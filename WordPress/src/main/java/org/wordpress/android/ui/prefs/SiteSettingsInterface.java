@@ -364,6 +364,10 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getCloseAfterDescription(int period) {
         if (mActivity == null) return "";
 
+        if (!getShouldCloseAfter()) {
+            return mActivity.getString(R.string.never);
+        }
+
         if (period == 0) return mActivity.getString(R.string.never);
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
@@ -413,8 +417,12 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
+        if (!getShouldPageComments()) {
+            return mActivity.getString(R.string.disabled);
+        }
+
         int count = getPagingCount();
-        if (count == 0) return mActivity.getString(R.string.none);
+        if (count == 0) return mActivity.getString(R.string.disabled);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 
@@ -464,9 +472,12 @@ public abstract class SiteSettingsInterface {
         mSettings.privacy = privacy;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public boolean setLanguageCode(String languageCode) {
+        if (!mLanguageCodes.containsKey(languageCode) ||
+            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        return true;
     }
 
     public void setLanguageId(int languageId) {

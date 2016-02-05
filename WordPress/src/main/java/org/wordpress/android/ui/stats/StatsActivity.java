@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -15,13 +17,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -69,6 +74,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
+    private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
 
     private Spinner mSpinner;
     private ScrollViewExt mOuterScrollView;
@@ -95,6 +101,8 @@ public class StatsActivity extends AppCompatActivity
     private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
+
+    private boolean mThereWasAnErrorLoadingStats = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,6 +157,7 @@ public class StatsActivity extends AppCompatActivity
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
+            mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
@@ -335,6 +344,7 @@ public class StatsActivity extends AppCompatActivity
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
+        outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);
         if (mOuterScrollView.getScrollY() != 0) {
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
         }
@@ -748,6 +758,64 @@ public class StatsActivity extends AppCompatActivity
         return true;
     }
 
+    public static class StatsWidgetPromoDialogFragment extends DialogFragment {
+
+        public static StatsWidgetPromoDialogFragment newInstance() {
+            return new StatsWidgetPromoDialogFragment();
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Dialog dialog = super.onCreateDialog(savedInstanceState);
+            // request a window without the title
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            return dialog;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
+        }
+
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            Button btn = (Button)view.findViewById(R.id.stats_widget_promo_got_it_btn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDialog().cancel();
+                }
+            });
+        }
+    }
+
+    private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
+        if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
+            // Do nothing in case of errors or when it's still loading
+            return;
+        }
+
+        if (!StringUtils.isEmpty(AppPrefs.getStatsWidgetsKeys())) {
+            // Stats widgets already used!!
+            return;
+        }
+
+        // Bump analytics that drives the Promo widget when the loading is completed without errors.
+        AppPrefs.bumpAnalyticsForStatsWidgetPromo();
+
+        // Should we display the widget promo?
+        int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+        if (counter == 3 || counter == 1000 || counter == 10000) {
+            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            newFragment.show(getFragmentManager(), "promote_widget_dialog");
+        }
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         if (isFinishing() || !mIsInFront) {
@@ -755,6 +823,11 @@ public class StatsActivity extends AppCompatActivity
         }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
+
+        if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
+            // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
+            bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -781,15 +854,30 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.JetpackAuthError event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
 
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
+
         if (event.mLocalBlogId != mLocalBlogID) {
             // The user has changed blog
             return;
         }
+
         mSwipeToRefreshHelper.setRefreshing(false);
         startWPComLoginActivity();
     }
