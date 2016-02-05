@@ -145,13 +145,13 @@ public class FilteredRecyclerView extends RelativeLayout {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
 
             //changing spinner arrow color to mach custom spinner at ReaderPostListFragment
-            Drawable spinnerBackground = mSpinner.getBackground();
-            spinnerBackground.setColorFilter(ContextCompat.getColor(getContext(), R.color.grey), PorterDuff.Mode.SRC_ATOP);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                mSpinner.setBackgroundDrawable(spinnerBackground);
-            } else {
-                mSpinner.setBackground(spinnerBackground);
-            }
+//            Drawable spinnerBackground = mSpinner.getBackground();
+//            spinnerBackground.setColorFilter(ContextCompat.getColor(getContext(), R.color.grey), PorterDuff.Mode.SRC_ATOP);
+//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+//                mSpinner.setBackgroundDrawable(spinnerBackground);
+//            } else {
+//                mSpinner.setBackground(spinnerBackground);
+//            }
         }
 
     }
