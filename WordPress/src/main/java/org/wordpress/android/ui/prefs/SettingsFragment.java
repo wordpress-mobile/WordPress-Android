@@ -73,7 +73,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
-        mLanguagePreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
@@ -159,8 +158,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
-        } else if (preference == mLanguagePreference) {
-            changeLanguage(newValue.toString());
         }
 
         return true;
@@ -333,6 +330,14 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
         if (isAdded()) {
             refreshAccountDetails();
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.ListPreferenceDialogClosed event) {
+        if (event.positiveResult && !event.startingValue.equals(event.newValue)) {
+            if (event.preference == mLanguagePreference) {
+                changeLanguage(event.newValue);
+            }
         }
     }
 }
