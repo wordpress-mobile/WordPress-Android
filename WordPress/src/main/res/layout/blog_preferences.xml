@@ -128,7 +128,7 @@
                 android:singleLine="true" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.OpenSansButton
+        <org.wordpress.android.widgets.WPButton
             android:id="@+id/remove_account"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_width="match_parent"

@@ -4,18 +4,18 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-public class OpenSansButton extends Button {
-    public OpenSansButton(Context context) {
+public class WPButton extends Button {
+    public WPButton(Context context) {
         super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
     }
 
-    public OpenSansButton(Context context, AttributeSet attrs) {
+    public WPButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypefaceCache.setCustomTypeface(context, this, attrs);
     }
 
-    public OpenSansButton(Context context, AttributeSet attrs, int defStyle) {
+    public WPButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypefaceCache.setCustomTypeface(context, this, attrs);
     }
