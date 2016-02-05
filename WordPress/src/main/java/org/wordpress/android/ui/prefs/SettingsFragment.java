@@ -30,6 +30,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -272,6 +273,10 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         String[] availableLocales = getResources().getStringArray(R.array.language_codes);
         Arrays.sort(availableLocales);
+
+        // make sure to use lowercase locales to make sure the language is selected
+        StringUtils.convertArrayToLowercase(availableLocales);
+        languageCode = languageCode.toLowerCase();
 
         if (mLanguagePreference.getEntryValues() == null || mLanguagePreference.getEntryValues().length == 0) {
             // update details to display in selected locale
