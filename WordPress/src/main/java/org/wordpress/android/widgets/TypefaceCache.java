@@ -67,7 +67,7 @@ public class TypefaceCache {
     }
 
     /*
-     * loads the desired typeface from the app's assets
+     * returns the desired typeface from the cache, loading it from app's assets if necessary
      */
     protected static Typeface getTypefaceForTypefaceName(Context context, String typefaceName) {
         if (!mTypefaceCache.containsKey(typefaceName)) {
