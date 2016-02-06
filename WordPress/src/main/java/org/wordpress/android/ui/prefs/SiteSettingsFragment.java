@@ -22,7 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -902,17 +902,23 @@ public class SiteSettingsFragment extends PreferenceFragment
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, null);
-                AlertDialog alertDialog = builder.create();
+                final AlertDialog alertDialog = builder.create();
                 int spacing = getResources().getDimensionPixelSize(R.dimen.dlp_padding_start);
                 alertDialog.setView(input, spacing, spacing, spacing, 0);
                 alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                alertDialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                alertDialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        alertDialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                    }
+                });
                 alertDialog.show();
-                alertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 Button positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 Button negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
                 if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
                 if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
-                WPActivityUtils.showKeyboard(input);
             }
         });
 
