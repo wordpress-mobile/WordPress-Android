@@ -143,6 +143,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mAllowCommentsNested;
     private WPSwitchPreference mSendPingbacksNested;
     private WPSwitchPreference mReceivePingbacksNested;
+    private PreferenceScreen mMorePreference;
 
     // Discussion settings -> Comments
     private WPSwitchPreference mIdentityRequiredPreference;
@@ -220,6 +221,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onDestroyView() {
+        removeMoreScreenToolbar();
+        super.onDestroyView();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RELATED_POSTS_REQUEST_CODE:
@@ -282,6 +289,19 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        removeMoreScreenToolbar();
+        super.onSaveInstanceState(outState);
+        setupMorePreferenceScreen();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) setupMorePreferenceScreen();
+    }
+
+    @Override
     public void onChildViewAdded(View parent, View child) {
         if (child.getId() == android.R.id.title && child instanceof TextView) {
             // style preference category title views
@@ -304,19 +324,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onPreferenceTreeClick(screen, preference);
 
         // More preference selected, style the Discussion screen
-        if (preference == findPreference(getString(R.string.pref_key_site_more_discussion))) {
-            Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog == null) return false;
-
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
-
-            // add Action Bar
-            String title = getString(R.string.site_settings_discussion_title);
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
-
+        if (preference == mMorePreference) {
             // track user accessing the full Discussion settings screen
             AnalyticsUtils.trackWithCurrentBlogDetails(
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
+
+            return setupMorePreferenceScreen();
         }
 
         return false;
@@ -555,6 +568,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSortByPref = (DetailListPreference) getChangePref(R.string.pref_key_site_sort_by);
         mThreadingPref = (DetailListPreference) getChangePref(R.string.pref_key_site_threading);
         mWhitelistPref = (DetailListPreference) getChangePref(R.string.pref_key_site_whitelist);
+        mMorePreference = (PreferenceScreen) getClickPref(R.string.pref_key_site_more_discussion);
         mRelatedPostsPref = getClickPref(R.string.pref_key_site_related_posts);
         mCloseAfterPref = getClickPref(R.string.pref_key_site_close_after);
         mPagingPref = getClickPref(R.string.pref_key_site_paging);
@@ -1009,6 +1023,24 @@ public class SiteSettingsFragment extends PreferenceFragment
             return displayLanguage + " (" + displayCountry + ")";
         }
         return displayLanguage;
+    }
+
+    private boolean setupMorePreferenceScreen() {
+        if (mMorePreference == null || !isAdded()) return false;
+        String title = getString(R.string.site_settings_discussion_title);
+        Dialog dialog = mMorePreference.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            return true;
+        }
+        return false;
+    }
+
+    private void removeMoreScreenToolbar() {
+        if (mMorePreference == null || !isAdded()) return;
+        Dialog moreDialog = mMorePreference.getDialog();
+        WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
     }
 
     private void hideAdminRequiredPreferences() {
