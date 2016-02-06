@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -291,7 +292,7 @@ public abstract class SiteSettingsInterface {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
-                categoryNames.put(model.id, model.name);
+                categoryNames.put(model.id, Html.fromHtml(model.name).toString());
             }
         }
 
@@ -305,7 +306,7 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
-                return model.name;
+                return Html.fromHtml(model.name).toString();
             }
         }
 
