@@ -221,9 +221,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onDestroyView() {
         removeMoreScreenToolbar();
-        super.onSaveInstanceState(outState);
+        super.onDestroyView();
     }
 
     @Override
@@ -286,6 +286,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        removeMoreScreenToolbar();
+        super.onSaveInstanceState(outState);
+        setupMorePreferenceScreen();
     }
 
     @Override
