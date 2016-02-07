@@ -20,6 +20,8 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -52,6 +54,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mThemesContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
+    private View mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -130,6 +133,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
+        mAdminView = rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -205,7 +209,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
+        mAdminView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
@@ -308,6 +312,8 @@ public class MySiteFragment extends Fragment
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
+        toggleAdminVisibility();
+
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
@@ -331,6 +337,17 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
+    }
+
+    private void toggleAdminVisibility() {
+        Blog blog = WordPress.getCurrentBlog();
+        Account account = AccountHelper.getDefaultAccount();
+        
+        if (blog.isDotcomFlag() && account.shouldHideWPAdmin()) {
+            mAdminView.setVisibility(View.GONE);
+        } else {
+            mAdminView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
