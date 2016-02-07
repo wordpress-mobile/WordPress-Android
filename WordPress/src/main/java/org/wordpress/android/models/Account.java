@@ -23,6 +23,12 @@ import de.greenrobot.event.EventBus;
  * Class for managing logged in user informations.
  */
 public class Account extends AccountModel {
+
+    public static final int HIDE_WP_ADMIN_YEAR = 2015;
+    public static final int HIDE_WP_ADMIN_MONTH = 9;
+    public static final int HIDE_WP_ADMIN_DAY = 7;
+    public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
+
     public void fetchAccountDetails() {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -102,8 +108,8 @@ public class Account extends AccountModel {
     }
 
     public boolean shouldHideWPAdmin() {
-        GregorianCalendar calendar = new GregorianCalendar(2015, 9, 7);
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
+        calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
 
         return getDate().after(calendar.getTime());
     }
