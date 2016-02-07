@@ -70,7 +70,7 @@
 	<string name="site_settings_title_hint">以简洁的话语介绍此站点的内容</string>
 	<string name="site_settings_whitelist_known_summary">来自已知用户的评论</string>
 	<string name="site_settings_whitelist_all_summary">来自所有用户的评论</string>
-	<string name="site_settings_threading_summary"> 个级别</string>
+	<string name="site_settings_threading_summary">%d个级别</string>
 	<string name="site_settings_privacy_private_summary">私密</string>
 	<string name="site_settings_privacy_hidden_summary">已隐藏</string>
 	<string name="site_settings_delete_site_title">删除站点</string>
