@@ -279,34 +279,43 @@
 
             </RelativeLayout>
 
-            <!--Admin-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout
+                android:id="@+id/admin_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_admin" />
+                <!--Admin-->
+                <LinearLayout style="@style/MySiteListHeaderLayout">
 
-                <View style="@style/MySiteListSectionDividerView" />
+                    <org.wordpress.android.widgets.WPTextView
+                        style="@style/MySiteListHeaderTextView"
+                        android:text="@string/my_site_header_admin" />
 
+                    <View style="@style/MySiteListSectionDividerView" />
+
+                </LinearLayout>
+
+                <!--View Admin-->
+                <RelativeLayout
+                    android:id="@+id/row_admin"
+                    style="@style/MySiteListRowLayout">
+
+                    <ImageView
+                        android:id="@+id/my_site_view_admin_icon"
+                        style="@style/MySiteListRowIcon"
+                        android:src="@drawable/my_site_icon_view_admin" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_view_admin_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:layout_toRightOf="@id/my_site_view_admin_icon"
+                        android:text="@string/my_site_btn_view_admin" />
+
+                </RelativeLayout>
             </LinearLayout>
 
-            <!--View Admin-->
-            <RelativeLayout
-                android:id="@+id/row_admin"
-                style="@style/MySiteListRowLayout">
 
-                <ImageView
-                    android:id="@+id/my_site_view_admin_icon"
-                    style="@style/MySiteListRowIcon"
-                    android:src="@drawable/my_site_icon_view_admin" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_view_admin_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_view_admin_icon"
-                    android:text="@string/my_site_btn_view_admin" />
-
-            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

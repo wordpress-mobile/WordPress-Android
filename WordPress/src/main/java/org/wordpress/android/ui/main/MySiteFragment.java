@@ -54,7 +54,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mThemesContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private View mAdminView;
+    private LinearLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -133,7 +133,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
-        mAdminView = rootView.findViewById(R.id.row_admin);
+        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -209,7 +209,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        mAdminView.setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
