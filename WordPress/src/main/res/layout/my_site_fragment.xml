@@ -293,8 +293,7 @@
             <!--View Admin-->
             <RelativeLayout
                 android:id="@+id/row_admin"
-                style="@style/MySiteListRowLayout"
-                android:layout_marginBottom="@dimen/margin_extra_large">
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_view_admin_icon"
@@ -308,6 +307,10 @@
                     android:text="@string/my_site_btn_view_admin" />
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_extra_large" />
 
         </LinearLayout>
 
