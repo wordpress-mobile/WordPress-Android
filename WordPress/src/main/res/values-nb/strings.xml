@@ -15,13 +15,11 @@
 	<string name="post_deleted">Innlegg slettet</string>
 	<string name="button_back">Tilbake</string>
 	<string name="page_deleted">Side slettet</string>
-	<string name="button_more">Mer</string>
 	<string name="button_stats">Statistikk</string>
 	<string name="button_preview">Forhåndsvis</string>
 	<string name="button_view">Vis</string>
 	<string name="button_edit">Rediger</string>
 	<string name="button_publish">Publiser</string>
-	<string name="button_delete">Slett</string>
 	<string name="button_trash">Papirkurv</string>
 	<string name="page_trashed">Siden er lagt i papirkurven</string>
 	<string name="stats_no_activity_this_period">Ingen aktivitet i denne perioden</string>
@@ -41,7 +39,6 @@
 	<string name="me_btn_login_logout">Logg inn/Logg ut</string>
 	<string name="me_connect_to_wordpress_com">Koble til WordPress.com</string>
 	<string name="my_site_btn_view_site">Vis nettsted</string>
-	<string name="my_site_btn_comments">Kommentarer</string>
 	<string name="my_site_header_publish">Publiser</string>
 	<string name="my_site_btn_site_settings">Innstillinger</string>
 	<string name="my_site_header_admin">Admin</string>
@@ -99,7 +96,6 @@
 	<string name="stats_view_all">Vis alle</string>
 	<string name="stats_view">Vis</string>
 	<string name="stats_followers_email_selector">E-post</string>
-	<string name="stats_comments">Kommentarer</string>
 	<string name="stats_pagination_label">Side %1$s av %2$s</string>
 	<string name="stats_timeframe_years">År</string>
 	<string name="stats_view_followers">Følgere</string>
@@ -134,7 +130,6 @@
 	<string name="confirm_delete_multi_media">Slette valgte elementer?</string>
 	<string name="confirm_delete_media">Slette valgt element?</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
-	<string name="reader_title_comments">Kommentarer</string>
 	<string name="comment">Kommentar</string>
 	<string name="comment_trashed">Kommentar slettet</string>
 	<string name="reader_title_photo_viewer">%1$d av %2$d</string>
@@ -307,7 +302,6 @@
 	<string name="stats_totals_views">Visninger</string>
 	<string name="stats_totals_clicks">Klikk</string>
 	<string name="stats_totals_plays">Avspillinger</string>
-	<string name="stats_totals_comments">Kommentarer</string>
 	<string name="unattached">Uten vedlegg</string>
 	<string name="media_add_popup_capture_video">Ta opp video</string>
 	<string name="media_gallery_type_squares">Kvadratisk</string>
@@ -320,7 +314,6 @@
 	<string name="stats_view_clicks">Klikk</string>
 	<string name="stats_view_tags_and_categories">Stikkord og kategorier</string>
 	<string name="stats_view_referrers">Henvisninger</string>
-	<string name="stats_view_comments">Kommentarer</string>
 	<string name="stats_timeframe_today">Idag</string>
 	<string name="stats_entry_referrers">Henvisninger</string>
 	<string name="passcode_manage">Håndter PIN kode</string>
@@ -374,7 +367,6 @@
 	<string name="tos">Lisens</string>
 	<string name="app_title">WordPress for Android</string>
 	<string name="about">Om</string>
-	<string name="max_thumbnail_px_width">Standardbredde for bilder</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Oppdater</string>
 	<string name="untitled">Uten tittel</string>
@@ -411,7 +403,6 @@
 	<string name="reply">Svar</string>
 	<string name="on">på</string>
 	<string name="preview">Forhåndsvisning</string>
-	<string name="tab_comments">Kommentarer</string>
 	<string name="cancel">Avbryt</string>
 	<string name="save">Lagre</string>
 	<string name="add">Legg til</string>

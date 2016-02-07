@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">原始大小</string>
+	<string name="about_me_hint">有关您的一些字词…</string>
+	<string name="public_display_name_hint">显示名称（如果未设置）将默认为您的用户名</string>
+	<string name="about_me">关于我</string>
+	<string name="public_display_name">公开显示名称</string>
+	<string name="my_profile">我的个人资料</string>
+	<string name="first_name">名字</string>
+	<string name="last_name">姓氏</string>
+	<string name="site_privacy_public_desc">允许搜索引擎将此站点编入索引</string>
+	<string name="site_privacy_hidden_desc">不鼓励搜索引擎将此站点编入索引</string>
+	<string name="site_privacy_private_desc">我希望我的站点保持私密，仅对我选择的用户可见</string>
+	<string name="cd_related_post_preview_image">相关文章预览图片</string>
+	<string name="error_post_remote_site_settings">无法保存站点信息</string>
+	<string name="error_fetch_remote_site_settings">无法检索站点信息</string>
+	<string name="error_media_upload_connection">上传媒体文件时出现连接错误</string>
+	<string name="site_settings_disconnected_toast">已断开连接，编辑已被禁用。</string>
+	<string name="site_settings_unsupported_version_error">不受支持的 WordPress 版本</string>
+	<string name="site_settings_multiple_links_dialog_description">所含链接数超过此数量的评论需要进行审核。</string>
+	<string name="site_settings_close_after_dialog_switch_text">自动关闭</string>
+	<string name="site_settings_close_after_dialog_description">自动关闭文章评论。</string>
+	<string name="site_settings_paging_dialog_description">将评论线程划分到多个页面。</string>
+	<string name="site_settings_paging_dialog_header">每个页面上的评论</string>
+	<string name="site_settings_close_after_dialog_title">关闭评论</string>
+	<string name="site_settings_blacklist_description">如果评论的内容、名称、URL、电子邮件或 IP 中包含其中任意字词，则评论会被标记为垃圾内容。您可输入部分字词，这样，输入“press”将匹配出“WordPress”。</string>
+	<string name="site_settings_hold_for_moderation_description">如果评论的内容、名称、URL、电子邮件或 IP 中包含其中任意字词，则评论会保留在审核队列中。您可输入部分字词，这样，输入“press”将匹配出“WordPress”。</string>
+	<string name="site_settings_list_editor_input_hint">输入一个单词或短语</string>
+	<string name="site_settings_list_editor_no_items_text">无菜单项</string>
+	<string name="site_settings_learn_more_caption">您可以为各篇文章覆盖这些设置。</string>
+	<string name="site_settings_rp_preview3_site">在“升级”中</string>
+	<string name="site_settings_rp_preview3_title">升级重点：婚礼 VideoPress</string>
+	<string name="site_settings_rp_preview2_site">在“应用程序”中</string>
+	<string name="site_settings_rp_preview2_title">Android 版 WordPress 应用程序外观有大变动</string>
+	<string name="site_settings_rp_preview1_site">在“手机”中</string>
+	<string name="site_settings_rp_preview1_title">iPhone/iPad 现在有大更新</string>
+	<string name="site_settings_rp_show_images_title">显示图片</string>
+	<string name="site_settings_rp_show_header_title">显示标题</string>
+	<string name="site_settings_rp_switch_summary">“相关文章”在您的文章下方显示您站点中的相关内容。</string>
+	<string name="site_settings_rp_switch_title">显示相关文章</string>
+	<string name="site_settings_delete_site_hint">从应用程序中删除站点数据</string>
+	<string name="site_settings_blacklist_hint">将与过滤器匹配的评论标记为垃圾内容</string>
+	<string name="site_settings_moderation_hold_hint">将与过滤器匹配的评论置于审核队列</string>
+	<string name="site_settings_multiple_links_hint">忽略来自已知用户的链接限制</string>
+	<string name="site_settings_whitelist_hint">评论作者必须已有审核通过的评论</string>
+	<string name="site_settings_user_account_required_hint">用户必须已注册并登录才能评论</string>
+	<string name="site_settings_identity_required_hint">评论作者必须填写名称和电子邮件</string>
+	<string name="site_settings_manual_approval_hint">评论必须经过人工审核</string>
+	<string name="site_settings_paging_hint">以指定大小的数据块显示评论</string>
+	<string name="site_settings_threading_hint">允许特定深度的嵌套评论</string>
+	<string name="site_settings_sort_by_hint">确定评论的显示顺序</string>
+	<string name="site_settings_close_after_hint">不允许在指定时间后评论</string>
+	<string name="site_settings_receive_pingbacks_hint">允许来自其他博客的链接通知</string>
+	<string name="site_settings_send_pingbacks_hint">尝试通知从文章链接到的任何博客</string>
+	<string name="site_settings_allow_comments_hint">允许阅读者发布评论</string>
+	<string name="site_settings_discussion_hint">查看并更改您的站点讨论设置</string>
+	<string name="site_settings_more_hint">查看所有可用的讨论设置</string>
+	<string name="site_settings_related_posts_hint">在阅读器中显示或隐藏相关文章</string>
+	<string name="site_settings_upload_and_link_image_hint">启用以始终上传完整大小的图片</string>
+	<string name="site_settings_image_width_hint">将文章中的图片大小调整至此宽度</string>
+	<string name="site_settings_format_hint">设置新的文章格式</string>
+	<string name="site_settings_category_hint">设置新的文章类别</string>
+	<string name="site_settings_location_hint">自动为文章添加位置数据</string>
+	<string name="site_settings_password_hint">更改您的密码</string>
+	<string name="site_settings_username_hint">当前用户帐户</string>
+	<string name="site_settings_language_hint">此博客的主要撰写语言</string>
+	<string name="site_settings_privacy_hint">控制可查看站点的人员</string>
+	<string name="site_settings_address_hint">目前不支持更改地址</string>
+	<string name="site_settings_tagline_hint">介绍您的博客的简短说明或夺人眼球的短语</string>
+	<string name="site_settings_title_hint">以简洁的话语介绍此站点的内容</string>
+	<string name="site_settings_whitelist_known_summary">来自已知用户的评论</string>
+	<string name="site_settings_whitelist_all_summary">来自所有用户的评论</string>
+	<string name="site_settings_threading_summary"> 个级别</string>
+	<string name="site_settings_privacy_private_summary">私密</string>
+	<string name="site_settings_privacy_hidden_summary">已隐藏</string>
+	<string name="site_settings_delete_site_title">删除站点</string>
+	<string name="site_settings_privacy_public_summary">公开</string>
+	<string name="site_settings_blacklist_title">黑名单</string>
+	<string name="site_settings_moderation_hold_title">保持审核状态</string>
+	<string name="site_settings_multiple_links_title">评论中的链接</string>
+	<string name="site_settings_whitelist_title">自动审核</string>
+	<string name="site_settings_threading_title">线程</string>
+	<string name="site_settings_paging_title">分页</string>
+	<string name="site_settings_sort_by_title">排序方式</string>
+	<string name="site_settings_account_required_title">用户必须注册</string>
+	<string name="site_settings_identity_required_title">必须包括名称和电子邮件</string>
+	<string name="site_settings_receive_pingbacks_title">接收 Pingback</string>
+	<string name="site_settings_send_pingbacks_title">发送 Pingback</string>
+	<string name="site_settings_allow_comments_title">允许评论</string>
+	<string name="site_settings_default_format_title">默认格式</string>
+	<string name="site_settings_default_category_title">默认类别</string>
+	<string name="site_settings_location_title">启用位置</string>
+	<string name="site_settings_address_title">地址</string>
+	<string name="site_settings_title_title">站点标题</string>
+	<string name="site_settings_tagline_title">标语</string>
+	<string name="site_settings_this_device_header">此设备</string>
+	<string name="site_settings_discussion_new_posts_header">默认用于新文章</string>
+	<string name="site_settings_account_header">帐户</string>
+	<string name="site_settings_writing_header">撰写</string>
+	<string name="newest_first">最新评论在先</string>
+	<string name="site_settings_general_header">常规</string>
+	<string name="discussion">讨论</string>
+	<string name="privacy">隐私</string>
+	<string name="related_posts">相关文章</string>
+	<string name="comments">评论</string>
+	<string name="close_after">在指定天数后关闭</string>
+	<string name="oldest_first">最早评论在先</string>
+	<string name="media_error_no_permission_upload">您无权向此站点上传媒体文件</string>
+	<string name="never">从不</string>
+	<string name="unknown">未知</string>
 	<string name="reader_err_get_post_not_found">此文章不再存在</string>
 	<string name="reader_err_get_post_not_authorized">您不具备查看此文章的权限</string>
 	<string name="reader_err_get_post_generic">无法检索这篇文章</string>
@@ -124,14 +232,12 @@
 	<string name="trashed">已放入回收站</string>
 	<string name="button_back">返回</string>
 	<string name="page_deleted">已删除页面</string>
-	<string name="button_more">更多</string>
 	<string name="button_stats">统计信息</string>
 	<string name="button_trash">放入回收站</string>
 	<string name="button_preview">预览</string>
 	<string name="button_view">查看</string>
 	<string name="button_edit">编辑</string>
 	<string name="button_publish">发布</string>
-	<string name="button_delete">删除</string>
 	<string name="my_site_no_sites_view_subtitle">想要添加一个吗？</string>
 	<string name="my_site_no_sites_view_title">您目前没有任何 WordPress 站点。</string>
 	<string name="my_site_no_sites_view_drake">插图</string>
@@ -170,7 +276,6 @@
 	<string name="my_site_btn_view_site">查看站点</string>
 	<string name="my_site_header_look_and_feel">外观</string>
 	<string name="my_site_header_publish">发布</string>
-	<string name="my_site_btn_comments">评论</string>
 	<string name="my_site_btn_site_settings">设置</string>
 	<string name="my_site_btn_blog_posts">博客文章</string>
 	<string name="reader_label_new_posts_subtitle">轻点以显示文章</string>
@@ -221,6 +326,8 @@
 	<string name="two_step_sms_sent">查收短信查看验证码。</string>
 	<string name="sign_in_jetpack">登录 WordPress.com 帐户来连接 Jetpack。</string>
 	<string name="auth_required">再次登录以继续操作。</string>
+	<string name="media_details_label_file_name">文件名</string>
+	<string name="media_details_label_file_type">文件类型</string>
 	<string name="stats_followers_total_email_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）电子邮件关注者</string>
 	<string name="stats_followers_total_wpcom_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
 	<string name="reader_empty_posts_request_failed">无法检索文章</string>
@@ -255,7 +362,6 @@
 	<string name="stats_views">浏览量</string>
 	<string name="stats_visitors">访客</string>
 	<string name="stats_likes">赞</string>
-	<string name="stats_comments">评论</string>
 	<string name="stats_view_followers">关注者</string>
 	<string name="stats_view_countries">国家/地区</string>
 	<string name="stats_view_videos">视频</string>
@@ -332,13 +438,13 @@
 	<string name="reader_label_comment_count_single">1 条评论</string>
 	<string name="reader_label_comments_closed">评论功能被关闭</string>
 	<string name="reader_label_comments_on">评论于</string>
-	<string name="reader_title_comments">评论</string>
 	<string name="reader_title_photo_viewer">%1$d/%2$d</string>
 	<string name="error_publish_empty_post">发布的文章不能为空</string>
 	<string name="error_refresh_unauthorized_posts">您不具备查看或编辑文章的权限</string>
 	<string name="error_refresh_unauthorized_pages">您不具备查看或编辑页面的权限</string>
 	<string name="error_refresh_unauthorized_comments">您不具备查看或编辑评论的权限</string>
 	<string name="older_month">超过一个月</string>
+	<string name="more">更多</string>
 	<string name="older_two_days">超过 2 天</string>
 	<string name="older_last_week">超过 1 周</string>
 	<string name="stats_no_blog">无法加载所需博客的统计信息</string>
@@ -647,7 +753,6 @@
 	<string name="stats_timeframe_days">天</string>
 	<string name="stats_timeframe_weeks">周</string>
 	<string name="stats_timeframe_months">月</string>
-	<string name="stats_view_comments">评论</string>
 	<string name="stats_view_clicks">点击</string>
 	<string name="share_action_title">添加到...</string>
 	<string name="theme_auth_error_title">未能获取主题</string>
@@ -686,7 +791,6 @@
 	<string name="stats_totals_views">浏览次数</string>
 	<string name="stats_totals_clicks">点击数</string>
 	<string name="stats_totals_plays">播放数</string>
-	<string name="stats_totals_comments">评论数</string>
 	<string name="stats_view_visitors_and_views">访问量和浏览量</string>
 	<string name="stats_view_referrers">推荐人</string>
 	<string name="stats_entry_country">国家</string>
@@ -736,7 +840,7 @@
 	<string name="tos">服务条款</string>
 	<string name="app_title">WordPress for Android</string>
 	<string name="about">关于</string>
-	<string name="max_thumbnail_px_width">默认图像宽度</string>
+	<string name="max_thumbnail_px_width">默认图片宽度</string>
 	<string name="image_alignment">对齐</string>
 	<string name="refresh">刷新</string>
 	<string name="untitled">无标题</string>
@@ -774,7 +878,6 @@
 	<string name="save">保存</string>
 	<string name="add">添加</string>
 	<string name="category_refresh_error">分类刷新错误</string>
-	<string name="tab_comments">评论</string>
 	<string name="on">于</string>
 	<string name="reply">回复</string>
 	<string name="yes">是</string>
@@ -826,6 +929,33 @@
 		<item>标准</item>
 		<item>状态</item>
 		<item>视频</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>您的站点对所有人可见，并且可以被搜索引擎编入索引</item>
+		<item>您的站点对所有人可见，但要求搜索引擎不将其编入索引</item>
+		<item>您的站点仅对您以及您审核通过的用户可见</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>每个人的评论都需要进行人工审核。</item>
+		<item>如果用户已有审核通过的评论，则系统将自动审核该用户的其他评论。</item>
+		<item>自动审核每个人的评论。</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>没有评论</item>
+		<item>已知用户的评论</item>
+		<item>所有用户</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>无</item>
+		<item>两个级别</item>
+		<item>三个级别</item>
+		<item>四个级别</item>
+		<item>五个级别</item>
+		<item>六个级别</item>
+		<item>七个级别</item>
+		<item>八个级别</item>
+		<item>九个级别</item>
+		<item>十个级别</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>免费</item>
