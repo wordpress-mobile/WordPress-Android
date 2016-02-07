@@ -72,7 +72,7 @@ public class AccountTable {
         values.put("first_name", account.getFirstName());
         values.put("last_name", account.getLastName());
         values.put("about_me", account.getAboutMe());
-        values.put("date", account.getDateISO8601());
+        values.put("date", account.getDateCreatedISO8601());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 

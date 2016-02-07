@@ -11,8 +11,6 @@ import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.TimeZone;
@@ -111,7 +109,7 @@ public class Account extends AccountModel {
         GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
         calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
 
-        return getDate().after(calendar.getTime());
+        return getDateCreated().after(calendar.getTime());
     }
 
     public enum RestParam {

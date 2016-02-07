@@ -23,7 +23,7 @@ public class AccountModel {
     private String mFirstName;
     private String mLastName;
     private String mAboutMe;
-    private Date mDate;
+    private Date mDateCreated;
 
     public AccountModel() {
         init();
@@ -43,7 +43,7 @@ public class AccountModel {
         mFirstName = "";
         mLastName = "";
         mAboutMe = "";
-        mDate = new Date();
+        mDateCreated = new Date();
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -56,7 +56,7 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
-        mDate = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
+        mDateCreated = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
@@ -174,15 +174,15 @@ public class AccountModel {
         mAboutMe = aboutMe;
     }
 
-    public Date getDate() {
-        return mDate;
+    public Date getDateCreated() {
+        return mDateCreated;
     }
 
-    public String getDateISO8601() {
-        return DateTimeUtils.javaDateToIso8601(mDate);
+    public String getDateCreatedISO8601() {
+        return DateTimeUtils.javaDateToIso8601(mDateCreated);
     }
 
-    public void setDate(Date date) {
-        mDate = date;
+    public void setDateCreated(Date date) {
+        mDateCreated = date;
     }
 }
