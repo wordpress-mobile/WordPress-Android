@@ -3,7 +3,10 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.Date;
 
 public class AccountModel {
     // WordPress.com only - data fetched from the REST API endpoint
@@ -20,6 +23,7 @@ public class AccountModel {
     private String mFirstName;
     private String mLastName;
     private String mAboutMe;
+    private Date mDate;
 
     public AccountModel() {
         init();
@@ -39,6 +43,7 @@ public class AccountModel {
         mFirstName = "";
         mLastName = "";
         mAboutMe = "";
+        mDate = new Date();
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -51,6 +56,7 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
+        mDate = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
@@ -166,5 +172,17 @@ public class AccountModel {
 
     public void setAboutMe(String aboutMe) {
         mAboutMe = aboutMe;
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public String getDateISO8601() {
+        return DateTimeUtils.javaDateToIso8601(mDate);
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
     }
 }
