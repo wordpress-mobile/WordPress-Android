@@ -11,7 +11,11 @@ import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.TimeZone;
 
 import de.greenrobot.event.EventBus;
 
@@ -95,6 +99,13 @@ public class Account extends AccountModel {
 
     public void save() {
         AccountTable.save(this);
+    }
+
+    public boolean shouldHideWPAdmin() {
+        GregorianCalendar calendar = new GregorianCalendar(2015, 9, 7);
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return getDate().after(calendar.getTime());
     }
 
     public enum RestParam {
