@@ -112,14 +112,12 @@
 	<string name="trashed">Διαγραμμένα</string>
 	<string name="button_back">Πίσω</string>
 	<string name="page_deleted">Σελίδα διαγράφηκε</string>
-	<string name="button_more">Περισσότερα</string>
 	<string name="button_stats">Στατιστικά</string>
 	<string name="button_trash">Διαγραφή</string>
 	<string name="button_preview">Προεπισκόπηση</string>
 	<string name="button_view">Προβολή</string>
 	<string name="button_edit">Αλλαγή</string>
 	<string name="button_publish">Δημοσίευση</string>
-	<string name="button_delete">Διαγραφή</string>
 	<string name="my_site_no_sites_view_subtitle">Θα θέλατε να προσθέσετε ένα;</string>
 	<string name="my_site_no_sites_view_title">Δεν έχετε κανένα ιστότοπο WordPress ακόμα.</string>
 	<string name="my_site_no_sites_view_drake">Απεικόνιση</string>
@@ -157,7 +155,6 @@
 	<string name="my_site_btn_view_admin">Προβολή Διαχείρισης</string>
 	<string name="site_picker_title">Επιλογή ιστότοπου</string>
 	<string name="my_site_btn_site_settings">Ρυθμίσεις</string>
-	<string name="my_site_btn_comments">Σχόλια</string>
 	<string name="my_site_btn_blog_posts">Ιστολόγημα</string>
 	<string name="my_site_header_look_and_feel">Κοίτα και Νιώσε</string>
 	<string name="my_site_header_publish">Δημοσιεύω</string>
@@ -249,7 +246,6 @@
 	<string name="stats_view_videos">Βίντεο</string>
 	<string name="stats_view_publicize">Δημοσιοποίηση</string>
 	<string name="stats_likes">Likes</string>
-	<string name="stats_comments">Σχόλια</string>
 	<string name="stats_timeframe_years">Χρόνια</string>
 	<string name="stats_views">Προβολές</string>
 	<string name="stats_visitors">Επισκέπτες</string>
@@ -310,7 +306,6 @@
 	<string name="older_two_days">Παλιότερο από 2 μέρες</string>
 	<string name="older_last_week">Παλιότερο από 1 βδομάδα</string>
 	<string name="comment">Σχόλιο</string>
-	<string name="reader_title_comments">Σχόλια</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_label_like">Like</string>
 	<string name="mnu_comment_liked">Liked</string>
@@ -647,7 +642,6 @@
 	<string name="stats_view_visitors_and_views">Επισκέπτες και Προβολές</string>
 	<string name="stats_view_clicks">Κλικ</string>
 	<string name="stats_view_tags_and_categories">Ετικέτες και Κατηγορίες</string>
-	<string name="stats_view_comments">Σχόλια</string>
 	<string name="stats_timeframe_today">Σήμερα</string>
 	<string name="stats_timeframe_yesterday">Χθες</string>
 	<string name="theme_set_success">Το θέμα ορίστηκε επιτυχώς</string>
@@ -671,7 +665,6 @@
 	<string name="stats_totals_views">Εμφανίσεις</string>
 	<string name="stats_totals_clicks">Κλικ</string>
 	<string name="stats_totals_plays">Αναπαραγωγές</string>
-	<string name="stats_totals_comments">Σχόλια</string>
 	<string name="menu_search">Αναζήτηση</string>
 	<string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
 	<string name="passcode_enter_passcode">Πληκτρολογήστε το PIN σας</string>
@@ -724,7 +717,6 @@
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="app_title">WordPress για Android</string>
 	<string name="about">Σχετικά</string>
-	<string name="max_thumbnail_px_width">Προεπιλεγμένο πλάτος εικόνας</string>
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
@@ -765,7 +757,6 @@
 	<string name="cancel">Ακύρωση</string>
 	<string name="save">Αποθήκευση</string>
 	<string name="add">Πρόσθεση</string>
-	<string name="tab_comments">Σχόλια</string>
 	<string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>
 	<string name="on">ενεργό</string>
 	<string name="notification_settings">Ρυθμίσεις Ειδοποιήσεων</string>

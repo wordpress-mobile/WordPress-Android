@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">元のサイズ</string>
+	<string name="about_me_hint">簡単な自己紹介</string>
+	<string name="about_me">自己紹介</string>
+	<string name="public_display_name_hint">表示名が設定されていない場合、デフォルトでユーザー名が指定されます</string>
+	<string name="public_display_name">公開表示名</string>
+	<string name="my_profile">プロフィール</string>
+	<string name="first_name">名</string>
+	<string name="last_name">姓</string>
+	<string name="site_privacy_public_desc">検索エンジンによるサイトのインデックスを許可する</string>
+	<string name="site_privacy_hidden_desc">検索エンジンがサイトをインデックスしないようにする</string>
+	<string name="site_privacy_private_desc">サイトを非公開にし、選択したユーザーにのみ表示する</string>
+	<string name="cd_related_post_preview_image">関連記事のプレビュー画像</string>
+	<string name="error_post_remote_site_settings">サイト情報を保存できませんでした</string>
+	<string name="error_fetch_remote_site_settings">サイト情報を取得できませんでした</string>
+	<string name="error_media_upload_connection">メディアのアップロード中に接続エラーが発生しました</string>
+	<string name="site_settings_disconnected_toast">接続が中断されたため編集を無効化しました。</string>
+	<string name="site_settings_unsupported_version_error">サポートされていない WordPress バージョン</string>
+	<string name="site_settings_multiple_links_dialog_description">この数より多くのリンクがコメントに含まれる場合、承認が必要です。</string>
+	<string name="site_settings_close_after_dialog_switch_text">自動的に閉じる</string>
+	<string name="site_settings_close_after_dialog_description">記事のコメントを自動的に閉じます。</string>
+	<string name="site_settings_paging_dialog_description">コメントスレッドを複数のページに分けます。</string>
+	<string name="site_settings_paging_dialog_header">1ページあたりのコメント数</string>
+	<string name="site_settings_close_after_dialog_title">コメントを閉じます</string>
+	<string name="site_settings_blacklist_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、スパムとしてマークされます。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
+	<string name="site_settings_hold_for_moderation_description">コメントの本文、名前、URL、メール、IP にこれらの語のいずれかが含まれている場合、承認待ちになります。語句の一部を入力できます。例えば、「press」は「WordPress」に一致します。</string>
+	<string name="site_settings_list_editor_input_hint">単語やフレーズを入力してください</string>
+	<string name="site_settings_list_editor_no_items_text">項目なし</string>
+	<string name="site_settings_learn_more_caption">これらの設定は投稿ごとに上書きできます。</string>
+	<string name="site_settings_rp_preview3_site">「アップグレード」カテゴリー</string>
+	<string name="site_settings_rp_preview3_title">アップグレードフォーカス: ウェディング向け VideoPress</string>
+	<string name="site_settings_rp_preview2_site">「アプリ」カテゴリー</string>
+	<string name="site_settings_rp_preview2_title">WordPress for Android アプリが大幅リニューアル</string>
+	<string name="site_settings_rp_preview1_site">「モバイル」カテゴリー</string>
+	<string name="site_settings_rp_preview1_title">iPhone/iPad の大幅なアップデートが利用できるようになりました</string>
+	<string name="site_settings_rp_show_images_title">画像を表示</string>
+	<string name="site_settings_rp_show_header_title">ヘッダーを表示</string>
+	<string name="site_settings_rp_switch_summary">「関連記事」は投稿の下にサイト内の関連コンテンツを表示します。</string>
+	<string name="site_settings_rp_switch_title">関連記事を表示</string>
+	<string name="site_settings_delete_site_hint">サイトのデータをアプリから削除します</string>
+	<string name="site_settings_blacklist_hint">フィルターに一致するコメントはスパムとしてマークされます</string>
+	<string name="site_settings_moderation_hold_hint">フィルターに一致するコメントは承認待ちになります</string>
+	<string name="site_settings_multiple_links_hint">既知のユーザーからのリンク制限を無視します</string>
+	<string name="site_settings_whitelist_hint">すでに承認されたコメントの投稿者のコメントを許可し、それ以外のコメントを承認待ちにする</string>
+	<string name="site_settings_user_account_required_hint">ユーザー登録してログインしたユーザーのみコメントをつけられるようにする</string>
+	<string name="site_settings_identity_required_hint">コメントの際、名前とメールアドレスの入力を必須にする</string>
+	<string name="site_settings_manual_approval_hint">コメントを手動で承認する必要があります</string>
+	<string name="site_settings_paging_hint">コメントを指定したサイズに分けて表示します</string>
+	<string name="site_settings_threading_hint">指定の深さまで入れ子コメントを許可します</string>
+	<string name="site_settings_sort_by_hint">コメントを表示する順番を決定します</string>
+	<string name="site_settings_close_after_hint">指定した時間後のコメントを許可しません</string>
+	<string name="site_settings_receive_pingbacks_hint">他のブログからのリンク通知を許可します</string>
+	<string name="site_settings_send_pingbacks_hint">この投稿に含まれるすべてのリンクへの通知を試みる</string>
+	<string name="site_settings_allow_comments_hint">読者からのコメントの投稿を許可します</string>
+	<string name="site_settings_discussion_hint">サイトのディスカッション設定を表示して変更します</string>
+	<string name="site_settings_more_hint">使用可能なディスカッション設定をすべて表示します</string>
+	<string name="site_settings_related_posts_hint">Reader で関連記事を表示または非表示にします</string>
+	<string name="site_settings_upload_and_link_image_hint">常時フルサイズ画像でのアップロードを有効にします</string>
+	<string name="site_settings_image_width_hint">投稿の画像のサイズを幅に合わせて変更します</string>
+	<string name="site_settings_format_hint">新しい投稿のフォーマットを設定します</string>
+	<string name="site_settings_category_hint">新しい投稿のカテゴリーを設定します</string>
+	<string name="site_settings_location_hint">位置データを投稿に自動的に追加します</string>
+	<string name="site_settings_password_hint">パスワードを変更します</string>
+	<string name="site_settings_username_hint">現在のユーザーアカウント</string>
+	<string name="site_settings_language_hint">ブログを書くときに使う主な言語</string>
+	<string name="site_settings_privacy_hint">サイトを閲覧できるユーザーを管理します</string>
+	<string name="site_settings_address_hint">アドレスの変更は現在サポートされていません</string>
+	<string name="site_settings_tagline_hint">ブログの簡単な説明やブログを表す魅力的なフレーズ</string>
+	<string name="site_settings_title_hint">このサイトを短い文章で説明してください</string>
+	<string name="site_settings_whitelist_known_summary">既知のユーザーからのコメント</string>
+	<string name="site_settings_whitelist_all_summary">すべてのユーザーからのコメント</string>
+	<string name="site_settings_threading_summary">%d階層</string>
+	<string name="site_settings_privacy_private_summary">プライベート</string>
+	<string name="site_settings_privacy_hidden_summary">非表示</string>
+	<string name="site_settings_delete_site_title">サイトを削除</string>
+	<string name="site_settings_privacy_public_summary">一般公開</string>
+	<string name="site_settings_blacklist_title">ブラックリスト</string>
+	<string name="site_settings_moderation_hold_title">承認待ち</string>
+	<string name="site_settings_multiple_links_title">コメント内のリンク</string>
+	<string name="site_settings_whitelist_title">自動で承認</string>
+	<string name="site_settings_paging_title">ページ送り</string>
+	<string name="site_settings_threading_title">スレッド化</string>
+	<string name="site_settings_sort_by_title">並び替え</string>
+	<string name="site_settings_account_required_title">ユーザーのログインを必須にする</string>
+	<string name="site_settings_identity_required_title">名前とメールを必須にする</string>
+	<string name="site_settings_receive_pingbacks_title">ピンバックを受け取る</string>
+	<string name="site_settings_send_pingbacks_title">ピンバックを送信</string>
+	<string name="site_settings_allow_comments_title">コメントを許可</string>
+	<string name="site_settings_default_format_title">デフォルトのフォーマット</string>
+	<string name="site_settings_default_category_title">デフォルトカテゴリー</string>
+	<string name="site_settings_location_title">位置情報を有効化</string>
+	<string name="site_settings_address_title">住所</string>
+	<string name="site_settings_title_title">サイトのタイトル</string>
+	<string name="site_settings_tagline_title">キャッチフレーズ</string>
+	<string name="site_settings_this_device_header">このデバイス</string>
+	<string name="site_settings_discussion_new_posts_header">新しい投稿のデフォルト</string>
+	<string name="site_settings_account_header">アカウント</string>
+	<string name="site_settings_writing_header">投稿設定</string>
+	<string name="newest_first">最新のものを先頭表示</string>
+	<string name="site_settings_general_header">一般</string>
+	<string name="discussion">ディスカッション</string>
+	<string name="privacy">プライバシー</string>
+	<string name="related_posts">関連記事</string>
+	<string name="comments">コメント</string>
+	<string name="close_after">特定の日付に終了:</string>
+	<string name="oldest_first">最も古いものを先頭表示</string>
+	<string name="media_error_no_permission_upload">このサイトにメディアをアップロードする権限がありません</string>
+	<string name="never">なし</string>
+	<string name="unknown">不明</string>
 	<string name="reader_err_get_post_not_found">この投稿は存在しません</string>
 	<string name="reader_err_get_post_not_authorized">この投稿を表示する権限がありません</string>
 	<string name="reader_err_get_post_generic">この投稿を取得できません</string>
@@ -124,14 +232,12 @@
 	<string name="trashed">ゴミ箱移動済み</string>
 	<string name="button_back">戻る</string>
 	<string name="page_deleted">ページを削除しました</string>
-	<string name="button_more">続き</string>
 	<string name="button_stats">統計情報</string>
 	<string name="button_trash">ゴミ箱</string>
 	<string name="button_preview">プレビュー</string>
 	<string name="button_view">表示</string>
 	<string name="button_edit">編集</string>
 	<string name="button_publish">公開</string>
-	<string name="button_delete">削除</string>
 	<string name="my_site_no_sites_view_subtitle">追加しますか ?</string>
 	<string name="my_site_no_sites_view_title">まだ WordPress サイトがありません。</string>
 	<string name="my_site_no_sites_view_drake">イラスト</string>
@@ -170,7 +276,6 @@
 	<string name="site_picker_title">サイトを選択</string>
 	<string name="my_site_btn_blog_posts">ブログ投稿</string>
 	<string name="my_site_btn_site_settings">設定</string>
-	<string name="my_site_btn_comments">コメント</string>
 	<string name="my_site_header_look_and_feel">ルックアンドフィール</string>
 	<string name="my_site_header_publish">公開</string>
 	<string name="my_site_header_configuration">設定</string>
@@ -266,7 +371,6 @@
 	<string name="stats_visitors">サイト訪問者</string>
 	<string name="stats_timeframe_years">年</string>
 	<string name="stats_pagination_label">%1$sページ目 (%2$sページ中)</string>
-	<string name="stats_comments">コメント</string>
 	<string name="stats_view_videos">動画</string>
 	<string name="stats_view_publicize">パブリサイズ共有 </string>
 	<string name="stats_view_followers">フォロワー</string>
@@ -332,12 +436,12 @@
 	<string name="reader_label_like">いいね</string>
 	<string name="reader_label_comments_closed">コメントは停止中です。</string>
 	<string name="reader_label_comments_on">次の投稿へのコメント:</string>
-	<string name="reader_title_comments">コメント</string>
 	<string name="reader_title_photo_viewer">%1$d/%2$d</string>
 	<string name="error_publish_empty_post">空の投稿はできません。</string>
 	<string name="error_refresh_unauthorized_posts">投稿の表示/編集の権限がありません。</string>
 	<string name="error_refresh_unauthorized_pages">ページの表示/編集の権限がありません。</string>
 	<string name="error_refresh_unauthorized_comments">コメントの表示/編集の権限がありません。</string>
+	<string name="more">続き</string>
 	<string name="stats_no_blog">要求されたブログの統計を読み込めませんでした。</string>
 	<string name="select_a_blog">WordPress のサイトを選択してください。</string>
 	<string name="sending_content">%s のコンテンツをアップロードしています</string>
@@ -665,7 +769,6 @@
 	<string name="stats_totals_views">表示</string>
 	<string name="stats_totals_clicks">クリック数</string>
 	<string name="stats_totals_plays">再生回数</string>
-	<string name="stats_totals_comments">コメント</string>
 	<string name="menu_search">検索</string>
 	<string name="media_add_popup_capture_photo">写真を撮影</string>
 	<string name="media_add_popup_capture_video">動画を撮影</string>
@@ -673,7 +776,6 @@
 	<string name="themes_details_label">詳細</string>
 	<string name="themes_features_label">機能</string>
 	<string name="stats_view_referrers">リファラ</string>
-	<string name="stats_view_comments">コメント</string>
 	<string name="media_edit_failure">更新に失敗しました</string>
 	<string name="media_edit_description_hint">説明を入力</string>
 	<string name="media_edit_caption_hint">キャプションを入力</string>
@@ -771,7 +873,6 @@
 	<string name="none">なし</string>
 	<string name="blogs">ブログ</string>
 	<string name="select_photo">ギャラリーから写真を選択</string>
-	<string name="tab_comments">コメント</string>
 	<string name="reply">返信する</string>
 	<string name="preview">プレビュー</string>
 	<string name="on">オン</string>
@@ -828,6 +929,33 @@
 		<item>標準</item>
 		<item>ステータス</item>
 		<item>動画</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>誰でもサイトを表示可能にし、検索エンジンによるインデックスを許可する</item>
+		<item>誰でもサイトを表示可能にし、検索エンジンによるインデックスは回避する</item>
+		<item>自身と承認したユーザーのみがサイトを表示可能</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>すべてのコメントで、手動の承認が必要です。</item>
+		<item>ユーザーのコメントが以前に承認されている場合、自動的に承認します。</item>
+		<item>すべてのコメントを自動的に承認します。</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>コメントはありません</item>
+		<item>既知のユーザーのコメント</item>
+		<item>すべてのユーザー</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>なし</item>
+		<item>2階層</item>
+		<item>3階層</item>
+		<item>4階層</item>
+		<item>5階層</item>
+		<item>6階層</item>
+		<item>7階層</item>
+		<item>8階層</item>
+		<item>9階層</item>
+		<item>10階層</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>無料</item>
