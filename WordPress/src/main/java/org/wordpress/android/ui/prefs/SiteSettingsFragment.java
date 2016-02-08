@@ -885,6 +885,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
                 final EditText input = new EditText(getActivity());
                 WPPrefUtils.layoutAsInput(input);
+                input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
                 input.setHint(R.string.site_settings_list_editor_input_hint);
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -914,7 +915,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                     }
                 });
                 alertDialog.show();
-                alertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
                 Button positive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 Button negative = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
                 if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
