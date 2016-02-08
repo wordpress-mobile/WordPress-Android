@@ -142,6 +142,12 @@
                     android:layout_toRightOf="@id/my_site_plan_icon"
                     android:text="@string/plan" />
 
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_current_plan_text_view"
+                    style="@style/MySiteListRowSecodaryTextView"
+                    android:layout_toRightOf="@id/my_site_plan_text_view"
+                    android:text="@string/plan" />
+
             </RelativeLayout>
 
             <!--PUBLISH-->
