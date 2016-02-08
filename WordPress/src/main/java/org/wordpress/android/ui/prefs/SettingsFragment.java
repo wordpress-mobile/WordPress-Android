@@ -30,6 +30,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -323,9 +324,21 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         account.postAccountSettings(params);
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
         if (isAdded()) {
             refreshAccountDetails();
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
+        if (isAdded()) {
+            ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
         }
     }
 
