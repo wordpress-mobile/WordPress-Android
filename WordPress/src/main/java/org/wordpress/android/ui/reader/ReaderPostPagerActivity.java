@@ -52,6 +52,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private ReaderTag mCurrentTag;
     private long mBlogId;
     private long mPostId;
+    private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
 
     private boolean mIsRequestingMorePosts;
@@ -110,19 +111,23 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 super.onPageSelected(position);
                 onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    // pause the active web view when the user starts scrolling - important
-                    // because otherwise embedded content in the web view will continue to play
-                    ReaderPostDetailFragment fragment = getActiveDetailFragment();
-                    if (fragment != null) {
-                        fragment.pauseWebView();
+                // pause the previous web view - important because otherwise embedded content
+                // will continue to play
+                if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
+                    ReaderPostDetailFragment lastFragment = getDetailFragmentAtPosition(mLastSelectedPosition);
+                    if (lastFragment != null) {
+                        lastFragment.pauseWebView();
                     }
                 }
+
+                // resume the newly active webView if it was previously paused
+                ReaderPostDetailFragment thisFragment = getDetailFragmentAtPosition(position);
+                if (thisFragment != null) {
+                    thisFragment.resumeWebViewIfPaused();
+                }
+
+                mLastSelectedPosition = position;
             }
         });
 
@@ -300,6 +305,23 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private ReaderPostDetailFragment getActiveDetailFragment() {
         Fragment fragment = getActivePagerFragment();
+        if (fragment instanceof ReaderPostDetailFragment) {
+            return (ReaderPostDetailFragment) fragment;
+        } else {
+            return null;
+        }
+    }
+
+    private Fragment getPagerFragmentAtPosition(int position) {
+        if (hasPagerAdapter()) {
+            return getPagerAdapter().getFragmentAtPosition(position);
+        } else {
+            return null;
+        }
+    }
+
+    private ReaderPostDetailFragment getDetailFragmentAtPosition(int position) {
+        Fragment fragment = getPagerFragmentAtPosition(position);
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {

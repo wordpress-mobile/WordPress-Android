@@ -5,13 +5,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class AuthorsModel implements Serializable {
+public class AuthorsModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
     private String mBlogID;

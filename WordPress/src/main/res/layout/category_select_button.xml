@@ -10,4 +10,5 @@
     android:minHeight="48dp"
     android:minWidth="48dp"
     android:paddingRight="12dp"
+    android:contentDescription="@string/add_category"
     android:tag="select-category" />

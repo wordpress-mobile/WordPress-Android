@@ -20,6 +20,8 @@ import java.util.Set;
 public class BlogUtils {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
 
+    public static final int BLOG_ID_INVALID = 0;
+
     /**
      * Remove blogs that are not in the list and add others
      * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
@@ -140,5 +142,14 @@ public class BlogUtils {
 
     public static boolean addBlogs(List<Map<String, Object>> userBlogList, String username) {
         return addBlogs(userBlogList, username, null, null, null);
+    }
+
+    /**
+     * Get a Blog's local Id.
+     * @param blog The Blog to get its local ID
+     * @return Blog's local id or {@value BlogUtils#BLOG_ID_INVALID} if null
+     */
+    public static int getBlogLocalId(final Blog blog) {
+        return (blog != null ? blog.getLocalTableBlogId() : BLOG_ID_INVALID);
     }
 }

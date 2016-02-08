@@ -1,16 +1,22 @@
 package org.wordpress.android.ui.stats;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.VolleyError;
+
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
+
+import de.greenrobot.event.EventBus;
 
 
 public abstract class StatsAbstractFragment extends Fragment {
@@ -28,7 +34,30 @@ public abstract class StatsAbstractFragment extends Fragment {
     private String mDate;
     private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
-    protected abstract StatsService.StatsEndpointsEnum[] getSectionsToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum[] sectionsToUpdate();
+    protected abstract void showPlaceholderUI();
+    protected abstract void updateUI();
+    protected abstract void showErrorUI(String label);
+
+    /**
+     * Wheter or not previous data is available.
+     * @return True if previous data is already available in the fragment
+     */
+    protected abstract boolean hasDataAvailable();
+
+    /**
+     * Called in onSaveIstance. Fragments should persist data here.
+     * @param outState Bundle in which to place fragment saved state.
+     */
+    protected abstract void saveStatsData(Bundle outState);
+
+    /**
+     * Called in OnCreate. Fragment should restore here previous saved data.
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
+    protected abstract void restoreStatsData(Bundle savedInstanceState); // called in onCreate
+
+    protected StatsResourceVars mResourceVars;
 
     public void refreshStats() {
         refreshStats(-1, null);
@@ -41,23 +70,18 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // if no sections to update is passed to the method, default to fragment
         if (sections == null) {
-            sections = getSectionsToUpdate();
+            sections = sectionsToUpdate();
         }
 
         //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.w(AppLog.T.STATS, this.getClass().getCanonicalName() + "--> no connection, update canceled");
-            return;
-        }
 
         final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
         if (currentBlog == null) {
             AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
-        final String blogId = currentBlog.getDotComBlogId();
 
+        final String blogId = currentBlog.getDotComBlogId();
         // Make sure the blogId is available.
         if (blogId == null) {
             AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
@@ -88,12 +112,9 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            if (pageNumberRequested > 0) {
-                // request 20 items per page. It's the maximum number returned by the server in paged mode
-                intent.putExtra(StatsService.ARG_MAX_RESULTS, StatsService.MAX_RESULTS_REQUESTED_PER_PAGE);
-            } else {
-                intent.putExtra(StatsService.ARG_MAX_RESULTS, MAX_RESULTS_REQUESTED);
-            }
+            // Single Item screen: request 20 items per page on paged requests. Default to the first 100 items otherwise.
+            int maxElementsToRetrieve = pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
+            intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
         }
         if (pageNumberRequested > 0) {
             intent.putExtra(StatsService.ARG_PAGE_REQUESTED, pageNumberRequested);
@@ -114,6 +135,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             if (savedInstanceState.containsKey(ARGS_SELECTED_DATE)) {
                 mDate = savedInstanceState.getString(ARGS_SELECTED_DATE);
             }
+            restoreStatsData(savedInstanceState); // Each fragment will override this to restore fragment dependant data
         }
 
       //  AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
@@ -121,18 +143,118 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mResourceVars = new StatsResourceVars(activity);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
        /* AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > saving instance state");
         AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
         AppLog.d(AppLog.T.STATS, "mDate: " + mDate); */
+
         outState.putString(ARGS_SELECTED_DATE, mDate);
         outState.putSerializable(ARGS_TIMEFRAME, mStatsTimeframe);
+        saveStatsData(outState); // Each fragment will override this
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Init the UI
+        if (hasDataAvailable()) {
+            updateUI();
+        } else {
+            showPlaceholderUI();
+            refreshStats();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public boolean shouldUpdateFragmentOnUpdateEvent(StatsEvents.SectionUpdatedAbstract event) {
+        if (!isAdded()) {
+            return false;
+        }
+
+        if (!getDate().equals(event.mDate)) {
+            return false;
+        }
+
+        if (!isSameBlog(event)) {
+            return false;
+        }
+
+        if (!event.mTimeframe.equals(getTimeframe())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    boolean isSameBlog(StatsEvents.SectionUpdatedAbstract event) {
+        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
+        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
+            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        }
+        return false;
+    }
+
+    protected void showErrorUI(VolleyError error) {
+        if (!isAdded()) {
+            return;
+        }
+
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+
+        if (error instanceof NoConnectionError) {
+            label += "<br/>" + getString(R.string.no_network_message);
+        }
+
+        if (StatsUtils.isRESTDisabledError(error)) {
+            label += "<br/>" + getString(R.string.stats_enable_rest_api_in_jetpack);
+        }
+
+        showErrorUI(label);
+    }
+
+    protected void showErrorUI() {
+        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
+        showErrorUI(label);
+    }
+
+    public boolean shouldUpdateFragmentOnErrorEvent(StatsEvents.SectionUpdateError errorEvent) {
+        if (!shouldUpdateFragmentOnUpdateEvent(errorEvent)) {
+            return false;
+        }
+
+        StatsService.StatsEndpointsEnum sectionToUpdate = errorEvent.mEndPointName;
+        StatsService.StatsEndpointsEnum[] sectionsToUpdate = sectionsToUpdate();
+
+        for (int i = 0; i < sectionsToUpdate().length; i++) {
+            if (sectionToUpdate == sectionsToUpdate[i]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
                                                     StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
-
         StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
         fragment.setSelectedOverviewItem(itemToSelect);
         return fragment;
@@ -236,12 +358,4 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     protected abstract String getTitle();
-
-    boolean isSameBlog(StatsEvents.SectionUpdated event) {
-        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
-            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
-        }
-        return false;
-    }
 }

@@ -14,6 +14,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -48,10 +49,30 @@ public class MyProfileActivity extends AppCompatActivity {
 
         refreshDetails();
 
-        findViewById(R.id.first_name_row).setOnClickListener(createOnClickListener(getString(R.string.first_name), null, mFirstName));
-        findViewById(R.id.last_name_row).setOnClickListener(createOnClickListener(getString(R.string.last_name), null, mLastName));
-        findViewById(R.id.display_name_row).setOnClickListener(createOnClickListener(getString(R.string.public_display_name), getString(R.string.public_display_name_hint), mDisplayName));
-        findViewById(R.id.about_me_row).setOnClickListener(createOnClickListener(getString(R.string.about_me), getString(R.string.about_me_hint), mAboutMe));
+        findViewById(R.id.first_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.first_name),
+                        null,
+                        mFirstName,
+                        false));
+        findViewById(R.id.last_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.last_name),
+                        null,
+                        mLastName,
+                        false));
+        findViewById(R.id.display_name_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.public_display_name),
+                        getString(R.string.public_display_name_hint),
+                        mDisplayName,
+                        false));
+        findViewById(R.id.about_me_row).setOnClickListener(
+                createOnClickListener(
+                        getString(R.string.about_me),
+                        getString(R.string.about_me_hint),
+                        mAboutMe,
+                        true));
     }
 
     @Override
@@ -111,17 +132,25 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     // helper method to create onClickListener to avoid code duplication
-    private View.OnClickListener createOnClickListener(final String dialogTitle, final String hint, final WPTextView textView) {
+    private View.OnClickListener createOnClickListener(final String dialogTitle,
+                                                       final String hint,
+                                                       final WPTextView textView,
+                                                       final boolean isMultiline) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.showMyProfileDialog(MyProfileActivity.this, dialogTitle, textView.getText().toString(), hint, new DialogUtils.Callback() {
-                    @Override
-                    public void onSuccessfulInput(String input) {
-                        updateLabel(textView, input);
-                        updateMyProfileForLabel(textView);
-                    }
-                });
+                DialogUtils.showMyProfileDialog(MyProfileActivity.this,
+                        dialogTitle,
+                        textView.getText().toString(),
+                        hint,
+                        isMultiline,
+                        new DialogUtils.Callback() {
+                            @Override
+                            public void onSuccessfulInput(String input) {
+                                updateLabel(textView, input);
+                                updateMyProfileForLabel(textView);
+                            }
+                        });
             }
         };
     }
@@ -141,9 +170,21 @@ public class MyProfileActivity extends AppCompatActivity {
         return Account.RestParam.toString(param);
     }
 
-    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
         if (!isFinishing()) {
             refreshDetails();
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
+        if (!isFinishing()) {
+            ToastUtils.showToast(this, R.string.error_fetch_my_profile, ToastUtils.Duration.LONG);
+        }
+    }
+
+    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
+        if (!isFinishing()) {
+            ToastUtils.showToast(this, R.string.error_post_my_profile, ToastUtils.Duration.LONG);
         }
     }
 }

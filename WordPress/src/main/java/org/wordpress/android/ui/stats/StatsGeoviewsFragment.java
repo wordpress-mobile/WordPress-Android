@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.net.http.SslError;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,44 @@ import java.util.List;
 public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
 
+    private GeoviewsModel mCountries;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mCountries != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mCountries);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mCountries = (GeoviewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.CountriesUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mCountries = event.mCountries;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mCountries = null;
+        showErrorUI(event.mError);
+    }
 
     private void hideMap() {
         if (!isAdded()) {
@@ -145,12 +184,6 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
-            hideMap();
-            return;
-        }
-
         if (hasCountries()) {
             List<GeoviewModel> countries = getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), countries);
@@ -164,21 +197,20 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasCountries() {
-        return !isDataEmpty() && ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
+        return mCountries != null && mCountries.getCountries() != null;
     }
 
     private List<GeoviewModel> getCountries() {
         if (!hasCountries()) {
             return null;
         }
-        return ((GeoviewsModel) mDatamodels[0]).getCountries();
+        return mCountries.getCountries();
     }
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (!isDataEmpty()
-                && ((GeoviewsModel) mDatamodels[0]).getCountries() != null
-                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
+        return (hasCountries()
+                && mCountries.getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
@@ -251,7 +283,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.GEO_VIEWS
         };

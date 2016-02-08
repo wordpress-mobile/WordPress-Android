@@ -119,14 +119,12 @@
 	<string name="button_stats">Štatistiky</string>
 	<string name="button_preview">Náhľad</string>
 	<string name="button_view">Zobraziť</string>
-	<string name="button_more">Viac</string>
 	<string name="page_deleted">Stránka vymazaná</string>
 	<string name="button_back">Späť</string>
 	<string name="trashed">Odstránené</string>
 	<string name="page_trashed">Stránka presunutá do koša</string>
 	<string name="stats_no_activity_this_period">Žiadna činnosť v toto obdobie</string>
 	<string name="button_publish">Zverejniť</string>
-	<string name="button_delete">Vymazať</string>
 	<string name="post_deleted">Článok vymazaný</string>
 	<string name="post_trashed">Článok presunutý do koša</string>
 	<string name="my_site_no_sites_view_subtitle">Prajete si pridať ďalšie?</string>
@@ -166,7 +164,6 @@
 	<string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
 	<string name="my_site_btn_view_admin">Zobraziť administráciu</string>
 	<string name="my_site_btn_site_settings">Nastavenia</string>
-	<string name="my_site_btn_comments">Komentáre</string>
 	<string name="my_site_header_publish">Zverejniť</string>
 	<string name="my_site_btn_blog_posts">Články blogu</string>
 	<string name="my_site_header_look_and_feel">Vzhľad</string>
@@ -282,7 +279,6 @@
 	<string name="stats_visitors">Návštevníci</string>
 	<string name="stats_views">Zobrazenia</string>
 	<string name="stats_timeframe_years">Roky</string>
-	<string name="stats_comments">Komentáre</string>
 	<string name="stats_view_top_posts_and_pages">Príspevky a stránky</string>
 	<string name="stats_view_countries">Krajiny</string>
 	<string name="stats_view_videos">Videá</string>
@@ -337,7 +333,6 @@
 	<string name="comment_trashed">Komentár bol odstránený</string>
 	<string name="reader_label_view_original">Pozrieť originál článku</string>
 	<string name="error_refresh_unauthorized_posts">Nemáte oprávnenie prezerať alebo upravovať príspevky</string>
-	<string name="reader_title_comments">Komentáre</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="reader_label_comments_closed">Už nie je možné pridávať komentáre</string>
 	<string name="reader_label_comment_count_single">jeden komentár</string>
@@ -349,6 +344,7 @@
 	<string name="older_month">Staršie ako mesiac</string>
 	<string name="older_last_week">Staršie ako týždeň</string>
 	<string name="older_two_days">Staršie ako 2 dni</string>
+	<string name="more">Viac</string>
 	<string name="new_blog_wpcom_created">WordPress.com blog bol vytvorený!</string>
 	<string name="reader_empty_followed_blogs_title">Nesledujete zatiaľ žiadne webové stránky</string>
 	<string name="reader_label_like">Lajk</string>
@@ -650,7 +646,6 @@
 	<string name="stats">Štatistiky</string>
 	<string name="media_gallery_image_order_random">Náhodné</string>
 	<string name="all">Všetko</string>
-	<string name="stats_view_comments">Komentáre</string>
 	<string name="stats_timeframe_yesterday">Včera</string>
 	<string name="stats_timeframe_today">Dnes</string>
 	<string name="share_action">Zdielať</string>
@@ -669,7 +664,6 @@
 	<string name="media_edit_description_text">Popis</string>
 	<string name="media_edit_caption_text">Titulok</string>
 	<string name="media_edit_title_text">Nadpis</string>
-	<string name="stats_totals_comments">Komentárov</string>
 	<string name="stats_totals_clicks">Kliknutí</string>
 	<string name="stats_totals_plays">Prehratí</string>
 	<string name="stats_totals_views">Zobrazení</string>
@@ -735,7 +729,6 @@
 	<string name="app_title">WordPress pre Android</string>
 	<string name="tos">Zmluvné podmienky</string>
 	<string name="about">O aplikácii</string>
-	<string name="max_thumbnail_px_width">Predvolená šírka miniatúry</string>
 	<string name="image_alignment">Zarovnanie</string>
 	<string name="refresh">Obnoviť</string>
 	<string name="untitled">Bez názvu</string>
@@ -768,7 +761,6 @@
 	<string name="none">Žiadny</string>
 	<string name="blogs">Blogy</string>
 	<string name="select_photo">Vybrať foografiu z galérie</string>
-	<string name="tab_comments">Komentáre</string>
 	<string name="reply">Odpovedať</string>
 	<string name="preview">Preview</string>
 	<string name="on">na</string>

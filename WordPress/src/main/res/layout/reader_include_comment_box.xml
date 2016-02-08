@@ -39,6 +39,7 @@
             android:background="@color/transparent"
             android:hint="@string/reader_hint_comment_on_post"
             android:imeOptions="actionSend"
+            android:focusableInTouchMode="false"
             android:inputType="text|textCapSentences|textMultiLine"
             android:maxLines="4"
             android:minLines="2"

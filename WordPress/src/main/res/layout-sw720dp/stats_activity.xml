@@ -35,16 +35,9 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <!-- POPULAR DAY AND TIME SECTION -->
+                    <!-- LATEST POST SUMMARY SECTION -->
                     <FrameLayout
-                        android:id="@+id/stats_insights_most_popular_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_large" />
-
-                    <!-- ALL TIME SECTION -->
-                    <FrameLayout
-                        android:id="@+id/stats_insights_all_time_container"
+                        android:id="@+id/stats_insights_latest_post_summary_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large" />
@@ -56,9 +49,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large" />
 
-                    <!-- LATEST POST SUMMARY SECTION -->
+                    <!-- ALL TIME SECTION -->
                     <FrameLayout
-                        android:id="@+id/stats_insights_latest_post_summary_container"
+                        android:id="@+id/stats_insights_all_time_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_large" />
+
+                    <!-- POPULAR DAY AND TIME SECTION -->
+                    <FrameLayout
+                        android:id="@+id/stats_insights_most_popular_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_large" />

@@ -415,7 +415,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             mComment = null;
         }
-        EditTextUtils.hideSoftInput(mEditReply);
     }
 
     @Override

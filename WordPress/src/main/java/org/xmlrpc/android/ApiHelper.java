@@ -3,6 +3,7 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.webkit.URLUtil;
@@ -21,6 +22,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.stats.StatsUtils;
@@ -58,6 +60,7 @@ public class ApiHelper {
         public static final String GET_POST_FORMATS   = "wp.getPostFormats";
         public static final String GET_CATEGORIES     = "wp.getCategories";
         public static final String GET_MEDIA_ITEM     = "wp.getMediaItem";
+        public static final String GET_COMMENT        = "wp.getComment";
         public static final String GET_COMMENTS       = "wp.getComments";
         public static final String GET_BLOGS          = "wp.getUsersBlogs";
         public static final String GET_OPTIONS        = "wp.getOptions";
@@ -1158,5 +1161,84 @@ public class ApiHelper {
             AppLog.e(AppLog.T.POSTS, e);
             return false;
         }
+    }
+
+    public static boolean editComment(Blog blog, Comment comment, CommentStatus newStatus) {
+        if (blog == null) {
+            return false;
+        }
+
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                blog.getHttppassword());
+
+        Map<String, String> postHash = new HashMap<>();
+        postHash.put("status", CommentStatus.toString(newStatus));
+        postHash.put("content", comment.getCommentText());
+        postHash.put("author", comment.getAuthorName());
+        postHash.put("author_url", comment.getAuthorUrl());
+        postHash.put("author_email", comment.getAuthorEmail());
+
+        Object[] params = { blog.getRemoteBlogId(),
+                blog.getUsername(),
+                blog.getPassword(),
+                Long.toString(comment.commentID),
+                postHash};
+
+        try {
+            Object result = client.call(Method.EDIT_COMMENT, params);
+            return (result != null && Boolean.parseBoolean(result.toString()));
+        } catch (XMLRPCFault xmlrpcFault) {
+            if (xmlrpcFault.getFaultCode() == 500) {
+                // let's check whether the comment is already marked as _newStatus_
+                CommentStatus remoteStatus = getCommentStatus(blog, comment);
+                if (remoteStatus != null && remoteStatus.equals(newStatus)) {
+                    // Happy days! Remote is already marked as the desired status
+                    return true;
+                }
+            }
+            AppLog.e(T.COMMENTS, "Error while editing comment", xmlrpcFault);
+        } catch (XMLRPCException e) {
+            AppLog.e(T.COMMENTS, "Error while editing comment", e);
+        } catch (IOException e) {
+            AppLog.e(T.COMMENTS, "Error while editing comment", e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(T.COMMENTS, "Error while editing comment", e);
+        }
+
+        return false;
+    }
+
+    /**
+     * Fetches the status of a comment
+     * @param blog the blog the comment is in
+     * @param comment the comment to fetch its status
+     * @return the status of the comment on the server, null if error
+     */
+    public static @Nullable CommentStatus getCommentStatus(Blog blog, Comment comment) {
+        if (blog == null || comment == null) {
+            return null;
+        }
+
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                blog.getHttppassword());
+
+        Object[] params = { blog.getRemoteBlogId(),
+                blog.getUsername(),
+                blog.getPassword(),
+                Long.toString(comment.commentID)};
+
+        try {
+            Map<?, ?> contentHash = (Map<?, ?>) client.call(Method.GET_COMMENT, params);
+            final Object status = contentHash.get("status");
+            return status == null ? null : CommentStatus.fromString(status.toString());
+        } catch (XMLRPCException e) {
+            AppLog.e(T.COMMENTS, "Error while getting comment", e);
+        } catch (IOException e) {
+            AppLog.e(T.COMMENTS, "Error while getting comment", e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(T.COMMENTS, "Error while getting comment", e);
+        }
+
+        return null;
     }
 }

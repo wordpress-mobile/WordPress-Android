@@ -37,6 +37,7 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_search"
                 android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/search"
                 android:layout_alignParentLeft="true" />
 
         </RelativeLayout>

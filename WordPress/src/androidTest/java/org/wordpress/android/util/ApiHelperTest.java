@@ -9,6 +9,8 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -86,5 +88,25 @@ public class ApiHelperTest extends InstrumentationTestCase {
             }
         }).execute(false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
+    }
+
+    public void testSpamSpammedComment() {
+        XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_XML;
+        XMLRPCFactoryTest.setPrefixAllInstances("comment-already-spammed");
+        Blog dummyBlog = new Blog("", "", "");
+        // contrstust a dummy (albeit invalid) comment object to pass the comment id
+        Comment comment = new Comment(1, 2, null, null, null, null, null, null, null, null);
+
+        assertTrue(ApiHelper.editComment(dummyBlog, comment, CommentStatus.SPAM));
+    }
+
+    public void testGetSpammedCommentStatus() {
+        XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_XML;
+        XMLRPCFactoryTest.setPrefixAllInstances("comment-already-spammed");
+        Blog dummyBlog = new Blog("", "", "");
+        // contrstust a dummy (albeit invalid) comment object to pass the comment id
+        Comment comment = new Comment(1, 2, null, null, null, null, null, null, null, null);
+
+        assertEquals(CommentStatus.SPAM, ApiHelper.getCommentStatus(dummyBlog, comment));
     }
 }

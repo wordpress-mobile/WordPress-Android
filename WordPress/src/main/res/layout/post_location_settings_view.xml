@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@string/remove_location"
+            android:text="@string/remove"
             android:textSize="@dimen/text_sz_large" />
     </LinearLayout>
 </LinearLayout>

@@ -76,6 +76,7 @@
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
+                android:contentDescription="@string/more"
                 android:src="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
