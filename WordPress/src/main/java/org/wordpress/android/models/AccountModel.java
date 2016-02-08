@@ -56,7 +56,11 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
-        mDateCreated = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
+
+        Date date = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
+        if (date != null) {
+            mDateCreated = date;
+        }
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
