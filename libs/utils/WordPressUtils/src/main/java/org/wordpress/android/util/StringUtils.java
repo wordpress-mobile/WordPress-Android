@@ -186,7 +186,7 @@ public class StringUtils {
             return str;
         }
 
-        return str.substring(0, str.length() - 1);
+        return str.substring(0, str.length() -1);
     }
 
     /*
@@ -299,12 +299,6 @@ public class StringUtils {
             return Long.valueOf(s);
         } catch (NumberFormatException e) {
             return defaultValue;
-        }
-    }
-
-    public static void convertArrayToLowercase(String[] array) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] = array[i].toLowerCase();
         }
     }
 }
