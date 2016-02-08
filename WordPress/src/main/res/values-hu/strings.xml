@@ -18,6 +18,7 @@
 	<string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="older_month">Egy hónapnál régebbi</string>
+	<string name="more">Bövebben</string>
 	<string name="older_two_days">2 napnál régebbi</string>
 	<string name="older_last_week">Egy hétnél régebbi</string>
 	<string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
@@ -117,7 +118,6 @@
 	<string name="media_edit_success">Frissítve</string>
 	<string name="theme_activating_button">Aktiválás</string>
 	<string name="post_excerpt">Kivonat</string>
-	<string name="stats_view_comments">Hozzászólások</string>
 	<string name="stats_view_referrers">Hivatkozások</string>
 	<string name="stats_timeframe_today">Ma</string>
 	<string name="stats_timeframe_yesterday">Tegnap</string>
@@ -128,7 +128,6 @@
 	<string name="stats_entry_authors">Szerző</string>
 	<string name="themes_details_label">Részletek</string>
 	<string name="themes_features_label">Funkciók</string>
-	<string name="stats_totals_comments">Hozzászólás</string>
 	<string name="media_gallery_type_squares">Négyzetek</string>
 	<string name="theme_activate_button">Bekapcsolás</string>
 	<string name="media_gallery_type_circles">Körök</string>
@@ -207,7 +206,6 @@
 	<string name="version">verzió</string>
 	<string name="app_title">WordPress for Android</string>
 	<string name="about">Névjegy</string>
-	<string name="max_thumbnail_px_width">Alapértelmezett kép szélesség</string>
 	<string name="image_alignment">Kép igazítás</string>
 	<string name="refresh">Frissítés</string>
 	<string name="untitled">Cím nélküli</string>
@@ -245,7 +243,6 @@
 	<string name="save">Mentés</string>
 	<string name="add">Hozzáad</string>
 	<string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
-	<string name="tab_comments">Hozzászólások</string>
 	<string name="on"> -</string>
 	<string name="reply">Válasz</string>
 	<string name="yes">Igen</string>
