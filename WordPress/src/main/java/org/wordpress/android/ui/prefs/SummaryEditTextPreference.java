@@ -135,20 +135,21 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
 
-        if (view != null) {
-            mEditText = getEditText();
-            ViewParent oldParent = mEditText.getParent();
-            if (oldParent != view) {
-                if (oldParent != null) {
-                    ((ViewGroup) oldParent).removeView(mEditText);
-                }
-                ((View) oldParent).setPadding(((View) oldParent).getPaddingLeft(), 0, ((View) oldParent).getPaddingRight(), ((View) oldParent).getPaddingBottom());
-                onAddEditTextToDialogView(view, mEditText);
+        if (view == null) return;
+
+        mEditText = getEditText();
+        ViewParent oldParent = mEditText.getParent();
+        if (oldParent != view) {
+            if (oldParent != null && oldParent instanceof ViewGroup) {
+                ViewGroup groupParent = (ViewGroup) oldParent;
+                groupParent.removeView(mEditText);
+                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
             }
-            WPPrefUtils.layoutAsInput(mEditText);
-            mEditText.setSelection(mEditText.getText().length());
-            WPActivityUtils.showKeyboard(mEditText);
+            onAddEditTextToDialogView(view, mEditText);
         }
+        WPPrefUtils.layoutAsInput(mEditText);
+        mEditText.setSelection(mEditText.getText().length());
+        WPActivityUtils.showKeyboard(mEditText);
     }
 
     @Override
