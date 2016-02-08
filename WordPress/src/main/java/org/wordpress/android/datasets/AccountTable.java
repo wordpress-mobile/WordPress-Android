@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
 
 public class AccountTable {
@@ -72,7 +73,7 @@ public class AccountTable {
         values.put("first_name", account.getFirstName());
         values.put("last_name", account.getLastName());
         values.put("about_me", account.getAboutMe());
-        values.put("date", account.getDateCreatedISO8601());
+        values.put("date", DateTimeUtils.javaDateToIso8601(account.getDateCreated()));
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 

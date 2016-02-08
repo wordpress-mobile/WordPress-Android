@@ -182,10 +182,6 @@ public class AccountModel {
         return mDateCreated;
     }
 
-    public String getDateCreatedISO8601() {
-        return DateTimeUtils.javaDateToIso8601(mDateCreated);
-    }
-
     public void setDateCreated(Date date) {
         mDateCreated = date;
     }
