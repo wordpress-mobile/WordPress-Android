@@ -61,6 +61,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
+    private WPTextView mCurrentPlanNameTextView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -140,6 +141,7 @@ public class MySiteFragment extends Fragment
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
+        mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,7 +357,13 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView.setText(homeURL);
 
         // Hide the Plan item if the Plans feature is not available.
-        mPlanContainer.setVisibility(PlansUtils.isPlanFeatureAvailableForBlog(blog) ? View.VISIBLE : View.GONE);
+        Plan currentBlogPlan = PlansUtils.getGlobalPlan(blog.getPlanID());
+        if (currentBlogPlan != null) {
+            mCurrentPlanNameTextView.setText(currentBlogPlan.getProductNameShort());
+            mPlanContainer.setVisibility(View.VISIBLE);
+        } else {
+            mPlanContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
