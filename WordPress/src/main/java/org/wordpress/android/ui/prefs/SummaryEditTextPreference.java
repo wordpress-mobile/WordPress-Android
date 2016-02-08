@@ -13,12 +13,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 /**
@@ -39,7 +39,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     private int mMaxLines;
     private String mHint;
     private AlertDialog mDialog;
-    private EditText mEditText;
     private int mWhichButtonClicked;
 
     public SummaryEditTextPreference(Context context) {
@@ -123,6 +122,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             mDialog.onRestoreInstanceState(state);
         }
         mDialog.setOnDismissListener(this);
+        mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mDialog.show();
 
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
@@ -134,34 +134,31 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     @Override
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
-
         if (view == null) return;
 
-        mEditText = getEditText();
-        ViewParent oldParent = mEditText.getParent();
+        EditText editText = getEditText();
+        ViewParent oldParent = editText.getParent();
         if (oldParent != view) {
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
-                groupParent.removeView(mEditText);
+                groupParent.removeView(editText);
                 groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
             }
-            onAddEditTextToDialogView(view, mEditText);
+            onAddEditTextToDialogView(view, editText);
         }
-        WPPrefUtils.layoutAsInput(mEditText);
-        mEditText.setSelection(mEditText.getText().length());
-        WPActivityUtils.showKeyboard(mEditText);
+        WPPrefUtils.layoutAsInput(editText);
+        editText.setSelection(editText.getText().length());
     }
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        WPActivityUtils.hideKeyboard(mEditText);
         mWhichButtonClicked = which;
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
+        mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         onDialogClosed(mWhichButtonClicked == DialogInterface.BUTTON_POSITIVE);
-        mDialog = null;
     }
 
     @Override
