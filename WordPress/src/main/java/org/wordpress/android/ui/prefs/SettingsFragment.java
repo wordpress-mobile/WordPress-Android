@@ -145,14 +145,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (newValue == null) return false;
 
         if (preference == mEmailPreference) {
-            Account account = AccountHelper.getDefaultAccount();
-            // if the user changed her email to her verified email, just cancel the pending email change
-            if (account.getEmail().equals(newValue.toString())) {
-                cancelPendingEmailChange();
-            } else {
-                updateEmail(newValue.toString());
-                showPendingEmailChangeSnackbar(newValue.toString());
-            }
+            updateEmail(newValue.toString());
+            showPendingEmailChangeSnackbar(newValue.toString());
+            mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
@@ -194,6 +189,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
         }
+        mEmailPreference.setEnabled(!account.getPendingEmailChange());
     }
 
     private void showPendingEmailChangeSnackbar(String newEmail) {
