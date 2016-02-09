@@ -69,7 +69,6 @@
 	<string name="days_ago">преди %d дни</string>
 	<string name="yesterday">Вчера</string>
 	<string name="connectionbar_no_connection">Няма връзка</string>
-	<string name="button_delete">Изтриване</string>
 	<string name="stats_no_activity_this_period">За този период няма дейности</string>
 	<string name="page_trashed">Страницата е изпратена към кошчето</string>
 	<string name="button_stats">Статистика</string>
@@ -82,7 +81,6 @@
 	<string name="page_deleted">Страницата е изтрита</string>
 	<string name="trashed">Изхвърлени</string>
 	<string name="button_back">Назад</string>
-	<string name="button_more">Още</string>
 	<string name="button_edit">Редактиране</string>
 	<string name="my_site_no_sites_view_subtitle">Добавяне на един?</string>
 	<string name="my_site_no_sites_view_title">Все още нямате сайтове на WordPress.</string>
@@ -120,7 +118,6 @@
 	<string name="site_picker_title">Избор на сайт</string>
 	<string name="my_site_btn_view_site">Преглед на сайта</string>
 	<string name="my_site_btn_switch_site">Превключване на сайта</string>
-	<string name="my_site_btn_comments">Коментари</string>
 	<string name="my_site_btn_site_settings">Настройки</string>
 	<string name="my_site_header_look_and_feel">Изглед</string>
 	<string name="my_site_header_publish">Публикуване</string>
@@ -213,7 +210,6 @@
 	<string name="stats_empty_video">Няма преглеждани видеа</string>
 	<string name="stats_totals_publicize">Последователи</string>
 	<string name="stats_entry_clicks_link">Връзка</string>
-	<string name="stats_comments">Коментари</string>
 	<string name="stats_followers_months">%1$d месеца</string>
 	<string name="stats_view_followers">Последователи</string>
 	<string name="stats_other_recent_stats_label">Други скорошни статистики</string>
@@ -287,7 +283,6 @@
 	<string name="signing_out">Излизане...</string>
 	<string name="older_month">По-стари от месец</string>
 	<string name="comment_trashed">Коментарът беше изтрит</string>
-	<string name="reader_title_comments">Коментари</string>
 	<string name="reader_label_comments_closed">Коментарите са изключени</string>
 	<string name="reader_title_photo_viewer">%1$d от %2$d</string>
 	<string name="comment">Коментар</string>
@@ -601,11 +596,9 @@
 	<string name="media_edit_description_hint">Добави описание</string>
 	<string name="media_edit_success">Обновено</string>
 	<string name="stats_timeframe_today">Днес</string>
-	<string name="stats_view_comments">Коментари</string>
 	<string name="stats_view_visitors_and_views">Посетители и разглеждания</string>
 	<string name="stats_entry_authors">Автор</string>
 	<string name="stats_timeframe_months">Месеци</string>
-	<string name="stats_totals_comments">Коментари</string>
 	<string name="stats_totals_plays">Гледания</string>
 	<string name="passcode_preference_title">ПИН ключ</string>
 	<string name="passcode_turn_off">Изключи ПИН ключ</string>
@@ -688,7 +681,6 @@
 	<string name="tos">Условия за ползване</string>
 	<string name="app_title">WordPress за Android</string>
 	<string name="about">Относно</string>
-	<string name="max_thumbnail_px_width">Широчина на изображение по подразбиране</string>
 	<string name="image_alignment">Подравняване</string>
 	<string name="refresh">Презареждане</string>
 	<string name="untitled">Неозаглавен</string>
@@ -722,7 +714,6 @@
 	<string name="blogs">Блогове</string>
 	<string name="select_photo">Избор на изображение от галерията</string>
 	<string name="no">Не</string>
-	<string name="tab_comments">Коментари</string>
 	<string name="error">Грешка</string>
 	<string name="cancel">Отказ</string>
 	<string name="yes">Да</string>

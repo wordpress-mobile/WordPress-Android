@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">ขนาดต้นฉบับ</string>
+	<string name="about_me">เกี่ยวกับฉัน</string>
+	<string name="public_display_name">ชื่อที่ใช้แสดงในสาธารณะ</string>
+	<string name="my_profile">ประวัติของฉัน</string>
+	<string name="first_name">ชื่อ</string>
+	<string name="last_name">นามสกุล</string>
+	<string name="site_privacy_public_desc">อนุญาตให้เซิร์ชเอ็นจิ้นเก็บหน้าเว็บนี้</string>
+	<string name="site_settings_list_editor_input_hint">ใส่คำหรือวลี</string>
+	<string name="site_settings_list_editor_no_items_text">ไม่มีรายการ</string>
+	<string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
+	<string name="site_settings_username_hint">บัญชีผู้ใช้ปัจจุบัน</string>
+	<string name="site_settings_whitelist_all_summary">ความเห็นจากผู้ใช้ทั้งหมด</string>
+	<string name="site_settings_threading_summary">%d ระดับ</string>
+	<string name="site_settings_privacy_private_summary">ส่วนตัว</string>
+	<string name="site_settings_privacy_hidden_summary">ซ่อน</string>
+	<string name="site_settings_delete_site_title">ลบเว็บ</string>
+	<string name="site_settings_privacy_public_summary">สาธารณะ</string>
+	<string name="site_settings_blacklist_title">บัญชีดำ</string>
+	<string name="site_settings_moderation_hold_title">กดค้างเพื่อจัดการ</string>
+	<string name="site_settings_multiple_links_title">ลิงก์ในความเห็น</string>
+	<string name="site_settings_whitelist_title">อนุมัติอัตโนมัติ</string>
+	<string name="site_settings_sort_by_title">เรียงตาม</string>
+	<string name="site_settings_identity_required_title">ต้องประกอบด้วยชื่อและอีเมล</string>
+	<string name="site_settings_receive_pingbacks_title">รับ Pingbacks</string>
+	<string name="site_settings_send_pingbacks_title">ส่ง Pingbacks</string>
+	<string name="site_settings_allow_comments_title">อนุมัติความเห็น</string>
+	<string name="site_settings_default_format_title">รูปแบบค่าเริ่มต้น</string>
+	<string name="site_settings_default_category_title">หมวดหมู่ค่าเริ่มต้น</string>
+	<string name="site_settings_address_title">ที่อยู่</string>
+	<string name="site_settings_title_title">หัวข้อเว็บ</string>
+	<string name="site_settings_tagline_title">คำอธิบาย</string>
+	<string name="site_settings_this_device_header">อุปกรณ์นี้</string>
+	<string name="site_settings_account_header">บัญชี</string>
+	<string name="site_settings_writing_header">การเขียน</string>
+	<string name="newest_first">ใหม่สุดก่อน</string>
+	<string name="site_settings_general_header">ทั่วไป</string>
+	<string name="related_posts">เรื่องที่เกี่ยวข้อง</string>
+	<string name="comments">ความเห็น</string>
+	<string name="discussion">สนทนา</string>
+	<string name="privacy">ส่วนตัว</string>
+	<string name="close_after">ปิดหลังจาก</string>
+	<string name="oldest_first">เก่าสุดก่อน</string>
+	<string name="media_error_no_permission_upload">คุณไม่ได้รับอนุญาตให้อัปโหลดไฟล์สื่อมาที่เว็บนี้</string>
+	<string name="never">ไม่เคย</string>
+	<string name="unknown">ไม่รู้จัก</string>
 	<string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
 	<string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
 	<string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
@@ -121,14 +166,12 @@
 	<string name="trashed">เปลี่ยนเป็นขยะแล้ว</string>
 	<string name="button_back">กลับไป</string>
 	<string name="page_deleted">ลบหน้าแล้ว</string>
-	<string name="button_more">เพิ่มเติม</string>
 	<string name="button_stats">สถิติ</string>
 	<string name="button_trash">ขยะ</string>
 	<string name="button_preview">ดูก่อน</string>
 	<string name="button_view">ดู</string>
 	<string name="button_edit">แก้ไข</string>
 	<string name="button_publish">เผยแพร่</string>
-	<string name="button_delete">ลบ</string>
 	<string name="post_deleted">ลบหน้าแล้ว</string>
 	<string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
 	<string name="page_trashed">หน้าที่ส่งไปถังขยะ</string>
@@ -170,7 +213,6 @@
 	<string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
 	<string name="my_site_header_publish">เผยแพร่</string>
 	<string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
-	<string name="my_site_btn_comments">ความเห็น</string>
 	<string name="my_site_btn_site_settings">ตั้งค่า</string>
 	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
 	<string name="my_site_header_admin">ผู้ควบคุม</string>
@@ -303,7 +345,6 @@
 	<string name="stats_views">การดู</string>
 	<string name="stats_timeframe_years">ปี</string>
 	<string name="stats_pagination_label">หน้า %1$s จาก %2$s</string>
-	<string name="stats_comments">ความเห็น</string>
 	<string name="stats_likes">ชื่นชอบ</string>
 	<string name="stats_view_countries">ประเทศ</string>
 	<string name="stats_view_followers">ผู้ติดตาม</string>
@@ -337,13 +378,13 @@
 	<string name="reader_label_comment_count_single">หนึ่งความเห็น</string>
 	<string name="reader_label_comments_closed">ปิดการแสดงความเห็น</string>
 	<string name="reader_label_comments_on">ความเห็นบน</string>
-	<string name="reader_title_comments">ความเห็น</string>
 	<string name="reader_title_photo_viewer">%1$d จาก %2$d</string>
 	<string name="error_publish_empty_post">ไม่สามารถเผยแพร่เรื่องที่ไม่มีเนื้อหา</string>
 	<string name="error_refresh_unauthorized_posts">คุณไม่มีสิทธิ์ดูหรือแก้ไขเรื่อง</string>
 	<string name="error_refresh_unauthorized_pages">คุณไม่มีสิทธิ์ดูหรือแก้ไขหน้า</string>
 	<string name="error_refresh_unauthorized_comments">คุณไม่มีสิทธิ์ดูหรือแก้ไขความเห็น</string>
 	<string name="older_month">เก่ากว่าหนึ่งเดือน</string>
+	<string name="more">กว่า</string>
 	<string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
 	<string name="faq_button">คำถามที่พบบ่อย</string>
 	<string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
@@ -645,9 +686,7 @@
 	<string name="stats_totals_views">ดู</string>
 	<string name="stats_totals_clicks">จำนวนที่กด</string>
 	<string name="stats_totals_plays">จำนวนที่เล่น</string>
-	<string name="stats_totals_comments">ความเห็น</string>
 	<string name="stats_view_referrers">ผู้อ้างอิง</string>
-	<string name="stats_view_comments">ความเห็น</string>
 	<string name="stats_timeframe_today">วันนี้</string>
 	<string name="stats_timeframe_yesterday">เมื่อวาน</string>
 	<string name="stats_timeframe_days">วัน</string>
@@ -738,7 +777,7 @@
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="about">เกี่ยวกับ</string>
-	<string name="max_thumbnail_px_width">ความกว้างรูปมาตรฐาน</string>
+	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>
@@ -777,7 +816,6 @@
 	<string name="cancel">ยกเลิก</string>
 	<string name="save">บันทึก</string>
 	<string name="add">เพิ่ม</string>
-	<string name="tab_comments">ความเห็น</string>
 	<string name="on">บน</string>
 	<string name="reply">ตอบกลับ</string>
 	<string name="category_refresh_error">โหลดหมวดหมู่อีกครั้งผิดพลาด</string>
@@ -828,6 +866,22 @@
 		<item>ชนิดเรื่องมาตรฐาน</item>
 		<item>ชนิดเรื่องสถานะ</item>
 		<item>ชนิดเรื่องวีดีโอ</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>ไม่มีความเห็น</item>
+		<item>ผู้ใช้ทั้งหมด</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>ไม่มี</item>
+		<item>สองระดับ</item>
+		<item>สามระดับ</item>
+		<item>สี่ระดับ</item>
+		<item>ห้าระดับ</item>
+		<item>หกระดับ</item>
+		<item>เจ็ดระดับ</item>
+		<item>แปดระดับ</item>
+		<item>เก้าระดับ</item>
+		<item>สิบระดับ</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>ฟรี</item>
