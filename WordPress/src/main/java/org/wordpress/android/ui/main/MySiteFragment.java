@@ -362,6 +362,7 @@ public class MySiteFragment extends Fragment
             return;
         }
 
+        // Update selected blog in case it was changed or deleted / removed.
         mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId());
         if (mBlog == null) {
             return;
