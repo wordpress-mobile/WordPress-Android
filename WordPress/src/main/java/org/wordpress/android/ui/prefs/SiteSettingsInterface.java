@@ -357,11 +357,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescription() {
-        return getCloseAfterDescription(getCloseAfter());
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
-    public @NonNull String getCloseAfterDescription(int period) {
+    public int getCloseAfterPeriodForDescription() {
+        return !getShouldCloseAfter() ? 0 : getCloseAfter();
+    }
+
+    public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
+    }
+
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
         if (period == 0) return mActivity.getString(R.string.never);
@@ -394,12 +402,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.threadingLevels;
     }
 
+    public int getThreadingLevelsForDescription() {
+        return !getShouldThreadComments() ? 1 : getThreadingLevels();
+    }
+
     public @NonNull String getThreadingDescription() {
+        return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
+    }
+
+    public @NonNull String getThreadingDescriptionForLevel(int level) {
         if (mActivity == null) return "";
 
-        int levels = getThreadingLevels();
-        if (levels <= 1) return mActivity.getString(R.string.none);
-        return String.format(mActivity.getString(R.string.site_settings_threading_summary), levels);
+        if (level <= 1) return mActivity.getString(R.string.none);
+        return String.format(mActivity.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -410,10 +425,14 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsPerPage;
     }
 
+    public int getPagingCountForDescription() {
+        return !getShouldPageComments() ? 0 : getPagingCount();
+    }
+
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
-        int count = getPagingCount();
+        int count = getPagingCountForDescription();
         if (count == 0) return mActivity.getString(R.string.none);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }

@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">原始尺寸</string>
+	<string name="about_me_hint">簡單介紹一下自己…</string>
+	<string name="public_display_name_hint">如果未設定，顯示名稱會預設為你的使用者名稱</string>
+	<string name="about_me">關於我</string>
+	<string name="public_display_name">公開顯示名稱</string>
+	<string name="my_profile">我的個人檔案</string>
+	<string name="first_name">名</string>
+	<string name="last_name">姓</string>
+	<string name="site_privacy_public_desc">允許搜尋引擎將這個網站加入索引</string>
+	<string name="site_privacy_hidden_desc">阻擋搜尋引擎將這個網站加入索引</string>
+	<string name="site_privacy_private_desc">我想要將我的網站設為私人網站，只有我選擇的使用者可看見</string>
+	<string name="cd_related_post_preview_image">相關文章預覽圖片</string>
+	<string name="error_post_remote_site_settings">無法儲存網站資訊</string>
+	<string name="error_fetch_remote_site_settings">無法擷取網站資訊</string>
+	<string name="error_media_upload_connection">上傳媒體時發生連線錯誤</string>
+	<string name="site_settings_disconnected_toast">已中斷連線，編輯功能已停用。</string>
+	<string name="site_settings_unsupported_version_error">不支援的 WordPress 版本</string>
+	<string name="site_settings_multiple_links_dialog_description">如果留言包含的連結超過此數量，留言就必須經過審核。</string>
+	<string name="site_settings_close_after_dialog_switch_text">自動關閉</string>
+	<string name="site_settings_close_after_dialog_description">自動關閉文章的留言功能。</string>
+	<string name="site_settings_paging_dialog_description">將留言串分為數頁。</string>
+	<string name="site_settings_paging_dialog_header">每頁留言數</string>
+	<string name="site_settings_close_after_dialog_title">關閉留言功能</string>
+	<string name="site_settings_blacklist_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，該留言將標記為垃圾留言。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
+	<string name="site_settings_hold_for_moderation_description">如果留言的內容、名稱、URL、電子郵件或 IP 位址中含有以下文字，就會被送進審核清單。你也可以輸入字詞的一部分，例如「press」會與「WordPress」相符。</string>
+	<string name="site_settings_list_editor_input_hint">輸入字詞或片語</string>
+	<string name="site_settings_list_editor_no_items_text">無項目</string>
+	<string name="site_settings_learn_more_caption">你可以針對不同的文章覆寫這些設定。</string>
+	<string name="site_settings_rp_preview3_site">在「升級」中</string>
+	<string name="site_settings_rp_preview3_title">升級重點：婚禮適用的 VideoPress</string>
+	<string name="site_settings_rp_preview2_site">在「應用程式」中</string>
+	<string name="site_settings_rp_preview2_title">Android 專用的 WordPress 應用程式已全面翻新</string>
+	<string name="site_settings_rp_preview1_site">在「行動」中</string>
+	<string name="site_settings_rp_preview1_title">有重大的 iPhone/iPad 更新可供使用</string>
+	<string name="site_settings_rp_show_images_title">顯示圖片</string>
+	<string name="site_settings_rp_show_header_title">顯示頁首</string>
+	<string name="site_settings_rp_switch_summary">相關文章會在你的文章下方顯示網站上的相關內容。</string>
+	<string name="site_settings_rp_switch_title">顯示相關文章</string>
+	<string name="site_settings_delete_site_hint">從應用程式移除你的網站資料</string>
+	<string name="site_settings_blacklist_hint">與篩選條件相符的留言將標示為垃圾留言</string>
+	<string name="site_settings_moderation_hold_hint">與篩選條件相符的留言將被送進審核清單</string>
+	<string name="site_settings_multiple_links_hint">忽略已知使用者的連結限制</string>
+	<string name="site_settings_whitelist_hint">先前有經核准的留言才可以發表留言</string>
+	<string name="site_settings_user_account_required_hint">已註冊且登入的使用者才可以發表留言</string>
+	<string name="site_settings_identity_required_hint">輸入名稱和電子郵件後才可以發表留言</string>
+	<string name="site_settings_manual_approval_hint">留言必須經人工核准</string>
+	<string name="site_settings_paging_hint">按照指定的區塊大小顯示留言</string>
+	<string name="site_settings_threading_hint">允許留言達到一定高度後以巢狀顯示</string>
+	<string name="site_settings_sort_by_hint">決定留言顯示順序</string>
+	<string name="site_settings_close_after_hint">不允許在指定的時間後發表留言</string>
+	<string name="site_settings_receive_pingbacks_hint">允許其他網誌在建立連結時傳送通知</string>
+	<string name="site_settings_send_pingbacks_hint">嘗試通知在文章中建立連結的所有網誌</string>
+	<string name="site_settings_allow_comments_hint">允許讀者發表留言</string>
+	<string name="site_settings_discussion_hint">檢視及變更你的網站討論設定</string>
+	<string name="site_settings_more_hint">檢視所有可變更的討論設定</string>
+	<string name="site_settings_related_posts_hint">在讀取器中顯示或隱藏相關文章</string>
+	<string name="site_settings_upload_and_link_image_hint">允許一律上傳完整大小的圖片</string>
+	<string name="site_settings_image_width_hint">將文章中的圖片調整為符合以下寬度</string>
+	<string name="site_settings_format_hint">設定新的文章格式</string>
+	<string name="site_settings_category_hint">設定新的文章類別</string>
+	<string name="site_settings_location_hint">自動將位置資料加到文章中</string>
+	<string name="site_settings_password_hint">變更你的密碼</string>
+	<string name="site_settings_username_hint">目前的使用者帳號</string>
+	<string name="site_settings_language_hint">此網誌主要使用的語言</string>
+	<string name="site_settings_privacy_hint">控制網站存取權限</string>
+	<string name="site_settings_address_hint">目前不支援變更網址</string>
+	<string name="site_settings_tagline_hint">使用簡短的說明或好記的字詞組合來描述你的網誌</string>
+	<string name="site_settings_title_hint">以簡單幾個字說明此網站主題</string>
+	<string name="site_settings_whitelist_known_summary">已知使用者的留言</string>
+	<string name="site_settings_whitelist_all_summary">所有使用者的留言</string>
+	<string name="site_settings_threading_summary">%d 層</string>
+	<string name="site_settings_privacy_private_summary">私密</string>
+	<string name="site_settings_privacy_hidden_summary">隱藏</string>
+	<string name="site_settings_delete_site_title">刪除網站</string>
+	<string name="site_settings_privacy_public_summary">公開</string>
+	<string name="site_settings_blacklist_title">黑名單</string>
+	<string name="site_settings_moderation_hold_title">等待審核</string>
+	<string name="site_settings_multiple_links_title">留言中的連結</string>
+	<string name="site_settings_whitelist_title">自動核准</string>
+	<string name="site_settings_threading_title">階層顯示</string>
+	<string name="site_settings_paging_title">分頁</string>
+	<string name="site_settings_sort_by_title">排序依據</string>
+	<string name="site_settings_account_required_title">使用者必須登入</string>
+	<string name="site_settings_identity_required_title">必須包含名稱和電子郵件</string>
+	<string name="site_settings_receive_pingbacks_title">接收引用通知</string>
+	<string name="site_settings_send_pingbacks_title">傳送引用通知</string>
+	<string name="site_settings_allow_comments_title">允許留言</string>
+	<string name="site_settings_default_format_title">預設格式</string>
+	<string name="site_settings_default_category_title">預設類別</string>
+	<string name="site_settings_location_title">啟用定位</string>
+	<string name="site_settings_address_title">位址</string>
+	<string name="site_settings_title_title">網站標題</string>
+	<string name="site_settings_tagline_title">標語</string>
+	<string name="site_settings_this_device_header">此裝置</string>
+	<string name="site_settings_discussion_new_posts_header">新文章預設設定</string>
+	<string name="site_settings_account_header">帳號</string>
+	<string name="site_settings_writing_header">撰寫</string>
+	<string name="newest_first">最新的在前</string>
+	<string name="site_settings_general_header">一般</string>
+	<string name="discussion">討論</string>
+	<string name="privacy">隱私</string>
+	<string name="related_posts">相關文章</string>
+	<string name="comments">留言</string>
+	<string name="close_after">以下時間後關閉</string>
+	<string name="oldest_first">最舊的在前</string>
+	<string name="media_error_no_permission_upload">你沒有權限，無法上傳媒體檔案至網站</string>
+	<string name="never">從未</string>
+	<string name="unknown">不明</string>
 	<string name="reader_err_get_post_not_found">此文章已不存在</string>
 	<string name="reader_err_get_post_not_authorized">你未獲授權無法檢視此文章</string>
 	<string name="reader_err_get_post_generic">無法擷取此文章</string>
@@ -124,14 +232,12 @@
 	<string name="trashed">已移至垃圾桶</string>
 	<string name="button_back">返回</string>
 	<string name="page_deleted">頁面已刪除</string>
-	<string name="button_more">更多</string>
 	<string name="button_stats">統計</string>
 	<string name="button_trash">垃圾桶</string>
 	<string name="button_preview">預覽</string>
 	<string name="button_view">檢視</string>
 	<string name="button_edit">編輯</string>
 	<string name="button_publish">發表</string>
-	<string name="button_delete">刪除</string>
 	<string name="my_site_no_sites_view_subtitle">你希望加入一個嗎?</string>
 	<string name="my_site_no_sites_view_title">你還沒有任何 WordPress 網站。</string>
 	<string name="my_site_no_sites_view_drake">圖示</string>
@@ -171,7 +277,6 @@
 	<string name="my_site_header_publish">發表</string>
 	<string name="my_site_header_look_and_feel">外觀和風格</string>
 	<string name="my_site_btn_site_settings">設定</string>
-	<string name="my_site_btn_comments">留言</string>
 	<string name="my_site_btn_blog_posts">網誌文章</string>
 	<string name="my_site_header_admin">管理</string>
 	<string name="reader_label_new_posts_subtitle">點選以顯示</string>
@@ -221,6 +326,8 @@
 	<string name="two_step_sms_sent">請查看簡訊是否收到驗證碼。</string>
 	<string name="sign_in_jetpack">登入 WordPress.com 帳號以連結至 Jetpack。</string>
 	<string name="auth_required">再次登入以繼續操作。</string>
+	<string name="media_details_label_file_name">檔案名稱</string>
+	<string name="media_details_label_file_type">檔案類型</string>
 	<string name="media_fetching">正在擷取媒體…</string>
 	<string name="posts_fetching">正在擷取文章…</string>
 	<string name="toast_err_post_uploading">上傳文章時無法加以開啟</string>
@@ -254,7 +361,6 @@
 	<string name="stats_timeframe_years">年</string>
 	<string name="stats_views">點閱數</string>
 	<string name="stats_pagination_label">第 %1$s 頁，共 %2$s 頁</string>
-	<string name="stats_comments">留言</string>
 	<string name="stats_view_countries">國家</string>
 	<string name="stats_likes">按讚數</string>
 	<string name="stats_view_publicize">宣傳</string>
@@ -332,13 +438,13 @@
 	<string name="reader_label_comment_count_single">一則留言</string>
 	<string name="reader_label_comments_closed">留言已關閉</string>
 	<string name="reader_label_comments_on">以下內容的留言：</string>
-	<string name="reader_title_comments">留言</string>
 	<string name="reader_title_photo_viewer">第 %1$d 個，共 %2$d 個</string>
 	<string name="error_publish_empty_post">無法發表空白的文章</string>
 	<string name="error_refresh_unauthorized_posts">你沒有查看或編輯文章的權限</string>
 	<string name="error_refresh_unauthorized_pages">你沒有查看或編輯頁面的權限</string>
 	<string name="error_refresh_unauthorized_comments">你沒有查看或編輯留言的權限</string>
 	<string name="older_month">超過一個月</string>
+	<string name="more">更多</string>
 	<string name="older_two_days">超過 2 天</string>
 	<string name="older_last_week">超過一週</string>
 	<string name="stats_no_blog">無法為所需網誌載入統計</string>
@@ -669,7 +775,6 @@
 	<string name="stats_view_visitors_and_views">訪客和點閱數</string>
 	<string name="stats_view_clicks">點擊率</string>
 	<string name="stats_view_referrers">來源網址</string>
-	<string name="stats_view_comments">回應</string>
 	<string name="stats_timeframe_today">今天</string>
 	<string name="stats_timeframe_yesterday">昨天</string>
 	<string name="stats_timeframe_days">天</string>
@@ -683,7 +788,6 @@
 	<string name="stats_totals_views">點閱數</string>
 	<string name="stats_totals_clicks">點擊率</string>
 	<string name="stats_totals_plays">播放次數</string>
-	<string name="stats_totals_comments">回應</string>
 	<string name="menu_search">搜尋</string>
 	<string name="passcode_manage">管理 PIN 鎖定</string>
 	<string name="passcode_enter_passcode">輸入你的 PIN</string>
@@ -779,7 +883,6 @@
 	<string name="yes">是</string>
 	<string name="no">否</string>
 	<string name="preview">預覽</string>
-	<string name="tab_comments">迴響</string>
 	<string name="notification_settings">通知設定</string>
 	<string-array name="alignment_array">
 		<item>無</item>
@@ -826,6 +929,33 @@
 		<item>標準</item>
 		<item>狀態</item>
 		<item>影片</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>所有人都能看見你的網站，且搜尋引擎可能會將網站加入索引</item>
+		<item>所有人都能看見你的網站，但網站會要求搜尋引擎不要加入索引</item>
+		<item>只有你和經核准的使用者可看見你的網站</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>需要人工審核所有人的留言。</item>
+		<item>如果使用者有已審核的留言，則自動核准。</item>
+		<item>自動核准所有人的留言。</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>無留言</item>
+		<item>已知使用者的留言</item>
+		<item>所有使用者</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>無</item>
+		<item>兩層</item>
+		<item>三層</item>
+		<item>四層</item>
+		<item>五層</item>
+		<item>六層</item>
+		<item>七層</item>
+		<item>八層</item>
+		<item>九層</item>
+		<item>十層</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>免費</item>
