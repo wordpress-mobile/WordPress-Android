@@ -75,9 +75,8 @@
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
-    <style name="FilteredRecyclerViewSpinner.WordPress" parent="@style/DropDownNav.WordPress">
+    <style name="FilteredRecyclerViewSpinner.WordPress" parent="DropDownNav.WordPress">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
     <style name="FilteredRecyclerViewFilterTextView.WordPress" parent="android:TextAppearance.Widget.TextView">
