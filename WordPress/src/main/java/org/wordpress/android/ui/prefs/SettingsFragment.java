@@ -332,6 +332,12 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         }
     }
 
+    public void onEventMainThread(PrefsEvents.AccountSettingsPostSuccess event) {
+        if (isAdded()) {
+            refreshAccountDetails();
+        }
+    }
+
     public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
