@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +10,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -18,8 +19,21 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.AnalyticsUtils;
 
 public class LearnMorePreference extends Preference
-        implements PreferenceHint, View.OnClickListener, DialogInterface.OnDismissListener {
+        implements PreferenceHint, View.OnClickListener {
     private static final String WP_SUPPORT_URL = "https://en.support.wordpress.com/settings/discussion-settings/#default-article-settings";
+    private static final String SUPPORT_MOBILE_ID = "mobile-only-usage";
+    private static final String SUPPORT_CONTENT_JS = "javascript:(function(){" +
+            "var mobileSupport = document.getElementById('" + SUPPORT_MOBILE_ID + "');" +
+            "mobileSupport.style.display = 'inline';" +
+            "var newHtml = '<body><h2>Discussion Settings</h2><' + " +
+            "mobileSupport.tagName + ' style=\"font-size:medium;\">' + mobileSupport.innerHTML + '</' + mobileSupport.tagName + '></body>';" +
+            "document.body.innerHTML = newHtml;" +
+            "document.body.style.paddingLeft='32px';" +
+            "document.body.style.marginLeft='32px';" +
+            "document.body.style.paddingTop='0px';" +
+            "document.body.style.paddingRight='32px';" +
+            "document.body.style.paddingBottom='24px';" +
+            "})();";
 
     private String mHint;
     private Dialog mDialog;
@@ -44,31 +58,7 @@ public class LearnMorePreference extends Preference
 
         AnalyticsUtils.trackWithCurrentBlogDetails(
                 AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
-
-        Context context = getContext();
-        mDialog = new Dialog(context);
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDialog.setOnDismissListener(this);
-        mDialog.setContentView(R.layout.learn_more_pref_screen);
-        WebView webView = new WebView(context);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView webView, String url) {
-                super.onPageFinished(webView, url);
-                if (mDialog != null) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
-                    mDialog.setContentView(webView);
-                }
-            }
-        });
-        webView.loadUrl(WP_SUPPORT_URL);
-        mDialog.show();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        mDialog = null;
+        showDialog();
     }
 
     @Override
@@ -84,5 +74,45 @@ public class LearnMorePreference extends Preference
     @Override
     public void setHint(String hint) {
         mHint = hint;
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void showDialog() {
+        Context context = getContext();
+        final WebView webView = new WebView(context);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new LearnMoreClient());
+        webView.loadUrl(WP_SUPPORT_URL);
+        mDialog = new Dialog(context);
+        mDialog.setTitle(R.string.site_settings_learn_more_dialog_title);
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                webView.stopLoading();
+                mDialog = null;
+            }
+        });
+        mDialog.setContentView(R.layout.learn_more_pref_screen);
+        mDialog.show();
+    }
+
+    private class LearnMoreClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+            return !WP_SUPPORT_URL.equals(url) && !SUPPORT_CONTENT_JS.equals(url);
+        }
+
+        @Override
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+            if (mDialog != null) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
+                webView.loadUrl(SUPPORT_CONTENT_JS);
+                mDialog.setContentView(webView);
+            }
+        }
     }
 }
