@@ -23,7 +23,7 @@
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
-        android:title="@string/language" />
+        android:title="@string/interface_language" />
 
     <CheckBoxPreference
         android:defaultValue="true"
