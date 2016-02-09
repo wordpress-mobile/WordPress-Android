@@ -827,7 +827,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             endProgress();
             showTwoStepCodeError(messageId);
             return;
-        } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
+        } else if (messageId == org.wordpress.android.R.string.invalid_blog_url_message) {
             showUrlError(messageId);
             endProgress();
             return;

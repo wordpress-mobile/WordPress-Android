@@ -373,7 +373,7 @@
 	<string name="out_of_memory">Уређај нема доступне меморије</string>
 	<string name="notifications_empty_list">Нема обавештења</string>
 	<string name="reply_failed">Одговарање неуспешно</string>
-	<string name="invalid_url_message">Проверите да ли је унети URL исправан</string>
+	<string name="invalid_blog_url_message">Проверите да ли је унети URL исправан</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
 	<string name="stats_empty_comments">Нема коментара</string>
 	<string name="no_site_error">Није могуће повезати се на Вордпрес веб место</string>

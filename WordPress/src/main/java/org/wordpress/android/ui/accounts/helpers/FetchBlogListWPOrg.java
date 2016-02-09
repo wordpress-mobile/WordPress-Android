@@ -92,7 +92,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         String xmlRpcUrl;
         if (!UrlUtils.isValidUrlAndHostNotNull(baseUrl)) {
             AppLog.e(T.NUX, "invalid URL: " + baseUrl);
-            mErrorMsgId = org.wordpress.android.R.string.invalid_url_message;
+            mErrorMsgId = org.wordpress.android.R.string.invalid_blog_url_message;
             return null;
         }
         URI uri = URI.create(baseUrl);
@@ -132,7 +132,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             // TODO: Hopefully a temporary log - remove it if we find a pattern of failing URLs
             CrashlyticsUtils.setString(ExtraKey.ENTERED_URL, baseUrl);
             CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.NUX);
-            mErrorMsgId = org.wordpress.android.R.string.invalid_url_message;
+            mErrorMsgId = org.wordpress.android.R.string.invalid_blog_url_message;
             return null;
         }
 
@@ -188,7 +188,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         url = UrlUtils.addUrlSchemeIfNeeded(url, false);
 
         if (!URLUtil.isValidUrl(url)) {
-            mErrorMsgId = org.wordpress.android.R.string.invalid_url_message;
+            mErrorMsgId = org.wordpress.android.R.string.invalid_blog_url_message;
             return null;
         }
 

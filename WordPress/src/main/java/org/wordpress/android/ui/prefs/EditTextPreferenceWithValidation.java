@@ -69,7 +69,7 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
         final Pattern urlRegExPattern = Patterns.WEB_URL;
         Matcher matcher = urlRegExPattern.matcher(text);
         if (!matcher.matches()) {
-            return getContext().getString(R.string.invalid_url_message);
+            return getContext().getString(R.string.invalid_blog_url_message);
         }
         return null;
     }

@@ -524,7 +524,7 @@
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
-	<string name="invalid_url_message">Check that the blog URL entered is valid</string>
+	<string name="invalid_blog_url_message">Check that the blog URL entered is valid</string>
 	<string name="reply_failed">Reply failed</string>
 	<string name="notifications_empty_list">No notifications</string>
 	<string name="error_delete_post">An error occurred while deleting the %s</string>
