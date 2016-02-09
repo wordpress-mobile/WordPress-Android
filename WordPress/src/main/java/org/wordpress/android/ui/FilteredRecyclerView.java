@@ -1,10 +1,6 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -143,15 +139,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
-
-            //changing spinner arrow color to mach custom spinner at ReaderPostListFragment
-//            Drawable spinnerBackground = mSpinner.getBackground();
-//            spinnerBackground.setColorFilter(ContextCompat.getColor(getContext(), R.color.grey), PorterDuff.Mode.SRC_ATOP);
-//            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-//                mSpinner.setBackgroundDrawable(spinnerBackground);
-//            } else {
-//                mSpinner.setBackground(spinnerBackground);
-//            }
         }
 
     }
