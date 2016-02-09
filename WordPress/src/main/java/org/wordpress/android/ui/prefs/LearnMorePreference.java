@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,6 +21,7 @@ import android.webkit.WebViewClient;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.ToastUtils;
 
 public class LearnMorePreference extends Preference
         implements PreferenceHint, View.OnClickListener {
@@ -136,6 +139,16 @@ public class LearnMorePreference extends Preference
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
             return !WP_SUPPORT_URL.equals(url) && !SUPPORT_CONTENT_JS.equals(url);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+
+            if (mDialog != null && mDialog.isShowing()) {
+                ToastUtils.showToast(getContext(), R.string.could_not_load_page);
+                mDialog.dismiss();
+            }
         }
 
         @Override
