@@ -249,6 +249,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
             // Validate the URL found before calling the client. Prevent a crash that can occur
             // during the setup of self-hosted sites.
+            if (!UrlUtils.isValidUrlAndHostNotNull(xmlrpcUrl)) {
+                mErrorMsgId = R.string.xmlrpc_error;
+                return null;
+            }
             URI xmlrpcUri;
             xmlrpcUri = URI.create(xmlrpcUrl);
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
@@ -287,12 +291,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             } catch (IOException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
                 mErrorMsgId = R.string.no_site_error;
-            } catch (IllegalArgumentException e) {
-                if (e.getMessage().contains("Host name may not be null")) {
-                    mErrorMsgId = R.string.invalid_url_message;
-                    return null;
-                }
-                throw e;
             }
             mClientResponse = client.getResponse();
             return null;
