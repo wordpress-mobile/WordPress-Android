@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +31,6 @@ import org.wordpress.android.ui.prefs.SettingsFragment;
 import java.util.Locale;
 
 public class WPActivityUtils {
-    private static final long SHOW_KEYBOARD_DELAY = 250;
-
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
     public static void addToolbarToDialog(final Fragment context, final Dialog dialog, String title) {
@@ -94,6 +91,23 @@ public class WPActivityUtils {
         });
     }
 
+    /**
+     * Checks for a {@link Toolbar} at the first child element of a given {@link Dialog} and
+     * removes it if it exists.
+     *
+     * Originally added to prevent a crash that occurs with nested PreferenceScreens that added
+     * a toolbar via {@link WPActivityUtils#addToolbarToDialog(Fragment, Dialog, String)}. The
+     * crash can be reproduced by turning 'Don't keep activities' on from Developer options.
+     */
+    public static void removeToolbarFromDialog(final Fragment context, final Dialog dialog) {
+        if (dialog == null || !context.isAdded()) return;
+
+        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        if (root.getChildAt(0) instanceof Toolbar) {
+            root.removeViewAt(0);
+        }
+    }
+
     public static void setStatusBarColor(Window window, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -101,15 +115,6 @@ public class WPActivityUtils {
             //noinspection deprecation
             window.setStatusBarColor(window.getContext().getResources().getColor(color));
         }
-    }
-
-    public static void showKeyboard(final View view) {
-        (new Handler()).postDelayed(new Runnable() {
-            public void run() {
-                InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-            }
-        }, SHOW_KEYBOARD_DELAY);
     }
 
     public static void hideKeyboard(final View view) {

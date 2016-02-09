@@ -498,18 +498,6 @@
         <item>Known users\' comments</item>
         <item>All users</item>
     </string-array>
-    <string-array name="site_settings_threading_entries">
-        <item>None</item>
-        <item>Two levels</item>
-        <item>Three levels</item>
-        <item>Four levels</item>
-        <item>Five levels</item>
-        <item>Six levels</item>
-        <item>Seven levels</item>
-        <item>Eight levels</item>
-        <item>Nine levels</item>
-        <item>Ten levels</item>
-    </string-array>
 
     <string-array name="site_settings_privacy_entries" translatable="false">
         <item>@string/site_settings_privacy_public_summary</item>
@@ -582,6 +570,8 @@
     <string name="site_settings_close_after_dialog_title">Close commenting</string>
     <string name="site_settings_paging_dialog_header">Comments per page</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
+    <string name="site_settings_threading_dialog_header">Thread up to</string>
+    <string name="site_settings_threading_dialog_description">Allow comments to be nested in threads.</string>
     <string name="site_settings_close_after_dialog_header" translatable="false">@string/close_after</string>
     <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
