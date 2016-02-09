@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -53,6 +55,25 @@ public class LearnMorePreference extends Preference
     }
 
     @Override
+    public Parcelable onSaveInstanceState() {
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+            return new SavedState(super.onSaveInstanceState());
+        }
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {// per documentation, state is always non-null
+            super.onRestoreInstanceState(state);
+        } else {
+            super.onRestoreInstanceState(((SavedState) state).getSuperState());
+            showDialog();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if (mDialog != null) return;
 
@@ -96,6 +117,19 @@ public class LearnMorePreference extends Preference
         });
         mDialog.setContentView(R.layout.learn_more_pref_screen);
         mDialog.show();
+    }
+
+    private static class SavedState extends BaseSavedState {
+        public SavedState(Parcel source) { super(source); }
+
+        public SavedState(Parcelable superState) { super(superState); }
+
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) { return new SavedState(in); }
+
+                    public SavedState[] newArray(int size) { return new SavedState[size]; }
+                };
     }
 
     private class LearnMoreClient extends WebViewClient {
