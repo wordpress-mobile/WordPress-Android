@@ -358,7 +358,15 @@ public class MySiteFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        if (!isAdded() || (mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId())) == null) return;
+        if (!isAdded() || mBlog == null) {
+            return;
+        }
+
+        // Update selected blog in case it was changed or deleted / removed.
+        mBlog = WordPress.getBlog(mBlog.getLocalTableBlogId());
+        if (mBlog == null) {
+            return;
+        }
 
         // Update view if blog has a new name
         if (!mBlogTitleTextView.getText().equals(mBlog.getBlogName())) {
