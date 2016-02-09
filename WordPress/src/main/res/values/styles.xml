@@ -88,6 +88,7 @@
     </style>
 
     <style name="FilteredRecyclerViewFilterContainer">
+        <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
         <item name="android:background">@color/blue_medium</item>
     </style>
