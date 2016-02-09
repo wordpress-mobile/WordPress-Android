@@ -39,6 +39,9 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
@@ -46,6 +49,10 @@ public class MySiteFragment extends Fragment
 
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
     private static final long ALERT_ANIM_DURATION_MS = 1000l;
+    public static final int HIDE_WP_ADMIN_YEAR = 2015;
+    public static final int HIDE_WP_ADMIN_MONTH = 9;
+    public static final int HIDE_WP_ADMIN_DAY = 7;
+    public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
@@ -340,13 +347,25 @@ public class MySiteFragment extends Fragment
     }
 
     private void toggleAdminVisibility() {
-        Blog blog = WordPress.getCurrentBlog();
-        Account account = AccountHelper.getDefaultAccount();
-        
-        if (blog.isDotcomFlag() && account.shouldHideWPAdmin()) {
+        if (shouldHideWPAdmin()) {
             mAdminView.setVisibility(View.GONE);
         } else {
             mAdminView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean shouldHideWPAdmin() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (!blog.isDotcomFlag()) {
+            return false;
+        } else {
+            Account account = AccountHelper.getDefaultAccount();
+
+            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
+            calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
+
+            return account.getDateCreated().after(calendar.getTime());
         }
     }
 
