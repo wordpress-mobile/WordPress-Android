@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
@@ -49,9 +48,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private PreferenceScreen mPreferenceScreen;
     private Preference mUsernamePreference;
-    private EditTextPreference mEmailPreference;
+    private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
-    private EditTextPreference mWebAddressPreference;
+    private EditTextPreferenceWithValidation mWebAddressPreference;
     private DetailListPreference mLanguagePreference;
     private Snackbar mEmailSnackbar;
     private SharedPreferences mSettings;
@@ -66,10 +65,13 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
-        mEmailPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_email));
+        mEmailPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_email));
         mPrimarySitePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_primary_site));
-        mWebAddressPreference = (EditTextPreference) findPreference(getString(R.string.pref_key_web_address));
+        mWebAddressPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
+
+        mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
+        mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);

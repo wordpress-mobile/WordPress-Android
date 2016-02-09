@@ -9,7 +9,7 @@
         android:title="@string/username"
         android:enabled="false"/>
 
-    <EditTextPreference
+    <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         android:key="@string/pref_key_email"
         android:title="@string/email" />
 
@@ -17,7 +17,7 @@
         android:key="@string/pref_key_primary_site"
         android:title="@string/primary_site" />
 
-    <EditTextPreference
+    <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         android:key="@string/pref_key_web_address"
         android:title="@string/web_address" />
 
