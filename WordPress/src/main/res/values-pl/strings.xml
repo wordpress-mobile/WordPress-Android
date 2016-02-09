@@ -219,7 +219,7 @@
 	<string name="theme_set_failed">Nie udało się włączyć motywu</string>
 	<string name="stats_empty_comments">Brak komentarzy</string>
 	<string name="stats_bar_graph_empty">Statystyki nie są dostępne</string>
-	<string name="invalid_url_message">Sprawdź czy wprowadzony URL bloga jest poprawny</string>
+	<string name="invalid_blog_url_message">Sprawdź czy wprowadzony URL bloga jest poprawny</string>
 	<string name="notifications_empty_list">Brak powiadomień</string>
 	<string name="error_delete_post">Wystąpił błąd podczas usuwania %s</string>
 	<string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
