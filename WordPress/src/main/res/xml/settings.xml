@@ -11,7 +11,7 @@
 
     <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         android:key="@string/pref_key_email"
-        android:title="@string/email" />
+        android:title="@string/email_address" />
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_primary_site"
@@ -50,7 +50,7 @@
 
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
-        android:title="@string/about">
+        android:title="@string/about_the_app">
 
         <Preference android:title="@string/app_title"
                     android:key="@string/pref_key_app_about" />

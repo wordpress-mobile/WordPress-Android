@@ -32,7 +32,7 @@
     <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="pages">Pages</string>
-    <string name="about">About</string>
+    <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -814,6 +814,7 @@
     <string name="notifications_comments_other_blogs">Comments on other sites</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
+    <string name="email_address">Email address</string>
     <string name="app_notifications">App notifications</string>
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
