@@ -395,6 +395,7 @@ public class CommentsListFragment extends Fragment {
         } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             mFilteredCommentsView.setRefreshing(false);
+            ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_cached));
             //we're offline, load/refresh whatever we have in our local db
             getAdapter().loadComments(mCommentStatusFilter);
             return;
