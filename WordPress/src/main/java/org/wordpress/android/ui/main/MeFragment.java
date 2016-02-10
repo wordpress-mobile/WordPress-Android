@@ -413,7 +413,7 @@ public class MeFragment extends Fragment {
 
         MultipartRequest multipartRequest = new MultipartRequest(request, listener, errorListener);
         multipartRequest.addPart("filedata", file);
-        multipartRequest.addPart("account", "stefanostogoulidis+stefanosuser@gmail.com");
+        multipartRequest.addPart("account", AccountHelper.getDefaultAccount().getEmail());
 
         WordPress.getGravatarRestClientUtilsV1().post(multipartRequest, null, errorListener);
     }
