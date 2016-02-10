@@ -336,7 +336,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * When this method is called, you should load data into the FilteredRecyclerView adapter, using the
          * latest criteria passed to you in a previous onFilterSelected() call.
          * Within the FilteredRecyclerView lifecycle, this is triggered in three different moments:
-         * 1 - upon initialisation, and
+         * 1 - upon initialisation
          * 2 - each time a screen refresh is requested
          * 3 - each time the user changes the filter spinner selection
          */
@@ -348,7 +348,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * the newly selected filter shall always arrive through onLoadData().
          * The parameters passed in this callback can be used alternatively as per your convenience.
          *
-         * @param position of the selected criteria
+         * @param position of the selected criteria within the array returned by onLoadFilterCriteriaOptions()
          * @param criteria the actual criteria selected
          */
         void onFilterSelected(int position, FilterCriteria criteria);
