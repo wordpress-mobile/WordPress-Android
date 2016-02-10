@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -10,6 +11,7 @@ import android.preference.PreferenceGroup;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -272,5 +274,19 @@ public class WPPrefUtils {
             return displayLanguage + " (" + displayCountry + ")";
         }
         return displayLanguage;
+    }
+
+    /**
+     * Styles a preference {@link ListView} to be used in Site Settings & Account Settings
+     */
+    public static void layoutPreferenceList(ListView prefList, Resources res) {
+        // customize list dividers
+        //noinspection deprecation
+        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
+        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
+        // remove footer divider bar
+        prefList.setFooterDividersEnabled(false);
+        //noinspection deprecation
+        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
     }
 }

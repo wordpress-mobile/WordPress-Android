@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,11 +14,13 @@ import android.preference.PreferenceScreen;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -42,7 +45,10 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 
 @SuppressWarnings("deprecation")
-public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment
+        implements OnPreferenceClickListener,
+        Preference.OnPreferenceChangeListener,
+        ViewGroup.OnHierarchyChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
@@ -95,9 +101,24 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false);
         CoordinatorLayout coordinator = (CoordinatorLayout) coordinatorView.findViewById(R.id.coordinator);
-        View preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState);
+
+        // use a wrapper to apply the Calypso theme
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(themer);
+        View preferenceView = super.onCreateView(localInflater, coordinator, savedInstanceState);
+        if (preferenceView != null) {
+            setupPreferenceList((ListView) preferenceView.findViewById(android.R.id.list), getResources());
+        }
         coordinator.addView(preferenceView);
         return coordinatorView;
+    }
+
+    private void setupPreferenceList(ListView prefList, Resources res) {
+        if (prefList == null || res == null) return;
+
+        // required to customize (Calypso) preference views
+        prefList.setOnHierarchyChangeListener(this);
+        WPPrefUtils.layoutPreferenceList(prefList, res);
     }
 
     @Override
@@ -355,5 +376,23 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 updatePrimaryBlog(event.newValue);
             }
         }
+    }
+
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+        if (child.getId() == android.R.id.title && child instanceof TextView) {
+            // style preference category title views
+            TextView title = (TextView) child;
+            WPPrefUtils.layoutAsBody2(title);
+        } else {
+            // style preference title views
+            TextView title = (TextView) child.findViewById(android.R.id.title);
+            if (title != null) WPPrefUtils.layoutAsSubhead(title);
+        }
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+        // NOP
     }
 }
