@@ -27,20 +27,14 @@ import java.util.Map;
 
 public class PlansUtils {
 
-    private static HashMap<Integer, List<SitePlan>> availablePlansForSites = new HashMap<>();
-
     public interface AvailablePlansListener {
         void onResponse(List<SitePlan> plans);
         void onError(Exception volleyError);
     }
 
-    public static boolean downloadAvailablePlansForSite(boolean force, final Blog blog, final AvailablePlansListener listener) {
+    public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
+        final Blog blog = WordPress.getBlog(localTableBlogID);
         if (blog == null || !PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
-            return false;
-        }
-
-        if (!force && PlansUtils.getAvailablePlansForSite(blog) != null) {
-            // Plans for the site already available.
             return false;
         }
 
@@ -61,7 +55,6 @@ public class PlansUtils {
                                 plans.add(currentPlan);
                             }
                         }
-                        availablePlansForSites.put(blog.getLocalTableBlogId(), plans);
                         if (listener!= null) {
                             listener.onResponse(plans);
                         }
@@ -76,7 +69,7 @@ public class PlansUtils {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.UTILS, "Error", volleyError);
+                AppLog.e(AppLog.T.UTILS, "Error downloading plans", volleyError);
                 if (listener!= null) {
                     listener.onError(volleyError);
                 }
@@ -84,11 +77,6 @@ public class PlansUtils {
         });
 
         return true;
-    }
-
-    @Nullable
-    public static List<SitePlan> getAvailablePlansForSite(Blog blog) {
-        return availablePlansForSites.get(blog.getLocalTableBlogId());
     }
 
     @Nullable

@@ -7,11 +7,12 @@ import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Plan {
+public class Plan implements Serializable {
     private long mProductID;
     private String mProductName;
     private String mProductNameEnglish;

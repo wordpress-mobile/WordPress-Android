@@ -172,6 +172,9 @@
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme"/>
 
+        <activity android:name=".ui.plans.PlansActivity"
+                  android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity"
                   android:theme="@style/Calypso.NoActionBar"/>
