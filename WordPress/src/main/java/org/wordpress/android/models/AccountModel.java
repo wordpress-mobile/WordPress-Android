@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -60,6 +61,8 @@ public class AccountModel {
         Date date = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
         if (date != null) {
             mDateCreated = date;
+        } else {
+            AppLog.e(AppLog.T.API, "Date could not be found from Account JSON response");
         }
     }
 
