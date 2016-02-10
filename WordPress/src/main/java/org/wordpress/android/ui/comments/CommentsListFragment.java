@@ -400,6 +400,11 @@ public class CommentsListFragment extends Fragment {
             return;
         }
 
+        //immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
+        if (!loadMore){
+            getAdapter().loadComments(mCommentStatusFilter);
+        }
+
         mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.LOADING);
 
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore, mCommentStatusFilter);
