@@ -11,9 +11,7 @@ import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.util.GregorianCalendar;
 import java.util.Map;
-import java.util.TimeZone;
 
 import de.greenrobot.event.EventBus;
 
