@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.StringRes;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
@@ -12,7 +14,7 @@ public enum CommentStatus implements FilterCriteria {
 
     private final int mLabelResId;
 
-    CommentStatus(int labelResId) {
+    CommentStatus(@StringRes int labelResId) {
         mLabelResId = labelResId;
     }
 
