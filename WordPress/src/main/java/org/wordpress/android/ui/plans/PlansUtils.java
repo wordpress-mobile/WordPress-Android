@@ -79,6 +79,17 @@ public class PlansUtils {
         return true;
     }
 
+    /*
+    @Nullable
+    public static Plan getGlobalPlanForBlog(int blogLocalId) {
+        Blog currentBlog = WordPress.getBlog(blogLocalId);
+        if (currentBlog == null) {
+            return null;
+        }
+        return getGlobalPlan(currentBlog.getPlanID());
+    }
+    */
+
     @Nullable
     public static Plan getGlobalPlan(long planId) {
         List<Plan> plans = getGlobalPlans();

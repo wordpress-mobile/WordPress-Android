@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -27,6 +28,9 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     public static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
+    public static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
+
+    public static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
     private ArrayList<SitePlan> mAvailablePlans;
@@ -36,6 +40,7 @@ public class PlansActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
 
     private static final int NUM_TABS = 3;
+    private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class PlansActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mAvailablePlans = (ArrayList<SitePlan>) savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
@@ -97,6 +103,18 @@ public class PlansActivity extends AppCompatActivity {
         int selectedColor = getResources().getColor(R.color.white);
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // Move the viewpager on the blog plan if no prev position is available
+        if (mViewpagerPosSelected == NO_PREV_POS_SELECTED_VIEWPAGER) {
+            Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (currentBlog != null) {
+                long planID = currentBlog.getPlanID();
+                mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(planID);
+            }
+        }
+        if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
+            mViewPager.setCurrentItem(mViewpagerPosSelected);
+        }
     }
 
     private void setupLoadingUI() {
@@ -176,6 +194,11 @@ public class PlansActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
+        if (mViewPager != null) {
+            outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
+        }
+        // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
+        mViewpagerPosSelected = mViewPager.getCurrentItem();
     }
 
     private class PlansPageAdapter extends FragmentPagerAdapter {
@@ -188,7 +211,7 @@ public class PlansActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if (mFragments != null && position < mFragments.size()) {
+            if (mFragments != null && isValidPosition(position)) {
                 return ((PlanFragment)mFragments.get(position)).getPlan().getProductName();
             }
             return super.getPageTitle(position);
@@ -202,6 +225,20 @@ public class PlansActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return mFragments.size();
+        }
+
+        public boolean isValidPosition(int position) {
+            return (position >= 0 && position < getCount());
+        }
+
+        public int getPositionOfPlan(long planID) {
+            for (int i = 0; i < getCount(); i++) {
+                PlanFragment fragment = (PlanFragment) getItem(i);
+                if (fragment.getPlan().getProductID() == planID ) {
+                    return  i;
+                }
+            }
+            return -1;
         }
     }
 }
