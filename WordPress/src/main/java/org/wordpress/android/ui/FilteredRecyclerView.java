@@ -29,7 +29,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private ProgressBar mProgressLoadMore;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private Spinner mSpinner;
-    private boolean mSelectingRememeberedFilterOnCreate = false;
+    private boolean mSelectingRememberedFilterOnCreate = false;
 
     private RecyclerView mRecycler;
     private TextView mEmptyView;
@@ -146,13 +146,13 @@ public class FilteredRecyclerView extends RelativeLayout {
     private void initAdapter(){
         mSpinnerAdapter = new SpinnerAdapter(getContext(), mFilterCriteriaOptions);
 
-        mSelectingRememeberedFilterOnCreate = true;
+        mSelectingRememberedFilterOnCreate = true;
         mSpinner.setAdapter(mSpinnerAdapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mSelectingRememeberedFilterOnCreate) {
-                    mSelectingRememeberedFilterOnCreate = false;
+                if (mSelectingRememberedFilterOnCreate) {
+                    mSelectingRememberedFilterOnCreate = false;
                     return;
                 }
 
