@@ -173,7 +173,7 @@ public class CommentsListFragment extends Fragment {
             mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
         }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
