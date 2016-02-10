@@ -252,8 +252,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         @Override
         public Object getItem(int position) {
-            if (position < 0 || position >= getCount())
-                return "";
             return mFilterValues[position];
         }
 
