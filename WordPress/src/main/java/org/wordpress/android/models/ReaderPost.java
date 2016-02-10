@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -182,8 +183,13 @@ public class ReaderPost {
                 }
             }
         }
-
-        // if we still don't have a featured image but the text contains an IMG tag, check whether
+        // if the post still doesn't have a featured image but we have attachment data, check whether
+        // we can find a suitable featured image from the attachments
+        if (!post.hasFeaturedImage() && post.hasAttachments()) {
+            post.featuredImage = new ImageSizeMap(post.attachmentsJson)
+                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        }
+        // if we *still* don't have a featured image but the text contains an IMG tag, check whether
         // we can find a suitable image from the text
         if (!post.hasFeaturedImage() && post.hasText() && post.text.contains("<img")) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
