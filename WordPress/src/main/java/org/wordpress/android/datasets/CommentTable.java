@@ -137,11 +137,9 @@ public class CommentTable {
                 "SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? ORDER BY published DESC", args);
 
         try {
-            if (c.moveToFirst()) {
-                do {
-                    Comment comment = getCommentFromCursor(c);
-                    comments.add(comment);
-                } while (c.moveToNext());
+            while (c.moveToNext()) {
+                Comment comment = getCommentFromCursor(c);
+                comments.add(comment);
             }
 
             return comments;
@@ -181,11 +179,9 @@ public class CommentTable {
         }
 
         try {
-            if (c.moveToFirst()) {
-                do {
-                    Comment comment = getCommentFromCursor(c);
-                    comments.add(comment);
-                } while (c.moveToNext());
+            while (c.moveToNext()) {
+                Comment comment = getCommentFromCursor(c);
+                comments.add(comment);
             }
 
             return comments;
