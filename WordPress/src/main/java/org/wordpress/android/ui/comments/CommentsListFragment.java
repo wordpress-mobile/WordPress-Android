@@ -258,6 +258,9 @@ public class CommentsListFragment extends Fragment {
         super.onResume();
         if (mFilteredCommentsView.getAdapter() == null) {
             mFilteredCommentsView.setAdapter(getAdapter());
+            if (!NetworkUtils.isNetworkAvailable(getActivity())){
+                ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_cached));
+            }
             getAdapter().loadComments(mCommentStatusFilter);
         }
     }
