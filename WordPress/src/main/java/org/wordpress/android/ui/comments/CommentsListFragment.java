@@ -220,31 +220,33 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                int stringId = 0;
 
-                switch (emptyViewMsgType) {
-                    case LOADING:
-                        stringId = R.string.comments_fetching;
-                        break;
-                    case NO_CONTENT:
-                        if (mFilteredCommentsView.getCurrentFilter() == null) {
-                            stringId = R.string.comments_empty_list;
-                        } else {
-                            stringId = R.string.comments_empty_list_filtered;
-                        }
-                        break;
-                    case NETWORK_ERROR:
-                        stringId = R.string.no_network_message;
-                        break;
-                    case PERMISSION_ERROR:
-                        stringId = R.string.error_refresh_unauthorized_comments;
-                        break;
-                    case GENERIC_ERROR:
-                        stringId = R.string.error_refresh_comments;
-                        break;
+                if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
+                    if (mFilteredCommentsView.getCurrentFilter() == null) {
+                        return getString(R.string.comments_empty_list);
+                    } else {
+                        return getString(R.string.comments_empty_list_filtered, mCommentStatusFilter.getLabel().toLowerCase());
+                    }
+
+                } else {
+                    int stringId = 0;
+                    switch (emptyViewMsgType) {
+                        case LOADING:
+                            stringId = R.string.comments_fetching;
+                            break;
+                        case NETWORK_ERROR:
+                            stringId = R.string.no_network_message;
+                            break;
+                        case PERMISSION_ERROR:
+                            stringId = R.string.error_refresh_unauthorized_comments;
+                            break;
+                        case GENERIC_ERROR:
+                            stringId = R.string.error_refresh_comments;
+                            break;
+                    }
+                    return getString(stringId);
                 }
 
-                return getString(stringId);
             }
         });
 
