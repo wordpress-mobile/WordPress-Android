@@ -300,17 +300,14 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
 
         public int getIndexOfCriteria(FilterCriteria tm) {
-            int pos = -1;
             if (tm != null && mFilterValues != null){
                 for (int i = 0; i < mFilterValues.length; i++) {
-                    FilterCriteria obj = mFilterValues[i];
-                    if (obj.equals(tm)) {
-                        pos = i;
-                        return pos;
+                    if (mFilterValues[i].equals(tm)) {
+                        return i;
                     }
                 }
             }
-            return pos;
+            return -1;
         }
     }
 
