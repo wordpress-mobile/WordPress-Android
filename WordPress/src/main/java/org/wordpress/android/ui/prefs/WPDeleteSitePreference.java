@@ -7,33 +7,36 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 
 /**
  * Calypso-style Preference that has an icon and a widget in the correct place. If there is a button
  * with id R.id.button, an onPreferenceClick listener is added.
  */
 
-public class WPButtonPreference extends WPPreference {
+public class WPDeleteSitePreference extends WPPreference {
     private String mButtonText;
     private int mButtonTextColor;
     private boolean mButtonTextAllCaps;
 
-    public WPButtonPreference(Context context, AttributeSet attrs) {
+    public WPDeleteSitePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mButtonTextColor = ContextCompat.getColor(context, R.color.black);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPButtonPreference);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPDeleteSitePreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
-            if (index == R.styleable.WPButtonPreference_buttonText) {
+            if (index == R.styleable.WPDeleteSitePreference_buttonText) {
                 mButtonText = array.getString(index);
-            } else if (index == R.styleable.WPButtonPreference_buttonTextColor) {
+            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextColor) {
                 mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
-            } else if (index == R.styleable.WPButtonPreference_buttonTextAllCaps) {
+            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
         }
@@ -46,7 +49,7 @@ public class WPButtonPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPButtonPreference wpButtonPreference = this;
+            final WPDeleteSitePreference deleteSitePreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
@@ -55,9 +58,15 @@ public class WPButtonPreference extends WPPreference {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPreferenceClickListener().onPreferenceClick(wpButtonPreference);
+                    getOnPreferenceClickListener().onPreferenceClick(deleteSitePreference);
                 }
             });
+        }
+
+        if (view.findViewById(R.id.domain) != null) {
+            TextView textView = (TextView) view.findViewById(R.id.domain);
+            Blog blog = WordPress.getCurrentBlog();
+            textView.setText(blog.getWordPressComHost());
         }
     }
 }

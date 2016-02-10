@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -43,8 +42,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -53,11 +50,10 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,12 +87,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
 
-    /**
-     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
-     *
-     * Used to format user-facing {@link String}'s in certain preferences.
-     */
-    private static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
      * Used to move the Uncategorized category to the beginning of the category list.
@@ -656,15 +647,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showDeleteSiteDialog() {
         Bundle args = new Bundle();
-        String url;
-        try {
-            URI uri = new URI(mBlog.getHomeURL());
-            url = uri.getHost();
-        } catch (URISyntaxException e) {
-            url = StringUtils.unescapeHTML(mBlog.getHomeURL().replaceFirst(ADDRESS_FORMAT_REGEX, ""));
-        }
-
-        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, url);
+        args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mBlog.getHomeURL()));
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
