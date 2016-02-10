@@ -36,7 +36,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     private FilterCriteria[] mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
-    private Listener mListener;
+    private FilterListener mFilterListener;
     private SpinnerAdapter mSpinnerAdapter;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> mAdapter;
     private AppLog.T mTAG;
@@ -76,11 +76,11 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mCurrentFilter;
     }
 
-    public void setLifecycleListener(Listener listener){
-        mListener = listener;
-        mFilterCriteriaOptions = mListener.onLoadFilterCriteriaOptions();
+    public void setFilterListener(FilterListener filterListener){
+        mFilterListener = filterListener;
+        mFilterCriteriaOptions = mFilterListener.onLoadFilterCriteriaOptions();
         initAdapter();
-        setCurrentFilter(mListener.onRecallSelection());
+        setCurrentFilter(mFilterListener.onRecallSelection());
     }
 
     public void setAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter){
@@ -128,8 +128,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                                     updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                                     return;
                                 }
-                                if (mListener != null){
-                                    mListener.onLoadData();
+                                if (mFilterListener != null){
+                                    mFilterListener.onLoadData();
                                 }
                             }
                         });
@@ -167,10 +167,10 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 AppLog.d(mTAG, "NEW STATUS : " + selectedCriteria.getLabel());
                 setCurrentFilter(selectedCriteria);
-                if (mListener != null) {
-                    mListener.onFilterSelected(position, selectedCriteria);
+                if (mFilterListener != null) {
+                    mFilterListener.onFilterSelected(position, selectedCriteria);
                     setRefreshing(true);
-                    mListener.onLoadData();
+                    mFilterListener.onLoadData();
                 }
             }
 
@@ -201,8 +201,8 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
             String msg = null;
-            if (mListener != null){
-                msg  = mListener.onShowEmptyViewMessage(emptyViewMessageType);
+            if (mFilterListener != null){
+                msg  = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
             }
 
             if (msg == null){
@@ -311,11 +311,55 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public interface Listener {
+    /**
+     * implement this interface to use FilterRecyclerView
+     */
+    public interface FilterListener {
+        /**
+         * Called upon initialization - provide an array of FilterCriterias here. These are the possible criterias
+         * the Spinner is loaded with, and through which the data can be filtered.
+         *
+         * @return an array of FilterCriteria to be used on Spinner initialization
+         */
         FilterCriteria[] onLoadFilterCriteriaOptions();
-        void onLoadData();
-        void onFilterSelected(int position, FilterCriteria criteria);
+
+        /**
+         * Called upon initialization, right after onLoadFilterCriteriaOptions().
+         * Once the criteria options are set up, use this callback to return the latest option selected on the
+         * screen the last time the user visited it, or a default value for the filter Spinner to be initialized with.
+         *
+         * @return
+         */
         FilterCriteria onRecallSelection();
+
+        /**
+         * When this method is called, you should load data into the FilteredRecyclerView adapter, using the
+         * latest criteria passed to you in a previous onFilterSelected() call.
+         * Within the FilteredRecyclerView lifecycle, this is triggered in three different moments:
+         * 1 - upon initialisation, and
+         * 2 - each time a screen refresh is requested
+         * 3 - each time the user changes the filter spinner selection
+         */
+        void onLoadData();
+
+        /**
+         * Called each time the user changes the Spinner selection (i.e. changes the criteria on which to filter
+         * the data). You should only take note of the change, and remember it, as a request to load data with
+         * the newly selected filter shall always arrive through onLoadData().
+         * The parameters passed in this callback can be used alternatively as per your convenience.
+         *
+         * @param position of the selected criteria
+         * @param criteria the actual criteria selected
+         */
+        void onFilterSelected(int position, FilterCriteria criteria);
+
+        /**
+         * Called when there's no data to show.
+         *
+         * @param emptyViewMsgType this will hint you on the reason why no data is being shown, so you can return
+         *                         a proper message to be displayed to the user
+         * @return the message to be displayed to the user
+         */
         String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType);
     }
 

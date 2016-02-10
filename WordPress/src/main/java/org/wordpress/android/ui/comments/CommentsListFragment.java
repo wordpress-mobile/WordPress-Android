@@ -194,7 +194,7 @@ public class CommentsListFragment extends Fragment {
 
         mFilteredCommentsView = (FilteredRecyclerView) view.findViewById(R.id.filtered_recycler_view);
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
-        mFilteredCommentsView.setLifecycleListener(new FilteredRecyclerView.Listener() {
+        mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public FilterCriteria[] onLoadFilterCriteriaOptions() {
                 return commentStatuses;
@@ -525,7 +525,7 @@ public class CommentsListFragment extends Fragment {
             if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
                 switch (mErrorType) {
                     case UNAUTHORIZED:
-                        if (mFilteredCommentsView.emptyViewIsVisible()) {
+                        if (!mFilteredCommentsView.emptyViewIsVisible()) {
                             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
                         }
                         mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);

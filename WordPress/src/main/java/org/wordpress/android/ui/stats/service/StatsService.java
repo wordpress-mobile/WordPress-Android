@@ -436,7 +436,7 @@ public class StatsService extends Service {
      *  That's good for now, but could lead to errors if the RestClient changes the way the URL is constructed internally,
      *  by calling `getAbsoluteURL`.
      *
-     *  - Another approach would involve the get of the requests ErrorListener and the check Listener's parameters.
+     *  - Another approach would involve the get of the requests ErrorListener and the check FilterListener's parameters.
      *  - Cleanest approach is for sure to create a new class that extends Request<JSONObject> and stores parameters for later comparison,
      *  unfortunately we have to change the REST Client and RestClientUtils a lot if we want follow this way...
      *
