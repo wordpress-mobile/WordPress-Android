@@ -23,10 +23,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
@@ -247,6 +249,8 @@ public class MySiteFragment extends Fragment
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
+                    //reset comments status filter
+                    AppPrefs.setCommentsStatusFilter(CommentStatus.UNKNOWN);
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
