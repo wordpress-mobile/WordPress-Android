@@ -171,7 +171,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     }
                 }
             } else {
-                ActivityLauncher.showSignInForResult(this);
+                ActivityLauncher.showSignInForResult(this, false);
             }
         }
     }
@@ -368,7 +368,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 break;
             case RequestCodes.REAUTHENTICATE:
                 if (resultCode == RESULT_CANCELED) {
-                    ActivityLauncher.showSignInForResult(this);
+                    ActivityLauncher.showSignInForResult(this, false);
                 } else {
                     // Register for Cloud messaging
                     startService(new Intent(this, GCMRegistrationIntentService.class));
@@ -388,7 +388,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     // user removed the current (self-hosted) blog from blog settings
                     if (!AccountHelper.isSignedIn()) {
-                        ActivityLauncher.showSignInForResult(this);
+                        ActivityLauncher.showSignInForResult(this, true);
                     } else {
                         MySiteFragment mySiteFragment = getMySiteFragment();
                         if (mySiteFragment != null) {
@@ -442,7 +442,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutCompletely event) {
-        ActivityLauncher.showSignInForResult(this);
+        ActivityLauncher.showSignInForResult(this, true);
     }
 
     @SuppressWarnings("unused")

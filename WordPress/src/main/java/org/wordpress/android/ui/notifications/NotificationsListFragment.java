@@ -370,7 +370,7 @@ public class NotificationsListFragment extends Fragment
         if (mFilterRadioGroup == null || !isAdded()) return;
 
         if (!AccountHelper.isSignedInWordPressDotCom()) {
-            ActivityLauncher.showSignInForResult(getActivity());
+            ActivityLauncher.showSignInForResult(getActivity(), false);
             return;
         }
 

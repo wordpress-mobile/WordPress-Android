@@ -77,6 +77,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-aar:4.2.0-support'
     compile 'de.greenrobot:eventbus:2.4.0'

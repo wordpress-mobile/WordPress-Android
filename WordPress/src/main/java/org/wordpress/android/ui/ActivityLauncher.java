@@ -225,8 +225,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_BLOG);
     }
 
-    public static void showSignInForResult(Activity activity) {
+    public static void showSignInForResult(Activity activity, boolean disableAutoSignIn) {
         Intent intent = new Intent(activity, SignInActivity.class);
+        if (disableAutoSignIn) {
+            intent.putExtra(SignInActivity.EXTRA_DISABLE_AUTO_SIGNIN, true);
+        }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -257,7 +260,7 @@ public class ActivityLauncher {
 
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
-        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

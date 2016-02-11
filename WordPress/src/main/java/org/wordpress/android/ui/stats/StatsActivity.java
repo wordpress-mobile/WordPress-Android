@@ -516,9 +516,9 @@ public class StatsActivity extends AppCompatActivity
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mLocalBlogID);
         signInIntent.putExtra(
-                SignInActivity.ARG_JETPACK_MESSAGE_AUTH,
+                SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
                 getString(R.string.stats_sign_in_jetpack_different_com_account)
         );
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
