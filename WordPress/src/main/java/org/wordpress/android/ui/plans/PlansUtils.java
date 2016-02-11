@@ -79,17 +79,6 @@ public class PlansUtils {
         return true;
     }
 
-    /*
-    @Nullable
-    public static Plan getGlobalPlanForBlog(int blogLocalId) {
-        Blog currentBlog = WordPress.getBlog(blogLocalId);
-        if (currentBlog == null) {
-            return null;
-        }
-        return getGlobalPlan(currentBlog.getPlanID());
-    }
-    */
-
     @Nullable
     public static Plan getGlobalPlan(long planId) {
         List<Plan> plans = getGlobalPlans();
@@ -174,6 +163,23 @@ public class PlansUtils {
         }
 
         return features;
+    }
+
+    @Nullable
+    public static List<Feature> getPlanFeatures(long planID) {
+        List<Feature> allFeatures = getFeatures();
+        if (allFeatures == null) {
+            return null;
+        }
+
+        List<Feature> currentPlanFeatures = new ArrayList<>();
+        for (Feature currentFeature : allFeatures) {
+            if (currentFeature.getPlanIDToDescription().containsKey(planID)) {
+                currentPlanFeatures.add(currentFeature);
+            }
+        }
+
+        return  currentPlanFeatures;
     }
 
     public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {

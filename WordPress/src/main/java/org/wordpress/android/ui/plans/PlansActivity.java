@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -34,13 +33,11 @@ public class PlansActivity extends AppCompatActivity {
 
     private int mLocalBlogID = -1;
     private ArrayList<SitePlan> mAvailablePlans;
+    private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     private WPViewPager mViewPager;
     private PlansPageAdapter mPageAdapter;
     private TabLayout mTabLayout;
-
-    private static final int NUM_TABS = 3;
-    private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +83,8 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void setupPlansUI() {
-        if (mAvailablePlans == null) {
+        if (mAvailablePlans == null || mAvailablePlans.size() == 0)  {
+            //TODO: Static UI here?
             return;
         }
 
@@ -94,7 +92,7 @@ public class PlansActivity extends AppCompatActivity {
         progress.setVisibility(View.GONE);
 
         mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
+        mViewPager.setOffscreenPageLimit(mAvailablePlans.size() - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setVisibility(View.VISIBLE);
@@ -106,10 +104,10 @@ public class PlansActivity extends AppCompatActivity {
 
         // Move the viewpager on the blog plan if no prev position is available
         if (mViewpagerPosSelected == NO_PREV_POS_SELECTED_VIEWPAGER) {
-            Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-            if (currentBlog != null) {
-                long planID = currentBlog.getPlanID();
-                mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(planID);
+            for (SitePlan currentSitePlan : mAvailablePlans) {
+                if (currentSitePlan.isCurrentPlan()) {
+                    mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
+                }
             }
         }
         if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
@@ -122,6 +120,46 @@ public class PlansActivity extends AppCompatActivity {
         progress.setVisibility(View.VISIBLE);
     }
 
+    private class PlansPageAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments;
+
+        PlansPageAdapter(FragmentManager fm, List<Fragment> fragments) {
+            super(fm);
+            mFragments = fragments;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (mFragments != null && isValidPosition(position)) {
+                return ((PlanFragment)mFragments.get(position)).getTitle();
+            }
+            return super.getPageTitle(position);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        public boolean isValidPosition(int position) {
+            return (position >= 0 && position < getCount());
+        }
+
+        public int getPositionOfPlan(long planID) {
+            for (int i = 0; i < getCount(); i++) {
+                PlanFragment fragment = (PlanFragment) getItem(i);
+                if (fragment.getSitePlan().getProductID() == planID ) {
+                    return  i;
+                }
+            }
+            return -1;
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -144,18 +182,16 @@ public class PlansActivity extends AppCompatActivity {
         }
     }
 
-    PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
-        public void onResponse(List<SitePlan> plans) {
-            // Make sure we've a list implementation that implements Serializable. ArrayList does implement it.
-            mAvailablePlans = new ArrayList<>(plans);
-            setupPlansUI();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
+        if (mViewPager != null) {
+            outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
         }
-        public void onError(Exception volleyError) {
-            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-            finish();
-        }
-    };
+        // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
+        mViewpagerPosSelected = mViewPager.getCurrentItem();
+    }
 
     private PlansPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
@@ -163,7 +199,7 @@ public class PlansActivity extends AppCompatActivity {
             if (mAvailablePlans != null) {
                 for(SitePlan current : mAvailablePlans) {
                     PlanFragment fg = PlanFragment.newInstance();
-                    fg.setPlan(current);
+                    fg.setSitePlan(current);
                     fragments.add(fg);
                 }
             }
@@ -190,55 +226,17 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
-        outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
-        if (mViewPager != null) {
-            outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
-        }
-        // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
-        mViewpagerPosSelected = mViewPager.getCurrentItem();
-    }
 
-    private class PlansPageAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments;
-
-        PlansPageAdapter(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            mFragments = fragments;
+    PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
+        public void onResponse(List<SitePlan> plans) {
+            // Make sure we've a list implementation that implements Serializable. ArrayList does implement it.
+            mAvailablePlans = new ArrayList<>(plans);
+            setupPlansUI();
         }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (mFragments != null && isValidPosition(position)) {
-                return ((PlanFragment)mFragments.get(position)).getPlan().getProductName();
-            }
-            return super.getPageTitle(position);
+        public void onError(Exception volleyError) {
+            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+            finish();
         }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        public boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
-        }
-
-        public int getPositionOfPlan(long planID) {
-            for (int i = 0; i < getCount(); i++) {
-                PlanFragment fragment = (PlanFragment) getItem(i);
-                if (fragment.getPlan().getProductID() == planID ) {
-                    return  i;
-                }
-            }
-            return -1;
-        }
-    }
+    };
 }

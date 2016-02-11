@@ -7,14 +7,23 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/plan_outer_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin">
 
+        <ImageView
+            android:id="@+id/plan_icon"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center_horizontal"
+            />
 
-        <org.wordpress.android.widgets.WPTextView
+
+        <!--org.wordpress.android.widgets.WPTextView
             android:id="@+id/plan_details_raw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +34,7 @@
             android:textSize="@dimen/text_sz_small"
             android:textStyle="bold"
             app:fontVariation="light"
-            />
+            / -->
 
     </LinearLayout>
 </ScrollView>

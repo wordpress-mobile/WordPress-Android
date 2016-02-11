@@ -5,17 +5,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.plans.models.Feature;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.widgets.WPTextView;
+
+import java.util.List;
 
 public class PlanFragment extends Fragment {
     private static final String PLAN = "PLAN";
+    private static final String PLAN_DETAILS = "PLAN_DETAILS";
 
-    private TextView mPlanDetailsRawTextView;
+    private LinearLayout mPlanDetailsOuterContainer;
+    private ImageView mPlanImageView;
 
-    private SitePlan mCurrentPlan;
+    private SitePlan mCurrentSitePlan;
+    private Plan mCurrentPlanDetails;
 
     public static PlanFragment newInstance() {
         return new PlanFragment();
@@ -26,7 +35,10 @@ public class PlanFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(PLAN)) {
-                mCurrentPlan = (SitePlan) savedInstanceState.getSerializable(PLAN);
+                mCurrentSitePlan = (SitePlan) savedInstanceState.getSerializable(PLAN);
+            }
+            if (savedInstanceState.containsKey(PLAN_DETAILS)) {
+                mCurrentPlanDetails = (Plan) savedInstanceState.getSerializable(PLAN_DETAILS);
             }
         }
     }
@@ -35,8 +47,8 @@ public class PlanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.plan_fragment, container, false);
-        mPlanDetailsRawTextView = (TextView) rootView.findViewById(R.id.plan_details_raw);
-
+        mPlanDetailsOuterContainer = (LinearLayout) rootView.findViewById(R.id.plan_outer_container);
+        mPlanImageView = (ImageView) rootView.findViewById(R.id.plan_icon);
         return rootView;
     }
 
@@ -48,21 +60,79 @@ public class PlanFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(PLAN, mCurrentPlan);
+        outState.putSerializable(PLAN, mCurrentSitePlan);
+        outState.putSerializable(PLAN_DETAILS, mCurrentPlanDetails);
         super.onSaveInstanceState(outState);
     }
 
     private void refreshPlanUI() {
-        if (mCurrentPlan!= null) {
-            mPlanDetailsRawTextView.setText(mCurrentPlan.getProductName() + " " + mCurrentPlan.getFormattedPrice());
+        if (!isAdded()) {
+            return;
         }
+        if (mCurrentSitePlan == null) {
+            // ?? This should never happen
+            return;
+        }
+
+        switch ((int)mCurrentSitePlan.getProductID()) {
+            case 1:
+            case 2002:
+                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_beginner));
+                break;
+            case 2000:
+            case 1003:
+                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_premium));
+                break;
+            case 1008:
+            case 2001:
+                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_business));
+                break;
+            default:
+                mPlanImageView.setVisibility(View.GONE);
+        }
+
+        addTextView(mCurrentPlanDetails.getTagline());
+        addTextView(mCurrentPlanDetails.getFormattedPrice());
+        addTextView(mCurrentPlanDetails.getBillPeriodLabel());
+
+        addTextView("");
+        addTextView("Features available:");
+
+        List<Feature> features = PlansUtils.getPlanFeatures(mCurrentSitePlan.getProductID());
+        if (features != null) {
+            for (Feature current : features) {
+                addTextView(current.getTitle());
+            }
+        }
+
+        addTextView("");
+
+        if (mCurrentSitePlan.isCurrentPlan()) {
+            addTextView("Your current Plan.");
+        } else {
+            addTextView("Upgrade to this Plan.");
+        }
+
     }
 
-    public void setPlan(SitePlan plan) {
-        mCurrentPlan = plan;
+    private void addTextView(String text) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        WPTextView valueTV = (WPTextView) inflater.inflate(R.layout.plan_text_item, mPlanDetailsOuterContainer, false);
+        valueTV.setText(text);
+        mPlanDetailsOuterContainer.addView(valueTV);
     }
 
-    public SitePlan getPlan() {
-        return mCurrentPlan;
+
+    public void setSitePlan(SitePlan plan) {
+        mCurrentSitePlan = plan;
+        mCurrentPlanDetails = PlansUtils.getGlobalPlan(mCurrentSitePlan.getProductID());
+    }
+
+    public SitePlan getSitePlan() {
+        return mCurrentSitePlan;
+    }
+
+    String getTitle() {
+        return mCurrentPlanDetails.getProductNameShort();
     }
 }
