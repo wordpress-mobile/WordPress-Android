@@ -1279,7 +1279,7 @@
     <string name="contact_support">Contact support</string>
     <string name="delete_entire_site">Delete the entire site?</string>
     <string name="confirm_entering_primary_domain_below">Confirm by entering the primary domain below.</string>
-    <string name="export_content">Export content</string>
+    <string name="site_settings_export_content_title">Export content</string>
     <string name="export_content_message">Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.</string>
     <string name="error_deleting_site">Error deleting site</string>
     <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>

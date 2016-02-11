@@ -641,7 +641,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showExportContentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.export_content);
+        builder.setTitle(R.string.site_settings_export_content_title);
         builder.setMessage(R.string.export_content_message);
         builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
