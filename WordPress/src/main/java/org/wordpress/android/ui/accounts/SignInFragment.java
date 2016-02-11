@@ -75,6 +75,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
+    private static final String KEY_IS_SELF_HOSTED = "IS_IS_SELF_HOSTED";
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -120,6 +121,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
@@ -159,6 +168,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 }
             }
         });
+
+        if (mSelfHosted) {
+            mUrlButtonLayout.setVisibility(View.VISIBLE);
+            mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
+        }
 
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
@@ -872,5 +886,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 refreshBlogContent(currentBlog);
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_SELF_HOSTED, mSelfHosted);
     }
 }
