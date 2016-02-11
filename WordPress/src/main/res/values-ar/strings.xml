@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">الحجم الأصلي</string>
+	<string name="about_me_hint">كلمات قليلة عنك...</string>
+	<string name="public_display_name_hint">سيكون اسم العرض افتراضيًا لاسم المستخدم الخاص بك إذا لم يتم تعيينه</string>
+	<string name="about_me">نبذة عني</string>
+	<string name="public_display_name">اسم العرض العام</string>
+	<string name="my_profile">ملفي الشخصي</string>
+	<string name="first_name">الاسم الأول</string>
+	<string name="last_name">اسم العائلة</string>
+	<string name="site_privacy_public_desc">السماح لمحركات البحث بفهرسة هذا الموقع</string>
+	<string name="site_privacy_hidden_desc">منع محركات البحث من فهرسة هذا الموقع</string>
+	<string name="site_privacy_private_desc">أود أن يكون موقعي خاصًا، مرئيًا فقط للمستخدمين الذين أختارهم</string>
+	<string name="cd_related_post_preview_image">صورة معاينة المقالة ذات الصلة</string>
+	<string name="error_post_remote_site_settings">تعذر حفظ معلومات الموقع</string>
+	<string name="error_fetch_remote_site_settings">تعذر استرداد معلومات الموقع</string>
+	<string name="error_media_upload_connection">حدث خطأ في الاتصال أثناء رفع ملفات الوسائط</string>
+	<string name="site_settings_disconnected_toast">غير متصل، التحرير مُعطّل.</string>
+	<string name="site_settings_unsupported_version_error">إصدار وردبرس غير مدعوم</string>
+	<string name="site_settings_multiple_links_dialog_description">يلزم موافقة على التعليقات التي تتضمن أكثر من هذا العدد من الروابط.</string>
+	<string name="site_settings_close_after_dialog_switch_text">إغلاق تلقائي</string>
+	<string name="site_settings_close_after_dialog_description">إغلاق تلقائي للتعليقات على المقالات.</string>
+	<string name="site_settings_paging_dialog_description">تحديد مناقشات التعليقات في صفحات متعددة.</string>
+	<string name="site_settings_paging_dialog_header">التعليقات لكل صفحة</string>
+	<string name="site_settings_close_after_dialog_title">إغلاق التعليق</string>
+	<string name="site_settings_blacklist_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم وضع علامة عليه باعتباره تعليقًا مزعجًا. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة "برس" كلمة "وردبرس".</string>
+	<string name="site_settings_hold_for_moderation_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم حجزه في قائمة انتظار الإدارة. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة "برس" كلمة "وردبرس".</string>
+	<string name="site_settings_list_editor_input_hint">أدخل كلمة أو عبارة</string>
+	<string name="site_settings_list_editor_no_items_text">لا توجد عناصر</string>
+	<string name="site_settings_learn_more_caption">يمكنك تجاوز هذه الإعدادات للمقالات الفردية.</string>
+	<string name="site_settings_rp_preview3_site">في "الترقية"</string>
+	<string name="site_settings_rp_preview3_title">نطاق الترقية: فيديوبرس لحفلات الزفاف</string>
+	<string name="site_settings_rp_preview2_site">في "التطبيقات"</string>
+	<string name="site_settings_rp_preview2_title">تجري حاليًا صيانة تطبيق وردبرس للأندرويد</string>
+	<string name="site_settings_rp_preview1_site">في "الجوال"</string>
+	<string name="site_settings_rp_preview1_title">تحديث iPhone/iPad كبير متوفر الآن</string>
+	<string name="site_settings_rp_show_images_title">عرض الصور</string>
+	<string name="site_settings_rp_show_header_title">عرض الترويسة</string>
+	<string name="site_settings_rp_switch_summary">تعرض المقالات ذات الصلة المحتوى ذا الصلة من موقعك أسفل مقالاتك.</string>
+	<string name="site_settings_rp_switch_title">عرض المقالات ذات الصلة</string>
+	<string name="site_settings_delete_site_hint">يُزيل بيانات موقعك من التطبيق</string>
+	<string name="site_settings_blacklist_hint">يتم وضع علامة على التعليقات التي تتطابق مع عامل التصفية باعتبارها بريدًا مزعجًا</string>
+	<string name="site_settings_moderation_hold_hint">يتم وضع التعليقات التي تتطابق مع عامل التصفية في قائمة انتظار الإدارة</string>
+	<string name="site_settings_multiple_links_hint">يتجاهل حد الرابط من المستخدمين المعروفين</string>
+	<string name="site_settings_whitelist_hint">يجب أن يملك صاحب التعليق تعليقات سابقة</string>
+	<string name="site_settings_user_account_required_hint">يجب على الزوار التسجيل ليتمكنوا من التعليق</string>
+	<string name="site_settings_identity_required_hint">يجب على كاتب التعليق كتابة الاسم والبريد الإلكتروني</string>
+	<string name="site_settings_manual_approval_hint">يجب الموافقة على التعليق يدويًا</string>
+	<string name="site_settings_paging_hint">عرض التعليقات في أجزاء من الحجم المحدد</string>
+	<string name="site_settings_threading_hint">السماح للتعليقات المتداخلة بالوصول إلى عمق معين</string>
+	<string name="site_settings_sort_by_hint">يحدد الترتيب الذي تُعرض به التعليقات</string>
+	<string name="site_settings_close_after_hint">إيقاف التعليقات بعد وقت محدد</string>
+	<string name="site_settings_receive_pingbacks_hint">السماح بتنبيهات الروابط من المدونات الأخرى</string>
+	<string name="site_settings_send_pingbacks_hint">محاولة التنبيه بوجود أي مدونات مرتبطة بالمقالة</string>
+	<string name="site_settings_allow_comments_hint">السماح للقرّاء بنشر التعليقات</string>
+	<string name="site_settings_discussion_hint">عرض إعدادات المناقشة على موقعك وتغييرها</string>
+	<string name="site_settings_more_hint">عرض جميع إعدادات المناقشة المتوفرة</string>
+	<string name="site_settings_related_posts_hint">إظهار المقالات ذات الصلة أو إخفاؤها في القارئ</string>
+	<string name="site_settings_upload_and_link_image_hint">التمكين لرفع صورة بالحجم الكامل دائمًا</string>
+	<string name="site_settings_image_width_hint">تغيير حجم الصور في المقالات إلى هذا العرض</string>
+	<string name="site_settings_format_hint">يُعيّن تنسيق مقالة جديدة</string>
+	<string name="site_settings_category_hint">تعيين فئة مقالة جديدة</string>
+	<string name="site_settings_location_hint">إضافة بيانات الموقع إلى مقالاتك تلقائيًا</string>
+	<string name="site_settings_password_hint">تغيير كلمة مرورك</string>
+	<string name="site_settings_username_hint">حساب المستخدم الحالي</string>
+	<string name="site_settings_language_hint">اللغة التي تُكتب بها هذه المدونة في الأصل.</string>
+	<string name="site_settings_privacy_hint">التحكم في من يمكنه رؤية موقعك</string>
+	<string name="site_settings_address_hint">تغيير عنوانك غير مدعوم حاليًا</string>
+	<string name="site_settings_tagline_hint">وصف موجز أو عبارة جذابة يراد بها وصف مدونتك</string>
+	<string name="site_settings_title_hint">بكلمات قليلة، اكتب نبذة موجزة عن هذا الموقع</string>
+	<string name="site_settings_whitelist_known_summary">تعليقات من مستخدمين معروفين</string>
+	<string name="site_settings_whitelist_all_summary">تعليقات من جميع المستخدمين</string>
+	<string name="site_settings_threading_summary">مستويات %d</string>
+	<string name="site_settings_privacy_private_summary">خاص</string>
+	<string name="site_settings_privacy_hidden_summary">مخفي</string>
+	<string name="site_settings_delete_site_title">حذف الموقع</string>
+	<string name="site_settings_privacy_public_summary">عام</string>
+	<string name="site_settings_blacklist_title">قائمة الحظر</string>
+	<string name="site_settings_moderation_hold_title">احتجاز من أجل الإدارة</string>
+	<string name="site_settings_multiple_links_title">الروابط في التعليقات</string>
+	<string name="site_settings_whitelist_title">الموافقة تلقائيًا</string>
+	<string name="site_settings_threading_title">مؤشر الترابط</string>
+	<string name="site_settings_paging_title">ترقيم الصفحات</string>
+	<string name="site_settings_sort_by_title">فرز حسب</string>
+	<string name="site_settings_account_required_title">يجب على المستخدمين تسجيل الدخول</string>
+	<string name="site_settings_identity_required_title">لا بد من تضمين الاسم والبريد الإلكتروني</string>
+	<string name="site_settings_receive_pingbacks_title">تلقي تنبيهات</string>
+	<string name="site_settings_send_pingbacks_title">إرسال تنبيهات</string>
+	<string name="site_settings_allow_comments_title">السماح بالتعليقات</string>
+	<string name="site_settings_default_format_title">التنسيق الافتراضي</string>
+	<string name="site_settings_default_category_title">الفئة الافتراضية</string>
+	<string name="site_settings_location_title">تمكين الموقع</string>
+	<string name="site_settings_address_title">العنوان</string>
+	<string name="site_settings_title_title">عنوان الموقع</string>
+	<string name="site_settings_tagline_title">الشعار</string>
+	<string name="site_settings_this_device_header">هذا الجهاز</string>
+	<string name="site_settings_discussion_new_posts_header">الإعدادات الافتراضية للمقالات الجديدة</string>
+	<string name="site_settings_account_header">الحساب</string>
+	<string name="site_settings_writing_header">كتابة</string>
+	<string name="newest_first">الأحدث أولاً</string>
+	<string name="site_settings_general_header">عام</string>
+	<string name="discussion">مناقشة</string>
+	<string name="privacy">الخصوصية</string>
+	<string name="related_posts">المقالات ذات الصلة</string>
+	<string name="comments">التعليقات</string>
+	<string name="close_after">إغلاق بعد</string>
+	<string name="oldest_first">الأقدم أولاً</string>
+	<string name="media_error_no_permission_upload">ليست لديك الصلاحية اللازمة لرفع ملفات الوسائط إلى هذا الموقع</string>
+	<string name="never">أبدًا</string>
+	<string name="unknown">غير معروف</string>
 	<string name="reader_err_get_post_not_found">لم تعد هذه المقالة موجودة</string>
 	<string name="reader_err_get_post_not_authorized">لست مخولاً لعرض هذه المقالة</string>
 	<string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
@@ -124,14 +232,12 @@
 	<string name="trashed">أُضيف إلى سلة المهملات</string>
 	<string name="button_back">رجوع</string>
 	<string name="page_deleted">تم حذف الصفحة</string>
-	<string name="button_more">المزيد</string>
 	<string name="button_stats">إحصاءات</string>
 	<string name="button_trash">سلة المهملات</string>
 	<string name="button_preview">معاينة</string>
 	<string name="button_view">عرض</string>
 	<string name="button_edit">تحرير</string>
 	<string name="button_publish">نشر</string>
-	<string name="button_delete">حذف</string>
 	<string name="my_site_no_sites_view_subtitle">هل ترغب في إضافة واحد؟</string>
 	<string name="my_site_no_sites_view_title">ليس لديك أي مواقع وردبرس حتى الآن.</string>
 	<string name="my_site_no_sites_view_drake">رسم توضيحي</string>
@@ -170,7 +276,6 @@
 	<string name="my_site_btn_switch_site">تبديل الموقع</string>
 	<string name="my_site_header_publish">نشر</string>
 	<string name="my_site_btn_blog_posts">مقالات المدونة</string>
-	<string name="my_site_btn_comments">التعليقات</string>
 	<string name="my_site_header_look_and_feel">الشكل والطابع</string>
 	<string name="my_site_btn_site_settings">الإعدادات</string>
 	<string name="my_site_header_configuration">التكوين</string>
@@ -221,6 +326,8 @@
 	<string name="add_to_post">إضافة مقالة</string>
 	<string name="take_photo">خذ صورة</string>
 	<string name="device">جهاز</string>
+	<string name="media_details_label_file_name">اسم الملف</string>
+	<string name="media_details_label_file_type">نوع الملف</string>
 	<string name="toast_err_post_uploading">يتعذر فتح مقالة أثناء رفعها</string>
 	<string name="posts_fetching">جار إحضار المقالات…</string>
 	<string name="media_fetching">جار إحضار الوسائط…</string>
@@ -256,7 +363,6 @@
 	<string name="stats_views">مشاهدات</string>
 	<string name="stats_timeframe_years">سنوات</string>
 	<string name="stats_pagination_label">الصفحة %1$s من %2$s</string>
-	<string name="stats_comments">تعليقات</string>
 	<string name="stats_likes">إعجابات</string>
 	<string name="stats_view_followers">متابعون</string>
 	<string name="stats_view_countries">البلاد</string>
@@ -332,13 +438,13 @@
 	<string name="reader_label_comment_count_single">تعليق واحد</string>
 	<string name="reader_label_comments_closed">التعليقات مغلقة</string>
 	<string name="reader_label_comments_on">تعليقات على</string>
-	<string name="reader_title_comments">تعليقات</string>
 	<string name="reader_title_photo_viewer">%1$d من %2$d</string>
 	<string name="error_publish_empty_post">يتعذر نشر مقالة فارغة</string>
 	<string name="error_refresh_unauthorized_posts">ليس لديك الإذن اللازم لعرض المقالات أو تحريرها</string>
 	<string name="error_refresh_unauthorized_pages">ليس لديك الإذن اللازم لعرض الصفحات أو تحريرها</string>
 	<string name="error_refresh_unauthorized_comments">ليس لديك الإذن اللازم لعرض التعليقات أو تحريرها</string>
 	<string name="older_month">أقدم من شهر</string>
+	<string name="more">المزيد</string>
 	<string name="older_two_days">أقدم من يومين</string>
 	<string name="older_last_week">أقدم من أسبوع</string>
 	<string name="stats_no_blog">يتعذر تحميل الإحصاءات للمدونة المطلوبة</string>
@@ -644,12 +750,10 @@
 	<string name="stats_view_clicks">النقرات</string>
 	<string name="stats_timeframe_yesterday">الأمس</string>
 	<string name="stats_timeframe_today">اليوم</string>
-	<string name="stats_view_comments">التعليقات</string>
 	<string name="stats_view_tags_and_categories">الوسوم و التصنيفات</string>
 	<string name="stats_entry_posts_and_pages">العنوان</string>
 	<string name="stats_entry_country">الدولة</string>
 	<string name="stats_totals_clicks">النقرات</string>
-	<string name="stats_totals_comments">التعليقات</string>
 	<string name="unattached">غير مرفق</string>
 	<string name="custom_date">تاريخ مخصص</string>
 	<string name="media_add_popup_capture_photo">التقط صورة</string>
@@ -775,7 +879,6 @@
 	<string name="reply">الرد</string>
 	<string name="yes">نعم</string>
 	<string name="no">لا</string>
-	<string name="tab_comments">تعليقات</string>
 	<string name="preview">معاينة</string>
 	<string name="add">أضف</string>
 	<string name="category_refresh_error">خطأ في تحديث القسم</string>
@@ -826,6 +929,33 @@
 		<item>قياسي</item>
 		<item>حالة</item>
 		<item>فيديو</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>سيكون موقعك مرئيًا للجميع ويمكن فهرسته بواسطة محركات البحث</item>
+		<item>سيكون موقعك مرئيًا للجميع مع مطالبة محركات البحث بعدم فهرسته في الوقت نفسه</item>
+		<item>سيكون موقعك مرئيًا لك وللمستخدمين الذين توافق عليهم فقط</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>يتطلب موافقة يدوية لتعليقات الجميع.</item>
+		<item>موافقة تلقائية إذا كان لدى المستخدم تعليق تمت الموافقة عليه مسبقًا.</item>
+		<item>موافقة تلقائية على تعليقات الجميع.</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>لا توجد تعليقات</item>
+		<item>تعليقات المستخدمين المعروفة</item>
+		<item>جميع المستخدمين</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>بلا</item>
+		<item>مستويان</item>
+		<item>المستويات الثلاثة</item>
+		<item>المستويات الأربعة</item>
+		<item>المستويات الخمسة</item>
+		<item>المستويات الستة</item>
+		<item>المستويات السبعة</item>
+		<item>المستويات الثمانية</item>
+		<item>المستويات التسعة</item>
+		<item>المستويات العشرة</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>مجاني</item>

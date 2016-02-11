@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -46,6 +47,13 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
+
+        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
+        STATS_WIDGET_PROMO_ANALYTICS,
+
+        // index of the last active status type in Comments activity
+        COMMENTS_STATUS_TYPE_INDEX,
+
     }
 
     /**
@@ -180,6 +188,25 @@ public class AppPrefs {
         }
     }
 
+    public static CommentStatus getCommentsStatusFilter() {
+        int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
+        CommentStatus[] commentStatusValues = CommentStatus.values();
+        if (commentStatusValues.length < idx) {
+            return commentStatusValues[0];
+        } else {
+            return commentStatusValues[idx];
+        }
+    }
+    public static void setCommentsStatusFilter(CommentStatus commentstatus) {
+        if (commentstatus != null) {
+            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentstatus.ordinal());
+        } else {
+            prefs().edit()
+                    .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
+                    .apply();
+        }
+    }
+
     // Store the version code of the app. Used to check it the app was upgraded.
     public static int getLastAppVersionCode() {
         return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
@@ -253,5 +280,14 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Store the number of times Stats are loaded successfully before showing the Promo Dialog
+    public static void bumpAnalyticsForStatsWidgetPromo() {
+        int current = getAnalyticsForStatsWidgetPromo();
+        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
+    }
+    public static int getAnalyticsForStatsWidgetPromo() {
+        return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 }

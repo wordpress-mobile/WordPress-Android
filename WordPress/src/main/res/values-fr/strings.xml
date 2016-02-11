@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">Taille originale</string>
+	<string name="about_me_hint">Quelques mots à propos de vous...</string>
+	<string name="about_me">À propos de moi</string>
+	<string name="public_display_name_hint">Le nom d\'affichage par défaut est votre nom d\'utilisateur s\'il n\'est pas défini.</string>
+	<string name="public_display_name">Public</string>
+	<string name="first_name">Prénom</string>
+	<string name="last_name">Nom</string>
+	<string name="my_profile">Mon profil</string>
+	<string name="site_privacy_public_desc">Permettre aux moteurs de recherche d’indexer votre site</string>
+	<string name="site_privacy_hidden_desc">Demander aux moteurs de recherche de ne pas indexer ce site</string>
+	<string name="site_privacy_private_desc">Je veux que mon site soit privé, visible seulement aux utilisateurs choisis.</string>
+	<string name="cd_related_post_preview_image">Prévisualisation de l\'image de l\'article connexe</string>
+	<string name="error_post_remote_site_settings">Impossible d\'enregistrer les infos du site</string>
+	<string name="error_fetch_remote_site_settings">Impossible de retrouver les infos du site</string>
+	<string name="error_media_upload_connection">Désolé, une erreur est survenue pendant l\'envoi du média</string>
+	<string name="site_settings_disconnected_toast">Déconnecté, modification désactivée.</string>
+	<string name="site_settings_unsupported_version_error">Version de WordPress non supportée</string>
+	<string name="site_settings_multiple_links_dialog_description">Approbation requise pour les commentaires incluant plus de liens que ce nombre.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Fermer automatiquement</string>
+	<string name="site_settings_close_after_dialog_description">Fermer automatiquement les commentaires.</string>
+	<string name="site_settings_paging_dialog_description">Scinder les fils de commentaires en pages multiples.</string>
+	<string name="site_settings_paging_dialog_header">Commentaires par page</string>
+	<string name="site_settings_close_after_dialog_title">Fermer les commentaires</string>
+	<string name="site_settings_blacklist_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera marqué en spam. Vous pouvez saisir des mots partiels, ainsi "press" correspondra à "WordPress".</string>
+	<string name="site_settings_hold_for_moderation_description">Quand un commentaire contient un de ces mots dans son contenu, nom, URL, email ou IP, il sera déposé dans la file de modération. Vous pouvez saisir des mots partiels, ainsi "press" correspondra à "WordPress". </string>
+	<string name="site_settings_list_editor_input_hint">Entrez un mot ou une phrase</string>
+	<string name="site_settings_list_editor_no_items_text">0 éléments</string>
+	<string name="site_settings_learn_more_caption">Vous pouvez substituer ces paramètres pour les articles individuels.</string>
+	<string name="site_settings_rp_preview3_site">dans "Mise à jour"</string>
+	<string name="site_settings_rp_preview3_title">Mise en avant de l\'option : VideoPress pour les mariages</string>
+	<string name="site_settings_rp_preview2_site">dans "Apps"</string>
+	<string name="site_settings_rp_preview2_title">WordPress pour Android App a subi un gros lifting</string>
+	<string name="site_settings_rp_preview1_site">Dans "Mobile"</string>
+	<string name="site_settings_rp_preview1_title">Grosse mise à jour iPhone/iPad disponible.</string>
+	<string name="site_settings_rp_show_images_title">Afficher les images</string>
+	<string name="site_settings_rp_show_header_title">Afficher l\'en-tête</string>
+	<string name="site_settings_rp_switch_summary">Les articles similaires affichent du contenu pertinent de votre site sous les articles.</string>
+	<string name="site_settings_rp_switch_title">Afficher les articles similaires</string>
+	<string name="site_settings_delete_site_hint">Supprime les données de votre site de l\'application</string>
+	<string name="site_settings_blacklist_hint">Les commentaires qui correspondent à un filtrer son marqués comme indésirables</string>
+	<string name="site_settings_moderation_hold_hint">Les commentaires qui correspondent à un filtre sont mis dans la file d\'attente de modération</string>
+	<string name="site_settings_multiple_links_hint">Ignore la limite de liens pour les utilisateurs connus</string>
+	<string name="site_settings_whitelist_hint">L&amp;rsquo;auteur d&amp;rsquo;un commentaire doit avoir déjà au moins un commentaire approuvé</string>
+	<string name="site_settings_user_account_required_hint">Les utilisateurs doivent être enregistrés et connectés pour commenter</string>
+	<string name="site_settings_identity_required_hint">L&amp;rsquo;auteur d&amp;rsquo;un commentaire doit renseigner son nom et son adresse de messagerie</string>
+	<string name="site_settings_manual_approval_hint">Les commentaires doivent être approuvés manuellement</string>
+	<string name="site_settings_paging_hint">Afficher les commentaires en morceaux d\'une taille spécifiée.</string>
+	<string name="site_settings_threading_hint">Permettre les commentaires imbriqués à un certain niveau</string>
+	<string name="site_settings_sort_by_hint">Détermine l\'ordre d\'affichage des commentaires</string>
+	<string name="site_settings_close_after_hint">Interdire les commentaires après l\'heure indiquée</string>
+	<string name="site_settings_receive_pingbacks_hint">Autoriser les liens de notifications depuis les autres sites</string>
+	<string name="site_settings_send_pingbacks_hint">Tenter de notifier les sites liés depuis le contenu des articles</string>
+	<string name="site_settings_allow_comments_hint">Autoriser les lecteurs à publier des commentaires</string>
+	<string name="site_settings_discussion_hint">Voir et modifier les réglages de discussion de votre site</string>
+	<string name="site_settings_more_hint">Voir tous les réglages de discussion disponibles</string>
+	<string name="site_settings_related_posts_hint">Afficher ou cacher les articles similaires dans le lecteur</string>
+	<string name="site_settings_upload_and_link_image_hint">Activez pour toujours mettre en ligne l\'image en pleine grandeur</string>
+	<string name="site_settings_image_width_hint">Redimensionner les images dans les articles dans cette largeur. </string>
+	<string name="site_settings_format_hint">Configure le nouveau format d&amp;rsquo;article</string>
+	<string name="site_settings_category_hint">Configure la nouvelle catégorie d\'articles</string>
+	<string name="site_settings_location_hint">Automatiquement ajouter les données de localisation pour vos articles.</string>
+	<string name="site_settings_password_hint">Changez votre mot de passe</string>
+	<string name="site_settings_username_hint">Compte utilisateur actuel</string>
+	<string name="site_settings_language_hint">La langue d\'écriture de ce blog est principalement en</string>
+	<string name="site_settings_privacy_hint">Contrôler qui peut voir votre site.</string>
+	<string name="site_settings_address_hint">Changer votre adresse n\'est actuellement pas supporté.</string>
+	<string name="site_settings_tagline_hint">Une brève description ou une phrase accrocheuse pour décrire votre blog</string>
+	<string name="site_settings_title_hint">En quelques mots, décrivez la raison d&amp;rsquo;être de ce site.</string>
+	<string name="site_settings_whitelist_known_summary">Commentaires des utilisateurs anonymes</string>
+	<string name="site_settings_whitelist_all_summary">Commentaires de tous les utilisateurs</string>
+	<string name="site_settings_threading_summary">%d niveaux</string>
+	<string name="site_settings_privacy_private_summary">Privé</string>
+	<string name="site_settings_privacy_hidden_summary">Caché</string>
+	<string name="site_settings_delete_site_title">Supprimer le site</string>
+	<string name="site_settings_privacy_public_summary">Public</string>
+	<string name="site_settings_blacklist_title">Liste noire</string>
+	<string name="site_settings_moderation_hold_title">Garder en modération</string>
+	<string name="site_settings_multiple_links_title">Liens dans les commentaires</string>
+	<string name="site_settings_whitelist_title">Approuver automatiquement</string>
+	<string name="site_settings_paging_title">Pagination</string>
+	<string name="site_settings_threading_title">Fil de discussions</string>
+	<string name="site_settings_sort_by_title">Trier par</string>
+	<string name="site_settings_account_required_title">Les utilisateurs doivent être connectés</string>
+	<string name="site_settings_identity_required_title">Doit inclure le nom et l\'email</string>
+	<string name="site_settings_receive_pingbacks_title">Recevoir les pings</string>
+	<string name="site_settings_send_pingbacks_title">Envoi des pings</string>
+	<string name="site_settings_allow_comments_title">Autoriser les commentaires</string>
+	<string name="site_settings_default_format_title">Format par défaut</string>
+	<string name="site_settings_default_category_title">Catégorie par défaut</string>
+	<string name="site_settings_location_title">Activer la localisation</string>
+	<string name="site_settings_address_title">Adresse</string>
+	<string name="site_settings_title_title">Titre du site</string>
+	<string name="site_settings_tagline_title">Slogan</string>
+	<string name="site_settings_this_device_header">Cet appareil</string>
+	<string name="site_settings_discussion_new_posts_header">Par défaut pour les nouveaux articles</string>
+	<string name="site_settings_account_header">Compte</string>
+	<string name="site_settings_writing_header">Écriture</string>
+	<string name="newest_first">Récents en premier</string>
+	<string name="site_settings_general_header">Général</string>
+	<string name="discussion">Discussion</string>
+	<string name="related_posts">Articles similaires</string>
+	<string name="comments">Commentaires</string>
+	<string name="oldest_first"> Anciens en Premier</string>
+	<string name="privacy">Vie privée</string>
+	<string name="close_after">Fermer après</string>
+	<string name="media_error_no_permission_upload">Vous n&amp;rsquo;avez pas l&amp;rsquo;autorisation de mettre en ligne des fichiers média sur ce site</string>
+	<string name="never">Jamais</string>
+	<string name="unknown">Inconnu</string>
 	<string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
 	<string name="reader_err_get_post_not_authorized">Vous n’avez pas les droits nécessaires pour voir cet article</string>
 	<string name="reader_err_get_post_generic">Impossible de retrouver cet article</string>
@@ -121,14 +229,12 @@
 	<string name="page_trashed">Page envoyée à la corbeille</string>
 	<string name="post_trashed">Article envoyé à la corbeille</string>
 	<string name="page_deleted">Page supprimée</string>
-	<string name="button_more">Plus</string>
 	<string name="button_stats">Stats</string>
 	<string name="button_trash">Corbeille</string>
 	<string name="button_preview">Aperçu</string>
 	<string name="button_view">Vue</string>
 	<string name="button_edit">Editer</string>
 	<string name="button_publish">Publier</string>
-	<string name="button_delete">Supprimer</string>
 	<string name="post_deleted">Article supprimé</string>
 	<string name="stats_no_activity_this_period">Pas d\'activité durant cette période</string>
 	<string name="button_back">Retour</string>
@@ -170,7 +276,6 @@
 	<string name="my_site_btn_view_admin">Afficher l\'Admin</string>
 	<string name="my_site_header_publish">Publier</string>
 	<string name="my_site_header_look_and_feel">Personnaliser</string>
-	<string name="my_site_btn_comments">Commentaires</string>
 	<string name="my_site_btn_site_settings">Réglages</string>
 	<string name="my_site_btn_blog_posts">Articles</string>
 	<string name="my_site_header_admin">Admin</string>
@@ -212,7 +317,6 @@
 	<string name="editor_toast_invalid_path">Chemin de fichier invalide</string>
 	<string name="error_publish_no_network">Impossible de publier quand il n\'y a pas de connexion. Brouillon sauvegardé.</string>
 	<string name="device">Appareil</string>
-	<string name="media_details_label_file_type">Type de fichier:</string>
 	<string name="tab_title_site_videos">Videos du site</string>
 	<string name="tab_title_site_images">Images du site</string>
 	<string name="tab_title_device_videos">Vidéos de l\'appareil</string>
@@ -222,7 +326,8 @@
 	<string name="media_picker_title">Sélectionner un média</string>
 	<string name="add_to_post">Ajouter à l\'article</string>
 	<string name="language">Langue</string>
-	<string name="media_details_label_file_name">Nom de fichier :</string>
+	<string name="media_details_label_file_name">Nom de fichier</string>
+	<string name="media_details_label_file_type">Type de fichier</string>
 	<string name="posts_fetching">Récupération des articles…</string>
 	<string name="media_fetching">Récupération des médias…</string>
 	<string name="stats_view_search_terms">Termes de Recherche</string>
@@ -256,7 +361,6 @@
 	<string name="stats_views">Visites</string>
 	<string name="stats_timeframe_years">Années</string>
 	<string name="stats_pagination_label">Page %1$s de %2$s</string>
-	<string name="stats_comments">Commentaires</string>
 	<string name="stats_view_countries">Pays</string>
 	<string name="stats_likes">Aime</string>
 	<string name="stats_view_publicize">Publicize</string>
@@ -334,13 +438,13 @@
 	<string name="reader_label_comment_count_single">Un commentaire</string>
 	<string name="reader_label_comments_closed">Les commentaires sont fermés</string>
 	<string name="reader_label_comments_on">Commentaires sur</string>
-	<string name="reader_title_comments">Commentaires</string>
 	<string name="reader_title_photo_viewer">%1$d sur %2$d</string>
 	<string name="error_publish_empty_post">Impossible de publier un article vide</string>
 	<string name="error_refresh_unauthorized_posts">Vous n\'avez pas la permission de voir ou éditer les articles</string>
 	<string name="error_refresh_unauthorized_pages">Vous n\'avez pas la permission de voir ou éditer les pages</string>
 	<string name="error_refresh_unauthorized_comments">Vous n\'avez pas la permission de voir ou éditer les commentaires</string>
 	<string name="older_month">Plus d\'un mois</string>
+	<string name="more">Plus</string>
 	<string name="older_two_days">Plus de 2 jours</string>
 	<string name="older_last_week">Plus d\'une semaine</string>
 	<string name="stats_no_blog">Les statistiques ne peuvent pas être chargée pour ce blog</string>
@@ -503,7 +607,6 @@
 	<string name="upload_failed">Échec du chargement</string>
 	<string name="horizontal_alignment">Alignement horizontal</string>
 	<string name="link_enter_url_text">Texte du lien (optionnel)</string>
-	<string name="comment_status_trash">À la corbeille</string>
 	<string name="trash">Corbeille</string>
 	<string name="saving_changes">Enregistrement des modifications</string>
 	<string name="sure_to_cancel_edit_comment">Annuler l\'édition de ce commentaire ?</string>
@@ -568,6 +671,7 @@
 	<string name="remove_account">Supprimer le site</string>
 	<string name="blog_removed_successfully">Site supprimé avec succès</string>
 	<string name="notifications_empty_all">Pas (encore) de notifications.</string>
+	<string name="comment_status_trash">À la Corbeille</string>
 	<string name="deleting_page">Suppression de la page</string>
 	<string name="deleting_post">Suppression de l\'article</string>
 	<string name="share_url_page">Partager la page</string>
@@ -616,8 +720,6 @@
 	<string name="reader_btn_follow">Suivre</string>
 	<string name="reader_label_added_tag">%s Ajouté</string>
 	<string name="reader_label_removed_tag">%s Retiré</string>
-	<string name="reader_toast_err_tag_exists">Vous suivez déjà ce tag</string>
-	<string name="reader_toast_err_tag_invalid">Ce n\'est pas un tag valide</string>
 	<string name="reader_toast_err_share_intent">Impossible de partager</string>
 	<string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
 	<string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
@@ -633,6 +735,8 @@
 	<string name="reader_btn_unfollow">Abonné</string>
 	<string name="media_add_new_media_gallery">Créer une galerie</string>
 	<string name="reader_hint_comment_on_comment">Répondre au commentaire…</string>
+	<string name="reader_toast_err_tag_invalid">Ce n’est pas une étiquette valide</string>
+	<string name="reader_toast_err_tag_exists">Vous suivez déjà cette étiquette</string>
 	<string name="themes">Thèmes</string>
 	<string name="media_gallery_image_order_random">Aléatoire</string>
 	<string name="media_gallery_type">Catégorie</string>
@@ -651,14 +755,11 @@
 	<string name="passcode_re_enter_passcode">Re-entrer votre code PIN</string>
 	<string name="passcode_change_passcode">Changer le code PIN</string>
 	<string name="passcode_set">Code PIN changé</string>
-	<string name="stats_view_referrers">Référants</string>
-	<string name="stats_view_comments">Commentaires</string>
 	<string name="stats_timeframe_today">Aujourd\'hui</string>
 	<string name="stats_timeframe_yesterday">Hier</string>
 	<string name="stats_timeframe_days">Jours</string>
 	<string name="stats_timeframe_weeks">Semaines</string>
 	<string name="stats_timeframe_months">Mois</string>
-	<string name="stats_view_clicks">Clicks</string>
 	<string name="media_no_video_title">VideoPress indisponible</string>
 	<string name="media_gallery_type_slideshow">Diaporama</string>
 	<string name="media_gallery_type_circles">Cercles</string>
@@ -672,7 +773,6 @@
 	<string name="theme_activate_button">Activer</string>
 	<string name="theme_activating_button">Activation</string>
 	<string name="stats_view_visitors_and_views">Visiteurs et Vues</string>
-	<string name="stats_view_tags_and_categories">Tags et Catégories</string>
 	<string name="stats_entry_country">Pays</string>
 	<string name="stats_entry_posts_and_pages">Titre</string>
 	<string name="stats_entry_tags_and_categories">Sujet</string>
@@ -687,7 +787,6 @@
 	<string name="stats_totals_views">Vues</string>
 	<string name="stats_totals_clicks">Clicks</string>
 	<string name="stats_totals_plays">Vues</string>
-	<string name="stats_totals_comments">Commentaires</string>
 	<string name="theme_auth_error_title">Impossible de récupérer les thèmes</string>
 	<string name="post_excerpt">Extrait</string>
 	<string name="share_action_title">Ajouter à ...</string>
@@ -696,6 +795,9 @@
 	<string name="media_edit_failure">Échec de mise à jour</string>
 	<string name="theme_set_success">Le thème a bien été sélectionné !</string>
 	<string name="passcode_turn_off">Désactiver le code PIN</string>
+	<string name="stats_view_clicks">Clics</string>
+	<string name="stats_view_tags_and_categories">Étiquettes et Catégories</string>
+	<string name="stats_view_referrers">Référents</string>
 	<string name="upload">Envoyer</string>
 	<string name="sign_in">Se connecter</string>
 	<string name="notifications">Notifications</string>
@@ -707,7 +809,7 @@
 	<string name="post_signature">Signature des articles</string>
 	<string name="add_tagline">Ajouter une signature aux articles</string>
 	<string name="httppassword">Mot de passe HTTP</string>
-	<string name="httpuser">Nom d\'utilisateur HTTP</string>
+	<string name="httpuser">Nom d’utilisateur HTTP</string>
 	<string name="error_media_upload">Désolé, une erreur est survenue pendant l\'envoi du média</string>
 	<string name="publish_date">Publié le</string>
 	<string name="content_description_add_media">Ajouter média</string>
@@ -738,9 +840,9 @@
 	<string name="tos">Conditions d\'utilisation</string>
 	<string name="app_title">WordPress pour Android</string>
 	<string name="about">A propos</string>
-	<string name="max_thumbnail_px_width">Largeur d\'image par défaut</string>
+	<string name="max_thumbnail_px_width">Largeur d\'iImage par défaut</string>
 	<string name="image_alignment">Alignement</string>
-	<string name="refresh">Rafraîchir</string>
+	<string name="refresh">Rafraichir</string>
 	<string name="untitled">Sans titre</string>
 	<string name="post_id">Article</string>
 	<string name="page_id">Page</string>
@@ -758,7 +860,7 @@
 	<string name="upload_full_size_image">Envoyer l\'image et ajouter un lien vers la taille originale</string>
 	<string name="title">Titre</string>
 	<string name="categories">Catégories</string>
-	<string name="tags_separate_with_commas">Tags (séparez les tags par des virgules)</string>
+	<string name="tags_separate_with_commas">Étiquettes (séparez les par des virgules)</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Faire clignoter le voyant de notification</string>
 	<string name="notification_sound">Faire retentir la sonnerie</string>
@@ -776,7 +878,6 @@
 	<string name="save">Enregistrer</string>
 	<string name="add">Ajouter</string>
 	<string name="category_refresh_error">Erreur de rafraîchissement de catégorie</string>
-	<string name="tab_comments">Commentaires</string>
 	<string name="preview">Prévisualisation</string>
 	<string name="on">sur</string>
 	<string name="reply">Répondre</string>
@@ -828,6 +929,33 @@
 		<item>Standard</item>
 		<item>État</item>
 		<item>Vidéo</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>Votre site est visible par tous et peut-être être indexé par les moteurs de recherche</item>
+		<item>Votre site est visible par tous, mais demande aux moteurs de recherche de ne pas l\'indexer</item>
+		<item>Votre site est visible uniquement pour vous et les utilisateurs que  vous approuvez</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>Les commentaires doivent être approuvés manuellement.</item>
+		<item>L’auteur d’un commentaire doit avoir déjà au moins un commentaire approuvé.</item>
+		<item>Approuver automatiquement</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>0 Commentaires</item>
+		<item>Commentaires des utilisateurs connus</item>
+		<item>Tous les utilisateurs</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Aucun</item>
+		<item>Deux niveaux</item>
+		<item>Trois niveaux</item>
+		<item>Quatre niveaux</item>
+		<item>Cinq niveaux</item>
+		<item>Six niveaux</item>
+		<item>Sept niveaux</item>
+		<item>Huit niveaux</item>
+		<item>Neuf niveaux</item>
+		<item>Dix niveaux</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratuit</item>

@@ -50,14 +50,12 @@
 	<string name="trashed">На отпаду</string>
 	<string name="button_back">Назад</string>
 	<string name="page_deleted">Страна је обрисана</string>
-	<string name="button_more">Више</string>
 	<string name="button_stats">Статистике</string>
 	<string name="button_trash">Отпад</string>
 	<string name="button_preview">Предпреглед</string>
 	<string name="button_view">Поглед</string>
 	<string name="button_edit">Уређивање</string>
 	<string name="button_publish">Објављивање</string>
-	<string name="button_delete">Брисање</string>
 	<string name="my_site_no_sites_view_subtitle">Да ли бисте желели да додате једно?</string>
 	<string name="my_site_no_sites_view_title">Још увек немате ниједно Вордпресово веб место.</string>
 	<string name="my_site_no_sites_view_drake">Илустрација</string>
@@ -94,7 +92,6 @@
 	<string name="my_site_btn_view_site">Види веб место</string>
 	<string name="site_picker_title">Одабери веб место</string>
 	<string name="my_site_btn_view_admin">Види управљање</string>
-	<string name="my_site_btn_comments">Коментари</string>
 	<string name="my_site_header_look_and_feel">Изглед и осећај</string>
 	<string name="my_site_header_publish">Објави</string>
 	<string name="my_site_btn_blog_posts">Чланци блога</string>
@@ -195,7 +192,6 @@
 	<string name="stats_visitors">Посетиоци</string>
 	<string name="stats_views">Прегледа</string>
 	<string name="stats_timeframe_years">Година</string>
-	<string name="stats_comments">Коментари</string>
 	<string name="stats_likes">Свиђања</string>
 	<string name="stats_view_countries">Државе</string>
 	<string name="stats_view_followers">Пратиоци</string>
@@ -264,11 +260,11 @@
 	<string name="older_two_days">Старије од два дана</string>
 	<string name="older_last_week">Старије од недељу дана</string>
 	<string name="older_month">Старије од месец дана</string>
+	<string name="more">Више</string>
 	<string name="error_refresh_unauthorized_comments">Немате дозволу да прегледате или уређујете коментаре</string>
 	<string name="error_refresh_unauthorized_posts">Немате дозволу да прегледате или уређујете чланке</string>
 	<string name="error_publish_empty_post">Није могуће објавити празан чланак</string>
 	<string name="reader_title_photo_viewer">%1$d од %2$d</string>
-	<string name="reader_title_comments">Коментари</string>
 	<string name="reader_label_comments_on">Коментарисање је отворено</string>
 	<string name="reader_label_comments_closed">Коментарисање је затворено</string>
 	<string name="reader_label_comment_count_single">Један коментар</string>
@@ -589,7 +585,6 @@
 	<string name="share_action">Подели</string>
 	<string name="share_action_title">Додај на...</string>
 	<string name="theme_set_success">Успешно постављена тема!</string>
-	<string name="stats_totals_comments">Коментари</string>
 	<string name="stats_totals_plays">Пуштања</string>
 	<string name="stats_totals_clicks">Притискања</string>
 	<string name="stats_totals_views">Прегледи</string>
@@ -601,7 +596,6 @@
 	<string name="stats_timeframe_days">Дани</string>
 	<string name="stats_timeframe_today">Данас</string>
 	<string name="stats_entry_referrers">Извор упућивања</string>
-	<string name="stats_view_comments">Коментари</string>
 	<string name="stats_view_referrers">Извори упућивања</string>
 	<string name="media_edit_description_hint">Унесите опис овде</string>
 	<string name="media_edit_caption_hint">Унесите натпис овде</string>
@@ -659,7 +653,6 @@
 	<string name="version">Издање</string>
 	<string name="app_title">Вордпрес за Андроид</string>
 	<string name="about">О</string>
-	<string name="max_thumbnail_px_width">Подразумевана ширина слике</string>
 	<string name="image_alignment">Поравнање</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без имена</string>
@@ -697,7 +690,6 @@
 	<string name="reply">Одговор</string>
 	<string name="on">укључен</string>
 	<string name="preview">Преглед</string>
-	<string name="tab_comments">Коментари</string>
 	<string name="category_refresh_error">Грешка приликом освежавања категорије</string>
 	<string name="add">Додај</string>
 	<string name="save">Сачувај</string>

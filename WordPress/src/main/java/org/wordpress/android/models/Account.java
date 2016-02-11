@@ -49,7 +49,7 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
-                    EventBus.getDefault().post(new PrefsEvents.MyProfileDetailsChanged());
+                    EventBus.getDefault().post(new PrefsEvents.AccountSettingsFetchSuccess());
                 }
             }
         };
@@ -58,6 +58,7 @@ public class Account extends AccountModel {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
+                EventBus.getDefault().post(new PrefsEvents.AccountSettingsFetchError(volleyError));
             }
         };
 
@@ -71,6 +72,7 @@ public class Account extends AccountModel {
                 if (jsonObject != null) {
                     updateAccountSettingsFromRestResponse(jsonObject);
                     save();
+                    EventBus.getDefault().post(new PrefsEvents.AccountSettingsPostSuccess());
                 }
             }
         };
@@ -79,6 +81,7 @@ public class Account extends AccountModel {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
+                EventBus.getDefault().post(new PrefsEvents.AccountSettingsPostError(volleyError));
             }
         };
 
