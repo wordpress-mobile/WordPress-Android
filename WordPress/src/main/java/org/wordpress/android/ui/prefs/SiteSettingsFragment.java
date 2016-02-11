@@ -670,8 +670,17 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showExportContentDialog() {
-        String url = mBlog.getAdminUrl() + "export.php";
-        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), url, AccountHelper.getDefaultAccount().getUserName());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Export your content");
+        builder.setMessage("Exports your shit, yo");
+        builder.setPositiveButton("Export my shit, yo", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                exportSite();
+            }
+        });
+
+        builder.show();
     }
 
     private void showDeleteSiteDialog() {
@@ -1139,6 +1148,25 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
+    }
+
+    private void exportSite() {
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog.isDotcomFlag()) {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Exporting content...", true, true);
+            WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            progressDialog.dismiss();
+                            ToastUtils.showToast(getActivity(), "Export started");
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
+                        }
+                    });
+        }
     }
 
     private void deleteSite() {
