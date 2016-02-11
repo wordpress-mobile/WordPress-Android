@@ -2,14 +2,19 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,26 +39,42 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
     {
         super.showDialog(state);
 
-        final AlertDialog dialog = (AlertDialog) getDialog();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String error = null;
-                CharSequence text = getEditText().getText();
-                if (mValidationType == ValidationType.EMAIL) {
-                    error = validateEmail(text);
-                } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
-                    error = validateUrl(text);
-                }
+        Typeface typeface = TypefaceCache.getTypeface(getContext(),
+                TypefaceCache.FAMILY_OPEN_SANS,
+                Typeface.BOLD,
+                TypefaceCache.VARIATION_LIGHT);
+        int buttonColor = ContextCompat.getColor(getContext(), R.color.blue_medium);
 
-                if (error != null) {
-                    getEditText().setError(error);
-                } else {
-                    callChangeListener(text);
-                    dialog.dismiss();
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        if (positiveButton != null) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String error = null;
+                    CharSequence text = getEditText().getText();
+                    if (mValidationType == ValidationType.EMAIL) {
+                        error = validateEmail(text);
+                    } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
+                        error = validateUrl(text);
+                    }
+
+                    if (error != null) {
+                        getEditText().setError(error);
+                    } else {
+                        callChangeListener(text);
+                        dialog.dismiss();
+                    }
                 }
-            }
-        });
+            });
+            positiveButton.setTextColor(buttonColor);
+            positiveButton.setTypeface(typeface);
+        }
+        if (negativeButton != null) {
+            negativeButton.setTextColor(buttonColor);
+            negativeButton.setTypeface(typeface);
+        }
     }
 
     private String validateEmail(CharSequence text) {
