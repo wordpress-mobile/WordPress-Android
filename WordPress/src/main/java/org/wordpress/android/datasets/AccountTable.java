@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
 
 public class AccountTable {
@@ -43,6 +44,10 @@ public class AccountTable {
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD about_me TEXT DEFAULT '';");
     }
 
+    public static void migrationAddDateFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD date TEXT DEFAULT '';");
+    }
+
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
     }
@@ -68,6 +73,7 @@ public class AccountTable {
         values.put("first_name", account.getFirstName());
         values.put("last_name", account.getLastName());
         values.put("about_me", account.getAboutMe());
+        values.put("date", DateTimeUtils.javaDateToIso8601(account.getDateCreated()));
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
