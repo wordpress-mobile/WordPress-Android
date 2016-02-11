@@ -63,7 +63,6 @@
 	<string name="stats_totals_followers">Од</string>
 	<string name="stats_followers_a_year">Година</string>
 	<string name="stats_followers_total_wpcom">Вкупен број на WordPress.com следбеници: %1$s</string>
-	<string name="stats_comments">Коментари</string>
 	<string name="stats_entry_top_commenter">Автор</string>
 	<string name="stats_view">Прегледи</string>
 	<string name="stats_other_recent_stats_label">Други последни статистики</string>
@@ -93,12 +92,12 @@
 	<string name="reader_label_comments_closed">Коментари затворени</string>
 	<string name="reader_label_comments_on">Коментари на</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
-	<string name="reader_title_comments">Коментари</string>
 	<string name="error_refresh_unauthorized_comments">Немате дозвола за гледање или уредување на коментари</string>
 	<string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
 	<string name="error_publish_empty_post">Неможе да се објави празен напис</string>
 	<string name="reader_title_photo_viewer">%1$d of %2$d</string>
 	<string name="older_month">Постари од месец</string>
+	<string name="more">Повеќе</string>
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
 	<string name="stats_no_blog">Статиска неможе да се покаже за побараниот блог</string>
@@ -413,7 +412,6 @@
 	<string name="passcode_turn_on">Вклучете го PIN заклучувањето</string>
 	<string name="stats_totals_views">Прегледи</string>
 	<string name="stats_totals_clicks">Кликнувања</string>
-	<string name="stats_totals_comments">Коментари</string>
 	<string name="theme_activating_button">Активирање</string>
 	<string name="theme_set_success">Темата е поставена успешно!</string>
 	<string name="theme_auth_error_title">Неуспешно преземање на теми</string>
@@ -423,7 +421,6 @@
 	<string name="stats">Статистики</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
 	<string name="stats_view_clicks">Кликнувања</string>
-	<string name="stats_view_comments">Коментари</string>
 	<string name="all">Сите</string>
 	<string name="media_edit_failure">Неуспешно качување</string>
 	<string name="themes_details_label">Детали</string>
@@ -483,7 +480,6 @@
 	<string name="version">Верзија</string>
 	<string name="app_title">WordPress за Андроид</string>
 	<string name="about">За нас</string>
-	<string name="max_thumbnail_px_width">Стандардна ширина на сликата</string>
 	<string name="image_alignment">Усогласување</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без наслов</string>
@@ -521,7 +517,6 @@
 	<string name="save">Зачувај</string>
 	<string name="add">Додај</string>
 	<string name="category_refresh_error">Грешка при освежување на категориите</string>
-	<string name="tab_comments">Коментари</string>
 	<string name="on">на</string>
 	<string name="reply">Одговори</string>
 	<string name="yes">Да</string>

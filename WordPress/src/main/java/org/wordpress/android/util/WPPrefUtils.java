@@ -171,6 +171,7 @@ public class WPPrefUtils {
         setTextViewAttributes(view, size, R.color.grey_dark, getNormalTypeface(view.getContext()));
         view.setHintTextColor(view.getResources().getColor(R.color.grey_lighten_10));
         view.setTextColor(view.getResources().getColor(R.color.grey_dark));
+        view.setSingleLine(true);
     }
 
     /**

@@ -177,10 +177,29 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
         context.startActivity(intent);
     }
 
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void configureWebView() {
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+
+        if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
+            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (blog == null) {
+                AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
+                finish();
+            }
+            mWebView.setWebViewClient(new WPWebViewClient(blog));
+        } else {
+            mWebView.setWebViewClient(new WebViewClient());
+        }
+
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    @Override
+    protected void loadContent() {
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {
@@ -188,21 +207,6 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
             finish();
             return;
         }
-
-        if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
-            Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
-                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
-                finish();
-            }
-            mWebView.setWebViewClient(new WPWebViewClient(blog));
-        } else {
-            mWebView.setWebViewClient(new WebViewClient());
-        }
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
-        mWebView.setDownloadListener(this);
 
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
@@ -233,7 +237,7 @@ public class WPWebViewActivity extends WebViewActivity implements DownloadListen
                 finish();
             }
 
-            this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
+            loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
     }
 

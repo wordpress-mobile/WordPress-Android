@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="about_me">Sobre mim</string>
+	<string name="first_name">Nome</string>
+	<string name="last_name">Sobrenome</string>
+	<string name="my_profile">Meu perfil</string>
+	<string name="error_post_remote_site_settings">Não foi possível salvar as informações do site</string>
+	<string name="reader_err_get_post_not_found">Este post não existe mais</string>
+	<string name="reader_err_get_post_not_authorized">Você não possui autorização para ver este post</string>
+	<string name="reader_err_get_post_generic">Falha ao carregar esse post</string>
+	<string name="blog_name_no_spaced_allowed">O endereço do site não pode conter espaços</string>
+	<string name="invalid_username_no_spaces">O nome de usuário não pode conter espaços</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Os sites que você segue não publicaram nada recentemente</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Não há posts recentes</string>
+	<string name="edit_media">Editar mídia</string>
+	<string name="media_details_copy_url_toast">A URL foi copiada para a área de transferência</string>
+	<string name="media_details_copy_url">Copiar URL</string>
+	<string name="media_details_label_date_uploaded">Upload completo</string>
+	<string name="media_details_label_date_added">Adicionada</string>
 	<string name="selected_theme">Tema selecionado</string>
 	<string name="could_not_load_theme">Não foi possível carregar o tema</string>
 	<string name="theme_activation_error">Algo deu errado. Não foi possível ativar o tema</string>
@@ -112,14 +129,12 @@
 	<string name="trashed">Na lixeira</string>
 	<string name="button_back">Voltar</string>
 	<string name="page_deleted">Página excluída</string>
-	<string name="button_more">Mais</string>
 	<string name="button_stats">Estatísticas</string>
 	<string name="button_trash">Enviar para a lixeira</string>
 	<string name="button_preview">Visualizar</string>
 	<string name="button_view">Exibir</string>
 	<string name="button_edit">Editar</string>
 	<string name="button_publish">Publicar</string>
-	<string name="button_delete">Excluir</string>
 	<string name="my_site_no_sites_view_subtitle">Deseja adicionar um?</string>
 	<string name="my_site_no_sites_view_title">Você ainda não possui nenhum site do WordPress.</string>
 	<string name="my_site_no_sites_view_drake">Ilustração</string>
@@ -159,7 +174,6 @@
 	<string name="my_site_btn_blog_posts">Posts do blog</string>
 	<string name="my_site_btn_site_settings">Configurações</string>
 	<string name="my_site_header_look_and_feel">Aparência</string>
-	<string name="my_site_btn_comments">Comentários</string>
 	<string name="my_site_header_publish">Publicar</string>
 	<string name="my_site_header_admin">Painel</string>
 	<string name="reader_label_new_posts_subtitle">Toque para mostrar</string>
@@ -239,7 +253,6 @@
 	<string name="reader_page_recommended_blogs">Talvez você goste destes sites</string>
 	<string name="stats_comments_total_comments_followers">Total de posts com comentários de seguidores: %1$s</string>
 	<string name="stats_visitors">Visitantes</string>
-	<string name="stats_comments">Comentários</string>
 	<string name="stats_pagination_label">Página %1$s de %2$s</string>
 	<string name="stats_timeframe_years">Anos</string>
 	<string name="stats_views">Visualizações</string>
@@ -317,13 +330,13 @@
 	<string name="reader_label_comment_count_single">Um comentário</string>
 	<string name="reader_label_comments_closed">Os comentários estão desativados</string>
 	<string name="reader_label_comments_on">Comentários sobre</string>
-	<string name="reader_title_comments">Comentários</string>
 	<string name="reader_title_photo_viewer">%1$d de %2$d</string>
 	<string name="error_publish_empty_post">Não é possível publicar um post em branco</string>
 	<string name="error_refresh_unauthorized_posts">Você não tem permissão para visualizar ou editar posts</string>
 	<string name="error_refresh_unauthorized_pages">Você não tem permissão para visualizar ou editar páginas</string>
 	<string name="error_refresh_unauthorized_comments">Você não tem permissão para visualizar ou editar comentários</string>
 	<string name="older_month">Há mais de um mês</string>
+	<string name="more">Mais</string>
 	<string name="older_two_days">Há mais de 2 dias</string>
 	<string name="older_last_week">Há mais de uma semana</string>
 	<string name="stats_no_blog">Não foi possível carregar as estatísticas do blog</string>
@@ -636,7 +649,6 @@
 	<string name="share_action_title">Adicionar para...</string>
 	<string name="stats_view_tags_and_categories">Tags e Categorias</string>
 	<string name="stats_view_clicks">Cliques</string>
-	<string name="stats_view_comments">Comentários</string>
 	<string name="stats_timeframe_today">Hoje</string>
 	<string name="stats_view_referrers">Referências</string>
 	<string name="stats_timeframe_yesterday">Ontem</string>
@@ -651,7 +663,6 @@
 	<string name="stats_totals_clicks">Cliques</string>
 	<string name="stats_entry_referrers">Referências</string>
 	<string name="stats_totals_plays">Tocados</string>
-	<string name="stats_totals_comments">Comentários</string>
 	<string name="media_gallery_type_squares">Quadrados</string>
 	<string name="media_gallery_type_circles">Circulos</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
@@ -724,7 +735,6 @@
 	<string name="tos">Termos de Serviço</string>
 	<string name="app_title">WordPress para Android</string>
 	<string name="about">Sobre</string>
-	<string name="max_thumbnail_px_width">Largura padrão de imagem</string>
 	<string name="image_alignment">Alinhamento</string>
 	<string name="refresh">Atualizar</string>
 	<string name="untitled">Sem Título</string>
@@ -763,7 +773,6 @@
 	<string name="cancel">Cancelar</string>
 	<string name="save">Salvar</string>
 	<string name="add">Adicionar</string>
-	<string name="tab_comments">Comentários</string>
 	<string name="category_refresh_error">Erro na atualização da categoria</string>
 	<string name="on">em</string>
 	<string name="reply">Responder</string>
@@ -814,6 +823,10 @@
 		<item>Padrão</item>
 		<item>Status</item>
 		<item>Vídeo</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>Seu site está visível para todos e pode ser indexado por mecanismos de busca</item>
+		<item>Seu site está visível para todos mas solicita aos mecanismos de busca para não indexá-lo</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratuito</item>

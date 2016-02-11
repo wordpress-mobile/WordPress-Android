@@ -32,7 +32,6 @@
 	<string name="site_picker_title">Tagh làrach</string>
 	<string name="my_site_header_publish">Foillsich</string>
 	<string name="my_site_header_look_and_feel">Coltas</string>
-	<string name="my_site_btn_comments">Beachdan</string>
 	<string name="my_site_btn_site_settings">Roghainnean</string>
 	<string name="my_site_btn_blog_posts">Puist bloga</string>
 	<string name="my_site_header_admin">Rianachd</string>
@@ -113,7 +112,6 @@
 	<string name="stats_comments_total_comments_followers">Puist air fad aig a bheil luchd-leantainn phost: %1$s</string>
 	<string name="stats_visitors">Aoighean</string>
 	<string name="stats_views">Seallaidhean</string>
-	<string name="stats_comments">Beachdan</string>
 	<string name="stats_pagination_label">Duilleag %1$s à %2$s</string>
 	<string name="stats_timeframe_years">Bliadhna</string>
 	<string name="stats_view_countries">Dùthchannan</string>
@@ -200,7 +198,6 @@
 	<string name="error_publish_empty_post">Cha ghabh post bàn fhoillseachadh</string>
 	<string name="reader_title_photo_viewer">%1$d de %2$d</string>
 	<string name="reader_label_comments_on">Beachdan air</string>
-	<string name="reader_title_comments">Beachdan</string>
 	<string name="reader_label_comments_closed">Tha na beachdan dùinte</string>
 	<string name="reader_label_comment_count_single">Aon bheachd</string>
 	<string name="reader_label_like">’S toil</string>
@@ -521,7 +518,6 @@
 	<string name="stats_view_clicks">Briogaidhean</string>
 	<string name="stats_view_tags_and_categories">Tagaichean ⁊ roinnean-seòrsa</string>
 	<string name="stats_view_referrers">Ath-threòraichean</string>
-	<string name="stats_view_comments">Beachdan</string>
 	<string name="stats_timeframe_today">An-diugh</string>
 	<string name="stats_timeframe_yesterday">An-dè</string>
 	<string name="stats_timeframe_days">Làithean</string>
@@ -536,7 +532,6 @@
 	<string name="stats_totals_views">Seallaidhean</string>
 	<string name="stats_totals_clicks">Briogaidhean</string>
 	<string name="stats_totals_plays">Air a chluich</string>
-	<string name="stats_totals_comments">Beachdan</string>
 	<string name="menu_search">Lorg</string>
 	<string name="passcode_enter_passcode">Cuir a-steach am PIN agad</string>
 	<string name="passcode_re_enter_passcode">Cuir a-steach am PIN agad a-rithist</string>
@@ -588,7 +583,6 @@
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
 	<string name="about">Mu dheidhinn</string>
-	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
@@ -625,7 +619,6 @@
 	<string name="cancel">Sguir dheth</string>
 	<string name="save">Sàbhail</string>
 	<string name="add">Cuir ris</string>
-	<string name="tab_comments">Beachdan</string>
 	<string name="preview">Ro-shealladh</string>
 	<string name="on"> </string>
 	<string name="reply">Freagair</string>

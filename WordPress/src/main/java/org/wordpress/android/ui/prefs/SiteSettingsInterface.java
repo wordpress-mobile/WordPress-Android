@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -291,7 +292,7 @@ public abstract class SiteSettingsInterface {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
-                categoryNames.put(model.id, model.name);
+                categoryNames.put(model.id, Html.fromHtml(model.name).toString());
             }
         }
 
@@ -305,7 +306,7 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
-                return model.name;
+                return Html.fromHtml(model.name).toString();
             }
         }
 
@@ -357,12 +358,24 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescription() {
-        return getCloseAfterDescription(getCloseAfter());
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
-    public @NonNull String getCloseAfterDescription(int period) {
+    public int getCloseAfterPeriodForDescription() {
+        return !getShouldCloseAfter() ? 0 : getCloseAfter();
+    }
+
+    public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
+    }
+
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
+
+        if (!getShouldCloseAfter()) {
+            return mActivity.getString(R.string.never);
+        }
 
         if (period == 0) return mActivity.getString(R.string.never);
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
@@ -394,12 +407,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.threadingLevels;
     }
 
+    public int getThreadingLevelsForDescription() {
+        return !getShouldThreadComments() ? 1 : getThreadingLevels();
+    }
+
     public @NonNull String getThreadingDescription() {
+        return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
+    }
+
+    public @NonNull String getThreadingDescriptionForLevel(int level) {
         if (mActivity == null) return "";
 
-        int levels = getThreadingLevels();
-        if (levels <= 1) return mActivity.getString(R.string.none);
-        return String.format(mActivity.getString(R.string.site_settings_threading_summary), levels);
+        if (level <= 1) return mActivity.getString(R.string.none);
+        return String.format(mActivity.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -410,11 +430,15 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsPerPage;
     }
 
+    public int getPagingCountForDescription() {
+        return !getShouldPageComments() ? 0 : getPagingCount();
+    }
+
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
-        int count = getPagingCount();
-        if (count == 0) return mActivity.getString(R.string.none);
+        int count = getPagingCountForDescription();
+        if (count == 0) return mActivity.getString(R.string.disabled);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 
@@ -464,9 +488,12 @@ public abstract class SiteSettingsInterface {
         mSettings.privacy = privacy;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public boolean setLanguageCode(String languageCode) {
+        if (!mLanguageCodes.containsKey(languageCode) ||
+            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        return true;
     }
 
     public void setLanguageId(int languageId) {

@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">Madhësia Origjinale</string>
+	<string name="about_me_hint">Pak fjalë rreth jush…</string>
+	<string name="public_display_name_hint">Nëse nuk caktohet një i tillë, si emër ekrani do të përdoret emri juaj i përdoruesit</string>
+	<string name="about_me">Rreth meje</string>
+	<string name="public_display_name">Emri i shfaqur botërisht</string>
+	<string name="my_profile">Profili Im</string>
+	<string name="first_name">Emri</string>
+	<string name="last_name">Mbiemri</string>
+	<string name="site_privacy_public_desc">Lejoji motorët e kërkimeve ta indeksojnë këtë sajt</string>
+	<string name="site_privacy_hidden_desc">Kërkoju motorëve të kërkimit të mos e indeksojnë këtë sajt</string>
+	<string name="site_privacy_private_desc">Do të doja që sajti im të jetë privat, i dukshëm vetëm për përdorues që i zgjedh unë</string>
+	<string name="cd_related_post_preview_image">Figurë paraparje postimi të afërt</string>
+	<string name="error_post_remote_site_settings">S&amp;#8217;u ruajtën dot të dhëna sajti</string>
+	<string name="error_fetch_remote_site_settings">S&amp;#8217;u morën dot të dhëna sajti</string>
+	<string name="error_media_upload_connection">Ndodhi një gabim ndërlidhjeje gjatë ngarkimit të medias</string>
+	<string name="site_settings_disconnected_toast">I shkëputur, përpunimet janë të çaktivizuara</string>
+	<string name="site_settings_unsupported_version_error">Version WordPress i pambuluar</string>
+	<string name="site_settings_multiple_links_dialog_description">Kërko miratim për komente që përmbajnë më tepër lidhje se sa kaq.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Mbylli vetvetiu</string>
+	<string name="site_settings_close_after_dialog_description">Mbylli vetvetiu komentet në artikuj.</string>
+	<string name="site_settings_paging_dialog_description">Copëzojini rrjedhat e komenteve në disa faqe.</string>
+	<string name="site_settings_paging_dialog_header">Komente për faqe</string>
+	<string name="site_settings_close_after_dialog_title">Mbylle komentimin</string>
+	<string name="site_settings_blacklist_description">Kur një koment përmban cilëndo nga këto fjalë në lëndën e vet, emrin, URL-në, email-in, ose IP-në e tij, do të shënohet si i padëshiruar. Mund të jepni edhe copa fjalësh, fjala vjen "press" do të ketë efekt edhe për "WordPress."</string>
+	<string name="site_settings_hold_for_moderation_description">Kur një koment përmban cilëndo nga këto fjalë në lëndën e vet, emrin, URL-në, email-in, ose IP-në e tij, do të mbahet në radhën e moderimeve. Mund të jepni edhe copa fjalësh, fjala vjen "press" do të ketë efekt edhe për "WordPress."</string>
+	<string name="site_settings_list_editor_input_hint">Jepni një fjalë ose togfjalësh</string>
+	<string name="site_settings_list_editor_no_items_text">Pa objekte</string>
+	<string name="site_settings_learn_more_caption">Për postime individuale mund t’i anashkaloni këto rregullime.</string>
+	<string name="site_settings_rp_preview3_site">te "Përmirësojeni"</string>
+	<string name="site_settings_rp_preview3_title">Përmirësoni Focus-in: VideoPress Për Dasma</string>
+	<string name="site_settings_rp_preview2_site">te "Aplikacione"</string>
+	<string name="site_settings_rp_preview2_title">Aplikacioni WordPress për Android i Ndërron Pamjen Goxha</string>
+	<string name="site_settings_rp_preview1_site">në "Celular"</string>
+	<string name="site_settings_rp_preview1_title">Gati Tani një Përditësim i Madh për iPhone/iPad</string>
+	<string name="site_settings_rp_show_images_title">Shfaqni Figura</string>
+	<string name="site_settings_rp_show_header_title">Shfaq Kryet</string>
+	<string name="site_settings_rp_switch_summary">Postimet e Afërta shfaqin nën postimet tuaja lëndë të afërt prej sajtit tuaj.</string>
+	<string name="site_settings_rp_switch_title">Shfaq Postime të Afërta</string>
+	<string name="site_settings_delete_site_hint">Heq prej aplikacionit të dhëna mbi sajtin tuaj</string>
+	<string name="site_settings_blacklist_hint">Komentet me përputhje me një filtër shënohen si të padëshiruar </string>
+	<string name="site_settings_moderation_hold_hint">Komentet me përputhje me ndonjë nga filtra vendosen në radhën e moderimit</string>
+	<string name="site_settings_multiple_links_hint">Për përdorues të njohur shpërfille kufirin e lidhjeve</string>
+	<string name="site_settings_whitelist_hint">Autori i komentit duhet të kenë një koment të miratuar më parë</string>
+	<string name="site_settings_user_account_required_hint">Përdoruesit duhet të jenë të regjistruar dhe të kenë bërë hyrjen</string>
+	<string name="site_settings_identity_required_hint">Autori i komentit duhet të plotësojë emrin dhe email-in</string>
+	<string name="site_settings_manual_approval_hint">Komentet duhet të miratohen dorazi</string>
+	<string name="site_settings_paging_hint">Shfaq komente në copa të madhësisë së dhënë</string>
+	<string name="site_settings_threading_hint">Lejo komente të folezëzuar deri në një nivel të dhënë</string>
+	<string name="site_settings_sort_by_hint">Përcakton rendin sipas të cilit shfaqen komentet</string>
+	<string name="site_settings_close_after_hint">Mos lejo më komente pas një kohe të caktuar</string>
+	<string name="site_settings_receive_pingbacks_hint">Lejo njoftime lidhjesh nga blogje të tjerë</string>
+	<string name="site_settings_send_pingbacks_hint">Përpjekje për të njoftuar cilindo blog me lidhje te artikulli</string>
+	<string name="site_settings_allow_comments_hint">Lejoju lexuesve të postojnë komente</string>
+	<string name="site_settings_discussion_hint">Shihni dhe ndryshoni rregullimet mbi diskutimet në sajtin tuaj</string>
+	<string name="site_settings_more_hint">Shihni krejt rregullimet e mundshme për Diskutimet</string>
+	<string name="site_settings_related_posts_hint">Shfaqni ose fshihni te lexuesi postime të afërta</string>
+	<string name="site_settings_upload_and_link_image_hint">Aktivizojeni që të ngarkohet përherë figura në madhësi të plotë</string>
+	<string name="site_settings_image_width_hint">Figurat në postime ripërmasoji sa kjo gjerësi</string>
+	<string name="site_settings_format_hint">Cakton format të ri postimesh</string>
+	<string name="site_settings_category_hint">Cakton kategori të re postimesh</string>
+	<string name="site_settings_location_hint">Shto vevetiu të dhëna vendi te postimet tuaja</string>
+	<string name="site_settings_password_hint">Ndryshoni fjalëkalimin tuaj</string>
+	<string name="site_settings_username_hint">Llogaria e përdoruesit të tanishëm</string>
+	<string name="site_settings_language_hint">Gjuha në të cilën shkruhet kryesisht në këtë blog</string>
+	<string name="site_settings_privacy_hint">Kontrolloni cilët mund të shohin sajtin tuaj</string>
+	<string name="site_settings_address_hint">Hëpërhë nuk mbulohet ndryshimi i adresës suaj </string>
+	<string name="site_settings_tagline_hint">Një përshkrim i shkurtër ose një togfjalësh ndjellës për të përshkruar blogun tuaj</string>
+	<string name="site_settings_title_hint">Shpjegoni, me pak fjalë, se për çfarë është ky sajt</string>
+	<string name="site_settings_whitelist_known_summary">Komente prej përdoruesish të njohur</string>
+	<string name="site_settings_whitelist_all_summary">Komente prej krejt përdoruesit</string>
+	<string name="site_settings_threading_summary">%d nivele</string>
+	<string name="site_settings_privacy_private_summary">Privat</string>
+	<string name="site_settings_privacy_hidden_summary">I fshehur</string>
+	<string name="site_settings_delete_site_title">Fshije Sajtin</string>
+	<string name="site_settings_privacy_public_summary">Publik</string>
+	<string name="site_settings_blacklist_title">Listë e zezë</string>
+	<string name="site_settings_moderation_hold_title">Mbaje për Moderim</string>
+	<string name="site_settings_multiple_links_title">Lidhje në komente</string>
+	<string name="site_settings_whitelist_title">Miratoji vetvetiu</string>
+	<string name="site_settings_threading_title">Në rrjedha</string>
+	<string name="site_settings_paging_title">Faqosje</string>
+	<string name="site_settings_sort_by_title">Renditini sipas</string>
+	<string name="site_settings_account_required_title">Përdoruesi duhet të ketë bërë hyrjen</string>
+	<string name="site_settings_identity_required_title">Duhet të përfshijë emër dhe email</string>
+	<string name="site_settings_receive_pingbacks_title">Merr Pingback-e</string>
+	<string name="site_settings_send_pingbacks_title">Dërgo Pingback-e</string>
+	<string name="site_settings_allow_comments_title">Lejo Komente</string>
+	<string name="site_settings_default_format_title">Format Parazgjedhje</string>
+	<string name="site_settings_default_category_title">Kategori Parazgjedhje</string>
+	<string name="site_settings_location_title">Aktivizoni Vendndodhje</string>
+	<string name="site_settings_address_title">Adresë</string>
+	<string name="site_settings_title_title">Titull Sajti</string>
+	<string name="site_settings_tagline_title">Përmbledhtas</string>
+	<string name="site_settings_this_device_header">Këtë pajisje</string>
+	<string name="site_settings_discussion_new_posts_header">Parazgjedhje për postime të reja</string>
+	<string name="site_settings_account_header">Llogari</string>
+	<string name="site_settings_writing_header">Shkrim</string>
+	<string name="newest_first">Më të rejat së pari</string>
+	<string name="site_settings_general_header">Të përgjithshme</string>
+	<string name="discussion">Diskutim</string>
+	<string name="privacy">Privatësi</string>
+	<string name="related_posts">Postime të afërt</string>
+	<string name="comments">Komente</string>
+	<string name="close_after">Mbylle pas</string>
+	<string name="oldest_first">Më të vjetrat së pari</string>
+	<string name="media_error_no_permission_upload">S’keni leje të ngarkoni media në këtë sajt</string>
+	<string name="never">Kurrë</string>
+	<string name="unknown">E panjohur</string>
 	<string name="reader_err_get_post_not_found">Ky postim s&amp;#8217;ekziston më</string>
 	<string name="reader_err_get_post_not_authorized">S&amp;#8217;jeni i autorizuar ta shihni këtë postim</string>
 	<string name="reader_err_get_post_generic">S&amp;#8217;arrihet të merret ky postim</string>
@@ -124,14 +232,12 @@
 	<string name="trashed">Të hedhur te hedhurinat</string>
 	<string name="button_back">Mbrapsht</string>
 	<string name="page_deleted">Faqja u fshi</string>
-	<string name="button_more">Më tepër</string>
 	<string name="button_stats">Statistika</string>
 	<string name="button_trash">Hedhurina</string>
 	<string name="button_preview">Paraparje</string>
 	<string name="button_view">Shiheni</string>
 	<string name="button_edit">Përpunojeni</string>
 	<string name="button_publish">Botojeni</string>
-	<string name="button_delete">Fshijeni</string>
 	<string name="my_site_no_sites_view_subtitle">Do të donit të shtoni një të tillë?</string>
 	<string name="my_site_no_sites_view_title">S’keni ende ndonjë sajt WordPress.</string>
 	<string name="my_site_no_sites_view_drake">Ilustrim</string>
@@ -170,7 +276,6 @@
 	<string name="my_site_btn_switch_site">Këmbe Sajt</string>
 	<string name="my_site_btn_blog_posts">Postime Blogu</string>
 	<string name="my_site_btn_site_settings">Rregullime</string>
-	<string name="my_site_btn_comments">Komente</string>
 	<string name="my_site_header_look_and_feel">Pamja dhe Ndjesitë</string>
 	<string name="my_site_header_publish">Botoje</string>
 	<string name="my_site_header_configuration">Formësim</string>
@@ -291,7 +396,6 @@
 	<string name="stats_view_followers">Ndjekës</string>
 	<string name="stats_view_countries">Vende</string>
 	<string name="stats_likes">Pëlqime</string>
-	<string name="stats_comments">Komente</string>
 	<string name="stats_pagination_label">Faqja %1$s nga %2$s</string>
 	<string name="stats_timeframe_years">Vite</string>
 	<string name="stats_views">Parje</string>
@@ -333,7 +437,6 @@
 	<string name="reader_label_comment_count_single">Një koment</string>
 	<string name="reader_label_comments_closed">Komentet janë mbyllur</string>
 	<string name="reader_label_comments_on">Me komentet hapur</string>
-	<string name="reader_title_comments">Komente</string>
 	<string name="error_publish_empty_post">S’botohet dot një postim i zbrazët</string>
 	<string name="error_refresh_unauthorized_posts">S’keni leje të shihni ose të përpunoni postime</string>
 	<string name="error_refresh_unauthorized_pages">S’keni leje të shihni ose të përpunoni faqe</string>
@@ -357,6 +460,7 @@
 	<string name="mnu_comment_liked">U pëlqye</string>
 	<string name="posting_post">Po postohet "%s"</string>
 	<string name="agree_terms_of_service">Duke krijuar një llogari, pajtoheni me %1$sKushtet tërheqëse të Shërbimit%2$s</string>
+	<string name="more">Më tepër</string>
 	<string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
 	<string name="reader_toast_err_block_blog">I pazoti të bllokojë këtë blog</string>
 	<string name="reader_toast_blog_blocked">Postimet prej këtij blogu s’do të shfaqen më</string>
@@ -668,7 +772,6 @@
 	<string name="stats_view_clicks">Klikime</string>
 	<string name="stats_view_tags_and_categories">Etiketa &amp; Kategori</string>
 	<string name="stats_view_referrers">Referues</string>
-	<string name="stats_view_comments">Komente</string>
 	<string name="stats_timeframe_today">Sot</string>
 	<string name="stats_timeframe_yesterday">Dje</string>
 	<string name="stats_timeframe_days">Ditë</string>
@@ -682,7 +785,6 @@
 	<string name="stats_totals_views">Parje</string>
 	<string name="stats_totals_clicks">Klikime</string>
 	<string name="stats_totals_plays">Luajtje</string>
-	<string name="stats_totals_comments">Komente</string>
 	<string name="menu_search">Kërko</string>
 	<string name="passcode_manage">Administroni kyçje PIN-i</string>
 	<string name="passcode_enter_passcode">Jepni PIN-in tuaj:</string>
@@ -738,7 +840,7 @@
 	<string name="tos">Kushte Shërbimi</string>
 	<string name="app_title">WordPress për Android</string>
 	<string name="about">Rreth</string>
-	<string name="max_thumbnail_px_width">Gjerësi parazgjedhje figure</string>
+	<string name="max_thumbnail_px_width">Gjerësi Parazgjedhje Figure</string>
 	<string name="image_alignment">Drejtim</string>
 	<string name="refresh">Rifresko</string>
 	<string name="untitled">Pa titull</string>
@@ -776,7 +878,6 @@
 	<string name="save">Ruaje</string>
 	<string name="add">Shtoni</string>
 	<string name="category_refresh_error">Gabim rifreskimi kategorish</string>
-	<string name="tab_comments">Komente</string>
 	<string name="preview">Paraparje</string>
 	<string name="on">on</string>
 	<string name="reply">Përgjigjjuni</string>
@@ -828,6 +929,33 @@
 		<item>Standard</item>
 		<item>Gjendje</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>Sajti juaj është i dukshëm për këdo dhe mund të indeksohet nga motorë kërkimesh</item>
+		<item>Sajti juaj është i dukshëm për këdo, por kërkon që motorët e kërkimeve të mos e indeksojnë</item>
+		<item>Sajti juaj është i dukshëm vetëm për ju dhe për përdorues që miratoni</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>Kërkoni miratim dorazi për komentet e kujtdo.</item>
+		<item>Miratoje vetvetiu, nëse përdoruesi ka një koment të mëparshëm të miratuar.</item>
+		<item>Mirato vetvetiu komentet e gjithkujt.</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>Pa komente</item>
+		<item>Komente përdoruesish të njohur</item>
+		<item>Krejt përdoruesit</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Asnjë</item>
+		<item>Dy nivele</item>
+		<item>Tre nivele</item>
+		<item>Katër nivele</item>
+		<item>Pesë nivele</item>
+		<item>Gjashtë nivele</item>
+		<item>Shtatë nivele</item>
+		<item>Tetë nivele</item>
+		<item>Nëntë nivele</item>
+		<item>Dhjetë nivele</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Falas</item>
