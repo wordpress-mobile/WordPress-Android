@@ -142,7 +142,12 @@ public class WPActivityUtils {
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
 
                 if (restart) {
-                    Intent refresh = new Intent(context, context.getClass());
+                    // To restart Activity we want to use original intent it was launched with
+                    Intent refresh = context.getIntent();
+                    if (refresh == null) {
+                        refresh = new Intent(context, context.getClass());
+                    }
+
                     refresh.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     context.startActivity(refresh);
                     context.finish();
