@@ -930,7 +930,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
-                        if (!mEditingList.contains(entry)) {
+                        if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
                             list.setAdapter(new ArrayAdapter<>(getActivity(),
                                     R.layout.wp_simple_list_item_1,
