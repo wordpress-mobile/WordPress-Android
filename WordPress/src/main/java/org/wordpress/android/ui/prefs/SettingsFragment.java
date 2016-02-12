@@ -241,12 +241,16 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         Locale newLocale = WPPrefUtils.languageLocale(languageCode);
         conf.locale = newLocale;
         res.updateConfiguration(conf, res.getDisplayMetrics());
-        mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
 
-        // Track the change only if the user selected a non default Device language. This is only used in
-        // Mixpanel, because we have both the device language and app selected language data in Tracks
-        // metadata.
-        if (!Locale.getDefault().equals(newLocale)) {
+        if (Locale.getDefault().equals(newLocale)) {
+            // remove custom locale key when original device locale is selected
+            mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
+        } else {
+            mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
+
+            // Track the change only if the user selected a non default Device language. This is only used in
+            // Mixpanel, because we have both the device language and app selected language data in Tracks
+            // metadata.
             Map<String, Object> properties = new HashMap<>();
             properties.put("forced_app_locale", conf.locale.toString());
             AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED, properties);

@@ -82,7 +82,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 41;
+    private static final int DATABASE_VERSION = 42;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -390,6 +390,9 @@ public class WordPressDB {
                 AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
                 currentVersion++;
             case 40:
+                AccountTable.migrationAddDateFields(db);
+                currentVersion++;
+            case 41:
                 AccountTable.migrationAddAccountSettingsFields(db);
                 currentVersion++;
         }

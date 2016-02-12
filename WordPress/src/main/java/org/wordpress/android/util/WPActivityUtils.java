@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +31,6 @@ import org.wordpress.android.ui.prefs.SettingsFragment;
 import java.util.Locale;
 
 public class WPActivityUtils {
-    private static final long SHOW_KEYBOARD_DELAY = 250;
-
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
     public static void addToolbarToDialog(final Fragment context, final Dialog dialog, String title) {
@@ -120,15 +117,6 @@ public class WPActivityUtils {
         }
     }
 
-    public static void showKeyboard(final View view) {
-        (new Handler()).postDelayed(new Runnable() {
-            public void run() {
-                InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInputFromWindow(view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT, 0);
-            }
-        }, SHOW_KEYBOARD_DELAY);
-    }
-
     public static void hideKeyboard(final View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -154,7 +142,12 @@ public class WPActivityUtils {
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
 
                 if (restart) {
-                    Intent refresh = new Intent(context, context.getClass());
+                    // To restart Activity we want to use original intent it was launched with
+                    Intent refresh = context.getIntent();
+                    if (refresh == null) {
+                        refresh = new Intent(context, context.getClass());
+                    }
+
                     refresh.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     context.startActivity(refresh);
                     context.finish();

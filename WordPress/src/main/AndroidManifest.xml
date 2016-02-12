@@ -101,8 +101,7 @@
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:theme="@style/CalypsoTheme"
-            android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden"/>
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
