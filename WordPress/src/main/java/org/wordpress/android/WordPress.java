@@ -785,6 +785,7 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle arg1) {
+            // If user uses custom locale this is right place to apply it to activity.
             WPActivityUtils.applyLocale(activity);
         }
 
