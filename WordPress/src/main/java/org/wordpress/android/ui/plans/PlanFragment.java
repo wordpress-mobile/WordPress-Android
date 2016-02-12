@@ -82,7 +82,9 @@ public class PlanFragment extends Fragment {
         }
 
         addTextView(mCurrentPlanDetails.getTagline());
-        addTextView(mCurrentPlanDetails.getFormattedPrice());
+
+        addTextView(PlansUtils.getPlanPriceValue(mCurrentPlanDetails) + PlansUtils.getPlanPriceCurrencySymbol(mCurrentPlanDetails));
+
         addTextView(mCurrentPlanDetails.getBillPeriodLabel());
 
         addTextView("");

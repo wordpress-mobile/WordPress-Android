@@ -20,12 +20,45 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class PlansUtils {
+
+    public static final String deviceCurrencyCode; // ISO 4217 currency code.
+    public static final String deviceCurrencySymbol;
+
+    public static final String DOLLAR_SYMBOL = "$";
+    public static final String DOLLAR_ISO4217_CODE = "USD";
+
+    static {
+        Currency currency = Currency.getInstance(Locale.getDefault());
+        deviceCurrencyCode = currency.getCurrencyCode();
+        deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
+    }
+
+    public static int getPlanPriceValue(Plan plan) {
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+            return pricesMap.get(deviceCurrencyCode);
+        }
+        // Returns US dollars price
+        return pricesMap.get(DOLLAR_ISO4217_CODE);
+    }
+
+    public static String getPlanPriceCurrencySymbol(Plan plan) {
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+           return deviceCurrencySymbol;
+        }
+
+        // Returns US dollars symbol
+        return DOLLAR_SYMBOL;
+    }
 
     public interface AvailablePlansListener {
         void onResponse(List<SitePlan> plans);
