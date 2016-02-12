@@ -205,7 +205,14 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                     conf.locale = new Locale(localString);
                 }
                 res.updateConfiguration(conf, dm);
-                mSettings.edit().putString(LANGUAGE_PREF_KEY, localeMap.get(values[position])).apply();
+
+                if (position > 0) {
+                    mSettings.edit().putString(LANGUAGE_PREF_KEY, localeMap.get(values[position])).apply();
+                } else {
+                    // remove custom locale key when original device locale is selected
+                    mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
+                }
+
 
                 // Track the change only if the user selected a non default Device language. This is only used in
                 // Mixpanel, because we have both the device language and app selected language data in Tracks

@@ -453,7 +453,9 @@ public class EditPostSettingsFragment extends Fragment
                 showLocationSearch();
             }
         } else if (id == R.id.searchLocation) {
-            searchLocation();
+            if (checkForLocationPermission()) {
+                searchLocation();
+            }
         }
     }
 
@@ -461,7 +463,7 @@ public class EditPostSettingsFragment extends Fragment
     public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
         boolean handled = false;
         int id = view.getId();
-        if (id == R.id.searchLocationText && actionId == EditorInfo.IME_ACTION_SEARCH) {
+        if (id == R.id.searchLocationText && actionId == EditorInfo.IME_ACTION_SEARCH && checkForLocationPermission()) {
             searchLocation();
             handled = true;
         }
@@ -775,7 +777,8 @@ public class EditPostSettingsFragment extends Fragment
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
 
-        if (!checkForLocationPermission()) return;
+        // this is where we ask for location permission when EditPostActivity is oppened
+        if (SiteSettingsInterface.getGeotagging(getActivity()) && !checkForLocationPermission()) return;
 
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
@@ -818,7 +821,9 @@ public class EditPostSettingsFragment extends Fragment
         mLocationViewSection.setVisibility(View.VISIBLE);
     }
 
-    private void searchLocation() {
+    public void searchLocation() {
+        if(!isAdded() || mLocationEditText == null) return;
+
         EditTextUtils.hideSoftInput(mLocationEditText);
         String location = EditTextUtils.getText(mLocationEditText);
 

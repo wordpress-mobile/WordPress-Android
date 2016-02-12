@@ -5,6 +5,7 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
@@ -13,6 +14,7 @@
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">8dp</dimen>
+    <dimen name="filter_subbar_elevation">4dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -65,6 +67,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_filter_spinner">68dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -228,6 +231,7 @@
     <dimen name="related_posts_dialog_padding_right">24dp</dimen>
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
+    <dimen name="list_editor_input_max_width">500dp</dimen>
 
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>
