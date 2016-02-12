@@ -75,6 +75,23 @@
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
+    <style name="FilteredRecyclerViewSpinner.WordPress" parent="DropDownNav.WordPress">
+        <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
+    </style>
+
+    <style name="FilteredRecyclerViewFilterTextView.WordPress" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingRight">@dimen/margin_large</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="FilteredRecyclerViewFilterContainer">
+        <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
+        <item name="android:elevation">@dimen/filter_subbar_elevation</item>
+        <item name="android:background">@color/blue_medium</item>
+    </style>
+
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>
