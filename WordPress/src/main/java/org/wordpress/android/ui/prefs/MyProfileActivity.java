@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
 import org.wordpress.android.util.StringUtils;
@@ -157,15 +158,15 @@ public class MyProfileActivity extends AppCompatActivity {
 
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
-        Account.RestParam param = null;
+        AccountModel.RestParam param = null;
         if (textView == mFirstName) {
-            param = Account.RestParam.FIRST_NAME;
+            param = AccountModel.RestParam.FIRST_NAME;
         } else if (textView == mLastName) {
-            param = Account.RestParam.LAST_NAME;
+            param = AccountModel.RestParam.LAST_NAME;
         } else if (textView == mDisplayName) {
-            param = Account.RestParam.DISPLAY_NAME;
+            param = AccountModel.RestParam.DISPLAY_NAME;
         } else if (textView == mAboutMe) {
-            param = Account.RestParam.ABOUT_ME;
+            param = AccountModel.RestParam.ABOUT_ME;
         }
         return param != null ? param.getDescription() : null;
     }

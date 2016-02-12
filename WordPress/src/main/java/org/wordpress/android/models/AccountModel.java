@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.models.Account.RestParam;
 
 import java.util.Date;
 
@@ -222,5 +221,31 @@ public class AccountModel {
 
     public void setWebAddress(String webAddress) {
         mWebAddress = webAddress;
+    }
+
+    public enum RestParam {
+        FIRST_NAME("first_name"),
+        LAST_NAME("last_name"),
+        DISPLAY_NAME("display_name"),
+        ABOUT_ME("description"),
+        EMAIL("user_email"),
+        NEW_EMAIL("new_user_email"),
+        EMAIL_CHANGE_PENDING("user_email_change_pending"),
+        PRIMARY_BLOG("primary_site_ID"),
+        WEB_ADDRESS("user_URL");
+
+        private String description;
+
+        RestParam(String description) {
+            this.description = description;
+        }
+
+        public static String toString(RestParam param) {
+            return param.description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 }
