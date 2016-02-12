@@ -340,8 +340,8 @@ public class CommentActions {
                                 final CommentStatus newStatus,
                                 final CommentActionListener actionListener) {
         // deletion is handled separately
-        if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
-            deleteComment(accountId, comment, actionListener);
+        if (newStatus != null && newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE)) {
+            deleteComment(accountId, comment, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
 
@@ -437,7 +437,8 @@ public class CommentActions {
      */
     private static void deleteComment(final int accountId,
                                         final Comment comment,
-                                        final CommentActionListener actionListener) {
+                                        final CommentActionListener actionListener,
+                                        final boolean forceDelete) {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null) {
             if (actionListener != null)
@@ -457,7 +458,8 @@ public class CommentActions {
                         blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        comment.commentID };
+                        comment.commentID,
+                        forceDelete};
 
                 Object result;
                 try {

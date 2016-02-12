@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -282,7 +284,31 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moderateComment(CommentStatus.TRASH);
+                if (mComment.getStatusEnum() == CommentStatus.TRASH) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+                    dialogBuilder.setTitle(getResources().getText(R.string.sure_to_delete_comment_title));
+                    dialogBuilder.setMessage(getResources().getText(R.string.sure_to_delete_comment));
+                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    moderateComment(CommentStatus.DELETE);
+                                }
+                            });
+                    dialogBuilder.setNegativeButton(
+                            getResources().getText(R.string.no),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // just close the dialog
+                                }
+                            });
+                    dialogBuilder.setCancelable(true);
+                    dialogBuilder.create().show();
+
+                } else {
+                    moderateComment(CommentStatus.TRASH);
+                }
+
             }
         });
 
@@ -927,6 +953,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
+            if (mComment.getStatusEnum() == CommentStatus.TRASH) {
+                mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
+                mBtnTrashComment.setText(R.string.mnu_comment_delete_permanently);
+            } else {
+                mBtnTrashComment.setText(R.string.mnu_comment_trash);
+            }
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
         }

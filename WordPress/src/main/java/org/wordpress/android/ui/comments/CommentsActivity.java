@@ -263,12 +263,12 @@ public class CommentsActivity extends AppCompatActivity
                     }
                 }
             });
-        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
+        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETE) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
 
-            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : getString(R.string.comment_spammed));
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently)  );
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
