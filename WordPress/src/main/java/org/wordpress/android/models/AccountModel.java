@@ -3,7 +3,11 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.Date;
 
 public class AccountModel {
     // WordPress.com only - data fetched from the REST API endpoint
@@ -20,6 +24,7 @@ public class AccountModel {
     private String mFirstName;
     private String mLastName;
     private String mAboutMe;
+    private Date mDateCreated;
 
     public AccountModel() {
         init();
@@ -39,6 +44,7 @@ public class AccountModel {
         mFirstName = "";
         mLastName = "";
         mAboutMe = "";
+        mDateCreated = new Date();
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -51,6 +57,13 @@ public class AccountModel {
         mSiteCount = json.optInt("site_count");
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
+
+        Date date = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
+        if (date != null) {
+            mDateCreated = date;
+        } else {
+            AppLog.e(AppLog.T.API, "Date could not be found from Account JSON response");
+        }
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
@@ -166,5 +179,13 @@ public class AccountModel {
 
     public void setAboutMe(String aboutMe) {
         mAboutMe = aboutMe;
+    }
+
+    public Date getDateCreated() {
+        return mDateCreated;
+    }
+
+    public void setDateCreated(Date date) {
+        mDateCreated = date;
     }
 }
