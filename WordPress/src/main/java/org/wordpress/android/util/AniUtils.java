@@ -84,7 +84,11 @@ public class AniUtils {
         float toY   = (show ? 0f : max);
 
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
-        anim.setInterpolator(show ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        if (show) {
+            anim.setInterpolator(new DecelerateInterpolator());
+        } else {
+            anim.setInterpolator(new AccelerateInterpolator());
+        }
         anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
 
         anim.addListener(new AnimatorListenerAdapter() {

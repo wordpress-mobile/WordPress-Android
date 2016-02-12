@@ -73,14 +73,14 @@ public class AccountModel {
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
-        mFirstName = json.optString(Account.RestParam.toString(Account.RestParam.FIRST_NAME));
-        mLastName = json.optString(Account.RestParam.toString(Account.RestParam.LAST_NAME));
-        mDisplayName = json.optString(Account.RestParam.toString(Account.RestParam.DISPLAY_NAME));
-        mAboutMe = json.optString(Account.RestParam.toString(Account.RestParam.ABOUT_ME));
-        mNewEmail = json.optString(Account.RestParam.toString(Account.RestParam.NEW_EMAIL));
-        mPendingEmailChange = json.optBoolean(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING));
-        mPrimaryBlogId = json.optLong(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG));
-        mWebAddress = json.optString(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS));
+        mFirstName = json.optString(RestParam.FIRST_NAME.getDescription());
+        mLastName = json.optString(RestParam.LAST_NAME.getDescription());
+        mDisplayName = json.optString(RestParam.DISPLAY_NAME.getDescription());
+        mAboutMe = json.optString(RestParam.ABOUT_ME.getDescription());
+        mNewEmail = json.optString(RestParam.NEW_EMAIL.getDescription());
+        mPendingEmailChange = json.optBoolean(RestParam.EMAIL_CHANGE_PENDING.getDescription());
+        mPrimaryBlogId = json.optLong(RestParam.PRIMARY_BLOG.getDescription());
+        mWebAddress = json.optString(RestParam.WEB_ADDRESS.getDescription());
     }
 
     public long getUserId() {
@@ -221,5 +221,31 @@ public class AccountModel {
 
     public void setWebAddress(String webAddress) {
         mWebAddress = webAddress;
+    }
+
+    public enum RestParam {
+        FIRST_NAME("first_name"),
+        LAST_NAME("last_name"),
+        DISPLAY_NAME("display_name"),
+        ABOUT_ME("description"),
+        EMAIL("user_email"),
+        NEW_EMAIL("new_user_email"),
+        EMAIL_CHANGE_PENDING("user_email_change_pending"),
+        PRIMARY_BLOG("primary_site_ID"),
+        WEB_ADDRESS("user_URL");
+
+        private String description;
+
+        RestParam(String description) {
+            this.description = description;
+        }
+
+        public static String toString(RestParam param) {
+            return param.description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 }
