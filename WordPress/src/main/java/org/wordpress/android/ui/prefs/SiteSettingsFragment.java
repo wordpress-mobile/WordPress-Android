@@ -447,6 +447,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
         } else if (preference == mRelatedPostsPref) {
             mRelatedPostsPref.setSummary(newValue.toString());
+        } else if (preference == mModerationHoldPref) {
+            mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
+        } else if (preference == mBlacklistPref) {
+            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
         } else {
             return false;
         }
@@ -484,7 +488,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mSiteSettings.saveSettings();
+        if (mEditingList == mSiteSettings.getModerationKeys()) {
+            onPreferenceChange(mModerationHoldPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
+            onPreferenceChange(mBlacklistPref, mEditingList.size());
+        }
         mEditingList = null;
     }
 
@@ -702,6 +710,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
+        mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
+        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
     }
 
     private void setCategories() {

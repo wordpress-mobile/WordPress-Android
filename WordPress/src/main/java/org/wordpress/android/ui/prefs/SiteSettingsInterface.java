@@ -467,13 +467,31 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) return new ArrayList<>();
+        if (mSettings.holdForModeration == null) mSettings.holdForModeration = new ArrayList<>();
         return mSettings.holdForModeration;
     }
 
+    public @NonNull String getModerationHoldDescription() {
+        return getKeysDescription(getModerationKeys().size());
+    }
+
     public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) return new ArrayList<>();
+        if (mSettings.blacklist == null) mSettings.blacklist = new ArrayList<>();
         return mSettings.blacklist;
+    }
+
+    public @NonNull String getBlacklistDescription() {
+        return getKeysDescription(getBlacklistKeys().size());
+    }
+
+    public @NonNull String getKeysDescription(int count) {
+        if (mActivity == null) return "";
+
+        if (count > 0) {
+            return mActivity.getResources().getQuantityString(
+                    R.plurals.site_settings_list_editor_summary, count, count);
+        }
+        return mActivity.getString(R.string.site_settings_list_editor_no_items_text);
     }
 
     public void setTitle(String title) {
@@ -793,7 +811,6 @@ public abstract class SiteSettingsInterface {
                         }
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
-                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
                     SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);
