@@ -206,6 +206,9 @@ public class WordPress extends Application {
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
+
+        // If users uses a custom locale set it on start of application
+        WPActivityUtils.applyLocale(getContext());
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -667,6 +670,8 @@ public class WordPress extends Application {
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
+            // Reapply locale on configuration change
+            WPActivityUtils.applyLocale(getContext());
         }
 
         @Override
@@ -782,8 +787,6 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityCreated(Activity activity, Bundle arg1) {
-            // If user uses custom locale this is right place to apply it to activity.
-            WPActivityUtils.applyLocale(activity);
         }
 
         @Override

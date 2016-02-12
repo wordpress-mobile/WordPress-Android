@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -121,7 +120,7 @@ public class WPActivityUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void applyLocale(Activity context) {
+    public static void applyLocale(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (sharedPreferences.contains(SettingsFragment.LANGUAGE_PREF_KEY)) {
