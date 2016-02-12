@@ -70,25 +70,15 @@ public class PlanFragment extends Fragment {
             return;
         }
         if (mCurrentSitePlan == null) {
-            // ?? This should never happen
+            // TODO This should never happen - Fix this. Close the activity?
             return;
         }
 
-        switch ((int)mCurrentSitePlan.getProductID()) {
-            case 1:
-            case 2002:
-                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_beginner));
-                break;
-            case 2000:
-            case 1003:
-                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_premium));
-                break;
-            case 1008:
-            case 2001:
-                mPlanImageView.setImageDrawable(getResources().getDrawable(R.drawable.plan_business));
-                break;
-            default:
-                mPlanImageView.setVisibility(View.GONE);
+        int pictureResID = PlansUIHelper.getPrimaryImageResIDForPlan(mCurrentSitePlan.getProductID());
+        if (pictureResID == PlansUIHelper.NO_PICTURE_FOR_PLAN_RES_ID) {
+            mPlanImageView.setVisibility(View.GONE);
+        } else {
+            mPlanImageView.setImageDrawable(getResources().getDrawable(pictureResID));
         }
 
         addTextView(mCurrentPlanDetails.getTagline());
