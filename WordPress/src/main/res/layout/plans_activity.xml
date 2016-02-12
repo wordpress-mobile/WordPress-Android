@@ -33,11 +33,11 @@
 
     <ProgressBar
         android:id="@+id/progress_loading_plans"
-        style="@style/ReaderProgressBar"
+        style="@style/PlansProgressBar"
+        android:layout_marginTop="@dimen/margin_large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone" />
-
 
 </LinearLayout>

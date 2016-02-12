@@ -32,7 +32,7 @@ public class PlansActivity extends AppCompatActivity {
     public static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
-    private ArrayList<SitePlan> mAvailablePlans;
+    private SitePlan[] mAvailablePlans;
     private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     private WPViewPager mViewPager;
@@ -47,7 +47,9 @@ public class PlansActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            mAvailablePlans = (ArrayList<SitePlan>) savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            if (savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS) instanceof SitePlan[]) {
+                mAvailablePlans = (SitePlan[]) savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            }
             mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -83,8 +85,10 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void setupPlansUI() {
-        if (mAvailablePlans == null || mAvailablePlans.size() == 0)  {
-            //TODO: Static UI here?
+        if (mAvailablePlans == null || mAvailablePlans.length == 0)  {
+            // This should never be called with empty plans.
+            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
 
@@ -92,7 +96,7 @@ public class PlansActivity extends AppCompatActivity {
         progress.setVisibility(View.GONE);
 
         mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOffscreenPageLimit(mAvailablePlans.size() - 1);
+        mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setVisibility(View.VISIBLE);
@@ -153,7 +157,7 @@ public class PlansActivity extends AppCompatActivity {
         public int getPositionOfPlan(long planID) {
             for (int i = 0; i < getCount(); i++) {
                 PlanFragment fragment = (PlanFragment) getItem(i);
-                if (fragment.getSitePlan().getProductID() == planID ) {
+                if (fragment.getSitePlan().getProductID() == planID) {
                     return  i;
                 }
             }
@@ -188,9 +192,9 @@ public class PlansActivity extends AppCompatActivity {
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
         if (mViewPager != null) {
             outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
+            // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
+            mViewpagerPosSelected = mViewPager.getCurrentItem();
         }
-        // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
-        mViewpagerPosSelected = mViewPager.getCurrentItem();
     }
 
     private PlansPageAdapter getPageAdapter() {
@@ -229,11 +233,11 @@ public class PlansActivity extends AppCompatActivity {
 
     PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
         public void onResponse(List<SitePlan> plans) {
-            // Make sure we've a list implementation that implements Serializable. ArrayList does implement it.
-            mAvailablePlans = new ArrayList<>(plans);
+            mAvailablePlans = new SitePlan[plans.size()];
+            plans.toArray(mAvailablePlans);
             setupPlansUI();
         }
-        public void onError(Exception volleyError) {
+        public void onError(Exception error) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();

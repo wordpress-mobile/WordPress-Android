@@ -29,7 +29,7 @@ public class PlansUtils {
 
     public interface AvailablePlansListener {
         void onResponse(List<SitePlan> plans);
-        void onError(Exception volleyError);
+        void onError(Exception error);
     }
 
     public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
@@ -42,34 +42,40 @@ public class PlansUtils {
         WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                if (response != null) {
-                    AppLog.d(AppLog.T.PLANS, response.toString());
-                    List<SitePlan> plans = new ArrayList<>();
-                    try {
-                        JSONArray planIDs = response.names();
-                        if (planIDs != null) {
-                            for (int i=0; i < planIDs.length(); i ++) {
-                                String currentKey = planIDs.getString(i);
-                                JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                                SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
-                                plans.add(currentPlan);
-                            }
+                if (response == null) {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server!");
+                    if (listener != null) {
+                        listener.onError(new Exception("Unexpected empty response from server!"));
+                    }
+                    return;
+                }
+
+                AppLog.d(AppLog.T.PLANS, response.toString());
+                List<SitePlan> plans = new ArrayList<>();
+                try {
+                    JSONArray planIDs = response.names();
+                    if (planIDs != null) {
+                        for (int i=0; i < planIDs.length(); i ++) {
+                            String currentKey = planIDs.getString(i);
+                            JSONObject currentPlanJSON = response.getJSONObject(currentKey);
+                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
+                            plans.add(currentPlan);
                         }
-                        if (listener!= null) {
-                            listener.onResponse(plans);
-                        }
-                    } catch (JSONException e) {
-                        AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-                        if (listener!= null) {
-                            listener.onError(e);
-                        }
+                    }
+                    if (listener!= null) {
+                        listener.onResponse(plans);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
+                    if (listener!= null) {
+                        listener.onError(e);
                     }
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.UTILS, "Error downloading plans", volleyError);
+                AppLog.e(AppLog.T.UTILS, "Error downloading site plans for the site with ID " + blog.getDotComBlogId(), volleyError);
                 if (listener!= null) {
                     listener.onError(volleyError);
                 }
@@ -197,6 +203,8 @@ public class PlansUtils {
 
                     // Load details of features from the server.
                     downloadFeatures(ctx, null, null);
+                } else {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading global Plans!");
                 }
 
                 if (listener != null) {
@@ -232,6 +240,8 @@ public class PlansUtils {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlansFeatures(response.toString());
+                } else {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features!");
                 }
                 if (listener != null) {
                     listener.onResponse(response);
