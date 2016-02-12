@@ -665,9 +665,6 @@ public class WordPress extends Application {
         boolean mIsInBackground = true;
         boolean mFirstActivityResumed = true;
 
-        private Class<?> mClass;
-        private int mOrientation = -1;
-
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
         }
