@@ -786,7 +786,7 @@ public class WordPress extends Application {
         }
 
         @Override
-        public void onActivityCreated(Activity activity, Bundle arg1) {
+        public void onActivityCreated(Activity arg0, Bundle arg1) {
         }
 
         @Override
