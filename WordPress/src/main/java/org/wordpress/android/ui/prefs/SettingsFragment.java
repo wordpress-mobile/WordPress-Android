@@ -145,6 +145,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         } else {
             final CheckBoxPreference visualEditorCheckBox = (CheckBoxPreference) findPreference(getActivity()
                     .getString(R.string.pref_key_visual_editor_enabled));
+            visualEditorCheckBox.setChecked(AppPrefs.isVisualEditorEnabled());
             visualEditorCheckBox.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
