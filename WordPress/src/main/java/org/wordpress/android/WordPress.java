@@ -772,17 +772,6 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            // Need to track orientation to apply preferred language on rotation
-            int orientation = activity.getResources().getConfiguration().orientation;
-            boolean shouldRestart =
-                    mOrientation == -1 || mOrientation != orientation || !mClass.equals(activity.getClass());
-
-            if (shouldRestart) {
-                mOrientation = orientation;
-                mClass = activity.getClass();
-            }
-            WPActivityUtils.applyLocale(activity, shouldRestart);
-
             if (mIsInBackground) {
                 // was in background before
                 onAppComesFromBackground();
@@ -795,7 +784,8 @@ public class WordPress extends Application {
         }
 
         @Override
-        public void onActivityCreated(Activity arg0, Bundle arg1) {
+        public void onActivityCreated(Activity activity, Bundle arg1) {
+            WPActivityUtils.applyLocale(activity);
         }
 
         @Override

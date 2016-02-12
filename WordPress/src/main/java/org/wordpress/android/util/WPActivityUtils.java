@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -122,7 +121,7 @@ public class WPActivityUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void applyLocale(Activity context, boolean restart) {
+    public static void applyLocale(Activity context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (sharedPreferences.contains(SettingsFragment.LANGUAGE_PREF_KEY)) {
@@ -140,19 +139,6 @@ public class WPActivityUtils {
                 Configuration conf = resources.getConfiguration();
                 conf.locale = new Locale(locale);
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
-
-                if (restart) {
-                    // To restart Activity we want to use original intent it was launched with
-                    Intent refresh = context.getIntent();
-                    if (refresh == null) {
-                        refresh = new Intent(context, context.getClass());
-                    }
-
-                    refresh.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    context.startActivity(refresh);
-                    context.finish();
-                    context.overridePendingTransition(0, 0);
-                }
             }
         }
     }
