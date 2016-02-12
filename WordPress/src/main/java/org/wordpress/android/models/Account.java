@@ -101,7 +101,12 @@ public class Account extends AccountModel {
         FIRST_NAME("first_name"),
         LAST_NAME("last_name"),
         DISPLAY_NAME("display_name"),
-        ABOUT_ME("description");
+        ABOUT_ME("description"),
+        EMAIL("user_email"),
+        NEW_EMAIL("new_user_email"),
+        EMAIL_CHANGE_PENDING("user_email_change_pending"),
+        PRIMARY_BLOG("primary_site_ID"),
+        WEB_ADDRESS("user_URL");
 
         private String description;
 

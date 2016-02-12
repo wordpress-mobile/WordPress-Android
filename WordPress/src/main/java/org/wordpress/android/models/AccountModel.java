@@ -25,6 +25,9 @@ public class AccountModel {
     private String mLastName;
     private String mAboutMe;
     private Date mDateCreated;
+    private String mNewEmail;
+    private boolean mPendingEmailChange;
+    private String mWebAddress;
 
     public AccountModel() {
         init();
@@ -45,6 +48,9 @@ public class AccountModel {
         mLastName = "";
         mAboutMe = "";
         mDateCreated = new Date();
+        mNewEmail = "";
+        mPendingEmailChange = false;
+        mWebAddress = "";
     }
 
     public void updateFromRestResponse(JSONObject json) {
@@ -67,10 +73,14 @@ public class AccountModel {
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
-        mFirstName = json.optString("first_name");
-        mLastName = json.optString("last_name");
-        mDisplayName = json.optString("display_name");
-        mAboutMe = json.optString("description");
+        mFirstName = json.optString(Account.RestParam.toString(Account.RestParam.FIRST_NAME));
+        mLastName = json.optString(Account.RestParam.toString(Account.RestParam.LAST_NAME));
+        mDisplayName = json.optString(Account.RestParam.toString(Account.RestParam.DISPLAY_NAME));
+        mAboutMe = json.optString(Account.RestParam.toString(Account.RestParam.ABOUT_ME));
+        mNewEmail = json.optString(Account.RestParam.toString(Account.RestParam.NEW_EMAIL));
+        mPendingEmailChange = json.optBoolean(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING));
+        mPrimaryBlogId = json.optLong(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG));
+        mWebAddress = json.optString(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS));
     }
 
     public long getUserId() {
@@ -187,5 +197,29 @@ public class AccountModel {
 
     public void setDateCreated(Date date) {
         mDateCreated = date;
+    }
+
+    public String getNewEmail() {
+        return StringUtils.notNullStr(mNewEmail);
+    }
+
+    public void setNewEmail(String newEmail) {
+        mNewEmail = newEmail;
+    }
+
+    public boolean getPendingEmailChange() {
+        return mPendingEmailChange;
+    }
+
+    public void setPendingEmailChange(boolean pendingEmailChange) {
+        mPendingEmailChange = pendingEmailChange;
+    }
+
+    public String getWebAddress() {
+        return mWebAddress;
+    }
+
+    public void setWebAddress(String webAddress) {
+        mWebAddress = webAddress;
     }
 }
