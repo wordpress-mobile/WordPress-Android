@@ -117,5 +117,9 @@ public class Account extends AccountModel {
         public static String toString(RestParam param) {
             return param.description;
         }
+
+        public String getDescription() {
+            return description;
+        }
     }
 }

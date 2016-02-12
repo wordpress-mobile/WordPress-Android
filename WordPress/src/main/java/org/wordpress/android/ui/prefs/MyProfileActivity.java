@@ -167,7 +167,7 @@ public class MyProfileActivity extends AppCompatActivity {
         } else if (textView == mAboutMe) {
             param = Account.RestParam.ABOUT_ME;
         }
-        return Account.RestParam.toString(param);
+        return param != null ? param.getDescription() : null;
     }
 
     public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {

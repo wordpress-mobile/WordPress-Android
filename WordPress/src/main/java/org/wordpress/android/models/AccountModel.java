@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.models.Account.RestParam;
 
 import java.util.Date;
 
@@ -73,14 +74,14 @@ public class AccountModel {
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
-        mFirstName = json.optString(Account.RestParam.toString(Account.RestParam.FIRST_NAME));
-        mLastName = json.optString(Account.RestParam.toString(Account.RestParam.LAST_NAME));
-        mDisplayName = json.optString(Account.RestParam.toString(Account.RestParam.DISPLAY_NAME));
-        mAboutMe = json.optString(Account.RestParam.toString(Account.RestParam.ABOUT_ME));
-        mNewEmail = json.optString(Account.RestParam.toString(Account.RestParam.NEW_EMAIL));
-        mPendingEmailChange = json.optBoolean(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING));
-        mPrimaryBlogId = json.optLong(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG));
-        mWebAddress = json.optString(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS));
+        mFirstName = json.optString(RestParam.FIRST_NAME.getDescription());
+        mLastName = json.optString(RestParam.LAST_NAME.getDescription());
+        mDisplayName = json.optString(RestParam.DISPLAY_NAME.getDescription());
+        mAboutMe = json.optString(RestParam.ABOUT_ME.getDescription());
+        mNewEmail = json.optString(RestParam.NEW_EMAIL.getDescription());
+        mPendingEmailChange = json.optBoolean(RestParam.EMAIL_CHANGE_PENDING.getDescription());
+        mPrimaryBlogId = json.optLong(RestParam.PRIMARY_BLOG.getDescription());
+        mWebAddress = json.optString(RestParam.WEB_ADDRESS.getDescription());
     }
 
     public long getUserId() {
