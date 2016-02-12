@@ -384,7 +384,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
             changeLanguageValue(mSiteSettings.getLanguageCode());
         } else if (preference == mPrivacyPref) {
-            mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
+            mSiteSettings.setPrivacy(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mPrivacyPref,
                     String.valueOf(mSiteSettings.getPrivacy()),
                     mSiteSettings.getPrivacyDescription());
