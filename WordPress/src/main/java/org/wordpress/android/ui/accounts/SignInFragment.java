@@ -157,21 +157,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-                    mUrlButtonLayout.setVisibility(View.GONE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
-                    mSelfHosted = false;
-                } else {
-                    mUrlButtonLayout.setVisibility(View.VISIBLE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
-                    mSelfHosted = true;
-                }
+                toggleSignInMode();
             }
         });
 
         if (mSelfHosted) {
-            mUrlButtonLayout.setVisibility(View.VISIBLE);
-            mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
+            showSelfHostedSignInForm();
         }
 
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
@@ -217,6 +208,26 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         moveBottomButtons();
 
         return rootView;
+    }
+
+    private void toggleSignInMode(){
+        if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
+            showDotComSignInForm();
+            mSelfHosted = false;
+        } else {
+            showSelfHostedSignInForm();
+            mSelfHosted = true;
+        }
+    }
+
+    private void showDotComSignInForm(){
+        mUrlButtonLayout.setVisibility(View.GONE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+    }
+
+    private void showSelfHostedSignInForm(){
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
 
     @Override
