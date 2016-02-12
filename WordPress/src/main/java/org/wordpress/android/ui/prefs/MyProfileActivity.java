@@ -158,17 +158,16 @@ public class MyProfileActivity extends AppCompatActivity {
 
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
-        AccountModel.RestParam param = null;
         if (textView == mFirstName) {
-            param = AccountModel.RestParam.FIRST_NAME;
+            return AccountModel.RestParam.FIRST_NAME.getDescription();
         } else if (textView == mLastName) {
-            param = AccountModel.RestParam.LAST_NAME;
+            return AccountModel.RestParam.LAST_NAME.getDescription();
         } else if (textView == mDisplayName) {
-            param = AccountModel.RestParam.DISPLAY_NAME;
+            return AccountModel.RestParam.DISPLAY_NAME.getDescription();
         } else if (textView == mAboutMe) {
-            param = AccountModel.RestParam.ABOUT_ME;
+            return AccountModel.RestParam.ABOUT_ME.getDescription();
         }
-        return param != null ? param.getDescription() : null;
+        return null;
     }
 
     public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
