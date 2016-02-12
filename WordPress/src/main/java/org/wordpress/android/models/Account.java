@@ -96,21 +96,4 @@ public class Account extends AccountModel {
     public void save() {
         AccountTable.save(this);
     }
-
-    public enum RestParam {
-        FIRST_NAME("first_name"),
-        LAST_NAME("last_name"),
-        DISPLAY_NAME("display_name"),
-        ABOUT_ME("description");
-
-        private String description;
-
-        RestParam(String description) {
-            this.description = description;
-        }
-
-        public static String toString(RestParam param) {
-            return param.description;
-        }
-    }
 }
