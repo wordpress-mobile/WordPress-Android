@@ -239,7 +239,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             RelatedPostsDialog.SHOW_HEADER_KEY, false));
                     mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
                             RelatedPostsDialog.SHOW_IMAGES_KEY, false));
-                    mSiteSettings.saveSettings();
+                    onPreferenceChange(mRelatedPostsPref, mSiteSettings.getRelatedPostsDescription());
                     break;
                 case THREADING_REQUEST_CODE:
                     int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
@@ -445,6 +445,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getMaxImageWidth());
         } else if (preference == mUploadAndLinkPref) {
             mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
+        } else if (preference == mRelatedPostsPref) {
+            mRelatedPostsPref.setSummary(newValue.toString());
         } else {
             return false;
         }
@@ -699,6 +701,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
         mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
+        mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
     }
 
     private void setCategories() {

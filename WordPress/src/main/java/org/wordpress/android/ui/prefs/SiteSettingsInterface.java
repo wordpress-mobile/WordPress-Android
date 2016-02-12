@@ -13,6 +13,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.ApiHelper.Param;
@@ -336,6 +337,12 @@ public abstract class SiteSettingsInterface {
 
     public boolean getShowRelatedPostImages() {
         return mSettings.showRelatedPostImages;
+    }
+
+    public @NonNull String getRelatedPostsDescription() {
+        if (mActivity == null) return "";
+        String desc = mActivity.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
+        return StringUtils.capitalize(desc);
     }
 
     public boolean getAllowComments() {
