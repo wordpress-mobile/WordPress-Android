@@ -287,8 +287,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (mComment.getStatusEnum() == CommentStatus.TRASH) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                             getActivity());
-                    dialogBuilder.setTitle(getResources().getText(R.string.sure_to_delete_comment_title));
-                    dialogBuilder.setMessage(getResources().getText(R.string.sure_to_delete_comment));
+                    dialogBuilder.setTitle(getResources().getText(R.string.trash));
+                    dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                     dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {

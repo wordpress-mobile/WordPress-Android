@@ -335,38 +335,64 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dlg_confirm_trash_comments);
-        builder.setTitle(R.string.trash);
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                deleteSelectedComments();
-            }
-        });
-        builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.TRASH)){
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                    getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.trash));
+            dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comments));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            deleteSelectedComments(true);
+                        }
+                    });
+            dialogBuilder.setNegativeButton(
+                    getResources().getText(R.string.no),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // just close the dialog
+                        }
+                    });
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+
+        } else {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.dlg_confirm_trash_comments);
+            builder.setTitle(R.string.trash);
+            builder.setCancelable(true);
+            builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    deleteSelectedComments(false);
+                }
+            });
+            builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
-    private void deleteSelectedComments() {
+    private void deleteSelectedComments(boolean forceDelete) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
+        final int dlgId = forceDelete ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
+
         final CommentList selectedComments = getAdapter().getSelectedComments();
-        getActivity().showDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
+        getActivity().showDialog(dlgId);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!isAdded()) return;
 
                 finishActionMode();
-                dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
+                dismissDialog(dlgId);
                 if (deletedComments.size() > 0) {
                     getAdapter().clearSelectedComments();
                     getAdapter().deleteComments(deletedComments);
@@ -376,8 +402,12 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
+        CommentStatus newStatus = CommentStatus.TRASH;
+        if (forceDelete){
+            newStatus = CommentStatus.DELETE;
+        }
         CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
+                WordPress.getCurrentLocalTableBlogId(), selectedComments, newStatus, listener);
     }
 
     void loadComments() {
@@ -611,11 +641,19 @@ public class CommentsListFragment extends Fragment {
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
             boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
             boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
+            boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
+            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam || hasTrash);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
             setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
             setItemEnabled(menu, R.id.menu_trash, hasSelection);
+
+            final MenuItem trashItem = menu.findItem(R.id.menu_trash);
+            if (trashItem != null){
+                if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.TRASH)){
+                    trashItem.setTitle(R.string.mnu_comment_delete_permanently);
+                }
+            }
 
             return true;
         }
