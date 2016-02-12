@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * EditText utils
@@ -14,13 +15,10 @@ public class EditTextUtils {
     }
 
     /**
-     * returns text string from passed EditText
+     * returns non-null text string from passed TextView
      */
-    public static String getText(EditText edit) {
-        if (edit.getText() == null) {
-            return "";
-        }
-        return edit.getText().toString();
+    public static String getText(TextView textView) {
+        return (textView != null) ? textView.getText().toString() : "";
     }
 
     /**

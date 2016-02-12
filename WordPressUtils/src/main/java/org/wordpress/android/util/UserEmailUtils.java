@@ -5,9 +5,11 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.util.Patterns;
 
+import org.wordpress.android.util.AppLog.T;
+
 import java.util.regex.Pattern;
 
-public class UserEmail {
+public class UserEmailUtils {
     /**
      * Get primary account and return its name if it matches the email address pattern.
      *
@@ -29,6 +31,7 @@ public class UserEmail {
             return "";
         } catch (SecurityException e) {
             // exception will occur if app doesn't have GET_ACCOUNTS permission
+            AppLog.e(T.UTILS, "SecurityException - missing GET_ACCOUNTS permission");
             return "";
         }
     }

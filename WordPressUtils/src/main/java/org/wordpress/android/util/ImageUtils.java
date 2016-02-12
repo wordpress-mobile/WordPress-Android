@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -18,6 +19,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -29,6 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -41,13 +45,17 @@ public class ImageUtils {
 
         if (uri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
+            Cursor cur = null;
+            try {
+                cur = context.getContentResolver().query(uri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     path = cur.getString(dataColumn);
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + uri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 
@@ -391,6 +399,60 @@ public class ImageUtils {
     }
 
     /**
+     * Given the path to an image, resize the image down to within a maximum width
+     * @param path the path to the original image
+     * @param maxWidth the maximum allowed width
+     * @return the path to the resized image
+     */
+    public static String createResizedImageWithMaxWidth(Context context, String path, int maxWidth) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return path;
+        }
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        if (mimeType.equals("image/gif")) {
+            // Don't rescale gifs to maintain their quality
+            return path;
+        }
+
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+
+        int[] dimensions = getImageSize(Uri.fromFile(file), context);
+        int orientation = getImageOrientation(context, path);
+
+        if (dimensions[0] <= maxWidth) {
+            // Image width is within limits; don't resize
+            return path;
+        }
+
+        // Create resized image
+        byte[] bytes = ImageUtils.createThumbnailFromUri(context, Uri.parse(path), maxWidth, fileExtension, orientation);
+
+        if (bytes != null) {
+            try {
+                File resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+                FileOutputStream out = new FileOutputStream(resizedImageFile);
+                out.write(bytes);
+                out.close();
+
+                String tempFilePath = resizedImageFile.getPath();
+
+                if (!TextUtils.isEmpty(tempFilePath)) {
+                    return tempFilePath;
+                } else {
+                    AppLog.e(AppLog.T.POSTS, "Failed to create resized image");
+                }
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, "Failed to create image temp file");
+            }
+        }
+
+        return path;
+    }
+
+    /**
      * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
      * require passing the full-size image as an array of bytes[]
      */
@@ -405,13 +467,17 @@ public class ImageUtils {
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
             String[] projection = new String[] { MediaStore.Images.Media.DATA };
-            Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-            if (cur != null) {
-                if (cur.moveToFirst()) {
+            Cursor cur = null;
+            try {
+                cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     filePath = cur.getString(dataColumn);
                 }
-                cur.close();
+            } catch (IllegalStateException stateException) {
+                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
+            } finally {
+                SqlUtils.closeCursor(cur);
             }
         }
 
@@ -556,5 +622,20 @@ public class ImageUtils {
         canvas.drawRoundRect(rectF, radius, radius, paint);
 
         return output;
+    }
+
+    /**
+     * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
+     */
+    public static int getMaximumThumbnailWidthForEditor(Context context) {
+        int maximumThumbnailWidthForEditor;
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        maximumThumbnailWidthForEditor = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+        // 48dp of padding on each side so you can still place the cursor next to the image.
+        int padding = DisplayUtils.dpToPx(context, 48) * 2;
+        maximumThumbnailWidthForEditor -= padding;
+        return maximumThumbnailWidthForEditor;
     }
 }

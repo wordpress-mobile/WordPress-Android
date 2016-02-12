@@ -180,6 +180,14 @@ public class StringUtils {
         return new StringBuilder(strLen).append(Character.toTitleCase(firstChar)).append(str.substring(1)).toString();
     }
 
+    public static String removeTrailingSlash(final String str) {
+        if (TextUtils.isEmpty(str) || !str.endsWith("/")) {
+            return str;
+        }
+
+        return str.substring(0, str.length() -1);
+    }
+
     /*
      * Wrap an image URL in a photon URL
      * Check out http://developer.wordpress.com/docs/photon/
@@ -189,24 +197,6 @@ public class StringUtils {
         return "http://i0.wp.com/" + imageUrl + "?w=" + size;
     }
 
-    public static String getHost(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return "";
-        }
-
-        int doubleslash = url.indexOf("//");
-        if (doubleslash == -1) {
-            doubleslash = 0;
-        } else {
-            doubleslash += 2;
-        }
-
-        int end = url.indexOf('/', doubleslash);
-        end = (end >= 0) ? end : url.length();
-
-        return url.substring(doubleslash, end);
-    }
-
     public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
         final int length = inputString.length();
         StringBuilder out = new StringBuilder(); // Used to hold the output.
@@ -214,8 +204,8 @@ public class StringUtils {
             final int codepoint = inputString.codePointAt(offset);
             final char current = inputString.charAt(offset);
             if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
-                if (Emoticons.wpSmiliesCodePointToText.get(codepoint) != null) {
-                    out.append(Emoticons.wpSmiliesCodePointToText.get(codepoint));
+                if (EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint) != null) {
+                    out.append(EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint));
                 } else {
                     final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
                     out.append(htmlEscapedChar);
@@ -271,6 +261,19 @@ public class StringUtils {
             return defaultValue;
         try {
             return Integer.valueOf(s);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    public static long stringToLong(String s) {
+        return stringToLong(s, 0L);
+    }
+    public static long stringToLong(String s, long defaultValue) {
+        if (s == null)
+            return defaultValue;
+        try {
+            return Long.valueOf(s);
         } catch (NumberFormatException e) {
             return defaultValue;
         }

@@ -1,15 +1,21 @@
 package org.wordpress.android.util;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
+
+import org.wordpress.android.util.AppLog.T;
 
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UrlUtils {
     public static String urlEncode(final String text) {
@@ -28,12 +34,18 @@ public class UrlUtils {
         }
     }
 
-    public static String getDomainFromUrl(final String urlString) {
-        if (urlString == null) {
-            return "";
+    /**
+     * @param urlString url to get host from
+     * @return host of uri if available. Empty string otherwise.
+     */
+    public static String getHost(final String urlString) {
+        if (urlString != null) {
+            Uri uri = Uri.parse(urlString);
+            if (uri.getHost() != null) {
+                return uri.getHost();
+            }
         }
-        Uri uri = Uri.parse(urlString);
-        return uri.getHost();
+        return "";
     }
 
     /**
@@ -52,10 +64,39 @@ public class UrlUtils {
         return url;
     }
 
+    /**
+     * Remove leading double slash, and inherit protocol scheme
+     */
+    public static String removeLeadingDoubleSlash(String url, String scheme) {
+        if (url != null && url.startsWith("//")) {
+            url = url.substring(2);
+            if (scheme != null) {
+                if (scheme.endsWith("://")){
+                    url = scheme + url;
+                } else {
+                    AppLog.e(T.UTILS, "Invalid scheme used: " + scheme);
+                }
+            }
+        }
+        return url;
+    }
+
+    /**
+     * Add scheme prefix to an URL. This method must be called on all user entered or server fetched URLs to ensure
+     * http client will work as expected.
+     *
+     * @param url url entered by the user or fetched from a server
+     * @param isHTTPS true will make the url starts with https;//
+     * @return transformed url prefixed by its http;// or https;// scheme
+     */
     public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
         if (url == null) {
             return null;
         }
+
+        // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
+        // switch between http or https
+        url = removeLeadingDoubleSlash(url, (isHTTPS ? "https" : "http") + "://");
 
         if (!URLUtil.isValidUrl(url)) {
             if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
@@ -78,7 +119,8 @@ public class UrlUtils {
         // this routine is called from some performance-critical code and creating a URI from a string
         // is slow, so skip it when possible - if we know it's not a relative path (and 99.9% of the
         // time it won't be for our purposes) then we can normalize it without java.net.URI.normalize()
-        if (urlString.startsWith("http") && !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
+        if (urlString.startsWith("http") &&
+                !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
             // return without a trailing slash
             if (urlString.endsWith("/")) {
                 return urlString.substring(0, urlString.length() - 1);
@@ -95,6 +137,25 @@ public class UrlUtils {
         }
     }
 
+
+    /**
+     * returns the passed url without the scheme
+     */
+    public static String removeScheme(final String urlString) {
+        if (urlString == null) {
+            return null;
+        }
+
+        int doubleslash = urlString.indexOf("//");
+        if (doubleslash == -1) {
+            doubleslash = 0;
+        } else {
+            doubleslash += 2;
+        }
+
+        return urlString.substring(doubleslash, urlString.length());
+    }
+
     /**
      * returns the passed url without the query parameters
      */
@@ -102,11 +163,7 @@ public class UrlUtils {
         if (urlString == null) {
             return null;
         }
-        int pos = urlString.indexOf("?");
-        if (pos == -1) {
-            return urlString;
-        }
-        return urlString.substring(0, pos);
+        return Uri.parse(urlString).buildUpon().clearQuery().toString();
     }
 
     /**
@@ -114,6 +171,17 @@ public class UrlUtils {
      */
     public static boolean isHttps(final String urlString) {
         return (urlString != null && urlString.startsWith("https:"));
+    }
+
+    public static boolean isHttps(URL url) {
+        return url != null && "https".equals(url.getProtocol());
+    }
+
+    public static boolean isHttps(URI uri) {
+        if (uri == null) return false;
+
+        String protocol = uri.getScheme();
+        return protocol != null && protocol.equals("https");
     }
 
     /**
@@ -161,5 +229,29 @@ public class UrlUtils {
             return false;
         }
         return true;
+    }
+
+    // returns true if the passed url is for an image
+    public static boolean isImageUrl(String url) {
+        if (TextUtils.isEmpty(url)) return false;
+
+        String cleanedUrl = removeQuery(url.toLowerCase());
+
+        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
+                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+    }
+
+    public static String appendUrlParameter(String url, String paramName, String paramValue) {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(paramName, paramValue);
+        return appendUrlParameters(url, parameters);
+    }
+
+    public static String appendUrlParameters(String url, Map<String, String> parameters) {
+        Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            uriBuilder.appendQueryParameter(parameter.getKey(), parameter.getValue());
+        }
+        return uriBuilder.build().toString();
     }
 }

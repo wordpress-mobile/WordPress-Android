@@ -6,30 +6,21 @@ import java.util.Map;
 public class BlogUtils {
     public static Comparator<Object> BlogNameComparator = new Comparator<Object>() {
         public int compare(Object blog1, Object blog2) {
-            Map<Object, Object> blogMap1 = (Map<Object, Object>) blog1;
-            Map<Object, Object> blogMap2 = (Map<Object, Object>) blog2;
-
-            String blogName1 = MapUtils.getMapStr(blogMap1, "blogName");
-            if (blogName1.length() == 0) {
-                blogName1 = MapUtils.getMapStr(blogMap1, "url");
-            }
-
-            String blogName2 = MapUtils.getMapStr(blogMap2, "blogName");
-            if (blogName2.length() == 0) {
-                blogName2 = MapUtils.getMapStr(blogMap2, "url");
-            }
-
+            Map<String, Object> blogMap1 = (Map<String, Object>) blog1;
+            Map<String, Object> blogMap2 = (Map<String, Object>) blog2;
+            String blogName1 = getBlogNameOrHomeURLFromAccountMap(blogMap1);
+            String blogName2 = getBlogNameOrHomeURLFromAccountMap(blogMap2);
             return blogName1.compareToIgnoreCase(blogName2);
         }
     };
 
     /**
-     * Return a blog name or blog url (host part only) if trimmed name is an empty string
+     * Return a blog name or blog home URL if trimmed name is an empty string
      */
-    public static String getBlogNameOrHostNameFromAccountMap(Map<String, Object> account) {
+    public static String getBlogNameOrHomeURLFromAccountMap(Map<String, Object> account) {
         String blogName = getBlogNameFromAccountMap(account);
         if (blogName.trim().length() == 0) {
-            blogName = StringUtils.getHost(MapUtils.getMapStr(account, "url"));
+            blogName = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
         }
         return blogName;
     }
@@ -42,9 +33,16 @@ public class BlogUtils {
     }
 
     /**
-     * Return blog url (host part only) if trimmed name is an empty string
+     * Return the blog home URL setting or the host name if home URL is an empty string.
      */
-    public static String getHostNameFromAccountMap(Map<String, Object> account) {
-        return StringUtils.getHost(MapUtils.getMapStr(account, "url"));
+    public static String getHomeURLOrHostNameFromAccountMap(Map<String, Object> account) {
+        String homeURL = UrlUtils.removeScheme(MapUtils.getMapStr(account, "homeURL"));
+        homeURL = StringUtils.removeTrailingSlash(homeURL);
+
+        if (homeURL.length() == 0) {
+            return UrlUtils.getHost(MapUtils.getMapStr(account, "url"));
+        }
+
+        return homeURL;
     }
 }
