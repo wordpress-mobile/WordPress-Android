@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +48,15 @@ public class PlansActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            if (savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS) instanceof SitePlan[]) {
-                mAvailablePlans = (SitePlan[]) savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            if (serializable instanceof SitePlan[]) {
+                mAvailablePlans = (SitePlan[]) serializable;
             }
             mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
 
-        //Make sure the blog_id passed to this activity is valid and the blog is available within the app
         if (WordPress.getBlog(mLocalBlogID) == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
@@ -92,8 +93,7 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
-        progress.setVisibility(View.GONE);
+        hideProgress();
 
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
@@ -119,7 +119,12 @@ public class PlansActivity extends AppCompatActivity {
         }
     }
 
-    private void setupLoadingUI() {
+    private void hideProgress() {
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
+        progress.setVisibility(View.GONE);
+    }
+
+    private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
         progress.setVisibility(View.VISIBLE);
     }
@@ -180,7 +185,7 @@ public class PlansActivity extends AppCompatActivity {
                 Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
                 finish();
             }
-            setupLoadingUI();
+            showProgress();
         } else {
             setupPlansUI();
         }
@@ -201,8 +206,8 @@ public class PlansActivity extends AppCompatActivity {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<>();
             if (mAvailablePlans != null) {
-                for(SitePlan current : mAvailablePlans) {
-                    fragments.add(PlanFragment.newInstance(current));
+                for (SitePlan plan : mAvailablePlans) {
+                    fragments.add(PlanFragment.newInstance(plan));
                 }
             }
 
@@ -210,10 +215,6 @@ public class PlansActivity extends AppCompatActivity {
             mPageAdapter = new PlansPageAdapter(fm, fragments);
         }
         return mPageAdapter;
-    }
-
-    private boolean hasPageAdapter() {
-        return mPageAdapter != null;
     }
 
     @Override
@@ -229,14 +230,17 @@ public class PlansActivity extends AppCompatActivity {
 
     private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
         public void onResponse(List<SitePlan> plans) {
-            mAvailablePlans = new SitePlan[plans.size()];
-            plans.toArray(mAvailablePlans);
-            setupPlansUI();
+            if (!isFinishing()) {
+                mAvailablePlans = new SitePlan[plans.size()];
+                plans.toArray(mAvailablePlans);
+                setupPlansUI();
+            }
         }
-        public void onError(Exception error) {
-            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-            finish();
+        public void onError() {
+            if (!isFinishing()) {
+                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     };
 }

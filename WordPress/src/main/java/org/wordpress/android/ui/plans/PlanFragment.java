@@ -20,7 +20,7 @@ public class PlanFragment extends Fragment {
     private static final String PLAN = "PLAN";
     private static final String PLAN_DETAILS = "PLAN_DETAILS";
 
-    private LinearLayout mPlanDetailsOuterContainer;
+    private ViewGroup mPlanDetailsOuterContainer;
     private ImageView mPlanImageView;
 
     private SitePlan mCurrentSitePlan;
@@ -115,7 +115,6 @@ public class PlanFragment extends Fragment {
         valueTV.setText(text);
         mPlanDetailsOuterContainer.addView(valueTV);
     }
-
 
     public void setSitePlan(SitePlan plan) {
         mCurrentSitePlan = plan;
