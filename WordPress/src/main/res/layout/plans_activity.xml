@@ -17,27 +17,27 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
             android:background="@color/tab_background"
+            android:visibility="gone"
             app:tabIndicatorColor="@color/tab_indicator"/>
     </android.support.design.widget.AppBarLayout>
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/progress_loading_plans"
         style="@style/PlansProgressBar"
-        android:layout_marginTop="@dimen/margin_large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:visibility="gone" />
+        android:layout_marginTop="@dimen/margin_large"
+        android:visibility="gone"/>
 
 </LinearLayout>

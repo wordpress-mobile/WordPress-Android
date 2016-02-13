@@ -221,7 +221,8 @@ public class PlansUtils {
         return  currentPlanFeatures;
     }
 
-    public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
+    public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener
+            listener, final RestRequest.ErrorListener errorListener) {
         if (!NetworkUtils.isNetworkAvailable(ctx)) {
             return false;
         }
@@ -237,7 +238,7 @@ public class PlansUtils {
                     // Load details of features from the server.
                     downloadFeatures(ctx, null, null);
                 } else {
-                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading global Plans!");
+                    AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans!");
                 }
 
                 if (listener != null) {
@@ -248,7 +249,7 @@ public class PlansUtils {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
-                if (errorListener!= null) {
+                if (errorListener != null) {
                     errorListener.onErrorResponse(volleyError);
                 }
             }

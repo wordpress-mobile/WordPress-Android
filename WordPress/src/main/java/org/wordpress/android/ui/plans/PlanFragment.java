@@ -124,7 +124,12 @@ public class PlanFragment extends Fragment {
         return mCurrentSitePlan;
     }
 
+    private static final String UNICODE_CHECKMARK = "\u2713";
     String getTitle() {
-        return mCurrentPlanDetails.getProductNameShort();
+        if (mCurrentSitePlan.isCurrentPlan()) {
+            return UNICODE_CHECKMARK + " " + mCurrentPlanDetails.getProductNameShort();
+        } else {
+            return mCurrentPlanDetails.getProductNameShort();
+        }
     }
 }

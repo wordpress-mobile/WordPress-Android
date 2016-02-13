@@ -42,7 +42,7 @@ public class Plan implements Serializable {
     private String mSupportDocument;
     private String mCapability;
     private List<Integer> mBundleProductIds;
-    private List<String> mFeatures = new ArrayList<>();
+    private final List<String> mFeatures = new ArrayList<>();
 
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
