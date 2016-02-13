@@ -44,6 +44,7 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
@@ -939,6 +940,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
         boolean isVideo = mimeType != null && mimeType.contains("video");
+
         MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
@@ -949,11 +951,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
         mediaFile.setMimeType(mimeType);
         mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
-        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
+        mediaFile.setFileURL(url);
         mediaFile.setVideo(isVideo);
+
+        // Make sure we're using a valid thumbnail for video. XML-RPC returns the video URL itself as the thumbnail URL
+        // for videos. If we can't get a real thumbnail for the Media Library video (currently only possible for
+        // VideoPress videos), we should not set any thumbnail.
+        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
+        if (isVideo && !MediaUtils.isValidImage(thumbnailUrl)) {
+            if (WPUrlUtils.isWordPressCom(url)) {
+                thumbnailUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(url);
+            } else {
+                thumbnailUrl = "";
+            }
+        }
+        mediaFile.setThumbnailURL(thumbnailUrl);
+
         WordPress.wpDB.saveMediaFile(mediaFile);
         cursor.close();
         return mediaFile;
