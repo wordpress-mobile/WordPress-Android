@@ -26,10 +26,10 @@ import java.util.List;
 public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-    public static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
-    public static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
+    private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
+    private static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
 
-    public static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
+    private static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
     private SitePlan[] mAvailablePlans;
@@ -58,7 +58,7 @@ public class PlansActivity extends AppCompatActivity {
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
         if (WordPress.getBlog(mLocalBlogID) == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.plans_no_blog, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -218,11 +218,9 @@ public class PlansActivity extends AppCompatActivity {
         return mPageAdapter != null;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -231,7 +229,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
 
-    PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
+    private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
         public void onResponse(List<SitePlan> plans) {
             mAvailablePlans = new SitePlan[plans.size()];
             plans.toArray(mAvailablePlans);
