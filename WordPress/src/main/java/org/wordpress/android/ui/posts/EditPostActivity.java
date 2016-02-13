@@ -979,6 +979,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaFile == null) {
             return null;
         }
+
+        // Since Photon doesn't support video, skip Photon checking and return the existing file URL
+        // (using a Photon URL for video will result in a 404 error)
+        if (mediaFile.isVideo()) {
+            return mediaFile.getFileURL();
+        }
+
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = mediaFile.getFileURL();
