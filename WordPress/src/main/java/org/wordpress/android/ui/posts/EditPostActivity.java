@@ -938,9 +938,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
-        boolean isVideo = mimeType != null && mimeType.contains("video");
-
         MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
@@ -950,18 +947,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mediaFile.setTitle(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
         mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH)));
         mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT)));
-        mediaFile.setMimeType(mimeType);
         mediaFile.setFileName(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME)));
         mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
         mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex(
                 WordPressDB.COLUMN_NAME_VIDEO_PRESS_SHORTCODE)));
-        mediaFile.setVideo(isVideo);
+
+        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
+        mediaFile.setMimeType(mimeType);
+
+        if (mimeType != null && !mimeType.isEmpty()) {
+            mediaFile.setVideo(mimeType.contains("video"));
+        } else {
+            mediaFile.setVideo(MediaUtils.isVideo(url));
+        }
 
         // Make sure we're using a valid thumbnail for video. XML-RPC returns the video URL itself as the thumbnail URL
         // for videos. If we can't get a real thumbnail for the Media Library video (currently only possible for
         // VideoPress videos), we should not set any thumbnail.
         String thumbnailUrl = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-        if (isVideo && !MediaUtils.isValidImage(thumbnailUrl)) {
+        if (mediaFile.isVideo() && !MediaUtils.isValidImage(thumbnailUrl)) {
             if (WPUrlUtils.isWordPressCom(url)) {
                 thumbnailUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(url);
             } else {
