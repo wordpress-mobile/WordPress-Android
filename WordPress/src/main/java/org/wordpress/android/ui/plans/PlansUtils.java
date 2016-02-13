@@ -20,27 +20,54 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class PlansUtils {
 
-    private static HashMap<Integer, List<SitePlan>> availablePlansForSites = new HashMap<>();
+    public static final String deviceCurrencyCode; // ISO 4217 currency code.
+    public static final String deviceCurrencySymbol;
+
+    public static final String DOLLAR_SYMBOL = "$";
+    public static final String DOLLAR_ISO4217_CODE = "USD";
+
+    static {
+        Currency currency = Currency.getInstance(Locale.getDefault());
+        deviceCurrencyCode = currency.getCurrencyCode();
+        deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
+    }
+
+    public static int getPlanPriceValue(Plan plan) {
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+            return pricesMap.get(deviceCurrencyCode);
+        }
+        // Returns US dollars price
+        return pricesMap.get(DOLLAR_ISO4217_CODE);
+    }
+
+    public static String getPlanPriceCurrencySymbol(Plan plan) {
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+           return deviceCurrencySymbol;
+        }
+
+        // Returns US dollars symbol
+        return DOLLAR_SYMBOL;
+    }
 
     public interface AvailablePlansListener {
         void onResponse(List<SitePlan> plans);
-        void onError(Exception volleyError);
+        void onError(Exception error);
     }
 
-    public static boolean downloadAvailablePlansForSite(boolean force, final Blog blog, final AvailablePlansListener listener) {
+    public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
+        final Blog blog = WordPress.getBlog(localTableBlogID);
         if (blog == null || !PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
-            return false;
-        }
-
-        if (!force && PlansUtils.getAvailablePlansForSite(blog) != null) {
-            // Plans for the site already available.
             return false;
         }
 
@@ -48,35 +75,40 @@ public class PlansUtils {
         WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                if (response != null) {
-                    AppLog.d(AppLog.T.PLANS, response.toString());
-                    List<SitePlan> plans = new ArrayList<>();
-                    try {
-                        JSONArray planIDs = response.names();
-                        if (planIDs != null) {
-                            for (int i=0; i < planIDs.length(); i ++) {
-                                String currentKey = planIDs.getString(i);
-                                JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                                SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
-                                plans.add(currentPlan);
-                            }
+                if (response == null) {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server!");
+                    if (listener != null) {
+                        listener.onError(new Exception("Unexpected empty response from server!"));
+                    }
+                    return;
+                }
+
+                AppLog.d(AppLog.T.PLANS, response.toString());
+                List<SitePlan> plans = new ArrayList<>();
+                try {
+                    JSONArray planIDs = response.names();
+                    if (planIDs != null) {
+                        for (int i=0; i < planIDs.length(); i ++) {
+                            String currentKey = planIDs.getString(i);
+                            JSONObject currentPlanJSON = response.getJSONObject(currentKey);
+                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
+                            plans.add(currentPlan);
                         }
-                        availablePlansForSites.put(blog.getLocalTableBlogId(), plans);
-                        if (listener!= null) {
-                            listener.onResponse(plans);
-                        }
-                    } catch (JSONException e) {
-                        AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-                        if (listener!= null) {
-                            listener.onError(e);
-                        }
+                    }
+                    if (listener!= null) {
+                        listener.onResponse(plans);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
+                    if (listener!= null) {
+                        listener.onError(e);
                     }
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.UTILS, "Error", volleyError);
+                AppLog.e(AppLog.T.UTILS, "Error downloading site plans for the site with ID " + blog.getDotComBlogId(), volleyError);
                 if (listener!= null) {
                     listener.onError(volleyError);
                 }
@@ -84,11 +116,6 @@ public class PlansUtils {
         });
 
         return true;
-    }
-
-    @Nullable
-    public static List<SitePlan> getAvailablePlansForSite(Blog blog) {
-        return availablePlansForSites.get(blog.getLocalTableBlogId());
     }
 
     @Nullable
@@ -177,6 +204,23 @@ public class PlansUtils {
         return features;
     }
 
+    @Nullable
+    public static List<Feature> getPlanFeatures(long planID) {
+        List<Feature> allFeatures = getFeatures();
+        if (allFeatures == null) {
+            return null;
+        }
+
+        List<Feature> currentPlanFeatures = new ArrayList<>();
+        for (Feature currentFeature : allFeatures) {
+            if (currentFeature.getPlanIDToDescription().containsKey(planID)) {
+                currentPlanFeatures.add(currentFeature);
+            }
+        }
+
+        return  currentPlanFeatures;
+    }
+
     public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
         if (!NetworkUtils.isNetworkAvailable(ctx)) {
             return false;
@@ -192,6 +236,8 @@ public class PlansUtils {
 
                     // Load details of features from the server.
                     downloadFeatures(ctx, null, null);
+                } else {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading global Plans!");
                 }
 
                 if (listener != null) {
@@ -227,6 +273,8 @@ public class PlansUtils {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlansFeatures(response.toString());
+                } else {
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features!");
                 }
                 if (listener != null) {
                     listener.onResponse(response);

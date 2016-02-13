@@ -29,7 +29,7 @@ public class Feature {
     private String mTitle;
     private String mDescription;
     private boolean mIsNotPartOfFreeTrial;
-    private final Hashtable<String, String> planIDToDescription = new Hashtable<>(); // plan ID/Description that have this feature in it.
+    private final Hashtable<Long, String> planIDToDescription = new Hashtable<>(); // plan ID/Description that have this feature in it.
 
     public Feature(JSONObject featureJSONObject, List<Long> plansIDS) throws JSONException {
         mProductSlug = featureJSONObject.getString("product_slug");
@@ -42,7 +42,7 @@ public class Feature {
             if (featureJSONObject.has(currentPlanIDAsString)) {
                 // need to use JSONUtils because there are null values returned here. Want to remove them asap.
                 String desc = JSONUtils.getString(featureJSONObject, currentPlanIDAsString);
-                planIDToDescription.put(currentPlanIDAsString, desc);
+                planIDToDescription.put(currentPlanID, desc);
             }
         }
 
@@ -65,7 +65,7 @@ public class Feature {
         return StringUtils.notNullStr(mDescription);
     }
 
-    public Hashtable<String, String> getPlanIDToDescription() {
+    public Hashtable<Long, String> getPlanIDToDescription() {
         return planIDToDescription;
     }
 

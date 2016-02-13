@@ -1278,5 +1278,7 @@
 
     <!-- Plans -->
     <string name="plan">Plan</string>
+    <string name="plans_no_blog">Plans couldn\'t be loaded for the required blog</string>
+    <string name="plans_loading_error">Plans couldn\'t be loaded for the required blog</string>
 
 </resources>

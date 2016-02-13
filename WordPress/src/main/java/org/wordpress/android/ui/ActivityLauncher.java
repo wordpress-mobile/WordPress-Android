@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -69,6 +70,12 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        slideInFromRight(context, intent);
+    }
+
+    public static void viewBlogPlans(Context context, int blogLocalTableId) {
+        Intent intent = new Intent(context, PlansActivity.class);
+        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         slideInFromRight(context, intent);
     }
 

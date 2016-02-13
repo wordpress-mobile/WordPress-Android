@@ -6,10 +6,12 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
+
 /**
  * This class represent an available Plan for a site.
  */
-public class SitePlan {
+public class SitePlan implements Serializable {
     /*
       "1003": {
     "raw_price": 99,

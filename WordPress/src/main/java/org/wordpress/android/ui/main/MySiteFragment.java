@@ -187,16 +187,7 @@ public class MySiteFragment extends Fragment
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Blog current = WordPress.getBlog(mBlogLocalId);
-                Plan currentBlogPlan = PlansUtils.getGlobalPlan(current.getPlanID());
-                String desc = currentBlogPlan != null ? currentBlogPlan.getDescription() : "Unknown";
-                String title = currentBlogPlan != null ? currentBlogPlan.getProductName() : "Unknown";
-                Dialog dlg = new AlertDialog.Builder(getActivity())
-                        .setTitle(title)
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setMessage(desc)
-                        .create();
-                dlg.show();
+                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
             }
         });
 
