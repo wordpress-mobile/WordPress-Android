@@ -202,9 +202,7 @@ public class PlansActivity extends AppCompatActivity {
             List<Fragment> fragments = new ArrayList<>();
             if (mAvailablePlans != null) {
                 for(SitePlan current : mAvailablePlans) {
-                    PlanFragment fg = PlanFragment.newInstance();
-                    fg.setSitePlan(current);
-                    fragments.add(fg);
+                    fragments.add(PlanFragment.newInstance(current));
                 }
             }
 

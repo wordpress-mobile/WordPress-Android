@@ -26,8 +26,10 @@ public class PlanFragment extends Fragment {
     private SitePlan mCurrentSitePlan;
     private Plan mCurrentPlanDetails;
 
-    public static PlanFragment newInstance() {
-        return new PlanFragment();
+    public static PlanFragment newInstance(SitePlan plan) {
+        PlanFragment fragment = new PlanFragment();
+        fragment.setSitePlan(plan);
+        return fragment;
     }
 
     @Override
