@@ -337,7 +337,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
-        if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.TRASH)){
+        if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
@@ -666,7 +666,7 @@ public class CommentsListFragment extends Fragment {
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
             if (trashItem != null){
-                if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.TRASH)){
+                if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
                     trashItem.setTitle(R.string.mnu_comment_delete_permanently);
                 }
             }

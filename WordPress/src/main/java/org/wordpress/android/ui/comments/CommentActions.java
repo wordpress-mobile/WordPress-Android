@@ -389,7 +389,7 @@ public class CommentActions {
                                  final CommentStatus newStatus,
                                  final OnCommentsModeratedListener actionListener) {
         // deletion is handled separately
-        if (newStatus != null && newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE)) {
+        if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
             deleteComments(accountId, comments, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
@@ -484,8 +484,8 @@ public class CommentActions {
                     else {
                         // update status in SQLite of successfully moderated comments
                         Blog blog = WordPress.getBlog(accountId);
-                        String newStatusStr = CommentStatus.toString(CommentStatus.TRASH);
-                        CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, newStatusStr);
+                        CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
+                                CommentStatus.toString(CommentStatus.TRASH));
                     }
                 }
 

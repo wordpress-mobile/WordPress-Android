@@ -284,7 +284,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mComment.getStatusEnum() == CommentStatus.TRASH) {
+                if (mComment.willTrashingPermanentlyDelete()) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                             getActivity());
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
@@ -950,6 +950,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (mComment.getStatusEnum() == CommentStatus.TRASH) {
+                mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
+                //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashComment.setText(R.string.mnu_comment_delete_permanently);
             } else {
