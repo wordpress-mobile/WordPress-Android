@@ -417,6 +417,15 @@ public class CommentsListFragment extends Fragment {
         getAdapter().loadComments(mCommentStatusFilter);
     }
 
+    void updateEmptyView(EmptyViewMessageType emptyViewMessageType){
+        //this is called from CommentsActivity in the case the last moment for a given type has been changed from that
+        //status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
+        //does the handling itself, so we only check for null here.
+        if (mFilteredCommentsView != null){
+            mFilteredCommentsView.updateEmptyView(emptyViewMessageType);
+        }
+    }
+
     /*
      * get latest comments from server, or pass loadMore=true to get comments beyond the
      * existing ones

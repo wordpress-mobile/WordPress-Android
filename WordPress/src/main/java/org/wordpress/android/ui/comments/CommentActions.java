@@ -340,7 +340,7 @@ public class CommentActions {
                                 final CommentStatus newStatus,
                                 final CommentActionListener actionListener) {
         // deletion is handled separately
-        if (newStatus != null && newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE)) {
+        if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
             deleteComment(accountId, comment, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
