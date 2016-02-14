@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -33,6 +34,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
@@ -379,10 +381,10 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private void deleteSelectedComments(boolean forceDelete) {
+    private void deleteSelectedComments(boolean deletePermanently) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
-        final int dlgId = forceDelete ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
+        final int dlgId = deletePermanently ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
 
         final CommentList selectedComments = getAdapter().getSelectedComments();
         getActivity().showDialog(dlgId);
@@ -403,7 +405,7 @@ public class CommentsListFragment extends Fragment {
         };
 
         CommentStatus newStatus = CommentStatus.TRASH;
-        if (forceDelete){
+        if (deletePermanently){
             newStatus = CommentStatus.DELETE;
         }
         CommentActions.moderateComments(
@@ -504,7 +506,7 @@ public class CommentsListFragment extends Fragment {
                 return null;
             }
 
-            Blog blog = WordPress.getCurrentBlog();
+            final Blog blog = WordPress.getCurrentBlog();
             if (blog == null) {
                 mErrorType = ErrorType.INVALID_CURRENT_BLOG;
                 return null;
@@ -531,7 +533,15 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                return ApiHelper.refreshComments(blog, params);
+                CommentList comments = ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                    @Override
+                    public void onDataReadyToSave(List list) {
+                        int localBlogId = blog.getLocalTableBlogId();
+                        CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
+                        CommentTable.saveComments(localBlogId, (CommentList)list);
+                    }
+                });
+                return comments;
             } catch (XMLRPCFault xmlrpcFault) {
                 mErrorType = ErrorType.UNKNOWN_ERROR;
                 if (xmlrpcFault.getFaultCode() == 401) {

@@ -438,7 +438,7 @@ public class CommentActions {
     private static void deleteComment(final int accountId,
                                         final Comment comment,
                                         final CommentActionListener actionListener,
-                                        final boolean forceDelete) {
+                                        final boolean deletePermanently) {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null) {
             if (actionListener != null)
@@ -459,7 +459,7 @@ public class CommentActions {
                         blog.getUsername(),
                         blog.getPassword(),
                         comment.commentID,
-                        forceDelete};
+                        deletePermanently};
 
                 Object result;
                 try {
@@ -475,9 +475,19 @@ public class CommentActions {
                     result = null;
                 }
 
+                //update local database
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                if (success)
-                    CommentTable.deleteComment(accountId, comment.commentID);
+                if (success){
+                    if (deletePermanently) {
+                        CommentTable.deleteComment(accountId, comment.commentID);
+                    }
+                    else {
+                        // update status in SQLite of successfully moderated comments
+                        Blog blog = WordPress.getBlog(accountId);
+                        String newStatusStr = CommentStatus.toString(CommentStatus.TRASH);
+                        CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, newStatusStr);
+                    }
+                }
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -497,7 +507,7 @@ public class CommentActions {
     private static void deleteComments(final int accountId,
                                        final CommentList comments,
                                        final OnCommentsModeratedListener actionListener,
-                                       final boolean forceDelete) {
+                                       final boolean deletePermanently) {
         final Blog blog = WordPress.getBlog(accountId);
 
         if (blog==null || comments==null || comments.size() == 0) {
@@ -523,7 +533,7 @@ public class CommentActions {
                             blog.getUsername(),
                             blog.getPassword(),
                             comment.commentID,
-                            forceDelete};
+                            deletePermanently};
 
                     Object result;
                     try {
@@ -541,7 +551,15 @@ public class CommentActions {
                 }
 
                 // remove successfully deleted comments from SQLite
-                CommentTable.deleteComments(localBlogId, deletedComments);
+                if (deletePermanently) {
+                    CommentTable.deleteComments(localBlogId, deletedComments);
+                }
+                else {
+                    // update status in SQLite of successfully moderated comments
+                    Blog blog = WordPress.getBlog(accountId);
+                    CommentTable.updateCommentsStatus(blog.getLocalTableBlogId(), deletedComments,
+                            CommentStatus.toString(CommentStatus.TRASH));
+                }
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
