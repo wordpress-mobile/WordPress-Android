@@ -340,8 +340,9 @@ public class CommentsListFragment extends Fragment {
         if (mCommentStatusFilter != null && mCommentStatusFilter.equals(CommentStatus.TRASH)){
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.trash));
-            dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comments));
+            dialogBuilder.setTitle(getResources().getText(R.string.delete));
+            int resid = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
+            dialogBuilder.setMessage(getResources().getText(resid));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -350,11 +351,7 @@ public class CommentsListFragment extends Fragment {
                     });
             dialogBuilder.setNegativeButton(
                     getResources().getText(R.string.no),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // just close the dialog
-                        }
-                    });
+                    null);
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
 

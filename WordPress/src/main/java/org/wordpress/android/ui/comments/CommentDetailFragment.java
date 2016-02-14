@@ -287,7 +287,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (mComment.getStatusEnum() == CommentStatus.TRASH) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                             getActivity());
-                    dialogBuilder.setTitle(getResources().getText(R.string.trash));
+                    dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                     dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                             new DialogInterface.OnClickListener() {
@@ -297,11 +297,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             });
                     dialogBuilder.setNegativeButton(
                             getResources().getText(R.string.no),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    // just close the dialog
-                                }
-                            });
+                            null);
                     dialogBuilder.setCancelable(true);
                     dialogBuilder.create().show();
 
