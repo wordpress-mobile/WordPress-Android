@@ -2,11 +2,13 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.plans.models.Feature;
@@ -21,7 +23,6 @@ public class PlanFragment extends Fragment {
     private static final String PLAN_DETAILS = "PLAN_DETAILS";
 
     private ViewGroup mPlanDetailsOuterContainer;
-    private ImageView mPlanImageView;
 
     private SitePlan mCurrentSitePlan;
     private Plan mCurrentPlanDetails;
@@ -50,7 +51,6 @@ public class PlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.plan_fragment, container, false);
         mPlanDetailsOuterContainer = (LinearLayout) rootView.findViewById(R.id.plan_outer_container);
-        mPlanImageView = (ImageView) rootView.findViewById(R.id.plan_icon);
         return rootView;
     }
 
@@ -76,12 +76,21 @@ public class PlanFragment extends Fragment {
             return;
         }
 
+        ImageView imgPlan = (ImageView) mPlanDetailsOuterContainer.findViewById(R.id.plan_icon);
         int pictureResID = PlansUIHelper.getPrimaryImageResIDForPlan(mCurrentSitePlan.getProductID());
         if (pictureResID == PlansUIHelper.NO_PICTURE_FOR_PLAN_RES_ID) {
-            mPlanImageView.setVisibility(View.GONE);
+            imgPlan.setVisibility(View.GONE);
         } else {
-            mPlanImageView.setImageDrawable(getResources().getDrawable(pictureResID));
+            imgPlan.setImageDrawable(getResources().getDrawable(pictureResID));
         }
+
+        // show product short name in bold, ex: "WordPress.com <b>Premium</b>"
+        TextView txtProductName = (TextView) mPlanDetailsOuterContainer.findViewById(R.id
+                .text_product_name);
+        String productShortName = mCurrentPlanDetails.getProductNameShort();
+        String productName = mCurrentPlanDetails.getProductName().replace(productShortName,
+                "<b>" + productShortName + "</b>");
+        txtProductName.setText(Html.fromHtml(productName));
 
         addTextView(mCurrentPlanDetails.getTagline());
 

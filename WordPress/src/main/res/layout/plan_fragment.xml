@@ -18,8 +18,18 @@
             android:layout_width="160dp"
             android:layout_height="160dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
             tools:src="@drawable/plan_business"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/blue_wordpress"
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="text_product_name"/>
 
     </LinearLayout>
 </ScrollView>
