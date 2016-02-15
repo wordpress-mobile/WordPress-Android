@@ -10,8 +10,11 @@ import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -30,14 +33,9 @@ public class LearnMorePreference extends Preference
     private static final String SUPPORT_CONTENT_JS = "javascript:(function(){" +
             "var mobileSupport = document.getElementById('" + SUPPORT_MOBILE_ID + "');" +
             "mobileSupport.style.display = 'inline';" +
-            "var newHtml = '<body><h2>Discussion Settings</h2><' + " +
-            "mobileSupport.tagName + ' style=\"font-size:medium;\">' + mobileSupport.innerHTML + '</' + mobileSupport.tagName + '></body>';" +
+            "var newHtml = '<' + mobileSupport.tagName + '>' + mobileSupport.innerHTML + '</' + mobileSupport.tagName + '>';" +
             "document.body.innerHTML = newHtml;" +
-            "document.body.style.paddingLeft='32px';" +
-            "document.body.style.marginLeft='32px';" +
-            "document.body.style.paddingTop='0px';" +
-            "document.body.style.paddingRight='32px';" +
-            "document.body.style.paddingBottom='24px';" +
+            "document.body.setAttribute('style', 'padding:24px 24px 0px 24px !important');" +
             "})();";
 
     private String mHint;
@@ -100,17 +98,9 @@ public class LearnMorePreference extends Preference
         mHint = hint;
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     private void showDialog() {
-        Context context = getContext();
-        final WebView webView = new WebView(context);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        webSettings.setJavaScriptEnabled(true);
-        webView.setWebViewClient(new LearnMoreClient());
-        webView.loadUrl(WP_SUPPORT_URL);
-        mDialog = new Dialog(context);
-        mDialog.setTitle(R.string.site_settings_learn_more_dialog_title);
+        final WebView webView = loadSupportWebView();
+        mDialog = new Dialog(getContext());
         mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -118,8 +108,26 @@ public class LearnMorePreference extends Preference
                 mDialog = null;
             }
         });
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.learn_more_pref_screen);
+        WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.gravity = Gravity.CENTER;
+        params.x = 12;
+        params.y = 12;
+        mDialog.getWindow().setAttributes(params);
         mDialog.show();
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private WebView loadSupportWebView() {
+        WebView webView = new WebView(getContext());
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new LearnMoreClient());
+        webView.loadUrl(WP_SUPPORT_URL);
+        return webView;
     }
 
     private static class SavedState extends BaseSavedState {

@@ -566,7 +566,6 @@
 
     <!-- Dialogs -->
     <string name="site_settings_discussion_title" translatable="false">@string/discussion</string>
-    <string name="site_settings_learn_more_dialog_title" translatable="false">Discussion Settings</string>
     <string name="site_settings_close_after_dialog_title">Close commenting</string>
     <string name="site_settings_paging_dialog_header">Comments per page</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
