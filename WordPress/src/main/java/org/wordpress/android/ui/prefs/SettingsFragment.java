@@ -182,6 +182,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private void checkWordPressComOnlyFields() {
         if (!AccountHelper.isSignedInWordPressDotCom()) {
             mPreferenceScreen.removePreference(mUsernamePreference);
+            mPreferenceScreen.removePreference(mEmailPreference);
+            mPreferenceScreen.removePreference(mPrimarySitePreference);
+            mPreferenceScreen.removePreference(mWebAddressPreference);
         }
     }
 
