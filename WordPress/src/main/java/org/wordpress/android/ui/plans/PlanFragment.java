@@ -14,7 +14,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
-import org.wordpress.android.widgets.WPTextView;
 
 import java.util.List;
 
@@ -94,37 +93,25 @@ public class PlanFragment extends Fragment {
         TextView txtTagLine = (TextView) mPlanDetailsOuterContainer.findViewById(R.id.text_tagline);
         txtTagLine.setText(mCurrentPlanDetails.getTagline());
 
-        addTextView(mCurrentPlanDetails.getTagline());
-
-        addTextView(PlansUtils.getPlanPriceValue(mCurrentPlanDetails) + PlansUtils.getPlanPriceCurrencySymbol(mCurrentPlanDetails));
-
-        addTextView(mCurrentPlanDetails.getBillPeriodLabel());
-
-        addTextView("");
-        addTextView("Features available:");
-
         List<Feature> features = PlansUtils.getPlanFeatures(mCurrentSitePlan.getProductID());
         if (features != null) {
-            for (Feature current : features) {
-                addTextView(current.getTitle());
+            for (Feature feature : features) {
+                addFeature(feature);
             }
-        }
-
-        addTextView("");
-
-        if (mCurrentSitePlan.isCurrentPlan()) {
-            addTextView("Your current Plan.");
-        } else {
-            addTextView("Upgrade to this Plan.");
         }
 
     }
 
-    private void addTextView(String text) {
+    private void addFeature(Feature feature) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        WPTextView valueTV = (WPTextView) inflater.inflate(R.layout.plan_text_item, mPlanDetailsOuterContainer, false);
-        valueTV.setText(text);
-        mPlanDetailsOuterContainer.addView(valueTV);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.plan_feature_item, mPlanDetailsOuterContainer, false);
+
+        TextView txtTitle = (TextView) view.findViewById(R.id.text_feature_title);
+        TextView txtDescription = (TextView) view.findViewById(R.id.text_feature_description);
+        txtTitle.setText(feature.getTitle());
+        txtDescription.setText(feature.getDescription());
+
+        mPlanDetailsOuterContainer.addView(view);
     }
 
     public void setSitePlan(SitePlan plan) {
