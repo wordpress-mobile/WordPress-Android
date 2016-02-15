@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.DialogUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -21,7 +20,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
 
     private final String DIALOG_TAG = "DIALOG";
 
@@ -29,6 +28,7 @@ public class MyProfileActivity extends AppCompatActivity {
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
+    private WPTextView mTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,23 +137,17 @@ public class MyProfileActivity extends AppCompatActivity {
                                                        final String hint,
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
+        mTextView = textView;
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                DialogUtils dialogUtils = DialogUtils.newInstance(MyProfileActivity.this,
-                        dialogTitle,
+                ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
                         textView.getText().toString(),
                         hint,
-                        isMultiline,
-                        new DialogUtils.Callback() {
-                            @Override
-                            public void onSuccessfulInput(String input) {
-                                updateLabel(textView, input);
-                                updateMyProfileForLabel(textView);
-                            }
-                        });
-                dialogUtils.show(getFragmentManager(), DIALOG_TAG);
+                        isMultiline);
+                inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
     }
@@ -177,5 +171,11 @@ public class MyProfileActivity extends AppCompatActivity {
         if (!isFinishing()) {
             refreshDetails();
         }
+    }
+
+    @Override
+    public void onSuccessfulInput(String input) {
+        updateLabel(mTextView, input);
+        updateMyProfileForLabel(mTextView);
     }
 }
