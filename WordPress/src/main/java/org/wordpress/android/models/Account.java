@@ -20,6 +20,10 @@ import de.greenrobot.event.EventBus;
  */
 public class Account extends AccountModel {
     public void fetchAccountDetails() {
+        if (!this.hasAccessToken()) {
+            AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the fetch account details request");
+            return;
+        }
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -43,6 +47,10 @@ public class Account extends AccountModel {
     }
 
     public void fetchAccountSettings() {
+        if (!this.hasAccessToken()) {
+            AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the fetch account settings request");
+            return;
+        }
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -66,6 +74,10 @@ public class Account extends AccountModel {
     }
 
     public void postAccountSettings(Map<String, String> params) {
+        if (!this.hasAccessToken()) {
+            AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the post account settings request");
+            return;
+        }
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
