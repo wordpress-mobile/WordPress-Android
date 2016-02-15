@@ -82,7 +82,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 43;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -216,6 +216,9 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // Add plan_product_id to blog
+    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_product_id integer default 0;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -394,6 +397,9 @@ public class WordPressDB {
                 currentVersion++;
             case 41:
                 AccountTable.migrationAddAccountSettingsFields(db);
+                currentVersion++;
+            case 42:
+                db.execSQL(ADD_BLOGS_PLAN_ID);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
