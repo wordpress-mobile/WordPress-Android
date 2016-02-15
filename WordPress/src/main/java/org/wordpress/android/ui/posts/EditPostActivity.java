@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -42,7 +41,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -51,6 +49,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
@@ -2024,5 +2023,62 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event) {
+        switch (event) {
+            case HTML_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+                break;
+            case MEDIA_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+                break;
+            case UNLINK_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNLINK);
+                break;
+            case NETWORK_IMAGE_ADDED:
+                AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                break;
+            case LOCAL_IMAGE_ADDED:
+                AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                break;
+            case LINK_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+                break;
+            case UPLOAD_IMAGE_FAILED:
+                AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
+                break;
+            case UPLOAD_IMAGE_RETRIED:
+                AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+                break;
+            case IMAGE_EDITED:
+                AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
+                break;
+            case BOLD_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+                break;
+            case ITALIC_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
+                break;
+            case OL_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ORDERED_LIST);
+                break;
+            case UL_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNORDERED_LIST);
+                break;
+            case BLOCKQUOTE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+                break;
+            case STRIKETHROUGH_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
+                break;
+            case UNDERLINE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
+                break;
+            case MORE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
+                break;
+        }
     }
 }
