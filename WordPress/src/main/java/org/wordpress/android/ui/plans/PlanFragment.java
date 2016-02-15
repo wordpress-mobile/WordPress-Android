@@ -85,12 +85,14 @@ public class PlanFragment extends Fragment {
         }
 
         // show product short name in bold, ex: "WordPress.com <b>Premium</b>"
-        TextView txtProductName = (TextView) mPlanDetailsOuterContainer.findViewById(R.id
-                .text_product_name);
+        TextView txtProductName = (TextView) mPlanDetailsOuterContainer.findViewById(R.id.text_product_name);
         String productShortName = mCurrentPlanDetails.getProductNameShort();
         String productName = mCurrentPlanDetails.getProductName().replace(productShortName,
                 "<b>" + productShortName + "</b>");
         txtProductName.setText(Html.fromHtml(productName));
+
+        TextView txtTagLine = (TextView) mPlanDetailsOuterContainer.findViewById(R.id.text_tagline);
+        txtTagLine.setText(mCurrentPlanDetails.getTagline());
 
         addTextView(mCurrentPlanDetails.getTagline());
 
