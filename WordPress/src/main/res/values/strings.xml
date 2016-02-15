@@ -1286,5 +1286,6 @@
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
+    <string name="plan_purchase_now">Purchase Now</string>
 
 </resources>

@@ -938,6 +938,11 @@ public class WordPressDB {
         return remoteBlogID;
     }
 
+    public long getPlanIdForLocalTableBlogId(int localBlogId) {
+        return SqlUtils.longForQuery(db,
+                "SELECT plan_product_id FROM accounts WHERE id=?",
+                new String[]{Integer.toString(localBlogId)});
+    }
     /**
      * Set the ID of the most recently active blog. This value will persist between application
      * launches.
