@@ -9,10 +9,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,16 +81,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         }
 
         return false;
-    }
-
-    private void hideManageNotificationCategory() {
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory notifs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-        if (preferenceScreen != null && notifs != null) {
-            preferenceScreen.removePreference(notifs);
-        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

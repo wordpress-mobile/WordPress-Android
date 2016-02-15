@@ -9,8 +9,6 @@
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
-    <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
