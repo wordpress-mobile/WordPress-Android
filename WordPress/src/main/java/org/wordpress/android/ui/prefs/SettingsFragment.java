@@ -15,6 +15,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.v4.text.BidiFormatter;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
 
@@ -159,13 +161,19 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         final String[] values = new String[availableLocales.length + 1];
         final Map<String, String> localeMap = new HashMap<>();
 
+        BidiFormatter bidiFormatter = BidiFormatter.getInstance(getResources().getConfiguration().locale);
+
         for (int i = 0; i < availableLocales.length; ++i) {
             String localString = availableLocales[i];
             if (localString.contains("-")) {
                 localString = localString.substring(0, localString.indexOf("-"));
             }
             Locale locale = new Locale(localString);
-            values[i + 1] = locale.getDisplayLanguage() + " (" + availableLocales[i] + ")";
+
+            // language names localised using their own locale
+            // with direction (ltr or rtl) set based on currently selected locale
+            String localisedLanguageName = StringUtils.capitalize(locale.getDisplayLanguage(locale));
+            values[i + 1] = bidiFormatter.unicodeWrap(localisedLanguageName) + " (" + availableLocales[i] + ")";
             localeMap.put(values[i + 1], availableLocales[i]);
         }
         values[0] = getActivity().getString(R.string.device) + " (" + Locale.getDefault().getLanguage() + ")";
