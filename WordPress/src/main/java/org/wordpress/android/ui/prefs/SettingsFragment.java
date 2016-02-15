@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -85,11 +86,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         checkWordPressComOnlyFields();
-
-        List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
-        mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
-        mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
-        mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
     }
 
     @Override
@@ -185,6 +181,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             mPreferenceScreen.removePreference(mEmailPreference);
             mPreferenceScreen.removePreference(mPrimarySitePreference);
             mPreferenceScreen.removePreference(mWebAddressPreference);
+        } else {
+            // only load sites for WordPress.com accounts since primary site preference is hidden otherwise
+            new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -362,6 +361,37 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 changePrimaryBlogPreference(event.newValue);
                 updatePrimaryBlog(event.newValue);
             }
+        }
+    }
+
+    /*
+     * AsyncTask which loads sites from database for primary site preference
+     */
+    private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
+            mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
+            mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
+            mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void results) {
+            super.onPostExecute(results);
+            mPrimarySitePreference.refreshAdapter();
         }
     }
 }
