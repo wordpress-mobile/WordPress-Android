@@ -26,6 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.BlogUtils;
@@ -219,7 +220,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private void cancelPendingEmailChange() {
         Map<String, String> params = new HashMap<>();
-        params.put(Account.RestParam.toString(Account.RestParam.EMAIL_CHANGE_PENDING), "false");
+        params.put(AccountModel.RestParam.EMAIL_CHANGE_PENDING.getDescription(), "false");
         AccountHelper.getDefaultAccount().postAccountSettings(params);
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
@@ -308,21 +309,21 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private void updateEmail(String newEmail) {
         Account account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
-        params.put(Account.RestParam.toString(Account.RestParam.EMAIL), newEmail);
+        params.put(AccountModel.RestParam.EMAIL.getDescription(), newEmail);
         account.postAccountSettings(params);
     }
 
     private void updatePrimaryBlog(String blogId) {
         Account account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
-        params.put(Account.RestParam.toString(Account.RestParam.PRIMARY_BLOG), blogId);
+        params.put(AccountModel.RestParam.PRIMARY_BLOG.getDescription(), blogId);
         account.postAccountSettings(params);
     }
 
     public void updateWebAddress(String newWebAddress) {
         Account account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
-        params.put(Account.RestParam.toString(Account.RestParam.WEB_ADDRESS), newWebAddress);
+        params.put(AccountModel.RestParam.WEB_ADDRESS.getDescription(), newWebAddress);
         account.postAccountSettings(params);
     }
 
