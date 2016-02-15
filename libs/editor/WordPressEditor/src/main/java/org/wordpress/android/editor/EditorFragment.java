@@ -32,8 +32,6 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -389,7 +387,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.format_bar_button_html) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
             // Don't switch to HTML mode if currently uploading media
             if (!mUploadingMediaIds.isEmpty()) {
@@ -431,7 +429,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
             }
         } else if (id == R.id.format_bar_button_media) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
@@ -446,10 +444,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             if (!((ToggleButton) v).isChecked()) {
                 // The link button was checked when it was pressed; remove the current link
                 mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNLINK);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNLINK_BUTTON_TAPPED);
                 return;
             }
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_BUTTON_TAPPED);
 
             ((ToggleButton) v).setChecked(false);
 
@@ -740,13 +738,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     String mediaId = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId + "');");
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                    mEditorFragmentListener.onTrackableEvent(TrackableEvent.NETWORK_IMAGE_ADDED);
                 } else {
                     String id = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
                     mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
                     mUploadingMediaIds.add(id);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                    mEditorFragmentListener.onTrackableEvent(TrackableEvent.LOCAL_IMAGE_ADDED);
                 }
             }
         });
@@ -834,7 +832,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UPLOAD_IMAGE_FAILED);
                 mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
                 mFailedMediaIds.add(mediaId);
                 mUploadingMediaIds.remove(mediaId);
@@ -993,7 +991,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.UPLOAD_IMAGE_RETRIED);
                         mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
                         mFailedMediaIds.remove(mediaId);
@@ -1008,7 +1006,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
                     return;
                 }
-                AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
                 ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
                 imageSettingsDialogFragment.setTargetFragment(this,
                         ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
@@ -1175,7 +1173,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private void onFormattingButtonClicked(ToggleButton toggleButton) {
         String tag = toggleButton.getTag().toString();
-        trackFormattingButtonClicked(toggleButton);
+        buttonTappedListener(toggleButton);
         if (mWebView.getVisibility() == View.VISIBLE) {
             mWebView.execJavaScriptFromString("ZSSEditor.set" + StringUtils.capitalize(tag) + "();");
         } else {
@@ -1183,20 +1181,20 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
-    private void trackFormattingButtonClicked(ToggleButton toggleButton) {
+    private void buttonTappedListener(ToggleButton toggleButton) {
         int id = toggleButton.getId();
         if (id == R.id.format_bar_button_bold) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_italic) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ol) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_ORDERED_LIST);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.OL_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ul) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNORDERED_LIST);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.UL_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_quote) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_strikethrough) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
         }
     }
 

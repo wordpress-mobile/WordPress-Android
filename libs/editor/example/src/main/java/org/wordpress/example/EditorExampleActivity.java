@@ -11,8 +11,11 @@ import android.view.View;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -193,6 +196,11 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         // TODO
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event) {
+        AppLog.d(T.EDITOR, "Trackable event: " + event);
     }
 
     private void simulateFileUpload(final String mediaId, final String mediaUrl) {
