@@ -224,7 +224,8 @@ public class CommentsListFragment extends Fragment {
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
 
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
-                    if (mFilteredCommentsView.getCurrentFilter() == null) {
+                    FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
+                    if (filter == null || CommentStatus.UNKNOWN.equals(filter)) {
                         return getString(R.string.comments_empty_list);
                     } else {
                         return getString(R.string.comments_empty_list_filtered, mCommentStatusFilter.getLabel().toLowerCase());
