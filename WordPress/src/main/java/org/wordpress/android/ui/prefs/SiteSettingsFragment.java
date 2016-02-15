@@ -165,6 +165,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
 
+    private boolean mEditingEnabled = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -366,7 +368,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue == null) return false;
+        if (newValue == null || !mEditingEnabled) return false;
 
         if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
@@ -581,6 +583,25 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // hide all options except for Delete site and Enable Location if user is not admin
         if (!mBlog.isAdmin()) hideAdminRequiredPreferences();
+    }
+
+    public void setEditingEnabled(boolean enabled) {
+        // excludes mAddressPref, mMorePreference
+        final Preference[] editablePreference = {
+                mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
+                mPasswordPref, mLocationPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
+                mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
+                mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
+                mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
+                mImageWidthPref, mUploadAndLinkPref, mDeleteSitePref
+        };
+
+        for(Preference preference : editablePreference) {
+            if(preference!=null) preference.setEnabled(enabled);
+        }
+
+        mEditingEnabled = enabled;
     }
 
     private void showRelatedPostsDialog() {
