@@ -274,11 +274,14 @@
     <string name="comment_status_unapproved">Pending</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
+    <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
+    <string name="comments_empty_list_filtered">No %s comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
 
@@ -288,6 +291,8 @@
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unspam">Not spam</string>
     <string name="mnu_comment_trash">Trash</string>
+    <string name="mnu_comment_untrash">Restore</string>
+    <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
@@ -295,6 +300,7 @@
     <string name="dlg_unapproving_comments">Unapproving</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="trash_yes">Trash</string>
     <string name="trash_no">Don\'t trash</string>
@@ -310,6 +316,8 @@
     <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+    <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
@@ -920,6 +928,7 @@
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
 
