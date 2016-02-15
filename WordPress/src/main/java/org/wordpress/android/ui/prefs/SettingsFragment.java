@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -24,9 +23,7 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.widgets.WPEditTextPreference;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,29 +37,12 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
-    private WPEditTextPreference mTaglineTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
-
-        OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null) { // cancelled dismiss keyboard
-                    preference.setSummary(newValue.toString());
-                }
-                ActivityUtils.hideKeyboard(getActivity());
-                return true;
-            }
-        };
-
-        mTaglineTextPreference = (WPEditTextPreference) findPreference(getString(R.string.pref_key_post_sig));
-        if (mTaglineTextPreference != null) {
-            mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
-        }
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
@@ -72,8 +52,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 .setOnPreferenceClickListener(this);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        updatePostSignature();
     }
 
     @Override
@@ -123,15 +101,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void updatePostSignature() {
-        if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-            mTaglineTextPreference.setSummary(R.string.posted_from);
-            mTaglineTextPreference.setText(getString(R.string.posted_from));
-        } else {
-            mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
-        }
     }
 
     private boolean handleLanguagePreferenceClick() {
