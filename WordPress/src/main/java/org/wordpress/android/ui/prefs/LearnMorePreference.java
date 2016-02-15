@@ -167,6 +167,7 @@ public class LearnMorePreference extends Preference
                         AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
                 webView.loadUrl(SUPPORT_CONTENT_JS);
                 mDialog.setContentView(webView);
+                webView.scrollTo(0, 0);
             }
         }
     }
