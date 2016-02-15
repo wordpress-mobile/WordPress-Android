@@ -292,7 +292,7 @@
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_notifications">Cha b’ urrainn dhuinn na brathan ath-nuadhachadh aig an àm seo</string>
-	<string name="invalid_blog_url_message">Dèan cinnteach gu bheil URL a’ bhloga seo dligheach</string>
+	<string name="invalid_url_message">Dèan cinnteach gu bheil URL a’ bhloga seo dligheach</string>
 	<string name="reply_failed">Dh’fhàillig an fhreagairt</string>
 	<string name="stats_empty_comments">Chan eil beachd ann fhathast</string>
 	<string name="stats_bar_graph_empty">Chan eil stats ri fhaighinn</string>

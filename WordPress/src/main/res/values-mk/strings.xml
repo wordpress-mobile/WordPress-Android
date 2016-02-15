@@ -212,7 +212,7 @@
 	<string name="blog_not_found">Настана грешка додека се достапувше блогот</string>
 	<string name="error_refresh_notifications">Известувањата неможат да се ажурират во моментот</string>
 	<string name="error_refresh_pages">Страниците неможат да се ажурират во моментот</string>
-	<string name="invalid_blog_url_message">Проверете дали блог URL-то е воведно правилно</string>
+	<string name="invalid_url_message">Проверете дали блог URL-то е воведно правилно</string>
 	<string name="error_refresh_posts">Напсите неможат да се ажурират во моментот</string>
 	<string name="blog_name_reserved_but_may_be_available">Ова адреса во моментот е резервирана, но можеби може да биде досптана по неколку денови</string>
 	<string name="gallery_error">Неможе да биде превземена медиата.</string>

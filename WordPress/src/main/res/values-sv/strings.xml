@@ -510,7 +510,7 @@
 	<string name="no_account">Inget WordPress-konto hittat, skapa ett konto och försök igen</string>
 	<string name="stats_empty_comments">Inga kommentarer ännu</string>
 	<string name="stats_bar_graph_empty">Ingen statistik tillgänglig</string>
-	<string name="invalid_blog_url_message">Kontrollera att blogg URL:en är gilltig</string>
+	<string name="invalid_url_message">Kontrollera att blogg URL:en är gilltig</string>
 	<string name="error_generic">Ett fel uppstod</string>
 	<string name="error_downloading_image">Fel vid nedladdning av bild</string>
 	<string name="error_load_comment">Kunde inte ladda kommentaren</string>

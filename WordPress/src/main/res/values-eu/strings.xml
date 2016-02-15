@@ -119,7 +119,7 @@
 	<string name="blog_not_found">Blog honetara sartzean errore bat gertatu da</string>
 	<string name="nux_cannot_log_in">Ezin zaitugu sartu</string>
 	<string name="auto_sharing_preference_reset_caused_by_error">Aurretik hautatutako bloga ez dago eskuragarri dagoeneko</string>
-	<string name="invalid_blog_url_message">Ziurtatu sartutako blogaren URLa zuzena dela</string>
+	<string name="invalid_url_message">Ziurtatu sartutako blogaren URLa zuzena dela</string>
 	<string name="auto_sharing_preference_reset">Hobespenen berrezartzea auto-partekatzen</string>
 	<string name="reply_failed">Erantzunak huts egin du</string>
 	<string name="error_refresh_comments">Iruzkinak ezin izan dira une honetan freskatu</string>
