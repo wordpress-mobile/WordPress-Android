@@ -483,7 +483,6 @@ public class CommentActions {
                     }
                     else {
                         // update status in SQLite of successfully moderated comments
-                        Blog blog = WordPress.getBlog(accountId);
                         CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
                                 CommentStatus.toString(CommentStatus.TRASH));
                     }
@@ -556,7 +555,6 @@ public class CommentActions {
                 }
                 else {
                     // update status in SQLite of successfully moderated comments
-                    Blog blog = WordPress.getBlog(accountId);
                     CommentTable.updateCommentsStatus(blog.getLocalTableBlogId(), deletedComments,
                             CommentStatus.toString(CommentStatus.TRASH));
                 }
