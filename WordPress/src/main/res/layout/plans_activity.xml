@@ -29,6 +29,7 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/frame_purchase"
         android:layout_below="@+id/appbar"
         android:visibility="gone"/>
 
