@@ -45,7 +45,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -380,7 +379,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mExportSitePref) {
             showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
-            checkPurchases();
+            requestPurchasesForDeletionCheck();
         } else {
             return false;
         }
@@ -698,30 +697,30 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.show();
     }
 
-    private void checkPurchases() {
+    private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray purchases = response.getJSONArray("originalResponse");
-                    if (hasActivePurchases(purchases)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Premium Upgrades");
-                        builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
-                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray purchases = response.getJSONArray("originalResponse");
+                            if (hasActivePurchases(purchases)) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle("Premium Upgrades");
+                                builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
+                                    }
+                                });
+                                builder.show();
+                            } else {
+                                showDeleteSiteDialog();
                             }
-                        });
-                        builder.show();
-                    } else {
-                        showDeleteSiteDialog();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
