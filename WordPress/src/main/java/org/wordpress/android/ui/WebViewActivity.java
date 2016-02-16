@@ -2,6 +2,7 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -39,12 +40,42 @@ public abstract class WebViewActivity extends AppCompatActivity {
         // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        configureWebView();
 
-        // load URL if one was provided in the intent
+        if (savedInstanceState == null) {
+            loadContent();
+        }
+    }
+
+    /*
+     * load the desired content - only done on initial activity creation (ie: when savedInstanceState
+     * is null) since onSaveInstanceState() and onRestoreInstanceState() will take care of saving
+     * and restoring the correct URL when the activity is recreated - note that descendants should
+     * override this w/o calling super() to load a different URL.
+     */
+    protected void loadContent() {
         String url = getIntent().getStringExtra(URL);
         if (url != null) {
             loadUrl(url);
         }
+    }
+
+    /*
+     * save the webView state with the bundle so it can be restored
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mWebView.saveState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    /*
+     * restore the webView state saved above
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mWebView.restoreState(savedInstanceState);
     }
 
     @Override
@@ -64,9 +95,23 @@ public abstract class WebViewActivity extends AppCompatActivity {
         setContentView(R.layout.webview);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    /*
+     * descendants should override this to set a WebViewClient, WebChromeClient, and anything
+     * else necessary to configure the webView prior to navigation
+     */
+    protected void configureWebView() {
+        // noop
     }
 
     private void pauseWebView() {

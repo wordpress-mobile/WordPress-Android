@@ -11,8 +11,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -154,20 +156,19 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
 
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
-        Account.RestParam param = null;
         if (textView == mFirstName) {
-            param = Account.RestParam.FIRST_NAME;
+            return AccountModel.RestParam.FIRST_NAME.getDescription();
         } else if (textView == mLastName) {
-            param = Account.RestParam.LAST_NAME;
+            return AccountModel.RestParam.LAST_NAME.getDescription();
         } else if (textView == mDisplayName) {
-            param = Account.RestParam.DISPLAY_NAME;
+            return AccountModel.RestParam.DISPLAY_NAME.getDescription();
         } else if (textView == mAboutMe) {
-            param = Account.RestParam.ABOUT_ME;
+            return AccountModel.RestParam.ABOUT_ME.getDescription();
         }
-        return Account.RestParam.toString(param);
+        return null;
     }
 
-    public void onEventMainThread(PrefsEvents.MyProfileDetailsChanged event) {
+    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
         if (!isFinishing()) {
             refreshDetails();
         }

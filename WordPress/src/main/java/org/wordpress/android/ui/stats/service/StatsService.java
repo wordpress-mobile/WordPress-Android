@@ -314,8 +314,9 @@ public class StatsService extends Service {
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
                             final int maxResultsRequested, final int pageRequested) {
 
-        String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
+        EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
+        String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
         if (cachedStats != null) {
             BaseStatsModel mResponseObjectModel;
                 try {
@@ -341,7 +342,7 @@ public class StatsService extends Service {
         /*AppLog.i(T.STATS, "A new Stats network request is required for blogID: " + blogId + " - period: " + period
                 + " - date: " + date + " - StatsType: " + sectionToUpdate.name());
 */
-        EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
+
 
         RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date, maxResultsRequested, pageRequested);
 
@@ -606,7 +607,7 @@ public class StatsService extends Service {
             if (req != null) {
                 mStatsNetworkRequests.remove(req);
             }
-            boolean isStillWorking = mStatsNetworkRequests.size() > 0 ;
+            boolean isStillWorking = mStatsNetworkRequests.size() > 0 || singleThreadNetworkHandler.getQueue().size() > 0;
             EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
         }
     }
