@@ -16,6 +16,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -50,10 +51,8 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -826,7 +825,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary()) ||
                 !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
             mLanguagePref.refreshAdapter();
         }
@@ -834,20 +833,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void sortLanguages() {
         if (mLanguagePref == null) return;
-        CharSequence[] languages = mLanguagePref.getEntryValues();
-        String[] entries = createLanguageDisplayStrings(languages);
-        String[] values = new String[entries.length];
-        Arrays.sort(entries);
 
-        for (int i = 0; i < entries.length; ++i) {
-            String[] split = entries[i].split("__");
-            entries[i] = split[0];
-            values[i] = split[1];
-        }
+        Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        String[] sortedEntries = pair.first;
+        String[] sortedValues = pair.second;
 
-        mLanguagePref.setEntryValues(values);
-        mLanguagePref.setEntries(entries);
-        mLanguagePref.setDetails(createLanguageDetailDisplayStrings(values));
+        mLanguagePref.setEntries(sortedEntries);
+        mLanguagePref.setEntryValues(sortedValues);
+        mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
     }
 
     private String getWhitelistSummary(int value) {
@@ -1032,56 +1025,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
-    }
-
-    /**
-     * Generates display strings for given language codes. Used as entries in language preference.
-     */
-    private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        Locale deviceLocale = WPPrefUtils.languageLocale(null);
-        String[] entryStrings = new String[languageCodes.length];
-        for (int i = 0; i < languageCodes.length; ++i) {
-            entryStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), deviceLocale)) + "__" + languageCodes[i];
-        }
-
-        return entryStrings;
-    }
-
-    /**
-     * Generates detail display strings in the currently selected locale. Used as detail text
-     * in language preference dialog.
-     */
-    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        String[] detailStrings = new String[languageCodes.length];
-        for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = StringUtils.capitalize(getLanguageString(
-                    languageCodes[i].toString(), WPPrefUtils.languageLocale(languageCodes[i].toString())));
-        }
-
-        return detailStrings;
-    }
-
-    /**
-     * Return a non-null display string for a given language code.
-     */
-    private String getLanguageString(String languageCode, Locale displayLocale) {
-        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
-            return "";
-        }
-
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
-        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
-        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
-
-        if (!TextUtils.isEmpty(displayCountry)) {
-            return displayLanguage + " (" + displayCountry + ")";
-        }
-        return displayLanguage;
     }
 
     private boolean setupMorePreferenceScreen() {
