@@ -5,19 +5,26 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -82,6 +89,68 @@ public class PlansActivity extends AppCompatActivity {
             actionBar.setElevation(0.0f);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updatePurchaseUI(position);
+            }
+        });
+    }
+
+    private void updatePurchaseUI(int position) {
+        Fragment fragment = getPageAdapter().getItem(position);
+        if (!(fragment instanceof PlanFragment)) {
+            return;
+        }
+
+        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
+        Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
+
+        boolean showPurchaseButton;
+        if (sitePlan.isCurrentPlan()) {
+            showPurchaseButton = false;
+        } else {
+            long currentPlanId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+            long thisPlanId = sitePlan.getProductID();
+            if (currentPlanId == PlansConstants.FREE_PLAN_ID) {
+                showPurchaseButton = true;
+            } else if (currentPlanId == PlansConstants.PREMIUM_PLAN_ID) {
+                showPurchaseButton = (thisPlanId == PlansConstants.FREE_PLAN_ID);
+            } else if (currentPlanId == PlansConstants.BUSINESS_PLAN_ID) {
+                showPurchaseButton = false;
+            } else if (currentPlanId == PlansConstants.JETPACK_FREE_PLAN_ID) {
+                showPurchaseButton = true;
+            } else if (currentPlanId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
+                showPurchaseButton = (thisPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID);
+            } else if (currentPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID) {
+                showPurchaseButton = false;
+            } else {
+                showPurchaseButton = true;
+            }
+        }
+
+        ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
+        if (showPurchaseButton) {
+            String purchase = planDetails.getFormattedPrice()
+                    + " | <b>"
+                    + getString(R.string.plan_purchase_now)
+                    + "</b>";
+            TextView txtPurchase = (TextView) framePurchase.findViewById(R.id.text_purchase);
+            txtPurchase.setText(Html.fromHtml(purchase));
+            txtPurchase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToastUtils.showToast(v.getContext(), "Not implemented yet");
+                }
+            });
+        }
+
+        if (showPurchaseButton && framePurchase.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(framePurchase, true);
+        } else if (!showPurchaseButton && framePurchase.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(framePurchase, false);
         }
     }
 

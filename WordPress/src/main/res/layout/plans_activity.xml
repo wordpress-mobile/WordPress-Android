@@ -41,4 +41,29 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
+    <FrameLayout
+        android:id="@+id/frame_purchase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_primary"
+        android:elevation="@dimen/appbar_elevation"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_purchase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center_vertical|right"
+            android:minHeight="@dimen/toolbar_height"
+            android:paddingLeft="@dimen/content_margin"
+            android:paddingRight="@dimen/content_margin"
+            android:text="@string/plan_purchase_now"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"/>
+    </FrameLayout>
+
 </RelativeLayout>

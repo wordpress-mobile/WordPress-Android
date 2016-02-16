@@ -11,11 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -102,50 +100,6 @@ public class PlanFragment extends Fragment {
                 addFeature(feature);
             }
         }
-
-        // show purchase button when appropriate
-        boolean showPurchaseButton;
-        if (mSitePlan.isCurrentPlan()) {
-            showPurchaseButton = false;
-        } else {
-            long currentPlanId = WordPress.wpDB.getPlanIdForLocalTableBlogId((int)mSitePlan.getBlogLocalTableID());
-            long thisPlanId = mSitePlan.getProductID();
-            if (currentPlanId == PlansConstants.FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.FREE_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else if (currentPlanId == PlansConstants.JETPACK_FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else {
-                showPurchaseButton = true;
-            }
-
-        }
-
-        ViewGroup framePurchase = (ViewGroup) getView().findViewById(R.id.frame_purchase);
-        TextView txtPurchase = (TextView) framePurchase.findViewById(R.id.text_purchase);
-        if (showPurchaseButton) {
-            String purchase = mPlanDetails.getFormattedPrice()
-                    + " | <b>"
-                    + getActivity().getString(R.string.plan_purchase_now)
-                    + "</b>";
-            txtPurchase.setText(Html.fromHtml(purchase));
-            txtPurchase.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ToastUtils.showToast(v.getContext(), "Not implemented yet");
-                }
-            });
-            framePurchase.setVisibility(View.VISIBLE);
-        } else {
-            framePurchase.setVisibility(View.GONE);
-        }
     }
 
     private void addFeature(Feature feature) {
@@ -167,6 +121,10 @@ public class PlanFragment extends Fragment {
 
     public SitePlan getSitePlan() {
         return mSitePlan;
+    }
+
+    public Plan getPlanDetails() {
+        return mPlanDetails;
     }
 
     private static final String UNICODE_CHECKMARK = "\u2713";
