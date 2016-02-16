@@ -233,4 +233,9 @@ public class Comment {
         }
         return formattedTitle;
     }
+
+    public boolean willTrashingPermanentlyDelete(){
+        CommentStatus status = getStatusEnum();
+        return CommentStatus.TRASH.equals(status) || CommentStatus.SPAM.equals(status);
+    }
 }
