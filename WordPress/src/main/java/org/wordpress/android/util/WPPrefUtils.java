@@ -235,6 +235,7 @@ public class WPPrefUtils {
 
         String[] entryStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
+            // we use "__" here to sort the language code with the display string, so both arrays are sorted at the same time
             entryStrings[i] = StringUtils.capitalize(
                     getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i];
         }
@@ -245,6 +246,7 @@ public class WPPrefUtils {
         String[] sortedValues = new String[languageCodes.length];
 
         for (int i = 0; i < entryStrings.length; ++i) {
+            // now, we can split the sorted array to extract the display string and the language code
             String[] split = entryStrings[i].split("__");
             sortedEntries[i] = split[0];
             sortedValues[i] = split[1];
