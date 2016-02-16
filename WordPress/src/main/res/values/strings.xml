@@ -76,6 +76,7 @@
     <string name="undo">Undo</string>
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
+    <string name="could_not_load_page">Could not load page</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
