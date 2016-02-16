@@ -82,7 +82,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 43;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -216,6 +216,9 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // Add plan_product_id to blog
+    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_product_id integer default 0;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -395,6 +398,9 @@ public class WordPressDB {
             case 41:
                 AccountTable.migrationAddAccountSettingsFields(db);
                 currentVersion++;
+            case 42:
+                db.execSQL(ADD_BLOGS_PLAN_ID);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -496,6 +502,7 @@ public class WordPressDB {
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
+        values.put("plan_product_id", blog.getPlanID());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -689,6 +696,7 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
+        values.put("plan_product_id", blog.getPlanID());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -780,7 +788,7 @@ public class WordPressDB {
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
+                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden", "plan_product_id"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -836,6 +844,7 @@ public class WordPressDB {
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
+                blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
             }
         }
         c.close();
@@ -929,6 +938,11 @@ public class WordPressDB {
         return remoteBlogID;
     }
 
+    public long getPlanIdForLocalTableBlogId(int localBlogId) {
+        return SqlUtils.longForQuery(db,
+                "SELECT plan_product_id FROM accounts WHERE id=?",
+                new String[]{Integer.toString(localBlogId)});
+    }
     /**
      * Set the ID of the most recently active blog. This value will persist between application
      * launches.
