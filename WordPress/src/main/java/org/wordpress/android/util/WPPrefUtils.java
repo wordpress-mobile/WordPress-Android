@@ -8,6 +8,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import org.wordpress.android.widgets.TypefaceCache;
 
 import org.wordpress.android.R;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -223,5 +225,65 @@ public class WPPrefUtils {
         }
 
         return languageMap;
+    }
+
+    /**
+     * Generates display strings for given language codes. Used as entries in language preference.
+     */
+    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes, Locale locale) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        String[] entryStrings = new String[languageCodes.length];
+        for (int i = 0; i < languageCodes.length; ++i) {
+            entryStrings[i] = StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i];
+        }
+
+        Arrays.sort(entryStrings);
+
+        String[] sortedEntries = new String[languageCodes.length];
+        String[] sortedValues = new String[languageCodes.length];
+
+        for (int i = 0; i < entryStrings.length; ++i) {
+            String[] split = entryStrings[i].split("__");
+            sortedEntries[i] = split[0];
+            sortedValues[i] = split[1];
+        }
+
+        return new Pair<>(sortedEntries, sortedValues);
+    }
+
+    /**
+     * Generates detail display strings in the currently selected locale. Used as detail text
+     * in language preference dialog.
+     */
+    public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
+        if (languageCodes == null || languageCodes.length < 1) return null;
+
+        String[] detailStrings = new String[languageCodes.length];
+        for (int i = 0; i < languageCodes.length; ++i) {
+            detailStrings[i] = StringUtils.capitalize(getLanguageString(
+                    languageCodes[i].toString(), WPPrefUtils.languageLocale(languageCodes[i].toString())));
+        }
+
+        return detailStrings;
+    }
+
+    /**
+     * Return a non-null display string for a given language code.
+     */
+    public static String getLanguageString(String languageCode, Locale displayLocale) {
+        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
+            return "";
+        }
+
+        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
+        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
+        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
+
+        if (!TextUtils.isEmpty(displayCountry)) {
+            return displayLanguage + " (" + displayCountry + ")";
+        }
+        return displayLanguage;
     }
 }
