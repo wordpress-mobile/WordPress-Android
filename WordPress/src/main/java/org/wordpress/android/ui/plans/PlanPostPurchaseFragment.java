@@ -32,7 +32,7 @@ public class PlanPostPurchaseFragment extends Fragment {
         Button button = (Button) rootView.findViewById(R.id.button);
 
         // TODO: these are placeholders until actual copy exists
-        image.setImageResource(R.drawable.box_with_pages_page1);
+        image.setImageResource(R.drawable.plan_business);
         txtTitle.setText("This is the title");
         txtDescription.setText("This is the description. It is a nice description and deserves to be respected.");
         button.setText("Don\'t Press This");
