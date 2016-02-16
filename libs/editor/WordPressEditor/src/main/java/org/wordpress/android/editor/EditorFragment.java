@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.ToggleButton;
@@ -59,6 +60,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String ARG_PARAM_CONTENT = "param_content";
 
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
+    private static final String JS_STATE_INTERFACE = "nativeState";
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
@@ -366,13 +368,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     protected void initJsEditor() {
-        if(!isAdded()) {
+        if (!isAdded()) {
             return;
         }
 
         String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
+        if (htmlEditor != null) {
+            htmlEditor = htmlEditor.replace("%%TITLE%%", getString(R.string.visual_editor));
+        }
 
         mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
+        mWebView.addJavascriptInterface(new NativeStateJsInterface(getActivity().getApplicationContext()),
+                                        JS_STATE_INTERFACE);
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
@@ -1119,7 +1126,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private void hideActionBarIfNeeded() {
 
         ActionBar actionBar = getActionBar();
-        if (getActionBar() != null
+        if (actionBar != null
                 && !isHardwareKeyboardPresent()
                 && mHideActionBarOnSoftKeyboardUp
                 && mIsKeyboardOpen
@@ -1134,8 +1141,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private void showActionBarIfNeeded() {
 
         ActionBar actionBar = getActionBar();
-        if (getActionBar() != null && !actionBar.isShowing()) {
-            getActionBar().show();
+        if (actionBar != null && !actionBar.isShowing()) {
+            actionBar.show();
         }
     }
 
@@ -1255,6 +1262,39 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // Insert closing tag
             content.insert(selectionEnd, endTag);
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
+        }
+    }
+
+    private class NativeStateJsInterface {
+        Context mContext;
+
+        NativeStateJsInterface(Context context) {
+            mContext = context;
+        }
+
+        @JavascriptInterface
+        public String getStringEdit() {
+            return mContext.getString(R.string.edit);
+        }
+
+        @JavascriptInterface
+        public String getStringTapToRetry() {
+            return mContext.getString(R.string.tap_to_try_again);
+        }
+
+        @JavascriptInterface
+        public String getStringUploading() {
+            return mContext.getString(R.string.uploading);
+        }
+
+        @JavascriptInterface
+        public String getStringUploadingGallery() {
+            return mContext.getString(R.string.uploading_gallery_placeholder);
+        }
+
+        @JavascriptInterface
+        public int getAPILevel() {
+            return Build.VERSION.SDK_INT;
         }
     }
 }
