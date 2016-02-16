@@ -162,7 +162,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
         return super.onOptionsItemSelected(item);
     }
 
-
     private void refreshAccountDetails() {
         Account account = AccountHelper.getDefaultAccount();
         mUsernamePreference.setSummary(account.getUserName());

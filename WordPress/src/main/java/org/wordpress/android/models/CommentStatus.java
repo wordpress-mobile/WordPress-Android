@@ -10,7 +10,8 @@ public enum CommentStatus implements FilterCriteria {
     UNAPPROVED(R.string.comment_status_unapproved),
     APPROVED(R.string.comment_status_approved),
     TRASH(R.string.comment_status_trash),
-    SPAM(R.string.comment_status_spam);
+    SPAM(R.string.comment_status_spam),
+    DELETE(R.string.comment_status_trash);
 
     private final int mLabelResId;
 

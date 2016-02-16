@@ -14,6 +14,7 @@ public class CommentDialogs {
     public static final int ID_COMMENT_DLG_UNAPPROVING = 101;
     public static final int ID_COMMENT_DLG_SPAMMING = 102;
     public static final int ID_COMMENT_DLG_TRASHING = 103;
+    public static final int ID_COMMENT_DLG_DELETING = 104;
 
     private CommentDialogs() {
         throw new AssertionError();
@@ -33,6 +34,9 @@ public class CommentDialogs {
                 break;
             case ID_COMMENT_DLG_SPAMMING:
                 resId = R.string.dlg_spamming_comments;
+                break;
+            case ID_COMMENT_DLG_DELETING:
+                resId = R.string.dlg_deleting_comments;
                 break;
             default :
                 return null;
