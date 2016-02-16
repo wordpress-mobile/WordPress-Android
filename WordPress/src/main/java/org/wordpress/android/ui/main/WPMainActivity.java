@@ -306,9 +306,9 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mViewPager == null) return;
+        if (isFinishing() || mTabLayout == null) return;
 
-        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
+        mTabLayout.setSelectedTabPosition(WPMainTabAdapter.TAB_READER);
     }
 
     /*
