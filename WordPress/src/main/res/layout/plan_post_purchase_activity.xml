@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/layout_nav"
-        android:background="@color/blue_dark"/>
+        android:background="#1078A4"/>
 
     <RelativeLayout
         android:id="@+id/layout_nav"
@@ -45,10 +45,10 @@
             android:id="@+id/layout_indicator_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
-            android:layout_centerInParent="true"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -56,32 +56,32 @@
                 android:id="@+id/image_indicator_0"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
                 android:background="@drawable/indicator_circle_selected"/>
 
             <ImageView
                 android:id="@+id/image_indicator_1"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
                 android:background="@drawable/indicator_circle_unselected"/>
 
             <ImageView
                 android:id="@+id/image_indicator_2"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
                 android:background="@drawable/indicator_circle_unselected"/>
 
             <ImageView
                 android:id="@+id/image_indicator_3"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
                 android:background="@drawable/indicator_circle_unselected"/>
 
         </LinearLayout>
