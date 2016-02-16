@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -24,7 +25,6 @@ import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -142,7 +142,7 @@ public class PlansActivity extends AppCompatActivity {
             txtPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showToast(v.getContext(), "Not implemented yet");
+                    startPurchaseProcess();
                 }
             });
         }
@@ -296,6 +296,13 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void startPurchaseProcess() {
+        // TODO: this should start the Google Play purchase process, for now it shows the
+        // post-purchase on-boarding
+        Intent intent = new Intent(this, PlanPostPurchaseActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
         public void onResponse(List<SitePlan> plans) {
