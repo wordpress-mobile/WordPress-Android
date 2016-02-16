@@ -37,6 +37,8 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -386,7 +388,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mExportSitePref) {
             showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
-            showDeleteSiteDialog();
+            checkPurchases();
         } else {
             return false;
         }
@@ -702,6 +704,71 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
 
         builder.show();
+    }
+
+    private void checkPurchases() {
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray purchases = response.getJSONArray("originalResponse");
+                    if (hasActivePurchases(purchases)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Premium Upgrades");
+                        builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
+                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                    } else {
+                        showDeleteSiteDialog();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+        if (currentBlog.isDotcomFlag()) {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Exporting content...", true, true);
+            WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    progressDialog.dismiss();
+                    ToastUtils.showToast(getActivity(), "Export started");
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressDialog.dismiss();
+                }
+            });
+        }
+    }
+
+    private boolean hasActivePurchases(JSONArray purchases) {
+        for (int i = 0; i < purchases.length(); i++) {
+            try {
+                JSONObject purchase = purchases.getJSONObject(i);
+                int active = purchase.getInt("active");
+
+                if (active == 1) {
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 
     private void showDeleteSiteDialog() {
