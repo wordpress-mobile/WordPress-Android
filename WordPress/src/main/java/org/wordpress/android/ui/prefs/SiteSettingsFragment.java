@@ -715,6 +715,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                             }
                         });
+                        builder.show();
                     } else {
                         showDeleteSiteDialog();
                     }
