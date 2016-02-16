@@ -731,17 +731,13 @@ public class SiteSettingsFragment extends PreferenceFragment
                 });
     }
 
-    private boolean hasActivePurchases(JSONArray purchases) {
+    private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
         for (int i = 0; i < purchases.length(); i++) {
-            try {
-                JSONObject purchase = purchases.getJSONObject(i);
-                int active = purchase.getInt("active");
+            JSONObject purchase = purchases.getJSONObject(i);
+            int active = purchase.getInt("active");
 
-                if (active == 1) {
-                    return true;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (active == 1) {
+                return true;
             }
         }
 
