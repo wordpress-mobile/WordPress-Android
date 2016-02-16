@@ -50,6 +50,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -573,6 +574,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
+        sortLanguages();
+
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
             removeSelfHostedOnlyPreferences();
@@ -824,13 +827,26 @@ public class SiteSettingsFragment extends PreferenceFragment
             mLanguagePref.setValue(newValue);
             String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
-
-            // update details to display in selected locale
-            CharSequence[] languageCodes = mLanguagePref.getEntryValues();
-            mLanguagePref.setEntries(WPPrefUtils.createLanguageDisplayStrings(languageCodes));
-            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePref.refreshAdapter();
         }
+    }
+
+    private void sortLanguages() {
+        if (mLanguagePref == null) return;
+        CharSequence[] languages = mLanguagePref.getEntryValues();
+        String[] entries = createLanguageDisplayStrings(languages);
+        String[] values = new String[entries.length];
+        Arrays.sort(entries);
+
+        for (int i = 0; i < entries.length; ++i) {
+            String[] split = entries[i].split("__");
+            entries[i] = split[0];
+            values[i] = split[1];
+        }
+
+        mLanguagePref.setEntryValues(values);
+        mLanguagePref.setEntries(entries);
+        mLanguagePref.setDetails(createLanguageDetailDisplayStrings(values));
     }
 
     private String getWhitelistSummary(int value) {
