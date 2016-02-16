@@ -729,22 +729,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                     }
                 });
-
-        if (currentBlog.isDotcomFlag()) {
-            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Exporting content...", true, true);
-            WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    progressDialog.dismiss();
-                    ToastUtils.showToast(getActivity(), "Export started");
-                }
-            }, new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    progressDialog.dismiss();
-                }
-            });
-        }
     }
 
     private boolean hasActivePurchases(JSONArray purchases) {
