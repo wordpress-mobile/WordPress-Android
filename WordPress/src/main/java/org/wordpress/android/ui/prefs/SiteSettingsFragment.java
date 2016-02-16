@@ -16,6 +16,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -834,20 +835,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void sortLanguages() {
         if (mLanguagePref == null) return;
-        CharSequence[] languages = mLanguagePref.getEntryValues();
-        String[] entries = createLanguageDisplayStrings(languages);
-        String[] values = new String[entries.length];
-        Arrays.sort(entries);
 
-        for (int i = 0; i < entries.length; ++i) {
-            String[] split = entries[i].split("__");
-            entries[i] = split[0];
-            values[i] = split[1];
-        }
+        Pair<String[], String[]> pair = createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        String[] sortedEntries = pair.first;
+        String[] sortedValues = pair.second;
 
-        mLanguagePref.setEntryValues(values);
-        mLanguagePref.setEntries(entries);
-        mLanguagePref.setDetails(createLanguageDetailDisplayStrings(values));
+        mLanguagePref.setEntries(sortedEntries);
+        mLanguagePref.setEntryValues(sortedValues);
+        mLanguagePref.setDetails(createLanguageDetailDisplayStrings(sortedValues));
     }
 
     private String getWhitelistSummary(int value) {
@@ -1037,17 +1032,27 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Generates display strings for given language codes. Used as entries in language preference.
      */
-    private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
+    private Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes, Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
-        Locale deviceLocale = WPPrefUtils.languageLocale(null);
         String[] entryStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
             entryStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), deviceLocale)) + "__" + languageCodes[i];
+                    getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i];
         }
 
-        return entryStrings;
+        Arrays.sort(entryStrings);
+
+        String[] sortedEntries = new String[languageCodes.length];
+        String[] sortedValues = new String[languageCodes.length];
+
+        for (int i = 0; i < entryStrings.length; ++i) {
+            String[] split = entryStrings[i].split("__");
+            sortedEntries[i] = split[0];
+            sortedValues[i] = split[1];
+        }
+
+        return new Pair<>(sortedEntries, sortedValues);
     }
 
     /**
