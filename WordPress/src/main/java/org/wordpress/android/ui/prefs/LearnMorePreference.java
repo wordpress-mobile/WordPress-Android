@@ -110,6 +110,13 @@ public class LearnMorePreference extends Preference
         });
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.learn_more_pref_screen);
+        WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        params.gravity = Gravity.CENTER;
+        params.x = 12;
+        params.y = 12;
+        mDialog.getWindow().setAttributes(params);
         mDialog.show();
     }
 
@@ -161,12 +168,6 @@ public class LearnMorePreference extends Preference
                         AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
                 webView.loadUrl(SUPPORT_CONTENT_JS);
                 mDialog.setContentView(webView);
-                WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
-                params.width = WindowManager.LayoutParams.MATCH_PARENT;
-                params.gravity = Gravity.CENTER;
-                params.x = 12;
-                params.y = 12;
-                mDialog.getWindow().setAttributes(params);
                 webView.scrollTo(0, 0);
             }
         }
