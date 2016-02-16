@@ -50,6 +50,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -574,6 +575,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
+        sortLanguages();
+
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
             removeSelfHostedOnlyPreferences();
@@ -825,13 +828,26 @@ public class SiteSettingsFragment extends PreferenceFragment
             mLanguagePref.setValue(newValue);
             String summary = getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
-
-            // update details to display in selected locale
-            CharSequence[] languageCodes = mLanguagePref.getEntryValues();
-            mLanguagePref.setEntries(createLanguageDisplayStrings(languageCodes));
-            mLanguagePref.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePref.refreshAdapter();
         }
+    }
+
+    private void sortLanguages() {
+        if (mLanguagePref == null) return;
+        CharSequence[] languages = mLanguagePref.getEntryValues();
+        String[] entries = createLanguageDisplayStrings(languages);
+        String[] values = new String[entries.length];
+        Arrays.sort(entries);
+
+        for (int i = 0; i < entries.length; ++i) {
+            String[] split = entries[i].split("__");
+            entries[i] = split[0];
+            values[i] = split[1];
+        }
+
+        mLanguagePref.setEntryValues(values);
+        mLanguagePref.setEntries(entries);
+        mLanguagePref.setDetails(createLanguageDetailDisplayStrings(values));
     }
 
     private String getWhitelistSummary(int value) {
@@ -1024,27 +1040,27 @@ public class SiteSettingsFragment extends PreferenceFragment
     private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
-        String[] displayStrings = new String[languageCodes.length];
-
+        Locale deviceLocale = WPPrefUtils.languageLocale(null);
+        String[] entryStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = StringUtils.capitalize(getLanguageString(
-                    String.valueOf(languageCodes[i]), WPPrefUtils.languageLocale(languageCodes[i].toString())));
+            entryStrings[i] = StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), deviceLocale)) + "__" + languageCodes[i];
         }
 
-        return displayStrings;
+        return entryStrings;
     }
 
     /**
      * Generates detail display strings in the currently selected locale. Used as detail text
      * in language preference dialog.
      */
-    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes, String locale) {
+    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), WPPrefUtils.languageLocale(locale)));
+            detailStrings[i] = StringUtils.capitalize(getLanguageString(
+                    languageCodes[i].toString(), WPPrefUtils.languageLocale(languageCodes[i].toString())));
         }
 
         return detailStrings;
