@@ -80,6 +80,7 @@
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>

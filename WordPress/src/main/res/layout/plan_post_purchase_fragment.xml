@@ -3,44 +3,48 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center_horizontal"
               android:orientation="vertical"
               android:paddingLeft="@dimen/content_margin"
-              android:paddingRight="@dimen/content_margin">
+              android:paddingRight="@dimen/content_margin"
+              android:paddingTop="@dimen/margin_extra_large"
+              tools:background="@color/blue_wordpress">
 
     <ImageView
-        android:id="@+id/plan_icon"
+        android:id="@+id/image"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        tools:src="@drawable/plan_business"/>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:textColor="@color/blue_wordpress"
-        android:textSize="@dimen/text_sz_extra_large"
-        tools:text="text_product_name"/>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_tagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:textColor="@color/grey_darken_10"
-        android:textSize="@dimen/text_sz_large"
-        android:textStyle="italic"
-        tools:text="text_tagline"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:background="@color/divider_grey"/>
+        tools:src="@drawable/box_with_pages_page1"
+        tools:tint="@color/white"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/text_sz_triple_extra_large"
+        tools:text="text_title"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/text_sz_extra_large"
+        tools:text="text_description"/>
+
+    <org.wordpress.android.widgets.OpenSansButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:textColor="@color/blue_medium"
+        tools:text="Button"/>
 
 </LinearLayout>
