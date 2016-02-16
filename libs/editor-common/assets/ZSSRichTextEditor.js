@@ -41,6 +41,9 @@ ZSSEditor.caretInfo = { y: 0, height: 0 };
 // Is this device an iPad
 ZSSEditor.isiPad;
 
+// The API level of the native host (Android)
+ZSSEditor.androidApiLevel;
+
 // The current selection
 ZSSEditor.currentSelection;
 
@@ -75,6 +78,8 @@ ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 ZSSEditor.init = function() {
 
     rangy.init();
+
+    ZSSEditor.androidApiLevel = nativeState.getAPILevel();
 
     // Change a few CSS values if the device is an iPad
     ZSSEditor.isiPad = (navigator.userAgent.match(/iPad/i) != null);
@@ -850,11 +855,22 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
 ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
-    var imgContainerStart = '<span id="' + imageContainerIdentifier+'" class="img_container" contenteditable="false" data-failed="Tap to try again!">';
+
+    if (ZSSEditor.androidApiLevel > 18) {
+        var imgContainerClass = 'img_container';
+        var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator" contenteditable="false"></progress>';
+    } else {
+        // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
+        var imgContainerClass = 'img_container compat';
+        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.getStringUploading()
+                              + '</span><span class="upload-overlay-bg"></span>';
+    }
+
+    var imgContainerStart = '<span id="' + imageContainerIdentifier + '" class="' + imgContainerClass
+                            + '" contenteditable="false" data-failed="' + nativeState.getStringTapToRetry() + '">';
     var imgContainerEnd = '</span>';
-    var progress = '<progress id="' + progressIdentifier+'" value=0  class="wp_media_indicator"  contenteditable="false"></progress>';
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
-    var html = imgContainerStart + progress+image + imgContainerEnd;
+    var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
@@ -941,6 +957,12 @@ ZSSEditor.setProgressOnImage = function(imageNodeIdentifier, progress) {
         imageNode.addClass("uploading");
     }
 
+    // Revert to non-compatibility image container once image upload has begun. This centers the overlays on the image
+    // (instead of the screen), while still circumventing the small container bug the compat class was added to fix
+    if (progress > 0) {
+        this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).removeClass("compat");
+    }
+
     var imageProgressNode = this.getImageProgressNodeWithIdentifier(imageNodeIdentifier);
     if (imageProgressNode.length == 0){
           return;
@@ -1023,6 +1045,9 @@ ZSSEditor.markImageUploadFailed = function(imageNodeIdentifier, message) {
     if (imageProgressNode.length != 0){
         imageProgressNode.addClass('failed');
     }
+
+    // Delete the compatibility overlay if present
+    imageContainerNode.find("span.upload-overlay").addClass("failed");
 };
 
 /**
@@ -1046,6 +1071,9 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
     if (imageProgressNode.length != 0){
         imageProgressNode.removeClass('failed');
     }
+
+    // Display the compatibility overlay again if present
+    imageContainerNode.find("span.upload-overlay").removeClass("failed");
 };
 
 /**
@@ -1432,7 +1460,8 @@ ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
     var posterSVG = '"wpposter.svg"';
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
-    var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster=' + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
+    var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster='
+           + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
 
     out = out + '<br>';
     return out;
@@ -1552,7 +1581,8 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
         sizeClass = " small";
     }
 
-    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">Edit</span></span>';
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
+                  + nativeState.getStringEdit() + '</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -1991,8 +2021,8 @@ ZSSEditor.insertGallery = function( imageIds, type, columns ) {
 }
 
 ZSSEditor.insertLocalGallery = function( placeholderId ) {
-    var container = '<span id="' + placeholderId + '" class="gallery_container">[Uploading gallery...]</span>';
-
+    var container = '<span id="' + placeholderId + '" class="gallery_container">['
+                    + nativeState.getStringUploadingGallery() + ']</span>';
     this.insertHTML(this.wrapInParagraphTags(container));
 }
 
@@ -2788,6 +2818,15 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1) {
             ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
             this.sendImageTappedCallback( ZSSEditor.currentEditingImage );
+            return;
+        }
+
+        if (targetNode.className.indexOf('upload-overlay') != -1 ||
+            targetNode.className.indexOf('upload-overlay-bg') != -1 ) {
+            // Select the image node associated with the selected upload overlay
+            var imageNode = targetNode.parentNode.getElementsByTagName('img')[0];
+
+            this.sendImageTappedCallback( imageNode );
             return;
         }
 
