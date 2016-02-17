@@ -1382,8 +1382,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-        boolean isLocal = !URLUtil.isNetworkUrl(mediaUri.toString());
-        // TODO: network url doesn't mean it comes from the WP MEDIA LIBRARY :/
         trackAddMediaEvents(isVideo, false);
 
         if (mShowNewEditor) {
