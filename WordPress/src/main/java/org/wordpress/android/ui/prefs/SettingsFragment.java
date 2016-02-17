@@ -109,7 +109,7 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     public void onResume() {
         super.onResume();
 
-        getActivity().setTitle(R.string.settings);
+        getActivity().setTitle(R.string.account_settings);
     }
 
     @Override
