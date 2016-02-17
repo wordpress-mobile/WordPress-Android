@@ -1288,8 +1288,8 @@
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
     <string name="contact_support">Contact support</string>
-    <string name="delete_entire_site">Delete the entire site?</string>
-    <string name="confirm_entering_primary_domain_below">Confirm by entering the primary domain below.</string>
+    <string name="delete_site_question">Delete Site?</string>
+    <string name="confirm_delete_site_prompt">You'll lose the address %1$s and all your content will be gone forever. We strongly recommend you export your content first.</string>
     <string name="site_settings_export_content_title">Export content</string>
     <string name="export_content_message">Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.</string>
     <string name="error_deleting_site">Error deleting site</string>

@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.UrlUtils;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
     public static final String SITE_DOMAIN_KEY = "site-domain";
@@ -57,8 +59,10 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     }
 
     private void configureAlertViewBuilder(AlertDialog.Builder builder) {
-        builder.setTitle(R.string.delete_entire_site);
-        builder.setMessage(R.string.confirm_entering_primary_domain_below);
+        builder.setTitle(R.string.delete_site_question);
+        String url = WordPress.getCurrentBlog().getHomeURL();
+        String deletePrompt = String.format(getString(R.string.confirm_delete_site_prompt), UrlUtils.getHost(url));
+        builder.setMessage(deletePrompt);
 
         configureUrlConfirmation(builder);
         configureButtons(builder);
