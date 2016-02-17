@@ -720,7 +720,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                 builder.setNegativeButton("Show purchases", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases?preview=true&iframe=true", AccountHelper.getCurrentUsernameForBlog(currentBlog));
+                                        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases", AccountHelper.getCurrentUsernameForBlog(currentBlog));
                                     }
                                 });
                                 builder.show();
