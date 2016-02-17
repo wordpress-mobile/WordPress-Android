@@ -60,7 +60,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
-import org.wordpress.android.util.WPWebViewClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,8 +110,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
     private static final String DELETE_SITE_TAG = "delete-site";
+    private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
+    private static final String PURCHASE_ACTIVE_KEY = "active";
 
     private static final long FETCH_DELAY = 1000;
+    public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
 
     // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
     private Blog mBlog;
@@ -706,22 +708,22 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        showPurchasesOrDeleteSiteDialog(response, currentBlog);
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        ToastUtils.showToast(getActivity(), "Something went wrong. Please contact support");
-                        AppLog.e(AppLog.T.MAIN, error.toString());
-                    }
-                });
+            @Override
+            public void onResponse(JSONObject response) {
+                showPurchasesOrDeleteSiteDialog(response, currentBlog);
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
+                AppLog.e(AppLog.T.MAIN, error.toString());
+            }
+        });
     }
 
     private void showPurchasesOrDeleteSiteDialog(JSONObject response, final Blog currentBlog) {
         try {
-            JSONArray purchases = response.getJSONArray("originalResponse");
+            JSONArray purchases = response.getJSONArray(PURCHASE_ORIGINAL_RESPONSE_KEY);
             if (hasActivePurchases(purchases)) {
                 showPurchasesDialog(currentBlog);
             } else {
@@ -734,15 +736,15 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showPurchasesDialog(final Blog currentBlog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Premium Upgrades");
-        builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
-        builder.setPositiveButton("Show purchases", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.premium_upgrades_title);
+        builder.setMessage(R.string.premium_upgrades_message);
+        builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases", AccountHelper.getCurrentUsernameForBlog(currentBlog));
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL, AccountHelper.getCurrentUsernameForBlog(currentBlog));
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -754,7 +756,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
         for (int i = 0; i < purchases.length(); i++) {
             JSONObject purchase = purchases.getJSONObject(i);
-            int active = purchase.getInt("active");
+            int active = purchase.getInt(PURCHASE_ACTIVE_KEY);
 
             if (active == 1) {
                 return true;
