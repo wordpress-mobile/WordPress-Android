@@ -835,12 +835,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mLanguagePref == null) return;
 
         Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
-        String[] sortedEntries = pair.first;
-        String[] sortedValues = pair.second;
+        if (pair != null) {
+            String[] sortedEntries = pair.first;
+            String[] sortedValues = pair.second;
 
-        mLanguagePref.setEntries(sortedEntries);
-        mLanguagePref.setEntryValues(sortedValues);
-        mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setEntries(sortedEntries);
+            mLanguagePref.setEntryValues(sortedValues);
+            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+        }
     }
 
     private String getWhitelistSummary(int value) {
