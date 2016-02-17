@@ -15,12 +15,10 @@ import java.util.List;
 public class Plan implements Serializable {
     private long mProductID;
     private String mProductName;
-    private String mProductNameEnglish;
     private final Hashtable<String, Integer> mPrices = new Hashtable<>();
     private String mProductNameShort;
     private String mProductSlug;
     private String mTagline;
-    private String mShortdesc;
     private String mDescription;
     private long mCost;
     private int mBillPeriod;
@@ -47,7 +45,6 @@ public class Plan implements Serializable {
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
         mProductName = planJSONObject.getString("product_name");
-        mProductNameEnglish = planJSONObject.getString("product_name_en");
 
         // Unfold prices object
         JSONObject priceJSONObject = planJSONObject.getJSONObject("prices");
@@ -63,7 +60,6 @@ public class Plan implements Serializable {
         mProductNameShort = planJSONObject.getString("product_name_short");
         mProductSlug = planJSONObject.getString("product_slug");
         mTagline = planJSONObject.getString("tagline");
-        mShortdesc = planJSONObject.getString("shortdesc");
         mDescription = planJSONObject.getString("description");
         mCost = planJSONObject.getLong("cost");
         mBillPeriod = planJSONObject.getInt("bill_period");
@@ -110,10 +106,6 @@ public class Plan implements Serializable {
         return StringUtils.notNullStr(mProductName);
     }
 
-    public String getProductNameEnglish() {
-        return StringUtils.notNullStr(mProductNameEnglish);
-    }
-
     public Hashtable<String, Integer> getPrices() {
         return mPrices;
     }
@@ -128,10 +120,6 @@ public class Plan implements Serializable {
 
     public String getTagline() {
         return StringUtils.notNullStr(mTagline);
-    }
-
-    public String getShortdesc() {
-        return StringUtils.notNullStr(mShortdesc);
     }
 
     public String getDescription() {

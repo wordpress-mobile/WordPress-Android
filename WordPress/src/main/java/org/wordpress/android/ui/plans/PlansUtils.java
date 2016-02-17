@@ -227,7 +227,7 @@ public class PlansUtils {
             return false;
         }
         Map<String, String> params = getDefaultRestCallParameters();
-        WordPress.getRestClientUtils().get("plans/", params, null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
