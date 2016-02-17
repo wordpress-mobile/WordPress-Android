@@ -233,12 +233,13 @@ public class WPPrefUtils {
      * Generates display strings for given language codes. Used as entries in language preference.
      */
     @Nullable
-    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes, Locale locale) {
+    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
+                                                                              Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
         ArrayList<String> entryStrings = new ArrayList<>(languageCodes.length);
         for (int i = 0; i < languageCodes.length; ++i) {
-            // we use "__" here to sort the language code with the display string, so both arrays are sorted at the same time
+            // "__" is used to sort the language code with the display string so both arrays are sorted at the same time
             entryStrings.add(i, StringUtils.capitalize(
                     getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i]);
         }
