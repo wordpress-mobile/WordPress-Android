@@ -16,7 +16,6 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 
@@ -26,7 +25,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     private AlertDialog mDeleteSiteDialog;
     private EditText mUrlConfirmation;
     private Button mDeleteButton;
-    private String mSiteDomain;
+    private String mSiteDomain = "";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
