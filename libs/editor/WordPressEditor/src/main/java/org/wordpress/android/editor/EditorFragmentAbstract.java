@@ -3,7 +3,6 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-
 import android.text.Spanned;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -12,7 +11,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -131,5 +129,22 @@ public abstract class EditorFragmentAbstract extends Fragment {
         String onAuthHeaderRequested(String url);
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
+        void onTrackableEvent(TrackableEvent event);
+    }
+
+    public enum TrackableEvent {
+        HTML_BUTTON_TAPPED,
+        UNLINK_BUTTON_TAPPED,
+        LINK_BUTTON_TAPPED,
+        MEDIA_BUTTON_TAPPED,
+        IMAGE_EDITED,
+        BOLD_BUTTON_TAPPED,
+        ITALIC_BUTTON_TAPPED,
+        OL_BUTTON_TAPPED,
+        UL_BUTTON_TAPPED,
+        BLOCKQUOTE_BUTTON_TAPPED,
+        STRIKETHROUGH_BUTTON_TAPPED,
+        UNDERLINE_BUTTON_TAPPED,
+        MORE_BUTTON_TAPPED
     }
 }

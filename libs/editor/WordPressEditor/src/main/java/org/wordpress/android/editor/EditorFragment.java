@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.ToggleButton;
@@ -32,8 +33,6 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -61,6 +60,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String ARG_PARAM_CONTENT = "param_content";
 
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
+    private static final String JS_STATE_INTERFACE = "nativeState";
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
@@ -368,13 +368,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     protected void initJsEditor() {
-        if(!isAdded()) {
+        if (!isAdded()) {
             return;
         }
 
         String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
+        if (htmlEditor != null) {
+            htmlEditor = htmlEditor.replace("%%TITLE%%", getString(R.string.visual_editor));
+        }
 
         mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
+        mWebView.addJavascriptInterface(new NativeStateJsInterface(getActivity().getApplicationContext()),
+                                        JS_STATE_INTERFACE);
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
@@ -389,7 +394,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.format_bar_button_html) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
             // Don't switch to HTML mode if currently uploading media
             if (!mUploadingMediaIds.isEmpty()) {
@@ -431,7 +436,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
             }
         } else if (id == R.id.format_bar_button_media) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
@@ -446,10 +451,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             if (!((ToggleButton) v).isChecked()) {
                 // The link button was checked when it was pressed; remove the current link
                 mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNLINK);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNLINK_BUTTON_TAPPED);
                 return;
             }
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_BUTTON_TAPPED);
 
             ((ToggleButton) v).setChecked(false);
 
@@ -740,13 +745,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     String mediaId = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId + "');");
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                 } else {
                     String id = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
                     mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
                     mUploadingMediaIds.add(id);
-                    AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                 }
             }
         });
@@ -834,7 +837,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
                 mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
                 mFailedMediaIds.add(mediaId);
                 mUploadingMediaIds.remove(mediaId);
@@ -993,7 +995,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
                         mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
                         mFailedMediaIds.remove(mediaId);
@@ -1008,7 +1009,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
                     return;
                 }
-                AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
                 ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
                 imageSettingsDialogFragment.setTargetFragment(this,
                         ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
@@ -1125,7 +1126,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private void hideActionBarIfNeeded() {
 
         ActionBar actionBar = getActionBar();
-        if (getActionBar() != null
+        if (actionBar != null
                 && !isHardwareKeyboardPresent()
                 && mHideActionBarOnSoftKeyboardUp
                 && mIsKeyboardOpen
@@ -1140,8 +1141,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private void showActionBarIfNeeded() {
 
         ActionBar actionBar = getActionBar();
-        if (getActionBar() != null && !actionBar.isShowing()) {
-            getActionBar().show();
+        if (actionBar != null && !actionBar.isShowing()) {
+            actionBar.show();
         }
     }
 
@@ -1175,7 +1176,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private void onFormattingButtonClicked(ToggleButton toggleButton) {
         String tag = toggleButton.getTag().toString();
-        trackFormattingButtonClicked(toggleButton);
+        buttonTappedListener(toggleButton);
         if (mWebView.getVisibility() == View.VISIBLE) {
             mWebView.execJavaScriptFromString("ZSSEditor.set" + StringUtils.capitalize(tag) + "();");
         } else {
@@ -1183,20 +1184,20 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
-    private void trackFormattingButtonClicked(ToggleButton toggleButton) {
+    private void buttonTappedListener(ToggleButton toggleButton) {
         int id = toggleButton.getId();
         if (id == R.id.format_bar_button_bold) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_italic) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ol) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_ORDERED_LIST);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.OL_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_ul) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNORDERED_LIST);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.UL_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_quote) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
         } else if (id == R.id.format_bar_button_strikethrough) {
-            AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
         }
     }
 
@@ -1261,6 +1262,39 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // Insert closing tag
             content.insert(selectionEnd, endTag);
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
+        }
+    }
+
+    private class NativeStateJsInterface {
+        Context mContext;
+
+        NativeStateJsInterface(Context context) {
+            mContext = context;
+        }
+
+        @JavascriptInterface
+        public String getStringEdit() {
+            return mContext.getString(R.string.edit);
+        }
+
+        @JavascriptInterface
+        public String getStringTapToRetry() {
+            return mContext.getString(R.string.tap_to_try_again);
+        }
+
+        @JavascriptInterface
+        public String getStringUploading() {
+            return mContext.getString(R.string.uploading);
+        }
+
+        @JavascriptInterface
+        public String getStringUploadingGallery() {
+            return mContext.getString(R.string.uploading_gallery_placeholder);
+        }
+
+        @JavascriptInterface
+        public int getAPILevel() {
+            return Build.VERSION.SDK_INT;
         }
     }
 }

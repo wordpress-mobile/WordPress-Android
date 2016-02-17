@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
@@ -455,11 +455,20 @@ public class PostUploadService extends Service {
             return false;
         }
 
+        private boolean hasGallery() {
+            Pattern galleryTester = Pattern.compile("\\[.*?gallery.*?\\]");
+            Matcher matcher = galleryTester.matcher(mPost.getContent());
+            return matcher.find();
+        }
+
         private void trackUploadAnalytics() {
             // Calculate the words count
             Map<String, Object> properties = new HashMap<String, Object>();
             properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
+            if (hasGallery()) {
+                properties.put("with_galleries", true);
+            }
             if (mHasImage) {
                 properties.put("with_photos", true);
             }
@@ -472,9 +481,7 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
-
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
-
+            AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }
 
         /**

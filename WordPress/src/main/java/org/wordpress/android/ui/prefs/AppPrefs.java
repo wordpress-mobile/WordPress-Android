@@ -6,6 +6,8 @@ import android.text.TextUtils;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -307,10 +309,14 @@ public class AppPrefs {
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_TOGGLED_ON : Stat.EDITOR_TOGGLED_OFF);
     }
 
     public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
+        if (visualEditorAvailable) {
+            AnalyticsTracker.track(Stat.EDITOR_ENABLED_NEW_VERSION);
+        }
     }
 
     public static boolean isVisualEditorAvailable() {

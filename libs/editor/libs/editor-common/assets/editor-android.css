@@ -16,6 +16,8 @@ video::-webkit-media-controls-fullscreen-button {
     display: none;
 }
 
+/* --- API<19 workarounds --- */
+
 /* Used only on older APIs (API<19), which don't support CSS filter effects (specifically, blur). */
 .edit-container .edit-overlay-bg {
     position: absolute;
@@ -25,4 +27,54 @@ video::-webkit-media-controls-fullscreen-button {
     height: 100%;
     display: block;
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Used only on older APIs (API<19), where using inline-block is buggy and sometimes displays a very small container */
+span.img_container.compat {
+    display: block;
+}
+
+/* Used on API<19 to darken the image so that the 'uploading' and 'retry' overlays can still be seen when the image is
+light */
+.img_container .upload-overlay-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* When the upload-overlay-bg element is present (API<19), a bug is exposed where the img_container is slightly larger
+than its containing image. The upload-overlay-bg is larger as well, leaving a dark line below the image. By setting
+display:block on the image and setting a width limit we get around this issue. */
+
+.img_container .upload-overlay-bg ~ img.uploading {
+    display:block;
+    max-width:100%;
+}
+
+.img_container .upload-overlay-bg ~ img.failed {
+    display:block;
+    max-width:100%;
+}
+
+/* Used only on older APIs (API<19) instead of a progress bar for uploading images, since the WebView at those API
+   levels does not support the progress tag */
+.img_container .upload-overlay {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    width:100%;
+    z-index: 100;
+    min-width: 60px;
+    font-family:OpenSans;
+    font-size:20px;
+    font-weight:600;
+    text-align: center;
+    text-shadow: 0px 1px 2px rgba(0,0,0,.06);
+    color: white;
+}
+
+.img_container .upload-overlay.failed {
+    visibility: hidden;
 }
