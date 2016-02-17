@@ -197,7 +197,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
-        if (!hasAdapter() || mEmptyView == null) return;
+        if (mEmptyView == null) return;
 
         if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
             String msg = null;

@@ -77,6 +77,7 @@
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
     <string name="off">Off</string>
+    <string name="could_not_load_page">Could not load page</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -281,6 +282,7 @@
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
 
@@ -290,6 +292,8 @@
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unspam">Not spam</string>
     <string name="mnu_comment_trash">Trash</string>
+    <string name="mnu_comment_untrash">Restore</string>
+    <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
@@ -297,6 +301,7 @@
     <string name="dlg_unapproving_comments">Unapproving</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="trash_yes">Trash</string>
     <string name="trash_no">Don\'t trash</string>
@@ -312,6 +317,8 @@
     <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+    <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
@@ -343,10 +350,6 @@
     <string name="post_not_published">Post status isn\'t published</string>
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
-    <string name="post_signature">Post signature</string>
-    <string name="your_signature">Your signature:</string>
-    <string name="add_tagline">Add a signature to new posts</string>
-    <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
@@ -383,11 +386,6 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
-    <string name="share_preference_title">Share to WordPress</string>
-    <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-    <string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
-    <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>

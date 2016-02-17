@@ -441,8 +441,12 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
+        if (!getShouldPageComments()) {
+            return mActivity.getString(R.string.disabled);
+        }
+
         int count = getPagingCountForDescription();
-        if (count == 0) return mActivity.getString(R.string.disabled);
+        if (count == 0) return mActivity.getString(R.string.none);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
 

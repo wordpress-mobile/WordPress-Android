@@ -200,6 +200,31 @@ public class CommentTable {
     }
 
     /**
+     * delete comments for a blog that match a specific status
+     * @param localBlogId - unique id in account table for this blog
+     * @param filter - status to use to filter the query
+     * @return number of comments deleted
+     */
+    public static int deleteCommentsForBlogWithFilter(int localBlogId, CommentStatus filter) {
+        if (CommentStatus.UNKNOWN.equals(filter)){
+            //we need to get the filter values for both XMLrpc and REST api as in the case of a migration where existing
+            // data is present on a device, we still need to be able to filter both values
+            String[] args = {Integer.toString(localBlogId),
+                    CommentStatus.toString(CommentStatus.APPROVED),
+                    CommentStatus.toString(CommentStatus.UNAPPROVED),
+                    CommentStatus.toRESTString(CommentStatus.APPROVED),
+                    CommentStatus.toRESTString(CommentStatus.UNAPPROVED)};
+            return getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND (status=? OR status=? OR status=? OR status=?)", args);
+
+        } else {
+            //we need to get the filter values for both XMLrpc and REST api as in the case of a migration where existing
+            // data is present on a device, we still need to be able to filter both values
+            String[] args = {Integer.toString(localBlogId), CommentStatus.toString(filter), CommentStatus.toRESTString(filter)};
+            return getWritableDb().delete(COMMENTS_TABLE, "blog_id=? AND (status=? OR status=?)", args);
+        }
+    }
+
+    /**
      * saves comments for passed blog to local db, overwriting existing ones if necessary
      * @param localBlogId - unique id in account table for this blog
      * @param comments - list of comments to save
