@@ -16,6 +16,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
@@ -705,31 +706,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray purchases = response.getJSONArray("originalResponse");
-                            if (hasActivePurchases(purchases)) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                builder.setTitle("Premium Upgrades");
-                                builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
-                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                    }
-                                });
-                                builder.setNegativeButton("Show purchases", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases", AccountHelper.getCurrentUsernameForBlog(currentBlog));
-                                    }
-                                });
-                                builder.show();
-                            } else {
-                                showDeleteSiteDialog();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        showPurchasesOrDeleteSiteDialog(response, currentBlog);
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
@@ -738,6 +715,38 @@ public class SiteSettingsFragment extends PreferenceFragment
                         AppLog.e(AppLog.T.MAIN, error.toString());
                     }
                 });
+    }
+
+    private void showPurchasesOrDeleteSiteDialog(JSONObject response, final Blog currentBlog) {
+        try {
+            JSONArray purchases = response.getJSONArray("originalResponse");
+            if (hasActivePurchases(purchases)) {
+                showPurchasesDialog(currentBlog);
+            } else {
+                showDeleteSiteDialog();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showPurchasesDialog(final Blog currentBlog) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Premium Upgrades");
+        builder.setMessage("You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.");
+        builder.setPositiveButton("Show purchases", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases", AccountHelper.getCurrentUsernameForBlog(currentBlog));
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
@@ -1228,7 +1237,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         @Override
                         public void onResponse(JSONObject response) {
                             progressDialog.dismiss();
-                            ToastUtils.showToast(getActivity(), "Export started");
+                            Snackbar.make(getView(), "Export email sent!", Snackbar.LENGTH_LONG).show();
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
