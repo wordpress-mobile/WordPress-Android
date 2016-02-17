@@ -2,12 +2,11 @@ package org.wordpress.android.ui.stats;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.FilterCriteria;
 
 /**
  * Timeframes for the stats pages.
  */
-public enum StatsTimeframe implements FilterCriteria{
+public enum StatsTimeframe {
     INSIGHTS(R.string.stats_insights),
     DAY(R.string.stats_timeframe_days),
     WEEK(R.string.stats_timeframe_weeks),
@@ -21,7 +20,6 @@ public enum StatsTimeframe implements FilterCriteria{
         mLabelResId = labelResId;
     }
 
-    @Override
     public String getLabel() {
         return WordPress.getContext().getString(mLabelResId);
     }
