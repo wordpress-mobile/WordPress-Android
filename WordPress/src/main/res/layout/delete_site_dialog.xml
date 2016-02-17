@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/password_confirmation"
+        android:id="@+id/url_confirmation"
         android:inputType="textUri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
