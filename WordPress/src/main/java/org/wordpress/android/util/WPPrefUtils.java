@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -231,6 +232,7 @@ public class WPPrefUtils {
     /**
      * Generates display strings for given language codes. Used as entries in language preference.
      */
+    @Nullable
     public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes, Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
@@ -260,6 +262,7 @@ public class WPPrefUtils {
      * Generates detail display strings in the currently selected locale. Used as detail text
      * in language preference dialog.
      */
+    @Nullable
     public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
