@@ -4,17 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +21,7 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPEditTextPreference;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,7 +35,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
     private AlertDialog mDialog;
     private SharedPreferences mSettings;
-    private WPEditTextPreference mTaglineTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,34 +42,14 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
 
         addPreferencesFromResource(R.xml.settings);
 
-        OnPreferenceChangeListener preferenceChangeListener = new OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (newValue != null) { // cancelled dismiss keyboard
-                    preference.setSummary(newValue.toString());
-                }
-                ActivityUtils.hideKeyboard(getActivity());
-                return true;
-            }
-        };
-
-        mTaglineTextPreference = (WPEditTextPreference) findPreference(getString(R.string.pref_key_post_sig));
-        if (mTaglineTextPreference != null) {
-            mTaglineTextPreference.setOnPreferenceChangeListener(preferenceChangeListener);
-        }
-
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
                 .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_reset_shared_pref))
-                .setOnPreferenceClickListener(this);
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        updatePostSignature();
     }
 
     @Override
@@ -107,21 +78,9 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
             return handleOssPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_language))) {
             return handleLanguagePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_reset_shared_pref))) {
-            return handleResetAutoSharePreferencesClick();
         }
 
         return false;
-    }
-
-    private void hideManageNotificationCategory() {
-        PreferenceScreen preferenceScreen =
-                (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
-        PreferenceCategory notifs =
-                (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_notifications_section));
-        if (preferenceScreen != null && notifs != null) {
-            preferenceScreen.removePreference(notifs);
-        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -130,25 +89,6 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void updatePostSignature() {
-        if (mTaglineTextPreference.getText() == null || mTaglineTextPreference.getText().equals("")) {
-            mTaglineTextPreference.setSummary(R.string.posted_from);
-            mTaglineTextPreference.setText(getString(R.string.posted_from));
-        } else {
-            mTaglineTextPreference.setSummary(mTaglineTextPreference.getText());
-        }
-    }
-
-    private boolean handleResetAutoSharePreferencesClick() {
-        Editor editor = mSettings.edit();
-        editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_BLOG_ID_KEY);
-        editor.remove(ShareIntentReceiverActivity.SHARE_IMAGE_ADDTO_KEY);
-        editor.remove(ShareIntentReceiverActivity.SHARE_TEXT_BLOG_ID_KEY);
-        editor.apply();
-        ToastUtils.showToast(getActivity(), R.string.auto_sharing_preference_reset, ToastUtils.Duration.SHORT);
-        return true;
     }
 
     private boolean handleLanguagePreferenceClick() {
