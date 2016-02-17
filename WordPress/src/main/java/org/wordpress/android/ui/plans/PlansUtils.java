@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.plans;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -17,7 +16,6 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -221,11 +219,7 @@ public class PlansUtils {
         return  currentPlanFeatures;
     }
 
-    public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener
-            listener, final RestRequest.ErrorListener errorListener) {
-        if (!NetworkUtils.isNetworkAvailable(ctx)) {
-            return false;
-        }
+    public static boolean downloadGlobalPlans() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
             @Override
@@ -236,22 +230,15 @@ public class PlansUtils {
                     AppPrefs.setGlobalPlans(response.toString());
 
                     // Load details of features from the server.
-                    downloadFeatures(ctx, null, null);
+                    downloadFeatures();
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans!");
-                }
-
-                if (listener != null) {
-                    listener.onResponse(response);
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
-                if (errorListener != null) {
-                    errorListener.onErrorResponse(volleyError);
-                }
             }
         });
         return true;
@@ -262,10 +249,7 @@ public class PlansUtils {
      *
      * Return true if the request is enqueued. False otherwise.
      */
-    public static boolean downloadFeatures(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
-        if (!NetworkUtils.isNetworkAvailable(ctx)) {
-            return false;
-        }
+    private static boolean downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -277,17 +261,11 @@ public class PlansUtils {
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features!");
                 }
-                if (listener != null) {
-                    listener.onResponse(response);
-                }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
-                if (errorListener!= null) {
-                    errorListener.onErrorResponse(volleyError);
-                }
             }
         });
 
