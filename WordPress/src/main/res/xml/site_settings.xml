@@ -290,7 +290,7 @@
             android:title="@string/start_over"
             app:longClickHint="@string/site_settings_start_over_hint">
 
-            <org.wordpress.android.ui.prefs.WPDeleteSitePreference
+            <org.wordpress.android.ui.prefs.WPStartOverPreference
                 android:id="@+id/pref_start_over"
                 android:key="@string/pref_key_site_start_over"
                 android:icon="@drawable/gridicons_history"
