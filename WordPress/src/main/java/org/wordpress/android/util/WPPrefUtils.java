@@ -13,8 +13,9 @@ import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
+
+import org.wordpress.android.R;
 
 import java.util.Arrays;
 import java.util.HashMap;
