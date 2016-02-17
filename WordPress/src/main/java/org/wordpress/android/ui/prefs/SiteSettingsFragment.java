@@ -45,6 +45,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -57,6 +58,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
+import org.wordpress.android.util.WPWebViewClient;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -714,6 +717,12 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                                     }
                                 });
+                                builder.setNegativeButton("Show purchases", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), "https://wordpress.com/purchases?preview=true&iframe=true", AccountHelper.getCurrentUsernameForBlog(currentBlog));
+                                    }
+                                });
                                 builder.show();
                             } else {
                                 showDeleteSiteDialog();
@@ -725,7 +734,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        ToastUtils.showToast(getActivity(), "Something went wrong. Please contact support");
+                        AppLog.e(AppLog.T.MAIN, error.toString());
                     }
                 });
     }
