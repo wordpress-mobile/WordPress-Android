@@ -7,17 +7,19 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
-import org.wordpress.android.R;
-
-import java.util.Arrays;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -230,24 +232,26 @@ public class WPPrefUtils {
     /**
      * Generates display strings for given language codes. Used as entries in language preference.
      */
-    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes, Locale locale) {
+    @Nullable
+    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
+                                                                              Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
-        String[] entryStrings = new String[languageCodes.length];
+        ArrayList<String> entryStrings = new ArrayList<>(languageCodes.length);
         for (int i = 0; i < languageCodes.length; ++i) {
-            // we use "__" here to sort the language code with the display string, so both arrays are sorted at the same time
-            entryStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i];
+            // "__" is used to sort the language code with the display string so both arrays are sorted at the same time
+            entryStrings.add(i, StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i]);
         }
 
-        Arrays.sort(entryStrings);
+        Collections.sort(entryStrings, Collator.getInstance(locale));
 
         String[] sortedEntries = new String[languageCodes.length];
         String[] sortedValues = new String[languageCodes.length];
 
-        for (int i = 0; i < entryStrings.length; ++i) {
+        for (int i = 0; i < entryStrings.size(); ++i) {
             // now, we can split the sorted array to extract the display string and the language code
-            String[] split = entryStrings[i].split("__");
+            String[] split = entryStrings.get(i).split("__");
             sortedEntries[i] = split[0];
             sortedValues[i] = split[1];
         }
@@ -259,6 +263,7 @@ public class WPPrefUtils {
      * Generates detail display strings in the currently selected locale. Used as detail text
      * in language preference dialog.
      */
+    @Nullable
     public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) return null;
 
