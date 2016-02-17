@@ -15,6 +15,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -271,20 +271,18 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     private void updateLanguagePreference(String languageCode) {
         if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
 
+        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
-        Arrays.sort(availableLocales);
+        Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+        String[] sortedEntries = pair.first;
+        String[] sortedValues = pair.second;
 
-        if (mLanguagePreference.getEntryValues() == null || mLanguagePreference.getEntryValues().length == 0) {
-            // update details to display in selected locale
-            mLanguagePreference.setEntryValues(availableLocales);
-        }
+        mLanguagePreference.setEntries(sortedEntries);
+        mLanguagePreference.setEntryValues(sortedValues);
+        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
 
-        mLanguagePreference.setValue(languageCode);
-        String summary = WPPrefUtils.getLanguageString(languageCode, WPPrefUtils.languageLocale(languageCode));
-        mLanguagePreference.setSummary(summary);
-
-        mLanguagePreference.setEntries(WPPrefUtils.createLanguageDisplayStrings(availableLocales));
-        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(availableLocales, languageCode));
+        mLanguagePreference.setValue(languageCode.toLowerCase());
+        mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
     }
 
