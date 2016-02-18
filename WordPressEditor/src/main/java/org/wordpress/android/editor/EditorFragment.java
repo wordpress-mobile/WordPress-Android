@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -94,7 +95,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
     private Set<MediaGallery> mWaitingGalleries;
-    private Set<String> mUploadingMediaIds;
+    private Map<String, MediaType> mUploadingMedia;
     private Set<String> mFailedMediaIds;
     private MediaGallery mUploadingMediaGallery;
 
@@ -135,7 +136,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWaitingMediaFiles = new ConcurrentHashMap<>();
         mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
-        mUploadingMediaIds = new HashSet<>();
+        mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
         // -- WebView configuration
@@ -232,7 +233,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onDetach() {
         // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMediaIds) {
+        for (String mediaId : mUploadingMedia.keySet()) {
             mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
         }
         super.onDetach();
@@ -397,7 +398,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
             // Don't switch to HTML mode if currently uploading media
-            if (!mUploadingMediaIds.isEmpty()) {
+            if (!mUploadingMedia.isEmpty()) {
                 ((ToggleButton) v).setChecked(false);
 
                 if (isAdded()) {
@@ -744,14 +745,30 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             public void run() {
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     String mediaId = mediaFile.getMediaId();
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId + "');");
-                    mEditorFragmentListener.onTrackableEvent(TrackableEvent.NETWORK_IMAGE_ADDED);
+                    if (mediaFile.isVideo()) {
+                        String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                                mediaFile.getVideoPressShortCode());
+
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertVideo('" + mediaUrl + "', '" +
+                                mediaFile.getThumbnailURL() + "', '" + videoPressId +  "');");
+                    } else {
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId +
+                                "');");
+                    }
                 } else {
                     String id = mediaFile.getMediaId();
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
-                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
-                    mUploadingMediaIds.add(id);
-                    mEditorFragmentListener.onTrackableEvent(TrackableEvent.LOCAL_IMAGE_ADDED);
+                    if (mediaFile.isVideo()) {
+                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
+                                "');");
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + id + ", " + 0 + ");");
+                        mUploadingMedia.put(id, MediaType.VIDEO);
+                    } else {
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl +
+                                "');");
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
+                        mUploadingMedia.put(id, MediaType.IMAGE);
+                    }
                 }
             }
         });
@@ -812,26 +829,43 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadSucceeded(final String mediaId, final String remoteId, final String remoteUrl) {
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId + ", '" +
-                        remoteId + "', '" + remoteUrl + "');");
-                mUploadingMediaIds.remove(mediaId);
-            }
-        });
+        final MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mediaType.equals(MediaType.IMAGE)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId +
+                                ", '" + remoteId + "', '" + remoteUrl + "');");
+                    } else if (mediaType.equals(MediaType.VIDEO)) {
+                        // TODO: Obtain the poster URL and the VideoPress id (where applicable) and pass them here
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + mediaId +
+                                ", '" + remoteUrl + "', '" + "', '');");
+                    }
+                    mUploadingMedia.remove(mediaId);
+                }
+            });
+        }
     }
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                String progressString = String.format(Locale.US, "%.1f", progress);
-                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
-                        progressString + ");");
-            }
-        });
+        final MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    String progressString = String.format(Locale.US, "%.1f", progress);
+                    if (mediaType.equals(MediaType.IMAGE)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
+                                progressString + ");");
+                    } else if (mediaType.equals(MediaType.VIDEO)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", " +
+                                progressString + ");");
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -839,10 +873,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UPLOAD_IMAGE_FAILED);
-                mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                MediaType mediaType = mUploadingMedia.get(mediaId);
+                switch (mediaType) {
+                    case IMAGE:
+                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                        break;
+                    case VIDEO:
+                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ");");
+                }
                 mFailedMediaIds.add(mediaId);
-                mUploadingMediaIds.remove(mediaId);
+                mUploadingMedia.remove(mediaId);
             }
         });
     }
@@ -961,7 +1001,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, String url, final JSONObject meta, String uploadStatus) {
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+        if (mediaType == null) {
+            return;
+        }
+
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
@@ -974,8 +1018,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.post(new Runnable() {
                             @Override
                             public void run() {
-                                mWebView.execJavaScriptFromString("ZSSEditor.removeImage(" + mediaId + ");");
-                                mUploadingMediaIds.remove(mediaId);
+                                switch (mediaType) {
+                                    case IMAGE:
+                                        mWebView.execJavaScriptFromString("ZSSEditor.removeImage(" + mediaId + ");");
+                                        break;
+                                    case VIDEO:
+                                        mWebView.execJavaScriptFromString("ZSSEditor.removeVideo(" + mediaId + ");");
+                                }
+                                mUploadingMedia.remove(mediaId);
                             }
                         });
                         dialog.dismiss();
@@ -998,16 +1048,30 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.UPLOAD_IMAGE_RETRIED);
-                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
+                        switch (mediaType) {
+                            case IMAGE:
+                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                        + ");");
+                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", "
+                                        + 0 + ");");
+                                break;
+                            case VIDEO:
+                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                        + ");");
+                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", "
+                                        + 0 + ");");
+                        }
                         mFailedMediaIds.remove(mediaId);
-                        mUploadingMediaIds.add(mediaId);
+                        mUploadingMedia.put(mediaId, mediaType);
                     }
                 });
                 break;
             default:
-                // Show media options fragment
+                if (!mediaType.equals(MediaType.IMAGE)) {
+                    return;
+                }
+
+                // Only show image options fragment for image taps
                 FragmentManager fragmentManager = getFragmentManager();
 
                 if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {

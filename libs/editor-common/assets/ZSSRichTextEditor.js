@@ -1138,45 +1138,76 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
  *  @brief Inserts a video tag using the videoURL as source and posterURL as the
  *  image to show while video is loading.
  *
- *  @param videoURL  the url of the video to present
- *  @param posterURL the url of an image to show while the video is loading
- *  @param alt       the alt description when the video is not supported.
+ *  @param videoURL     the url of the video
+ *  @param posterURL    the url of an image to show while the video is loading
+ *  @param videoPressID the VideoPress ID of the video, when applicable
  *
  */
-ZSSEditor.insertVideo = function(videoURL, posterURL, alt) {
-    var html = '<video controls webkit-playsinline poster="' + posterURL+ '"><source src="'
-    + videoURL + '" type="video/mp4"/>' + alt + '</video>';
+ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
+    var html = '<video webkit-playsinline src="' + videoURL + '" onclick="" controls="controls" preload="metadata"';
 
-    this.insertHTML(html);
+    if (posterURL != '') {
+        html += ' poster="' + posterURL + '"';
+    }
+
+    if (videopressID != '') {
+        html += ' data-wpvideopress="' + videopressID + '"';
+    }
+
+    html += '></video>';
+
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
 /**
- *  @brief      Inserts a video tag marked with a identifier using only a poster image.  Useful for videos that need to be uploaded.
- *  @details    By inserting a video with only a porter URL, we can make sure the video element is shown to the user
- *              as soon as it's selected for uploading.  Once the video is successfully uploaded
- *              the application should call replaceLocalVideoWithRemoteVideo().
+ *  @brief      Inserts a placeholder image tag for in-progress video uploads, marked with an identifier.
+ *  @details    The image shown can be the video's poster if available - otherwise the default poster image is used.
+ *              Using an image instead of a video placeholder is a departure from iOS, necessary because the original
+ *              method caused occasional WebView freezes on Android.
+ *              Once the video is successfully uploaded, the application should call replaceLocalVideoWithRemoteVideo().
  *
  *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.  It exists as
  *                                      a mechanism to update the video node with the remote URL
  *                                      when replaceLocalVideoWithRemoteVideo() is called.
  *  @param      posterURL               The URL of a poster image to display while the video is being uploaded.
  */
-ZSSEditor.insertInProgressVideoWithIDUsingPosterImage = function(videoNodeIdentifier, posterURL) {
-    var space = '&nbsp';
+ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var progressIdentifier = this.getVideoProgressIdentifier(videoNodeIdentifier);
     var videoContainerIdentifier = this.getVideoContainerIdentifier(videoNodeIdentifier);
-    var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="video_container">';
+
+    if (ZSSEditor.androidApiLevel > 18) {
+        var videoContainerClass = 'video_container';
+        var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator"'
+                + 'contenteditable="false"></progress>';
+    } else {
+        // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
+        var videoContainerClass = 'video_container compat';
+        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.getStringUploading()
+                + '</span><span class="upload-overlay-bg"></span>';
+    }
+
+    var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="' + videoContainerClass
+            + '" contenteditable="false" data-failed="' + nativeState.getStringTapToRetry() + '">';
     var videoContainerEnd = '</span>';
-    var progress = '<progress id="' + progressIdentifier + '" value=0  class="wp_media_indicator"  contenteditable="false"></progress>';
-    var video = '<video data-wpid="' + videoNodeIdentifier + '" webkit-playsinline poster="' + posterURL + '" onclick="" class="uploading"></video>';
-    var html =  space + videoContainerStart + progress + video + videoContainerEnd + space;
-    this.insertHTML(html);
+
+    if (posterURL == '') {
+       posterURL = "wpposter.svg";
+    }
+
+    var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
+    var html = videoContainerStart + progressElement + image + videoContainerEnd;
+
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
 ZSSEditor.getVideoNodeWithIdentifier = function(videoNodeIdentifier) {
-    return $('video[data-wpid="' + videoNodeIdentifier+'"]');
+    var videoNode = $('img[data-video_wpid="' + videoNodeIdentifier+'"]');
+    if (videoNode.length == 0) {
+        videoNode = $('video[data-wpid="' + videoNodeIdentifier+'"]');
+    }
+    return videoNode;
 };
 
 ZSSEditor.getVideoProgressIdentifier = function(videoNodeIdentifier) {
@@ -1195,40 +1226,42 @@ ZSSEditor.getVideoContainerNodeWithIdentifier = function(videoNodeIdentifier) {
     return $('#'+this.getVideoContainerIdentifier(videoNodeIdentifier));
 };
 
-
 /**
- *  @brief      Replaces a local Video URL with a remote Video URL.  Useful for videos that have
- *              just finished uploading.
- *  @details    The remote Video can be available after a while, when uploading Videos.  This method
- *              allows for the remote URL to be loaded once the upload completes.
+ *  @brief      Replaces the image placeholder with a video element containing the uploaded video's attributes,
+ *              and removes the upload container.
  *
- *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.  It exists as
- *                                      a mechanism to update the Video node with the remote URL
- *                                      when replaceLocalVideoWithRemoteVideo() is called.
- *  @param      remoteVideoUrl          The URL of the remote Video to display.
- *  @param      remotePosterUrl         The URL of thre remote poster image to display
- *  @param      videopressID          VideoPress Guid of the video if any
+ *  @param      videoNodeIdentifier     The unique id of the video upload
+ *  @param      remoteVideoUrl          The URL of the remote video to display
+ *  @param      remotePosterUrl         The URL of the remote poster image to display
+ *  @param      videopressID            The VideoPress ID of the video, where applicable
  */
 ZSSEditor.replaceLocalVideoWithRemoteVideo = function(videoNodeIdentifier, remoteVideoUrl, remotePosterUrl, videopressID) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
+    var imagePlaceholderNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
 
-    if (videoNode.length == 0) {
-        // even if the Video is not present anymore we must do callback
-        this.markVideoUploadDone(videoNodeIdentifier);
-        return;
+    if (imagePlaceholderNode.length != 0) {
+        var videoNode = document.createElement("video");
+        videoNode.setAttribute('webkit-playsinline', '');
+        videoNode.setAttribute('onclick', '');
+        videoNode.setAttribute('src', remoteVideoUrl);
+        videoNode.setAttribute('controls', 'controls');
+        videoNode.setAttribute('preload', 'metadata');
+        videoNode.setAttribute('data-wpid', videoNodeIdentifier);
+        if (videopressID != '') {
+           videoNode.setAttribute('data-wpvideopress', videopressID);
+        }
+        videoNode.setAttribute('poster', remotePosterUrl);
+
+        // Replace upload container and placeholder image with the uploaded video node
+        var containerNode = imagePlaceholderNode.parent();
+        containerNode.replaceWith(videoNode);
     }
-    videoNode.attr('src', remoteVideoUrl);
-    videoNode.attr('controls', '');
-    videoNode.attr('preload', 'metadata');
-    if (videopressID != '') {
-        videoNode.attr('data-wpvideopress', videopressID);
-    }
-    videoNode.attr('poster', remotePosterUrl);
+
+    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
+    ZSSEditor.callback("callback-input", joinedArguments);
+    // We invoke the sendVideoReplacedCallback with a delay to avoid for
+    // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
-    videoNode.on('webkitbeginfullscreen', function (event){ thisObj.sendVideoFullScreenStarted(); } );
-    videoNode.on('webkitendfullscreen', function (event){ thisObj.sendVideoFullScreenEnded(); } );
-    videoNode.on('error', function(event) { videoNode.load()} );
-    this.markVideoUploadDone(videoNodeIdentifier);
+    setTimeout(function() { thisObj.sendVideoReplacedCallback(videoNodeIdentifier);}, 500);
 };
 
 /**
@@ -1254,37 +1287,6 @@ ZSSEditor.setProgressOnVideo = function(videoNodeIdentifier, progress) {
 };
 
 /**
- *  @brief      Notifies that the Video upload as finished
- *
- *  @param      VideoNodeIdentifier     The unique Video ID for the uploaded Video
- */
-ZSSEditor.markVideoUploadDone = function(videoNodeIdentifier) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length > 0) {
-
-        // remove identifier attributed from Video
-        videoNode.removeAttr('data-wpid');
-
-        // remove uploading style
-        videoNode.removeClass("uploading");
-        videoNode.removeAttr("class");
-
-        // Remove all extra formatting nodes for progress
-        if (videoNode.parent().attr("id") == this.getVideoContainerIdentifier(videoNodeIdentifier)) {
-            // remove id from container to avoid to report a user removal
-            videoNode.parent().attr("id", "");
-            videoNode.parent().replaceWith(videoNode);
-        }
-    }
-    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-    ZSSEditor.callback("callback-input", joinedArguments);
-    // We invoke the sendVideoReplacedCallback with a delay to avoid for
-    // it to be ignored by the webview because of the previous callback being done.
-    var thisObj = this;
-    setTimeout(function() { thisObj.sendVideoReplacedCallback(videoNodeIdentifier);}, 500);
-};
-
-/**
  *  @brief      Callbacks to native that the video upload as finished and the local url was replaced by the remote url
  *
  *  @param      videoNodeIdentifier    the unique video ID for the uploaded Video
@@ -1295,22 +1297,6 @@ ZSSEditor.sendVideoReplacedCallback = function( videoNodeIdentifier ) {
     var joinedArguments = arguments.join( defaultCallbackSeparator );
 
     this.callback("callback-video-replaced", joinedArguments);
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSEditor.sendVideoFullScreenStarted = function() {
-    this.callback("callback-video-fullscreen-started", "empty");
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSEditor.sendVideoFullScreenEnded = function() {
-    this.callback("callback-video-fullscreen-ended", "empty");
 };
 
 /**
@@ -1498,7 +1484,7 @@ ZSSEditor.applyVideoFormattingCallback = function( match ) {
         out += ' preload="metadata"';
     }
 
-    out += ' onclick="" controls="controls"></video>';
+    out += ' onclick="" controls="controls"></video><br>';
 
     return out;
 }
@@ -1531,8 +1517,6 @@ ZSSEditor.setVideoPressLinks = function(videopressID, videoURL, posterURL ) {
     videoNode.attr('controls', '');
     videoNode.attr('poster', posterURL);
     var thisObj = this;
-    videoNode.on('webkitbeginfullscreen', function (event){ thisObj.sendVideoFullScreenStarted(); } );
-    videoNode.on('webkitendfullscreen', function (event){ thisObj.sendVideoFullScreenEnded(); } );
     videoNode.load();
 };
 
@@ -2785,7 +2769,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
-            if ( targetNode.dataset.wpid ) {
+            if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
                 this.sendImageTappedCallback( targetNode );
                 return;
             }
@@ -2858,17 +2842,21 @@ ZSSField.prototype.handleTapEvent = function(e) {
     }
 };
 
-ZSSField.prototype.sendImageTappedCallback = function( imageNode ) {
-    var meta = JSON.stringify( ZSSEditor.extractImageMeta( imageNode ) );
-    var imageId = "";
-    if ( imageNode.hasAttribute( 'data-wpid' ) ){
-        imageId = imageNode.getAttribute( 'data-wpid' )
+ZSSField.prototype.sendImageTappedCallback = function(imageNode) {
+    var meta = JSON.stringify(ZSSEditor.extractImageMeta(imageNode));
+    var imageId = "", mediaType = "image";
+    if (imageNode.hasAttribute('data-wpid')){
+        imageId = imageNode.getAttribute('data-wpid');
+    } else if (imageNode.hasAttribute('data-video_wpid')){
+        imageId = imageNode.getAttribute('data-video_wpid');
+        mediaType = "video";
     }
-    var arguments = ['id=' + encodeURIComponent( imageId ),
-                     'url=' + encodeURIComponent( imageNode.src ),
-                     'meta=' + encodeURIComponent( meta )];
+    var arguments = ['id=' + encodeURIComponent(imageId),
+                     'url=' + encodeURIComponent(imageNode.src),
+                     'meta=' + encodeURIComponent(meta),
+                     'type=' + mediaType];
 
-    var joinedArguments = arguments.join( defaultCallbackSeparator );
+    var joinedArguments = arguments.join(defaultCallbackSeparator);
 
     var thisObj = this;
 
@@ -2889,22 +2877,6 @@ ZSSField.prototype.sendVideoTappedCallback = function( videoNode ) {
 
     ZSSEditor.callback('callback-video-tap', joinedArguments);
 }
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSField.prototype.sendVideoFullScreenStarted = function() {
-    this.callback("callback-video-fullscreen-started", "empty");
-};
-
-/**
- *  @brief      Callbacks to native that the video entered full screen mode
- *
- */
-ZSSField.prototype.sendVideoFullScreenEnded = function() {
-    this.callback("callback-video-fullscreen-ended", "empty");
-};
 
 // MARK: - Callback Execution
 

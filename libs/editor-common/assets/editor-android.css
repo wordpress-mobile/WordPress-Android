@@ -30,13 +30,15 @@ video::-webkit-media-controls-fullscreen-button {
 }
 
 /* Used only on older APIs (API<19), where using inline-block is buggy and sometimes displays a very small container */
-span.img_container.compat {
+span.img_container.compat,
+span.video_container.compat {
     display: block;
 }
 
 /* Used on API<19 to darken the image so that the 'uploading' and 'retry' overlays can still be seen when the image is
 light */
-.img_container .upload-overlay-bg {
+.img_container .upload-overlay-bg,
+.video_container .upload-overlay-bg {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -48,19 +50,22 @@ light */
 than its containing image. The upload-overlay-bg is larger as well, leaving a dark line below the image. By setting
 display:block on the image and setting a width limit we get around this issue. */
 
-.img_container .upload-overlay-bg ~ img.uploading {
+.img_container .upload-overlay-bg ~ img.uploading,
+.video_container .upload-overlay-bg ~ img.uploading {
     display:block;
     max-width:100%;
 }
 
-.img_container .upload-overlay-bg ~ img.failed {
+.img_container .upload-overlay-bg ~ img.failed,
+.video_container .upload-overlay-bg ~ img.failed{
     display:block;
     max-width:100%;
 }
 
 /* Used only on older APIs (API<19) instead of a progress bar for uploading images, since the WebView at those API
    levels does not support the progress tag */
-.img_container .upload-overlay {
+.img_container .upload-overlay,
+.video_container .upload-overlay{
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
@@ -75,6 +80,7 @@ display:block on the image and setting a width limit we get around this issue. *
     color: white;
 }
 
-.img_container .upload-overlay.failed {
+.img_container .upload-overlay.failed,
+.video_container .upload-overlay.failed{
     visibility: hidden;
 }
