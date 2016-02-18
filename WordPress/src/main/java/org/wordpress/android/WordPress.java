@@ -125,7 +125,11 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
         protected boolean run() {
-            return PlansUtils.downloadGlobalPlans(WordPress.getContext(), null, null);
+            if (NetworkUtils.isNetworkAvailable(getContext())) {
+                return PlansUtils.downloadGlobalPlans();
+            } else {
+                return false;
+            }
         }
     };
 

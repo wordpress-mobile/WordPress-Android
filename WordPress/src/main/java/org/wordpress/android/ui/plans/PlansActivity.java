@@ -2,34 +2,42 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
-    public static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
-    public static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
+    private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
+    private static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
 
-    public static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
+    private static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
     private SitePlan[] mAvailablePlans;
@@ -47,18 +55,18 @@ public class PlansActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
-            if (savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS) instanceof SitePlan[]) {
-                mAvailablePlans = (SitePlan[]) savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
+            if (serializable instanceof SitePlan[]) {
+                mAvailablePlans = (SitePlan[]) serializable;
             }
             mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
 
-        //Make sure the blog_id passed to this activity is valid and the blog is available within the app
         if (WordPress.getBlog(mLocalBlogID) == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.plans_no_blog, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -77,10 +85,72 @@ public class PlansActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
-            actionBar.setTitle(getString(R.string.plan));
+            actionBar.setTitle(getString(R.string.plans));
             actionBar.setElevation(0.0f);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updatePurchaseUI(position);
+            }
+        });
+    }
+
+    private void updatePurchaseUI(int position) {
+        Fragment fragment = getPageAdapter().getItem(position);
+        if (!(fragment instanceof PlanFragment)) {
+            return;
+        }
+
+        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
+        Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
+
+        boolean showPurchaseButton;
+        if (sitePlan.isCurrentPlan()) {
+            showPurchaseButton = false;
+        } else {
+            long currentPlanId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+            long thisPlanId = sitePlan.getProductID();
+            if (currentPlanId == PlansConstants.FREE_PLAN_ID) {
+                showPurchaseButton = true;
+            } else if (currentPlanId == PlansConstants.PREMIUM_PLAN_ID) {
+                showPurchaseButton = (thisPlanId == PlansConstants.FREE_PLAN_ID);
+            } else if (currentPlanId == PlansConstants.BUSINESS_PLAN_ID) {
+                showPurchaseButton = false;
+            } else if (currentPlanId == PlansConstants.JETPACK_FREE_PLAN_ID) {
+                showPurchaseButton = true;
+            } else if (currentPlanId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
+                showPurchaseButton = (thisPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID);
+            } else if (currentPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID) {
+                showPurchaseButton = false;
+            } else {
+                showPurchaseButton = true;
+            }
+        }
+
+        ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
+        if (showPurchaseButton) {
+            String purchase = planDetails.getFormattedPrice()
+                    + " | <b>"
+                    + getString(R.string.plan_purchase_now)
+                    + "</b>";
+            TextView txtPurchase = (TextView) framePurchase.findViewById(R.id.text_purchase);
+            txtPurchase.setText(Html.fromHtml(purchase));
+            txtPurchase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startPurchaseProcess();
+                }
+            });
+        }
+
+        if (showPurchaseButton && framePurchase.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(framePurchase, true);
+        } else if (!showPurchaseButton && framePurchase.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(framePurchase, false);
         }
     }
 
@@ -92,8 +162,7 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
-        progress.setVisibility(View.GONE);
+        hideProgress();
 
         mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
@@ -119,7 +188,12 @@ public class PlansActivity extends AppCompatActivity {
         }
     }
 
-    private void setupLoadingUI() {
+    private void hideProgress() {
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
+        progress.setVisibility(View.GONE);
+    }
+
+    private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
         progress.setVisibility(View.VISIBLE);
     }
@@ -180,7 +254,7 @@ public class PlansActivity extends AppCompatActivity {
                 Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
                 finish();
             }
-            setupLoadingUI();
+            showProgress();
         } else {
             setupPlansUI();
         }
@@ -201,10 +275,8 @@ public class PlansActivity extends AppCompatActivity {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<>();
             if (mAvailablePlans != null) {
-                for(SitePlan current : mAvailablePlans) {
-                    PlanFragment fg = PlanFragment.newInstance();
-                    fg.setSitePlan(current);
-                    fragments.add(fg);
+                for (SitePlan plan : mAvailablePlans) {
+                    fragments.add(PlanFragment.newInstance(plan));
                 }
             }
 
@@ -214,15 +286,9 @@ public class PlansActivity extends AppCompatActivity {
         return mPageAdapter;
     }
 
-    private boolean hasPageAdapter() {
-        return mPageAdapter != null;
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int i = item.getItemId();
-        if (i == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -230,17 +296,27 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void startPurchaseProcess() {
+        // TODO: this should start the Google Play purchase process, for now it shows the
+        // post-purchase on-boarding
+        Intent intent = new Intent(this, PlanPostPurchaseActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
-    PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
+    private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
         public void onResponse(List<SitePlan> plans) {
-            mAvailablePlans = new SitePlan[plans.size()];
-            plans.toArray(mAvailablePlans);
-            setupPlansUI();
+            if (!isFinishing()) {
+                mAvailablePlans = new SitePlan[plans.size()];
+                plans.toArray(mAvailablePlans);
+                setupPlansUI();
+            }
         }
-        public void onError(Exception error) {
-            AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-            finish();
+        public void onError() {
+            if (!isFinishing()) {
+                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     };
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.plans;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -17,7 +16,6 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -62,12 +60,12 @@ public class PlansUtils {
 
     public interface AvailablePlansListener {
         void onResponse(List<SitePlan> plans);
-        void onError(Exception error);
+        void onError();
     }
 
     public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
         final Blog blog = WordPress.getBlog(localTableBlogID);
-        if (blog == null || !PlansUtils.isPlanFeatureAvailableForBlog(blog)) {
+        if (blog == null || !isPlanFeatureAvailableForBlog(blog)) {
             return false;
         }
 
@@ -76,9 +74,9 @@ public class PlansUtils {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
-                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server!");
+                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server");
                     if (listener != null) {
-                        listener.onError(new Exception("Unexpected empty response from server!"));
+                        listener.onError();
                     }
                     return;
                 }
@@ -88,20 +86,20 @@ public class PlansUtils {
                 try {
                     JSONArray planIDs = response.names();
                     if (planIDs != null) {
-                        for (int i=0; i < planIDs.length(); i ++) {
+                        for (int i = 0; i < planIDs.length(); i++) {
                             String currentKey = planIDs.getString(i);
                             JSONObject currentPlanJSON = response.getJSONObject(currentKey);
                             SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
                             plans.add(currentPlan);
                         }
                     }
-                    if (listener!= null) {
+                    if (listener != null) {
                         listener.onResponse(plans);
                     }
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-                    if (listener!= null) {
-                        listener.onError(e);
+                    if (listener != null) {
+                        listener.onError();
                     }
                 }
             }
@@ -109,8 +107,8 @@ public class PlansUtils {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.UTILS, "Error downloading site plans for the site with ID " + blog.getDotComBlogId(), volleyError);
-                if (listener!= null) {
-                    listener.onError(volleyError);
+                if (listener != null) {
+                    listener.onError();
                 }
             }
         });
@@ -221,12 +219,9 @@ public class PlansUtils {
         return  currentPlanFeatures;
     }
 
-    public static boolean downloadGlobalPlans(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
-        if (!NetworkUtils.isNetworkAvailable(ctx)) {
-            return false;
-        }
+    public static boolean downloadGlobalPlans() {
         Map<String, String> params = getDefaultRestCallParameters();
-        WordPress.getRestClientUtils().get("plans/", params, null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
@@ -235,22 +230,15 @@ public class PlansUtils {
                     AppPrefs.setGlobalPlans(response.toString());
 
                     // Load details of features from the server.
-                    downloadFeatures(ctx, null, null);
+                    downloadFeatures();
                 } else {
-                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading global Plans!");
-                }
-
-                if (listener != null) {
-                    listener.onResponse(response);
+                    AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans!");
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
-                if (errorListener!= null) {
-                    errorListener.onErrorResponse(volleyError);
-                }
             }
         });
         return true;
@@ -261,10 +249,7 @@ public class PlansUtils {
      *
      * Return true if the request is enqueued. False otherwise.
      */
-    public static boolean downloadFeatures(final Context ctx, final RestRequest.Listener listener, final RestRequest.ErrorListener errorListener) {
-        if (!NetworkUtils.isNetworkAvailable(ctx)) {
-            return false;
-        }
+    private static boolean downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -276,17 +261,11 @@ public class PlansUtils {
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features!");
                 }
-                if (listener != null) {
-                    listener.onResponse(response);
-                }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
-                if (errorListener!= null) {
-                    errorListener.onErrorResponse(volleyError);
-                }
             }
         });
 

@@ -246,4 +246,7 @@
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
 
+    <!-- plans -->
+    <dimen name="plan_indicator_size">12dp</dimen>
+    <dimen name="plan_indicator_margin">6dp</dimen>
 </resources>

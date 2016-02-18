@@ -3,7 +3,6 @@
     {
       "product_id": 2002,
       "product_name": "Free",
-      "product_name_en": "Free",
       "prices": {
         "USD": 0,
         "GBP": 0
@@ -11,8 +10,7 @@
       "product_name_short": "Free",
       "product_slug": "jetpack_free",
       "tagline": "Get started",
-      "shortdesc": "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.",
-      "description": "Spam Protection",
+      "description": "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.",
       "cost": 0,
       "bill_period": -1,
       "product_type": "jetpack",
@@ -27,7 +25,6 @@
     {
       "product_id": 2000,
       "product_name": "Premium",
-      "product_name_en": "Premium",
       "prices": {
         "USD": 99,
         "GBP": 74
@@ -35,8 +32,7 @@
       "product_name_short": "Premium",
       "product_slug": "jetpack_premium",
       "tagline": "Backup and spam protection",
-      "shortdesc": "Keep your site's content backed up and secure, and enable state-of-the-art spam filtering.",
-      "description": "Daily Backups, Automated Restores and Spam Protection",
+      "description": "Keep your site's content backed up and secure, and enable state-of-the-art spam filtering.",
       "feature_1": "Automated backups with easy restores",
       "feature_2": "30-day backup archive",
       "feature_3": "Help from the WordPress experts",
@@ -57,7 +53,6 @@
     {
       "product_id": 2001,
       "product_name": "Business",
-      "product_name_en": "Business",
       "prices": {
         "USD": 299,
         "GBP": 224
@@ -65,8 +60,7 @@
       "product_name_short": "Business",
       "product_slug": "jetpack_business",
       "tagline": "Faster backups, security scans, and repairs",
-      "shortdesc": "Get everything included with Premium, as well as real-time backups, security scans, and more.",
-      "description": "Daily Backups, Security Scanning, Spam Protection, Polls and Surveys",
+      "description": "Get everything included with Premium, as well as real-time backups, security scans, and more.",
       "feature_1": "Real-time database backups",
       "feature_2": "Unlimited  backup archive",
       "feature_3": "Daily security scans with one-click repairs",
@@ -87,7 +81,6 @@
     {
       "product_id": 1,
       "product_name": "WordPress.com Free",
-      "product_name_en": "Free",
       "prices": {
         "USD": 0,
         "AUD": 0,
@@ -99,8 +92,7 @@
       "product_name_short": "Free",
       "product_slug": "free_plan",
       "tagline": "Just get started",
-      "shortdesc": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
-      "description": "Just start blogging: get a free blog and be on your way to publishing your first post in less than five minutes.",
+      "description": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
       "capability": "manage_options",
       "cost": 0,
       "bill_period": -1,
@@ -115,7 +107,6 @@
     {
       "product_id": 1003,
       "product_name": "WordPress.com Premium",
-      "product_name_en": "WordPress.com Premium",
       "prices": {
         "USD": 99,
         "NZD": 139,
@@ -128,8 +119,7 @@
       "product_name_short": "Premium",
       "product_slug": "value_bundle",
       "tagline": "Supercharge your site",
-      "shortdesc": "Your own domain name, powerful customization options, and lots of space for audio and video.",
-      "description": "Get all of these great features to super-charge your blog. Includes a domain name of your choice or domain mapping for an existing domain, VideoPress, Custom Design, 10GB Space Upgrade, and No Ads.",
+      "description": "Your own domain name, powerful customization options, and lots of space for audio and video.",
       "capability": "manage_options",
       "cost": 85,
       "bill_period": 365,
@@ -159,7 +149,6 @@
     {
       "product_id": 1008,
       "product_name": "WordPress.com Business",
-      "product_name_en": "WordPress.com Business",
       "prices": {
         "USD": 299,
         "NZD": 399,
@@ -172,8 +161,7 @@
       "product_name_short": "Business",
       "product_slug": "business-bundle",
       "tagline": "Take it to the next level",
-      "shortdesc": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
-      "description": "All you need to build a great website:<ul><li>Chat live with a WordPress.com specialist, Monday to Friday between 7am and 7pm Eastern time.<\/li><li>Try any premium theme and change as often as you like, no extra charge.<\/li><li>Upload all the video and audio files you want with unlimited storage.<\/li><\/ul>Including all the features of WordPress.com Premium:<ul><li>A domain of your choice to replace your site\u2019s default address<\/li><li>Custom Design to customize your site\u2019s appearance and choose unique fonts and colors<\/li><li>VideoPress to embed beautiful HD video straight from your dashboard or from your mobile device<\/li><li>Hides all ads on your site<\/li><\/ul>",
+      "description": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
       "capability": "manage_options",
       "cost": 250,
       "bill_period": 365,

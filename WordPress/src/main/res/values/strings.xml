@@ -78,6 +78,10 @@
     <string name="unknown">Unknown</string>
     <string name="could_not_load_page">Could not load page</string>
 
+    <string name="button_skip">Skip</string>
+    <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
+
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -1276,7 +1280,8 @@
 
     <!-- Plans -->
     <string name="plan">Plan</string>
-    <string name="plans_no_blog">Plans couldn\'t be loaded for the required blog</string>
-    <string name="plans_loading_error">Plans couldn\'t be loaded for the required blog</string>
+    <string name="plans">Plans</string>
+    <string name="plans_loading_error">Unable to load plans</string>
+    <string name="plan_purchase_now">Purchase Now</string>
 
 </resources>
