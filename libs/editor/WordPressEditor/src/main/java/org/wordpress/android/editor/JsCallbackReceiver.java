@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.wordpress.android.editor.EditorFragmentAbstract.MediaType;
+
 public class JsCallbackReceiver {
     private static final String JS_CALLBACK_DELIMITER = "~";
 
@@ -103,6 +105,7 @@ public class JsCallbackReceiver {
                 mediaIds.add("id");
                 mediaIds.add("url");
                 mediaIds.add("meta");
+                mediaIds.add("type");
 
                 Set<String> mediaDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, mediaIds);
                 Map<String, String> mediaDataMap = Utils.buildMapFromKeyValuePairs(mediaDataSet);
@@ -113,6 +116,8 @@ public class JsCallbackReceiver {
                 if (mediaUrl != null) {
                     mediaUrl = Utils.decodeHtml(mediaUrl);
                 }
+
+                MediaType mediaType = MediaType.fromString(mediaDataMap.get("type"));
 
                 String mediaMeta = mediaDataMap.get("meta");
                 JSONObject mediaMetaJson = new JSONObject();
@@ -136,7 +141,7 @@ public class JsCallbackReceiver {
                     }
                 }
 
-                mListener.onMediaTapped(mediaId, mediaUrl, mediaMetaJson, uploadStatus);
+                mListener.onMediaTapped(mediaId, mediaType, mediaMetaJson, uploadStatus);
                 break;
             case CALLBACK_LINK_TAP:
                 // Extract and HTML-decode the link data from the callback params

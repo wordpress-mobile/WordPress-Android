@@ -1195,7 +1195,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
        posterURL = "wpposter.svg";
     }
 
-    var image = '<img video-data-wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
+    var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
     var html = videoContainerStart + progressElement + image + videoContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
@@ -1203,7 +1203,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
 };
 
 ZSSEditor.getVideoNodeWithIdentifier = function(videoNodeIdentifier) {
-    var videoNode = $('img[video-data-wpid="' + videoNodeIdentifier+'"]');
+    var videoNode = $('img[data-video_wpid="' + videoNodeIdentifier+'"]');
     if (videoNode.length == 0) {
         videoNode = $('video[data-wpid="' + videoNodeIdentifier+'"]');
     }
@@ -2769,7 +2769,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
-            if ( targetNode.dataset.wpid ) {
+            if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
                 this.sendImageTappedCallback( targetNode );
                 return;
             }
@@ -2842,17 +2842,21 @@ ZSSField.prototype.handleTapEvent = function(e) {
     }
 };
 
-ZSSField.prototype.sendImageTappedCallback = function( imageNode ) {
-    var meta = JSON.stringify( ZSSEditor.extractImageMeta( imageNode ) );
-    var imageId = "";
-    if ( imageNode.hasAttribute( 'data-wpid' ) ){
-        imageId = imageNode.getAttribute( 'data-wpid' )
+ZSSField.prototype.sendImageTappedCallback = function(imageNode) {
+    var meta = JSON.stringify(ZSSEditor.extractImageMeta(imageNode));
+    var imageId = "", mediaType = "image";
+    if (imageNode.hasAttribute('data-wpid')){
+        imageId = imageNode.getAttribute('data-wpid');
+    } else if (imageNode.hasAttribute('data-video_wpid')){
+        imageId = imageNode.getAttribute('data-video_wpid');
+        mediaType = "video";
     }
-    var arguments = ['id=' + encodeURIComponent( imageId ),
-                     'url=' + encodeURIComponent( imageNode.src ),
-                     'meta=' + encodeURIComponent( meta )];
+    var arguments = ['id=' + encodeURIComponent(imageId),
+                     'url=' + encodeURIComponent(imageNode.src),
+                     'meta=' + encodeURIComponent(meta),
+                     'type=' + mediaType];
 
-    var joinedArguments = arguments.join( defaultCallbackSeparator );
+    var joinedArguments = arguments.join(defaultCallbackSeparator);
 
     var thisObj = this;
 

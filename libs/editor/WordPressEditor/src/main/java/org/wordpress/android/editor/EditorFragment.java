@@ -994,8 +994,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, String url, final JSONObject meta, String uploadStatus) {
-        // TODO: Differentiate between image and video
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+        if (mediaType == null) {
+            return;
+        }
+
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
@@ -1035,12 +1038,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
                         mFailedMediaIds.remove(mediaId);
-                        mUploadingMedia.put(mediaId, MediaType.IMAGE);
+                        mUploadingMedia.put(mediaId, mediaType);
                     }
                 });
                 break;
             default:
-                // Show media options fragment
+                if (!mediaType.equals(MediaType.IMAGE)) {
+                    return;
+                }
+
+                // Only show image options fragment for image taps
                 FragmentManager fragmentManager = getFragmentManager();
 
                 if (fragmentManager.findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG) != null) {
