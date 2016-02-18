@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
+import com.google.android.gms.auth.api.credentials.Credential;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -77,6 +79,14 @@ public class SignInActivity extends FragmentActivity {
                 AppLog.d(T.NUX, "Credentials saved");
             } else {
                 AppLog.d(T.NUX, "Credentials save cancelled");
+            }
+        } else if (requestCode == SMART_LOCK_READ) {
+            if (resultCode == RESULT_OK) {
+                AppLog.d(T.NUX, "Credentials retrieved");
+                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                mSignInFragment.onCredentialRetrieved(credential);
+            } else {
+                AppLog.e(T.NUX, "Credential read failed");
             }
         } else if (resultCode == RESULT_OK && data != null) {
             String username = data.getStringExtra("username");

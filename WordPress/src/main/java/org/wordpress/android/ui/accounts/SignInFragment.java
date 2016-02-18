@@ -285,8 +285,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         Status status = result.getStatus();
                         if (status.isSuccess()) {
                             Credential credential = result.getCredential();
-                            AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-                            signInDotComUser(credential.getId(), credential.getPassword());
+                            onCredentialRetrieved(credential);
                         } else {
                             if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
                                 try {
@@ -303,6 +302,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         }
                     }
                 });
+    }
+
+    public void onCredentialRetrieved(Credential credential) {
+        AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
+        signInDotComUser(credential.getId(), credential.getPassword());
     }
 
     @Override
