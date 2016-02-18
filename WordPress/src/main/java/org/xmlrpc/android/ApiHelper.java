@@ -138,6 +138,10 @@ public class ApiHelper {
         public void onSuccess();
     }
 
+    public interface DatabasePersistCallback {
+        void onDataReadyToSave(List list);
+    }
+
     public static class GetPostFormatsTask extends HelperAsyncTask<Blog, Void, Object> {
         private Blog mBlog;
 
@@ -334,7 +338,14 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mBlog, commentParams);
+                ApiHelper.refreshComments(mBlog, commentParams, new DatabasePersistCallback() {
+                    @Override
+                    public void onDataReadyToSave(List list) {
+                        int localBlogId = mBlog.getLocalTableBlogId();
+                        CommentTable.deleteCommentsForBlog(localBlogId);
+                        CommentTable.saveComments(localBlogId, (CommentList)list);
+                    }
+                });
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -406,7 +417,7 @@ public class ApiHelper {
         return numDeleted;
     }
 
-    public static CommentList refreshComments(Blog blog, Object[] commentParams)
+    public static CommentList refreshComments(Blog blog, Object[] commentParams, DatabasePersistCallback dbCallback)
             throws XMLRPCException, IOException, XmlPullParserException {
         if (blog == null) {
             return null;
@@ -454,8 +465,9 @@ public class ApiHelper {
             comments.add(comment);
         }
 
-        int localBlogId = blog.getLocalTableBlogId();
-        CommentTable.saveComments(localBlogId, comments);
+        if (dbCallback != null){
+            dbCallback.onDataReadyToSave(comments);
+        }
 
         return comments;
     }
