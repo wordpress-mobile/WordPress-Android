@@ -90,11 +90,17 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (NetworkUtils.isNetworkAvailable(this)) {
             AccountHelper.getDefaultAccount().fetchAccountSettings();
         }
-
-        EventBus.getDefault().register(this);
     }
 
     @Override

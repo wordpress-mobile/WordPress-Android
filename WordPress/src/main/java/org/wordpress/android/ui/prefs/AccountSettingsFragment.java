@@ -109,6 +109,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     @Override
     public void onResume() {
         super.onResume();
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            AccountHelper.getDefaultAccount().fetchAccountSettings();
+        }
 
         getActivity().setTitle(R.string.account_settings);
     }
@@ -116,9 +119,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     @Override
     public void onStart() {
         super.onStart();
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
-        }
 
         EventBus.getDefault().register(this);
     }
