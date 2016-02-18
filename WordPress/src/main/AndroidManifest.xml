@@ -106,7 +106,7 @@
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.prefs.SettingsActivity"
+            android:name=".ui.prefs.AccountSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
             android:theme="@style/CalypsoTheme"/>
         <activity

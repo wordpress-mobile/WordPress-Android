@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
-public class SettingsActivity extends AppCompatActivity {
-    private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
+public class AccountSettingsActivity extends AppCompatActivity {
+    private static final String KEY_ACCOUNT_SETTINGS_FRAGMENT = "account-settings-fragment";
     private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
 
-    private SettingsFragment mSettingsFragment;
+    private AccountSettingsFragment mAccountSettingsFragment;
     private PasscodePreferenceFragment mPasscodePreferenceFragment;
 
     @Override
@@ -27,18 +27,18 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        mSettingsFragment = (SettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+        mAccountSettingsFragment = (AccountSettingsFragment) fragmentManager.findFragmentByTag(KEY_ACCOUNT_SETTINGS_FRAGMENT);
         mPasscodePreferenceFragment = (PasscodePreferenceFragment) fragmentManager.findFragmentByTag(KEY_PASSCODE_FRAGMENT);
-        if (mSettingsFragment == null || mPasscodePreferenceFragment == null) {
+        if (mAccountSettingsFragment == null || mPasscodePreferenceFragment == null) {
             Bundle passcodeArgs = new Bundle();
             passcodeArgs.putBoolean(PasscodePreferenceFragment.KEY_SHOULD_INFLATE, false);
-            mSettingsFragment = new SettingsFragment();
+            mAccountSettingsFragment = new AccountSettingsFragment();
             mPasscodePreferenceFragment = new PasscodePreferenceFragment();
             mPasscodePreferenceFragment.setArguments(passcodeArgs);
 
             fragmentManager.beginTransaction()
                     .replace(android.R.id.content, mPasscodePreferenceFragment, KEY_PASSCODE_FRAGMENT)
-                    .add(android.R.id.content, mSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                    .add(android.R.id.content, mAccountSettingsFragment, KEY_ACCOUNT_SETTINGS_FRAGMENT)
                     .commit();
         }
     }
@@ -48,10 +48,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onStart();
 
         Preference togglePref =
-                mSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
+                mAccountSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
                         .pref_key_passcode_toggle));
         Preference changePref =
-                mSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
+                mAccountSettingsFragment.findPreference(getString(org.wordpress.passcodelock.R.string
                         .pref_key_change_passcode));
 
         if (togglePref != null && changePref != null) {

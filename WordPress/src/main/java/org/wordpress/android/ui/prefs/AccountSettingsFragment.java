@@ -45,7 +45,7 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 
 @SuppressWarnings("deprecation")
-public class SettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class AccountSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
