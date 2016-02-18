@@ -37,8 +37,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
 
     public static final String MEDIA_REMOTE_ID_SAMPLE = "123";
 
-    private static final int SELECT_PHOTO_MENU_POSITION = 0;
-    private static final int SELECT_PHOTO_FAIL_MENU_POSITION = 1;
+    private static final int SELECT_IMAGE_MENU_POSITION = 0;
+    private static final int SELECT_IMAGE_FAIL_MENU_POSITION = 1;
     private static final int SELECT_VIDEO_MENU_POSITION = 2;
     private static final int SELECT_VIDEO_FAIL_MENU_POSITION = 3;
 
@@ -81,8 +81,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_PHOTO_MENU_POSITION, 0, getString(R.string.select_photo));
-        menu.add(0, SELECT_PHOTO_FAIL_MENU_POSITION, 0, getString(R.string.select_photo_fail));
+        menu.add(0, SELECT_IMAGE_MENU_POSITION, 0, getString(R.string.select_image));
+        menu.add(0, SELECT_IMAGE_FAIL_MENU_POSITION, 0, getString(R.string.select_image_fail));
         menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getString(R.string.select_video));
         menu.add(0, SELECT_VIDEO_FAIL_MENU_POSITION, 0, getString(R.string.select_video_fail));
     }
@@ -92,17 +92,17 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         Intent intent = new Intent(Intent.ACTION_PICK);
 
         switch (item.getItemId()) {
-            case SELECT_PHOTO_MENU_POSITION:
+            case SELECT_IMAGE_MENU_POSITION:
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent = Intent.createChooser(intent, getString(R.string.select_photo));
+                intent = Intent.createChooser(intent, getString(R.string.select_image));
 
                 startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 return true;
-            case SELECT_PHOTO_FAIL_MENU_POSITION:
+            case SELECT_IMAGE_FAIL_MENU_POSITION:
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent = Intent.createChooser(intent, getString(R.string.select_photo_fail));
+                intent = Intent.createChooser(intent, getString(R.string.select_image_fail));
 
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
