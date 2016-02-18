@@ -20,7 +20,7 @@ import de.greenrobot.event.EventBus;
  */
 public class Account extends AccountModel {
     public void fetchAccountDetails() {
-        if (!this.hasAccessToken()) {
+        if (!hasAccessToken()) {
             AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the fetch account details request");
             return;
         }
@@ -47,7 +47,7 @@ public class Account extends AccountModel {
     }
 
     public void fetchAccountSettings() {
-        if (!this.hasAccessToken()) {
+        if (!hasAccessToken()) {
             AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the fetch account settings request");
             return;
         }
@@ -74,7 +74,7 @@ public class Account extends AccountModel {
     }
 
     public void postAccountSettings(Map<String, String> params) {
-        if (!this.hasAccessToken()) {
+        if (!hasAccessToken()) {
             AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the post account settings request");
             return;
         }
