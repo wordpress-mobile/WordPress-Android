@@ -691,14 +691,17 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
+                progressDialog.dismiss();
                 showPurchasesOrDeleteSiteDialog(response, currentBlog);
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
                 AppLog.e(AppLog.T.API, error.toString());
             }
