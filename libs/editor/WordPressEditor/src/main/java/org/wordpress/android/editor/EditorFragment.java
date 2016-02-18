@@ -757,9 +757,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 } else {
                     String id = mediaFile.getMediaId();
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
-                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
-                    mUploadingMedia.put(id, MediaType.IMAGE);
+                    if (mediaFile.isVideo()) {
+                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
+                                "');");
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + id + ", " + 0 + ");");
+                        mUploadingMedia.put(id, MediaType.VIDEO);
+                    } else {
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl +
+                                "');");
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
+                        mUploadingMedia.put(id, MediaType.IMAGE);
+                    }
                 }
             }
         });
@@ -832,14 +841,22 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                String progressString = String.format(Locale.US, "%.1f", progress);
-                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
-                        progressString + ");");
-            }
-        });
+        final MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    String progressString = String.format(Locale.US, "%.1f", progress);
+                    if (mediaType.equals(MediaType.IMAGE)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
+                                progressString + ");");
+                    } else if (mediaType.equals(MediaType.VIDEO)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", " +
+                                progressString + ");");
+                    }
+                }
+            });
+        }
     }
 
     @Override
