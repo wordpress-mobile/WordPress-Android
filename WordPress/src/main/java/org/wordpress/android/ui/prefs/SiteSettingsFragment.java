@@ -277,9 +277,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                     onPreferenceChange(mMultipleLinksPref, numLinks);
                     break;
-				case DELETE_SITE_REQUEST_CODE:
-                	deleteSite();
-                	break;
+            }
+        } else {
+            switch (requestCode) {
+                case DELETE_SITE_REQUEST_CODE:
+                    deleteSite();
+                    break;
             }
         }
 

@@ -83,7 +83,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
             public void onClick(DialogInterface dialog, int which) {
                 Fragment target = getTargetFragment();
                 if (target != null) {
-                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
+                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
                 }
 
                 dismiss();
