@@ -703,7 +703,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
                 ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
-                AppLog.e(AppLog.T.API, error.toString());
+                AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
             }
         });
     }
@@ -717,7 +717,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 showDeleteSiteDialog();
             }
         } catch (JSONException e) {
-            AppLog.e(AppLog.T.API, e.toString());
+            AppLog.e(AppLog.T.API, "Error occurred while trying to delete site: " + e.toString());
         }
     }
 
