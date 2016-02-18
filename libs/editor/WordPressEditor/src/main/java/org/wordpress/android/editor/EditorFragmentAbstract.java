@@ -27,6 +27,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();
 
+    public enum MediaType {
+        IMAGE, VIDEO;
+    }
+
     private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
     private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
 

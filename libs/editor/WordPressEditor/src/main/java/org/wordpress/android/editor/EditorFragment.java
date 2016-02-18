@@ -95,7 +95,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
     private Set<MediaGallery> mWaitingGalleries;
-    private Set<String> mUploadingMediaIds;
+    private Map<String, MediaType> mUploadingMedia;
     private Set<String> mFailedMediaIds;
     private MediaGallery mUploadingMediaGallery;
 
@@ -136,7 +136,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWaitingMediaFiles = new ConcurrentHashMap<>();
         mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
-        mUploadingMediaIds = new HashSet<>();
+        mUploadingMedia = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
         // -- WebView configuration
@@ -233,7 +233,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onDetach() {
         // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMediaIds) {
+        for (String mediaId : mUploadingMedia.keySet()) {
             mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
         }
         super.onDetach();
@@ -398,7 +398,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
             // Don't switch to HTML mode if currently uploading media
-            if (!mUploadingMediaIds.isEmpty()) {
+            if (!mUploadingMedia.isEmpty()) {
                 ((ToggleButton) v).setChecked(false);
 
                 if (isAdded()) {
@@ -759,7 +759,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     String id = mediaFile.getMediaId();
                     mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl + "');");
                     mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
-                    mUploadingMediaIds.add(id);
+                    mUploadingMedia.put(id, MediaType.IMAGE);
                 }
             }
         });
@@ -849,7 +849,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
                 mFailedMediaIds.add(mediaId);
-                mUploadingMediaIds.remove(mediaId);
+                mUploadingMedia.remove(mediaId);
             }
         });
     }
@@ -969,6 +969,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void onMediaTapped(final String mediaId, String url, final JSONObject meta, String uploadStatus) {
+        // TODO: Differentiate between image and video
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
@@ -982,7 +983,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                             @Override
                             public void run() {
                                 mWebView.execJavaScriptFromString("ZSSEditor.removeImage(" + mediaId + ");");
-                                mUploadingMediaIds.remove(mediaId);
+                                mUploadingMedia.remove(mediaId);
                             }
                         });
                         dialog.dismiss();
@@ -1008,7 +1009,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
                         mFailedMediaIds.remove(mediaId);
-                        mUploadingMediaIds.add(mediaId);
+                        mUploadingMedia.put(mediaId, MediaType.IMAGE);
                     }
                 });
                 break;
