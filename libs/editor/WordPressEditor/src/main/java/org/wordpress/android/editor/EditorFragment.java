@@ -873,7 +873,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                MediaType mediaType = mUploadingMedia.get(mediaId);
+                switch (mediaType) {
+                    case IMAGE:
+                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                        break;
+                    case VIDEO:
+                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ");");
+                }
                 mFailedMediaIds.add(mediaId);
                 mUploadingMedia.remove(mediaId);
             }
@@ -1041,8 +1048,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId + ");");
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " + 0 + ");");
+                        switch (mediaType) {
+                            case IMAGE:
+                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                        + ");");
+                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", "
+                                        + 0 + ");");
+                                break;
+                            case VIDEO:
+                                mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                        + ");");
+                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", "
+                                        + 0 + ");");
+                        }
                         mFailedMediaIds.remove(mediaId);
                         mUploadingMedia.put(mediaId, mediaType);
                     }
