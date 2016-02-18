@@ -1226,38 +1226,42 @@ ZSSEditor.getVideoContainerNodeWithIdentifier = function(videoNodeIdentifier) {
     return $('#'+this.getVideoContainerIdentifier(videoNodeIdentifier));
 };
 
-
 /**
- *  @brief      Replaces a local Video URL with a remote Video URL.  Useful for videos that have
- *              just finished uploading.
- *  @details    The remote Video can be available after a while, when uploading Videos.  This method
- *              allows for the remote URL to be loaded once the upload completes.
+ *  @brief      Replaces the image placeholder with a video element containing the uploaded video's attributes,
+ *              and removes the upload container.
  *
- *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.  It exists as
- *                                      a mechanism to update the Video node with the remote URL
- *                                      when replaceLocalVideoWithRemoteVideo() is called.
- *  @param      remoteVideoUrl          The URL of the remote Video to display.
- *  @param      remotePosterUrl         The URL of thre remote poster image to display
- *  @param      videopressID          VideoPress Guid of the video if any
+ *  @param      videoNodeIdentifier     The unique id of the video upload
+ *  @param      remoteVideoUrl          The URL of the remote video to display
+ *  @param      remotePosterUrl         The URL of the remote poster image to display
+ *  @param      videopressID            The VideoPress ID of the video, where applicable
  */
 ZSSEditor.replaceLocalVideoWithRemoteVideo = function(videoNodeIdentifier, remoteVideoUrl, remotePosterUrl, videopressID) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
+    var imagePlaceholderNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
 
-    if (videoNode.length == 0) {
-        // even if the Video is not present anymore we must do callback
-        this.markVideoUploadDone(videoNodeIdentifier);
-        return;
+    if (imagePlaceholderNode.length != 0) {
+        var videoNode = document.createElement("video");
+        videoNode.setAttribute('webkit-playsinline', '');
+        videoNode.setAttribute('onclick', '');
+        videoNode.setAttribute('src', remoteVideoUrl);
+        videoNode.setAttribute('controls', 'controls');
+        videoNode.setAttribute('preload', 'metadata');
+        videoNode.setAttribute('data-wpid', videoNodeIdentifier);
+        if (videopressID != '') {
+           videoNode.setAttribute('data-wpvideopress', videopressID);
+        }
+        videoNode.setAttribute('poster', remotePosterUrl);
+
+        // Replace upload container and placeholder image with the uploaded video node
+        var containerNode = imagePlaceholderNode.parent();
+        containerNode.replaceWith(videoNode);
     }
-    videoNode.attr('src', remoteVideoUrl);
-    videoNode.attr('controls', '');
-    videoNode.attr('preload', 'metadata');
-    if (videopressID != '') {
-        videoNode.attr('data-wpvideopress', videopressID);
-    }
-    videoNode.attr('poster', remotePosterUrl);
+
+    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
+    ZSSEditor.callback("callback-input", joinedArguments);
+    // We invoke the sendVideoReplacedCallback with a delay to avoid for
+    // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
-    videoNode.on('error', function(event) { videoNode.load()} );
-    this.markVideoUploadDone(videoNodeIdentifier);
+    setTimeout(function() { thisObj.sendVideoReplacedCallback(videoNodeIdentifier);}, 500);
 };
 
 /**
@@ -1280,37 +1284,6 @@ ZSSEditor.setProgressOnVideo = function(videoNodeIdentifier, progress) {
         return;
     }
     videoProgressNode.attr("value",progress);
-};
-
-/**
- *  @brief      Notifies that the Video upload as finished
- *
- *  @param      VideoNodeIdentifier     The unique Video ID for the uploaded Video
- */
-ZSSEditor.markVideoUploadDone = function(videoNodeIdentifier) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length > 0) {
-
-        // remove identifier attributed from Video
-        videoNode.removeAttr('data-wpid');
-
-        // remove uploading style
-        videoNode.removeClass("uploading");
-        videoNode.removeAttr("class");
-
-        // Remove all extra formatting nodes for progress
-        if (videoNode.parent().attr("id") == this.getVideoContainerIdentifier(videoNodeIdentifier)) {
-            // remove id from container to avoid to report a user removal
-            videoNode.parent().attr("id", "");
-            videoNode.parent().replaceWith(videoNode);
-        }
-    }
-    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-    ZSSEditor.callback("callback-input", joinedArguments);
-    // We invoke the sendVideoReplacedCallback with a delay to avoid for
-    // it to be ignored by the webview because of the previous callback being done.
-    var thisObj = this;
-    setTimeout(function() { thisObj.sendVideoReplacedCallback(videoNodeIdentifier);}, 500);
 };
 
 /**

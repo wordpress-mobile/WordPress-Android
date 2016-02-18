@@ -829,14 +829,23 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadSucceeded(final String mediaId, final String remoteId, final String remoteUrl) {
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId + ", '" +
-                        remoteId + "', '" + remoteUrl + "');");
-                mUploadingMediaIds.remove(mediaId);
-            }
-        });
+        final MediaType mediaType = mUploadingMedia.get(mediaId);
+        if (mediaType != null) {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mediaType.equals(MediaType.IMAGE)) {
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId +
+                                ", '" + remoteId + "', '" + remoteUrl + "');");
+                    } else if (mediaType.equals(MediaType.VIDEO)) {
+                        // TODO: Obtain the poster URL and the VideoPress id (where applicable) and pass them here
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + mediaId +
+                                ", '" + remoteUrl + "', '" + "', '');");
+                    }
+                    mUploadingMedia.remove(mediaId);
+                }
+            });
+        }
     }
 
     @Override
