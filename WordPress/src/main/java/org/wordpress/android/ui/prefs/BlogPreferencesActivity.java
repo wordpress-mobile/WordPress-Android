@@ -217,6 +217,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (!event.isConnected()) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
             }
+            siteSettingsFragment.setEditingEnabled(event.isConnected());
 
             // TODO: add this back when delete blog is back
             //https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
