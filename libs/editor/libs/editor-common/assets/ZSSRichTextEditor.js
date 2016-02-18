@@ -1138,16 +1138,25 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
  *  @brief Inserts a video tag using the videoURL as source and posterURL as the
  *  image to show while video is loading.
  *
- *  @param videoURL  the url of the video to present
- *  @param posterURL the url of an image to show while the video is loading
- *  @param alt       the alt description when the video is not supported.
+ *  @param videoURL     the url of the video
+ *  @param posterURL    the url of an image to show while the video is loading
+ *  @param videoPressID the VideoPress ID of the video, when applicable
  *
  */
-ZSSEditor.insertVideo = function(videoURL, posterURL, alt) {
-    var html = '<video controls webkit-playsinline poster="' + posterURL+ '"><source src="'
-    + videoURL + '" type="video/mp4"/>' + alt + '</video>';
+ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
+    var html = '<video webkit-playsinline src="' + videoURL + '" onclick="" controls="controls" preload="metadata"';
 
-    this.insertHTML(html);
+    if (posterURL != '') {
+        html += ' poster="' + posterURL + '"';
+    }
+
+    if (videopressID != '') {
+        html += ' data-wpvideopress="' + videopressID + '"';
+    }
+
+    html += '></video>';
+
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
