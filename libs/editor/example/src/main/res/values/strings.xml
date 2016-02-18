@@ -15,4 +15,6 @@
 
     <string name="select_photo">Select a photo</string>
     <string name="select_photo_fail">Select a photo (failure demo)</string>
+    <string name="select_video">Select a video</string>
+    <string name="select_video_fail">Select a video (failure demo)</string>
 </resources>
