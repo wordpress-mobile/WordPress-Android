@@ -716,7 +716,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onErrorResponse(VolleyError error) {
                 ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
-                AppLog.e(AppLog.T.MAIN, error.toString());
+                AppLog.e(AppLog.T.API, error.toString());
             }
         });
     }
@@ -730,7 +730,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 showDeleteSiteDialog();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.API, e.toString());
         }
     }
 
