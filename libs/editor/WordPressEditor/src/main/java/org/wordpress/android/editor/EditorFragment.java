@@ -1011,7 +1011,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.post(new Runnable() {
                             @Override
                             public void run() {
-                                mWebView.execJavaScriptFromString("ZSSEditor.removeImage(" + mediaId + ");");
+                                switch (mediaType) {
+                                    case IMAGE:
+                                        mWebView.execJavaScriptFromString("ZSSEditor.removeImage(" + mediaId + ");");
+                                        break;
+                                    case VIDEO:
+                                        mWebView.execJavaScriptFromString("ZSSEditor.removeVideo(" + mediaId + ");");
+                                }
                                 mUploadingMedia.remove(mediaId);
                             }
                         });
