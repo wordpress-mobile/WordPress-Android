@@ -14,6 +14,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -89,6 +90,10 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            AccountHelper.getDefaultAccount().fetchAccountSettings();
+        }
+
         EventBus.getDefault().register(this);
     }
 

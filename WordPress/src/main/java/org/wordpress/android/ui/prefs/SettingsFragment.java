@@ -32,6 +32,7 @@ import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPPrefUtils;
@@ -115,6 +116,10 @@ public class SettingsFragment extends PreferenceFragment implements OnPreference
     @Override
     public void onStart() {
         super.onStart();
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            AccountHelper.getDefaultAccount().fetchAccountSettings();
+        }
+
         EventBus.getDefault().register(this);
     }
 
