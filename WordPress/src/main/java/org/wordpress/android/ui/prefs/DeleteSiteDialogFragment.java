@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -82,7 +83,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
             public void onClick(DialogInterface dialog, int which) {
                 Fragment target = getTargetFragment();
                 if (target != null) {
-                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+                    target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
                 }
 
                 dismiss();
