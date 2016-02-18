@@ -1161,31 +1161,53 @@ ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
 };
 
 /**
- *  @brief      Inserts a video tag marked with a identifier using only a poster image.  Useful for videos that need to be uploaded.
- *  @details    By inserting a video with only a porter URL, we can make sure the video element is shown to the user
- *              as soon as it's selected for uploading.  Once the video is successfully uploaded
- *              the application should call replaceLocalVideoWithRemoteVideo().
+ *  @brief      Inserts a placeholder image tag for in-progress video uploads, marked with an identifier.
+ *  @details    The image shown can be the video's poster if available - otherwise the default poster image is used.
+ *              Using an image instead of a video placeholder is a departure from iOS, necessary because the original
+ *              method caused occasional WebView freezes on Android.
+ *              Once the video is successfully uploaded, the application should call replaceLocalVideoWithRemoteVideo().
  *
  *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.  It exists as
  *                                      a mechanism to update the video node with the remote URL
  *                                      when replaceLocalVideoWithRemoteVideo() is called.
  *  @param      posterURL               The URL of a poster image to display while the video is being uploaded.
  */
-ZSSEditor.insertInProgressVideoWithIDUsingPosterImage = function(videoNodeIdentifier, posterURL) {
-    var space = '&nbsp';
+ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var progressIdentifier = this.getVideoProgressIdentifier(videoNodeIdentifier);
     var videoContainerIdentifier = this.getVideoContainerIdentifier(videoNodeIdentifier);
-    var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="video_container">';
+
+    if (ZSSEditor.androidApiLevel > 18) {
+        var videoContainerClass = 'video_container';
+        var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator"'
+                + 'contenteditable="false"></progress>';
+    } else {
+        // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
+        var videoContainerClass = 'video_container compat';
+        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.getStringUploading()
+                + '</span><span class="upload-overlay-bg"></span>';
+    }
+
+    var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="' + videoContainerClass
+            + '" contenteditable="false" data-failed="' + nativeState.getStringTapToRetry() + '">';
     var videoContainerEnd = '</span>';
-    var progress = '<progress id="' + progressIdentifier + '" value=0  class="wp_media_indicator"  contenteditable="false"></progress>';
-    var video = '<video data-wpid="' + videoNodeIdentifier + '" webkit-playsinline poster="' + posterURL + '" onclick="" class="uploading"></video>';
-    var html =  space + videoContainerStart + progress + video + videoContainerEnd + space;
-    this.insertHTML(html);
+
+    if (posterURL == '') {
+       posterURL = "wpposter.svg";
+    }
+
+    var image = '<img video-data-wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
+    var html = videoContainerStart + progressElement + image + videoContainerEnd;
+
+    this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
 
 ZSSEditor.getVideoNodeWithIdentifier = function(videoNodeIdentifier) {
-    return $('video[data-wpid="' + videoNodeIdentifier+'"]');
+    var videoNode = $('img[video-data-wpid="' + videoNodeIdentifier+'"]');
+    if (videoNode.length == 0) {
+        videoNode = $('video[data-wpid="' + videoNodeIdentifier+'"]');
+    }
+    return videoNode;
 };
 
 ZSSEditor.getVideoProgressIdentifier = function(videoNodeIdentifier) {
