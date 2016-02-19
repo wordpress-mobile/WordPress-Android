@@ -7,9 +7,9 @@ import android.test.mock.MockCursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wordpress.android.util.DatabaseUtils.*;
+import static org.wordpress.android.util.SqlUtils.*;
 
-public class DatabaseUtilsTest extends InstrumentationTestCase {
+public class SqlUtilsTest extends InstrumentationTestCase {
     public void testInvalidIntFromCursor() {
         Cursor testCursor = new TestCursor();
         assertEquals(INVALID_INTEGER, getIntFromCursor(testCursor, INVALID_COLUMN_NAME));

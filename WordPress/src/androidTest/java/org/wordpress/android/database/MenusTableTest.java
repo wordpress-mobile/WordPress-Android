@@ -11,7 +11,8 @@ import org.wordpress.android.datasets.MenusTable;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
-import org.wordpress.android.util.DatabaseUtils;
+
+import static org.wordpress.android.util.SqlUtils.*;
 
 public class MenusTableTest extends InstrumentationTestCase {
     private static final String CONTEXT_RENAME_PREFIX = "test_";
@@ -37,13 +38,13 @@ public class MenusTableTest extends InstrumentationTestCase {
 
     public void testDeleteTables() {
         SQLiteDatabase db = WordPress.wpDB.getDatabase();
-        assertTrue(DatabaseUtils.doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
-        assertTrue(DatabaseUtils.doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
-        assertTrue(DatabaseUtils.doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+        assertTrue(doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
+        assertTrue(doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
+        assertTrue(doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
         MenusTable.deleteMenusTables();
-        assertFalse(DatabaseUtils.doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
-        assertFalse(DatabaseUtils.doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
-        assertFalse(DatabaseUtils.doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
+        assertFalse(doesTableExist(db, MenuModel.MENUS_TABLE_NAME));
+        assertFalse(doesTableExist(db, MenuItemModel.MENU_ITEMS_TABLE_NAME));
+        assertFalse(doesTableExist(db, MenuLocationModel.MENU_LOCATIONS_TABLE_NAME));
         MenusTable.createMenusTables(db);
     }
 

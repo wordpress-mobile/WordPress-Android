@@ -9,7 +9,7 @@ import android.test.RenamingDelegatingContext;
 import android.test.mock.MockCursor;
 
 import org.wordpress.android.TestUtils;
-import org.wordpress.android.util.DatabaseUtils;
+import static org.wordpress.android.util.SqlUtils.*;
 
 public class MenuModelTest extends InstrumentationTestCase {
     protected Context mTestContext;
@@ -72,8 +72,8 @@ public class MenuModelTest extends InstrumentationTestCase {
         assertEquals(TEST_ID, testMenu.menuId);
         assertEquals(TEST_NAME, testMenu.name);
         assertEquals(TEST_DETAILS, testMenu.details);
-        assertEquals(TEST_LOCATIONS, DatabaseUtils.separatedStringList(testMenu.locations, ","));
-        assertEquals(TEST_ITEMS, DatabaseUtils.separatedStringList(testMenu.menuItems, ","));
+        assertEquals(TEST_LOCATIONS, separatedStringList(testMenu.locations, ","));
+        assertEquals(TEST_ITEMS, separatedStringList(testMenu.menuItems, ","));
     }
 
     private class TestCursor extends MockCursor {

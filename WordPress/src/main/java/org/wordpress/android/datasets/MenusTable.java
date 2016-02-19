@@ -9,7 +9,7 @@ import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 
-import static org.wordpress.android.util.DatabaseUtils.*;
+import static org.wordpress.android.util.SqlUtils.*;
 
 /**
  * Provides methods to interface with a local SQL database for Menus related queries.

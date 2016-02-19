@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static org.wordpress.android.util.DatabaseUtils.separatedStringList;
+import static org.wordpress.android.util.SqlUtils.separatedStringList;
 
 class SelfHostedSiteSettings extends SiteSettingsInterface {
     // XML-RPC wp.getOptions keys

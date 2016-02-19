@@ -9,7 +9,7 @@ import org.wordpress.android.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wordpress.android.util.DatabaseUtils.*;
+import static org.wordpress.android.util.SqlUtils.*;
 
 /**
  * Describes a Menu Item and provides convenience methods for local database (de)serialization.

@@ -6,7 +6,7 @@ import android.database.Cursor;
 
 import org.wordpress.android.util.StringUtils;
 
-import static org.wordpress.android.util.DatabaseUtils.*;
+import static org.wordpress.android.util.SqlUtils.*;
 
 /**
  * Describes a Menu Location and provides convenience methods for local database (de)serialization.

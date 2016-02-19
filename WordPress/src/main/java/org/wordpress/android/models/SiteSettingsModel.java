@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wordpress.android.util.DatabaseUtils.*;
+import static org.wordpress.android.util.SqlUtils.*;
 
 /**
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.

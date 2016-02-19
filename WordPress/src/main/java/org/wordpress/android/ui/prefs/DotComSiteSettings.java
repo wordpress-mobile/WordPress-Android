@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.wordpress.android.util.DatabaseUtils.separatedStringList;
+import static org.wordpress.android.util.SqlUtils.separatedStringList;
 
 class DotComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
