@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -12,6 +13,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.ApiHelper.Param;
@@ -291,7 +293,7 @@ public abstract class SiteSettingsInterface {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
-                categoryNames.put(model.id, model.name);
+                categoryNames.put(model.id, Html.fromHtml(model.name).toString());
             }
         }
 
@@ -305,7 +307,7 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
-                return model.name;
+                return Html.fromHtml(model.name).toString();
             }
         }
 
@@ -337,6 +339,12 @@ public abstract class SiteSettingsInterface {
         return mSettings.showRelatedPostImages;
     }
 
+    public @NonNull String getRelatedPostsDescription() {
+        if (mActivity == null) return "";
+        String desc = mActivity.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
+        return StringUtils.capitalize(desc);
+    }
+
     public boolean getAllowComments() {
         return mSettings.allowComments;
     }
@@ -357,14 +365,23 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescription() {
-        return getCloseAfterDescription(getCloseAfter());
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
-    public @NonNull String getCloseAfterDescription(int period) {
+    public int getCloseAfterPeriodForDescription() {
+        return !getShouldCloseAfter() ? 0 : getCloseAfter();
+    }
+
+    public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
+    }
+
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
-        if (period == 0) return mActivity.getString(R.string.never);
+        if (!getShouldCloseAfter() || period == 0) return mActivity.getString(R.string.never);
+
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
 
@@ -394,12 +411,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.threadingLevels;
     }
 
+    public int getThreadingLevelsForDescription() {
+        return !getShouldThreadComments() ? 1 : getThreadingLevels();
+    }
+
     public @NonNull String getThreadingDescription() {
+        return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
+    }
+
+    public @NonNull String getThreadingDescriptionForLevel(int level) {
         if (mActivity == null) return "";
 
-        int levels = getThreadingLevels();
-        if (levels <= 1) return mActivity.getString(R.string.none);
-        return String.format(mActivity.getString(R.string.site_settings_threading_summary), levels);
+        if (level <= 1) return mActivity.getString(R.string.none);
+        return String.format(mActivity.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -410,10 +434,18 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsPerPage;
     }
 
+    public int getPagingCountForDescription() {
+        return !getShouldPageComments() ? 0 : getPagingCount();
+    }
+
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
-        int count = getPagingCount();
+        if (!getShouldPageComments()) {
+            return mActivity.getString(R.string.disabled);
+        }
+
+        int count = getPagingCountForDescription();
         if (count == 0) return mActivity.getString(R.string.none);
         return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
     }
@@ -439,13 +471,31 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) return new ArrayList<>();
+        if (mSettings.holdForModeration == null) mSettings.holdForModeration = new ArrayList<>();
         return mSettings.holdForModeration;
     }
 
+    public @NonNull String getModerationHoldDescription() {
+        return getKeysDescription(getModerationKeys().size());
+    }
+
     public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) return new ArrayList<>();
+        if (mSettings.blacklist == null) mSettings.blacklist = new ArrayList<>();
         return mSettings.blacklist;
+    }
+
+    public @NonNull String getBlacklistDescription() {
+        return getKeysDescription(getBlacklistKeys().size());
+    }
+
+    public @NonNull String getKeysDescription(int count) {
+        if (mActivity == null) return "";
+
+        if (count > 0) {
+            return mActivity.getResources().getQuantityString(
+                    R.plurals.site_settings_list_editor_summary, count, count);
+        }
+        return mActivity.getString(R.string.site_settings_list_editor_no_items_text);
     }
 
     public void setTitle(String title) {
@@ -464,9 +514,12 @@ public abstract class SiteSettingsInterface {
         mSettings.privacy = privacy;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public boolean setLanguageCode(String languageCode) {
+        if (!mLanguageCodes.containsKey(languageCode) ||
+            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        return true;
     }
 
     public void setLanguageId(int languageId) {
@@ -762,7 +815,6 @@ public abstract class SiteSettingsInterface {
                         }
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
-                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
                     SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);

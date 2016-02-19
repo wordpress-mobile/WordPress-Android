@@ -340,8 +340,8 @@ public class CommentActions {
                                 final CommentStatus newStatus,
                                 final CommentActionListener actionListener) {
         // deletion is handled separately
-        if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
-            deleteComment(accountId, comment, actionListener);
+        if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
+            deleteComment(accountId, comment, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
 
@@ -389,8 +389,8 @@ public class CommentActions {
                                  final CommentStatus newStatus,
                                  final OnCommentsModeratedListener actionListener) {
         // deletion is handled separately
-        if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
-            deleteComments(accountId, comments, actionListener);
+        if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
+            deleteComments(accountId, comments, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
 
@@ -437,7 +437,8 @@ public class CommentActions {
      */
     private static void deleteComment(final int accountId,
                                         final Comment comment,
-                                        final CommentActionListener actionListener) {
+                                        final CommentActionListener actionListener,
+                                        final boolean deletePermanently) {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null) {
             if (actionListener != null)
@@ -457,7 +458,8 @@ public class CommentActions {
                         blog.getRemoteBlogId(),
                         blog.getUsername(),
                         blog.getPassword(),
-                        comment.commentID };
+                        comment.commentID,
+                        deletePermanently};
 
                 Object result;
                 try {
@@ -473,9 +475,18 @@ public class CommentActions {
                     result = null;
                 }
 
+                //update local database
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
-                if (success)
-                    CommentTable.deleteComment(accountId, comment.commentID);
+                if (success){
+                    if (deletePermanently) {
+                        CommentTable.deleteComment(accountId, comment.commentID);
+                    }
+                    else {
+                        // update status in SQLite of successfully moderated comments
+                        CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
+                                CommentStatus.toString(CommentStatus.TRASH));
+                    }
+                }
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
@@ -494,7 +505,8 @@ public class CommentActions {
      */
     private static void deleteComments(final int accountId,
                                        final CommentList comments,
-                                       final OnCommentsModeratedListener actionListener) {
+                                       final OnCommentsModeratedListener actionListener,
+                                       final boolean deletePermanently) {
         final Blog blog = WordPress.getBlog(accountId);
 
         if (blog==null || comments==null || comments.size() == 0) {
@@ -519,7 +531,8 @@ public class CommentActions {
                             remoteBlogId,
                             blog.getUsername(),
                             blog.getPassword(),
-                            comment.commentID};
+                            comment.commentID,
+                            deletePermanently};
 
                     Object result;
                     try {
@@ -537,7 +550,14 @@ public class CommentActions {
                 }
 
                 // remove successfully deleted comments from SQLite
-                CommentTable.deleteComments(localBlogId, deletedComments);
+                if (deletePermanently) {
+                    CommentTable.deleteComments(localBlogId, deletedComments);
+                }
+                else {
+                    // update status in SQLite of successfully moderated comments
+                    CommentTable.updateCommentsStatus(blog.getLocalTableBlogId(), deletedComments,
+                            CommentStatus.toString(CommentStatus.TRASH));
+                }
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {

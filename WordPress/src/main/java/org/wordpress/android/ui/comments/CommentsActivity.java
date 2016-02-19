@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,15 +16,16 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
@@ -36,8 +38,11 @@ public class CommentsActivity extends AppCompatActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
+    static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
+
+    private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +52,25 @@ public class CommentsActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.tab_comments));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+            actionBar.setTitle(R.string.comments);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
+            mCurrentCommentStatusType = (CommentStatus) getIntent().getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE);
+        } else {
+            // Read the value from app preferences here. Default to 0 - All
+            mCurrentCommentStatusType = AppPrefs.getCommentsStatusFilter();
+        }
 
         if (savedInstanceState == null) {
-            Fragment commentsListFragment = new CommentsListFragment();
+            CommentsListFragment commentsListFragment = new CommentsListFragment();
+            // initialize comment status filter first time
+            commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getFragmentManager().beginTransaction()
                     .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
                             .fragment_tag_comment_list))
@@ -63,6 +81,7 @@ public class CommentsActivity extends AppCompatActivity
 
             mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
         }
+
     }
 
     @Override
@@ -182,7 +201,8 @@ public class CommentsActivity extends AppCompatActivity
     void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
-            listFragment.setRefreshing(true);
+            //listFragment.setRefreshing(true);
+            listFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             listFragment.updateComments(false);
         }
     }
@@ -224,6 +244,7 @@ public class CommentsActivity extends AppCompatActivity
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().setCommentIsModerating(comment.commentID, true);
+            getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             CommentActions.moderateComment(accountId, comment, newStatus,
                     new CommentActions.CommentActionListener() {
                 @Override
@@ -237,6 +258,7 @@ public class CommentsActivity extends AppCompatActivity
                     if (succeeded) {
                         reloadCommentList();
                     } else {
+                        getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                         ToastUtils.showToast(CommentsActivity.this,
                                 R.string.error_moderate_comment,
                                 ToastUtils.Duration.LONG
@@ -244,12 +266,13 @@ public class CommentsActivity extends AppCompatActivity
                     }
                 }
             });
-        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH) {
+        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETE) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
+            getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
 
-            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : getString(R.string.comment_spammed));
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently)  );
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -288,6 +311,8 @@ public class CommentsActivity extends AppCompatActivity
                                         R.string.error_moderate_comment,
                                         ToastUtils.Duration.LONG
                                 );
+                            } else {
+                                getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                             }
                         }
                     });
@@ -320,4 +345,5 @@ public class CommentsActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

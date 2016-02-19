@@ -77,6 +77,8 @@
     <string name="undo">Undo</string>
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
+    <string name="off">Off</string>
+    <string name="could_not_load_page">Could not load page</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -274,11 +276,14 @@
     <string name="comment_status_unapproved">Pending</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Trashed</string>
+    <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
+    <string name="comments_empty_list_filtered">No %s comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
 
@@ -288,6 +293,8 @@
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unspam">Not spam</string>
     <string name="mnu_comment_trash">Trash</string>
+    <string name="mnu_comment_untrash">Restore</string>
+    <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
@@ -295,6 +302,7 @@
     <string name="dlg_unapproving_comments">Unapproving</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="trash_yes">Trash</string>
     <string name="trash_no">Don\'t trash</string>
@@ -310,6 +318,8 @@
     <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+    <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
@@ -341,10 +351,6 @@
     <string name="post_not_published">Post status isn\'t published</string>
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
-    <string name="post_signature">Post signature</string>
-    <string name="your_signature">Your signature:</string>
-    <string name="add_tagline">Add a signature to new posts</string>
-    <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
@@ -381,11 +387,6 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
-    <string name="share_preference_title">Share to WordPress</string>
-    <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-    <string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
-    <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
@@ -414,6 +415,7 @@
     <string name="related_posts">Related Posts</string>
     <string name="more">More</string>
     <string name="none">None</string>
+    <string name="disabled">Disabled</string>
     <string name="comments">Comments</string>
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
@@ -496,18 +498,6 @@
         <item>Known users\' comments</item>
         <item>All users</item>
     </string-array>
-    <string-array name="site_settings_threading_entries">
-        <item>None</item>
-        <item>Two levels</item>
-        <item>Three levels</item>
-        <item>Four levels</item>
-        <item>Five levels</item>
-        <item>Six levels</item>
-        <item>Seven levels</item>
-        <item>Eight levels</item>
-        <item>Nine levels</item>
-        <item>Ten levels</item>
-    </string-array>
 
     <string-array name="site_settings_privacy_entries" translatable="false">
         <item>@string/site_settings_privacy_public_summary</item>
@@ -570,6 +560,10 @@
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
+    <plurals name="site_settings_list_editor_summary">
+        <item quantity="one">1 item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -580,6 +574,8 @@
     <string name="site_settings_close_after_dialog_title">Close commenting</string>
     <string name="site_settings_paging_dialog_header">Comments per page</string>
     <string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
+    <string name="site_settings_threading_dialog_header">Thread up to</string>
+    <string name="site_settings_threading_dialog_description">Allow comments to be nested in threads.</string>
     <string name="site_settings_close_after_dialog_header" translatable="false">@string/close_after</string>
     <string name="site_settings_close_after_dialog_description">Automatically close comments on articles.</string>
     <string name="site_settings_close_after_dialog_switch_text">Automatically close</string>
@@ -587,6 +583,7 @@
 
     <!-- Errors -->
     <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
+    <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
     <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
 
     <!--               -->
@@ -626,6 +623,11 @@
     <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
     <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
     <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
+
+    <!-- stats: Widget Promote Dialog -->
+    <string name="stats_widget_promo_title">Home Screen Stats Widget</string>
+    <string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
+    <string name="stats_widget_promo_ok_btn_label">Ok, got it</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -923,12 +925,17 @@
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
+    <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
+    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+    <string name="error_post_my_profile">Couldn\'t save your profile</string>
+    <string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
