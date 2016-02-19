@@ -828,21 +828,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String mediaId, final String remoteId, final String remoteUrl) {
-        final MediaType mediaType = mUploadingMedia.get(mediaId);
+    public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             mWebView.post(new Runnable() {
                 @Override
                 public void run() {
+                    String remoteUrl = mediaFile.getFileURL();
                     if (mediaType.equals(MediaType.IMAGE)) {
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + mediaId +
-                                ", '" + remoteId + "', '" + remoteUrl + "');");
+                        String remoteMediaId = mediaFile.getMediaId();
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
+                                ", '" + remoteMediaId + "', '" + remoteUrl + "');");
                     } else if (mediaType.equals(MediaType.VIDEO)) {
-                        // TODO: Obtain the poster URL and the VideoPress id (where applicable) and pass them here
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + mediaId +
-                                ", '" + remoteUrl + "', '" + "', '');");
+                        String posterUrl = mediaFile.getThumbnailURL();
+                        String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                                mediaFile.getVideoPressShortCode());
+                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
+                                ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
                     }
-                    mUploadingMedia.remove(mediaId);
+                    mUploadingMedia.remove(localMediaId);
                 }
             });
         }

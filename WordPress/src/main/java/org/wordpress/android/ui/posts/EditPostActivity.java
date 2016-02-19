@@ -1735,10 +1735,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        // Notify visual editor that a normal image has finished uploading (not part of a gallery)
+        // Notify visual editor that a normal media item has finished uploading (not part of a gallery)
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
-                    event.mRemoteMediaUrl);
+            MediaFile mediaFile = new MediaFile();
+            mediaFile.setPostID(getPost().getLocalTablePostId());
+            mediaFile.setMediaId(event.mRemoteMediaId);
+            mediaFile.setFileURL(event.mRemoteMediaUrl);
+            mediaFile.setVideoPressShortCode(event.mSecondaryRemoteMediaId);
+            mediaFile.setThumbnailURL(WordPressMediaUtils.getVideoPressVideoPosterFromURL(event.mRemoteMediaUrl));
+
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, mediaFile);
         }
     }
 
