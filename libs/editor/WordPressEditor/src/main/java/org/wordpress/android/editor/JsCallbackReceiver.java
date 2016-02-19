@@ -193,7 +193,7 @@ public class JsCallbackReceiver {
                         case "getSelectedText":
                             responseIds.add("result");
                             break;
-                        case "getFailedImages":
+                        case "getFailedMedia":
                             responseIds.add("ids");
                     }
 

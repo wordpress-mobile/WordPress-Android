@@ -1099,19 +1099,24 @@ ZSSEditor.markAllUploadingMediaAsFailed = function() {
 /**
  *  @brief      Sends a callback with a list of failed images
  */
-ZSSEditor.getFailedImages = function() {
+ZSSEditor.getFailedMedia = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
     var matches = tmpDom.find("img.failed");
 
-    var functionArgument = "function=getFailedImages";
+    var functionArgument = "function=getFailedMedia";
     var mediaIdArray = [];
 
     for (var i = 0; i < matches.size(); i ++) {
-        var mediaId = matches[i].getAttribute("data-wpid");
-        if (mediaId != null) {
-            mediaIdArray.push(mediaId);
+        var imageId = matches[i].getAttribute("data-wpid");
+        var videoId = matches[i].getAttribute('data-video_wpid');
+        if (imageId != null) {
+            console.log("mediaId: " + imageId);
+            mediaIdArray.push(imageId);
+        } else if (videoId != null) {
+            console.log("videoId: " + videoId);
+            mediaIdArray.push(videoId);
         }
     }
 

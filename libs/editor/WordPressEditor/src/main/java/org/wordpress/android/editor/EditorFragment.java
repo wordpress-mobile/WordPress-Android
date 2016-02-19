@@ -933,7 +933,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed();");
 
                 // Update the list of failed media uploads
-                mWebView.execJavaScriptFromString("ZSSEditor.getFailedImages();");
+                mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
 
                 hideActionBarIfNeeded();
 
@@ -1175,7 +1175,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mJavaScriptResult = inputArgs.get("result");
                 mGetSelectedTextCountDownLatch.countDown();
                 break;
-            case "getFailedImages":
+            case "getFailedMedia":
                 String[] mediaIds = inputArgs.get("ids").split(",");
                 for (String mediaId : mediaIds) {
                     if (!mediaId.equals("")) {
