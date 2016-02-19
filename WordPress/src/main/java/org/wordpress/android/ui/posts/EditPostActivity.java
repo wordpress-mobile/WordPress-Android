@@ -1906,6 +1906,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mediaFile.setUploadState("queued");
         mediaFile.setDateCreatedGMT(currentTime);
         mediaFile.setMediaId(String.valueOf(currentTime));
+        mediaFile.setVideo(MediaUtils.isVideo(path));
 
         if (mimeType != null && mimeType.startsWith("image")) {
             // get width and height
