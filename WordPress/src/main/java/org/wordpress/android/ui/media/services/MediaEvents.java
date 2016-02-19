@@ -6,11 +6,14 @@ public class MediaEvents {
         public final String mLocalMediaId;
         public final String mRemoteMediaId;
         public final String mRemoteMediaUrl;
-        MediaUploadSucceeded(String localBlogId, String localMediaId, String remoteMediaId, String remoteMediaUrl) {
+        public final String mSecondaryRemoteMediaId;
+        MediaUploadSucceeded(String localBlogId, String localMediaId, String remoteMediaId, String remoteMediaUrl,
+                             String secondaryRemoteMediaId) {
             mLocalBlogId = localBlogId;
             mLocalMediaId = localMediaId;
             mRemoteMediaId = remoteMediaId;
             mRemoteMediaUrl = remoteMediaUrl;
+            mSecondaryRemoteMediaId = secondaryRemoteMediaId;
         }
     }
 
