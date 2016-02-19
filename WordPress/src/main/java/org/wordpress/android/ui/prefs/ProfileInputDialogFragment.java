@@ -16,10 +16,10 @@ import org.wordpress.android.widgets.WPTextView;
 
 public class ProfileInputDialogFragment extends DialogFragment {
 
-    private static final String TITLE_TAG = "TITLE";
-    private static final String INITIAL_TEXT_TAG = "INITIAL-TEXT";
-    private static final String HINT_TAG = "HINT";
-    private static final String IS_MULTILINE_TAG = "IS-MULTILINE";
+    private static final String TITLE_TAG = "title";
+    private static final String INITIAL_TEXT_TAG = "initial_text";
+    private static final String HINT_TAG = "hint";
+    private static final String IS_MULTILINE_TAG = "is_multiline";
 
     public static ProfileInputDialogFragment newInstance(String title,
                                    String initialText,
