@@ -1286,6 +1286,13 @@ ZSSEditor.setProgressOnVideo = function(videoNodeIdentifier, progress) {
         videoNode.addClass("uploading");
     }
 
+    // Revert to non-compatibility video container once video upload has begun. This centers the overlays on the
+    // placeholder image (instead of the screen), while still circumventing the small container bug the compat class
+    // was added to fix
+    if (progress > 0) {
+        this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).removeClass("compat");
+    }
+
     var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
     if (videoProgressNode.length == 0){
         return;
@@ -1353,6 +1360,9 @@ ZSSEditor.markVideoUploadFailed = function(videoNodeIdentifier, message) {
     if (videoProgressNode.length != 0){
         videoProgressNode.addClass('failed');
     }
+
+    // Delete the compatibility overlay if present
+    videoContainerNode.find("span.upload-overlay").addClass("failed");
 };
 
 /**
@@ -1376,6 +1386,9 @@ ZSSEditor.unmarkVideoUploadFailed = function(videoNodeIdentifier, message) {
     if (videoProgressNode.length != 0){
         videoProgressNode.removeClass('failed');
     }
+
+    // Display the compatibility overlay again if present
+    videoContainerNode.find("span.upload-overlay").removeClass("failed");
 };
 
 /**
