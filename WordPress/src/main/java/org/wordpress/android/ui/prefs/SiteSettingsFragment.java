@@ -709,14 +709,18 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onResponse(JSONObject response) {
                 progressDialog.dismiss();
-                showPurchasesOrDeleteSiteDialog(response, currentBlog);
+                if (isAdded()) {
+                    showPurchasesOrDeleteSiteDialog(response, currentBlog);
+                }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
-                AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
+                    AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
+                }
             }
         });
     }
