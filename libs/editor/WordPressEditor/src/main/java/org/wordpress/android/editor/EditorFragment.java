@@ -838,7 +838,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
-                        + errorMessage + "');");
+                        + errorMessage.replace("'", "\\'").replace("\"", "\\\"") + "');");
                 mFailedMediaIds.add(mediaId);
                 mUploadingMediaIds.remove(mediaId);
             }
