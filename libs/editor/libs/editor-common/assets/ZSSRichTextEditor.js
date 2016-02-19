@@ -1079,7 +1079,7 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
 /**
  *  @brief      Marks all in-progress images as failed to upload
  */
-ZSSEditor.markAllUploadingImagesAsFailed = function() {
+ZSSEditor.markAllUploadingMediaAsFailed = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
@@ -1087,8 +1087,11 @@ ZSSEditor.markAllUploadingImagesAsFailed = function() {
 
     for(var i = 0; i < matches.size(); i++) {
         var mediaId = matches[i].getAttribute("data-wpid");
+        var videoId = matches[i].getAttribute("data-video_wpid");
         if (mediaId != null) {
             ZSSEditor.markImageUploadFailed(mediaId);
+        } else if (videoId != null) {
+            ZSSEditor.markVideoUploadFailed(videoId);
         }
     }
 };

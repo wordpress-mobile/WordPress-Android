@@ -930,7 +930,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // If there are images that are still in progress (because the editor exited before they completed),
                 // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
-                mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingImagesAsFailed();");
+                mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed();");
 
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedImages();");
