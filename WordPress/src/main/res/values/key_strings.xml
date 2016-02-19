@@ -9,15 +9,8 @@
 
     <!-- Preference keys -->
     <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
-    <string name="pref_key_notifications_section" translatable="false">wp_pref_notifications_category</string>
-    <string name="pref_key_notifications" translatable="false">wp_pref_manage_notifications</string>
-    <string name="pref_key_post_sig_section" translatable="false">wp_post_signature</string>
-    <string name="pref_key_post_sig_enabled" translatable="false">wp_pref_signature_enabled</string>
-    <string name="pref_key_post_sig" translatable="false">wp_pref_post_signature</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
-    <string name="pref_key_shared_pref_section" translatable="false">wp_share_pref</string>
-    <string name="pref_key_reset_shared_pref" translatable="false">wp_reset_share_pref</string>
     <string name="pref_key_privacy_section" translatable="false">wp_privacy</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
@@ -130,18 +123,6 @@
     <string-array name="site_settings_sort_values" translatable="false">
         <item>0</item>
         <item>1</item>
-    </string-array>
-    <string-array name="site_settings_threading_values" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
     </string-array>
     <string-array name="site_settings_privacy_values" translatable="false">
         <item>1</item>
