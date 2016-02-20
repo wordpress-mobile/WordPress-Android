@@ -1196,7 +1196,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     }
 
     var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="' + videoContainerClass
-            + '" contenteditable="false" data-failed="' + nativeState.getStringTapToRetry() + '">';
+            + '" contenteditable="false">';
     var videoContainerEnd = '</span>';
 
     if (posterURL == '') {
