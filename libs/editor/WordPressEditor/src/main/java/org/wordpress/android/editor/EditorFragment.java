@@ -873,17 +873,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadFailed(final String mediaId) {
+    public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
         mWebView.post(new Runnable() {
             @Override
             public void run() {
                 MediaType mediaType = mUploadingMedia.get(mediaId);
                 switch (mediaType) {
                     case IMAGE:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ");");
+                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
+                                + errorMessage.replace("'", "\\'").replace("\"", "\\\"") + "');");
                         break;
                     case VIDEO:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ");");
+                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
+                                + errorMessage.replace("'", "\\'").replace("\"", "\\\"") + "');");
                 }
                 mFailedMediaIds.add(mediaId);
                 mUploadingMedia.remove(mediaId);
@@ -930,7 +932,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // If there are images that are still in progress (because the editor exited before they completed),
                 // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
-                mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed();");
+                mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed('"
+                        + getString(R.string.tap_to_try_again) + "');");
 
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
@@ -1347,11 +1350,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         @JavascriptInterface
         public String getStringEdit() {
             return mContext.getString(R.string.edit);
-        }
-
-        @JavascriptInterface
-        public String getStringTapToRetry() {
-            return mContext.getString(R.string.tap_to_try_again);
         }
 
         @JavascriptInterface

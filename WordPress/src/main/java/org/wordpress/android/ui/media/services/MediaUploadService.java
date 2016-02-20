@@ -9,17 +9,16 @@ import android.os.IBinder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
-import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
-import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,23 +186,16 @@ public class MediaUploadService extends Service {
                 mUploadInProgress = false;
                 mCurrentUploadMediaId = "";
 
-                String errorMessageToDisplay = null;
-                // well formed XML-RPC response from the server, but it's an error.
-                if (throwable instanceof XMLRPCFault) {
-                    XMLRPCFault xmlrpcFault = ((XMLRPCFault) throwable);
-                    if (xmlrpcFault.getFaultCode() == 401) {
-                        //Just for reference - xmlrpcFault.getFaultString() returns the error message
-                        // from the server without the ugly "[Code 401]" part.
-                        errorMessageToDisplay = getString(R.string.media_error_no_permission_upload);
-                    }
+                MediaEvents.MediaUploadFailed event;
+                if (errorMessage == null) {
+                    event = new MediaEvents.MediaUploadFailed(mediaId, getString(R.string.upload_failed), true);
+                } else {
+                    event = new MediaEvents.MediaUploadFailed(mediaId, errorMessage);
                 }
 
-                if (errorMessageToDisplay == null) {
-                    errorMessageToDisplay = getString(R.string.upload_failed);
-                }
-
-                EventBus.getDefault().post(new MediaEvents.MediaUploadFailed(mediaId, errorMessageToDisplay));
+                EventBus.getDefault().post(event);
                 mHandler.post(mFetchQueueTask);
+
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
                     CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);

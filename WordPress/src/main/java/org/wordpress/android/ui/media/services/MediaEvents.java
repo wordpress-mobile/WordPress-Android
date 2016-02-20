@@ -20,9 +20,14 @@ public class MediaEvents {
     public static class MediaUploadFailed {
         public final String mLocalMediaId;
         public final String mErrorMessage;
-        MediaUploadFailed(String localMediaId, String errorMessage) {
+        public final boolean mIsGenericMessage;
+        MediaUploadFailed(String localMediaId, String errorMessage, boolean isGenericMessage) {
             mLocalMediaId = localMediaId;
             mErrorMessage = errorMessage;
+            mIsGenericMessage = isGenericMessage;
+        }
+        MediaUploadFailed(String localMediaId, String errorMessage) {
+            this(localMediaId, errorMessage, false);
         }
     }
 

@@ -867,7 +867,7 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     }
 
     var imgContainerStart = '<span id="' + imageContainerIdentifier + '" class="' + imgContainerClass
-                            + '" contenteditable="false" data-failed="' + nativeState.getStringTapToRetry() + '">';
+                            + '" contenteditable="false">';
     var imgContainerEnd = '</span>';
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
@@ -1055,7 +1055,7 @@ ZSSEditor.markImageUploadFailed = function(imageNodeIdentifier, message) {
  *
  *  @param      imageNodeIdentifier     This is a unique ID provided by the caller.
  */
-ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
+ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
         imageNode.removeClass('failed');
@@ -1079,7 +1079,7 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
 /**
  *  @brief      Marks all in-progress images as failed to upload
  */
-ZSSEditor.markAllUploadingMediaAsFailed = function() {
+ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
@@ -1089,9 +1089,9 @@ ZSSEditor.markAllUploadingMediaAsFailed = function() {
         var mediaId = matches[i].getAttribute("data-wpid");
         var videoId = matches[i].getAttribute("data-video_wpid");
         if (mediaId != null) {
-            ZSSEditor.markImageUploadFailed(mediaId);
+            ZSSEditor.markImageUploadFailed(mediaId, message);
         } else if (videoId != null) {
-            ZSSEditor.markVideoUploadFailed(videoId);
+            ZSSEditor.markVideoUploadFailed(videoId, message);
         }
     }
 };
@@ -1370,7 +1370,7 @@ ZSSEditor.markVideoUploadFailed = function(videoNodeIdentifier, message) {
  *
  *  @param      VideoNodeIdentifier     This is a unique ID provided by the caller.
  */
-ZSSEditor.unmarkVideoUploadFailed = function(videoNodeIdentifier, message) {
+ZSSEditor.unmarkVideoUploadFailed = function(videoNodeIdentifier) {
     var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
     if (videoNode.length != 0){
         videoNode.removeClass('failed');
