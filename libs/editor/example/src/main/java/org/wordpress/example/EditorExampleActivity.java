@@ -246,7 +246,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId);
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId,
+                            getString(R.string.tap_to_try_again));
 
                     mFailedUploads.put(mediaId, mediaUrl);
                 } catch (InterruptedException e) {

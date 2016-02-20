@@ -1718,7 +1718,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onEventMainThread(MediaEvents.MediaUploadFailed event) {
         AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED);
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalMediaId);
+            if (event.mIsGenericMessage) {
+                mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalMediaId, getString(R.string.tap_to_try_again));
+            } else {
+                mEditorMediaUploadListener.onMediaUploadFailed(event.mLocalMediaId, event.mErrorMessage);
+            }
         }
     }
 
