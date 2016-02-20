@@ -1112,10 +1112,8 @@ ZSSEditor.getFailedMedia = function() {
         var imageId = matches[i].getAttribute("data-wpid");
         var videoId = matches[i].getAttribute('data-video_wpid');
         if (imageId != null) {
-            console.log("mediaId: " + imageId);
             mediaIdArray.push(imageId);
         } else if (videoId != null) {
-            console.log("videoId: " + videoId);
             mediaIdArray.push(videoId);
         }
     }
