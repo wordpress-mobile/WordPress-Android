@@ -897,8 +897,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Show two pages for the visual editor, and add a third page for the EditPostPreviewFragment for legacy
+            return (mShowNewEditor ? 2 : 3);
         }
     }
 
