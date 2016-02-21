@@ -20,11 +20,13 @@ public class ProfileInputDialogFragment extends DialogFragment {
     private static final String INITIAL_TEXT_TAG = "initial_text";
     private static final String HINT_TAG = "hint";
     private static final String IS_MULTILINE_TAG = "is_multiline";
+    private static final String TEXT_VIEW_ID_TAG = "text_view_id";
 
     public static ProfileInputDialogFragment newInstance(String title,
                                    String initialText,
                                    String hint,
-                                   boolean isMultiline) {
+                                   boolean isMultiline,
+                                   int textViewId) {
 
         ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
         Bundle args = new Bundle();
@@ -33,6 +35,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         args.putString(INITIAL_TEXT_TAG, initialText);
         args.putString(HINT_TAG, hint);
         args.putBoolean(IS_MULTILINE_TAG, isMultiline);
+        args.putInt(TEXT_VIEW_ID_TAG, textViewId);
 
         profileInputDialogFragment.setArguments(args);
         return profileInputDialogFragment;
@@ -54,6 +57,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         String hint  = args.getString(HINT_TAG);
         Boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
         String initialText = args.getString(INITIAL_TEXT_TAG);
+        final int textViewId = args.getInt(TEXT_VIEW_ID_TAG);
 
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
@@ -74,7 +78,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (getActivity() instanceof Callback) {
-                            ((Callback) getActivity()).onSuccessfulInput(editText.getText().toString());
+                            ((Callback) getActivity()).onSuccessfulInput(editText.getText().toString(), textViewId);
                         } else {
                             String error = getActivity() + "is not an instance of ProfileInputDialogFragment Callback";
                             AppLog.e(AppLog.T.UTILS, error);
@@ -92,6 +96,6 @@ public class ProfileInputDialogFragment extends DialogFragment {
     }
 
     public interface Callback {
-        void onSuccessfulInput(String input);
+        void onSuccessfulInput(String input, int textViewId);
     }
 }

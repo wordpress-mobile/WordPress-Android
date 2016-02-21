@@ -30,7 +30,6 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
-    private WPTextView mTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,8 +138,6 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
                                                        final String hint,
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
-        mTextView = textView;
-
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +145,8 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
                         textView.getText().toString(),
                         hint,
-                        isMultiline);
+                        isMultiline,
+                        textView.getId());
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
@@ -175,8 +173,9 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     @Override
-    public void onSuccessfulInput(String input) {
-        updateLabel(mTextView, input);
-        updateMyProfileForLabel(mTextView);
+    public void onSuccessfulInput(String input, int textViewId) {
+        WPTextView textView = (WPTextView) findViewById(textViewId);
+        updateLabel(textView, input);
+        updateMyProfileForLabel(textView);
     }
 }
