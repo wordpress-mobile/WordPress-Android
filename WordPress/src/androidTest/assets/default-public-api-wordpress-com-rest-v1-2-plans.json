@@ -91,14 +91,24 @@
       },
       "product_name_short": "Free",
       "product_slug": "free_plan",
-      "tagline": "Just get started",
+      "tagline": "Perfect for anyone creating a basic blog or site",
       "description": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
+      "icon": "",
       "capability": "manage_options",
       "cost": 0,
       "bill_period": -1,
       "product_type": "bundle",
       "available": "yes",
       "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "free-blog",
+            "space",
+            "support"
+          ]
+        }
+      ],
       "bill_period_label": "for life",
       "price": "\u00a30",
       "formatted_price": "\u00a30",
@@ -118,14 +128,33 @@
       },
       "product_name_short": "Premium",
       "product_slug": "value_bundle",
-      "tagline": "Supercharge your site",
+      "tagline": "Perfect for bloggers, creatives, and other professionals",
       "description": "Your own domain name, powerful customization options, and lots of space for audio and video.",
+      "icon": "",
       "capability": "manage_options",
       "cost": 85,
       "bill_period": 365,
       "product_type": "bundle",
       "available": "yes",
       "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "custom-design",
+            "videopress",
+            "support",
+            "space",
+            "domain_map",
+            "no-adverts\/no-adverts.php"
+          ]
+        },
+        {
+          "title": "Included with all plans",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
       "width": 500,
       "height": 250,
       "multi": 0,
@@ -160,10 +189,35 @@
       },
       "product_name_short": "Business",
       "product_slug": "business-bundle",
-      "tagline": "Take it to the next level",
+      "tagline": "Perfect for power users, business website and blogs",
       "description": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
+      "icon": "",
       "capability": "manage_options",
       "cost": 250,
+      "features_highlight": [
+        {
+          "items": [
+            "premium-themes",
+            "space",
+            "support"
+          ]
+        },
+        {
+          "title": "Includes WordPress.com Premium features:",
+          "items": [
+            "custom-design",
+            "videopress",
+            "no-adverts\/no-adverts.php",
+            "domain_map"
+          ]
+        },
+        {
+          "title": "Included with all plans:",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
       "bill_period": 365,
       "width": 500,
       "height": 435,

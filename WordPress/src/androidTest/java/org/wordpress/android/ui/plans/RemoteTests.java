@@ -23,17 +23,14 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
-    private RestClientCustomizableMock mRestClient;
     private RestClientCustomizableMock mRestClientV1_2;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        // Set the version of the REST client to v1
-        RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1;
-
-        mRestClient = (RestClientCustomizableMock) RestClientFactory.instantiate(null, RestClientFactoryTest.sVersion);
+        // Set the version of the REST client to v1.2
+        RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
         mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_2);
     }
 
@@ -152,7 +149,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             }
         };
 
-        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1/sites/123456/plans",
+        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1/sites/123456/plans",
                 null,
                 listener,
                 errListener
@@ -163,21 +160,12 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         PlansRestRequestAbstractListener listener = new PlansRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                // Create a list of plans IDs. Just put all plans available on wpcom
-                List<Long> plansIDS = new ArrayList<>();
-                plansIDS.add(1L);
-                plansIDS.add(1003L);
-                plansIDS.add(1008L);
-                plansIDS.add(2000L);
-                plansIDS.add(2001L);
-                plansIDS.add(2002L);
-
                 // Parse the response from the server
                 List<Feature> features = new ArrayList<>();
                 JSONArray featuresArray = response.getJSONArray("originalResponse");
                 for (int i = 0; i < featuresArray.length(); i++) {
                     JSONObject currentFeatureJSON = featuresArray.getJSONObject(i);
-                    Feature currentFeature = new Feature(currentFeatureJSON, plansIDS);
+                    Feature currentFeature = new Feature(currentFeatureJSON);
                     features.add(currentFeature);
                 }
 
@@ -185,34 +173,36 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
 
                 // Test the 1st object in the response
                 Feature currentFeatures = features.get(0);
-                assertEquals("Free Blog", currentFeatures.getTitle());
+                assertEquals("WordPress.com Site", currentFeatures.getTitle());
                 assertEquals("free-blog", currentFeatures.getProductSlug());
-                Hashtable<Long, String> planIDToDescription = new Hashtable<>();
-                planIDToDescription.put(1L, "true");
-                planIDToDescription.put(1003L, "true");
-                planIDToDescription.put(1008L, "true");
-                assertEquals(planIDToDescription, currentFeatures.getPlanIDToDescription());
-                assertEquals("Get a free blog on WordPress.com.", currentFeatures.getDescription());
+                assertEquals("Your own space to create posts and pages with basic customization.", currentFeatures.getDescription());
+                assertEquals("Your own space to create posts and pages with basic customization.",
+                        currentFeatures.getDescriptionForPlan(1L));
+                assertEquals("Your own space to create posts and pages with basic customization.",
+                        currentFeatures.getDescriptionForPlan(1003L));
+                assertEquals("Your own space to create posts and pages with basic customization.",
+                        currentFeatures.getDescriptionForPlan(1008L));
+
                 assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
 
                 // Test the latest object in the response
                 currentFeatures = features.get(15);
                 assertEquals("Support", currentFeatures.getTitle());
                 assertEquals("support", currentFeatures.getProductSlug());
-                planIDToDescription = new Hashtable<>();
-                planIDToDescription.put(1L, "Community");
-                planIDToDescription.put(1003L, "Direct email");
-                planIDToDescription.put(1008L, "Live chat");
-                planIDToDescription.put(2002L, "Direct email");
-                planIDToDescription.put(2000L, "Expert security support");
-                planIDToDescription.put(2001L, "Priority security support");
-                //assertEquals(planIDToDescription, currentFeatures.getPlanIDToDescription());
                 assertEquals("For those times when you can't find an answer on our Support site", currentFeatures.getDescription());
+                assertEquals("Find answers to your questions in our community forum.",
+                        currentFeatures.getDescriptionForPlan(1L));
+                assertEquals("Community support",
+                        currentFeatures.getTitleForPlan(1L));
+                assertEquals("The kind of support we offer for Jetpack Business.",
+                        currentFeatures.getDescriptionForPlan(2001L));
+                assertEquals("Priority security support",
+                        currentFeatures.getTitleForPlan(2001L));
                 assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
             }
         };
 
-        mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1/plans/features",
+        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/plans/features",
                 null,
                 listener,
                 errListener
