@@ -71,6 +71,9 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
             getEditText().setText(summary);
             getEditText().setSelection(0, summary.length());
         }
+
+        // clear previous errors
+        getEditText().setError(null);
     }
 
     private String validateEmail(CharSequence text) {
