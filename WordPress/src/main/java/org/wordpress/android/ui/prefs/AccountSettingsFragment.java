@@ -14,6 +14,7 @@ import android.preference.PreferenceScreen;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -73,6 +74,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         mWebAddressPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
 
+        mEmailPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
 
