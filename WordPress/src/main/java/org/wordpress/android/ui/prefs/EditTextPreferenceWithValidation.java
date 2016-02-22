@@ -63,6 +63,14 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
             WPPrefUtils.layoutAsFlatButton(positiveButton);
         }
         if (negativeButton != null) WPPrefUtils.layoutAsFlatButton(negativeButton);
+
+        CharSequence summary = getSummary();
+        if (TextUtils.isEmpty(summary)) {
+            getEditText().setText("");
+        } else {
+            getEditText().setText(summary);
+            getEditText().setSelection(0, summary.length());
+        }
     }
 
     private String validateEmail(CharSequence text) {
