@@ -201,6 +201,7 @@ public class PlansUtils {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
+                    // TODO: don't log response - only here for testing
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
@@ -228,6 +229,7 @@ public class PlansUtils {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
+                    // TODO: don't log response - only here for testing
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlansFeatures(response.toString());
