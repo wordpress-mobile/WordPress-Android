@@ -13,8 +13,11 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
+import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.ui.plans.models.SitePlan;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlanFragment extends Fragment {
@@ -93,11 +96,20 @@ public class PlanFragment extends Fragment {
         TextView txtTagLine = (TextView) mPlanContainerView.findViewById(R.id.text_tagline);
         txtTagLine.setText(mPlanDetails.getTagline());
 
-        // add the list of features
-        List<Feature> features = PlansUtils.getPlanFeatures(mSitePlan.getProductID());
-        if (features != null) {
-            for (Feature feature : features) {
-                addFeature(feature);
+        // The current plan could probably have some features to highlight on the details screen
+        HashMap<String, Feature> globalFeatures = PlansUtils.getFeatures();
+        ArrayList<PlanFeaturesHighlightSection> sectionsToHighlight = mPlanDetails.getFeaturesHighlightSections();
+        if (globalFeatures != null && sectionsToHighlight != null) {
+            for (PlanFeaturesHighlightSection currentSection: sectionsToHighlight) {
+                String sectionTitle = currentSection.getTitle(); // section title could be empty.
+                // TODO: add section title on the screen
+                ArrayList<String> featuresToHighlight = currentSection.getFeatures(); // features to highlight in this section
+                for (String currentFeatureSlug: featuresToHighlight) {
+                    Feature currentFeature = globalFeatures.get(currentFeatureSlug);
+                    if (currentFeature != null) {
+                        addFeature(currentFeature);
+                    }
+                }
             }
         }
     }
@@ -108,8 +120,8 @@ public class PlanFragment extends Fragment {
 
         TextView txtTitle = (TextView) view.findViewById(R.id.text_feature_title);
         TextView txtDescription = (TextView) view.findViewById(R.id.text_feature_description);
-        txtTitle.setText(feature.getTitle());
-        txtDescription.setText(feature.getDescription());
+        txtTitle.setText(feature.getTitleForPlan(mPlanDetails.getProductID()));
+        txtDescription.setText(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
 
         mPlanContainerView.addView(view);
     }
