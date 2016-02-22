@@ -172,27 +172,20 @@ public class PlansUtils {
     }
 
     @Nullable
-    public static List<Feature> getFeatures() {
+    public static HashMap<String, Feature> getFeatures() {
         String featuresString = AppPrefs.getGlobalPlansFeatures();
         if (TextUtils.isEmpty(featuresString)) {
             return null;
         }
 
-        List<Long> plansIDS = getGlobalPlansIDS();
-        if (plansIDS == null || plansIDS.size() == 0) {
-            //no plans stored in the app. Features are attached to plans. We can probably returns null here.
-            //TODO: Check if we need to return null or features with empty links to plans
-            return null;
-        }
-
-        List<Feature> features = new ArrayList<>();
+        HashMap<String, Feature> features = new HashMap<>();
         try {
             JSONObject featuresJSONObject = new JSONObject(featuresString);
             JSONArray featuresArray = featuresJSONObject.getJSONArray("originalResponse");
             for (int i=0; i < featuresArray.length(); i ++) {
                 JSONObject currentFeatureJSON = featuresArray.getJSONObject(i);
-                Feature currentFeature = new Feature(currentFeatureJSON, plansIDS);
-                features.add(currentFeature);
+                Feature currentFeature = new Feature(currentFeatureJSON);
+                features.put(currentFeature.getProductSlug(), currentFeature);
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PLANS, "Can't parse the features list returned from the server", e);
@@ -200,23 +193,6 @@ public class PlansUtils {
         }
 
         return features;
-    }
-
-    @Nullable
-    public static List<Feature> getPlanFeatures(long planID) {
-        List<Feature> allFeatures = getFeatures();
-        if (allFeatures == null) {
-            return null;
-        }
-
-        List<Feature> currentPlanFeatures = new ArrayList<>();
-        for (Feature currentFeature : allFeatures) {
-            if (currentFeature.getPlanIDToDescription().containsKey(planID)) {
-                currentPlanFeatures.add(currentFeature);
-            }
-        }
-
-        return  currentPlanFeatures;
     }
 
     public static boolean downloadGlobalPlans() {
@@ -228,9 +204,6 @@ public class PlansUtils {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
-
-                    // Load details of features from the server.
-                    downloadFeatures();
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans!");
                 }
@@ -249,9 +222,9 @@ public class PlansUtils {
      *
      * Return true if the request is enqueued. False otherwise.
      */
-    private static boolean downloadFeatures() {
+    public static boolean downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
-        WordPress.getRestClientUtils().get("plans/features/", params, null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {

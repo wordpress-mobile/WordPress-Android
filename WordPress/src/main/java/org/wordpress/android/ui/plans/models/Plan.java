@@ -39,8 +39,8 @@ public class Plan implements Serializable {
     private int mMulti;
     private String mSupportDocument;
     private String mCapability;
-    private List<Integer> mBundleProductIds;
-    private final List<String> mFeatures = new ArrayList<>();
+    private ArrayList<Integer> mBundleProductIds;
+    private final ArrayList<PlanFeaturesHighlightSection> mFeaturesHighlightSections =  new ArrayList<>();
 
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
@@ -90,10 +90,13 @@ public class Plan implements Serializable {
             }
         }
 
-        int featureNumber = 1;
-        while (planJSONObject.has("feature_" + featureNumber)) {
-            mFeatures.add(planJSONObject.getString("feature_" + featureNumber));
-            featureNumber++;
+        if (planJSONObject.has("features_highlight")) {
+            JSONArray featuresHighlightSections = planJSONObject.getJSONArray("features_highlight");
+            for (int i=0; i < featuresHighlightSections.length(); i++) {
+                mFeaturesHighlightSections.add(
+                        new PlanFeaturesHighlightSection(featuresHighlightSections.getJSONObject(i))
+                );
+            }
         }
     }
 
@@ -166,8 +169,8 @@ public class Plan implements Serializable {
         return mRawPrice;
     }
 
-    public List<String> getFeatures() {
-        return mFeatures;
+    public ArrayList<PlanFeaturesHighlightSection> getFeaturesHighlightSections() {
+        return mFeaturesHighlightSections;
     }
 
     public List<Integer> getBundleProductIds() {
