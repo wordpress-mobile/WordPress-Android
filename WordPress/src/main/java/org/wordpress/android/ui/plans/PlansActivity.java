@@ -29,6 +29,8 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlansActivity extends AppCompatActivity {
@@ -309,6 +311,17 @@ public class PlansActivity extends AppCompatActivity {
             if (!isFinishing()) {
                 mAvailablePlans = new SitePlan[plans.size()];
                 plans.toArray(mAvailablePlans);
+                // make sure plans are correctly sorted - assumes lower product IDs are "lesser"
+                // than higher product IDs
+                Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+                    @Override
+                    public int compare(SitePlan lhs, SitePlan rhs) {
+                        long lhsId = lhs.getProductID();
+                        long rhsId = rhs.getProductID();
+                        // this duplicates Long.compare(), which wasn't added until API 19
+                        return lhsId < rhsId ? -1 : (lhsId == rhsId ? 0 : 1);
+                    }
+                });
                 setupPlansUI();
             }
         }
