@@ -6,7 +6,6 @@
                 android:background="@color/blue_wordpress"
                 android:orientation="vertical">
 
-
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

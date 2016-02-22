@@ -149,12 +149,12 @@ public class PlanFragment extends Fragment {
             AppLog.d(AppLog.T.PLANS, "no sections to highlight");
             return;
         }
-        for (PlanFeaturesHighlightSection currentSection : sectionsToHighlight) {
+
+        for (PlanFeaturesHighlightSection section : sectionsToHighlight) {
             // add section title if it's not empty
-            addSectionTitle(currentSection.getTitle());
-            // TODO: add section title on the screen
-            // features to highlight in this section
-            ArrayList<String> featuresToHighlight = currentSection.getFeatures();
+            addSectionTitle(section.getTitle());
+            // add features to highlight in this section
+            ArrayList<String> featuresToHighlight = section.getFeatures();
             for (String featureSlug : featuresToHighlight) {
                 addFeature(globalFeatures.get(featureSlug));
             }
