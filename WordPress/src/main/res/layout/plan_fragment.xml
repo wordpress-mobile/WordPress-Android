@@ -17,7 +17,9 @@
             android:layout_marginRight="@dimen/margin_large"
             android:orientation="vertical"
             android:paddingLeft="@dimen/content_margin"
-            android:paddingRight="@dimen/content_margin">
+            android:paddingRight="@dimen/content_margin"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <ImageView
                 android:id="@+id/plan_icon"

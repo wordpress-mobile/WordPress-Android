@@ -1,11 +1,17 @@
 package org.wordpress.android.ui.plans;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.List;
 
@@ -100,6 +107,32 @@ public class PlanFragment extends Fragment {
                 addFeature(feature);
             }
         }
+
+        // container is hidden at design time, so animate it in if it's still hidden
+        if (mPlanContainerView.getVisibility() != View.VISIBLE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealContainer();
+            } else {
+                mPlanContainerView.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void revealContainer() {
+        if (!isAdded()) return;
+
+        Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
+        float startRadius = 0f;
+        float endRadius = (float) Math.hypot(pt.x, pt.y);
+        int centerX = pt.x / 2;
+        int centerY = pt.y / 2;
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(mPlanContainerView, centerX, centerY, startRadius, endRadius);
+        anim.setDuration(getActivity().getResources().getInteger(android.R.integer.config_longAnimTime));
+        anim.setInterpolator(new AccelerateInterpolator());
+        mPlanContainerView.setVisibility(View.VISIBLE);
+        anim.start();
     }
 
     private void addFeature(Feature feature) {
