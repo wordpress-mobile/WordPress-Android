@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.plans;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -10,11 +15,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -149,18 +154,25 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     private void updateIndicator(int pageNumber, boolean animate) {
         boolean isSelected = (pageNumber == getCurrentPage());
         final ImageView indicator = getIndicator(pageNumber);
-        final AniUtils.Duration duration = AniUtils.Duration.SHORT;
         final @DrawableRes int backgroundRes =
                 isSelected ? R.drawable.indicator_circle_selected : R.drawable.indicator_circle_unselected;
 
         if (animate) {
-            AniUtils.scaleOut(indicator, View.INVISIBLE, duration, new AniUtils.AnimationEndListener() {
+            // scale it out, change the background, then scale it back in
+            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.25f);
+            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.25f);
+            ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(indicator, scaleX, scaleY);
+            anim.setDuration(100);
+            anim.setInterpolator(new AccelerateInterpolator());
+            anim.setRepeatCount(1);
+            anim.setRepeatMode(ValueAnimator.REVERSE);
+            anim.addListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd() {
+                public void onAnimationRepeat(Animator animation) {
                     indicator.setBackgroundResource(backgroundRes);
-                    AniUtils.scaleIn(indicator, duration);
                 }
             });
+            anim.start();
         } else {
             indicator.setBackgroundResource(backgroundRes);
         }
