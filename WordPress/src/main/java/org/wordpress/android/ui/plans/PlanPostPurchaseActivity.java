@@ -3,6 +3,7 @@ package org.wordpress.android.ui.plans;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -28,9 +30,9 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     private PageAdapter mPageAdapter;
     private TextView mTxtSkip;
     private TextView mTxtNext;
-
     private ViewGroup mIndicatorContainerView;
 
+    private int mPrevPageNumber = 0;
     private static final int NUM_PAGES = 4;
 
     @Override
@@ -47,8 +49,12 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                updateIndicators();
+                if (position != mPrevPageNumber) {
+                    updateIndicator(position, true);
+                    updateIndicator(mPrevPageNumber, false);
+                }
                 updateButtons();
+                mPrevPageNumber = position;
             }
         });
         mViewPager.setAdapter(getPageAdapter());
@@ -140,16 +146,24 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         return (ImageView) mIndicatorContainerView.findViewById(resId);
     }
 
-    private void updateIndicators() {
-        for (int i = 0; i < NUM_PAGES; i++) {
-            updateIndicator(i);
-        }
-    }
+    private void updateIndicator(int pageNumber, boolean animate) {
+        boolean isSelected = (pageNumber == getCurrentPage());
+        final ImageView indicator = getIndicator(pageNumber);
+        final AniUtils.Duration duration = AniUtils.Duration.SHORT;
+        final @DrawableRes int backgroundRes =
+                isSelected ? R.drawable.indicator_circle_selected : R.drawable.indicator_circle_unselected;
 
-    private void updateIndicator(int pageNumber) {
-        boolean isSelected = pageNumber == getCurrentPage();
-        getIndicator(pageNumber).setBackgroundResource(
-                isSelected ? R.drawable.indicator_circle_selected : R.drawable.indicator_circle_unselected);
+        if (animate) {
+            AniUtils.scaleOut(indicator, View.INVISIBLE, duration, new AniUtils.AnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    indicator.setBackgroundResource(backgroundRes);
+                    AniUtils.scaleIn(indicator, duration);
+                }
+            });
+        } else {
+            indicator.setBackgroundResource(backgroundRes);
+        }
     }
 
     private final View.OnClickListener mIndicatorClickListener = new View.OnClickListener() {
