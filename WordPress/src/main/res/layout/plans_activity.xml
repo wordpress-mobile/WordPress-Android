@@ -52,19 +52,43 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_purchase"
+        <LinearLayout
+            android:id="@+id/purchase_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:gravity="center_vertical|right"
             android:minHeight="@dimen/toolbar_height"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/content_margin"
-            android:paddingRight="@dimen/content_margin"
-            android:text="@string/plan_purchase_now"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"/>
+            android:paddingRight="@dimen/content_margin">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_purchase_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="$99"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:text="@string/vertical_line"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/plan_purchase_now"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </FrameLayout>
 
 </RelativeLayout>

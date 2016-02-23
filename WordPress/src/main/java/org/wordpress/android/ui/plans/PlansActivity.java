@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,8 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlansActivity extends AppCompatActivity {
@@ -106,45 +107,36 @@ public class PlansActivity extends AppCompatActivity {
         }
 
         SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
-        Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
+        Plan globalPlan = PlansUtils.getGlobalPlan(sitePlan.getProductID());
+        if (globalPlan == null) {
+            AppLog.w(AppLog.T.PLANS, "unable to match global plan " + sitePlan.getProductID());
+            finish();
+            return;
+        }
 
         boolean showPurchaseButton;
         if (sitePlan.isCurrentPlan()) {
             showPurchaseButton = false;
         } else {
-            long currentPlanId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
-            long thisPlanId = sitePlan.getProductID();
-            if (currentPlanId == PlansConstants.FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.FREE_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else if (currentPlanId == PlansConstants.JETPACK_FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else {
-                showPurchaseButton = true;
-            }
+            // don't show the purchase button unless the plan at this position is "greater" than
+            // the current plan for this site
+            long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+            showPurchaseButton = (PlansUtils.compareProducts(sitePlan.getProductID(), currentPlanProductId) == PlansUtils.GREATER_PRODUCT);
         }
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
+        ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
-            String purchase = planDetails.getFormattedPrice()
-                    + " | <b>"
-                    + getString(R.string.plan_purchase_now)
-                    + "</b>";
-            TextView txtPurchase = (TextView) framePurchase.findViewById(R.id.text_purchase);
-            txtPurchase.setText(Html.fromHtml(purchase));
-            txtPurchase.setOnClickListener(new View.OnClickListener() {
+            TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
+            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(globalPlan));
+            containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startPurchaseProcess();
                 }
             });
+        } else {
+            containerPurchase.setOnClickListener(null);
         }
 
         if (showPurchaseButton && framePurchase.getVisibility() != View.VISIBLE) {
@@ -309,6 +301,13 @@ public class PlansActivity extends AppCompatActivity {
             if (!isFinishing()) {
                 mAvailablePlans = new SitePlan[plans.size()];
                 plans.toArray(mAvailablePlans);
+                // make sure plans are correctly sorted
+                Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+                    @Override
+                    public int compare(SitePlan lhs, SitePlan rhs) {
+                        return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
+                    }
+                });
                 setupPlansUI();
             }
         }
