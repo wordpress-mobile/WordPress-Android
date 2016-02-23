@@ -1192,7 +1192,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     } else {
         // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
         var videoContainerClass = 'video_container compat';
-        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.getStringUploading()
+        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.localizedStringUploading
                 + '</span><span class="upload-overlay-bg"></span>';
     }
 
