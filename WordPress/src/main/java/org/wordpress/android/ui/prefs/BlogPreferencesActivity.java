@@ -72,7 +72,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setCustomView(R.layout.site_settings_actionbar);
+                actionBar.setCustomView(R.layout.preferences_actionbar);
             }
 
             FragmentManager fragmentManager = getFragmentManager();
