@@ -1242,6 +1242,7 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
+    <string name="vertical_line" translatable="false">\u007C</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>

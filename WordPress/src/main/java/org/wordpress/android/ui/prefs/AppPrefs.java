@@ -299,13 +299,21 @@ public class AppPrefs {
 
     // Plans
     public static void setGlobalPlans(String jsonOfPlans) {
-        setString(UndeletablePrefKey.GLOBAL_PLANS, jsonOfPlans);
+        if (jsonOfPlans != null) {
+            setString(UndeletablePrefKey.GLOBAL_PLANS, jsonOfPlans);
+        } else {
+            remove(UndeletablePrefKey.GLOBAL_PLANS);
+        }
     }
     public static String getGlobalPlans() {
         return getString(UndeletablePrefKey.GLOBAL_PLANS, "");
     }
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {
-        setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
+        if (jsonOfFeatures != null) {
+            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
+        } else {
+            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
+        }
     }
     public static String getGlobalPlansFeatures() {
         return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");

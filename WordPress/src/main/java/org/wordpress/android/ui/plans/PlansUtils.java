@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -27,35 +29,39 @@ import java.util.Map;
 
 public class PlansUtils {
 
-    public static final String deviceCurrencyCode; // ISO 4217 currency code.
-    public static final String deviceCurrencySymbol;
+    private static String deviceCurrencyCode; // ISO 4217 currency code.
+    private static String deviceCurrencySymbol;
 
-    public static final String DOLLAR_SYMBOL = "$";
-    public static final String DOLLAR_ISO4217_CODE = "USD";
+    private static final String DOLLAR_SYMBOL = "$";
+    private static final String DOLLAR_ISO4217_CODE = "USD";
 
-    static {
-        Currency currency = Currency.getInstance(Locale.getDefault());
-        deviceCurrencyCode = currency.getCurrencyCode();
-        deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
-    }
-
-    public static int getPlanPriceValue(Plan plan) {
-        Hashtable<String, Integer> pricesMap = plan.getPrices();
-        if (pricesMap.containsKey(deviceCurrencyCode)) {
-            return pricesMap.get(deviceCurrencyCode);
-        }
-        // Returns US dollars price
-        return pricesMap.get(DOLLAR_ISO4217_CODE);
-    }
-
-    public static String getPlanPriceCurrencySymbol(Plan plan) {
-        Hashtable<String, Integer> pricesMap = plan.getPrices();
-        if (pricesMap.containsKey(deviceCurrencyCode)) {
-           return deviceCurrencySymbol;
+    /**
+     * Returns the price for the passed plan formatted for the user's locale, defaults
+     * to USD if user's locale isn't matched
+     *
+     * TODO: endpoint will be updated to include the formatted price, so this method is temporary
+     */
+    public static String getPlanDisplayPrice(@NonNull Plan plan) {
+        // lookup currency code/symbol on first use
+        if (deviceCurrencyCode == null) {
+            Currency currency = Currency.getInstance(Locale.getDefault());
+            deviceCurrencyCode = currency.getCurrencyCode();
+            deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
         }
 
-        // Returns US dollars symbol
-        return DOLLAR_SYMBOL;
+        String currencySymbol;
+        int priceValue;
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+            currencySymbol = deviceCurrencySymbol;
+            priceValue = pricesMap.get(deviceCurrencyCode);
+            return currencySymbol + FormatUtils.formatInt(priceValue);
+        } else {
+            // locale not found, default to USD
+            currencySymbol = DOLLAR_SYMBOL;
+            priceValue = pricesMap.get(DOLLAR_ISO4217_CODE);
+            return currencySymbol + FormatUtils.formatInt(priceValue) + " " + DOLLAR_ISO4217_CODE;
+        }
     }
 
     public interface AvailablePlansListener {
@@ -195,7 +201,7 @@ public class PlansUtils {
         return features;
     }
 
-    public static boolean downloadGlobalPlans() {
+    public static void downloadGlobalPlans() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
             @Override
@@ -214,7 +220,6 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
             }
         });
-        return true;
     }
 
     /*
@@ -222,7 +227,7 @@ public class PlansUtils {
      *
      * Return true if the request is enqueued. False otherwise.
      */
-    public static boolean downloadFeatures() {
+    public static void downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtilsV1_2().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -241,8 +246,6 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
             }
         });
-
-        return true;
     }
 
     /**
@@ -274,4 +277,24 @@ public class PlansUtils {
         return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
                 blog != null && blog.getPlanID() != 0;
     }
+
+    /**
+     * Compares two plan products - assumes lower product IDs are "lesser" than higher product IDs
+     */
+    public static final int LESSER_PRODUCT = -1;
+    public static final int EQUAL_PRODUCT = 0;
+    public static final int GREATER_PRODUCT = 1;
+    public static int compareProducts(long lhsProductId, long rhsProductId) {
+        // this duplicates Long.compare(), which wasn't added until API 19
+        return lhsProductId < rhsProductId ? LESSER_PRODUCT : (lhsProductId == rhsProductId ? EQUAL_PRODUCT : GREATER_PRODUCT);
+    }
+
+    /**
+     * Removes stored plan data - for testing purposes
+     */
+    public static void clearPlanData() {
+        AppPrefs.setGlobalPlans(null);
+        AppPrefs.setGlobalPlansFeatures(null);
+    }
+
 }
