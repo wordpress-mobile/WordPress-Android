@@ -106,8 +106,15 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        boolean showPurchaseButton;
         SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
+        Plan globalPlan = PlansUtils.getGlobalPlan(sitePlan.getProductID());
+        if (globalPlan == null) {
+            AppLog.w(AppLog.T.PLANS, "unable to match global plan " + sitePlan.getProductID());
+            finish();
+            return;
+        }
+
+        boolean showPurchaseButton;
         if (sitePlan.isCurrentPlan()) {
             showPurchaseButton = false;
         } else {
@@ -120,9 +127,8 @@ public class PlansActivity extends AppCompatActivity {
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
-            Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
-            txtPurchasePrice.setText(planDetails.getFormattedPrice());
+            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(globalPlan));
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

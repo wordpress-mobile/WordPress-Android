@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -27,35 +29,39 @@ import java.util.Map;
 
 public class PlansUtils {
 
-    public static final String deviceCurrencyCode; // ISO 4217 currency code.
-    public static final String deviceCurrencySymbol;
+    private static String deviceCurrencyCode; // ISO 4217 currency code.
+    private static String deviceCurrencySymbol;
 
-    public static final String DOLLAR_SYMBOL = "$";
-    public static final String DOLLAR_ISO4217_CODE = "USD";
+    private static final String DOLLAR_SYMBOL = "$";
+    private static final String DOLLAR_ISO4217_CODE = "USD";
 
-    static {
-        Currency currency = Currency.getInstance(Locale.getDefault());
-        deviceCurrencyCode = currency.getCurrencyCode();
-        deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
-    }
-
-    public static int getPlanPriceValue(Plan plan) {
-        Hashtable<String, Integer> pricesMap = plan.getPrices();
-        if (pricesMap.containsKey(deviceCurrencyCode)) {
-            return pricesMap.get(deviceCurrencyCode);
-        }
-        // Returns US dollars price
-        return pricesMap.get(DOLLAR_ISO4217_CODE);
-    }
-
-    public static String getPlanPriceCurrencySymbol(Plan plan) {
-        Hashtable<String, Integer> pricesMap = plan.getPrices();
-        if (pricesMap.containsKey(deviceCurrencyCode)) {
-           return deviceCurrencySymbol;
+    /**
+     * Returns the price for the passed plan formatted for the user's locale, defaults
+     * to USD if user's locale isn't matched
+     *
+     * TODO: endpoint will be updated to include the formatted price, so this method is temporary
+     */
+    public static String getPlanDisplayPrice(@NonNull Plan plan) {
+        // lookup currency code/symbol on first use
+        if (deviceCurrencyCode == null) {
+            Currency currency = Currency.getInstance(Locale.getDefault());
+            deviceCurrencyCode = currency.getCurrencyCode();
+            deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
         }
 
-        // Returns US dollars symbol
-        return DOLLAR_SYMBOL;
+        String currencySymbol;
+        int priceValue;
+        Hashtable<String, Integer> pricesMap = plan.getPrices();
+        if (pricesMap.containsKey(deviceCurrencyCode)) {
+            currencySymbol = deviceCurrencySymbol;
+            priceValue = pricesMap.get(deviceCurrencyCode);
+            return currencySymbol + FormatUtils.formatInt(priceValue);
+        } else {
+            // locale not found, default to USD
+            currencySymbol = DOLLAR_SYMBOL;
+            priceValue = pricesMap.get(DOLLAR_ISO4217_CODE);
+            return currencySymbol + FormatUtils.formatInt(priceValue) + " " + DOLLAR_ISO4217_CODE;
+        }
     }
 
     public interface AvailablePlansListener {
@@ -201,7 +207,6 @@ public class PlansUtils {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
-                    // TODO: don't log response - only here for testing
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
@@ -229,7 +234,6 @@ public class PlansUtils {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
-                    // TODO: don't log response - only here for testing
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlansFeatures(response.toString());
