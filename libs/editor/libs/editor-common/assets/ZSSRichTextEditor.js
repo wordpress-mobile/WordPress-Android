@@ -41,9 +41,6 @@ ZSSEditor.caretInfo = { y: 0, height: 0 };
 // Is this device an iPad
 ZSSEditor.isiPad;
 
-// The API level of the native host (Android)
-ZSSEditor.androidApiLevel;
-
 // The current selection
 ZSSEditor.currentSelection;
 
@@ -78,8 +75,6 @@ ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 ZSSEditor.init = function() {
 
     rangy.init();
-
-    ZSSEditor.androidApiLevel = nativeState.getAPILevel();
 
     // Change a few CSS values if the device is an iPad
     ZSSEditor.isiPad = (navigator.userAgent.match(/iPad/i) != null);
@@ -232,7 +227,11 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
 	if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
     } else if (isUsingAndroid) {
-        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
+        if (nativeState.androidApiLevel < 17) {
+            ZSSEditor.callbackThroughIFrame(url);
+        } else {
+            nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
+        }
 	} else {
 		console.log(url);
 	}
@@ -249,6 +248,7 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
  */
 ZSSEditor.callbackThroughIFrame = function(url) {
     var iframe = document.createElement("IFRAME");
+    iframe.setAttribute('sandbox', '');
     iframe.setAttribute("src", url);
 
     // IMPORTANT: the IFrame was showing up as a black box below our text.  By setting its borders
@@ -856,13 +856,13 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
 
-    if (ZSSEditor.androidApiLevel > 18) {
+    if (nativeState.androidApiLevel > 18) {
         var imgContainerClass = 'img_container';
         var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator" contenteditable="false"></progress>';
     } else {
         // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
         var imgContainerClass = 'img_container compat';
-        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.getStringUploading()
+        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.localizedStringUploading
                               + '</span><span class="upload-overlay-bg"></span>';
     }
 
@@ -1587,7 +1587,7 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     }
 
     var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
-                  + nativeState.getStringEdit() + '</span></span>';
+                  + nativeState.localizedStringEdit + '</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -2027,7 +2027,7 @@ ZSSEditor.insertGallery = function( imageIds, type, columns ) {
 
 ZSSEditor.insertLocalGallery = function( placeholderId ) {
     var container = '<span id="' + placeholderId + '" class="gallery_container">['
-                    + nativeState.getStringUploadingGallery() + ']</span>';
+                    + nativeState.localizedStringUploadingGallery + ']</span>';
     this.insertHTML(this.wrapInParagraphTags(container));
 }
 
@@ -2902,7 +2902,6 @@ ZSSField.prototype.sendVideoTappedCallback = function( videoNode ) {
 // MARK: - Callback Execution
 
 ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
-
     var url = callbackScheme + ":";
 
     url = url + "id=" + this.getNodeId();
@@ -2914,7 +2913,11 @@ ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
     if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
     } else if (isUsingAndroid) {
-        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
+        if (nativeState.androidApiLevel < 17) {
+            ZSSEditor.callbackThroughIFrame(url);
+        } else {
+            nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
+        }
     } else {
         console.log(url);
     }

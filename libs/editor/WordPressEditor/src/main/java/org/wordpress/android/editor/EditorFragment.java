@@ -24,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.JavascriptInterface;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.ToggleButton;
@@ -36,6 +35,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -61,7 +61,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final String ARG_PARAM_CONTENT = "param_content";
 
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
-    private static final String JS_STATE_INTERFACE = "nativeState";
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
@@ -122,6 +121,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ProfilingUtils.start("Visual Editor Startup");
+        ProfilingUtils.split("EditorFragment.onCreate");
     }
 
     @Override
@@ -373,14 +375,26 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return;
         }
 
+        ProfilingUtils.split("EditorFragment.initJsEditor");
+
         String htmlEditor = Utils.getHtmlFromFile(getActivity(), "android-editor.html");
         if (htmlEditor != null) {
             htmlEditor = htmlEditor.replace("%%TITLE%%", getString(R.string.visual_editor));
+            htmlEditor = htmlEditor.replace("%%ANDROID_API_LEVEL%%", String.valueOf(Build.VERSION.SDK_INT));
+            htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
+                    "nativeState.localizedStringEdit = '" + getString(R.string.edit) + "';\n" +
+                    "nativeState.localizedStringUploading = '" + getString(R.string.uploading) + "';\n" +
+                    "nativeState.localizedStringUploadingGallery = '" + getString(R.string.uploading_gallery_placeholder) + "';\n");
         }
 
-        mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
-        mWebView.addJavascriptInterface(new NativeStateJsInterface(getActivity().getApplicationContext()),
-                                        JS_STATE_INTERFACE);
+        // To avoid reflection security issues with JavascriptInterface on API<17, we use an iframe to make URL requests
+        // for callbacks from JS instead. These are received by WebViewClient.shouldOverrideUrlLoading() and then
+        // passed on to the JsCallbackReceiver
+        if (Build.VERSION.SDK_INT < 17) {
+            mWebView.setJsCallbackReceiver(new JsCallbackReceiver(this));
+        } else {
+            mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
+        }
 
         mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
 
@@ -918,6 +932,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void onDomLoaded() {
+        ProfilingUtils.split("EditorFragment.onDomLoaded");
+
         mWebView.post(new Runnable() {
             public void run() {
                 mDomHasLoaded = true;
@@ -974,6 +990,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                     mWaitingGalleries.clear();
                 }
+
+                ProfilingUtils.split("EditorFragment.onDomLoaded completed");
+                ProfilingUtils.dump();
+                ProfilingUtils.stop();
             }
         });
     }
@@ -1340,34 +1360,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // Insert closing tag
             content.insert(selectionEnd, endTag);
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
-        }
-    }
-
-    private class NativeStateJsInterface {
-        Context mContext;
-
-        NativeStateJsInterface(Context context) {
-            mContext = context;
-        }
-
-        @JavascriptInterface
-        public String getStringEdit() {
-            return mContext.getString(R.string.edit);
-        }
-
-        @JavascriptInterface
-        public String getStringUploading() {
-            return mContext.getString(R.string.uploading);
-        }
-
-        @JavascriptInterface
-        public String getStringUploadingGallery() {
-            return mContext.getString(R.string.uploading_gallery_placeholder);
-        }
-
-        @JavascriptInterface
-        public int getAPILevel() {
-            return Build.VERSION.SDK_INT;
         }
     }
 }
