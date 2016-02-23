@@ -90,12 +90,7 @@ public class DetailListPreference extends ListPreference
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mSelectedIndex != which) {
-                            mSelectedIndex = which;
-                            mListAdapter.notifyDataSetChanged();
-                            setValue(getEntryValues()[mSelectedIndex].toString());
-                            notifyChanged();
-                        }
+                        mSelectedIndex = which;
                     }
                 });
 
@@ -165,8 +160,6 @@ public class DetailListPreference extends ListPreference
         if (values != null && index >= 0 && index < values.length) {
             String value = String.valueOf(values[index]);
             callChangeListener(value);
-        } else {
-            callChangeListener(mStartingValue);
         }
     }
 
@@ -276,7 +269,6 @@ public class DetailListPreference extends ListPreference
             if (radioButton != null && values != null && position < values.length) {
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
-                callChangeListener(values[position]);
             }
         }
     }
