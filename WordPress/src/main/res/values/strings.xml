@@ -32,7 +32,7 @@
     <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="pages">Pages</string>
-    <string name="about">About</string>
+    <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -72,6 +72,7 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
+    <string name="interface_language">Interface Language</string>
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
     <string name="never">Never</string>
@@ -591,7 +592,6 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 
@@ -758,7 +758,8 @@
     <string name="stats_insights_best_ever">Best Views Ever</string>
 
     <!-- invalid_url -->
-    <string name="invalid_url_message">Check that the blog URL entered is valid</string>
+    <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
+    <string name="invalid_url_message">Check that the URL entered is valid</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -827,6 +828,7 @@
     <string name="notifications_comments_other_blogs">Comments on other sites</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
+    <string name="email_address">Email address</string>
     <string name="app_notifications">App notifications</string>
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
@@ -934,7 +936,7 @@
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_post_my_profile">Couldn\'t save your profile</string>
-    <string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
+    <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
@@ -1278,5 +1280,11 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+
+    <!--Account Settings-->
+    <string name="account_settings">@string/me_btn_settings</string>
+    <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+    <string name="primary_site">Primary site</string>
+    <string name="web_address">Web Address</string>
 
 </resources>
