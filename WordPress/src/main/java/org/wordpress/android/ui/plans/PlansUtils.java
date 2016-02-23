@@ -288,4 +288,13 @@ public class PlansUtils {
         // this duplicates Long.compare(), which wasn't added until API 19
         return lhsProductId < rhsProductId ? LESSER_PRODUCT : (lhsProductId == rhsProductId ? EQUAL_PRODUCT : GREATER_PRODUCT);
     }
+
+    /**
+     * Removes stored plan data - for testing purposes
+     */
+    public static void clearPlanData() {
+        AppPrefs.setGlobalPlans(null);
+        AppPrefs.setGlobalPlansFeatures(null);
+    }
+
 }
