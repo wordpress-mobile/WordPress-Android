@@ -201,7 +201,7 @@ public class PlansUtils {
         return features;
     }
 
-    public static boolean downloadGlobalPlans() {
+    public static void downloadGlobalPlans() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
             @Override
@@ -220,7 +220,6 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
             }
         });
-        return true;
     }
 
     /*
@@ -228,7 +227,7 @@ public class PlansUtils {
      *
      * Return true if the request is enqueued. False otherwise.
      */
-    public static boolean downloadFeatures() {
+    public static void downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
         WordPress.getRestClientUtilsV1_2().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
@@ -247,8 +246,6 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
             }
         });
-
-        return true;
     }
 
     /**

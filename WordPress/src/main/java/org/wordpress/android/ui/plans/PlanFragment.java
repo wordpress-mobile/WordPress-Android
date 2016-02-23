@@ -208,10 +208,6 @@ public class PlanFragment extends Fragment {
         return mSitePlan;
     }
 
-    public Plan getPlanDetails() {
-        return mPlanDetails;
-    }
-
     private static final String UNICODE_CHECKMARK = "\u2713";
     String getTitle() {
         if (mSitePlan.isCurrentPlan()) {
