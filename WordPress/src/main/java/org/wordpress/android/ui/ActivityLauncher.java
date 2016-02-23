@@ -20,15 +20,14 @@ import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.plans.PlansActivity;
-import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -70,12 +69,6 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
-        slideInFromRight(context, intent);
-    }
-
-    public static void viewBlogPlans(Context context, int blogLocalTableId) {
-        Intent intent = new Intent(context, PlansActivity.class);
-        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         slideInFromRight(context, intent);
     }
 
@@ -190,7 +183,7 @@ public class ActivityLauncher {
     }
 
     public static void viewAccountSettings(Activity activity) {
-        Intent intent = new Intent(activity, SettingsActivity.class);
+        Intent intent = new Intent(activity, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
     }
