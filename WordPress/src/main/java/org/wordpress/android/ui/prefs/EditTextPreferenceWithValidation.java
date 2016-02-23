@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Patterns;
@@ -12,12 +11,11 @@ import android.view.View;
 import android.widget.Button;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EditTextPreferenceWithValidation extends EditTextPreference {
+public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
     private ValidationType mValidationType = ValidationType.NONE;
 
     public EditTextPreferenceWithValidation(Context context) {
@@ -33,15 +31,13 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
     }
 
     @Override
-    protected void showDialog(Bundle state)
-    {
+    protected void showDialog(Bundle state) {
         super.showDialog(state);
 
         final AlertDialog dialog = (AlertDialog) getDialog();
         Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negativeButton = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         if (positiveButton != null) {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String error = null;
@@ -60,9 +56,7 @@ public class EditTextPreferenceWithValidation extends EditTextPreference {
                     }
                 }
             });
-            WPPrefUtils.layoutAsFlatButton(positiveButton);
         }
-        if (negativeButton != null) WPPrefUtils.layoutAsFlatButton(negativeButton);
 
         CharSequence summary = getSummary();
         if (TextUtils.isEmpty(summary)) {
