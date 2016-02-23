@@ -75,6 +75,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
         mEmailPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
+        mWebAddressPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
