@@ -157,21 +157,25 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         final @DrawableRes int backgroundRes =
                 isSelected ? R.drawable.indicator_circle_selected : R.drawable.indicator_circle_unselected;
 
-        // scale it out, change the background, then scale it back in
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.25f);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.25f);
-        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(indicator, scaleX, scaleY);
-        anim.setDuration(150);
-        anim.setInterpolator(new AccelerateInterpolator());
-        anim.setRepeatCount(1);
-        anim.setRepeatMode(ValueAnimator.REVERSE);
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                indicator.setBackgroundResource(backgroundRes);
-            }
-        });
-        anim.start();
+        if (isSelected) {
+            // scale it out, change the background, then scale it back in
+            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0.25f);
+            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0.25f);
+            ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(indicator, scaleX, scaleY);
+            anim.setDuration(150);
+            anim.setInterpolator(new AccelerateInterpolator());
+            anim.setRepeatCount(1);
+            anim.setRepeatMode(ValueAnimator.REVERSE);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    indicator.setBackgroundResource(backgroundRes);
+                }
+            });
+            anim.start();
+        } else {
+            indicator.setBackgroundResource(backgroundRes);
+        }
     }
 
     private final View.OnClickListener mIndicatorClickListener = new View.OnClickListener() {

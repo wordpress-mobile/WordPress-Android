@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,19 +133,18 @@ public class PlansActivity extends AppCompatActivity {
         }
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
+        ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
-            String purchase = planDetails.getFormattedPrice()
-                    + " | <b>"
-                    + getString(R.string.plan_purchase_now)
-                    + "</b>";
-            TextView txtPurchase = (TextView) framePurchase.findViewById(R.id.text_purchase);
-            txtPurchase.setText(Html.fromHtml(purchase));
-            txtPurchase.setOnClickListener(new View.OnClickListener() {
+            TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
+            txtPurchasePrice.setText(planDetails.getFormattedPrice());
+            containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startPurchaseProcess();
                 }
             });
+        } else {
+            containerPurchase.setOnClickListener(null);
         }
 
         if (showPurchaseButton && framePurchase.getVisibility() != View.VISIBLE) {
