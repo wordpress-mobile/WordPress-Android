@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -75,5 +76,19 @@ public class AccountSettingsActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        setTitle(getString(titleId));
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            TextView textView = (TextView) actionBar.getCustomView().findViewById(R.id.title);
+            textView.setText(title);
+        }
     }
 }
