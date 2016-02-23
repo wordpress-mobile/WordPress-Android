@@ -36,6 +36,7 @@ public abstract class EditorWebViewAbstract extends WebView {
 
     private OnImeBackListener mOnImeBackListener;
     private AuthHeaderRequestListener mAuthHeaderRequestListener;
+    private JsCallbackReceiver mJsCallbackReceiver;
 
     private Map<String, String> mHeaderMap = new HashMap<>();
 
@@ -53,6 +54,12 @@ public abstract class EditorWebViewAbstract extends WebView {
         this.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url != null && url.startsWith("callback") && mJsCallbackReceiver != null) {
+                    String[] split = url.split(":", 2);
+                    String callbackId = split[0];
+                    String params = (split.length > 1 ? split[1] : "");
+                    mJsCallbackReceiver.executeCallback(callbackId, params);
+                }
                 return true;
             }
 
@@ -176,6 +183,14 @@ public abstract class EditorWebViewAbstract extends WebView {
 
     public void setAuthHeaderRequestListener(AuthHeaderRequestListener listener) {
         mAuthHeaderRequestListener = listener;
+    }
+
+    /**
+     * Used on API<17 to handle callbacks as a safe alternative to JavascriptInterface (which has security risks
+     * at those API levels).
+     */
+    public void setJsCallbackReceiver(JsCallbackReceiver jsCallbackReceiver) {
+        mJsCallbackReceiver = jsCallbackReceiver;
     }
 
     @Override
