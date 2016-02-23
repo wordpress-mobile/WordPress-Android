@@ -44,6 +44,7 @@ import android.widget.Toast;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
@@ -597,7 +598,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        // Disable format bar buttons while there are failed media uploads in the post/page
+        // Disable ActionBar buttons while there are failed media uploads in the post/page
         if (mEditorFragment.hasFailedMediaUploads()) {
             ToastUtils.showToast(this, R.string.editor_toast_failed_uploads, Duration.SHORT);
             return false;
@@ -934,29 +935,48 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
-        String url = cursor.getString(cursor.getColumnIndex("fileURL"));
+        String url = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
         if (url == null) {
             cursor.close();
             return null;
         }
 
-        String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        boolean isVideo = mimeType != null && mimeType.contains("video");
         MediaFile mediaFile = new MediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
-        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex("caption")));
-        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex("width")));
-        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex("height")));
+        mediaFile.setFileURL(url);
+        mediaFile.setCaption(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_CAPTION)));
+        mediaFile.setDescription(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
+        mediaFile.setTitle(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE)));
+        mediaFile.setWidth(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH)));
+        mediaFile.setHeight(cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT)));
+        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME)));
+        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
+        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex(
+                WordPressDB.COLUMN_NAME_VIDEO_PRESS_SHORTCODE)));
+
+        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
         mediaFile.setMimeType(mimeType);
-        mediaFile.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
-        mediaFile.setThumbnailURL(cursor.getString(cursor.getColumnIndex("thumbnailURL")));
-        mediaFile.setDateCreatedGMT(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
-        mediaFile.setVideoPressShortCode(cursor.getString(cursor.getColumnIndex("videoPressShortcode")));
-        mediaFile.setFileURL(cursor.getString(cursor.getColumnIndex("fileURL")));
-        mediaFile.setVideo(isVideo);
+
+        if (mimeType != null && !mimeType.isEmpty()) {
+            mediaFile.setVideo(mimeType.contains("video"));
+        } else {
+            mediaFile.setVideo(MediaUtils.isVideo(url));
+        }
+
+        // Make sure we're using a valid thumbnail for video. XML-RPC returns the video URL itself as the thumbnail URL
+        // for videos. If we can't get a real thumbnail for the Media Library video (currently only possible for
+        // VideoPress videos), we should not set any thumbnail.
+        String thumbnailUrl = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
+        if (mediaFile.isVideo() && !MediaUtils.isValidImage(thumbnailUrl)) {
+            if (WPUrlUtils.isWordPressCom(url)) {
+                thumbnailUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(url);
+            } else {
+                thumbnailUrl = "";
+            }
+        }
+        mediaFile.setThumbnailURL(thumbnailUrl);
+
         WordPress.wpDB.saveMediaFile(mediaFile);
         cursor.close();
         return mediaFile;
@@ -982,6 +1002,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaFile == null) {
             return null;
         }
+
+        // Since Photon doesn't support video, skip Photon checking and return the existing file URL
+        // (using a Photon URL for video will result in a 404 error)
+        if (mediaFile.isVideo()) {
+            return mediaFile.getFileURL();
+        }
+
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = mediaFile.getFileURL();
@@ -1711,10 +1738,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        // Notify visual editor that a normal image has finished uploading (not part of a gallery)
+        // Notify visual editor that a normal media item has finished uploading (not part of a gallery)
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, event.mRemoteMediaId,
-                    event.mRemoteMediaUrl);
+            MediaFile mediaFile = new MediaFile();
+            mediaFile.setPostID(getPost().getLocalTablePostId());
+            mediaFile.setMediaId(event.mRemoteMediaId);
+            mediaFile.setFileURL(event.mRemoteMediaUrl);
+            mediaFile.setVideoPressShortCode(event.mSecondaryRemoteMediaId);
+            mediaFile.setThumbnailURL(WordPressMediaUtils.getVideoPressVideoPosterFromURL(event.mRemoteMediaUrl));
+
+            mEditorMediaUploadListener.onMediaUploadSucceeded(event.mLocalMediaId, mediaFile);
         }
     }
 
@@ -1886,6 +1919,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mediaFile.setUploadState("queued");
         mediaFile.setDateCreatedGMT(currentTime);
         mediaFile.setMediaId(String.valueOf(currentTime));
+        mediaFile.setVideo(MediaUtils.isVideo(path));
 
         if (mimeType != null && mimeType.startsWith("image")) {
             // get width and height

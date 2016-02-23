@@ -73,6 +73,13 @@ public class Utils {
         return html;
     }
 
+    public static String escapeQuotes(String text) {
+        if (text != null) {
+            text = text.replace("'", "\\'").replace("\"", "\\\"");
+        }
+        return text;
+    }
+
     /**
      * Splits a delimited string into a set of strings.
      * @param string the delimited string to split

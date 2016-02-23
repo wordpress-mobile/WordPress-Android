@@ -744,7 +744,7 @@ public class ApiHelper {
 
     public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
-            void onSuccess(String remoteId, String remoteUrl);
+            void onSuccess(String remoteId, String remoteUrl, String secondaryId);
             void onProgressUpdate(float progress);
         }
         private Callback mCallback;
@@ -862,7 +862,8 @@ public class ApiHelper {
                 if (result != null) {
                     String remoteId = (String) result.get("id");
                     String remoteUrl = (String) result.get("url");
-                    mCallback.onSuccess(remoteId, remoteUrl);
+                    String videoPressId = (String) result.get("videopress_shortcode");
+                    mCallback.onSuccess(remoteId, remoteUrl, videoPressId);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }

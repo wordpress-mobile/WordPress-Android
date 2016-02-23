@@ -33,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -1595,7 +1596,8 @@ public class WordPressDB {
             return "";
         }
 
-        String shortcode = "[wpvideo " + videoId + "]";
+        String shortcode = ShortcodeUtils.getVideoPressShortcodeFromId(videoId);
+
         String query = "SELECT " + COLUMN_NAME_FILE_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND videoPressShortcode=?";
         return SqlUtils.stringForQuery(db, query, new String[]{blogId, shortcode});
     }

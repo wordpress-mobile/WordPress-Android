@@ -171,12 +171,12 @@ public class MediaUploadService extends Service {
         mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(mContext, mediaFile,
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
-            public void onSuccess(String remoteId, String remoteUrl) {
+            public void onSuccess(String remoteId, String remoteUrl, String secondaryId) {
                 // once the file has been uploaded, update the local database entry (swap the id with the remote id)
                 // and download the new one
                 WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, remoteId);
                 EventBus.getDefault().post(new MediaEvents.MediaUploadSucceeded(blogIdStr, mediaId,
-                        remoteId, remoteUrl));
+                        remoteId, remoteUrl, secondaryId));
                 fetchMediaFile(remoteId);
             }
 
