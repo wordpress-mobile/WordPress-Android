@@ -270,7 +270,9 @@ public class DetailListPreference extends ListPreference
             CharSequence[] values = getEntryValues();
 
             if (radioButton != null && values != null && position < values.length) {
-                mSelectedRadioButton.setChecked(false);
+                if (mSelectedRadioButton != null) {
+                    mSelectedRadioButton.setChecked(false);
+                }
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
                 mSelectedRadioButton = radioButton;
