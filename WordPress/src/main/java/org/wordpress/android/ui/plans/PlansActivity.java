@@ -106,35 +106,21 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
-        Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
-
         boolean showPurchaseButton;
+        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
         if (sitePlan.isCurrentPlan()) {
             showPurchaseButton = false;
         } else {
-            long currentPlanId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
-            long thisPlanId = sitePlan.getProductID();
-            if (currentPlanId == PlansConstants.FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.FREE_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else if (currentPlanId == PlansConstants.JETPACK_FREE_PLAN_ID) {
-                showPurchaseButton = true;
-            } else if (currentPlanId == PlansConstants.JETPACK_PREMIUM_PLAN_ID) {
-                showPurchaseButton = (thisPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID);
-            } else if (currentPlanId == PlansConstants.JETPACK_BUSINESS_PLAN_ID) {
-                showPurchaseButton = false;
-            } else {
-                showPurchaseButton = true;
-            }
+            // don't show the purchase button unless the plan at this position is "greater" than
+            // the current plan for this site
+            long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+            showPurchaseButton = (PlansUtils.compareProducts(sitePlan.getProductID(), currentPlanProductId) == PlansUtils.GREATER_PRODUCT);
         }
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
+            Plan planDetails = ((PlanFragment) fragment).getPlanDetails();
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
             txtPurchasePrice.setText(planDetails.getFormattedPrice());
             containerPurchase.setOnClickListener(new View.OnClickListener() {
@@ -309,15 +295,11 @@ public class PlansActivity extends AppCompatActivity {
             if (!isFinishing()) {
                 mAvailablePlans = new SitePlan[plans.size()];
                 plans.toArray(mAvailablePlans);
-                // make sure plans are correctly sorted - assumes lower product IDs are "lesser"
-                // than higher product IDs
+                // make sure plans are correctly sorted
                 Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
                     @Override
                     public int compare(SitePlan lhs, SitePlan rhs) {
-                        long lhsId = lhs.getProductID();
-                        long rhsId = rhs.getProductID();
-                        // this duplicates Long.compare(), which wasn't added until API 19
-                        return lhsId < rhsId ? -1 : (lhsId == rhsId ? 0 : 1);
+                        return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
                     }
                 });
                 setupPlansUI();
