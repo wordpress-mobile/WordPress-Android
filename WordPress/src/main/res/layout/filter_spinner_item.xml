@@ -8,4 +8,5 @@
     android:textColor="@color/white"
     android:paddingRight="0dp"
     android:paddingLeft="0dp"
+    android:drawableRight="@drawable/arrow"
     tools:text="spinner item"/>
