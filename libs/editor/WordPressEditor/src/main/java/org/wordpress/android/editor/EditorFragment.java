@@ -746,11 +746,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     String mediaId = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
+                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                                 mediaFile.getVideoPressShortCode());
 
                         mWebView.execJavaScriptFromString("ZSSEditor.insertVideo('" + mediaUrl + "', '" +
-                                mediaFile.getThumbnailURL() + "', '" + videoPressId +  "');");
+                                posterUrl + "', '" + videoPressId +  "');");
                     } else {
                         mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId +
                                 "');");
@@ -840,7 +841,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
                                 ", '" + remoteMediaId + "', '" + remoteUrl + "');");
                     } else if (mediaType.equals(MediaType.VIDEO)) {
-                        String posterUrl = mediaFile.getThumbnailURL();
+                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                                 mediaFile.getVideoPressShortCode());
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
