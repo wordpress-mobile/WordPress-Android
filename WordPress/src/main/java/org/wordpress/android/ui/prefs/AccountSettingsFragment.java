@@ -79,7 +79,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
+        mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
+        mLanguagePreference.setOnPreferenceChangeListener(this);
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
@@ -153,9 +155,17 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             showPendingEmailChangeSnackbar(newValue.toString());
             mEmailPreference.setEnabled(false);
             return false;
+        } else if (preference == mPrimarySitePreference) {
+            changePrimaryBlogPreference(newValue.toString());
+            updatePrimaryBlog(newValue.toString());
+            return false;
         } else if (preference == mWebAddressPreference) {
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
+            return false;
+        } else if (preference == mLanguagePreference) {
+            changeLanguage(newValue.toString());
+            return false;
         }
 
         return true;
