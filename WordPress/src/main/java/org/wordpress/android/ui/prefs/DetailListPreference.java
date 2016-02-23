@@ -23,8 +23,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.TypefaceCache;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Custom {@link ListPreference} used to display detail text per item.
  */
@@ -164,14 +162,12 @@ public class DetailListPreference extends ListPreference
     protected void onDialogClosed(boolean positiveResult) {
         int index = positiveResult ? mSelectedIndex : findIndexOfValue(mStartingValue);
         CharSequence[] values = getEntryValues();
-        String newValue = mStartingValue;
         if (values != null && index >= 0 && index < values.length) {
-            newValue = String.valueOf(values[index]);
-            callChangeListener(newValue);
+            String value = String.valueOf(values[index]);
+            callChangeListener(value);
         } else {
             callChangeListener(mStartingValue);
         }
-        EventBus.getDefault().post(new PrefsEvents.ListPreferenceDialogClosed(this, positiveResult, mStartingValue, newValue));
     }
 
     @Override

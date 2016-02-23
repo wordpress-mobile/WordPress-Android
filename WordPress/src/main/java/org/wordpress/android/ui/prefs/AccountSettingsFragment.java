@@ -367,17 +367,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         }
     }
 
-    public void onEventMainThread(PrefsEvents.ListPreferenceDialogClosed event) {
-        if (event.positiveResult && !event.startingValue.equals(event.newValue)) {
-            if (event.preference == mLanguagePreference) {
-                changeLanguage(event.newValue);
-            } else if (event.preference == mPrimarySitePreference) {
-                changePrimaryBlogPreference(event.newValue);
-                updatePrimaryBlog(event.newValue);
-            }
-        }
-    }
-
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
