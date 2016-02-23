@@ -850,6 +850,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        // Show two pages for the visual editor, and add a third page for the EditPostPreviewFragment for legacy
+        private static final int NUM_PAGES_VISUAL_EDITOR = 2;
+        private static final int NUM_PAGES_LEGACY_EDITOR = 3;
+
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -897,8 +901,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return (mShowNewEditor ? NUM_PAGES_VISUAL_EDITOR : NUM_PAGES_LEGACY_EDITOR);
         }
     }
 
