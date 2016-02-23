@@ -740,32 +740,34 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return;
         }
 
+        final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
+
         mWebView.post(new Runnable() {
             @Override
             public void run() {
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
                     String mediaId = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
-                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
+                        String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                                 mediaFile.getVideoPressShortCode());
 
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertVideo('" + mediaUrl + "', '" +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertVideo('" + safeMediaUrl + "', '" +
                                 posterUrl + "', '" + videoPressId +  "');");
                     } else {
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + mediaUrl + "', '" + mediaId +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + safeMediaUrl + "', '" + mediaId +
                                 "');");
                     }
                 } else {
                     String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
-                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
+                        String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
                                 "');");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + id + ", " + 0 + ");");
                         mUploadingMedia.put(id, MediaType.VIDEO);
                     } else {
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + mediaUrl +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + safeMediaUrl +
                                 "');");
                         mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
                         mUploadingMedia.put(id, MediaType.IMAGE);
@@ -802,8 +804,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
-                        videoUrl + "', '" + posterUrl + "');");
+                    mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
+                        Utils.escapeQuotes(videoUrl) + "', '" + Utils.escapeQuotes(posterUrl) + "');");
             }
         });
     }
@@ -835,13 +837,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mWebView.post(new Runnable() {
                 @Override
                 public void run() {
-                    String remoteUrl = mediaFile.getFileURL();
+                    String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
                     if (mediaType.equals(MediaType.IMAGE)) {
                         String remoteMediaId = mediaFile.getMediaId();
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
                                 ", '" + remoteMediaId + "', '" + remoteUrl + "');");
                     } else if (mediaType.equals(MediaType.VIDEO)) {
-                        String posterUrl = StringUtils.notNullStr(mediaFile.getThumbnailURL());
+                        String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                                 mediaFile.getVideoPressShortCode());
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
@@ -882,11 +884,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 switch (mediaType) {
                     case IMAGE:
                         mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
-                                + errorMessage.replace("'", "\\'").replace("\"", "\\\"") + "');");
+                                + Utils.escapeQuotes(errorMessage) + "');");
                         break;
                     case VIDEO:
                         mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
-                                + errorMessage.replace("'", "\\'").replace("\"", "\\\"") + "');");
+                                + Utils.escapeQuotes(errorMessage) + "');");
                 }
                 mFailedMediaIds.add(mediaId);
                 mUploadingMedia.remove(mediaId);
