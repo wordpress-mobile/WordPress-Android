@@ -27,6 +27,7 @@ import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +106,7 @@ public class PlanFragment extends Fragment {
         txtProductName.setText(Html.fromHtml(productName));
 
         TextView txtTagLine = (TextView) mPlanContainerView.findViewById(R.id.text_tagline);
-        txtTagLine.setText(mPlanDetails.getTagline());
+        txtTagLine.setText(HtmlUtils.fastUnescapeHtml(mPlanDetails.getTagline()));
 
         // The current plan could probably have some features to highlight on the details screen
         addFeaturesToHighlight();
@@ -168,7 +169,7 @@ public class PlanFragment extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.plan_section_title, mPlanContainerView, false);
 
         TextView txtTitle = (TextView) view.findViewById(R.id.text_section_title);
-        txtTitle.setText(title);
+        txtTitle.setText(HtmlUtils.fastUnescapeHtml(title));
 
         mPlanContainerView.addView(view);
     }
@@ -181,8 +182,10 @@ public class PlanFragment extends Fragment {
 
         TextView txtTitle = (TextView) view.findViewById(R.id.text_feature_title);
         TextView txtDescription = (TextView) view.findViewById(R.id.text_feature_description);
-        txtTitle.setText(feature.getTitleForPlan(mPlanDetails.getProductID()));
-        txtDescription.setText(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
+        String title = HtmlUtils.fastUnescapeHtml(feature.getTitleForPlan(mPlanDetails.getProductID()));
+        String description = HtmlUtils.fastUnescapeHtml(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
+        txtTitle.setText(title);
+        txtDescription.setText(description);
 
         // TODO: right now icon is always empty, so we show noticon_publish as a placeholder
         NetworkImageView imgIcon = (NetworkImageView) view.findViewById(R.id.image_icon);
