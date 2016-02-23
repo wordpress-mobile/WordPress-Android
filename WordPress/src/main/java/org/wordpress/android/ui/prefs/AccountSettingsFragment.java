@@ -290,7 +290,11 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
         Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
+
         Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+        // check for a possible NPE
+        if (pair == null) return;
+
         String[] sortedEntries = pair.first;
         String[] sortedValues = pair.second;
 
