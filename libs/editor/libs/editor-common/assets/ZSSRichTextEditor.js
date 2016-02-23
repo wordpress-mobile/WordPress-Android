@@ -1086,11 +1086,11 @@ ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
     var matches = tmpDom.find("img.uploading");
 
     for(var i = 0; i < matches.size(); i++) {
-        var mediaId = matches[i].getAttribute("data-wpid");
-        var videoId = matches[i].getAttribute("data-video_wpid");
-        if (mediaId != null) {
+        if (matches[i].hasAttribute('data-wpid')) {
+            var mediaId = matches[i].getAttribute('data-wpid');
             ZSSEditor.markImageUploadFailed(mediaId, message);
-        } else if (videoId != null) {
+        } else if (matches[i].hasAttribute('data-video_wpid')) {
+            var videoId = matches[i].getAttribute('data-video_wpid');
             ZSSEditor.markVideoUploadFailed(videoId, message);
         }
     }
@@ -1108,13 +1108,16 @@ ZSSEditor.getFailedMedia = function() {
     var functionArgument = "function=getFailedMedia";
     var mediaIdArray = [];
 
-    for (var i = 0; i < matches.size(); i ++) {
-        var imageId = matches[i].getAttribute("data-wpid");
-        var videoId = matches[i].getAttribute('data-video_wpid');
-        if (imageId != null) {
-            mediaIdArray.push(imageId);
-        } else if (videoId != null) {
-            mediaIdArray.push(videoId);
+    for (var i = 0; i < matches.size(); i++) {
+        var mediaId;
+        if (matches[i].hasAttribute("data-wpid")) {
+            mediaId = matches[i].getAttribute("data-wpid");
+        } else if (matches[i].hasAttribute("data-video_wpid")) {
+            mediaId = matches[i].getAttribute("data-video_wpid");
+        }
+
+        if (mediaId.length > 0) {
+            mediaIdArray.push(mediaId);
         }
     }
 
