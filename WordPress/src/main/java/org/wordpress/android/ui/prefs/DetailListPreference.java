@@ -208,6 +208,8 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
+        private RadioButton mSelectedRadioButton;
+
         public DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -244,6 +246,7 @@ public class DetailListPreference extends ListPreference
             }
 
             if (radioButton != null) {
+                if (mSelectedIndex == position) mSelectedRadioButton = radioButton;
                 radioButton.setChecked(mSelectedIndex == position);
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -267,8 +270,10 @@ public class DetailListPreference extends ListPreference
             CharSequence[] values = getEntryValues();
 
             if (radioButton != null && values != null && position < values.length) {
+                mSelectedRadioButton.setChecked(false);
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
+                mSelectedRadioButton = radioButton;
             }
         }
     }
