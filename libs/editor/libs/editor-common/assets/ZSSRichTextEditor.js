@@ -1185,7 +1185,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var progressIdentifier = this.getVideoProgressIdentifier(videoNodeIdentifier);
     var videoContainerIdentifier = this.getVideoContainerIdentifier(videoNodeIdentifier);
 
-    if (ZSSEditor.androidApiLevel > 18) {
+    if (nativeState.androidApiLevel > 18) {
         var videoContainerClass = 'video_container';
         var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator"'
                 + 'contenteditable="false"></progress>';
