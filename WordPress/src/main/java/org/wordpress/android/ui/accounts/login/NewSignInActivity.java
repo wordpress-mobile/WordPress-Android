@@ -3,12 +3,13 @@ package org.wordpress.android.ui.accounts.login;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 
-public class NewSignInActivity extends AppCompatActivity {
+public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnFragmentInteractionListener {
     public String email = "";
 
     @Override
@@ -41,5 +42,14 @@ public class NewSignInActivity extends AppCompatActivity {
 
     public void requestMagicLink() {
 
+    }
+
+    @Override
+    public void onFragmentInteraction(Boolean shouldSendMagicLink) {
+        if (shouldSendMagicLink) {
+            // request url
+        } else {
+            // send to password screen
+        }
     }
 }
