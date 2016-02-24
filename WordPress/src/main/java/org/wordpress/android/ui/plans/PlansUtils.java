@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PlansUtils {
 
@@ -74,7 +75,8 @@ public class PlansUtils {
             return false;
         }
 
-        WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
@@ -200,7 +202,8 @@ public class PlansUtils {
     }
 
     public static void downloadGlobalPlans() {
-        WordPress.getRestClientUtilsV1_2().get("plans/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtilsV1_3().get("plans/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
@@ -225,7 +228,8 @@ public class PlansUtils {
      * Return true if the request is enqueued. False otherwise.
      */
     public static void downloadFeatures() {
-        WordPress.getRestClientUtilsV1_2().get("plans/features/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        Map<String, String> params = getDefaultRestCallParameters();
+        WordPress.getRestClientUtilsV1_2().get("plans/features/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
@@ -242,6 +246,23 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
             }
         });
+    }
+
+    /**
+     * This function returns default parameters used in all REST Calls in Plans.
+     *
+     * The "locale" parameter fox example is one of those we need to add to the request. It must be set to retrieve
+     * the localized version of plans descriptions and avoid hardcode them in code.
+     *
+     * @return The map with default parameters.
+     */
+    private static Map<String, String> getDefaultRestCallParameters() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
     /**
