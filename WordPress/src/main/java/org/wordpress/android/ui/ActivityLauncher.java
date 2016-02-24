@@ -227,7 +227,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
+        Intent intent = new Intent(activity, NewSignInActivity.class);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
