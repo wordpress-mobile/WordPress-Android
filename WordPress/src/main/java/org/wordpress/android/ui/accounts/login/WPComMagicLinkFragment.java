@@ -65,9 +65,9 @@ public class WPComMagicLinkFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(Boolean shouldSendMagicLink) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentInteraction(shouldSendMagicLink);
         }
     }
 
