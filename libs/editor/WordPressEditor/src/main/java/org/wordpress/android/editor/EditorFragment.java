@@ -825,6 +825,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public boolean isUploadingMedia() {
+        return (mUploadingMedia.size() > 0);
+    }
+
+    @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
     }
