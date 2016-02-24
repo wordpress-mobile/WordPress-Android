@@ -35,6 +35,7 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
             WPComMagicLinkFragment fragment = WPComMagicLinkFragment.newInstance(email);
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else {
             // self-hosted flow
