@@ -703,7 +703,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             Thread.currentThread().interrupt();
         }
 
-        return StringUtils.notNullStr(mTitle);
+        return StringUtils.notNullStr(mTitle.replaceAll("&nbsp;$", ""));
     }
 
     /**
