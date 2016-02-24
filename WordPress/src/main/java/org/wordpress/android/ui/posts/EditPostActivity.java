@@ -52,6 +52,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.AccountHelper;
@@ -80,6 +81,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -107,6 +110,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -2027,6 +2031,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
+        // Set the error listener
+        if (mEditorFragment instanceof EditorFragment) {
+            ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
+                @Override
+                public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
+                    CrashlyticsUtils.logException(new Exception(message), ExceptionType.SPECIFIC, T.EDITOR,
+                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
+                }
+
+                @Override
+                public void onJavaScriptAlert(String url, String message) {
+                    // no op
+                }
+            });
+        }
+
     }
 
     @Override

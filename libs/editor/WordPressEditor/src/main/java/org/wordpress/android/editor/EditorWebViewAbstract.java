@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ConsoleMessage;
+import android.webkit.ConsoleMessage.MessageLevel;
 import android.webkit.JsResult;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
@@ -19,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HTTPUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -36,6 +38,7 @@ public abstract class EditorWebViewAbstract extends WebView {
 
     private OnImeBackListener mOnImeBackListener;
     private AuthHeaderRequestListener mAuthHeaderRequestListener;
+    private ErrorListener mErrorListener;
     private JsCallbackReceiver mJsCallbackReceiver;
 
     private Map<String, String> mHeaderMap = new HashMap<>();
@@ -65,7 +68,7 @@ public abstract class EditorWebViewAbstract extends WebView {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                AppLog.e(AppLog.T.EDITOR, description);
+                AppLog.e(T.EDITOR, description);
             }
 
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -96,7 +99,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
-                        AppLog.e(AppLog.T.EDITOR, e);
+                        AppLog.e(T.EDITOR, e);
                     }
                 }
 
@@ -128,7 +131,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
-                        AppLog.e(AppLog.T.EDITOR, e);
+                        AppLog.e(T.EDITOR, e);
                     }
                 }
 
@@ -139,13 +142,23 @@ public abstract class EditorWebViewAbstract extends WebView {
         this.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(@NonNull ConsoleMessage cm) {
-                AppLog.d(AppLog.T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                if (cm.messageLevel() == MessageLevel.ERROR) {
+                    if (mErrorListener != null) {
+                        mErrorListener.onJavaScriptError(cm.sourceId(), cm.lineNumber(), cm.message());
+                    }
+                    AppLog.e(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                } else {
+                    AppLog.d(T.EDITOR, cm.message() + " -- From line " + cm.lineNumber() + " of " + cm.sourceId());
+                }
                 return true;
             }
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                AppLog.d(AppLog.T.EDITOR, message);
+                AppLog.d(T.EDITOR, message);
+                if (mErrorListener != null) {
+                    mErrorListener.onJavaScriptAlert(url, message);
+                }
                 return true;
             }
         });
@@ -164,6 +177,7 @@ public abstract class EditorWebViewAbstract extends WebView {
 
     /**
      * Handles events that should be triggered when the WebView is hidden or is shown to the user
+     *
      * @param visible the new visibility status of the WebView
      */
     public void notifyVisibilityChanged(boolean visible) {
@@ -207,7 +221,16 @@ public abstract class EditorWebViewAbstract extends WebView {
         mHeaderMap.put(name, value);
     }
 
+    public void setErrorListener(ErrorListener errorListener) {
+        mErrorListener = errorListener;
+    }
+
     public interface AuthHeaderRequestListener {
         String onAuthHeaderRequested(String url);
+    }
+
+    public interface ErrorListener {
+        void onJavaScriptError(String sourceFile, int lineNumber, String message);
+        void onJavaScriptAlert(String url, String message);
     }
 }
