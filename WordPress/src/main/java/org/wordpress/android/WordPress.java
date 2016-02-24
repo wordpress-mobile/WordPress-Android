@@ -80,6 +80,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -666,6 +667,18 @@ public class WordPress extends Application {
                 wpDB.updateLastBlogId(id);
             }
         }
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static Map<String, String> getRestLocaleParams() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
     /**

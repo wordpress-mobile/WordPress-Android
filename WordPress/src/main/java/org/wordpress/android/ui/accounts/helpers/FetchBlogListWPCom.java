@@ -64,7 +64,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
     }
 
     private void getUsersBlogsRequestREST(final FetchBlogListAbstract.Callback callback) {
-        WordPress.getRestClientUtils().get("me/sites", new RestRequest.Listener() {
+        WordPress.getRestClientUtils().get("me/sites", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
