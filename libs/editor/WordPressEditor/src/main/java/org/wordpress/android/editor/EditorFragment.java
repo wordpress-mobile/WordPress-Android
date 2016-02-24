@@ -91,6 +91,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
+    private boolean mIsFormatBarDisabled = false;
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
     private Set<MediaGallery> mWaitingGalleries;
@@ -292,6 +293,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 parent.addView(formatBar);
 
                 setupFormatBarButtonMap(formatBar);
+
+                if (mIsFormatBarDisabled) {
+                    updateFormatBarEnabledState(false);
+                }
 
                 // Restore the active format bar buttons
                 for (String tag : activeTags) {
@@ -1273,6 +1278,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             button.setEnabled(enabled);
             button.setAlpha(alpha);
         }
+
+        mIsFormatBarDisabled = !enabled;
     }
 
     private void clearFormatBarButtons() {
