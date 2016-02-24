@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private RecyclerView mRecycler;
     private TextView mEmptyView;
     private LinearLayout mCustomComponentsContainer;
+    private Toolbar mToolbar;
 
     private FilterCriteria[] mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
@@ -112,6 +114,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mCustomComponentsContainer = (LinearLayout) findViewById(R.id.custom_components_toolbar_container);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
 
@@ -245,6 +248,10 @@ public class FilteredRecyclerView extends RelativeLayout {
                 v.setOnClickListener(clickListener);
             }
         }
+    }
+
+    public void setToolbarBackgroundColor(int color){
+        mToolbar.setBackgroundColor(color);
     }
 
     /*
