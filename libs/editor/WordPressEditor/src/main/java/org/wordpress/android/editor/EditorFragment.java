@@ -863,7 +863,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
                                 ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
                     }
-                    mUploadingMedia.remove(localMediaId);
                 }
             });
         }
@@ -1166,6 +1165,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         linkDialogFragment.setArguments(dialogBundle);
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+    }
+
+    @Override
+    public void onMediaReplaced(String mediaId) {
+        mUploadingMedia.remove(mediaId);
     }
 
     @Override
