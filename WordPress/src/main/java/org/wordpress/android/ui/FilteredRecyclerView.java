@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -33,6 +34,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     private RecyclerView mRecycler;
     private TextView mEmptyView;
+    private LinearLayout mCustomComponentsContainer;
 
     private FilterCriteria[] mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
@@ -108,6 +110,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         mRecycler = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        mCustomComponentsContainer = (LinearLayout) findViewById(R.id.custom_components_toolbar_container);
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
 
@@ -231,6 +235,17 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
+    /*
+     * use this to add custom control/component views to your toolbar. Components are added on the right side of the
+      * toolbar */
+    public void addCustomControl(View v, OnClickListener clickListener){
+        if (v != null){
+            mCustomComponentsContainer.addView(v);
+            if (clickListener != null){
+                v.setOnClickListener(clickListener);
+            }
+        }
+    }
 
     /*
      * adapter used by the filter spinner
