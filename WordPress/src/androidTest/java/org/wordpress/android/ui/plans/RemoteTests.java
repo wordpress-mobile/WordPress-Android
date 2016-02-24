@@ -25,6 +25,8 @@ import java.util.List;
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     private RestClientCustomizableMock mRestClientV1_2;
 
+    private RestClientCustomizableMock mRestClientV1_3;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -32,6 +34,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         // Set the version of the REST client to v1.2
         RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
         mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_2);
+        mRestClientV1_3 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_3);
     }
 
     private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
@@ -87,13 +90,13 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(currentPlan.getProductID(), 1008L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Business");
                 assertEquals(currentPlan.getBillPeriod(), 365);
-                assertEquals(currentPlan.getRawPrice(), 250);
-                assertEquals(currentPlan.getCost(), 250);
+                assertEquals(currentPlan.getRawPrice(), 299);
+                assertEquals(currentPlan.getCost(), 299);
                 assertEquals(currentPlan.isAvailable(), true);
             }
         };
 
-        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/plans",
+        mRestClientV1_3.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.3/plans",
                 null,
                 listener,
                 errListener

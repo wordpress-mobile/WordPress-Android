@@ -203,7 +203,7 @@ public class PlansUtils {
 
     public static void downloadGlobalPlans() {
         Map<String, String> params = getDefaultRestCallParameters();
-        WordPress.getRestClientUtilsV1_2().get("plans/", params, null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_3().get("plans/", params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {

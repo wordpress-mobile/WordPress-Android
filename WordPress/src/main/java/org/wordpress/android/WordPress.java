@@ -96,6 +96,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
+    private static RestClientUtils mRestClientUtilsVersion1_3;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -351,6 +352,14 @@ public class WordPress extends Application {
             mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return mRestClientUtilsVersion1_2;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_3() {
+        if (mRestClientUtilsVersion1_3 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+        }
+        return mRestClientUtilsVersion1_3;
     }
 
     /**
