@@ -72,7 +72,13 @@
 
         <!-- Main tab activity -->
         <activity android:name=".ui.main.WPMainActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
+            android:theme="@style/Calypso.NoActionBar">
+
+            <intent-filter>
+                <data android:scheme="wordpress" />
+            </intent-filter>
+
+        </activity>
 
         <!-- Account activities -->
         <activity
