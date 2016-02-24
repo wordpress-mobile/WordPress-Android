@@ -894,17 +894,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 MediaType mediaType = mUploadingMedia.get(mediaId);
-                switch (mediaType) {
-                    case IMAGE:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
-                                + Utils.escapeQuotes(errorMessage) + "');");
-                        break;
-                    case VIDEO:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
-                                + Utils.escapeQuotes(errorMessage) + "');");
+                if (mediaType != null) {
+                    switch (mediaType) {
+                        case IMAGE:
+                            mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
+                                    + Utils.escapeQuotes(errorMessage) + "');");
+                            break;
+                        case VIDEO:
+                            mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
+                                    + Utils.escapeQuotes(errorMessage) + "');");
+                    }
+                    mFailedMediaIds.add(mediaId);
+                    mUploadingMedia.remove(mediaId);
                 }
-                mFailedMediaIds.add(mediaId);
-                mUploadingMedia.remove(mediaId);
             }
         });
     }
