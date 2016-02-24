@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -90,12 +89,14 @@ public class PlanFragment extends Fragment {
             return;
         }
 
-        ImageView imgPlan = (ImageView) mPlanContainerView.findViewById(R.id.plan_icon);
-        int pictureResID = PlansUIHelper.getPrimaryImageResIDForPlan(mSitePlan.getProductID());
-        if (pictureResID == PlansUIHelper.NO_PICTURE_FOR_PLAN_RES_ID) {
-            imgPlan.setVisibility(View.GONE);
+        int iconSize = getActivity().getResources().getDimensionPixelSize(R.dimen.plan_icon_size);
+        NetworkImageView imgPlan = (NetworkImageView) mPlanContainerView.findViewById(R.id.image_plan_icon);
+        String iconUrl = PlansUtils.getIconUrlForPlan(mSitePlan.getProductID(), iconSize);
+        if (!TextUtils.isEmpty(iconUrl)) {
+            imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgPlan.setVisibility(View.VISIBLE);
         } else {
-            imgPlan.setImageDrawable(getResources().getDrawable(pictureResID));
+            imgPlan.setVisibility(View.GONE);
         }
 
         // show product short name in bold, ex: "WordPress.com <b>Premium</b>"

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 import java.util.ArrayList;
 import java.util.Currency;
@@ -199,6 +200,14 @@ public class PlansUtils {
         }
 
         return features;
+    }
+
+    public static String getIconUrlForPlan(long planId, int iconSize) {
+        Plan plan = getGlobalPlan(planId);
+        if (plan == null) {
+            return null;
+        }
+        return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);
     }
 
     public static void downloadGlobalPlans() {
