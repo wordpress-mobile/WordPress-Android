@@ -140,7 +140,7 @@ public class PlansUtils {
     }
 
     @Nullable
-    public static List<Plan> getGlobalPlans() {
+    private static List<Plan> getGlobalPlans() {
         String plansString = AppPrefs.getGlobalPlans();
         if (TextUtils.isEmpty(plansString)) {
             return null;
@@ -161,21 +161,6 @@ public class PlansUtils {
         }
 
         return plans;
-    }
-
-    @Nullable
-    public static List<Long> getGlobalPlansIDS() {
-        List<Plan> plans = getGlobalPlans();
-        if (plans == null) {
-            return null;
-        }
-
-        List<Long> plansIDS = new ArrayList<>(plans.size());
-        for (Plan currentPlan: plans) {
-            plansIDS.add(currentPlan.getProductID());
-        }
-
-        return plansIDS;
     }
 
     @Nullable
@@ -207,7 +192,7 @@ public class PlansUtils {
      *
      * @param planId - ID of the global plan
      * @param iconSize - desired size of the returned image
-     * @return string containing photon-ized plan icon
+     * @return string containing photon-ized url for the plan icon
      */
     public static String getIconUrlForPlan(long planId, int iconSize) {
         Plan plan = getGlobalPlan(planId);
@@ -233,15 +218,13 @@ public class PlansUtils {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.PLANS, "Error loading plans/", volleyError);
+                AppLog.e(AppLog.T.PLANS, "Error loading plans", volleyError);
             }
         });
     }
 
     /*
      * Download Features from the WordPress.com backend.
-     *
-     * Return true if the request is enqueued. False otherwise.
      */
     public static void downloadFeatures() {
         Map<String, String> params = getDefaultRestCallParameters();
@@ -289,7 +272,7 @@ public class PlansUtils {
      * @param blog to test
      * @return True if Plans are enabled on the blog
      */
-    public static boolean isPlanFeatureAvailableForBlog(Blog blog) {
+    private static boolean isPlanFeatureAvailableForBlog(Blog blog) {
         return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
                 blog != null && blog.getPlanID() != 0;
     }
@@ -308,6 +291,7 @@ public class PlansUtils {
     /**
      * Removes stored plan data - for testing purposes
      */
+    @SuppressWarnings("unused")
     public static void clearPlanData() {
         AppPrefs.setGlobalPlans(null);
         AppPrefs.setGlobalPlansFeatures(null);

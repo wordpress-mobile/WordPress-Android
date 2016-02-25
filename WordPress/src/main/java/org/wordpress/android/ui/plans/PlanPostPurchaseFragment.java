@@ -18,8 +18,7 @@ import org.wordpress.android.util.ToastUtils;
 public class PlanPostPurchaseFragment extends Fragment {
 
     static PlanPostPurchaseFragment newInstance() {
-        PlanPostPurchaseFragment fragment = new PlanPostPurchaseFragment();
-        return fragment;
+        return new PlanPostPurchaseFragment();
     }
 
     @Override
