@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import org.wordpress.android.DefaultMocksInstrumentationTestCase;
 import org.wordpress.android.mocks.RestClientCustomizableMock;
 import org.wordpress.android.mocks.RestClientFactoryTest;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientFactory;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
@@ -19,7 +18,6 @@ import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
@@ -113,7 +111,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                     for (int i=0; i < planIDs.length(); i ++) {
                         String currentKey = planIDs.getString(i);
                         JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                        SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, new Blog());
+                        SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, 123456);
                         plans.add(currentPlan);
                     }
                 }
