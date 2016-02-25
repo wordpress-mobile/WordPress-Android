@@ -21,13 +21,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
-import org.wordpress.android.ui.plans.models.SitePlanList;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -41,7 +42,7 @@ public class PlansActivity extends AppCompatActivity {
     private static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
-    private SitePlanList mAvailablePlans;
+    private SitePlan[] mAvailablePlans;
     private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     private WPViewPager mViewPager;
@@ -51,14 +52,15 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PlansUtils.clearPlanData();
 
         setContentView(R.layout.plans_activity);
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
-            if (serializable instanceof SitePlanList) {
-                mAvailablePlans = (SitePlanList) serializable;
+            if (serializable instanceof SitePlan[]) {
+                mAvailablePlans = (SitePlan[]) serializable;
             }
             mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
@@ -147,7 +149,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void setupPlansUI() {
-        if (mAvailablePlans == null || mAvailablePlans.size() == 0)  {
+        if (mAvailablePlans == null || mAvailablePlans.length == 0)  {
             // This should never be called with empty plans.
             Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
@@ -157,7 +159,7 @@ public class PlansActivity extends AppCompatActivity {
         hideProgress();
 
         mViewPager.setVisibility(View.VISIBLE);
-        mViewPager.setOffscreenPageLimit(mAvailablePlans.size() - 1);
+        mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setVisibility(View.VISIBLE);
@@ -169,9 +171,9 @@ public class PlansActivity extends AppCompatActivity {
 
         // Move the viewpager on the blog plan if no prev position is available
         if (mViewpagerPosSelected == NO_PREV_POS_SELECTED_VIEWPAGER) {
-            for (SitePlan sitePlan : mAvailablePlans) {
-                if (sitePlan.isCurrentPlan()) {
-                    mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(sitePlan.getProductID());
+            for (SitePlan currentSitePlan : mAvailablePlans) {
+                if (currentSitePlan.isCurrentPlan()) {
+                    mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
                 }
             }
         }
@@ -235,7 +237,7 @@ public class PlansActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
-        // start service to download plans if not already available
+        // Download plans if not already available
         if (mAvailablePlans == null) {
             showProgress();
             PlanUpdateService.startService(this, mLocalBlogID);
@@ -281,7 +283,18 @@ public class PlansActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PlanEvents.PlansUpdated event) {
-        mAvailablePlans = event.getSitePlans();
+        List<SitePlan> plans = event.getPlans();
+        mAvailablePlans = new SitePlan[plans.size()];
+        plans.toArray(mAvailablePlans);
+
+        // make sure plans are correctly sorted
+        Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+            @Override
+            public int compare(SitePlan lhs, SitePlan rhs) {
+                return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
+            }
+        });
+
         setupPlansUI();
     }
 

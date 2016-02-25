@@ -2,20 +2,22 @@ package org.wordpress.android.ui.plans;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.ui.plans.models.SitePlanList;
+import org.wordpress.android.ui.plans.models.SitePlan;
+
+import java.util.List;
 
 /**
  * Plan-related EventBus event classes
  */
-class PlanEvents {
+public class PlanEvents {
 
     public static class PlansUpdated {
-        private final SitePlanList mSitePlans;
-        public PlansUpdated(@NonNull SitePlanList sitePlans) {
-            mSitePlans = sitePlans;
+        private final List<SitePlan> mPlans;
+        public PlansUpdated(@NonNull List<SitePlan> plans) {
+            mPlans = plans;
         }
-        public SitePlanList getSitePlans() {
-            return mSitePlans;
+        public List<SitePlan> getPlans() {
+            return mPlans;
         }
     }
 

@@ -14,9 +14,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.SitePlan;
-import org.wordpress.android.ui.plans.models.SitePlanList;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -55,13 +57,6 @@ public class PlanUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
-
-        /*
-         * start the three-step update process
-         *  Step 1: update global plans
-         *  Step 2: update features for global plans
-         *  Step 3: update available plans for this specific site
-         */
         downloadGlobalPlans();
 
         return START_NOT_STICKY;
@@ -70,8 +65,8 @@ public class PlanUpdateService extends Service {
     /*
      * called when plan data has been successfully updated
      */
-    private void notifySuccess(@NonNull SitePlanList sitePlans) {
-        EventBus.getDefault().post(new PlanEvents.PlansUpdated(sitePlans));
+    private void notifySuccess(@NonNull List<SitePlan> plans) {
+        EventBus.getDefault().post(new PlanEvents.PlansUpdated(plans));
     }
 
     /*
@@ -150,23 +145,18 @@ public class PlanUpdateService extends Service {
                 }
 
                 AppLog.d(AppLog.T.PLANS, response.toString());
-                SitePlanList sitePlans = new SitePlanList();
+                List<SitePlan> plans = new ArrayList<>();
                 try {
                     JSONArray planIDs = response.names();
                     if (planIDs != null) {
                         for (int i = 0; i < planIDs.length(); i++) {
                             String currentKey = planIDs.getString(i);
                             JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                            SitePlan sitePlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, mLocalBlogId);
-                            sitePlans.add(sitePlan);
+                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, mLocalBlogId);
+                            plans.add(currentPlan);
                         }
                     }
-
-                    // make sure the plans are in the right order
-                    sitePlans.sortPlans();
-
-                    // if we get this far, then all plan data has been successfully downloaded
-                    notifySuccess(sitePlans);
+                    notifySuccess(plans);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
                     notifyFailure();
