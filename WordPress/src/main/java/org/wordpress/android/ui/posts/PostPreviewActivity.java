@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -202,6 +203,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     AniUtils.animateBottomBar(messageView, false);
                     revertPost();
+                    AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 }
             });
         }

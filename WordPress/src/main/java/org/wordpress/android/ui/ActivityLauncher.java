@@ -28,7 +28,8 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -191,7 +192,7 @@ public class ActivityLauncher {
     }
 
     public static void viewAccountSettings(Activity activity) {
-        Intent intent = new Intent(activity, SettingsActivity.class);
+        Intent intent = new Intent(activity, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
     }
