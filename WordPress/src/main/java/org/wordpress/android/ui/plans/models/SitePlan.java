@@ -2,7 +2,6 @@ package org.wordpress.android.ui.plans.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -43,8 +42,8 @@ public class SitePlan implements Serializable {
     protected String mUserFacingExpiry;
     protected String mSubscribedDate;
 
-    public SitePlan(long productID, JSONObject planJSONObject, Blog blog) throws JSONException {
-        mBlogLocalTableID = blog.getLocalTableBlogId();
+    public SitePlan(long productID, JSONObject planJSONObject, int localTableBlogID) throws JSONException {
+        mBlogLocalTableID = localTableBlogID;
         mProductID = productID;
         mProductName = planJSONObject.getString("product_name");
         mProductSlug = planJSONObject.getString("product_slug");

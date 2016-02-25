@@ -51,6 +51,7 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PlansUtils.clearPlanData();
 
         setContentView(R.layout.plans_activity);
 
@@ -237,19 +238,37 @@ public class PlansActivity extends AppCompatActivity {
 
         // Download plans if not already available
         if (mAvailablePlans == null) {
-            if (!NetworkUtils.checkConnection(this)) {
-                finish();
-                return;
-            }
-            boolean enqueued = PlansUtils.downloadAvailablePlansForSite(mLocalBlogID, mPlansDownloadListener);
-            if (!enqueued) {
-                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-                finish();
-            }
             showProgress();
+            updatePlanData();
         } else {
             setupPlansUI();
         }
+    }
+
+    /**
+     * retrieve the latest plan data from the server, including available plans for this site
+     */
+    private void updatePlanData() {
+        if (!NetworkUtils.checkConnection(this)) {
+            finish();
+            return;
+        }
+
+        PlansUtils.updatePlanData(new PlansUtils.PlanUpdateListener() {
+            @Override
+            public void onSuccess() {
+                if (!isFinishing()) {
+                    PlansUtils.downloadAvailablePlansForSite(mLocalBlogID, mPlansDownloadListener);
+                }
+            }
+            @Override
+            public void onError() {
+                if (!isFinishing()) {
+                    Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
