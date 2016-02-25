@@ -71,7 +71,7 @@ public class PlansUtils {
 
     public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
         final Blog blog = WordPress.getBlog(localTableBlogID);
-        if (blog == null || !isPlanFeatureAvailableForBlog(blog)) {
+        if (blog == null || blog.getPlanID() == 0) {
             return false;
         }
 
@@ -241,19 +241,6 @@ public class PlansUtils {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
             }
         });
-    }
-
-    /**
-     * This function return true if Plans are available for a blog.
-     * Basically this means that Plans data were downloaded from the server,
-     * and the blog has the product_id stored in the DB.
-     *
-     * @param blog to test
-     * @return True if Plans are enabled on the blog
-     */
-    private static boolean isPlanFeatureAvailableForBlog(Blog blog) {
-        return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
-                blog != null && blog.getPlanID() != 0;
     }
 
     /**
