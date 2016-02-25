@@ -202,9 +202,16 @@ public class PlansUtils {
         return features;
     }
 
+    /**
+     * Returns the url of the image to display for the passed plan
+     *
+     * @param planId - ID of the global plan
+     * @param iconSize - desired size of the returned image
+     * @return string containing photon-ized plan icon
+     */
     public static String getIconUrlForPlan(long planId, int iconSize) {
         Plan plan = getGlobalPlan(planId);
-        if (plan == null) {
+        if (plan == null || !plan.hasIconUrl()) {
             return null;
         }
         return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);

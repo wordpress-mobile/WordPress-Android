@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.plans.models;
 
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -212,5 +214,8 @@ public class Plan implements Serializable {
     }
     public void setIconUrl(String iconUrl) {
         mIconUrl = StringUtils.notNullStr(iconUrl);
+    }
+    public boolean hasIconUrl() {
+        return !TextUtils.isEmpty(mIconUrl);
     }
 }
