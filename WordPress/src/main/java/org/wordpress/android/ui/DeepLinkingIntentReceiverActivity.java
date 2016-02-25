@@ -34,21 +34,24 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            mBlogId = uri.getQueryParameter("blogId");
-            mPostId = uri.getQueryParameter("postId");
+            if (uri.equals("viewpost")) {
+                mBlogId = uri.getQueryParameter("blogId");
+                mPostId = uri.getQueryParameter("postId");
 
-            // if user is logged in, show the post right away - otherwise show welcome activity
-            // and then show the post once the user has logged in
-            if (AccountHelper.isSignedInWordPressDotCom()) {
-                showPost();
+                // if user is logged in, show the post right away - otherwise show welcome activity
+                // and then show the post once the user has logged in
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    showPost();
+                } else {
+                    Intent intent = new Intent(this, SignInActivity.class);
+                    startActivityForResult(intent, INTENT_WELCOME);
+                }
+            } else if (uri.equals("login")) {
+                attemptLogin(uri);
             } else {
-                Intent intent = new Intent(this, SignInActivity.class);
-                startActivityForResult(intent, INTENT_WELCOME);
+                finish();
             }
-        } else {
-            finish();
         }
     }
 
@@ -72,6 +75,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         }
 
         finish();
+    }
+
+    private void attemptLogin(Uri uri) {
+        
     }
 
     @Override
