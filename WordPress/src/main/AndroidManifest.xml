@@ -168,7 +168,7 @@
 
         <activity
             android:name=".ui.posts.PostsListActivity"
-            android:theme="@style/Calypso.NoActionBar"></activity>
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
@@ -206,14 +206,14 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar"></activity>
-        <activity android:name=".ui.media.MediaGalleryActivity"></activity>
-        <activity android:name=".ui.media.MediaGalleryPickerActivity"></activity>
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.media.MediaGalleryActivity" />
+        <activity android:name=".ui.media.MediaGalleryPickerActivity" />
 
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar"></activity>
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
@@ -235,7 +235,7 @@
 
                 <data
                     android:host="viewpost"
-                    android:scheme="wordpress"></data>
+                    android:scheme="wordpress" />
             </intent-filter>
         </activity>
 
@@ -286,6 +286,7 @@
                 <data android:mimeType="video/*" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
             android:label="WordPress QuickPress">
@@ -295,6 +296,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -351,10 +353,10 @@
             android:label="Post Update Service" />
         <service
             android:name=".ui.media.services.MediaUploadService"
-            android:label="Media Upload Service"></service>
+            android:label="Media Upload Service" />
         <service
             android:name=".ui.media.services.MediaDeleteService"
-            android:label="Media Delete Service"></service>
+            android:label="Media Delete Service" />
         <service
             android:name=".ui.stats.service.StatsService"
             android:exported="false"
@@ -374,7 +376,7 @@
         <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
-            android:label="Suggestion Service"></service>
+            android:label="Suggestion Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -423,7 +425,7 @@
 
         <service
             android:name=".GCMRegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
