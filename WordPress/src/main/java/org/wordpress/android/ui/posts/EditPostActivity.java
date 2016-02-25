@@ -42,6 +42,7 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.wordpress.android.Constants;
+import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -2036,7 +2037,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
-                    CrashlyticsUtils.logException(new Exception(message), ExceptionType.SPECIFIC, T.EDITOR,
+                    CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
+                            ExceptionType.SPECIFIC, T.EDITOR,
                             String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
                 }
 
@@ -2046,7 +2048,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             });
         }
-
     }
 
     @Override
