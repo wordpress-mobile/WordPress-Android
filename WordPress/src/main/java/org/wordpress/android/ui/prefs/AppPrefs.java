@@ -4,7 +4,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -51,6 +54,9 @@ public class AppPrefs {
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
 
+        // visual editor enabled
+        VISUAL_EDITOR_ENABLED,
+
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
 
@@ -66,6 +72,9 @@ public class AppPrefs {
 
         // index of the last app-version
         LAST_APP_VERSION_INDEX,
+
+        // visual editor available
+        VISUAL_EDITOR_AVAILABLE,
 
         // Global plans
         GLOBAL_PLANS,
@@ -286,6 +295,30 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Visual Editor
+    public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
+        setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_TOGGLED_ON : Stat.EDITOR_TOGGLED_OFF);
+    }
+
+    public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
+        if (visualEditorAvailable) {
+            AnalyticsTracker.track(Stat.EDITOR_ENABLED_NEW_VERSION);
+        }
+    }
+
+    public static boolean isVisualEditorAvailable() {
+        // TODO: When we allow users to test the visual editor, we should change this function by:
+        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
+        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+    }
+
+    public static boolean isVisualEditorEnabled() {
+        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
     }
 
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog
