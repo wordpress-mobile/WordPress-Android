@@ -75,6 +75,11 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public boolean isUploadingMedia() {
+            return false;
+        }
+
+        @Override
         public boolean hasFailedMediaUploads() {
             return false;
         }

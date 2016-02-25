@@ -597,7 +597,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaUploadService mediaUploadService = MediaUploadService.getInstance();
 
         // Disable format bar buttons while a media upload is in progress
-        if (mediaUploadService != null && mediaUploadService.hasUploads()) {
+        if ((mediaUploadService != null && mediaUploadService.hasUploads()) || mEditorFragment.isUploadingMedia()) {
             ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
             return false;
         }

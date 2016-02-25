@@ -29,6 +29,7 @@ public class JsCallbackReceiver {
     private static final String CALLBACK_FOCUS_OUT = "callback-focus-out";
 
     private static final String CALLBACK_IMAGE_REPLACED = "callback-image-replaced";
+    private static final String CALLBACK_VIDEO_REPLACED = "callback-video-replaced";
     private static final String CALLBACK_IMAGE_TAP = "callback-image-tap";
     private static final String CALLBACK_LINK_TAP = "callback-link-tap";
 
@@ -93,8 +94,20 @@ public class JsCallbackReceiver {
                 AppLog.d(AppLog.T.EDITOR, "New field created, " + params);
                 break;
             case CALLBACK_IMAGE_REPLACED:
-                // TODO: Notifies that image upload has finished and that the local url was replaced by the remote url in the ZSS editor
                 AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
+
+                // Extract the local media id from the callback string (stripping the 'id=' part)
+                if (params.length() > 3) {
+                    mListener.onMediaReplaced(params.substring(3));
+                }
+                break;
+            case CALLBACK_VIDEO_REPLACED:
+                AppLog.d(AppLog.T.EDITOR, "Video replaced, " + params);
+
+                // Extract the local media id from the callback string (stripping the 'id=' part)
+                if (params.length() > 3) {
+                    mListener.onMediaReplaced(params.substring(3));
+                }
                 break;
             case CALLBACK_IMAGE_TAP:
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);

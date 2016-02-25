@@ -12,6 +12,7 @@ public interface OnJsEditorStateChangedListener {
     void onSelectionStyleChanged(Map<String, Boolean> changeSet);
     void onMediaTapped(String mediaId, MediaType mediaType, JSONObject meta, String uploadStatus);
     void onLinkTapped(String url, String title);
+    void onMediaReplaced(String mediaId);
     void onVideoPressInfoRequested(String videoId);
     void onGetHtmlResponse(Map<String, String> responseArgs);
 }

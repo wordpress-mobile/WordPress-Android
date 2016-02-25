@@ -976,9 +976,6 @@ ZSSEditor.setProgressOnImage = function(imageNodeIdentifier, progress) {
  *  @param      imageNodeIdentifier     The unique image ID for the uploaded image
  */
 ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
-
-    this.sendImageReplacedCallback(imageNodeIdentifier);
-
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length == 0){
         return;
@@ -997,6 +994,9 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
     // Wrap link around image
     var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
     imageNode.wrap(linkTag);
+
+    var thisObj = this;
+    setTimeout(function() { thisObj.sendImageReplacedCallback(imageNodeIdentifier);}, 500);
 };
 
 /**

@@ -235,6 +235,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         final Account account = AccountHelper.getDefaultAccount();
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
+        } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()){
+            mEmailSnackbar.dismiss();
         }
         mEmailPreference.setEnabled(!account.getPendingEmailChange());
     }
@@ -396,6 +398,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+
+            // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+            checkIfEmailChangeIsPending();
         }
     }
 
