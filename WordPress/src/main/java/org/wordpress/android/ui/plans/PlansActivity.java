@@ -23,7 +23,6 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -31,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class PlansActivity extends AppCompatActivity {
 
@@ -235,40 +236,20 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        EventBus.getDefault().register(this);
         // Download plans if not already available
         if (mAvailablePlans == null) {
             showProgress();
-            updatePlanData();
+            PlanUpdateService.startService(this, mLocalBlogID);
         } else {
             setupPlansUI();
         }
     }
 
-    /**
-     * retrieve the latest plan data from the server, including available plans for this site
-     */
-    private void updatePlanData() {
-        if (!NetworkUtils.checkConnection(this)) {
-            finish();
-            return;
-        }
-
-        PlansUtils.updatePlanData(new PlansUtils.PlanUpdateListener() {
-            @Override
-            public void onSuccess() {
-                if (!isFinishing()) {
-                    PlansUtils.downloadAvailablePlansForSite(mLocalBlogID, mPlansDownloadListener);
-                }
-            }
-            @Override
-            public void onError() {
-                if (!isFinishing()) {
-                    Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            }
-        });
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -297,6 +278,35 @@ public class PlansActivity extends AppCompatActivity {
         return mPageAdapter;
     }
 
+    /*
+     * called by the service when plan data is successfully updated
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PlanEvents.PlansUpdated event) {
+        List<SitePlan> plans = event.getPlans();
+        mAvailablePlans = new SitePlan[plans.size()];
+        plans.toArray(mAvailablePlans);
+
+        // make sure plans are correctly sorted
+        Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+            @Override
+            public int compare(SitePlan lhs, SitePlan rhs) {
+                return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
+            }
+        });
+
+        setupPlansUI();
+    }
+
+    /*
+     * called by the service when plan data fails to update
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PlanEvents.PlansUpdateFailed event) {
+        Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -314,27 +324,4 @@ public class PlansActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
-        public void onResponse(List<SitePlan> plans) {
-            if (!isFinishing()) {
-                mAvailablePlans = new SitePlan[plans.size()];
-                plans.toArray(mAvailablePlans);
-                // make sure plans are correctly sorted
-                Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
-                    @Override
-                    public int compare(SitePlan lhs, SitePlan rhs) {
-                        return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
-                    }
-                });
-                setupPlansUI();
-            }
-        }
-        public void onError() {
-            if (!isFinishing()) {
-                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-    };
 }
