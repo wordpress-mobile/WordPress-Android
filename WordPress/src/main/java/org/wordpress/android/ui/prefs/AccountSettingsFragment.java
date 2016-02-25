@@ -6,8 +6,10 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
@@ -91,6 +93,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         checkWordPressComOnlyFields();
+
+        updateVisualEditorSettings();
     }
 
     @Override
@@ -177,6 +181,30 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateVisualEditorSettings() {
+        if (!AppPrefs.isVisualEditorAvailable()) {
+            PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
+                    .getString(R.string.pref_key_settings_root));
+            PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
+                    .getString(R.string.pref_key_editor));
+            if (preferenceScreen != null && editor != null) {
+                preferenceScreen.removePreference(editor);
+            }
+        } else {
+            final CheckBoxPreference visualEditorCheckBox = (CheckBoxPreference) findPreference(getActivity()
+                    .getString(R.string.pref_key_visual_editor_enabled));
+            visualEditorCheckBox.setChecked(AppPrefs.isVisualEditorEnabled());
+            visualEditorCheckBox.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    visualEditorCheckBox.setChecked(!visualEditorCheckBox.isChecked());
+                    AppPrefs.setVisualEditorEnabled(visualEditorCheckBox.isChecked());
+                    return false;
+                }
+            });
+        }
     }
 
     private void refreshAccountDetails() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
+import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class MockEditorActivity extends AppCompatActivity implements EditorFragmentAbstract.EditorFragmentListener {
@@ -62,7 +63,22 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
+    public void onVideoPressInfoRequested(String videoId) {
+
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return "";
+    }
+
+    @Override
     public void saveMediaFile(MediaFile mediaFile) {
+
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event) {
 
     }
 }
