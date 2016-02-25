@@ -6,8 +6,10 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
@@ -91,6 +93,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         checkWordPressComOnlyFields();
+
+        updateVisualEditorSettings();
     }
 
     @Override
@@ -179,6 +183,30 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateVisualEditorSettings() {
+        if (!AppPrefs.isVisualEditorAvailable()) {
+            PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
+                    .getString(R.string.pref_key_settings_root));
+            PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
+                    .getString(R.string.pref_key_editor));
+            if (preferenceScreen != null && editor != null) {
+                preferenceScreen.removePreference(editor);
+            }
+        } else {
+            final CheckBoxPreference visualEditorCheckBox = (CheckBoxPreference) findPreference(getActivity()
+                    .getString(R.string.pref_key_visual_editor_enabled));
+            visualEditorCheckBox.setChecked(AppPrefs.isVisualEditorEnabled());
+            visualEditorCheckBox.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                    visualEditorCheckBox.setChecked(!visualEditorCheckBox.isChecked());
+                    AppPrefs.setVisualEditorEnabled(visualEditorCheckBox.isChecked());
+                    return false;
+                }
+            });
+        }
+    }
+
     private void refreshAccountDetails() {
         Account account = AccountHelper.getDefaultAccount();
         mUsernamePreference.setSummary(account.getUserName());
@@ -207,6 +235,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         final Account account = AccountHelper.getDefaultAccount();
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
+        } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()){
+            mEmailSnackbar.dismiss();
         }
         mEmailPreference.setEnabled(!account.getPendingEmailChange());
     }
@@ -368,6 +398,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+
+            // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+            checkIfEmailChangeIsPending();
         }
     }
 

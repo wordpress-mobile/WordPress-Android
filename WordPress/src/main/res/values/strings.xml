@@ -598,6 +598,8 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_editor">Editor</string>
+    <string name="preference_show_visual_editor">Show visual editor</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -870,6 +872,17 @@
     <!-- reader -->
     <string name="reader">Reader</string>
 
+    <!-- editor -->
+    <string name="editor_post_title_placeholder">Post Title</string>
+    <string name="editor_page_title_placeholder">Page Title</string>
+    <string name="editor_content_placeholder">Share your story here…</string>
+    <string name="visual_editor_enabled">Visual Editor enabled</string>
+
+    <!-- editor post settings -->
+    <string name="editor_post_settings_featured_image">Featured Image</string>
+    <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+
+
     <!-- Post Formats -->
     <string-array name="post_formats_array">
         <item>Aside</item>
@@ -1077,6 +1090,8 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
+    <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
