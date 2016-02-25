@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,8 +27,6 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
-import org.wordpress.android.ui.plans.PlansUtils;
-import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -365,9 +361,9 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView.setText(homeURL);
 
         // Hide the Plan item if the Plans feature is not available.
-        Plan currentBlogPlan = PlansUtils.getGlobalPlan(blog.getPlanID());
-        if (currentBlogPlan != null) {
-            mCurrentPlanNameTextView.setText(currentBlogPlan.getProductNameShort());
+        String planShortName = blog.getPlanShortName();
+        if (!TextUtils.isEmpty(planShortName)) {
+            mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);

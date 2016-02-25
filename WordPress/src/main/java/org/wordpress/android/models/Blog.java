@@ -42,6 +42,7 @@ public class Blog {
     private boolean isAdmin;
     private boolean isHidden;
     private long planID;
+    private String planShortName;
 
     public Blog() {
     }
@@ -491,5 +492,12 @@ public class Blog {
 
     public void setPlanID(long planID) {
         this.planID = planID;
+    }
+
+    public String getPlanShortName() {
+        return StringUtils.notNullStr(planShortName);
+    }
+    public void setPlanShortName(String name) {
+        this.planShortName = StringUtils.notNullStr(name);
     }
 }
