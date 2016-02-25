@@ -252,4 +252,5 @@
     <!-- plans -->
     <dimen name="plan_indicator_size">12dp</dimen>
     <dimen name="plan_indicator_margin">6dp</dimen>
+    <dimen name="plan_icon_size">79dp</dimen>
 </resources>

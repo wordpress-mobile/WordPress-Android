@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.plans.models;
 
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,7 @@ public class Plan implements Serializable {
     private String mBillPeriodLabel;
     private String mPrice;
     private String mFormattedPrice;
+    private String mIconUrl;
     private int mRawPrice;
 
     // Optionals
@@ -69,6 +72,7 @@ public class Plan implements Serializable {
         mPrice = planJSONObject.getString("price");
         mFormattedPrice = planJSONObject.getString("formatted_price");
         mRawPrice = planJSONObject.getInt("raw_price");
+        mIconUrl = planJSONObject.optString("icon");
 
         // Optionals
         mWidth = planJSONObject.optInt("width");
@@ -203,5 +207,15 @@ public class Plan implements Serializable {
 
     public long getOriginal() {
         return mOriginal;
+    }
+
+    public String getIconUrl() {
+        return StringUtils.notNullStr(mIconUrl);
+    }
+    public void setIconUrl(String iconUrl) {
+        mIconUrl = StringUtils.notNullStr(iconUrl);
+    }
+    public boolean hasIconUrl() {
+        return !TextUtils.isEmpty(mIconUrl);
     }
 }

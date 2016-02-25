@@ -18,8 +18,7 @@ import org.wordpress.android.util.ToastUtils;
 public class PlanPostPurchaseFragment extends Fragment {
 
     static PlanPostPurchaseFragment newInstance() {
-        PlanPostPurchaseFragment fragment = new PlanPostPurchaseFragment();
-        return fragment;
+        return new PlanPostPurchaseFragment();
     }
 
     @Override
@@ -32,7 +31,7 @@ public class PlanPostPurchaseFragment extends Fragment {
         Button button = (Button) rootView.findViewById(R.id.button);
 
         // TODO: these are placeholders until actual copy exists
-        image.setImageResource(R.drawable.plan_business);
+        image.setImageResource(R.drawable.penandink);
         txtTitle.setText("This is the title");
         txtDescription.setText("This is the description. It is a nice description and deserves to be respected.");
         button.setText("Don\'t Press This");

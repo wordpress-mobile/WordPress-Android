@@ -19,13 +19,13 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/plan_icon"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/image_plan_icon"
+            android:layout_width="@dimen/plan_icon_size"
+            android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:src="@drawable/plan_business"/>
+            tools:background="@drawable/penandink"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_product_name"
