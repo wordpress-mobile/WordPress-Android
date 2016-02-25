@@ -65,7 +65,7 @@ import de.greenrobot.event.EventBus;
  * </p>
  */
 public class StatsActivity extends AppCompatActivity
-        implements ScrollViewExt.ScrollViewListener,
+        implements NestedScrollViewExt.ScrollViewListener,
                 StatsVisitorsAndViewsFragment.OnDateChangeListener,
                 StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
                 StatsInsightsTodayFragment.OnInsightsTodayClickListener {
@@ -77,10 +77,9 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
 
     private Spinner mSpinner;
-    private ScrollViewExt mOuterScrollView;
+    private NestedScrollViewExt mOuterScrollView;
 
     private static final int REQUEST_JETPACK = 7000;
-
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
@@ -104,6 +103,7 @@ public class StatsActivity extends AppCompatActivity
 
     private boolean mThereWasAnErrorLoadingStats = false;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +121,9 @@ public class StatsActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setElevation(0);
+            actionBar.setTitle(R.string.stats);
+            actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -149,7 +151,7 @@ public class StatsActivity extends AppCompatActivity
 
         setTitle(R.string.stats);
 
-        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView = (NestedScrollViewExt) findViewById(R.id.scroll_view_stats);
         mOuterScrollView.setScrollViewListener(this);
 
         if (savedInstanceState != null) {
@@ -186,6 +188,7 @@ public class StatsActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
                 }
             }
+
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -203,10 +206,8 @@ public class StatsActivity extends AppCompatActivity
         // if its internal datamodel is empty.
         createFragments(false);
 
-        if (mSpinner == null && toolbar != null) {
-            View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
-            mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
-
+        if (mSpinner == null) {
+            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
 
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
@@ -935,7 +936,7 @@ public class StatsActivity extends AppCompatActivity
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
+                view = mInflater.inflate(R.layout.filter_spinner_item, parent, false);
             } else {
                 view = convertView;
             }
@@ -983,7 +984,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+    public void onScrollChanged(NestedScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
         View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
         if (view == null) {

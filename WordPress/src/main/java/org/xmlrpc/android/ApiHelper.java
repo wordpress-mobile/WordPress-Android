@@ -3,6 +3,7 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
@@ -40,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -116,13 +119,13 @@ public class ApiHelper {
         protected ErrorType mErrorType = ErrorType.NO_ERROR;
         protected Throwable mThrowable;
 
-        protected void setError(ErrorType errorType, String errorMessage) {
+        protected void setError(@NonNull ErrorType errorType, String errorMessage) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
         }
 
-        protected void setError(ErrorType errorType, String errorMessage, Throwable throwable) {
+        protected void setError(@NonNull ErrorType errorType, String errorMessage, Throwable throwable) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             mThrowable = throwable;
@@ -739,9 +742,10 @@ public class ApiHelper {
         }
     }
 
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
+    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
-            public void onSuccess(String id);
+            void onSuccess(String remoteId, String remoteUrl, String secondaryId);
+            void onProgressUpdate(float progress);
         }
         private Callback mCallback;
         private Context mContext;
@@ -755,7 +759,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected String doInBackground(List<?>... params) {
+        protected Map<?, ?> doInBackground(List<?>... params) {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
@@ -765,7 +769,7 @@ public class ApiHelper {
                 return null;
             }
 
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Map<String, Object> data = new HashMap<String, Object>();
@@ -781,31 +785,61 @@ public class ApiHelper {
                     data
             };
 
+            final File tempFile = getTempFile(mContext);
+
+            if (client instanceof XMLRPCClient) {
+                ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
+                    @Override
+                    public void onBytesUploaded(long uploadedBytes) {
+                        if (isCancelled()) {
+                            // Stop the upload if the task has been cancelled
+                            ((XMLRPCClient) client).cancel();
+                        }
+
+                        if (tempFile == null || tempFile.length() == 0) {
+                            return;
+                        }
+
+                        float fractionUploaded = uploadedBytes / (float) tempFile.length();
+                        mCallback.onProgressUpdate(fractionUploaded);
+                    }
+                });
+            }
+
             if (mContext == null) {
                 return null;
             }
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, tempFile);
             } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                setError(ErrorType.INVALID_RESULT, null, cce);
+                return null;
+            } catch (XMLRPCFault e) {
+                if (e.getFaultCode() == 401) {
+                    setError(ErrorType.NETWORK_XMLRPC,
+                            mContext.getString(R.string.media_error_no_permission_upload), e);
+                } else {
+                    // getFaultString() returns the error message from the server without the "[Code 403]" part.
+                    setError(ErrorType.NETWORK_XMLRPC, e.getFaultString(), e);
+                }
                 return null;
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             }
 
             if (resultMap != null && resultMap.containsKey("id")) {
-                return (String) resultMap.get("id");
+                return resultMap;
             } else {
-                setError(ErrorType.INVALID_RESULT, "Invalid result");
+                setError(ErrorType.INVALID_RESULT, null);
             }
 
             return null;
@@ -823,10 +857,13 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Map<?, ?> result) {
             if (mCallback != null) {
                 if (result != null) {
-                    mCallback.onSuccess(result);
+                    String remoteId = (String) result.get("id");
+                    String remoteUrl = (String) result.get("url");
+                    String videoPressId = (String) result.get("videopress_shortcode");
+                    mCallback.onSuccess(remoteId, remoteUrl, videoPressId);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }

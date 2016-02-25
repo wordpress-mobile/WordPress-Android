@@ -9,6 +9,10 @@
     <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
+    <string name="edit">Edit</string>
+    <string name="tap_to_try_again">Tap to try again!</string>
+    <string name="uploading">Uploading…</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
 
     <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
     <string name="alert_html_toggle_uploading">You are currently uploading media. Please wait until this completes.</string>
@@ -60,5 +64,21 @@
         <item>Large</item>
         <item>Full Size</item>
     </string-array>
+
+    <!-- Accessibility - format bar button descriptions -->
+    <string name="format_bar_description_bold">Bold</string>
+    <string name="format_bar_description_italic">Italic</string>
+    <string name="format_bar_description_underline">Underline</string>
+    <string name="format_bar_description_strike">Strikethrough</string>
+    <string name="format_bar_description_quote">Block quote</string>
+    <string name="format_bar_description_link">Insert link</string>
+    <string name="format_bar_description_more">Insert more</string>
+    <string name="format_bar_description_media">Insert media</string>
+    <string name="format_bar_description_ul">Unordered list</string>
+    <string name="format_bar_description_ol">Ordered list</string>
+    <string name="format_bar_description_html">HTML mode</string>
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
+
 
 </resources>
