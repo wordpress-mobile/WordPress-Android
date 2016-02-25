@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.wordpress.android"
-    android:installLocation="auto">
+<manifest package="org.wordpress.android"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto">
 
     <supports-screens
         android:anyDensity="true"
@@ -98,7 +98,6 @@
             android:label=""
             android:theme="@style/CalypsoTheme.NoActionBarShadow" />
         <!-- empty title -->
-
 
         <!-- Preferences activities -->
         <activity
@@ -324,6 +323,19 @@
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
+
+        <activity android:name=".ui.VisualEditorOptionsReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="editor"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
 
         <!-- Services -->
         <service
