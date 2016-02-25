@@ -4,11 +4,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import org.wordpress.android.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wordpress.android.util.SqlUtils.*;
 
 /**
  * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
@@ -158,8 +162,8 @@ public class SiteSettingsModel {
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
-                holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
-                blacklist != null && blacklist.equals(otherModel.blacklist);
+                CollectionUtils.areListsEqual(holdForModeration, otherModel.holdForModeration) &&
+                CollectionUtils.areListsEqual(blacklist, otherModel.blacklist);
     }
 
     /**
@@ -390,29 +394,5 @@ public class SiteSettingsModel {
         builder.setLength(builder.length() - 1);
 
         return builder.toString();
-    }
-
-    /**
-     * Helper method to get an integer value from a given column in a Cursor.
-     */
-    private int getIntFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
-    }
-
-    /**
-     * Helper method to get a String value from a given column in a Cursor.
-     */
-    private String getStringFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 ? cursor.getString(columnIndex) : "";
-    }
-
-    /**
-     * Helper method to get a boolean value (stored as an int) from a given column in a Cursor.
-     */
-    private boolean getBooleanFromCursor(Cursor cursor, String columnName) {
-        int columnIndex = cursor.getColumnIndex(columnName);
-        return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
     }
 }
