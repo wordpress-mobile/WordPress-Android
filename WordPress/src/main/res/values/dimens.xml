@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
@@ -133,6 +132,10 @@
     <dimen name="nux_secondary_button_height">36dp</dimen>
 
     <dimen name="nux_width">600dp</dimen>
+
+    <!-- editor -->
+    <dimen name="post_settings_featured_image_height_min">150dp</dimen>
+    <dimen name="post_settings_featured_image_height_max">300dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
