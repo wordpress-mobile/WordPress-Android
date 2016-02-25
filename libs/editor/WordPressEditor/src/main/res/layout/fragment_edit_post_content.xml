@@ -100,6 +100,7 @@
                     style="@style/LegacyToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/format_bar_description_bold"
                     android:background="@drawable/legacy_format_bar_button_bold_selector" />
 
                 <ToggleButton
@@ -107,6 +108,7 @@
                     style="@style/LegacyToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/format_bar_description_italic"
                     android:background="@drawable/legacy_format_bar_button_italic_selector" />
 
                 <ToggleButton
@@ -114,6 +116,7 @@
                     style="@style/LegacyToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/format_bar_description_underline"
                     android:background="@drawable/legacy_format_bar_button_underline_selector" />
 
                 <ToggleButton
@@ -121,6 +124,7 @@
                     style="@style/LegacyToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/format_bar_description_strike"
                     android:background="@drawable/legacy_format_bar_button_strike_selector" />
 
                 <ToggleButton
@@ -128,6 +132,7 @@
                     style="@style/LegacyToggleButton"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:contentDescription="@string/format_bar_description_quote"
                     android:background="@drawable/legacy_format_bar_button_quote_selector" />
 
                 <Button
@@ -135,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/legacy_format_bar_height"
+                    android:contentDescription="@string/format_bar_description_link"
                     android:background="@drawable/legacy_format_bar_button_link_selector" />
 
                 <Button
@@ -142,6 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:minWidth="@dimen/legacy_format_bar_height"
+                    android:contentDescription="@string/format_bar_description_more"
                     android:background="@drawable/legacy_format_bar_button_more_selector" />
             </LinearLayout>
         </HorizontalScrollView>
@@ -151,6 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:minWidth="@dimen/legacy_format_bar_height"
+            android:contentDescription="@string/format_bar_description_media"
             android:background="@drawable/legacy_format_bar_button_media_selector" />
     </LinearLayout>
 
