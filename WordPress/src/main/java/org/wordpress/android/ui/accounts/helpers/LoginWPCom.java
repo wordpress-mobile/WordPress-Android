@@ -33,6 +33,11 @@ public class LoginWPCom extends LoginAbstract {
         mJetpackBlog = blog;
     }
 
+    public LoginWPCom(String username, Oauth oneTimeToken, String twoStepCode, boolean shouldSendTwoStepSMS, Blog blog) {
+        super(username, "");
+
+    }
+
     public static int restLoginErrorToMsgId(JSONObject errorObject) {
         // Default to generic error message
         int errorMsgId = org.wordpress.android.R.string.nux_cannot_log_in;
@@ -67,6 +72,19 @@ public class LoginWPCom extends LoginAbstract {
         oauthRequest = oauth.makeRequest(username, password, mTwoStepCode, mShouldSendTwoStepSMS, listener, errorListener);
         return oauthRequest;
     }
+
+    private Request makeOAuthRequest(final String username, final Oauth oneTimeToken, final Listener listener,
+                                     final ErrorListener errorListener) {
+        Oauth oauth = new Oauth(org.wordpress.android.BuildConfig.OAUTH_APP_ID,
+                org.wordpress.android.BuildConfig.OAUTH_APP_SECRET,
+                org.wordpress.android.BuildConfig.OAUTH_REDIRECT_URI);
+        Request oauthRequest;
+
+        oauthRequest = oauth.makeRequest(username, "", mTwoStepCode, mShouldSendTwoStepSMS, listener, errorListener);
+        return oauthRequest;
+    }
+
+
 
     protected void login() {
         // Get OAuth token for the first time and check for errors
