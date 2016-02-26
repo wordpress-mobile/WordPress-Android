@@ -174,4 +174,13 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public String getLabel() {
         return getCapitalizedTagName();
     }
+
+    @Override
+    public boolean equals(Object tag){
+        if (tag == null) return false;
+
+        if (!ReaderTag.class.isAssignableFrom(tag.getClass())) return false;
+
+        return getLabel().equals(((ReaderTag) tag).getLabel());
+    }
 }
