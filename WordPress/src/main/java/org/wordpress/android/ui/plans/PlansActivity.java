@@ -109,6 +109,12 @@ public class PlansActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        PlanUpdateService.stopService(this);
+        super.onDestroy();
+    }
+
     private void updatePurchaseUI(int position) {
         Fragment fragment = getPageAdapter().getItem(position);
         if (!(fragment instanceof PlanFragment)) {
