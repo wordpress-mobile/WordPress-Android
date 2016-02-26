@@ -3,10 +3,13 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
@@ -27,10 +30,8 @@ public class ReaderPostListActivity1 extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setElevation(0);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -58,6 +59,32 @@ public class ReaderPostListActivity1 extends AppCompatActivity {
             if (tag != null && savedInstanceState == null) {
                 showListFragmentForTag(tag, mPostListType);
             }
+        }
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        //this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
+        disableFilteredRecylerViewToolbar();
+    }
+
+    private void disableFilteredRecylerViewToolbar(){
+        //make it invisible - setting height to zero here because View.GONE wouldn't take the
+        // occupied space, as otherwise expected
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        if (appBarLayout != null) {
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+            lp.height = 0;
+            appBarLayout.setLayoutParams(lp);
+        }
+
+        // disabling any CoordinatorLayout behavior for scrolling
+        Toolbar toolbarWithSpinner = (Toolbar) findViewById(R.id.toolbar_with_spinner);
+        if (toolbarWithSpinner != null){
+            AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbarWithSpinner.getLayoutParams();
+            p.setScrollFlags(0);
+            toolbarWithSpinner.setLayoutParams(p);
         }
     }
 

@@ -139,7 +139,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mCustomComponentsContainer = (LinearLayout) findViewById(R.id.custom_components_toolbar_container);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_with_spinner);
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
 
