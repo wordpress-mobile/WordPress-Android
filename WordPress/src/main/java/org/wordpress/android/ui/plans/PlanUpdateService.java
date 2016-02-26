@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -29,7 +28,8 @@ import de.greenrobot.event.EventBus;
 public class PlanUpdateService extends Service {
 
     private static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
-    private int mLocalBlogId;
+    private int mNumActiveRequests;
+    private final List<SitePlan> mSitePlans = new ArrayList<>();
 
     public static void startService(Context context, int localTableBlogId) {
         Intent intent = new Intent(context, PlanUpdateService.class);
@@ -56,28 +56,36 @@ public class PlanUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+        int localBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+
+        mNumActiveRequests = 3;
         downloadGlobalPlans();
+        downloadPlanFeatures();
+        downloadAvailablePlansForSite(localBlogId);
 
         return START_NOT_STICKY;
     }
 
     /*
-     * called when plan data has been successfully updated
+     * called when any plan data has been successfully updated
      */
-    private void notifySuccess(@NonNull List<SitePlan> plans) {
-        EventBus.getDefault().post(new PlanEvents.PlansUpdated(plans));
+    private void requestCompleted() {
+        // send event once all requests have successfully completed
+        mNumActiveRequests--;
+        if (mNumActiveRequests == 0) {
+            EventBus.getDefault().post(new PlanEvents.PlansUpdated(mSitePlans));
+        }
     }
 
     /*
-     * called when updating plan data fails
+     * called when updating any plan data fails
      */
-    private void notifyFailure() {
+    private void requestFailed() {
         EventBus.getDefault().post(new PlanEvents.PlansUpdateFailed());
     }
 
     /*
-     * Step 1: download global plans
+     * download global plans
      */
     private void downloadGlobalPlans() {
         WordPress.getRestClientUtilsV1_3().get("plans/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
@@ -87,24 +95,23 @@ public class PlanUpdateService extends Service {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlans(response.toString());
-                    // proceed to step 2
-                    downloadPlanFeatures();
+                    requestCompleted();
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans");
-                    notifyFailure();
+                    requestFailed();
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error loading plans", volleyError);
-                notifyFailure();
+                requestFailed();
             }
         });
     }
 
     /*
-     * Step 2: download plan features
+     * download features for the global plans
      */
     private void downloadPlanFeatures() {
         WordPress.getRestClientUtilsV1_2().get("plans/features/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
@@ -114,59 +121,60 @@ public class PlanUpdateService extends Service {
                     AppLog.d(AppLog.T.PLANS, response.toString());
                     // Store the response into App Prefs
                     AppPrefs.setGlobalPlansFeatures(response.toString());
-                    // proceed to step 3
-                    downloadAvailablePlansForSite();
+                    requestCompleted();
                 } else {
                     AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features");
-                    notifyFailure();
+                    requestFailed();
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
-                notifyFailure();
+                requestFailed();
             }
         });
     }
 
     /*
-     * Step 3: download plans for the specific site
+     * download plans for the specific site
      */
-    private void downloadAvailablePlansForSite() {
-        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
+    private void downloadAvailablePlansForSite(final int localBlogId) {
+        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(localBlogId);
         WordPress.getRestClientUtils().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
                     AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server");
-                    notifyFailure();
+                    requestFailed();
                     return;
                 }
 
                 AppLog.d(AppLog.T.PLANS, response.toString());
-                List<SitePlan> plans = new ArrayList<>();
+                mSitePlans.clear();
                 try {
                     JSONArray planIDs = response.names();
                     if (planIDs != null) {
                         for (int i = 0; i < planIDs.length(); i++) {
                             String currentKey = planIDs.getString(i);
                             JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, mLocalBlogId);
-                            plans.add(currentPlan);
+                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, localBlogId);
+                            mSitePlans.add(currentPlan);
                         }
                     }
-                    notifySuccess(plans);
+
+                    requestCompleted();
+
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-                    notifyFailure();
+                    requestFailed();
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.UTILS, "Error downloading site plans", volleyError);
-                notifyFailure();
+                requestFailed();
             }
         });
     }
