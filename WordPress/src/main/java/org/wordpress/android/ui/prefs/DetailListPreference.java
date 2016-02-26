@@ -90,12 +90,7 @@ public class DetailListPreference extends ListPreference
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mSelectedIndex != which) {
-                            mSelectedIndex = which;
-                            mListAdapter.notifyDataSetChanged();
-                            setValue(getEntryValues()[mSelectedIndex].toString());
-                            notifyChanged();
-                        }
+                        mSelectedIndex = which;
                     }
                 });
 
@@ -165,8 +160,6 @@ public class DetailListPreference extends ListPreference
         if (values != null && index >= 0 && index < values.length) {
             String value = String.valueOf(values[index]);
             callChangeListener(value);
-        } else {
-            callChangeListener(mStartingValue);
         }
     }
 
@@ -215,6 +208,8 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
+        private RadioButton mSelectedRadioButton;
+
         public DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -251,6 +246,7 @@ public class DetailListPreference extends ListPreference
             }
 
             if (radioButton != null) {
+                if (mSelectedIndex == position) mSelectedRadioButton = radioButton;
                 radioButton.setChecked(mSelectedIndex == position);
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -274,9 +270,12 @@ public class DetailListPreference extends ListPreference
             CharSequence[] values = getEntryValues();
 
             if (radioButton != null && values != null && position < values.length) {
+                if (mSelectedRadioButton != null) {
+                    mSelectedRadioButton.setChecked(false);
+                }
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
-                callChangeListener(values[position]);
+                mSelectedRadioButton = radioButton;
             }
         }
     }

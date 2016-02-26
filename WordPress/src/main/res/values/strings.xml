@@ -32,7 +32,7 @@
     <string name="video">Video</string>
     <string name="themes">Themes</string>
     <string name="pages">Pages</string>
-    <string name="about">About</string>
+    <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -72,10 +72,13 @@
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
+    <string name="interface_language">Interface Language</string>
     <string name="signout">Disconnect</string>
     <string name="undo">Undo</string>
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
+    <string name="off">Off</string>
+    <string name="could_not_load_page">Could not load page</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -280,6 +283,7 @@
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
+    <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
 
@@ -289,6 +293,8 @@
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unspam">Not spam</string>
     <string name="mnu_comment_trash">Trash</string>
+    <string name="mnu_comment_untrash">Restore</string>
+    <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
@@ -296,6 +302,7 @@
     <string name="dlg_unapproving_comments">Unapproving</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
+    <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="trash_yes">Trash</string>
     <string name="trash_no">Don\'t trash</string>
@@ -311,6 +318,8 @@
     <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
+    <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+    <string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
     <string name="content_required">Comment is required</string>
     <string name="toast_comment_unedited">Comment hasn\'t changed</string>
 
@@ -342,10 +351,6 @@
     <string name="post_not_published">Post status isn\'t published</string>
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
-    <string name="post_signature">Post signature</string>
-    <string name="your_signature">Your signature:</string>
-    <string name="add_tagline">Add a signature to new posts</string>
-    <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
@@ -382,11 +387,6 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
-    <string name="share_preference_title">Share to WordPress</string>
-    <string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-    <string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-    <string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
-    <string name="always_use_these_settings_to_share">Always use these settings</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
@@ -560,6 +560,10 @@
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
+    <plurals name="site_settings_list_editor_summary">
+        <item quantity="one">1 item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -588,9 +592,10 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+    <string name="preference_editor">Editor</string>
+    <string name="preference_show_visual_editor">Show visual editor</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -755,7 +760,8 @@
     <string name="stats_insights_best_ever">Best Views Ever</string>
 
     <!-- invalid_url -->
-    <string name="invalid_url_message">Check that the blog URL entered is valid</string>
+    <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
+    <string name="invalid_url_message">Check that the URL entered is valid</string>
 
     <!-- post status -->
     <string name="publish_post">Publish</string>
@@ -824,6 +830,7 @@
     <string name="notifications_comments_other_blogs">Comments on other sites</string>
     <string name="notifications_tab">Notifications tab</string>
     <string name="email">Email</string>
+    <string name="email_address">Email address</string>
     <string name="app_notifications">App notifications</string>
     <string name="comment_likes">Comment likes</string>
     <string name="replies_to_your_comments">Replies to your comments</string>
@@ -860,6 +867,17 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
+
+    <!-- editor -->
+    <string name="editor_post_title_placeholder">Post Title</string>
+    <string name="editor_page_title_placeholder">Page Title</string>
+    <string name="editor_content_placeholder">Share your story here…</string>
+    <string name="visual_editor_enabled">Visual Editor enabled</string>
+
+    <!-- editor post settings -->
+    <string name="editor_post_settings_featured_image">Featured Image</string>
+    <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+
 
     <!-- Post Formats -->
     <string-array name="post_formats_array">
@@ -931,7 +949,7 @@
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
     <string name="error_post_my_profile">Couldn\'t save your profile</string>
-    <string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
+    <string name="error_post_account_settings">Couldn\'t save your account settings</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
@@ -1068,6 +1086,8 @@
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
+    <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
@@ -1275,5 +1295,11 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+
+    <!--Account Settings-->
+    <string name="account_settings">@string/me_btn_settings</string>
+    <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+    <string name="primary_site">Primary site</string>
+    <string name="web_address">Web Address</string>
 
 </resources>

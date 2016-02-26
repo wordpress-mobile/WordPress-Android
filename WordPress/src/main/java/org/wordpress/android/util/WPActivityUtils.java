@@ -1,10 +1,8 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -26,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 
 import java.util.Locale;
 
@@ -122,14 +120,14 @@ public class WPActivityUtils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void applyLocale(Activity context, boolean restart) {
+    public static void applyLocale(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        if (sharedPreferences.contains(SettingsFragment.LANGUAGE_PREF_KEY)) {
+        if (sharedPreferences.contains(AccountSettingsFragment.LANGUAGE_PREF_KEY)) {
             Locale contextLocale = context.getResources().getConfiguration().locale;
             String contextLanguage = contextLocale.getLanguage();
             String contextCountry = contextLocale.getCountry();
-            String locale = sharedPreferences.getString(SettingsFragment.LANGUAGE_PREF_KEY, "");
+            String locale = sharedPreferences.getString(AccountSettingsFragment.LANGUAGE_PREF_KEY, "");
 
             if (!TextUtils.isEmpty(contextCountry)) {
                 contextLanguage += "-" + contextCountry;
@@ -140,19 +138,6 @@ public class WPActivityUtils {
                 Configuration conf = resources.getConfiguration();
                 conf.locale = new Locale(locale);
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
-
-                if (restart) {
-                    // To restart Activity we want to use original intent it was launched with
-                    Intent refresh = context.getIntent();
-                    if (refresh == null) {
-                        refresh = new Intent(context, context.getClass());
-                    }
-
-                    refresh.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    context.startActivity(refresh);
-                    context.finish();
-                    context.overridePendingTransition(0, 0);
-                }
             }
         }
     }
