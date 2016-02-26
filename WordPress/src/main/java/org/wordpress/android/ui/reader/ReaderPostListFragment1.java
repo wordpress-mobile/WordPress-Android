@@ -449,14 +449,16 @@ public class ReaderPostListFragment1 extends Fragment
         mRecyclerView.getInternalRecyclerView().addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, skipFirstItem));
 
         // the following will change the look and feel of the toolbar to match the current design
-        View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);
-        mRecyclerView.addCustomControl(settingsControl, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderActivityLauncher.showReaderSubs(v.getContext());
-            }
-        });
-        ReaderUtils.setBackgroundToRoundRipple(settingsControl);
+        if (!ReaderUtils.isLoggedOutReader()) {
+            View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);
+            mRecyclerView.addCustomControl(settingsControl, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderSubs(v.getContext());
+                }
+            });
+            ReaderUtils.setBackgroundToRoundRipple(settingsControl);
+        }
         mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.grey_lighten_30));
         mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.grey));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.reader_dropdown_arrow);

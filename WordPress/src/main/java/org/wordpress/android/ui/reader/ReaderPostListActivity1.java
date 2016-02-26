@@ -69,6 +69,9 @@ public class ReaderPostListActivity1 extends AppCompatActivity {
         disableFilteredRecylerViewToolbar();
     }
 
+    /*
+    * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
+    * */
     private void disableFilteredRecylerViewToolbar(){
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
