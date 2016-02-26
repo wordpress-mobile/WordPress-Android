@@ -89,23 +89,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     public void setFilterListener(FilterListener filterListener){
         mFilterListener = filterListener;
-        mFilterCriteriaOptions = mFilterListener.onLoadFilterCriteriaOptions();
-        if (mFilterCriteriaOptions == null){
-            mFilterListener.onLoadFilterCriteriaOptionsAsync(new FilterCriteriaAsyncLoaderListener() {
-                @Override
-                public void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList) {
-                    if (criteriaList != null) {
-                        mFilterCriteriaOptions = new ArrayList<FilterCriteria>();
-                        mFilterCriteriaOptions.addAll(criteriaList);
-                        initAdapter();
-                        setCurrentFilter(mFilterListener.onRecallSelection());
-                    }
-                }
-            });
-        } else {
-            initAdapter();
-            setCurrentFilter(mFilterListener.onRecallSelection());
-        }
+        setup(false);
     }
 
     public void setAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter){
@@ -175,7 +159,30 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     }
 
-    private void initAdapter(){
+    private void setup(boolean refresh){
+        List<FilterCriteria> criterias = mFilterListener.onLoadFilterCriteriaOptions(refresh);
+        if (criterias != null){
+            mFilterCriteriaOptions = criterias;
+        }
+        if (criterias == null){
+            mFilterListener.onLoadFilterCriteriaOptionsAsync(new FilterCriteriaAsyncLoaderListener() {
+                @Override
+                public void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList) {
+                    if (criteriaList != null) {
+                        mFilterCriteriaOptions = new ArrayList<FilterCriteria>();
+                        mFilterCriteriaOptions.addAll(criteriaList);
+                        initSpinnerAdapter();
+                        setCurrentFilter(mFilterListener.onRecallSelection());
+                    }
+                }
+            }, refresh);
+        } else {
+            initSpinnerAdapter();
+            setCurrentFilter(mFilterListener.onRecallSelection());
+        }
+    }
+
+    private void initSpinnerAdapter(){
         mSpinnerAdapter = new SpinnerAdapter(getContext(), mFilterCriteriaOptions);
 
         mSelectingRememberedFilterOnCreate = true;
@@ -270,7 +277,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     /*
      * use this to add custom control/component views to your toolbar. Components are added on the right side of the
       * toolbar */
-    public void addCustomControl(View v, OnClickListener clickListener){
+    public void addToolbarCustomControl(View v, OnClickListener clickListener){
         if (v != null){
             mCustomComponentsContainer.addView(v);
             if (clickListener != null){
@@ -334,9 +341,23 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-
+    /*
+    * use this to access the internal RecyclerView if you need to, for example, add items decoration
+    * */
     public RecyclerView getInternalRecyclerView(){
         return mRecyclerView;
+    }
+
+    /*
+    * use this if you need to reload the criterias for this FilteredRecyclerView. The actual data loading goes
+    * through the FilteredRecyclerView lifecycle using its listeners:
+    *
+    * - FilterCriteriaAsyncLoaderListener
+    * and
+    *  - FilterListener.onLoadFilterCriteriaOptions
+    * */
+    public void refreshFilterCriteriaOptions(){
+        setup(true);
     }
 
     /*
@@ -453,9 +474,11 @@ public class FilteredRecyclerView extends RelativeLayout {
          * Called upon initialization - provide an array of FilterCriterias here. These are the possible criterias
          * the Spinner is loaded with, and through which the data can be filtered.
          *
-         * @return an array of FilterCriteria to be used on Spinner initialization, or null if going to use the Async method below
+         * @param refresh "true"if the criterias need be refreshed
+         * @return an array of FilterCriteria to be used on Spinner initialization, or null if going to use the
+         *          Async method below
          */
-        List<FilterCriteria> onLoadFilterCriteriaOptions();
+        List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh);
 
         /**
          * Called upon initialization - you can use this callback to start an asynctask to build an array of
@@ -463,8 +486,9 @@ public class FilteredRecyclerView extends RelativeLayout {
          * The Spinner is then loaded with such array of FilterCriterias, through which the main data can be filtered.
          *
          * @param listener to be called to pass the FilterCriteria array when done
+         * @param refresh "true"if the criterias need be refreshed
          */
-        void onLoadFilterCriteriaOptionsAsync(FilterCriteriaAsyncLoaderListener listener);
+        void onLoadFilterCriteriaOptionsAsync(FilterCriteriaAsyncLoaderListener listener, boolean refresh);
 
         /**
          * Called upon initialization, right after onLoadFilterCriteriaOptions().

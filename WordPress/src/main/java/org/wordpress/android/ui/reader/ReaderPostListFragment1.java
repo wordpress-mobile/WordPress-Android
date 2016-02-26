@@ -272,6 +272,10 @@ public class ReaderPostListFragment1 extends Fragment
         super.onStart();
         EventBus.getDefault().register(this);
 
+        if (mRecyclerView != null) {
+            mRecyclerView.refreshFilterCriteriaOptions();
+        }
+
         // purge database and update followed tags/blog if necessary - note that we don't purge unless
         // there's a connection to avoid removing posts the user would expect to see offline
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -371,12 +375,14 @@ public class ReaderPostListFragment1 extends Fragment
         mRecyclerView.setCustomEmptyView(mEmptyView);
         mRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public List<FilterCriteria> onLoadFilterCriteriaOptions() {
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 return null;
             }
 
             @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+            public void onLoadFilterCriteriaOptionsAsync(
+                    FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+
                 loadTags(listener);
             }
 
@@ -448,10 +454,9 @@ public class ReaderPostListFragment1 extends Fragment
         boolean skipFirstItem = (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
         mRecyclerView.getInternalRecyclerView().addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, skipFirstItem));
 
-        // the following will change the look and feel of the toolbar to match the current design
         if (!ReaderUtils.isLoggedOutReader()) {
             View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);
-            mRecyclerView.addCustomControl(settingsControl, new View.OnClickListener() {
+            mRecyclerView.addToolbarCustomControl(settingsControl, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderSubs(v.getContext());
@@ -459,6 +464,7 @@ public class ReaderPostListFragment1 extends Fragment
             });
             ReaderUtils.setBackgroundToRoundRipple(settingsControl);
         }
+        // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.grey_lighten_30));
         mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.grey));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.reader_dropdown_arrow);

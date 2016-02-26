@@ -199,7 +199,7 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public List<FilterCriteria> onLoadFilterCriteriaOptions() {
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> criterias = new ArrayList();
                 for (CommentStatus criteria : commentStatuses) {
                     criterias.add(criteria);
@@ -208,7 +208,7 @@ public class CommentsListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
                 //noop
             }
 
