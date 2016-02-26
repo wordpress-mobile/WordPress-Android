@@ -17,13 +17,6 @@
             style="@style/FilteredRecyclerViewFilterContainer"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <!--<Spinner-->
-                <!--style="@style/FilteredRecyclerViewSpinner.WordPress"-->
-                <!--android:id="@+id/filter_spinner"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:overlapAnchor="false"/>-->
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,13 +42,6 @@
                     android:layout_centerVertical="true"
                     android:orientation="horizontal"
                     >
-                    <!--<ImageView-->
-                        <!--android:id="@+id/btn_edit_tags"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="?android:selectableItemBackground"-->
-                        <!--android:contentDescription="@string/reader_menu_tags"-->
-                        <!--android:src="@drawable/my_site_icon_settings" />-->
                 </LinearLayout>
 
             </RelativeLayout>
@@ -77,7 +63,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 

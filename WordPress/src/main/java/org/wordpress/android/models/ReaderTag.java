@@ -8,7 +8,7 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public class ReaderTag implements Serializable {
+public class ReaderTag implements Serializable, FilterCriteria {
     private String tagName;
     private String endpoint;
     public final ReaderTagType tagType;
@@ -168,5 +168,10 @@ public class ReaderTag implements Serializable {
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/list/");
+    }
+
+    @Override
+    public String getLabel() {
+        return getCapitalizedTagName();
     }
 }

@@ -68,7 +68,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
-    private ReaderTagToolbar.OnTagChangedListener mOnTagChangedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -269,7 +268,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof TagToolbarViewHolder) {
             TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
             toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
-            toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -575,13 +573,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
-    }
-
-    /*
-     * called when user selects a tag from the toolbar
-     */
-    public void setOnTagChangedListener(ReaderTagToolbar.OnTagChangedListener listener) {
-        mOnTagChangedListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {

@@ -33,6 +33,7 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,8 +199,17 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public FilterCriteria[] onLoadFilterCriteriaOptions() {
-                return commentStatuses;
+            public List<FilterCriteria> onLoadFilterCriteriaOptions() {
+                ArrayList<FilterCriteria> criterias = new ArrayList();
+                for (CommentStatus criteria : commentStatuses) {
+                    criterias.add(criteria);
+                }
+                return criterias;
+            }
+
+            @Override
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+                //noop
             }
 
             @Override
@@ -250,6 +260,11 @@ public class CommentsListFragment extends Fragment {
                     return getString(stringId);
                 }
 
+            }
+
+            @Override
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
+                //noop
             }
         });
 

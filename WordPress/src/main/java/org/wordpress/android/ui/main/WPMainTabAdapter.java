@@ -8,7 +8,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostListFragment1;
 
 /**
  * pager adapter containing tab fragments used by WPMainActivity
@@ -55,7 +55,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
             case TAB_MY_SITE:
                 return MySiteFragment.newInstance();
             case TAB_READER:
-                return ReaderPostListFragment.newInstance();
+                return ReaderPostListFragment1.newInstance();
             case TAB_ME:
                 return MeFragment.newInstance();
             case TAB_NOTIFS:
