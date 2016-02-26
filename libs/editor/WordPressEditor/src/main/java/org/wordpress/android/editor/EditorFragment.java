@@ -1180,6 +1180,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onMediaRemoved(String mediaId) {
+        mUploadingMedia.remove(mediaId);
+        mFailedMediaIds.remove(mediaId);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+    }
+
+    @Override
     public void onMediaReplaced(String mediaId) {
         mUploadingMedia.remove(mediaId);
     }

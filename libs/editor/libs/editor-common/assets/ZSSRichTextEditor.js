@@ -817,6 +817,30 @@ ZSSEditor.turnBlockquoteOnForNode = function(node) {
     }
 };
 
+// MARK: - Generic media
+
+ZSSEditor.isMediaContainerNode = function(node) {
+    if (node.id === undefined) {
+        return false;
+    }
+    return (node.id.search("img_container_") == 0) || (node.id.search("video_container_") == 0);
+};
+
+ZSSEditor.extractMediaIdentifier = function(node) {
+    if (node.id.search("img_container_") == 0) {
+        return node.id.replace("img_container_", "");
+    } else if (node.id.search("video_container_") == 0) {
+        return node.id.replace("video_container_", "");
+    }
+    return "";
+};
+
+ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
+    var arguments = ['id=' + encodeURIComponent(mediaNodeIdentifier)];
+    var joinedArguments = arguments.join(defaultCallbackSeparator);
+    this.callback("callback-media-removed", joinedArguments);
+};
+
 // MARK: - Images
 
 ZSSEditor.updateImage = function(url, alt) {
@@ -989,6 +1013,8 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
 
     // Remove all extra formatting nodes for progress
     if (imageNode.parent().attr("id") == this.getImageContainerIdentifier(imageNodeIdentifier)) {
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageNode.parent().attr("id", "");
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
@@ -1133,6 +1159,8 @@ ZSSEditor.getFailedMedia = function() {
 ZSSEditor.removeImage = function(imageNodeIdentifier) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageContainerNode.attr("id","");
         imageNode.remove();
     }
 
@@ -1406,7 +1434,7 @@ ZSSEditor.removeVideo = function(videoNodeIdentifier) {
     // if Video is inside options container we need to remove the container
     var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
     if (videoContainerNode.length != 0){
-        //reset id before removal to avoid detection of user removal
+        // Reset id before removal to avoid triggering the manual media removal callback
         videoContainerNode.attr("id","");
         videoContainerNode.remove();
     }
@@ -2669,6 +2697,42 @@ ZSSField.prototype.bindListeners = function() {
     this.wrappedObject.bind('input', function(e) { thisObj.handleInputEvent(e); });
     this.wrappedObject.bind('compositionstart', function(e) { thisObj.handleCompositionStartEvent(e); });
     this.wrappedObject.bind('compositionend', function(e) { thisObj.handleCompositionEndEvent(e); });
+
+    this.bindMutationObserver();
+};
+
+ZSSField.prototype.bindMutationObserver = function () {
+    var target = this.wrappedObject[0];
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            for (var i = 0; i < mutation.removedNodes.length; i++) {
+                var removedNode = mutation.removedNodes[i];
+                if (ZSSEditor.isMediaContainerNode(removedNode)) {
+                    // An uploading or failed container node was deleted manually - notify native
+                    var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
+                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+                } else if (removedNode.attributes.getNamedItem("data-wpid")) {
+                    // An uploading or failed image was deleted manually - remove its container and send the callback
+                    var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                    ZSSEditor.removeImage(mediaIdentifier);
+                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+                } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
+                    // An uploading or failed video was deleted manually - remove its container and send the callback
+                    var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                    ZSSEditor.removeVideo(mediaIdentifier);
+                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+                }
+            }
+        });
+    });
+
+    // Configure observer: listen for changes to both the child list and changes to the children themselves
+    // This is needed because using only childList will ignore cases where an uploading image is deleted: it's within
+    // a <span> container which is itself within a paragraph tag, and the observer is only called for top-level DOM
+    // changes. The span container is unaffected, so the p tag won't notice the image deletion at the childList level
+    var config = { attributes: false, childList: true, characterData: false, subtree: true };
+
+    observer.observe(target, config);
 };
 
 // MARK: - Emptying the field when it should be, well... empty (HTML madness)
