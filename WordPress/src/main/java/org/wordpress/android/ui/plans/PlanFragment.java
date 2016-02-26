@@ -1,18 +1,12 @@
 package org.wordpress.android.ui.plans;
 
-import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +19,6 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
 import java.util.ArrayList;
@@ -71,6 +64,7 @@ public class PlanFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshPlanUI();
+
     }
 
     @Override
@@ -86,6 +80,7 @@ public class PlanFragment extends Fragment {
         }
         if (mSitePlan == null || mPlanDetails == null) {
             // TODO This should never happen - Fix this. Close the activity?
+            AppLog.w(AppLog.T.PLANS, "empty plan data in fragment");
             return;
         }
 
@@ -111,44 +106,18 @@ public class PlanFragment extends Fragment {
 
         // The current plan could probably have some features to highlight on the details screen
         addFeaturesToHighlight();
-
-        // container is hidden at design time, so animate it in if it's still hidden
-        if (mPlanContainerView.getVisibility() != View.VISIBLE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                revealContainer();
-            } else {
-                mPlanContainerView.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void revealContainer() {
-        if (!isAdded()) return;
-
-        Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
-        float startRadius = 0f;
-        float endRadius = (float) Math.hypot(pt.x, pt.y);
-        int centerX = pt.x / 2;
-        int centerY = pt.y / 2;
-
-        Animator anim = ViewAnimationUtils.createCircularReveal(mPlanContainerView, centerX, centerY, startRadius, endRadius);
-        anim.setDuration(getActivity().getResources().getInteger(android.R.integer.config_longAnimTime));
-        anim.setInterpolator(new AccelerateInterpolator());
-        mPlanContainerView.setVisibility(View.VISIBLE);
-        anim.start();
     }
 
     private void addFeaturesToHighlight() {
         HashMap<String, Feature> globalFeatures = PlansUtils.getFeatures();
         if (globalFeatures == null) {
-            AppLog.d(AppLog.T.PLANS, "no global features");
+            AppLog.w(AppLog.T.PLANS, "no global features");
             return;
         }
 
         ArrayList<PlanFeaturesHighlightSection> sectionsToHighlight = mPlanDetails.getFeaturesHighlightSections();
         if (sectionsToHighlight == null) {
-            AppLog.d(AppLog.T.PLANS, "no sections to highlight");
+            AppLog.w(AppLog.T.PLANS, "no sections to highlight");
             return;
         }
 
@@ -212,7 +181,7 @@ public class PlanFragment extends Fragment {
     private static final String UNICODE_CHECKMARK = "\u2713";
     String getTitle() {
         if (mSitePlan == null || mPlanDetails == null) {
-            AppLog.w(AppLog.T.PLANS, "empty plan in fragment");
+            AppLog.w(AppLog.T.PLANS, "empty plan data in fragment getTitle");
             return "";
         } else if (mSitePlan.isCurrentPlan()) {
             return UNICODE_CHECKMARK + " " + mPlanDetails.getProductNameShort();

@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.plans;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -12,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +30,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -52,7 +60,6 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PlansUtils.clearPlanData();
 
         setContentView(R.layout.plans_activity);
 
@@ -158,11 +165,9 @@ public class PlansActivity extends AppCompatActivity {
 
         hideProgress();
 
-        mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
-        mTabLayout.setVisibility(View.VISIBLE);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         int normalColor = getResources().getColor(R.color.blue_light);
         int selectedColor = getResources().getColor(R.color.white);
@@ -180,6 +185,41 @@ public class PlansActivity extends AppCompatActivity {
         if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
             mViewPager.setCurrentItem(mViewpagerPosSelected);
         }
+
+        if (mViewPager.getVisibility() != View.VISIBLE) {
+            // use a circular reveal on API 21+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealViewPager();
+            } else {
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void revealViewPager() {
+        mViewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mViewPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Point pt = DisplayUtils.getDisplayPixelSize(PlansActivity.this);
+                float startRadius = 0f;
+                float endRadius = (float) Math.hypot(pt.x, pt.y);
+                int centerX = pt.x / 2;
+                int centerY = pt.y / 2;
+
+                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius, endRadius);
+                anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+                anim.setInterpolator(new AccelerateInterpolator());
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                anim.start();
+            }
+        });
     }
 
     private void hideProgress() {
