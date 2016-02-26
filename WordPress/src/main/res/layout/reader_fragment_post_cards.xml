@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.reader.views.ReaderRecyclerView1
+    <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

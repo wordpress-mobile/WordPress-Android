@@ -44,7 +44,6 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
-import org.wordpress.android.ui.reader.views.ReaderRecyclerView1;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -72,7 +71,7 @@ public class ReaderPostListFragment1 extends Fragment
                    WPMainActivity.OnScrollToTopListener {
 
     private ReaderPostAdapter mPostAdapter;
-    private ReaderRecyclerView1 mRecyclerView;
+    private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
     private ReaderTagList mTags = new ReaderTagList();
 
@@ -359,7 +358,7 @@ public class ReaderPostListFragment1 extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
-        mRecyclerView = (ReaderRecyclerView1) rootView.findViewById(R.id.reader_recycler_view);
+        mRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.reader_recycler_view);
 
         Context context = container.getContext();
 
@@ -861,7 +860,7 @@ public class ReaderPostListFragment1 extends Fragment
                 && event.getAction() == UpdateAction.REQUEST_NEWER
                 && getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && !isPostAdapterEmpty()
-                && (!isAdded() || !mRecyclerView.isFirstPostVisible())) {
+                && (!isAdded() || !mRecyclerView.isFirstItemVisible())) {
             showNewPostsBar();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();

@@ -430,6 +430,21 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
+    /*
+     * returns true if the first item is still visible in the RecyclerView - will return
+     * false if the first item is scrolled out of view, or if the list is empty
+     */
+    public boolean isFirstItemVisible() {
+        if (mRecyclerView == null
+                || mRecyclerView.getLayoutManager() == null) {
+            return false;
+        }
+
+        View child = mRecyclerView.getLayoutManager().getChildAt(0);
+        return (child != null && mRecyclerView.getLayoutManager().getPosition(child) == 0);
+    }
+
+
     /**
      * implement this interface to use FilterRecyclerView
      */

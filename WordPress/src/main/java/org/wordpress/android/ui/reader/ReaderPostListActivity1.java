@@ -70,7 +70,7 @@ public class ReaderPostListActivity1 extends AppCompatActivity {
     }
 
     private void disableFilteredRecylerViewToolbar(){
-        //make it invisible - setting height to zero here because View.GONE wouldn't take the
+        // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         if (appBarLayout != null) {
