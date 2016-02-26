@@ -330,6 +330,12 @@ public class PlansActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PlanEvents.PlansUpdated event) {
+        // make sure the update is for this blog
+        if (event.getLocalBlogId() != this.mLocalBlogID) {
+            AppLog.w(AppLog.T.PLANS, "plans updated for different blog");
+            return;
+        }
+
         List<SitePlan> plans = event.getPlans();
         mAvailablePlans = new SitePlan[plans.size()];
         plans.toArray(mAvailablePlans);

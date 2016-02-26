@@ -29,6 +29,7 @@ public class PlanUpdateService extends Service {
 
     private static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     private int mNumActiveRequests;
+    private int mLocalBlogId;
     private final List<SitePlan> mSitePlans = new ArrayList<>();
 
     public static void startService(Context context, int localTableBlogId) {
@@ -63,12 +64,12 @@ public class PlanUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int localBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
 
         mNumActiveRequests = 3;
         downloadGlobalPlans();
         downloadPlanFeatures();
-        downloadAvailablePlansForSite(localBlogId);
+        downloadAvailablePlansForSite();
 
         return START_NOT_STICKY;
     }
@@ -80,7 +81,7 @@ public class PlanUpdateService extends Service {
         // send event once all requests have successfully completed
         mNumActiveRequests--;
         if (mNumActiveRequests == 0) {
-            EventBus.getDefault().post(new PlanEvents.PlansUpdated(mSitePlans));
+            EventBus.getDefault().post(new PlanEvents.PlansUpdated(mLocalBlogId, mSitePlans));
         }
     }
 
@@ -146,8 +147,8 @@ public class PlanUpdateService extends Service {
     /*
      * download plans for the specific site
      */
-    private void downloadAvailablePlansForSite(final int localBlogId) {
-        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(localBlogId);
+    private void downloadAvailablePlansForSite() {
+        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
         WordPress.getRestClientUtils().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -165,7 +166,7 @@ public class PlanUpdateService extends Service {
                         for (int i = 0; i < planIDs.length(); i++) {
                             String currentKey = planIDs.getString(i);
                             JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, localBlogId);
+                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, mLocalBlogId);
                             mSitePlans.add(currentPlan);
                         }
                     }

@@ -13,8 +13,13 @@ public class PlanEvents {
 
     public static class PlansUpdated {
         private final List<SitePlan> mPlans;
-        public PlansUpdated(@NonNull List<SitePlan> plans) {
+        private final int mLocalBlogId;
+        public PlansUpdated(int localBlogId, @NonNull List<SitePlan> plans) {
+            mLocalBlogId = localBlogId;
             mPlans = plans;
+        }
+        public int getLocalBlogId() {
+            return mLocalBlogId;
         }
         public List<SitePlan> getPlans() {
             return mPlans;
