@@ -35,7 +35,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment1;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -316,7 +316,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
         // reset the timestamp that determines when followed tags/blogs are updated so they're
         // updated when the fragment is recreated (necessary after signin/disconnect)
-        ReaderPostListFragment1.resetLastUpdateDate();
+        ReaderPostListFragment.resetLastUpdateDate();
 
         // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();

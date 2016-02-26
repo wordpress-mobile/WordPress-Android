@@ -22,7 +22,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashMap;
@@ -87,8 +86,7 @@ public class ReaderActivityLauncher {
         }
 
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, blogId);
-        //Intent intent = new Intent(context, ReaderPostListActivity.class);
-        Intent intent = new Intent(context, ReaderPostListActivity1.class);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
@@ -111,8 +109,7 @@ public class ReaderActivityLauncher {
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
-        //Intent intent = new Intent(context, ReaderPostListActivity.class);
-        Intent intent = new Intent(context, ReaderPostListActivity1.class);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
@@ -128,8 +125,7 @@ public class ReaderActivityLauncher {
         Map<String, String> properties = new HashMap<>();
         properties.put("tag", tag.getTagName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
-        //Intent intent = new Intent(context, ReaderPostListActivity.class);
-        Intent intent = new Intent(context, ReaderPostListActivity1.class);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
