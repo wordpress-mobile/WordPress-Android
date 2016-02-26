@@ -261,6 +261,7 @@ public class PlansActivity extends AppCompatActivity {
             // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
             mViewpagerPosSelected = mViewPager.getCurrentItem();
         }
+        super.onSaveInstanceState(outState);
     }
 
     private PlansPageAdapter getPageAdapter() {

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlanFragment extends Fragment {
-    private static final String PLAN = "PLAN";
+    private static final String SITE_PLAN = "SITE_PLAN";
     private static final String PLAN_DETAILS = "PLAN_DETAILS";
 
     private ViewGroup mPlanContainerView;
@@ -50,8 +50,8 @@ public class PlanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(PLAN)) {
-                mSitePlan = (SitePlan) savedInstanceState.getSerializable(PLAN);
+            if (savedInstanceState.containsKey(SITE_PLAN)) {
+                mSitePlan = (SitePlan) savedInstanceState.getSerializable(SITE_PLAN);
             }
             if (savedInstanceState.containsKey(PLAN_DETAILS)) {
                 mPlanDetails = (Plan) savedInstanceState.getSerializable(PLAN_DETAILS);
@@ -75,7 +75,7 @@ public class PlanFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(PLAN, mSitePlan);
+        outState.putSerializable(SITE_PLAN, mSitePlan);
         outState.putSerializable(PLAN_DETAILS, mPlanDetails);
         super.onSaveInstanceState(outState);
     }
@@ -84,7 +84,7 @@ public class PlanFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (mSitePlan == null) {
+        if (mSitePlan == null || mPlanDetails == null) {
             // TODO This should never happen - Fix this. Close the activity?
             return;
         }
@@ -211,7 +211,10 @@ public class PlanFragment extends Fragment {
 
     private static final String UNICODE_CHECKMARK = "\u2713";
     String getTitle() {
-        if (mSitePlan.isCurrentPlan()) {
+        if (mSitePlan == null || mPlanDetails == null) {
+            AppLog.w(AppLog.T.PLANS, "empty plan in fragment");
+            return "";
+        } else if (mSitePlan.isCurrentPlan()) {
             return UNICODE_CHECKMARK + " " + mPlanDetails.getProductNameShort();
         } else {
             return mPlanDetails.getProductNameShort();
