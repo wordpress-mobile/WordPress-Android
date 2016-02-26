@@ -383,6 +383,10 @@
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
             android:label="Suggestion Service" />
+        <service
+            android:name=".ui.plans.PlanUpdateService"
+            android:exported="false"
+            android:label="Plans Update Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"

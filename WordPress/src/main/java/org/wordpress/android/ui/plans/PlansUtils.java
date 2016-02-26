@@ -4,17 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
@@ -64,62 +58,7 @@ public class PlansUtils {
         }
     }
 
-    public interface AvailablePlansListener {
-        void onResponse(List<SitePlan> plans);
-        void onError();
-    }
 
-    public static boolean downloadAvailablePlansForSite(int localTableBlogID, final AvailablePlansListener listener) {
-        final Blog blog = WordPress.getBlog(localTableBlogID);
-        if (blog == null || !isPlanFeatureAvailableForBlog(blog)) {
-            return false;
-        }
-
-        WordPress.getRestClientUtils().get("sites/" + blog.getDotComBlogId() + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (response == null) {
-                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server");
-                    if (listener != null) {
-                        listener.onError();
-                    }
-                    return;
-                }
-
-                AppLog.d(AppLog.T.PLANS, response.toString());
-                List<SitePlan> plans = new ArrayList<>();
-                try {
-                    JSONArray planIDs = response.names();
-                    if (planIDs != null) {
-                        for (int i = 0; i < planIDs.length(); i++) {
-                            String currentKey = planIDs.getString(i);
-                            JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, blog);
-                            plans.add(currentPlan);
-                        }
-                    }
-                    if (listener != null) {
-                        listener.onResponse(plans);
-                    }
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-                    if (listener != null) {
-                        listener.onError();
-                    }
-                }
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.UTILS, "Error downloading site plans for the site with ID " + blog.getDotComBlogId(), volleyError);
-                if (listener != null) {
-                    listener.onError();
-                }
-            }
-        });
-
-        return true;
-    }
 
     @Nullable
     public static Plan getGlobalPlan(long planId) {
@@ -198,62 +137,6 @@ public class PlansUtils {
             return null;
         }
         return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);
-    }
-
-    public static void downloadGlobalPlans() {
-        WordPress.getRestClientUtilsV1_3().get("plans/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (response != null) {
-                    AppLog.d(AppLog.T.PLANS, response.toString());
-                    // Store the response into App Prefs
-                    AppPrefs.setGlobalPlans(response.toString());
-                } else {
-                    AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans!");
-                }
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.PLANS, "Error loading plans", volleyError);
-            }
-        });
-    }
-
-    /*
-     * Download Features from the WordPress.com backend.
-     */
-    public static void downloadFeatures() {
-        WordPress.getRestClientUtilsV1_2().get("plans/features/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (response != null) {
-                    AppLog.d(AppLog.T.PLANS, response.toString());
-                    // Store the response into App Prefs
-                    AppPrefs.setGlobalPlansFeatures(response.toString());
-                } else {
-                    AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server when downloading Features!");
-                }
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.PLANS, "Error Loading Plans/Features", volleyError);
-            }
-        });
-    }
-
-    /**
-     * This function return true if Plans are available for a blog.
-     * Basically this means that Plans data were downloaded from the server,
-     * and the blog has the product_id stored in the DB.
-     *
-     * @param blog to test
-     * @return True if Plans are enabled on the blog
-     */
-    private static boolean isPlanFeatureAvailableForBlog(Blog blog) {
-        return !TextUtils.isEmpty(AppPrefs.getGlobalPlans()) &&
-                blog != null && blog.getPlanID() != 0;
     }
 
     /**

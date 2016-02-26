@@ -1,8 +1,12 @@
 package org.wordpress.android.ui.plans;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -12,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +30,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -31,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class PlansActivity extends AppCompatActivity {
 
@@ -100,6 +109,12 @@ public class PlansActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        PlanUpdateService.stopService(this);
+        super.onDestroy();
+    }
+
     private void updatePurchaseUI(int position) {
         Fragment fragment = getPageAdapter().getItem(position);
         if (!(fragment instanceof PlanFragment)) {
@@ -156,11 +171,9 @@ public class PlansActivity extends AppCompatActivity {
 
         hideProgress();
 
-        mViewPager.setVisibility(View.VISIBLE);
         mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
-        mTabLayout.setVisibility(View.VISIBLE);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         int normalColor = getResources().getColor(R.color.blue_light);
         int selectedColor = getResources().getColor(R.color.white);
@@ -178,6 +191,41 @@ public class PlansActivity extends AppCompatActivity {
         if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
             mViewPager.setCurrentItem(mViewpagerPosSelected);
         }
+
+        if (mViewPager.getVisibility() != View.VISIBLE) {
+            // use a circular reveal on API 21+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealViewPager();
+            } else {
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void revealViewPager() {
+        mViewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mViewPager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Point pt = DisplayUtils.getDisplayPixelSize(PlansActivity.this);
+                float startRadius = 0f;
+                float endRadius = (float) Math.hypot(pt.x, pt.y);
+                int centerX = pt.x / 2;
+                int centerY = pt.y / 2;
+
+                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius, endRadius);
+                anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+                anim.setInterpolator(new AccelerateInterpolator());
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                anim.start();
+            }
+        });
     }
 
     private void hideProgress() {
@@ -234,22 +282,20 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        EventBus.getDefault().register(this);
         // Download plans if not already available
         if (mAvailablePlans == null) {
-            if (!NetworkUtils.checkConnection(this)) {
-                finish();
-                return;
-            }
-            boolean enqueued = PlansUtils.downloadAvailablePlansForSite(mLocalBlogID, mPlansDownloadListener);
-            if (!enqueued) {
-                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-                finish();
-            }
             showProgress();
+            PlanUpdateService.startService(this, mLocalBlogID);
         } else {
             setupPlansUI();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -261,6 +307,7 @@ public class PlansActivity extends AppCompatActivity {
             // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
             mViewpagerPosSelected = mViewPager.getCurrentItem();
         }
+        super.onSaveInstanceState(outState);
     }
 
     private PlansPageAdapter getPageAdapter() {
@@ -276,6 +323,41 @@ public class PlansActivity extends AppCompatActivity {
             mPageAdapter = new PlansPageAdapter(fm, fragments);
         }
         return mPageAdapter;
+    }
+
+    /*
+     * called by the service when plan data is successfully updated
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PlanEvents.PlansUpdated event) {
+        // make sure the update is for this blog
+        if (event.getLocalBlogId() != this.mLocalBlogID) {
+            AppLog.w(AppLog.T.PLANS, "plans updated for different blog");
+            return;
+        }
+
+        List<SitePlan> plans = event.getPlans();
+        mAvailablePlans = new SitePlan[plans.size()];
+        plans.toArray(mAvailablePlans);
+
+        // make sure plans are correctly sorted
+        Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+            @Override
+            public int compare(SitePlan lhs, SitePlan rhs) {
+                return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
+            }
+        });
+
+        setupPlansUI();
+    }
+
+    /*
+     * called by the service when plan data fails to update
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PlanEvents.PlansUpdateFailed event) {
+        Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
@@ -295,27 +377,4 @@ public class PlansActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    private final PlansUtils.AvailablePlansListener mPlansDownloadListener = new PlansUtils.AvailablePlansListener() {
-        public void onResponse(List<SitePlan> plans) {
-            if (!isFinishing()) {
-                mAvailablePlans = new SitePlan[plans.size()];
-                plans.toArray(mAvailablePlans);
-                // make sure plans are correctly sorted
-                Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
-                    @Override
-                    public int compare(SitePlan lhs, SitePlan rhs) {
-                        return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
-                    }
-                });
-                setupPlansUI();
-            }
-        }
-        public void onError() {
-            if (!isFinishing()) {
-                Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-    };
 }

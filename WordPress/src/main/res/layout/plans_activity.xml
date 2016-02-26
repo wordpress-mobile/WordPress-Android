@@ -21,7 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
             android:background="@color/tab_background"
-            app:tabIndicatorColor="@color/tab_indicator"/>
+            android:visibility="gone"
+            app:tabIndicatorColor="@color/tab_indicator"
+            tools:visibility="visible"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -31,7 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/frame_purchase"
         android:layout_below="@+id/appbar"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <ProgressBar
         android:id="@+id/progress_loading_plans"

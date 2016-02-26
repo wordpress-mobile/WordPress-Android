@@ -48,7 +48,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -102,7 +101,6 @@ public class WordPress extends Application {
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
-    private static final int SECONDS_BETWEEN_PLANS_UPDATE = 20 * 60; // 20 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -119,21 +117,6 @@ public class WordPress extends Application {
                 return true;
             }
             return false;
-        }
-    };
-
-    /**
-     *  Download all available plans from wpcom. If the call ends with success it start to download features.
-     */
-    public static RateLimitedTask sAvailablePlans = new RateLimitedTask(SECONDS_BETWEEN_PLANS_UPDATE) {
-        protected boolean run() {
-            if (NetworkUtils.isNetworkAvailable(getContext())) {
-                PlansUtils.downloadFeatures();
-                PlansUtils.downloadGlobalPlans();
-                return true;
-            } else {
-                return false;
-            }
         }
     };
 
@@ -807,9 +790,6 @@ public class WordPress extends Application {
 
                 // Rate limited blog options Update
                 sUpdateCurrentBlogOption.runIfNotLimited();
-
-                // Update global plans
-                sAvailablePlans.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }
