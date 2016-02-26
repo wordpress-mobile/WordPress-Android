@@ -2667,6 +2667,17 @@ ZSSEditor.parentTags = function() {
     return parentTags;
 };
 
+// MARK: - Range handling
+
+ZSSEditor.getParentRangeOfFocusedNode = function() {
+    var selection = window.getSelection();
+    return selection.getRangeAt(selection.focusNode.parentNode);
+};
+
+ZSSEditor.setRange = function(range) {
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+};
 // MARK: - ZSSField Constructor
 
 function ZSSField(wrappedObject) {
@@ -2714,12 +2725,16 @@ ZSSField.prototype.bindMutationObserver = function () {
                 } else if (removedNode.attributes.getNamedItem("data-wpid")) {
                     // An uploading or failed image was deleted manually - remove its container and send the callback
                     var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                    var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
                     ZSSEditor.removeImage(mediaIdentifier);
+                    ZSSEditor.setRange(parentRange);
                     ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
                 } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
                     // An uploading or failed video was deleted manually - remove its container and send the callback
                     var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                    var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
                     ZSSEditor.removeVideo(mediaIdentifier);
+                    ZSSEditor.setRange(parentRange);
                     ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
                 }
             }
