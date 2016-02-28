@@ -268,6 +268,14 @@ public class CommentsListFragment extends Fragment {
             }
         });
 
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredCommentsView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredCommentsView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_none),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
+
         return view;
     }
 

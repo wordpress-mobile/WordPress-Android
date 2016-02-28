@@ -16,14 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/FilteredRecyclerViewFilterContainer"
+            app:contentInsetLeft="@dimen/margin_filter_spinner"
+            app:contentInsetStart="@dimen/margin_filter_spinner"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/reader_card_margin"
-                android:layout_marginRight="@dimen/reader_card_margin"
                 android:layout_marginTop="@dimen/margin_small"
                 >
 
