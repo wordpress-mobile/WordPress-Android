@@ -68,6 +68,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
+    private View mSharingView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -142,6 +143,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
+        mSharingView = rootView.findViewById(R.id.row_sharing);
         mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
@@ -215,6 +217,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getBlog(mBlogLocalId));
+            }
+        });
+
+        mSharingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSharing(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 
@@ -328,6 +337,10 @@ public class MySiteFragment extends Fragment
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
+
+        // sharing is only exposed for wp.com blogs
+        int sharingVisibility = blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
         int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
