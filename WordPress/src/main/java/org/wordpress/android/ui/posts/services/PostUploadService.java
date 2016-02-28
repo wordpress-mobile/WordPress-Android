@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.support.v4.app.NotificationCompat;
@@ -27,7 +25,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
@@ -75,6 +73,7 @@ public class PostUploadService extends Service {
     private static Context mContext;
     private static final ArrayList<Post> mPostsList = new ArrayList<Post>();
     private static Post mCurrentUploadingPost = null;
+    private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
     private FeatureSet mFeatureSet;
 
@@ -82,6 +81,10 @@ public class PostUploadService extends Service {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
         }
+    }
+
+    public static void setLegacyMode(boolean enabled) {
+        mUseLegacyMode = enabled;
     }
 
     /*
@@ -281,22 +284,6 @@ public class PostUploadService extends Service {
 
             Map<String, Object> contentStruct = new HashMap<String, Object>();
 
-            if (!mPost.isPage() && mPost.isLocalDraft()) {
-                // add the tagline
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-                if (prefs.getBoolean(getString(R.string.pref_key_post_sig_enabled), false)) {
-                    String tagline = prefs.getString(getString(R.string.pref_key_post_sig), "");
-                    if (!TextUtils.isEmpty(tagline)) {
-                        String tag = "\n\n<span class=\"post_sig\">" + tagline + "</span>\n\n";
-                        if (TextUtils.isEmpty(moreContent))
-                            descriptionContent += tag;
-                        else
-                            moreContent += tag;
-                    }
-                }
-            }
-
             // Post format
             if (!mPost.isPage()) {
                 if (!TextUtils.isEmpty(mPost.getPostFormat())) {
@@ -381,9 +368,19 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // featured image
-            if (featuredImageID != -1) {
-                contentStruct.put("wp_post_thumbnail", featuredImageID);
+            // Featured images
+            if (mUseLegacyMode) {
+                // Support for legacy editor - images are identified as featured as they're being uploaded with the post
+                if (featuredImageID != -1) {
+                    contentStruct.put("wp_post_thumbnail", featuredImageID);
+                }
+            } else if (mPost.featuredImageHasChanged()) {
+                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
+                    // The featured image was removed from a live post
+                    contentStruct.put("wp_post_thumbnail", "");
+                } else {
+                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                }
             }
 
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
@@ -440,11 +437,20 @@ public class PostUploadService extends Service {
             return false;
         }
 
+        private boolean hasGallery() {
+            Pattern galleryTester = Pattern.compile("\\[.*?gallery.*?\\]");
+            Matcher matcher = galleryTester.matcher(mPost.getContent());
+            return matcher.find();
+        }
+
         private void trackUploadAnalytics() {
             // Calculate the words count
             Map<String, Object> properties = new HashMap<String, Object>();
             properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
+            if (hasGallery()) {
+                properties.put("with_galleries", true);
+            }
             if (mHasImage) {
                 properties.put("with_photos", true);
             }
@@ -457,9 +463,7 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
-
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
-
+            AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }
 
         /**

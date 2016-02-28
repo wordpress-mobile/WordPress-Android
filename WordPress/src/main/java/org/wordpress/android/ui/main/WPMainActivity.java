@@ -33,7 +33,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -302,9 +302,9 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mViewPager == null) return;
+        if (isFinishing() || mTabLayout == null) return;
 
-        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
+        mTabLayout.setSelectedTabPosition(WPMainTabAdapter.TAB_READER);
     }
 
     /*
@@ -398,7 +398,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
                 break;
             case RequestCodes.ACCOUNT_SETTINGS:
-                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
+                if (resultCode == AccountSettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
                 }
                 break;

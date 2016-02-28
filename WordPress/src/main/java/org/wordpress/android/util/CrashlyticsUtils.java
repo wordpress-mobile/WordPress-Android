@@ -2,6 +2,8 @@ package org.wordpress.android.util;
 
 import com.crashlytics.android.Crashlytics;
 
+import io.fabric.sdk.android.Fabric;
+
 public class CrashlyticsUtils {
     final private static String EXCEPTION_KEY = "exception";
     final private static String TAG_KEY = "tag";
@@ -10,6 +12,9 @@ public class CrashlyticsUtils {
     public enum ExtraKey {IMAGE_ANGLE, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_RESIZE_SCALE, NOTE_HTMLDATA, ENTERED_URL}
 
     public static void logException(Throwable tr, ExceptionType exceptionType, AppLog.T tag, String message) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         if (tag != null) {
             Crashlytics.setString(TAG_KEY, tag.name());
         }

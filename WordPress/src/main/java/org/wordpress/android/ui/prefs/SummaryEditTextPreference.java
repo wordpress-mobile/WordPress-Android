@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -87,6 +88,11 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (mLines != -1) summaryView.setLines(mLines);
             if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
+    }
+
+    @Override
+    public Dialog getDialog() {
+        return mDialog;
     }
 
     @Override

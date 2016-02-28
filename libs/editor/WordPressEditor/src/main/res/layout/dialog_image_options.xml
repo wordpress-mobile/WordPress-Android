@@ -21,6 +21,7 @@
 
             <ImageView
                 android:id="@+id/image_thumbnail"
+                android:contentDescription="@string/image_thumbnail"
                 android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
                 android:layout_height="@dimen/image_settings_dialog_thumbnail_size"
                 android:layout_marginLeft="@dimen/image_settings_dialog_thumbnail_left_margin"
