@@ -924,23 +924,41 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
-
+        image.onerror = null;
+        image.classList.add("image-loaded");
     }
 
     image.onerror = function () {
-        // Even on an error, we swap the image for the time being.  This is because private
-        // blogs are currently failing to download images due to access privilege issues.
-        //
-        imageNode.attr('src', image.src);
         imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
         ZSSEditor.callback("callback-input", joinedArguments);
-
+        // Try to reload the image on error.
+        ZSSEditor.tryToReload(image, 1);
     }
 
     image.src = remoteImageUrl;
 };
+
+ZSSEditor.reloadImage = function(node, nCall) {
+    if (node.classList.contains("image-loaded")) {
+        return;
+    }
+    console.log("Reloading image:", node, nCall);
+    node.onerror = tryToReload(node, nCall + 1);
+    // Force reloading by updating image src
+    node.src = node.src;
+}
+
+ZSSEditor.tryToReload = function (node, nCall) {
+    if (nCall > 8) { // 7 tries: 22500 ms total
+        return;
+    }
+    console.log("Image not loaded:", node, "- image reloading will happen soon.");
+    node.onerror = null;
+    // reload the image with a variable delay: 500ms, 1000ms, 1500ms, 2000ms, etc.
+    setTimeout(reloadImage, nCall * 500, node, nCall);
+}
 
 /**
  *  @brief      Update the progress indicator for the image identified with the value in progress.
