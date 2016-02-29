@@ -994,7 +994,8 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
     // Wrap link around image
     var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
     imageNode.wrap(linkTag);
-
+    // We invoke the sendImageReplacedCallback with a delay to avoid for
+    // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
     setTimeout(function() { thisObj.sendImageReplacedCallback(imageNodeIdentifier);}, 500);
 };
