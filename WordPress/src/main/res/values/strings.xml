@@ -5,6 +5,7 @@
 
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
