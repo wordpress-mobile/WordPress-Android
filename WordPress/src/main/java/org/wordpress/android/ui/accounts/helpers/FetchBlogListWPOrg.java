@@ -145,10 +145,14 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         url = UrlUtils.addUrlSchemeIfNeeded(url, false);
 
         if (!URLUtil.isValidUrl(url)) {
-            // TODO: Clean the URL here, and try again
             mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
             // TODO: Bump analytics here?
             return null;
+        }
+
+        // Remove wp-login.php if available in the URL
+        if (url.contains("wp-login.php")) {
+            url = url.substring(0, url.indexOf("wp-login.php"));
         }
 
         // 1. Create an array of Strings that contains the URLs we want to try in the first step. No discovery ;)
