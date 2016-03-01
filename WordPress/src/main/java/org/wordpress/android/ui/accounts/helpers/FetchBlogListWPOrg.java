@@ -134,7 +134,8 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         return true;
     }
 
-    // Attempts to retrieve the xmlrpc url for a self-hosted site. See diagrams here XXX for details
+    // Attempts to retrieve the xmlrpc url for a self-hosted site.
+    // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about thw whole process.
     private String getSelfHostedXmlrpcUrl(String url) {
         String xmlrpcUrl = null;
 
@@ -152,11 +153,14 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         // Remove wp-login.php if available in the URL
         if (url.contains("wp-login.php")) {
-            url = url.substring(0, url.indexOf("wp-login.php"));
+            if (URLUtil.isValidUrl(url.substring(0, url.indexOf("wp-login.php")))) {
+                url = url.substring(0, url.indexOf("wp-login.php"));
+                AppLog.w(T.NUX, "URL inserted by the user rewritten to: " + url);
+            }
         }
 
-        // 1. Create an array of Strings that contains the URLs we want to try in the first step. No discovery ;)
-        String[] urlToTry;
+        // Create an array of Strings that contains the URLs we want to try in the first step. No discovery ;)
+        ArrayList<String> urlsToTry = new ArrayList<>();
         // Append "xmlrpc.php" if missing in the URL
         if (!url.endsWith("xmlrpc.php")) {
             String guessedEndpointURL = url;
@@ -164,15 +168,14 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 guessedEndpointURL = guessedEndpointURL.substring(0, guessedEndpointURL.length() - 1);
             }
             guessedEndpointURL += "/xmlrpc.php";
-            urlToTry = new String[2];
-            urlToTry[0] = guessedEndpointURL;
-            urlToTry[1] = url;
-        } else {
-            urlToTry = new String[1];
-            urlToTry[0] = url;
+            if (URLUtil.isValidUrl(guessedEndpointURL)) {
+                urlsToTry.add(guessedEndpointURL);
+            }
         }
+        // add the original URL
+        urlsToTry.add(url);
 
-        for (String currentURL: urlToTry) {
+        for (String currentURL: urlsToTry) {
             try {
                 Object[] methods = (Object[]) doSystemListMethodsXMLRPC(currentURL);
                 if (validateListMethodsResponse(methods)) {
@@ -183,33 +186,27 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     mErrorMsgId = org.wordpress.android.R.string.xmlrpc_missing_method_error;
                 }
             } catch (XMLRPCException e) {
-                AppLog.i(T.NUX, "system.listMethods failed on: " + currentURL);
+                AppLog.e(T.NUX, "system.listMethods failed on: " + currentURL, e);
                 if (isHTTPAuthErrorMessage(e)) {
                     mHttpAuthRequired = true;
                     return null;
                 }
-            } catch (SSLHandshakeException e) {
+            } catch (SSLHandshakeException | SSLPeerUnverifiedException e) {
                 if (!WPUrlUtils.isWordPressCom(currentURL)) {
                     mErroneousSslCertificate = true;
                 }
-                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                return null;
-            } catch (SSLPeerUnverifiedException e) {
-                if (!WPUrlUtils.isWordPressCom(currentURL)) {
-                    mErroneousSslCertificate = true;
-                }
-                AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
+                AppLog.e(T.NUX, "SSL error. Erroneous SSL certificate detected.", e);
                 return null;
             } catch (IOException e) {
                 AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
-                AppLog.i(T.NUX, "system.listMethods failed on: " + currentURL);
+                AppLog.e(T.NUX, "system.listMethods failed on: " + currentURL, e);
                 if (isHTTPAuthErrorMessage(e)) {
                     mHttpAuthRequired = true;
                     return null;
                 }
             } catch (XmlPullParserException e) {
                 AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
-                AppLog.i(T.NUX, "system.listMethods failed on: " + currentURL);
+                AppLog.e(T.NUX, "system.listMethods failed on: " + currentURL, e);
                 if (isHTTPAuthErrorMessage(e)) {
                     mHttpAuthRequired = true;
                     return null;
@@ -228,18 +225,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             String rsdUrl;
             try {
                 rsdUrl = UrlUtils.addUrlSchemeIfNeeded(getRsdUrl(url), false);
-            } catch (SSLHandshakeException e) {
-                if (!WPUrlUtils.isWordPressCom(url)) {
-                    mErroneousSslCertificate = true;
-                }
-                AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-                return null;
-            }
-
-            try {
                 if (rsdUrl != null) {
                     xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(ApiHelper.getXMLRPCUrl(rsdUrl), false);
                     if (xmlrpcUrl == null) {
+                        // Still null here? It's unlikely that's still null here, just remove the 'rsd' part and try with it.
                         xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(rsdUrl.replace("?rsd", ""), false);
                     }
                 }
@@ -251,7 +240,50 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 return null;
             }
 
+            if (URLUtil.isValidUrl(xmlrpcUrl)) {
+                // Validate the endpoint now
+                try {
+                    Object[] methods = (Object[]) doSystemListMethodsXMLRPC(xmlrpcUrl);
+                    if (!validateListMethodsResponse(methods)) {
+                        mErrorMsgId = org.wordpress.android.R.string.xmlrpc_missing_method_error;
+                        return null;
+                    }
+                } catch (XMLRPCException e) {
+                    AppLog.e(T.NUX, "system.listMethods failed on: " + xmlrpcUrl, e);
+                    if (isHTTPAuthErrorMessage(e)) {
+                        mHttpAuthRequired = true;
+                        return null;
+                    }
+                } catch (SSLHandshakeException | SSLPeerUnverifiedException e) {
+                    if (!WPUrlUtils.isWordPressCom(xmlrpcUrl)) {
+                        mErroneousSslCertificate = true;
+                    }
+                    AppLog.e(T.NUX, "SSL error. Erroneous SSL certificate detected.", e);
+                    return null;
+                } catch (IOException e) {
+                    AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
+                    AppLog.e(T.NUX, "system.listMethods failed on: " + xmlrpcUrl, e);
+                    if (isHTTPAuthErrorMessage(e)) {
+                        mHttpAuthRequired = true;
+                        return null;
+                    }
+                } catch (XmlPullParserException e) {
+                    AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
+                    AppLog.e(T.NUX, "system.listMethods failed on: " + xmlrpcUrl, e);
+                    if (isHTTPAuthErrorMessage(e)) {
+                        mHttpAuthRequired = true;
+                        return null;
+                    }
+                } catch (IllegalArgumentException e) {
+                    // TODO: Hopefully a temporary log - remove it if we find a pattern of failing URLs
+                    CrashlyticsUtils.setString(ExtraKey.ENTERED_URL, xmlrpcUrl);
+                    CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.NUX);
+                    mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+                    return null;
+                }
+            }
         }
+
         return xmlrpcUrl;
     }
 
