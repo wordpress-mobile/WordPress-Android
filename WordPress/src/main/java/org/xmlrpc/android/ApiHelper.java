@@ -1113,9 +1113,13 @@ public class ApiHelper {
             throws SSLHandshakeException {
         // get the html code
         String data = ApiHelper.getResponse(urlString);
-
         // parse the html and get the attribute for xmlrpc endpoint
         if (data != null) {
+            // Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
+            int indexOfFirstXML = data.indexOf("<?xml");
+            if (indexOfFirstXML > 0) {
+                data = data.substring(indexOfFirstXML);
+            }
             StringReader stringReader = new StringReader(data);
             XmlPullParser parser = Xml.newPullParser();
             try {
