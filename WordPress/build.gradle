@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -30,19 +30,24 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "5.0-rc-2"
-        versionCode 235
+        versionName "alpha-1"
+        versionCode 240
         minSdkVersion 14
         targetSdkVersion 23
 
-        buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
     }
 
     productFlavors {
-        vanilla {}
+        vanilla {} // used for release and beta
 
-        zbetagroup {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+        zalpha { // alpha version - enable experimental features
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            applicationId "org.wordpress.android"
+        }
+
+        wasabi { // "hot" version, can be installed along release, alpha or beta versions
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
         }
     }
@@ -108,7 +113,7 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile 'com.simperium.android:simperium:0.6.6'
+    compile 'com.simperium.android:simperium:0.6.8'
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')

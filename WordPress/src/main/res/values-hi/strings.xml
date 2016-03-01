@@ -48,7 +48,6 @@
 	<string name="button_preview">पूर्वावलोकन</string>
 	<string name="button_view">देखें</string>
 	<string name="button_publish">प्रकाशित करें</string>
-	<string name="button_delete">हटाएँ</string>
 	<string name="button_edit">संपादित करें</string>
 	<string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
 	<string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
@@ -66,7 +65,6 @@
 	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
 	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
 	<string name="site_picker_add_site">साईट जोड़े</string>
-	<string name="my_site_btn_comments">टिप्पणियाँ</string>
 	<string name="my_site_header_publish">प्रकाशित</string>
 	<string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
 	<string name="my_site_header_admin">एडमिन</string>
@@ -106,7 +104,6 @@
 	<string name="stats_followers_a_month">एक महीना</string>
 	<string name="stats_followers_a_year">एक साल</string>
 	<string name="stats_followers_email_selector">ई-मेल</string>
-	<string name="stats_comments">टिप्पणियाँ</string>
 	<string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
 	<string name="stats_entry_top_commenter">लेखक</string>
 	<string name="stats_entry_followers">प्रसंशक</string>
@@ -123,7 +120,6 @@
 	<string name="reader_title_photo_viewer">%1$d का %2$d</string>
 	<string name="comment">टिप्पणी</string>
 	<string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
-	<string name="reader_title_comments">टिप्पणियाँ</string>
 	<string name="reader_label_comments_on">पर टिप्पणियाँ</string>
 	<string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
 	<string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
@@ -398,8 +394,6 @@
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
 	<string name="all">सभी</string>
-	<string name="stats_view_comments">टिप्पणियां</string>
-	<string name="stats_totals_comments">टिप्पणियां</string>
 	<string name="stats_entry_country">देश</string>
 	<string name="stats_entry_authors">लेखक</string>
 	<string name="media_edit_title_text">शीर्षक</string>
@@ -534,7 +528,6 @@
 	<string name="blogs">ब्लॉग</string>
 	<string name="select_photo">गैलरी से एक तस्वीर को चुने </string>
 	<string name="add"> जोड़े</string>
-	<string name="tab_comments">टिप्पणियां</string>
 	<string name="cancel">रद्द करें</string>
 	<string name="error">त्रुटि</string>
 	<string name="no">नहीं</string>
