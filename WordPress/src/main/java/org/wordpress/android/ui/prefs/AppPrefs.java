@@ -321,6 +321,10 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
     }
 
+    public static boolean isInAppBillingAvailable() {
+        return BuildConfig.IN_APP_BILLING_AVAILABLE;
+    }
+
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog
     public static void bumpAnalyticsForStatsWidgetPromo() {
         int current = getAnalyticsForStatsWidgetPromo();
