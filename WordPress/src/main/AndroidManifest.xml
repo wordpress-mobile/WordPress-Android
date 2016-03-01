@@ -220,7 +220,7 @@
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.wordpress.android.ui.themes.ThemeBrowserActivity" />
+                android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
 
         <!-- Deep Linking Activity -->
