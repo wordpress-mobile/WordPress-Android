@@ -76,6 +76,7 @@
     <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
       we're using a shade of blue_wordpress -->
     <color name="status_bar_tint">#006b98</color>
+    <color name="action_mode_status_bar_tint">#ff517188</color>
 
     <!-- Media Gallery -->
     <color name="media_gallery_grid_label_bg">@color/semi_transparent_grey_dark</color>
@@ -128,10 +129,6 @@
     <color name="nux_eye_icon_color_open">@color/grey_lighten_10</color>
 
     <!-- Editor -->
-    <color name="post_detail_icon_tint">@color/grey_darken_20</color>
-    <color name="format_bar_button_selected">@color/blue_medium</color>
-    <color name="placeholder_content_text">@color/blue_wordpress</color>
-    <color name="format_bar_background">@color/grey_lighten_30</color>
     <color name="image_options_label">@color/grey_lighten_20</color>
     <!-- copied from private support lib resource: color/design_snackbar_background_color -->
     <color name="snackbar_background_color">#323232</color>
@@ -141,7 +138,7 @@
     <color name="background_grey">@color/grey_lighten_30</color>
 
     <!--Me-->
-    <color name="me_list_row_border">#D8E3EA</color>
+    <color name="me_divider">#D8E3EA</color>
 
     <color name="passcodelock_background">@color/color_primary</color>
     <color name="passcodelock_prompt_text_color">@color/white</color>
@@ -149,6 +146,9 @@
 
     <!-- Notifications -->
     <color name="notifications_settings_divider_color">#d0d5d9</color>
+
+    <!-- Site Settings -->
+    <color name="site_settings_pref_divider_color">#dce1e6</color>
 
     <!-- Themes -->
     <color name="theme_price">#4FB769</color>

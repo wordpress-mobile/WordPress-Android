@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
@@ -14,6 +14,7 @@
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
     <dimen name="appbar_elevation">8dp</dimen>
+    <dimen name="filter_subbar_elevation">4dp</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -66,6 +67,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_filter_spinner">64dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -93,6 +95,7 @@
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
+    <dimen name="text_sz_triple_extra_large">26sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -130,6 +133,10 @@
 
     <dimen name="nux_width">600dp</dimen>
 
+    <!-- editor -->
+    <dimen name="post_settings_featured_image_height_min">150dp</dimen>
+    <dimen name="post_settings_featured_image_height_max">300dp</dimen>
+
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>
@@ -141,17 +148,36 @@
 
     <dimen name="progress_bar_height">3dp</dimen>
 
+    <!-- DetailListPreference -->
+    <dimen name="dlp_padding_start">20dp</dimen>
+    <dimen name="dlp_padding_end">24dp</dimen>
+    <dimen name="dlp_padding_top">6dp</dimen>
+    <dimen name="dlp_padding_bottom">6dp</dimen>
+    <dimen name="dlp_radio_margin_top">4dp</dimen>
+    <dimen name="dlp_text_margin_start">4dp</dimen>
+    <dimen name="dlp_text_margin_end">4dp</dimen>
+    <dimen name="dlp_title_padding_start">24dp</dimen>
+    <dimen name="dlp_title_padding_end">24dp</dimen>
+    <dimen name="dlp_title_padding_top">24dp</dimen>
+    <dimen name="dlp_title_padding_bottom">16dp</dimen>
+    <dimen name="dlp_title_logo_padding">8dp</dimen>
+    <dimen name="dlp_title_logo_width">36dp</dimen>
+    <dimen name="dlp_title_logo_height">36dp</dimen>
+
     <!-- stats -->
-    <dimen name="stats_widget_icon_size">18dp</dimen>
     <dimen name="stats_button_corner_radius">2dp</dimen>
     <dimen name="stats_barchart_height">128dp</dimen>
     <dimen name="stats_barchart_legend_item">12dp</dimen>
 
     <!-- stats widget-->
-    <dimen name="stats_widget_one_cell">40dp</dimen>
+    <dimen name="stats_widget_icon_size">18dp</dimen>
+    <dimen name="stats_widget_text_sz">14dp</dimen>
+    <dimen name="stats_widget_text_sz_small">10dp</dimen>
+    <dimen name="stats_widget_min_height">62dp</dimen>
+    <dimen name="stats_widget_main_container_min_size">38dp</dimen>
+    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_four_cells">250dp</dimen>
     <dimen name="stats_widget_five_cells">320dp</dimen>
-    <dimen name="stats_widget_main_container_size">48dp</dimen>
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
@@ -175,7 +201,6 @@
     <!-- my site -->
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
-    <dimen name="my_site_list_row_height">48dp</dimen>
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
@@ -185,7 +210,6 @@
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
     <dimen name="me_list_margin_top">20dp</dimen>
-    <dimen name="me_list_row_height">56dp</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
 
     <!--site picker-->
@@ -199,6 +223,15 @@
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <!-- Site Settings -->
+    <dimen name="site_settings_divider_height">1dp</dimen>
+    <dimen name="related_posts_dialog_padding_left">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_top">12dp</dimen>
+    <dimen name="related_posts_dialog_padding_right">24dp</dimen>
+    <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
+    <dimen name="text_sz_related_post_small">11sp</dimen>
+    <dimen name="list_editor_input_max_width">500dp</dimen>
 
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>

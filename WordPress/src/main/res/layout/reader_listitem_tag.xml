@@ -32,5 +32,6 @@
         android:layout_gravity="center_vertical"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
+        android:contentDescription="@string/remove"
         android:src="@drawable/ic_close_grey600_24dp" />
 </LinearLayout>

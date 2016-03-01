@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -282,7 +284,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moderateComment(CommentStatus.TRASH);
+                if (mComment.willTrashingPermanentlyDelete()) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            getActivity());
+                    dialogBuilder.setTitle(getResources().getText(R.string.delete));
+                    dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
+                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    moderateComment(CommentStatus.DELETE);
+                                }
+                            });
+                    dialogBuilder.setNegativeButton(
+                            getResources().getText(R.string.no),
+                            null);
+                    dialogBuilder.setCancelable(true);
+                    dialogBuilder.create().show();
+
+                } else {
+                    moderateComment(CommentStatus.TRASH);
+                }
+
             }
         });
 
@@ -415,7 +437,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             mComment = null;
         }
-        EditTextUtils.hideSoftInput(mEditReply);
     }
 
     @Override
@@ -676,22 +697,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             // the title if it wasn't set above
             if (!postExists) {
                 AppLog.d(T.COMMENTS, "comment detail > retrieving post");
-                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
-                    @Override
-                    public void onActionResult(boolean succeeded) {
-                        if (!isAdded())
-                            return;
-                        // update title if it wasn't set above
-                        if (!hasTitle) {
-                            String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
-                            if (!TextUtils.isEmpty(postTitle)) {
-                                setPostTitle(txtPostTitle, postTitle, true);
-                            } else {
-                                txtPostTitle.setText(R.string.untitled);
+                ReaderPostActions.requestPost(blogId, postId, new ReaderActions.OnRequestListener() {
+                            @Override
+                            public void onSuccess() {
+                                if (!isAdded()) return;
+
+                                // update title if it wasn't set above
+                                if (!hasTitle) {
+                                    String postTitle = ReaderPostTable.getPostTitle(blogId, postId);
+                                    if (!TextUtils.isEmpty(postTitle)) {
+                                        setPostTitle(txtPostTitle, postTitle, true);
+                                    } else {
+                                        txtPostTitle.setText(R.string.untitled);
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+
+                            @Override
+                            public void onFailure(int statusCode) {
+                                // noop
+                            }
+                        });
             }
 
             txtPostTitle.setOnClickListener(new View.OnClickListener() {
@@ -923,6 +949,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
+            if (mComment.getStatusEnum() == CommentStatus.TRASH) {
+                mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
+                //mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
+                mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
+                mBtnTrashComment.setText(R.string.mnu_comment_delete_permanently);
+            } else {
+                mBtnTrashComment.setText(R.string.mnu_comment_trash);
+            }
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
         }
@@ -1029,6 +1063,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         toggleLikeButton(!mBtnLikeComment.isActivated());
 
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
+
+        // Bump analytics
+        AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED :  Stat.NOTIFICATION_UNLIKED);
 
         boolean commentWasUnapproved = false;
         if (mNotificationsDetailListFragment != null && mComment != null) {

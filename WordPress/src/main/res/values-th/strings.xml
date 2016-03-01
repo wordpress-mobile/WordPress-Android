@@ -1,5 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">ขนาดต้นฉบับ</string>
+	<string name="about_me">เกี่ยวกับฉัน</string>
+	<string name="public_display_name">ชื่อที่ใช้แสดงในสาธารณะ</string>
+	<string name="my_profile">ประวัติของฉัน</string>
+	<string name="first_name">ชื่อ</string>
+	<string name="last_name">นามสกุล</string>
+	<string name="site_privacy_public_desc">อนุญาตให้เซิร์ชเอ็นจิ้นเก็บหน้าเว็บนี้</string>
+	<string name="site_settings_list_editor_input_hint">ใส่คำหรือวลี</string>
+	<string name="site_settings_list_editor_no_items_text">ไม่มีรายการ</string>
+	<string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
+	<string name="site_settings_username_hint">บัญชีผู้ใช้ปัจจุบัน</string>
+	<string name="site_settings_whitelist_all_summary">ความเห็นจากผู้ใช้ทั้งหมด</string>
+	<string name="site_settings_threading_summary">%d ระดับ</string>
+	<string name="site_settings_privacy_private_summary">ส่วนตัว</string>
+	<string name="site_settings_privacy_hidden_summary">ซ่อน</string>
+	<string name="site_settings_delete_site_title">ลบเว็บ</string>
+	<string name="site_settings_privacy_public_summary">สาธารณะ</string>
+	<string name="site_settings_blacklist_title">บัญชีดำ</string>
+	<string name="site_settings_moderation_hold_title">กดค้างเพื่อจัดการ</string>
+	<string name="site_settings_multiple_links_title">ลิงก์ในความเห็น</string>
+	<string name="site_settings_whitelist_title">อนุมัติอัตโนมัติ</string>
+	<string name="site_settings_sort_by_title">เรียงตาม</string>
+	<string name="site_settings_identity_required_title">ต้องประกอบด้วยชื่อและอีเมล</string>
+	<string name="site_settings_receive_pingbacks_title">รับ Pingbacks</string>
+	<string name="site_settings_send_pingbacks_title">ส่ง Pingbacks</string>
+	<string name="site_settings_allow_comments_title">อนุมัติความเห็น</string>
+	<string name="site_settings_default_format_title">รูปแบบค่าเริ่มต้น</string>
+	<string name="site_settings_default_category_title">หมวดหมู่ค่าเริ่มต้น</string>
+	<string name="site_settings_address_title">ที่อยู่</string>
+	<string name="site_settings_title_title">หัวข้อเว็บ</string>
+	<string name="site_settings_tagline_title">คำอธิบาย</string>
+	<string name="site_settings_this_device_header">อุปกรณ์นี้</string>
+	<string name="site_settings_account_header">บัญชี</string>
+	<string name="site_settings_writing_header">การเขียน</string>
+	<string name="newest_first">ใหม่สุดก่อน</string>
+	<string name="site_settings_general_header">ทั่วไป</string>
+	<string name="related_posts">เรื่องที่เกี่ยวข้อง</string>
+	<string name="comments">ความเห็น</string>
+	<string name="discussion">สนทนา</string>
+	<string name="privacy">ส่วนตัว</string>
+	<string name="close_after">ปิดหลังจาก</string>
+	<string name="oldest_first">เก่าสุดก่อน</string>
+	<string name="media_error_no_permission_upload">คุณไม่ได้รับอนุญาตให้อัปโหลดไฟล์สื่อมาที่เว็บนี้</string>
+	<string name="never">ไม่เคย</string>
+	<string name="unknown">ไม่รู้จัก</string>
+	<string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
+	<string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
+	<string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
+	<string name="blog_name_no_spaced_allowed">ที่อยู่เว็บไม่สามารถมีที่ว่างได้</string>
+	<string name="invalid_username_no_spaces">ชื่อผู้ใช้ไม่สามารถมีที่ว่างได้</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
+	<string name="media_details_copy_url_toast">คัดลอก URL ไปยังคลิปบอร์ด</string>
+	<string name="edit_media">แก้ไขไฟล์สื่อ</string>
+	<string name="media_details_copy_url">คัดลอก URL</string>
+	<string name="media_details_label_date_uploaded">อัปโหลดแล้ว</string>
+	<string name="media_details_label_date_added">เพิ่มแล้ว</string>
+	<string name="selected_theme">ธีมที่เลือก</string>
+	<string name="could_not_load_theme">ไม่สามารถโหลดธีม</string>
+	<string name="theme_activation_error">มีบางสิ่งผิดปกติ  ไม่สามารถเปิดใช้ธีม</string>
+	<string name="theme_by_author_prompt_append">โดย %1$s</string>
+	<string name="theme_prompt">ขอบคุณที่เลือกใช้ %1$s</string>
+	<string name="theme_try_and_customize">ทดลองและปรับแต่ง</string>
+	<string name="theme_view">ดู</string>
+	<string name="theme_details">รายละเอียด</string>
+	<string name="theme_support">สนับสนุน</string>
+	<string name="theme_done">เสร็จแล้ว</string>
+	<string name="theme_manage_site">จัดการเว็บไซต์</string>
+	<string name="title_activity_theme_support">ธีม</string>
+	<string name="theme_activate">เปิดใช้งาน</string>
+	<string name="date_range_start_date">วันที่เริ่มต้น</string>
+	<string name="date_range_end_date">วันที่สิ้นสุด</string>
+	<string name="current_theme">ธีมปัจจุบัน</string>
+	<string name="customize">ปรับแต่ง</string>
+	<string name="details">รายละเอียด</string>
+	<string name="support">สนับสนุน</string>
+	<string name="active">ใช้งานได้</string>
+	<string name="stats_referrers_spam_generic_error">มีบางสิ่งผิดปกติในระหว่างกระทำการ  ดังนั้นสถานะสแปมจึงไม่เปลี่ยน</string>
+	<string name="stats_referrers_marking_not_spam">บันทึกว่าไม่ใช่สแปม</string>
+	<string name="stats_referrers_unspam">ไม่ใช่สแปม</string>
+	<string name="stats_referrers_marking_spam">บันทึกเป็นสแปม</string>
+	<string name="post_published">เผยแพร่เรื่องแล้ว</string>
+	<string name="page_published">เผยแพร่หน้าแล้ว</string>
+	<string name="post_updated">อัปเดตเรื่องแล้ว</string>
+	<string name="page_updated">อัปเดตหน้าแล้ว</string>
+	<string name="stats_referrers_spam">สแปม</string>
+	<string name="theme_auth_error_authenticate">ล้มเหลวในการดึงธีม: ผู้ใช้ไม่มีสิทธินี้</string>
+	<string name="theme_no_search_result_found">ขอโทษครับ  ไม่พบธีม</string>
+	<string name="media_dimensions">ขนาดมิติ: %s</string>
+	<string name="media_uploaded_on">อัปโหลดแล้วบน: %s</string>
+	<string name="media_file_name">ชื่อไฟล์: %s</string>
+	<string name="upload_queued">เข้าคิวแล้ว</string>
+	<string name="media_file_type">ประเภทไฟล์: %s</string>
+	<string name="reader_label_gap_marker">โหลดเรื่องเพิ่มเติม</string>
+	<string name="notifications_no_search_results">ไม่มีเว็บใดตรงกับ \'%s\'</string>
+	<string name="search_sites">ค้นหาเว็บ</string>
+	<string name="notifications_empty_view_reader">ดูการอ่าน</string>
+	<string name="unread">ยังไม่ได้อ่าน</string>
+	<string name="notifications_empty_action_followers_likes">ได้การเตือน: ความเห็นบนเรื่องที่คุณอ่าน</string>
+	<string name="notifications_empty_action_comments">เข้าร่วมการสนทนา: ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
+	<string name="notifications_empty_action_unread">จุดประกายให้การสนทนา: เขียนเรื่องใหม่</string>
+	<string name="notifications_empty_action_all">ได้การเตือนเสมอ ความเห็นบนเรื่องจากบล็อกที่คุณติดตาม</string>
+	<string name="notifications_empty_likes">ยังไม่มีการชื่นชอบใหม่ให้แสดง</string>
+	<string name="notifications_empty_followers">ยังไม่มีผู้ติดตามใหม่ให้รายงาน</string>
+	<string name="notifications_empty_comments">ยังไม่มีความเห็นใหม่</string>
+	<string name="notifications_empty_unread">คุณตามทันทั้งหมดแล้ว</string>
+	<string name="stats_widget_error_jetpack_no_blogid">โปรดเข้าดูสถิติในแอพ และลองเพิ่มวิดเจ็ตภายหลัง</string>
+	<string name="stats_widget_error_readd_widget">โปรดลบวิดเจ๊ตออกและลองเพิ่มใหม่อีกครั้ง</string>
+	<string name="stats_widget_error_no_visible_blog">สถิติไม่สามารถทำงานโดยไม่มีบล็อกที่มองเห็นได้</string>
+	<string name="stats_widget_error_no_permissions">บัญชี WordPress.com ของคุณไม่สามารถเข้าถึงสถิติของบล็อกนี้</string>
+	<string name="stats_widget_error_no_account">โปรดเข้าสู่ระบบเวิร์ดเพรส</string>
+	<string name="stats_widget_error_generic">ไม่สามารถโหลดสถิติ</string>
+	<string name="stats_widget_loading_data">กำลังโหลดข้อมูล...</string>
+	<string name="stats_widget_name_for_blog">สถิติวันนี้สำหรับ %1$s</string>
+	<string name="stats_widget_name">สถิติเวิร์ดเพรสวันนี้</string>
+	<string name="add_location_permission_required">ต้องได้การอนุญาตก่อนจะเพิ่มที่อยู่</string>
+	<string name="add_media_permission_required">ต้องได้การอนุญาตก่อนจะเพิ่มไฟล์สื่อ</string>
+	<string name="access_media_permission_required">ต้องได้การอนุญาตก่อนจะเข้าถึงไฟล์สื่อ</string>
+	<string name="stats_enable_rest_api_in_jetpack">เพื่อดูสถิติของคุณ  ให้เปิดใช้งาน JSON API module ใน Jetpack</string>
+	<string name="error_open_list_from_notification">เรื่องหรือหน้านี้เผยแพร่แล้วบนเว็บอื่น</string>
 	<string name="reader_short_comment_count_multi">%s ความคิดเห็น</string>
 	<string name="reader_short_comment_count_one">1 ความคิดเห็น</string>
 	<string name="reader_label_submit_comment">ส่ง</string>
@@ -32,6 +152,7 @@
 	<string name="notifications_comments_other_blogs">ความเห็นบนเว็บอื่น</string>
 	<string name="notifications_wpcom_updates">การอัปเดตของ WordPress.com</string>
 	<string name="notifications_other">อื่น ๆ</string>
+	<string name="notifications_account_emails">อีเมลจาก WordPress.com</string>
 	<string name="notifications_account_emails_summary">เรามักจะส่งอีเมล์ที่สำคัญไปยังอีเมล์ของคุณเสมอ  แต่คุณสามารถได้อีเมล์ที่มีประโยชน์เพิ่มได้เหมือนกัน</string>
 	<string name="your_sites">เว็บของคุณ</string>
 	<string name="notifications_sights_and_sounds">แบบมองเห็นและเสียง</string>
@@ -45,14 +166,12 @@
 	<string name="trashed">เปลี่ยนเป็นขยะแล้ว</string>
 	<string name="button_back">กลับไป</string>
 	<string name="page_deleted">ลบหน้าแล้ว</string>
-	<string name="button_more">เพิ่มเติม</string>
 	<string name="button_stats">สถิติ</string>
 	<string name="button_trash">ขยะ</string>
 	<string name="button_preview">ดูก่อน</string>
 	<string name="button_view">ดู</string>
 	<string name="button_edit">แก้ไข</string>
 	<string name="button_publish">เผยแพร่</string>
-	<string name="button_delete">ลบ</string>
 	<string name="post_deleted">ลบหน้าแล้ว</string>
 	<string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
 	<string name="page_trashed">หน้าที่ส่งไปถังขยะ</string>
@@ -94,7 +213,6 @@
 	<string name="my_site_btn_view_admin">ดูผู้ควบคุม</string>
 	<string name="my_site_header_publish">เผยแพร่</string>
 	<string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
-	<string name="my_site_btn_comments">ความเห็น</string>
 	<string name="my_site_btn_site_settings">ตั้งค่า</string>
 	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
 	<string name="my_site_header_admin">ผู้ควบคุม</string>
@@ -129,12 +247,6 @@
 	<string name="verification_code">โค้ดยืนยัน</string>
 	<string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
 	<string name="error_publish_no_network">ไม่สามารถเผยแพร่ในขณะที่ไม่มีการเชื่อมต่อ  บันทึกเป็นฉบับร่าง</string>
-	<string name="media_details_dimensions">ขนาดมิติ:</string>
-	<string name="media_details_file_url">URL ไฟล์:</string>
-	<string name="media_details_file_type">ประเภทไฟล์:</string>
-	<string name="media_details_file_name">ชื่อไฟล์:</string>
-	<string name="media_details_uploaded_on">อัปโหลดแล้วบน:</string>
-	<string name="media_details_added_on">เพิ่มแล้วบน:</string>
 	<string name="two_step_footer_label">ใส่โค้ดจากแอพยืนยันตัวตนของคุณ</string>
 	<string name="verify">ยืนยัน</string>
 	<string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
@@ -151,6 +263,8 @@
 	<string name="add_to_post">เพิ่มไปยังเรื่อง</string>
 	<string name="device">อุปกรณ์</string>
 	<string name="language">ภาษา</string>
+	<string name="media_details_label_file_type">ประเภทไฟล์</string>
+	<string name="media_details_label_file_name">ชื่อไฟล์</string>
 	<string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
 	<string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
 	<string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ...</string>
@@ -178,6 +292,7 @@
 	<string name="stats_overall">ทั้งหมด</string>
 	<string name="stats_total">ทั้งหมด</string>
 	<string name="post_uploading">กำลังอัปโหลด</string>
+	<string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
 	<string name="stats_comments_total_comments_followers">เรื่องทั้งหมดที่มีผู้ติดตามความเห็น: %1$s</string>
 	<string name="stats_empty_publicize_desc">ติดตามจำนวนผู้ติดตามจากบริการโซเชียลเน็ตเวิร์คโดยใช้การเผยแพร่</string>
 	<string name="stats_empty_followers_desc">ติดตามจำนวนผู้ติดตามทั้งหมดของคุณ  และดูว่าแต่ละคนใช้เวลานานเท่าไหร่บนเว็บของคุณ</string>
@@ -230,7 +345,6 @@
 	<string name="stats_views">การดู</string>
 	<string name="stats_timeframe_years">ปี</string>
 	<string name="stats_pagination_label">หน้า %1$s จาก %2$s</string>
-	<string name="stats_comments">ความเห็น</string>
 	<string name="stats_likes">ชื่นชอบ</string>
 	<string name="stats_view_countries">ประเทศ</string>
 	<string name="stats_view_followers">ผู้ติดตาม</string>
@@ -264,13 +378,13 @@
 	<string name="reader_label_comment_count_single">หนึ่งความเห็น</string>
 	<string name="reader_label_comments_closed">ปิดการแสดงความเห็น</string>
 	<string name="reader_label_comments_on">ความเห็นบน</string>
-	<string name="reader_title_comments">ความเห็น</string>
 	<string name="reader_title_photo_viewer">%1$d จาก %2$d</string>
 	<string name="error_publish_empty_post">ไม่สามารถเผยแพร่เรื่องที่ไม่มีเนื้อหา</string>
 	<string name="error_refresh_unauthorized_posts">คุณไม่มีสิทธิ์ดูหรือแก้ไขเรื่อง</string>
 	<string name="error_refresh_unauthorized_pages">คุณไม่มีสิทธิ์ดูหรือแก้ไขหน้า</string>
 	<string name="error_refresh_unauthorized_comments">คุณไม่มีสิทธิ์ดูหรือแก้ไขความเห็น</string>
 	<string name="older_month">เก่ากว่าหนึ่งเดือน</string>
+	<string name="more">กว่า</string>
 	<string name="reader_empty_posts_liked">คุณยังไม่ได้ชื่นชอบเรื่องใด ๆ</string>
 	<string name="faq_button">คำถามที่พบบ่อย</string>
 	<string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
@@ -283,6 +397,7 @@
 	<string name="reader_label_comment_count_multi">%,d ความเห็น</string>
 	<string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
 	<string name="reader_label_like">ชื่นชอบ</string>
+	<string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ติดตามเว็บใด ๆ</string>
 	<string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
 	<string name="reader_toast_err_block_blog">ไม่สามารถปิดกั้นบล็อกนี้</string>
 	<string name="reader_toast_blog_blocked">เรื่องจากบล็อกนี้จะไม่แสดงอีกต่อไป</string>
@@ -315,6 +430,8 @@
 	<string name="reader_toast_err_unfollow_blog">ไม่สามารถเลิกติดตามบล็อกนี้</string>
 	<string name="reader_title_blog_preview">การอ่านบล็อก</string>
 	<string name="reader_title_tag_preview">การอ่านป้ายกำกับ</string>
+	<string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
+	<string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
 	<string name="ptr_tip_message">เคล็ดลับ: ดึงลงล่างเพื่อรีเฟรช</string>
 	<string name="saving">กำลังบันทึก</string>
 	<string name="media_empty_list">ไม่มีไฟล์สื่อ</string>
@@ -389,7 +506,6 @@
 	<string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
 	<string name="email_not_allowed">ที่อยู่อีเมลนั้นไม่อนุญาต</string>
 	<string name="email_exists">ที่อยู่อีเมลนั้นถูกใช้งานแล้ว</string>
-	<string name="theme_no_search_result_found">ไม่พบผลลัพธ์</string>
 	<string name="blog_name_must_include_letters">ที่อยู่เว็บต้องมีตัวอักษรอย่างน้อย 1 ตัว (a-z)</string>
 	<string name="blog_name_invalid">ที่อยู่เว็บไม่ถูกต้อง</string>
 	<string name="blog_title_invalid">หัวข้อเว็บไม่ถูกต้อง</string>
@@ -492,6 +608,7 @@
 	<string name="username_email">ชื่อผู้ใช้หรืออีเมล</string>
 	<string name="email_cant_be_used_to_signup">คุณไม่สามารถใช้อีเมลนั้นในการลงทะเบียนได้  เรากำลังมีปัญหาเรื่องการที่ผู้ให้บริการปิดกั้นอีเมลบางส่วนของเรา  กรุณาใช้ผู้ให้บริการอีเมลรายอื่น</string>
 	<string name="email_reserved">มีการใช้อีเมลนั้นแล้ว  โปรดตรวจสอบกล่องเมลเข้าของคุณสำหรับเมลเปิดการใช้งาน  ถ้าคุณไม่เปิดใช้งาน คุณสามารถลองอีกครั้งในอีกสองสามวันภายหลัง</string>
+	<string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
 	<string name="deleting_page">กำลังลบหน้า</string>
 	<string name="deleting_post">กำลังลบเรื่อง</string>
 	<string name="share_url_post">แบ่งปันเรื่อง</string>
@@ -521,6 +638,7 @@
 	<string name="account_two_step_auth_enabled">บัญชีนี้มีสองขั้นตอนในการเปิดใช้การยืนยัน  เยี่ยมชมการตั้งค่าความปลอดภัยของคุณบน WordPress.com และสร้างรหัสผ่านเฉพาะแอพพลิเคชั่น</string>
 	<string name="validating_user_data">ยืนยันข้อมูลผู้ใช้</string>
 	<string name="validating_site_data">ยืนยันข้อมูลเว็บไซต์</string>
+	<string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
 	<string name="nux_oops_not_selfhosted_blog">เข้าสู่ระบบของ WordPress.com</string>
 	<string name="password_invalid">คุณต้องการรหัสผ่านที่ปลอดภัยมากขึ้น โปรดแน่ใจว่าได้ใช้ตัวอักษร 7 ตัวหรือมากกว่า  และผสมตัวอักษรตัวใหญ่ ตัวเล็ก ตัวเลข และสัญลักษณ์พิเศษในรหัสผ่าน</string>
 	<string name="nux_tap_continue">ดำเนินการต่อ</string>
@@ -568,9 +686,7 @@
 	<string name="stats_totals_views">ดู</string>
 	<string name="stats_totals_clicks">จำนวนที่กด</string>
 	<string name="stats_totals_plays">จำนวนที่เล่น</string>
-	<string name="stats_totals_comments">ความเห็น</string>
 	<string name="stats_view_referrers">ผู้อ้างอิง</string>
-	<string name="stats_view_comments">ความเห็น</string>
 	<string name="stats_timeframe_today">วันนี้</string>
 	<string name="stats_timeframe_yesterday">เมื่อวาน</string>
 	<string name="stats_timeframe_days">วัน</string>
@@ -579,7 +695,6 @@
 	<string name="share_action_title">เพิ่มไปที่...</string>
 	<string name="share_action">แบ่งปัน</string>
 	<string name="stats">สถิติ</string>
-	<string name="view_stats_full_site">ดูทั้งเว็บ</string>
 	<string name="stats_view_visitors_and_views">ผู้เยี่ยมชมและการดู</string>
 	<string name="stats_view_clicks">การกด</string>
 	<string name="stats_view_tags_and_categories">ป้ายกำกับและหมวดหมู่</string>
@@ -626,6 +741,7 @@
 	<string name="note_reply_successful">เผยแพร่การตอบกลับแล้ว</string>
 	<string name="new_notifications">%d คำเตือนใหม่</string>
 	<string name="more_notifications">และ %d เพิ่มเติม</string>
+	<string name="follows">ติดตาม</string>
 	<string name="loading">กำลังโหลดข้อมูล...</string>
 	<string name="post_signature">ลายเซ็นเรื่อง</string>
 	<string name="add_tagline">ใส่ลายเซ็นลงไปเรื่องใหม่</string>
@@ -661,7 +777,7 @@
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="about">เกี่ยวกับ</string>
-	<string name="max_thumbnail_px_width">ความกว้างรูปมาตรฐาน</string>
+	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>
@@ -700,7 +816,6 @@
 	<string name="cancel">ยกเลิก</string>
 	<string name="save">บันทึก</string>
 	<string name="add">เพิ่ม</string>
-	<string name="tab_comments">ความเห็น</string>
 	<string name="on">บน</string>
 	<string name="reply">ตอบกลับ</string>
 	<string name="category_refresh_error">โหลดหมวดหมู่อีกครั้งผิดพลาด</string>
@@ -751,5 +866,26 @@
 		<item>ชนิดเรื่องมาตรฐาน</item>
 		<item>ชนิดเรื่องสถานะ</item>
 		<item>ชนิดเรื่องวีดีโอ</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>ไม่มีความเห็น</item>
+		<item>ผู้ใช้ทั้งหมด</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>ไม่มี</item>
+		<item>สองระดับ</item>
+		<item>สามระดับ</item>
+		<item>สี่ระดับ</item>
+		<item>ห้าระดับ</item>
+		<item>หกระดับ</item>
+		<item>เจ็ดระดับ</item>
+		<item>แปดระดับ</item>
+		<item>เก้าระดับ</item>
+		<item>สิบระดับ</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>ฟรี</item>
+		<item>ทั้งหมด</item>
+		<item>พรีเมี่ยม</item>
 	</string-array>
 </resources>

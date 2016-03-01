@@ -11,7 +11,11 @@ import android.view.View;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.ImageSettingsDialogFragment;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -31,8 +35,12 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE = 1112;
 
-    private static final int SELECT_PHOTO_MENU_POSITION = 0;
-    private static final int SELECT_PHOTO_FAIL_MENU_POSITION = 1;
+    public static final String MEDIA_REMOTE_ID_SAMPLE = "123";
+
+    private static final int SELECT_IMAGE_MENU_POSITION = 0;
+    private static final int SELECT_IMAGE_FAIL_MENU_POSITION = 1;
+    private static final int SELECT_VIDEO_MENU_POSITION = 2;
+    private static final int SELECT_VIDEO_FAIL_MENU_POSITION = 3;
 
     private EditorFragmentAbstract mEditorFragment;
 
@@ -61,9 +69,22 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
+    public void onBackPressed() {
+        Fragment fragment =  getFragmentManager()
+                .findFragmentByTag(ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (fragment != null && fragment.isVisible()) {
+            ((ImageSettingsDialogFragment) fragment).dismissFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_PHOTO_MENU_POSITION, 0, getString(R.string.select_photo));
-        menu.add(0, SELECT_PHOTO_FAIL_MENU_POSITION, 0, getString(R.string.select_photo_fail));
+        menu.add(0, SELECT_IMAGE_MENU_POSITION, 0, getString(R.string.select_image));
+        menu.add(0, SELECT_IMAGE_FAIL_MENU_POSITION, 0, getString(R.string.select_image_fail));
+        menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getString(R.string.select_video));
+        menu.add(0, SELECT_VIDEO_FAIL_MENU_POSITION, 0, getString(R.string.select_video_fail));
     }
 
     @Override
@@ -71,17 +92,31 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         Intent intent = new Intent(Intent.ACTION_PICK);
 
         switch (item.getItemId()) {
-            case SELECT_PHOTO_MENU_POSITION:
+            case SELECT_IMAGE_MENU_POSITION:
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent = Intent.createChooser(intent, getString(R.string.select_photo));
+                intent = Intent.createChooser(intent, getString(R.string.select_image));
 
                 startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 return true;
-            case SELECT_PHOTO_FAIL_MENU_POSITION:
+            case SELECT_IMAGE_FAIL_MENU_POSITION:
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent = Intent.createChooser(intent, getString(R.string.select_photo_fail));
+                intent = Intent.createChooser(intent, getString(R.string.select_image_fail));
+
+                startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
+                return true;
+            case SELECT_VIDEO_MENU_POSITION:
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent = Intent.createChooser(intent, getString(R.string.select_video));
+
+                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                return true;
+            case SELECT_VIDEO_FAIL_MENU_POSITION:
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent = Intent.createChooser(intent, getString(R.string.select_video_fail));
 
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
@@ -103,6 +138,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         MediaFile mediaFile = new MediaFile();
         String mediaId = String.valueOf(System.currentTimeMillis());
         mediaFile.setMediaId(mediaId);
+        mediaFile.setVideo(imageUri.toString().contains("video"));
 
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
@@ -139,8 +175,23 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId) {
+    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
 
+    }
+
+    @Override
+    public void onFeaturedImageChanged(int mediaId) {
+
+    }
+
+    @Override
+    public void onVideoPressInfoRequested(String videoId) {
+
+    }
+
+    @Override
+    public String onAuthHeaderRequested(String url) {
+        return "";
     }
 
     @Override
@@ -166,6 +217,11 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         // TODO
     }
 
+    @Override
+    public void onTrackableEvent(TrackableEvent event) {
+        AppLog.d(T.EDITOR, "Trackable event: " + event);
+    }
+
     private void simulateFileUpload(final String mediaId, final String mediaUrl) {
         Thread thread = new Thread() {
             @Override
@@ -180,7 +236,11 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaUrl);
+                    MediaFile mediaFile = new MediaFile();
+                    mediaFile.setMediaId(MEDIA_REMOTE_ID_SAMPLE);
+                    mediaFile.setFileURL(mediaUrl);
+
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
 
                     if (mFailedUploads.containsKey(mediaId)) {
                         mFailedUploads.remove(mediaId);
@@ -208,7 +268,8 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId);
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId,
+                            getString(R.string.tap_to_try_again));
 
                     mFailedUploads.put(mediaId, mediaUrl);
                 } catch (InterruptedException e) {

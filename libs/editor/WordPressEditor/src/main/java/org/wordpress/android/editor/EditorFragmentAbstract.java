@@ -3,13 +3,14 @@ package org.wordpress.android.editor;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-
 import android.text.Spanned;
 
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+
+import java.util.HashMap;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
@@ -18,20 +19,41 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
+    public abstract boolean isUploadingMedia();
+    public abstract boolean hasFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
 
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();
 
+    public enum MediaType {
+        IMAGE, VIDEO;
+
+        public static MediaType fromString(String value) {
+            if (value != null) {
+                for (MediaType mediaType : MediaType.values()) {
+                    if (value.equalsIgnoreCase(mediaType.toString())) {
+                        return mediaType;
+                    }
+                }
+            }
+            return null;
+        }
+    }
+
     private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
     private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected boolean mFeaturedImageSupported;
+    protected int mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
+
+    protected HashMap<String, String> mCustomHttpHeaders;
 
     @Override
     public void onAttach(Activity activity) {
@@ -77,6 +99,18 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
     }
 
+    public void setFeaturedImageId(int featuredImageId) {
+        mFeaturedImageId = featuredImageId;
+    }
+
+    public void setCustomHttpHeader(String name, String value) {
+        if (mCustomHttpHeaders == null) {
+            mCustomHttpHeaders = new HashMap<>();
+        }
+
+        mCustomHttpHeaders.put(name, value);
+    }
+
     public void setDebugModeEnabled(boolean debugModeEnabled) {
         mDebugModeEnabled = debugModeEnabled;
     }
@@ -105,9 +139,28 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onSettingsClicked();
         void onAddMediaClicked();
         void onMediaRetryClicked(String mediaId);
-        void onMediaUploadCancelClicked(String mediaId);
-        // TODO: remove saveMediaFile, it's currently needed for the legacy editor - we should have something like
-        // "EditorFragmentAbstract.getFeaturedImage()" returning the remote id
+        void onMediaUploadCancelClicked(String mediaId, boolean delete);
+        void onFeaturedImageChanged(int mediaId);
+        void onVideoPressInfoRequested(String videoId);
+        String onAuthHeaderRequested(String url);
+        // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
+        void onTrackableEvent(TrackableEvent event);
+    }
+
+    public enum TrackableEvent {
+        HTML_BUTTON_TAPPED,
+        UNLINK_BUTTON_TAPPED,
+        LINK_BUTTON_TAPPED,
+        MEDIA_BUTTON_TAPPED,
+        IMAGE_EDITED,
+        BOLD_BUTTON_TAPPED,
+        ITALIC_BUTTON_TAPPED,
+        OL_BUTTON_TAPPED,
+        UL_BUTTON_TAPPED,
+        BLOCKQUOTE_BUTTON_TAPPED,
+        STRIKETHROUGH_BUTTON_TAPPED,
+        UNDERLINE_BUTTON_TAPPED,
+        MORE_BUTTON_TAPPED
     }
 }

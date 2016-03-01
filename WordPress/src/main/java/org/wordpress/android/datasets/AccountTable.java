@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
 
 public class AccountTable {
@@ -37,6 +38,22 @@ public class AccountTable {
         db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD email TEXT DEFAULT '';");
     }
 
+    public static void migrationAddFirstNameLastNameAboutMeFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD first_name TEXT DEFAULT '';");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD last_name TEXT DEFAULT '';");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD about_me TEXT DEFAULT '';");
+    }
+
+    public static void migrationAddDateFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD date TEXT DEFAULT '';");
+    }
+
+    public static void migrationAddAccountSettingsFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD new_email TEXT DEFAULT '';");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD pending_email_change BOOLEAN DEFAULT false;");
+        db.execSQL("ALTER TABLE " + ACCOUNT_TABLE + " ADD web_address TEXT DEFAULT '';");
+    }
+
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
     }
@@ -59,6 +76,13 @@ public class AccountTable {
         values.put("visible_site_count", account.getVisibleSiteCount());
         values.put("access_token", account.getAccessToken());
         values.put("email", account.getEmail());
+        values.put("first_name", account.getFirstName());
+        values.put("last_name", account.getLastName());
+        values.put("about_me", account.getAboutMe());
+        values.put("date", DateTimeUtils.javaDateToIso8601(account.getDateCreated()));
+        values.put("new_email", account.getNewEmail());
+        values.put("pending_email_change", account.getPendingEmailChange());
+        values.put("web_address", account.getWebAddress());
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -84,6 +108,12 @@ public class AccountTable {
                 account.setVisibleSiteCount(c.getInt(c.getColumnIndex("visible_site_count")));
                 account.setAccessToken(c.getString(c.getColumnIndex("access_token")));
                 account.setEmail(c.getString(c.getColumnIndex("email")));
+                account.setFirstName(c.getString(c.getColumnIndex("first_name")));
+                account.setLastName(c.getString(c.getColumnIndex("last_name")));
+                account.setAboutMe(c.getString(c.getColumnIndex("about_me")));
+                account.setNewEmail(c.getString(c.getColumnIndex("new_email")));
+                account.setPendingEmailChange(c.getInt(c.getColumnIndex("pending_email_change")) > 0);
+                account.setWebAddress(c.getString(c.getColumnIndex("web_address")));
             }
             return account;
         } finally {

@@ -57,6 +57,7 @@ import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -74,6 +75,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
+    private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -119,6 +121,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
@@ -147,17 +157,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-                    mUrlButtonLayout.setVisibility(View.GONE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
-                    mSelfHosted = false;
-                } else {
-                    mUrlButtonLayout.setVisibility(View.VISIBLE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
-                    mSelfHosted = true;
-                }
+                toggleSignInMode();
             }
         });
+
+        if (mSelfHosted) {
+            showSelfHostedSignInForm();
+        }
 
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
@@ -202,6 +208,26 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         moveBottomButtons();
 
         return rootView;
+    }
+
+    private void toggleSignInMode(){
+        if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
+            showDotComSignInForm();
+            mSelfHosted = false;
+        } else {
+            showSelfHostedSignInForm();
+            mSelfHosted = true;
+        }
+    }
+
+    private void showDotComSignInForm(){
+        mUrlButtonLayout.setVisibility(View.GONE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+    }
+
+    private void showSelfHostedSignInForm(){
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
 
     @Override
@@ -302,7 +328,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean isWPComLogin() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
-        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || selfHostedUrl.contains("wordpress.com");
+        return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) || WPUrlUtils.isWordPressCom(selfHostedUrl);
     }
 
     private boolean isJetpackAuth() {
@@ -349,7 +375,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
+            String forgotPasswordUrl = getForgotPasswordURL();
+            AppLog.i(T.NUX, "User tapped forgot password link: " + forgotPasswordUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(forgotPasswordUrl));
             startActivity(intent);
         }
     };
@@ -391,10 +419,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void trackAnalyticsSignIn() {
+        AnalyticsUtils.refreshMetadata();
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-        AnalyticsUtils.refreshMetadata();
         if (!isWPComLogin()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
         }
@@ -597,9 +625,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
         if (isWPComLogin()) {
+            AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
             startProgress(getString(R.string.connecting_wpcom));
             signInAndFetchBlogListWPCom();
         } else {
+            String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
+            AppLog.i(T.NUX, "User tries to sign in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
             startProgress(getString(R.string.signing_in));
             signInAndFetchBlogListWPOrg();
         }
@@ -821,7 +852,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             endProgress();
             showTwoStepCodeError(messageId);
             return;
-        } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
+        } else if (messageId == org.wordpress.android.R.string.invalid_site_url_message) {
             showUrlError(messageId);
             endProgress();
             return;
@@ -866,5 +897,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 refreshBlogContent(currentBlog);
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_SELF_HOSTED, mSelfHosted);
     }
 }

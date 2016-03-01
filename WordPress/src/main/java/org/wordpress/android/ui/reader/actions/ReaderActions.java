@@ -27,17 +27,25 @@ public class ReaderActions {
     }
 
     /*
-     * result when a specific action is performed (liking a post, etc.)
+     * listener when a specific action is performed (liking a post, etc.)
      */
     public interface ActionListener {
-        public void onActionResult(boolean succeeded);
+        void onActionResult(boolean succeeded);
     }
 
     /*
-     * result when submitting a comment
+     * listener when the failure status code is required
+     */
+    public interface OnRequestListener {
+        void onSuccess();
+        void onFailure(int statusCode);
+    }
+
+    /*
+     * listener when submitting a comment
      */
     public interface CommentActionListener {
-        public void onActionResult(boolean succeeded, ReaderComment newComment);
+        void onActionResult(boolean succeeded, ReaderComment newComment);
     }
 
     /*
@@ -53,29 +61,21 @@ public class ReaderActions {
         }
     }
     public interface UpdateResultListener {
-        public void onUpdateResult(UpdateResult result);
+        void onUpdateResult(UpdateResult result);
     }
 
     /*
      * used by adapters to notify when more data should be loaded
      */
     public interface DataRequestedListener {
-        public void onRequestData();
+        void onRequestData();
     }
 
     /*
      * used by blog preview when requesting latest info about a blog
      */
     public interface UpdateBlogInfoListener {
-        public void onResult(ReaderBlog blogInfo);
-    }
-
-    /*
-     * used when checking whether a blog's url is reachable
-     */
-    public interface OnCheckUrlReachableListener {
-        void onSuccess();
-        void onFailed(int statusCode);
+        void onResult(ReaderBlog blogInfo);
     }
 
 }

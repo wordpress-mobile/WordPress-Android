@@ -107,8 +107,12 @@ public class NotificationsListFragment extends Fragment
             mBucket.addListener(this);
         }
 
-        // Remove app notification if it is showing when we resume
-        cancelNotifications();
+        // Removes app notifications from the system bar
+        new Thread(new Runnable() {
+            public void run() {
+                GCMMessageService.removeAllNotifications(getActivity());
+            }
+        }).start();
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
@@ -472,15 +476,6 @@ public class NotificationsListFragment extends Fragment
     public void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
-    }
-
-    // Removes app notifications from the system bar
-    private void cancelNotifications() {
-        new Thread(new Runnable() {
-            public void run() {
-                GCMMessageService.removeAllNotifications(getActivity());
-            }
-        }).start();
     }
 
     @SuppressWarnings("unused")

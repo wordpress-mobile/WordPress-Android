@@ -23,6 +23,10 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPUrlUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReaderActivityLauncher {
 
@@ -119,7 +123,9 @@ public class ReaderActivityLauncher {
         if (tag == null) {
             return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("tag", tag.getTagName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
@@ -212,6 +218,9 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
         }
     }
+    public static void showReaderPhotoViewer(Context context, String imageUrl, boolean isPrivate) {
+        showReaderPhotoViewer(context, imageUrl, null, null, isPrivate, 0, 0);
+    }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
     public static void openUrl(Context context, String url) {
@@ -224,8 +233,7 @@ public class ReaderActivityLauncher {
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             // That won't work on wpcom sites with custom urls
-            // TODO: #2785 (util method to check if a URL is wpcom)
-            if (UrlUtils.getDomainFromUrl(url).endsWith("wordpress.com")) {
+            if (WPUrlUtils.isWordPressCom(url)) {
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
                         AccountHelper.getDefaultAccount().getUserName());
             } else {

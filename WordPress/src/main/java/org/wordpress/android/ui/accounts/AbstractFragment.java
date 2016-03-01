@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -25,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.WPActivityUtils;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
@@ -39,7 +39,6 @@ public abstract class AbstractFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppLog.v(T.NUX, "NewAccountAbstractOage.onCreate()");
         mSystemService = (ConnectivityManager) getActivity().getApplicationContext().
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         if (requestQueue == null) {
@@ -75,12 +74,8 @@ public abstract class AbstractFragment extends Fragment {
             }
 
             // hide keyboard before calling the done action
-            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
             View view = getActivity().getCurrentFocus();
-            if (view != null) {
-                inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
+            if (view != null) WPActivityUtils.hideKeyboard(view);
 
             // call child action
             onDoneAction();

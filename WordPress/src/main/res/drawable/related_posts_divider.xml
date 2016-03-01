@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@color/grey_lighten_30"
+        android:state_enabled="true" />
+
+    <item
+        android:drawable="@color/grey_lighten_30" />
+
+</selector>

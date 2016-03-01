@@ -5,12 +5,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FollowersModel implements Serializable {
+public class FollowersModel extends BaseStatsModel {
     private String mBlogID;
     private int mPage;
     private int mPages;

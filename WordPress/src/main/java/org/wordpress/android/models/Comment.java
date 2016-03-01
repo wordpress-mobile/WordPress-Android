@@ -201,7 +201,7 @@ public class Comment {
      */
     private transient String avatarForDisplay;
     public String getAvatarForDisplay(int avatarSize) {
-        if (avatarForDisplay==null) {
+        if (avatarForDisplay == null) {
             if (hasProfileImageUrl()) {
                 avatarForDisplay = GravatarUtils.fixGravatarUrl(profileImageUrl, avatarSize);
             } else if (hasAuthorEmail()) {
@@ -232,5 +232,10 @@ public class Comment {
             }
         }
         return formattedTitle;
+    }
+
+    public boolean willTrashingPermanentlyDelete(){
+        CommentStatus status = getStatusEnum();
+        return CommentStatus.TRASH.equals(status) || CommentStatus.SPAM.equals(status);
     }
 }

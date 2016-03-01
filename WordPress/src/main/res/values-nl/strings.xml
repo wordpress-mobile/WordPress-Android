@@ -1,9 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">Oorspronkelijke grootte</string>
+	<string name="about_me_hint">Enkele woorden over jou…</string>
+	<string name="public_display_name_hint">De weergavenaam is standaard je gebruikersnaam, tenzij hij anders is ingesteld</string>
+	<string name="about_me">Over mij</string>
+	<string name="public_display_name">Openbare weergavenaam</string>
+	<string name="my_profile">Mijn Profiel</string>
+	<string name="first_name">Voornaam</string>
+	<string name="last_name">Achternaam</string>
+	<string name="site_privacy_public_desc">Laat zoekmachines deze site indexeren</string>
+	<string name="site_privacy_hidden_desc">Laat zoekmachines deze site niet indexeren</string>
+	<string name="site_privacy_private_desc">Ik wil dat mijn site privé blijft en dat ik zelf kies voor wie hij zichtbaar is</string>
+	<string name="cd_related_post_preview_image">Voorbeeldafbeelding van gerelateerd bericht bekijken</string>
+	<string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
+	<string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
+	<string name="error_media_upload_connection">Er is een verbindingsfout opgetreden bij het uploaden van media</string>
+	<string name="site_settings_disconnected_toast">Niet verbonden, bijwerken uitgeschakeld.</string>
+	<string name="site_settings_unsupported_version_error">Niet-ondersteunde versie van WordPress</string>
+	<string name="site_settings_multiple_links_dialog_description">Vereist goedkeuring voor reacties die meer dan dit aantal koppelingen bevatten.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Automatisch afsluiten</string>
+	<string name="site_settings_close_after_dialog_description">Sluit reacties op artikelen automatisch af.</string>
+	<string name="site_settings_paging_dialog_description">Deel reacties in threads op in meerdere pagina\'s.</string>
+	<string name="site_settings_paging_dialog_header">Reacties per pagina</string>
+	<string name="site_settings_close_after_dialog_title">Reacties afsluiten</string>
+	<string name="site_settings_blacklist_description">Wanneer een reactie een van deze woorden bevat in de inhoud, naam, URL, e-mailadres of IP-adres, wordt het gemarkeerd als spam. Ook delen van woorden worden gevonden, dus "press" levert ook "WordPress" op als resultaat.</string>
+	<string name="site_settings_hold_for_moderation_description">Wanneer een reactie een van deze woorden bevat in de inhoud, naam, URL, het e-mailadres of IP-adres, wordt hij in de wachtrij voor moderatie gezet. Ook delen van woorden worden gevonden, dus "press" levert ook "WordPress" op als resultaat.</string>
+	<string name="site_settings_list_editor_input_hint">Voer een woord of zinsdeel in</string>
+	<string name="site_settings_list_editor_no_items_text">Geen items</string>
+	<string name="site_settings_learn_more_caption">Je kunt deze instellingen ongedaan maken voor individuele berichten.</string>
+	<string name="site_settings_rp_preview3_site">in "Upgrade"</string>
+	<string name="site_settings_rp_preview3_title">Upgradefocus: VideoPress voor bruiloften</string>
+	<string name="site_settings_rp_preview2_site">in "Apps"</string>
+	<string name="site_settings_rp_preview2_title">De WordPress voor Android-app krijgt een grote update</string>
+	<string name="site_settings_rp_preview1_site">in "Mobiel"</string>
+	<string name="site_settings_rp_preview1_title">Grote update voor iPhone/iPad nu beschikbaar</string>
+	<string name="site_settings_rp_show_images_title">Afbeeldingen weergeven</string>
+	<string name="site_settings_rp_show_header_title">Koptekst weergeven</string>
+	<string name="site_settings_rp_switch_summary">Gerelateerde berichten geeft relevante content van je site weer onder je berichten.</string>
+	<string name="site_settings_rp_switch_title">Gerelateerde berichten weergeven</string>
+	<string name="site_settings_delete_site_hint">Verwijder je sitegegevens van de app</string>
+	<string name="site_settings_blacklist_hint">Reacties die overeenkomen met een filter worden als spam gemarkeerd</string>
+	<string name="site_settings_moderation_hold_hint">Reacties die overeenkomen met een filter worden in de wachtrij voor moderatie gezet</string>
+	<string name="site_settings_multiple_links_hint">Negeert koppelingslimiet van bekende gebruikers</string>
+	<string name="site_settings_whitelist_hint">De reactie-auteur moet eerder een goedgekeurde reactie hebben geplaatst</string>
+	<string name="site_settings_user_account_required_hint">Gebruikers moeten geregistreerd en ingelogd zijn om een reactie te plaatsen</string>
+	<string name="site_settings_identity_required_hint">De reactie-auteur moet zijn of haar naam en e-mailadres invullen</string>
+	<string name="site_settings_manual_approval_hint">Reacties moeten handmatig worden goedgekeurd</string>
+	<string name="site_settings_paging_hint">Geef reacties weer in delen van een specifieke grootte</string>
+	<string name="site_settings_threading_hint">Geneste reacties toestaan tot een bepaalde diepte</string>
+	<string name="site_settings_sort_by_hint">Bepaalt de volgorde waarin reacties worden weergegeven</string>
+	<string name="site_settings_close_after_hint">Reacties niet meer toestaan na bepaalde tijd</string>
+	<string name="site_settings_receive_pingbacks_hint">Koppelingsmeldingen van andere blogs toestaan</string>
+	<string name="site_settings_send_pingbacks_hint">Probeer een melding te maken op alle blogs waaraan het artikel is gekoppeld</string>
+	<string name="site_settings_allow_comments_hint">Toestaan dat lezers reacties plaatsen</string>
+	<string name="site_settings_discussion_hint">Geef discussie-instellingen van je site weer en wijzig ze</string>
+	<string name="site_settings_more_hint">Geef alle beschikbare discussie-instellingen weer</string>
+	<string name="site_settings_related_posts_hint">Toon of verberg alle gerelateerde berichten in de reader</string>
+	<string name="site_settings_upload_and_link_image_hint">Inschakelen dat de afbeelding altijd op volledige grootte wordt geüpload</string>
+	<string name="site_settings_image_width_hint">De afmeting van afbeeldingen in berichten wijzigen naar deze breedte</string>
+	<string name="site_settings_format_hint">Een nieuwe post format instellen</string>
+	<string name="site_settings_category_hint">Een nieuwe berichtcategorie instellen</string>
+	<string name="site_settings_location_hint">Automatisch locatiegegevens aan je berichten toevoegen</string>
+	<string name="site_settings_password_hint">Wijzig je wachtwoord</string>
+	<string name="site_settings_username_hint">Huidig gebruikersaccount</string>
+	<string name="site_settings_language_hint">Taal waarin deze blog voornamelijk is geschreven</string>
+	<string name="site_settings_privacy_hint">Beheert wie je site kan zien</string>
+	<string name="site_settings_address_hint">Het wijzigen van je adres wordt momenteel niet ondersteund</string>
+	<string name="site_settings_tagline_hint">Een korte beschrijving of een pakkende zin om je blog te omschrijven</string>
+	<string name="site_settings_title_hint">Leg in een paar woorden uit waar deze site over gaat</string>
+	<string name="site_settings_whitelist_known_summary">Reacties van bekende gebruikers</string>
+	<string name="site_settings_whitelist_all_summary">Reacties van alle gebruikers</string>
+	<string name="site_settings_threading_summary">%d niveaus</string>
+	<string name="site_settings_privacy_private_summary">Privé</string>
+	<string name="site_settings_privacy_hidden_summary">Verborgen</string>
+	<string name="site_settings_delete_site_title">Site verwijderen</string>
+	<string name="site_settings_privacy_public_summary">Openbaar</string>
+	<string name="site_settings_blacklist_title">Blacklist</string>
+	<string name="site_settings_moderation_hold_title">In de wacht zetten voor moderatie</string>
+	<string name="site_settings_multiple_links_title">Koppelingen in reacties</string>
+	<string name="site_settings_whitelist_title">Automatisch goedkeuren</string>
+	<string name="site_settings_threading_title">Weergave threads</string>
+	<string name="site_settings_paging_title">Weergave pagina\'s</string>
+	<string name="site_settings_sort_by_title">Sorteren op</string>
+	<string name="site_settings_account_required_title">Gebruikers moeten aangemeld zijn</string>
+	<string name="site_settings_identity_required_title">Moet naam en e-mail bevatten</string>
+	<string name="site_settings_receive_pingbacks_title">Pingbacks ontvangen</string>
+	<string name="site_settings_send_pingbacks_title">Pingbacks verzenden</string>
+	<string name="site_settings_allow_comments_title">Reacties toestaan</string>
+	<string name="site_settings_default_format_title">Standaard indeling</string>
+	<string name="site_settings_default_category_title">Standaard categorie</string>
+	<string name="site_settings_location_title">Locatie inschakelen</string>
+	<string name="site_settings_address_title">Adres</string>
+	<string name="site_settings_title_title">Sitetitel</string>
+	<string name="site_settings_tagline_title">Slogan</string>
+	<string name="site_settings_this_device_header">Dit apparaat</string>
+	<string name="site_settings_discussion_new_posts_header">Standaardinstellingen voor nieuwe berichten</string>
+	<string name="site_settings_account_header">Account</string>
+	<string name="site_settings_writing_header">Schrijven</string>
+	<string name="newest_first">Nieuwste eerst</string>
+	<string name="site_settings_general_header">Algemeen</string>
+	<string name="discussion">Reacties</string>
+	<string name="privacy">Privacy</string>
+	<string name="related_posts">Gerelateerde berichten</string>
+	<string name="comments">Commentaar</string>
+	<string name="close_after">Hierna sluiten</string>
+	<string name="oldest_first">Oudste eerst</string>
+	<string name="media_error_no_permission_upload">Je hebt geen toestemming om media naar de site te uploaden</string>
+	<string name="never">Nooit</string>
+	<string name="unknown">Onbekend</string>
+	<string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
+	<string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
+	<string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
+	<string name="blog_name_no_spaced_allowed">Het adres van de site mag geen spaties bevatten</string>
+	<string name="invalid_username_no_spaces">De gebruikersnaam mag geen spaties bevatten</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
+	<string name="media_details_copy_url_toast">URL gekopieerd naar klembord</string>
+	<string name="edit_media">Media bewerken</string>
+	<string name="media_details_copy_url">URL kopiëren</string>
+	<string name="media_details_label_date_uploaded">Geüpload</string>
+	<string name="media_details_label_date_added">Toegevoegd</string>
+	<string name="selected_theme">Geselecteerd thema</string>
+	<string name="could_not_load_theme">Kan thema niet laden</string>
+	<string name="theme_activation_error">Er is iets fout gegaan. Kan thema niet activeren</string>
+	<string name="theme_by_author_prompt_append"> door %1$s</string>
+	<string name="theme_prompt">Bedankt dat je hebt gekozen voor %1$s</string>
+	<string name="theme_try_and_customize">Uitproberen en aanpassen</string>
+	<string name="theme_view">Weergeven</string>
+	<string name="theme_details">Details</string>
+	<string name="theme_support">Ondersteuning</string>
+	<string name="theme_done">GEREED</string>
+	<string name="theme_manage_site">SITE BEHEREN</string>
+	<string name="title_activity_theme_support">Thema\'s</string>
+	<string name="theme_activate">Activeren</string>
+	<string name="date_range_start_date">Startdatum</string>
+	<string name="date_range_end_date">Einddatum</string>
+	<string name="current_theme">Huidig thema</string>
+	<string name="customize">Aanpassen</string>
+	<string name="details">Details</string>
+	<string name="support">Ondersteuning</string>
+	<string name="active">Actief</string>
+	<string name="stats_referrers_spam_generic_error">Er is iets fout gegaan tijdens deze handeling. De status van de spam is ongewijzigd gebleven.</string>
+	<string name="stats_referrers_marking_not_spam">Markeren als geen spam</string>
+	<string name="stats_referrers_unspam">Geen spam</string>
+	<string name="stats_referrers_marking_spam">Markeren als spam</string>
+	<string name="theme_auth_error_authenticate">Fout bij het ophalen van thema\'s: authenticatie van gebruiker mislukt</string>
+	<string name="post_published">Bericht gepubliceerd</string>
+	<string name="page_published">Pagina gepubliceerd</string>
+	<string name="post_updated">Bericht bijgewerkt</string>
+	<string name="page_updated">Pagina bijgewerkt</string>
+	<string name="stats_referrers_spam">Spam</string>
+	<string name="theme_no_search_result_found">Helaas, geen thema\'s gevonden.</string>
+	<string name="media_file_name">Bestandsnaam: %s</string>
+	<string name="media_uploaded_on">Geüpload op: %s</string>
+	<string name="media_dimensions">Afmetingen: %s</string>
+	<string name="upload_queued">In wachtrij geplaatst</string>
+	<string name="media_file_type">Bestandstype: %s</string>
+	<string name="reader_label_gap_marker">Meer berichten laden</string>
+	<string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
+	<string name="search_sites">Zoek sites</string>
+	<string name="notifications_empty_view_reader">Reader weergeven</string>
+	<string name="unread">Ongelezen</string>
+	<string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen.</string>
+	<string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht.</string>
+	<string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
+	<string name="notifications_empty_likes">Er zijn nog geen nieuwe likes.</string>
+	<string name="notifications_empty_followers">Er zijn nog geen nieuwe volgers.</string>
+	<string name="notifications_empty_comments">Nog geen nieuwe reacties.</string>
+	<string name="notifications_empty_unread">Je bent helemaal bij!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
+	<string name="stats_widget_error_readd_widget">Verwijder de widget en voeg deze opnieuw in</string>
+	<string name="stats_widget_error_no_visible_blog">Je hebt geen toegang tot de statistieken zonder een zichtbare blog</string>
+	<string name="stats_widget_error_no_permissions">Je account van WordPress.com heeft geen toegang tot de statistieken van deze blog</string>
+	<string name="stats_widget_error_no_account">Login bij WordPress</string>
+	<string name="stats_widget_error_generic">Statistieken kunnen niet worden geladen</string>
+	<string name="stats_widget_loading_data">Gegevens laden…</string>
+	<string name="stats_widget_name_for_blog">Huidige statistieken voor %1$s</string>
+	<string name="stats_widget_name">Huidige statistieken van WordPress</string>
+	<string name="add_location_permission_required">Toestemming vereist om locatie toe te voegen</string>
+	<string name="add_media_permission_required">Toestemming vereist om media toe te voegen</string>
+	<string name="access_media_permission_required">Toestemming vereist om media toe te voegen</string>
 	<string name="stats_enable_rest_api_in_jetpack">Om je statistieken te bekijken moet je de JSON API module in Jetpack activeren.</string>
 	<string name="error_open_list_from_notification">Dit bericht of deze pagina is gepubliceerd op een andere site</string>
-	<string name="post_uploaded">Bericht geüpload</string>
-	<string name="page_uploaded">Pagina geüpload</string>
 	<string name="reader_short_comment_count_multi">%s Reacties</string>
 	<string name="reader_short_comment_count_one">1 Reactie</string>
 	<string name="reader_label_submit_comment">VERSTUUR</string>
@@ -46,14 +225,12 @@
 	<string name="days_ago">%d dagen geleden</string>
 	<string name="yesterday">Gisteren</string>
 	<string name="connectionbar_no_connection">Geen verbinging</string>
-	<string name="button_delete">Verwijderen</string>
 	<string name="button_publish">Publiceren</string>
 	<string name="post_deleted">Bericht verwijderd</string>
 	<string name="post_trashed">Bericht naar de prullenbak verplaatst</string>
 	<string name="page_trashed">Pagina naar de prullenbak verplaatst.</string>
 	<string name="button_back">Terug</string>
 	<string name="page_deleted">Pagina verwijderd</string>
-	<string name="button_more">Meer</string>
 	<string name="button_stats">Statistieken</string>
 	<string name="button_trash">Prullenbak</string>
 	<string name="button_edit">Bewerken</string>
@@ -99,7 +276,6 @@
 	<string name="my_site_btn_view_site">Bekijk site</string>
 	<string name="my_site_header_publish">Publiceren</string>
 	<string name="my_site_header_look_and_feel">Look and feel</string>
-	<string name="my_site_btn_comments">Reacties</string>
 	<string name="my_site_btn_blog_posts">Blogberichten</string>
 	<string name="my_site_btn_site_settings">Instellingen</string>
 	<string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
@@ -140,12 +316,6 @@
 	<string name="tab_title_device_videos">Apparaatvideo\'s</string>
 	<string name="tab_title_site_images">Siteafbeeldingen</string>
 	<string name="tab_title_site_videos">Sitevideo\'s</string>
-	<string name="media_details_added_on">Toegevoegd op:</string>
-	<string name="media_details_uploaded_on">Geüpload op:</string>
-	<string name="media_details_file_name">Bestandsnaam:</string>
-	<string name="media_details_file_type">Bestandstype:</string>
-	<string name="media_details_file_url">Bestands-URL:</string>
-	<string name="media_details_dimensions">Afmetingen:</string>
 	<string name="error_publish_no_network">Kan niet publiceren als er geen verbinding is. Opgeslagen als concept.</string>
 	<string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
 	<string name="verification_code">Verificatiecode</string>
@@ -156,6 +326,8 @@
 	<string name="two_step_sms_sent">Kijk in je sms\'jes voor de verificatiecode.</string>
 	<string name="sign_in_jetpack">Meld je aan bij je WordPress.com account om verbinding te maken met Jetpack.</string>
 	<string name="auth_required">Meld je opnieuw aan om door te gaan.</string>
+	<string name="media_details_label_file_name">Bestandsnaam</string>
+	<string name="media_details_label_file_type">Bestandstype</string>
 	<string name="posts_fetching">Fetching posts…</string>
 	<string name="media_fetching">Fetching media…</string>
 	<string name="pages_fetching">Fetching pages…</string>
@@ -187,7 +359,6 @@
 	<string name="stats_comments_total_comments_followers">Totaalaantal berichten met reactievolgers: %1$s</string>
 	<string name="stats_visitors">Bezoekers</string>
 	<string name="stats_likes">Waarderingen</string>
-	<string name="stats_comments">Reacties</string>
 	<string name="stats_pagination_label">Pagina %1$s van %2$s</string>
 	<string name="stats_timeframe_years">Jaren</string>
 	<string name="stats_views">Weergaven</string>
@@ -263,7 +434,6 @@
 	<string name="reader_empty_posts_in_tag">Geen berichten met deze tag</string>
 	<string name="reader_label_view_original">Bekijk oorspronkelijk artikel</string>
 	<string name="reader_label_like">Like</string>
-	<string name="reader_title_comments">Reacties</string>
 	<string name="reader_label_comments_on">Reacties op</string>
 	<string name="error_refresh_unauthorized_posts">Je hebt geen rechten om berichten te bekijken of te bewerken</string>
 	<string name="reader_title_photo_viewer">%1$d van %2$d</string>
@@ -273,6 +443,7 @@
 	<string name="comment">Reactie</string>
 	<string name="comment_trashed">Reactie verwijderd</string>
 	<string name="older_month">Ouder dan een maand</string>
+	<string name="more">Meer</string>
 	<string name="older_two_days">Ouder dan 2 dagen</string>
 	<string name="older_last_week">Ouder dan een week</string>
 	<string name="select_a_blog">Selecteer een WordPress site</string>
@@ -359,7 +530,6 @@
 	<string name="theme_fetch_failed">Fout bij het ophalen van thema\'s</string>
 	<string name="theme_set_failed">Fout bij het instellen van het thema</string>
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
-	<string name="theme_no_search_result_found">Geen resultaten gevonden </string>
 	<string name="comments_empty_list">Geen reacties</string>
 	<string name="mnu_comment_unspam">Geen spam</string>
 	<string name="gallery_error">Media-item kan niet worden opgehaald</string>
@@ -501,6 +671,7 @@
 	<string name="blog_name_must_include_letters">Site-adres moet ten minste 1 letter (a-z) bevatten</string>
 	<string name="blog_name_invalid">Ongeldig site-adres</string>
 	<string name="blog_title_invalid">Ongeldige sitetitel</string>
+	<string name="notifications_empty_all">Nog geen meldingen.</string>
 	<string name="share_url_page">Deel pagina</string>
 	<string name="share_url_post">Deel bericht</string>
 	<string name="deleting_page">Verwijderen van pagina</string>
@@ -592,7 +763,6 @@
 	<string name="theme_activate_button">Activeren</string>
 	<string name="share_action">Deel</string>
 	<string name="stats">Statistieken</string>
-	<string name="view_stats_full_site">Bekijk site</string>
 	<string name="stats_view_visitors_and_views">Bezoekers en views</string>
 	<string name="stats_view_clicks">Kliks</string>
 	<string name="stats_view_tags_and_categories">Tags en categorieën </string>
@@ -604,7 +774,6 @@
 	<string name="stats_totals_views">Views</string>
 	<string name="stats_totals_clicks">Kliks</string>
 	<string name="stats_totals_plays">Afgespeeld</string>
-	<string name="stats_totals_comments">Reacties</string>
 	<string name="passcode_preference_title">PIN slot</string>
 	<string name="passcode_turn_off">Zet PIN slot uit</string>
 	<string name="passcode_turn_on">Zet PIN slot uit</string>
@@ -627,7 +796,6 @@
 	<string name="stats_timeframe_months">Maanden</string>
 	<string name="stats_timeframe_yesterday">Gisteren</string>
 	<string name="stats_view_referrers">Top auteurs</string>
-	<string name="stats_view_comments">Reacties</string>
 	<string name="stats_timeframe_today">Vandaag</string>
 	<string name="media_gallery_type_tiled">Tegels</string>
 	<string name="upload">Upload</string>
@@ -636,6 +804,7 @@
 	<string name="note_reply_successful">Reactie gepubliceerd</string>
 	<string name="new_notifications">%d nieuwe notificaties</string>
 	<string name="more_notifications">en %d extra.</string>
+	<string name="follows">Volgt</string>
 	<string name="loading">Laden...</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>
 	<string name="httppassword">HTTP wachtwoord</string>
@@ -671,7 +840,7 @@
 	<string name="tos">Eindgebruikersovereenkomst</string>
 	<string name="app_title">WordPress voor Android</string>
 	<string name="about">Over</string>
-	<string name="max_thumbnail_px_width">Standaard breedte afbeelding</string>
+	<string name="max_thumbnail_px_width">Standaardbreedte van afbeelding</string>
 	<string name="image_alignment">Uitlijning </string>
 	<string name="refresh">Vernieuw</string>
 	<string name="untitled">Zonder titel</string>
@@ -709,7 +878,6 @@
 	<string name="reply">Beantwoord</string>
 	<string name="on">aan</string>
 	<string name="add">Voeg toe</string>
-	<string name="tab_comments">Reacties</string>
 	<string name="error">Fout</string>
 	<string name="cancel">Annuleer </string>
 	<string name="save">Bewaar</string>
@@ -761,5 +929,37 @@
 		<item>Standaard</item>
 		<item>Status</item>
 		<item>Video</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>Je site kan door iedereen worden bekeken en kan worden geïndexeerd door zoekmachines</item>
+		<item>Je site kan door iedereen worden bekeken, maar wordt niet geïndexeerd door zoekmachines</item>
+		<item>Je site is alleen zichtbaar voor jou en gebruikers die je goedkeurt</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>Vereist handmatige goedkeuring voor de reacties van iedereen.</item>
+		<item>Keur de reactie automatisch goed indien de gebruiker eerder een goedgekeurde reactie heeft geplaatst.</item>
+		<item>Keur de reacties van iedereen automatisch goed.</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>Geen reacties</item>
+		<item>Reacties van bekende gebruikers</item>
+		<item>Alle gebruikers</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Geen</item>
+		<item>Twee niveaus</item>
+		<item>Drie niveaus</item>
+		<item>Vier niveaus</item>
+		<item>Vijf niveaus</item>
+		<item>Zes niveaus</item>
+		<item>Zeven niveaus</item>
+		<item>Acht niveaus</item>
+		<item>Negen niveaus</item>
+		<item>Tien niveaus</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Gratis</item>
+		<item>Alles</item>
+		<item>Premium</item>
 	</string-array>
 </resources>

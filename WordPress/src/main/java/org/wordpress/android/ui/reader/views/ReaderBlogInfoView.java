@@ -113,7 +113,7 @@ public class ReaderBlogInfoView extends LinearLayout {
         }
 
         if (blogInfo.hasUrl()) {
-            txtDomain.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+            txtDomain.setText(UrlUtils.getHost(blogInfo.getUrl()));
             txtDomain.setVisibility(View.VISIBLE);
         } else {
             txtDomain.setVisibility(View.GONE);

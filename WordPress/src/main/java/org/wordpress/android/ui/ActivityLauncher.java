@@ -28,8 +28,10 @@ import org.wordpress.android.ui.people.PersonActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.SettingsActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -147,8 +149,10 @@ public class ActivityLauncher {
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
         if (blog == null) return;
 
-        // Create a new post object
+        // Create a new post object and assign default settings
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
+        newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
+        newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
         Intent intent = new Intent(context, EditPostActivity.class);
@@ -171,9 +175,8 @@ public class ActivityLauncher {
     public static void browsePostOrPage(Context context, Blog blog, Post post) {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
-        String url = post.getPermaLink();
-        // Add the preview parameter if the post is not published yet
-        url = UrlUtils.appendUrlParameter(url, "preview", "true");
+        // always add the preview parameter to avoid bumping stats when viewing posts
+        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
@@ -181,8 +184,15 @@ public class ActivityLauncher {
         WordPressMediaUtils.launchPictureLibrary(activity);
     }
 
+    public static void viewMyProfile(Context context) {
+        Intent intent = new Intent(context, MyProfileActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        slideInFromRight(context, intent);
+    }
+
     public static void viewAccountSettings(Activity activity) {
-        Intent intent = new Intent(activity, SettingsActivity.class);
+        Intent intent = new Intent(activity, AccountSettingsActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
     }
 

@@ -50,13 +50,13 @@ public class WPMainTabLayout extends TabLayout {
 
         ImageView icon = (ImageView) customView.findViewById(R.id.tab_icon);
         icon.setImageResource(iconId);
+        icon.setContentDescription(getResources().getText(contentDescriptionId));
 
         // each tab has a badge icon, but we only care about the one on the notifications tab
         if (isNoteTab) {
             mNoteBadge = customView.findViewById(R.id.tab_badge);
         }
-
-        addTab(newTab().setCustomView(customView).setContentDescription(contentDescriptionId));
+        addTab(newTab().setCustomView(customView));
     }
 
     /*
@@ -103,5 +103,19 @@ public class WPMainTabLayout extends TabLayout {
         }
 
         animScale.start();
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position >=0 && position < getTabCount());
+    }
+
+    public void setSelectedTabPosition(int position) {
+        if (!isValidPosition(position) || getSelectedTabPosition() == position) {
+            return;
+        }
+        Tab tab = getTabAt(position);
+        if (tab != null) {
+            tab.select();
+        }
     }
 }

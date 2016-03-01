@@ -17,32 +17,18 @@
 package org.wordpress.android.util.helpers;
 
 import android.os.Parcel;
-import android.text.ParcelableSpan;
-import android.text.TextPaint;
-import android.text.style.CharacterStyle;
-import android.text.style.UpdateAppearance;
+import android.text.style.UnderlineSpan;
 
-public class WPUnderlineSpan extends CharacterStyle
-        implements UpdateAppearance, ParcelableSpan {
+/**
+ * WPUnderlineSpan is used as an alternative class to UnderlineSpan. UnderlineSpan is used by EditText auto
+ * correct, so it can get mixed up with our formatting.
+ */
+public class WPUnderlineSpan extends UnderlineSpan {
     public WPUnderlineSpan() {
+        super();
     }
 
     public WPUnderlineSpan(Parcel src) {
-    }
-
-    public int getSpanTypeId() {
-        return 6;
-    }
-
-    public int describeContents() {
-        return 0;
-    }
-
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
-    @Override
-    public void updateDrawState(TextPaint ds) {
-        ds.setUnderlineText(true);
+        super(src);
     }
 }

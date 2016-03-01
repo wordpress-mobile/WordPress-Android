@@ -24,8 +24,11 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -133,6 +136,16 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
         if (username.length() > 60) {
             showUsernameError(R.string.invalid_username_too_long);
+            retValue = false;
+        }
+
+        if (username.contains(" ")) {
+            showUsernameError(R.string.invalid_username_no_spaces);
+            retValue = false;
+        }
+
+        if (siteUrl.contains(" ")) {
+            showSiteUrlError(R.string.blog_name_no_spaced_allowed);
             retValue = false;
         }
 
@@ -284,6 +297,9 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         AnalyticsUtils.refreshMetadata(username, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
+                        // Set visual editor available when user signup
+                        AppPrefs.setVisualEditorAvailable(true);
+                        AppPrefs.setVisualEditorEnabled(true);
                         if (isAdded()) {
                             finishThisStuff(username, password);
                         }
@@ -297,6 +313,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         }
                     }
                 });
+        AppLog.i(T.NUX, "User tries to create a new account, username: " + username + ", email: " + email
+                        + ", site name: " + siteName + ", site URL: " + siteUrl);
         createUserAndBlog.startCreateUserAndBlogProcess();
     }
 

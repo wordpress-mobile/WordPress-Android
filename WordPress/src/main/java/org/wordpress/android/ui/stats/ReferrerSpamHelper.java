@@ -34,7 +34,7 @@ class ReferrerSpamHelper {
     private static String getDomain(ReferrerGroupModel group) {
         // Use the URL value given in the JSON response, or use the groupID that doesn't contain the schema.
         final String spamDomain = group.getUrl() != null ? group.getUrl() : "http://" + group.getGroupId();
-        return UrlUtils.isValidUrlAndHostNotNull(spamDomain) ? UrlUtils.getDomainFromUrl(spamDomain) : null;
+        return UrlUtils.isValidUrlAndHostNotNull(spamDomain) ? UrlUtils.getHost(spamDomain) : null;
     }
 
     public static boolean isSpamActionAvailable(ReferrerGroupModel group) {

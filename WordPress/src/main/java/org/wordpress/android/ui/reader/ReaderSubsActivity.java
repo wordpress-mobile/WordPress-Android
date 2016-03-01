@@ -361,7 +361,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         showAddUrlProgress();
 
-        ReaderActions.OnCheckUrlReachableListener urlListener = new ReaderActions.OnCheckUrlReachableListener() {
+        ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
                 if (!isFinishing()) {
@@ -369,7 +369,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 }
             }
             @Override
-            public void onFailed(int statusCode) {
+            public void onFailure(int statusCode) {
                 if (!isFinishing()) {
                     hideAddUrlProgress();
                     String errMsg;
@@ -389,7 +389,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 }
             }
         };
-        ReaderBlogActions.checkUrlReachable(blogUrl, urlListener);
+        ReaderBlogActions.checkUrlReachable(blogUrl, requestListener);
     }
 
     private void followBlogUrl(String normUrl) {

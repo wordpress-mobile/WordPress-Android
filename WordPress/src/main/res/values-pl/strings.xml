@@ -25,7 +25,6 @@
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
 	<string name="two_step_footer_label">Wprowadź kod z aplikacji do uwierzytelniania.</string>
 	<string name="device">Urządzenie</string>
-	<string name="media_details_file_name">Nazwa pliku:</string>
 	<string name="media_picker_title">Wybierz media</string>
 	<string name="add_to_post">Dodaj do wpisu</string>
 	<string name="tab_title_device_images">Zdjęcia z urządzenia</string>
@@ -33,16 +32,11 @@
 	<string name="take_video">Nagraj film</string>
 	<string name="tab_title_site_videos">Filmy z witryny</string>
 	<string name="tab_title_site_images">Zdjęcia z witryny</string>
-	<string name="media_details_dimensions">Wymiary:</string>
-	<string name="media_details_file_url">Adres URL pliku:</string>
-	<string name="media_details_added_on">Dodane:</string>
-	<string name="media_details_uploaded_on">Wgrane:</string>
 	<string name="verify">Weryfikuj</string>
 	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
 	<string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
 	<string name="verification_code">Kod weryfikacyjny</string>
-	<string name="media_details_file_type">Typ pliku:</string>
 	<string name="take_photo">Zrób zdjęcie</string>
 	<string name="language">Język</string>
 	<string name="media_fetching">Ładowanie mediów...</string>
@@ -76,7 +70,6 @@
 	<string name="stats_visitors">Odwiedzających</string>
 	<string name="stats_pagination_label">Strona %1$s z %2$s</string>
 	<string name="stats_timeframe_years">Lata</string>
-	<string name="stats_comments">Komentarze</string>
 	<string name="stats_view_countries">Kraje</string>
 	<string name="stats_likes">Polubienia</string>
 	<string name="stats_view_followers">Śledzący</string>
@@ -143,7 +136,7 @@
 	<string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
 	<string name="reader_label_like">Lubię to</string>
 	<string name="reader_label_comment_count_single">Jeden komentarz</string>
-	<string name="reader_title_comments">Komentarze</string>
+	<string name="more">Więcej</string>
 	<string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="error_publish_empty_post">Nie można opublikować pustego wpisu</string>
@@ -216,7 +209,6 @@
 	<string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
 	<string name="out_of_memory">Brak pamięci</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
-	<string name="theme_no_search_result_found">Niczego nie znaleziono</string>
 	<string name="comments_empty_list">Brak komentarzy</string>
 	<string name="mnu_comment_unspam">To nie jest spam</string>
 	<string name="adding_cat_failed">Nie udało się dodać kategorii</string>
@@ -462,11 +454,9 @@
 	<string name="themes_features_label">Funkcje</string>
 	<string name="share_action">Udostępnij</string>
 	<string name="stats">Statystyki</string>
-	<string name="view_stats_full_site">Zobacz całą witrynę</string>
 	<string name="stats_view_visitors_and_views">Odwiedzający i wyświetlenia</string>
 	<string name="stats_view_clicks">Kliknięcia</string>
 	<string name="stats_view_tags_and_categories">Tagi i kategorie</string>
-	<string name="stats_view_comments">Komentarze</string>
 	<string name="stats_timeframe_today">Dzisiaj</string>
 	<string name="stats_timeframe_yesterday">Wczoraj</string>
 	<string name="stats_timeframe_days">Dni</string>
@@ -479,7 +469,6 @@
 	<string name="stats_totals_views">Wizyty</string>
 	<string name="stats_totals_clicks">Kliknięcia</string>
 	<string name="stats_totals_plays">Odtworzenia</string>
-	<string name="stats_totals_comments">Komentarze</string>
 	<string name="menu_search">Szukaj</string>
 	<string name="passcode_enter_passcode">Podaj swój PIN</string>
 	<string name="passcode_enter_old_passcode">Podaj swój stary PIN</string>
@@ -547,7 +536,6 @@
 	<string name="app_title">WordPress dla Androida</string>
 	<string name="tos">Warunki korzystania</string>
 	<string name="about">O nas</string>
-	<string name="max_thumbnail_px_width">Domyślna szerokość obrazu</string>
 	<string name="image_alignment">Wyrównanie</string>
 	<string name="refresh">Odśwież</string>
 	<string name="untitled">Bez tytułu</string>
@@ -584,7 +572,6 @@
 	<string name="yes">Tak</string>
 	<string name="no">Nie</string>
 	<string name="on">na</string>
-	<string name="tab_comments">Komentarze</string>
 	<string name="category_refresh_error">Błąd odświeżania kategorii</string>
 	<string name="cancel">Anuluj</string>
 	<string name="save">Zapisz</string>

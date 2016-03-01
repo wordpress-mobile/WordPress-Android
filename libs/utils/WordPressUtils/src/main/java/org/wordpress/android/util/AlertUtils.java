@@ -30,10 +30,10 @@ public class AlertUtils {
      */
     public static void showAlert(Context context, int titleId, int messageId) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setTitle(titleId)
-            .setPositiveButton(android.R.string.ok, null)
-            .setMessage(messageId)
-            .create();
+                .setTitle(titleId)
+                .setPositiveButton(android.R.string.ok, null)
+                .setMessage(messageId)
+                .create();
 
         dlg.show();
     }
@@ -42,14 +42,14 @@ public class AlertUtils {
      * Show Alert Dialog
      * @param context
      * @param titleId
-     * @param messageId
+     * @param message
      */
     public static void showAlert(Context context, int titleId, String message) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setTitle(titleId)
-            .setPositiveButton(android.R.string.ok, null)
-            .setMessage(message)
-            .create();
+                .setTitle(titleId)
+                .setPositiveButton(android.R.string.ok, null)
+                .setMessage(message)
+                .create();
 
         dlg.show();
     }
@@ -65,15 +65,15 @@ public class AlertUtils {
      * @param negativeListener
      */
     public static void showAlert(Context context, int titleId, int messageId,
-            CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener,
-            CharSequence negativeButtontxt, DialogInterface.OnClickListener negativeListener) {
+                                 CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener,
+                                 CharSequence negativeButtontxt, DialogInterface.OnClickListener negativeListener) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setTitle(titleId)
-            .setPositiveButton(positiveButtontxt, positiveListener)
-            .setNegativeButton(negativeButtontxt, negativeListener)
-            .setMessage(messageId)
-            .setCancelable(false)
-            .create();
+                .setTitle(titleId)
+                .setPositiveButton(positiveButtontxt, positiveListener)
+                .setNegativeButton(negativeButtontxt, negativeListener)
+                .setMessage(messageId)
+                .setCancelable(false)
+                .create();
 
         dlg.show();
     }
@@ -82,20 +82,19 @@ public class AlertUtils {
      * Show Alert Dialog
      * @param context
      * @param titleId
-     * @param messageId
+     * @param message
      * @param positiveButtontxt
      * @param positiveListener
      */
     public static void showAlert(Context context, int titleId, String message,
-            CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener) {
+                                 CharSequence positiveButtontxt, DialogInterface.OnClickListener positiveListener) {
         Dialog dlg = new AlertDialog.Builder(context)
-            .setTitle(titleId)
-            .setPositiveButton(positiveButtontxt, positiveListener)
-            .setMessage(message)
-            .setCancelable(false)
-            .create();
+                .setTitle(titleId)
+                .setPositiveButton(positiveButtontxt, positiveListener)
+                .setMessage(message)
+                .setCancelable(false)
+                .create();
 
         dlg.show();
     }
 }
-

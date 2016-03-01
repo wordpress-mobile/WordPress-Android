@@ -239,6 +239,13 @@ public class BlogTest extends InstrumentationTestCase {
     public void testGetSetPrivate() {
         assertFalse(blog.isPrivate());
         blog.setBlogOptions("{ \"blog_public\" : { \"value\" : \"-1\" } }");
+
+        // blog cannot be private if not a wpcom one
+        assertFalse(blog.isPrivate());
+
+        // set the blog as a WPCom one
+        blog.setDotcomFlag(true);
+        // blog should now appear as private
         assertTrue(blog.isPrivate());
     }
 

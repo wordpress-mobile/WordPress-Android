@@ -16,7 +16,5 @@
         android:text="@string/add_location"
         android:textSize="@dimen/text_sz_large"
         android:drawableLeft="@drawable/ic_location_on_grey600_24dp"
-        android:drawablePadding="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="16dp" />
+        android:drawablePadding="8dp" />
 </LinearLayout>

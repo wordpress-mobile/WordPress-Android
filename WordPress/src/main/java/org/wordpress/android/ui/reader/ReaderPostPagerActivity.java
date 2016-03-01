@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -51,12 +52,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private ReaderTag mCurrentTag;
     private long mBlogId;
     private long mPostId;
+    private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
 
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    private final HashSet<Integer> mBumpedPageViewPositions = new HashSet<>();
+    private final HashSet<Integer> mTrackedPositions = new HashSet<>();
 
     private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
@@ -108,20 +110,24 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 onShowHideToolbar(true);
-                bumpPageViewIfNeeded(position);
-            }
+                trackPostAtPositionIfNeeded(position);
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-                    // pause the active web view when the user starts scrolling - important
-                    // because otherwise embedded content in the web view will continue to play
-                    ReaderPostDetailFragment fragment = getActiveDetailFragment();
-                    if (fragment != null) {
-                        fragment.pauseWebView();
+                // pause the previous web view - important because otherwise embedded content
+                // will continue to play
+                if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
+                    ReaderPostDetailFragment lastFragment = getDetailFragmentAtPosition(mLastSelectedPosition);
+                    if (lastFragment != null) {
+                        lastFragment.pauseWebView();
                     }
                 }
+
+                // resume the newly active webView if it was previously paused
+                ReaderPostDetailFragment thisFragment = getDetailFragmentAtPosition(position);
+                if (thisFragment != null) {
+                    thisFragment.resumeWebViewIfPaused();
+                }
+
+                mLastSelectedPosition = position;
             }
         });
 
@@ -205,17 +211,25 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     /*
-     * "bumps" the page view for the post at the passed position if it hasn't already been done
+     * perform analytics tracking and bump the page view for the post at the passed position
+     * if it hasn't already been done
      */
-    private void bumpPageViewIfNeeded(int position) {
-        if (!mBumpedPageViewPositions.contains(position) && hasPagerAdapter()) {
-            ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
-            if (idPair != null) {
-                AppLog.d(AppLog.T.READER, "reader pager > bumping page view for position " + position);
-                mBumpedPageViewPositions.add(position);
-                ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
-            }
-        }
+    private void trackPostAtPositionIfNeeded(int position) {
+        if (!hasPagerAdapter() || mTrackedPositions.contains(position)) return;
+
+        ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
+        if (idPair == null) return;
+
+        AppLog.d(AppLog.T.READER, "reader pager > tracking post at position " + position);
+        mTrackedPositions.add(position);
+
+        // bump the page view
+        ReaderPostActions.bumpPageViewForPost(idPair.getBlogId(), idPair.getPostId());
+
+        // analytics tracking
+        AnalyticsUtils.trackWithReaderPostDetails(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                ReaderPostTable.getPost(idPair.getBlogId(), idPair.getPostId(), true));
     }
 
     /*
@@ -258,10 +272,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
-                            bumpPageViewIfNeeded(newPosition);
+                            trackPostAtPositionIfNeeded(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
-                            bumpPageViewIfNeeded(currentPosition);
+                            trackPostAtPositionIfNeeded(currentPosition);
                         }
                     }
                 });
@@ -291,6 +305,23 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private ReaderPostDetailFragment getActiveDetailFragment() {
         Fragment fragment = getActivePagerFragment();
+        if (fragment instanceof ReaderPostDetailFragment) {
+            return (ReaderPostDetailFragment) fragment;
+        } else {
+            return null;
+        }
+    }
+
+    private Fragment getPagerFragmentAtPosition(int position) {
+        if (hasPagerAdapter()) {
+            return getPagerAdapter().getFragmentAtPosition(position);
+        } else {
+            return null;
+        }
+    }
+
+    private ReaderPostDetailFragment getDetailFragmentAtPosition(int position) {
+        Fragment fragment = getPagerFragmentAtPosition(position);
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {

@@ -237,6 +237,11 @@ public class ReaderBlogTable {
                 new String[]{Long.toString(feedId)});
     }
 
+    public static boolean hasFollowedBlogs() {
+        String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 LIMIT 1";
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, null);
+    }
+
     public static boolean isFollowedBlogUrl(String blogUrl) {
         if (TextUtils.isEmpty(blogUrl)) {
             return false;

@@ -118,6 +118,7 @@ public class SqlUtils {
             return true;
         } finally {
             db.endTransaction();
+            closeCursor(cursor);
         }
     }
 

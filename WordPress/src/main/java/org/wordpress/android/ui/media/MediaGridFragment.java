@@ -281,7 +281,7 @@ public class MediaGridFragment extends Fragment
         updateSpinnerAdapter();
     }
 
-    private void updateFilterText() {
+    void updateFilterText() {
         if (WordPress.currentBlog == null)
             return;
 
@@ -301,7 +301,7 @@ public class MediaGridFragment extends Fragment
         mFiltersText[3] = getResources().getString(R.string.custom_date) + "...";
     }
 
-    private void updateSpinnerAdapter() {
+    void updateSpinnerAdapter() {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) mSpinner.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();

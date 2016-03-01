@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -31,6 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -394,6 +396,60 @@ public class ImageUtils {
         }
 
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
+    }
+
+    /**
+     * Given the path to an image, resize the image down to within a maximum width
+     * @param path the path to the original image
+     * @param maxWidth the maximum allowed width
+     * @return the path to the resized image
+     */
+    public static String createResizedImageWithMaxWidth(Context context, String path, int maxWidth) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return path;
+        }
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        if (mimeType.equals("image/gif")) {
+            // Don't rescale gifs to maintain their quality
+            return path;
+        }
+
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+
+        int[] dimensions = getImageSize(Uri.fromFile(file), context);
+        int orientation = getImageOrientation(context, path);
+
+        if (dimensions[0] <= maxWidth) {
+            // Image width is within limits; don't resize
+            return path;
+        }
+
+        // Create resized image
+        byte[] bytes = ImageUtils.createThumbnailFromUri(context, Uri.parse(path), maxWidth, fileExtension, orientation);
+
+        if (bytes != null) {
+            try {
+                File resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+                FileOutputStream out = new FileOutputStream(resizedImageFile);
+                out.write(bytes);
+                out.close();
+
+                String tempFilePath = resizedImageFile.getPath();
+
+                if (!TextUtils.isEmpty(tempFilePath)) {
+                    return tempFilePath;
+                } else {
+                    AppLog.e(AppLog.T.POSTS, "Failed to create resized image");
+                }
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.POSTS, "Failed to create image temp file");
+            }
+        }
+
+        return path;
     }
 
     /**

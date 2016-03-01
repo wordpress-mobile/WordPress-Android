@@ -11,18 +11,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.BaseStatsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
@@ -49,12 +50,13 @@ import java.util.concurrent.TimeUnit;
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
-        if (date == null) {
+        if (date == null || date.equals("null")) {
+            AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
             return -1;
         }
 
         if (pattern == null) {
-            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            AppLog.w(T.UTILS, "Trying to parse a Stats date with a null pattern");
             return -1;
         }
 
@@ -291,34 +293,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    /**
-     * Return the credentials for the  blog or null if not available.
-     *
-     * 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
-     * 2. If credentials are empty read the global wpcom credentials
-     * 3. Check that credentials are not empty before launching the activity
-     *
-     */
-    public static String getBlogStatsUsername(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        String statsAuthenticatedUser = currentBlog.getDotcom_username();
-
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            // Let's try the global wpcom credentials
-            statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
-        }
-
-        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-            AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
-            return null;
-        }
-
-        return statsAuthenticatedUser;
-    }
-
     public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
         // workaround: There are 2 entries in the DB for each Jetpack blog linked with
         // the current wpcom account. We need to load the correct localID here, otherwise options are
@@ -333,47 +307,6 @@ public class StatsUtils {
         }
 
         return localId;
-    }
-
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    public static String getBlogId(int localTableBlogID) {
-        Blog currentBlog = WordPress.getBlog(localTableBlogID);
-        if (currentBlog == null) {
-            return null;
-        }
-        return getBlogId(currentBlog);
-    }
-    public static String getBlogId(Blog blog) {
-        if (blog == null) {
-            return null;
-        }
-        if (blog.isDotcomFlag()) {
-            return String.valueOf(blog.getRemoteBlogId());
-        } else {
-            String remoteID =  blog.getApi_blogid();
-            // Self-hosted blogs edge cases.
-            if (StringUtils.isEmpty(remoteID)) {
-               return null;
-            }
-            try {
-                int parsedBlogID = Integer.parseInt(remoteID);
-                // remote blogID is always > 1 for Jetpack blogs
-                if (parsedBlogID < 1) {
-                    return null;
-                }
-            } catch (NumberFormatException e) {
-                AppLog.e(T.STATS, "The remote blog ID stored in options isn't valid: " + remoteID);
-                return null;
-            }
-            return remoteID;
-        }
     }
 
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
@@ -405,9 +338,9 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
+    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
             throws JSONException {
-        Serializable model = null;
+        BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:
                 model = new VisitsModel(blogID, response);
@@ -464,7 +397,7 @@ public class StatsUtils {
                 model = new InsightsLatestPostModel(blogID, response);
                 break;
             case INSIGHTS_LATEST_POST_VIEWS:
-                model = response.getInt("views");
+                model = new InsightsLatestPostDetailsModel(blogID, response);
                 break;
         }
         return model;

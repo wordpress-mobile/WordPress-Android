@@ -10,6 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -34,18 +35,16 @@ public class UrlUtils {
     }
 
     /**
-     *
-     * @param urlString url to get domain from
-     * @return domain of uri if available. Empty string otherwise.
+     * @param urlString url to get host from
+     * @return host of uri if available. Empty string otherwise.
      */
-    public static String getDomainFromUrl(final String urlString) {
+    public static String getHost(final String urlString) {
         if (urlString != null) {
             Uri uri = Uri.parse(urlString);
             if (uri.getHost() != null) {
                 return uri.getHost();
             }
         }
-
         return "";
     }
 
@@ -172,6 +171,17 @@ public class UrlUtils {
      */
     public static boolean isHttps(final String urlString) {
         return (urlString != null && urlString.startsWith("https:"));
+    }
+
+    public static boolean isHttps(URL url) {
+        return url != null && "https".equals(url.getProtocol());
+    }
+
+    public static boolean isHttps(URI uri) {
+        if (uri == null) return false;
+
+        String protocol = uri.getScheme();
+        return protocol != null && protocol.equals("https");
     }
 
     /**

@@ -29,7 +29,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -176,7 +176,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         boolean success = false;
         try {
-            result = (Object[]) mClient.call(ApiHelper.Methods.GET_CATEGORIES, params);
+            result = (Object[]) mClient.call(Method.GET_CATEGORIES, params);
             success = true;
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
@@ -225,7 +225,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         Object result = null;
         try {
-            result = mClient.call(ApiHelper.Methods.NEW_CATEGORY, params);
+            result = mClient.call(Method.NEW_CATEGORY, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {
@@ -332,7 +332,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
         mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         try {
-            result = (Map<?, ?>) mClient.call(ApiHelper.Methods.GET_TERM, params);
+            result = (Map<?, ?>) mClient.call(Method.GET_TERM, params);
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.POSTS, e);
         } catch (IOException e) {

@@ -1,9 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl  JSON API yn Jetpack.</string>
+	<string name="site_settings_image_original_size">Maint Gwreiddiol</string>
+	<string name="about_me_hint">Ychydig o eiriau amdanoch chi…</string>
+	<string name="public_display_name_hint">Bydd yr enw dangos yn defnyddio eich enw defnyddiwr os yw wedi ei osod</string>
+	<string name="about_me">Amdanaf fi</string>
+	<string name="public_display_name">Enw dangos cyhoeddus</string>
+	<string name="my_profile">Fy Mhroffil</string>
+	<string name="first_name">Enw cyntaf</string>
+	<string name="last_name">Enw olaf</string>
+	<string name="site_privacy_public_desc">Caniatáu i beiriannau chwilio fynegeio\'r wefan</string>
+	<string name="site_privacy_hidden_desc">Annog peiriannau chwilio i beidio mynegeio\'r wefan</string>
+	<string name="site_privacy_private_desc">Hoffwn i fy ngwefan fod yn breifat, yn weladwy yn unig i ddefnyddwyr rwy\'n eu dewis</string>
+	<string name="cd_related_post_preview_image">Delwedd sy\'n perthyn ar ôl y rhagolwg</string>
+	<string name="error_post_remote_site_settings">Methu cadw manylion y wefan</string>
+	<string name="error_fetch_remote_site_settings">Methu estyn manylion y wefan</string>
+	<string name="error_media_upload_connection">Digwyddodd gwall cysylltu wrth lwytho\'r cyfrwng</string>
+	<string name="site_settings_disconnected_toast">Datgysylltwyd, analluogwyd y golygu.</string>
+	<string name="site_settings_unsupported_version_error">Fersiwn o WordPress sydd heb ei gynnal</string>
+	<string name="site_settings_multiple_links_dialog_description">Bydd angen cymeradwyaeth ar gyfer sylwadau sy\'n cynnwys mwy na\'r nifer yma o ddolenni.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Cau\'n awtomatig</string>
+	<string name="site_settings_close_after_dialog_description">Cau\'r sylwadau ar erthyglau yn awtomatig.</string>
+	<string name="site_settings_paging_dialog_description">Torri\'r edefyn sylw i dudalennau lluosog.</string>
+	<string name="site_settings_paging_dialog_header">Sylwadau fesul tudalen</string>
+	<string name="site_settings_close_after_dialog_title">Cau sylwadau</string>
+	<string name="site_settings_blacklist_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost, neu IP, bydd yn cael ei farcio fel sbam. Gallwch gynnig geiriau rhannol, felly bydd "press" yn canfod "WordPress"</string>
+	<string name="site_settings_hold_for_moderation_description">Pan fydd sylw yn cynnwys unrhyw un o\'r geiriau hyn yn ei gynnwys, enw, URL, e-bost neu IP, bydd yn cael ei gadw yn y rhes cymedroli. Gallwch gynnig geiriau rhannol, felly bydd "press" yn canfod "WordPress"</string>
+	<string name="site_settings_list_editor_input_hint">Teipiwch air neu ymadrodd</string>
+	<string name="site_settings_list_editor_no_items_text">Dim eitemau</string>
+	<string name="site_settings_learn_more_caption">Gallwch diystyru\'r gosodiadau hyn ar gyfer cofnodion unigol.</string>
+	<string name="site_settings_rp_preview3_site">yn "Diweddariad"</string>
+	<string name="site_settings_rp_preview3_title">Canolbwynt Diweddaru: VideoPress ar gyfer Priodasau</string>
+	<string name="site_settings_rp_preview2_site">yn "Apiau"</string>
+	<string name="site_settings_rp_preview2_title">Mae Ap WordPress Android yn Derbyn Adnewyddiad Sylweddol</string>
+	<string name="site_settings_rp_preview1_site">yn "Symudol"</string>
+	<string name="site_settings_rp_preview1_title">Diweddariad iPhone/iPad Mawr Nawr ar Gael</string>
+	<string name="site_settings_rp_show_images_title">Dangos Delweddau</string>
+	<string name="site_settings_rp_show_header_title">Dangos Pennyn</string>
+	<string name="site_settings_rp_switch_summary">Mae Cofnodion Perthynol yn dangos cynnwys perthnasol o\'ch gwefan islaw eich cofnodion.</string>
+	<string name="site_settings_rp_switch_title">Dangos Cofnodion sy\'n Perthyn</string>
+	<string name="site_settings_delete_site_hint">Dileu data eich gwefan o\'r ap</string>
+	<string name="site_settings_blacklist_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael eu marcio fel sbam</string>
+	<string name="site_settings_moderation_hold_hint">Mae sylwadau sy\'n cyfateb i hidl yn cael gosod yn y rhes cymedroli</string>
+	<string name="site_settings_multiple_links_hint">Anwybyddu terfyn dolen gan ddefnyddwyr hysbys</string>
+	<string name="site_settings_whitelist_hint">Rhaid i awdur y sylw fod wedi cyfrannu sylw cymeradwy yn y gorffennol</string>
+	<string name="site_settings_user_account_required_hint">Rhaid i ddefnyddwyr fod wedi\'u cofrestru ac wedi mewngofnodi cyn cynnig sylw</string>
+	<string name="site_settings_identity_required_hint">Rhaid i awdur sylw rhoi enw ac e-bost</string>
+	<string name="site_settings_manual_approval_hint">Rhaid i sylwadau gael eu cymeradwyo â llaw</string>
+	<string name="site_settings_paging_hint">Dangos sylwadau mewn darnau o faint penodol</string>
+	<string name="site_settings_threading_hint">Caniatáu sylwadau nythog i ddyfnder penodol</string>
+	<string name="site_settings_sort_by_hint">Pennu\'r drefn mae\'r sylwadau yn cael eu dangos</string>
+	<string name="site_settings_close_after_hint">Peidio â chaniatáu sylwadau ar ôl amser penodol</string>
+	<string name="site_settings_receive_pingbacks_hint">Caniatáu hysbysiadau dolenni o flogiau eraill</string>
+	<string name="site_settings_send_pingbacks_hint">Ceisio hysbysu unrhyw flogiau sy\'n cael eu cysylltu atyn nhw yn yr erthygl</string>
+	<string name="site_settings_allow_comments_hint">Caniatáu darllenwyr i gofnodi sylwadau</string>
+	<string name="site_settings_discussion_hint">Gweld a newid gosodiadau trafodaethau ar eich gwefannau</string>
+	<string name="site_settings_more_hint">Gweld pob gosodiad trafodaeth sydd ar gael</string>
+	<string name="site_settings_related_posts_hint">Dangos neu guddio cofnodion cysylltiedig yn y darllenydd</string>
+	<string name="site_settings_upload_and_link_image_hint">Galluogi llwytho delwedd maint llawn bob tro</string>
+	<string name="site_settings_image_width_hint">Newid maint delweddau mewn cofnodion i\'r lled hwn</string>
+	<string name="site_settings_format_hint">Gosod fformat cofnod newydd</string>
+	<string name="site_settings_category_hint">Gosod categori cofnod newydd</string>
+	<string name="site_settings_location_hint">Ychwanegu data lleoliad yn awtomatig at eich cofnodion</string>
+	<string name="site_settings_password_hint">Newid eich cyfrinair</string>
+	<string name="site_settings_username_hint">Cyfrif y defnyddiwr cyfredol</string>
+	<string name="site_settings_language_hint">Yr iaith mae\'r blog yn cael ei ysgrifennu ynddi yn bennaf</string>
+	<string name="site_settings_privacy_hint">Rheoli pwy sy\'n gallu gweld eich gwefan</string>
+	<string name="site_settings_address_hint">Nid yw newid eich cyfeiriad yn cael ei gynnal ar hyn o bryd</string>
+	<string name="site_settings_tagline_hint">Disgrifiad byr neu ymadrodd bachog i ddisgrifio eich blog</string>
+	<string name="site_settings_title_hint">Mewn ychydig eiriau, yn esboniwch beth yw natur y wefan hon</string>
+	<string name="site_settings_whitelist_known_summary">Sylwadau gan ddefnyddwyr hysbys</string>
+	<string name="site_settings_whitelist_all_summary">Sylwadau gan pob defnyddiwr</string>
+	<string name="site_settings_threading_summary">%d lefel</string>
+	<string name="site_settings_privacy_private_summary">Preifat</string>
+	<string name="site_settings_privacy_hidden_summary">Cudd</string>
+	<string name="site_settings_delete_site_title">Dileu Gwefan</string>
+	<string name="site_settings_privacy_public_summary">Cyhoeddus</string>
+	<string name="site_settings_blacklist_title">Rhestr ddu</string>
+	<string name="site_settings_moderation_hold_title">Dal ar gyfer Cymedroli</string>
+	<string name="site_settings_multiple_links_title">Dolenni mewn sylwadau</string>
+	<string name="site_settings_whitelist_title">Gymeradwyo\'n Awtomatig</string>
+	<string name="site_settings_threading_title">Edafu</string>
+	<string name="site_settings_paging_title">Tudalennu</string>
+	<string name="site_settings_sort_by_title">Trefnu yn ôl</string>
+	<string name="site_settings_account_required_title">Rhaid llofnodi defnyddwyr</string>
+	<string name="site_settings_identity_required_title">Rhaid cynnwys enw ac e-bost</string>
+	<string name="site_settings_receive_pingbacks_title">Derbyn Hysbysiad Cyfeirio</string>
+	<string name="site_settings_send_pingbacks_title">Anfon Hysbysiadau Cyfeirio</string>
+	<string name="site_settings_allow_comments_title">Caniatáu Sylwadau</string>
+	<string name="site_settings_default_format_title">Fformat Rhagosodedig</string>
+	<string name="site_settings_default_category_title">Categori Rhagosodedig</string>
+	<string name="site_settings_location_title">Galluogi Lleoliad</string>
+	<string name="site_settings_address_title">Cyfeiriad</string>
+	<string name="site_settings_title_title">Teitl y Wefan</string>
+	<string name="site_settings_tagline_title">Llinell Tag</string>
+	<string name="site_settings_this_device_header">Y ddyfais hon</string>
+	<string name="site_settings_discussion_new_posts_header">Rhagosodiadau ar gyfer cofnodion ewydd</string>
+	<string name="site_settings_account_header">Cyfrif</string>
+	<string name="site_settings_writing_header">Ysgrifennu</string>
+	<string name="newest_first">Diweddaraf yn gyntaf</string>
+	<string name="site_settings_general_header">Cyfredinol</string>
+	<string name="discussion">Trafodaeth</string>
+	<string name="privacy">Preifatrwydd</string>
+	<string name="related_posts">Cofnodion sy\'n Perthyn</string>
+	<string name="comments">Sylwadau</string>
+	<string name="close_after">Cau ar ôl</string>
+	<string name="oldest_first">Hynaf yn gyntaf</string>
+	<string name="media_error_no_permission_upload">Nid oes gennych ganiatâd i lwytho cyfrwng i\'r wefan</string>
+	<string name="never">Byth</string>
+	<string name="unknown">Anhysbys</string>
+	<string name="reader_err_get_post_not_found">Nid yw\'r cofnod yma\'n bodoli bellach</string>
+	<string name="reader_err_get_post_not_authorized">Nid ydych wedi eich awdurdodi i weld y cofnod hwn</string>
+	<string name="reader_err_get_post_generic">Methu estyn y cofnod hwn</string>
+	<string name="blog_name_no_spaced_allowed">Nid oes modd i gyfeiriad gwefan gynnwys bylchau</string>
+	<string name="invalid_username_no_spaces">Nid oes modd i enw defnyddiwr gynnwys bylchau</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
+	<string name="media_details_copy_url_toast">URL wedi ei gopïo i\'r clipfwrdd</string>
+	<string name="edit_media">Golygu cyfrwng</string>
+	<string name="media_details_copy_url">Copïo URL</string>
+	<string name="media_details_label_date_uploaded">Wedi ei lwytho</string>
+	<string name="media_details_label_date_added">Ychwanegwyd</string>
+	<string name="selected_theme">Thema Dewiswyd</string>
+	<string name="could_not_load_theme">Methu llwytho\'r thema</string>
+	<string name="theme_activation_error">Aeth rhywbeth o\'i le. Methu cychwyn y thema</string>
+	<string name="theme_by_author_prompt_append"> gan %1$s</string>
+	<string name="theme_prompt">Diolch am ddewis %1$s</string>
+	<string name="theme_try_and_customize">Defnyddio a Chyfaddasu</string>
+	<string name="theme_view">Golwg</string>
+	<string name="theme_details">Manylion</string>
+	<string name="theme_support">Cefnogaeth</string>
+	<string name="theme_done">GORFFEN</string>
+	<string name="theme_manage_site">RHEOLI GWEFAN</string>
+	<string name="title_activity_theme_support">Themâu</string>
+	<string name="theme_activate">Gweithredu</string>
+	<string name="date_range_start_date">Dyddiad Cychwyn</string>
+	<string name="date_range_end_date">Dyddiad Gorffen</string>
+	<string name="current_theme">Thema Gyfredol</string>
+	<string name="customize">Cyfaddasu</string>
+	<string name="details">Manylion</string>
+	<string name="support">Cefnogaeth</string>
+	<string name="active">Gweithredol</string>
+	<string name="stats_referrers_spam_generic_error">Aeth rhywbeth o\'i le wrth wneud hynny. Nid yw\'r cyflwr sbam wedi newid.</string>
+	<string name="stats_referrers_marking_not_spam">Nodi fel nad sbam</string>
+	<string name="stats_referrers_unspam">Nid sbam</string>
+	<string name="stats_referrers_marking_spam">Marciwyd fel sbam</string>
+	<string name="post_updated">Diweddarwyd y cofnod</string>
+	<string name="page_updated">Diweddarwyd y dudalen</string>
+	<string name="stats_referrers_spam">Sbam</string>
+	<string name="theme_auth_error_authenticate">Methwyd estyn themâu: methwyd dilysu defnyddiwr</string>
+	<string name="post_published">Cyhoeddwyd y cofnod</string>
+	<string name="page_published">Cyhoeddwyd y dudalen</string>
+	<string name="theme_no_search_result_found">Ymddiheuriadau, heb ganfod thema.</string>
+	<string name="media_file_name">Enw ffeil: %s</string>
+	<string name="media_uploaded_on">Llwythwyd i fyny ar: %s</string>
+	<string name="media_dimensions">Dimensiynau: %s</string>
+	<string name="upload_queued">Mewn ciw</string>
+	<string name="media_file_type">Math o ffeil: %s</string>
+	<string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
+	<string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
+	<string name="search_sites">Chwilio gwefannau</string>
+	<string name="notifications_empty_view_reader">Gweld y Darllennydd</string>
+	<string name="unread">Deb ei ddarllen</string>
+	<string name="notifications_empty_action_followers_likes">Denu sylw: rhowch sylw ar gofnod rydych wedi ei ddarllen.</string>
+	<string name="notifications_empty_action_comments">Ymunwch â sgwrs: rhowch sylw ar flogiau rydych yn eu dilyn.</string>
+	<string name="notifications_empty_action_unread">Ail-gynnwch sgwrs: ysgrifennwch gofnod newydd.</string>
+	<string name="notifications_empty_action_all">Byddwch egniol! Rhowch sylwadau ar flogiau rydych yn eu dilyn.</string>
+	<string name="notifications_empty_likes">Dim hoffi newydd i\'w dangos...eto.</string>
+	<string name="notifications_empty_followers">Dim dilynwyr newydd...eto.</string>
+	<string name="notifications_empty_comments">Dim sylwadau newydd...eto.</string>
+	<string name="notifications_empty_unread">Wedi dal i fyny!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">Ewch i\'r Ystadegau yn yr ap a cheisio ychwanegu\'r teclyn yn hwyrach</string>
+	<string name="stats_widget_error_readd_widget">Tynnwch y teclyn a\'i ychwanegu eto</string>
+	<string name="stats_widget_error_no_visible_blog">Nid oes modd mynd i\'r Ystadegau heb flog gweladwy</string>
+	<string name="stats_widget_error_no_permissions">Nid yw eich cyfrif WordPress.com yn cael mynediad i\'r Ystadegau ar y blog</string>
+	<string name="stats_widget_error_no_account">Mewngofnodwch i WordPress</string>
+	<string name="stats_widget_error_generic">Methu llwytho\'r Ystadegau</string>
+	<string name="stats_widget_loading_data">Llwytho data…</string>
+	<string name="stats_widget_name_for_blog">Ystadegau %1$s Heddiw</string>
+	<string name="stats_widget_name">Ystadegau Heddiw WordPress</string>
+	<string name="add_location_permission_required">Caniatâd angenrheidiol er mwyn ychwanegu lleoliad</string>
+	<string name="add_media_permission_required">Caniatâd angenrheidiol er mwyn ychwanegu cyfrwng</string>
+	<string name="access_media_permission_required">Caniatâd angenrheidiol er mwyn cael mynediad at gyfrwng</string>
+	<string name="stats_enable_rest_api_in_jetpack">I weld eich ystadegau, galluogwch y modiwl JSON API yn Jetpack.</string>
 	<string name="error_open_list_from_notification">Cafodd y cofnod neu dudalen hwn ei gyhoeddi ar wefan arall</string>
-	<string name="post_uploaded">Cofnod wedi ei lwytho i fyny</string>
-	<string name="page_uploaded">Cofnod wedi ei lwytho i fyny </string>
 	<string name="reader_short_comment_count_multi">%s Sylw</string>
 	<string name="reader_short_comment_count_one">1 Sylw</string>
 	<string name="reader_label_submit_comment">ANFON</string>
@@ -53,13 +232,11 @@
 	<string name="stats_no_activity_this_period">Dim gweithgaredd yn ystod y cyfnod hwn</string>
 	<string name="button_back">Nôl</string>
 	<string name="page_deleted">Dilëwyd y dudalen</string>
-	<string name="button_more">Rhagor</string>
 	<string name="button_stats">Ystadegau</string>
 	<string name="button_trash">Sbwriel</string>
 	<string name="button_edit">Golygu</string>
 	<string name="button_preview">Rhagolwg</string>
 	<string name="button_view">Gweld</string>
-	<string name="button_delete">Dileu</string>
 	<string name="button_publish">Cyhoeddi</string>
 	<string name="my_site_no_sites_view_subtitle">Hoffech chi ychwanegu un?</string>
 	<string name="my_site_no_sites_view_title">Nid oes gennych wefannau WordPress eto.</string>
@@ -101,7 +278,6 @@
 	<string name="my_site_header_publish">Cyhoeddi</string>
 	<string name="my_site_btn_blog_posts">Cofnodion Blog</string>
 	<string name="my_site_btn_site_settings">Gosodiadau</string>
-	<string name="my_site_btn_comments">Sylwadau</string>
 	<string name="reader_label_new_posts_subtitle">Tapio i\'w dangos</string>
 	<string name="my_site_header_admin">Gweinyddu</string>
 	<string name="my_site_header_configuration">Ffurfweddiad</string>
@@ -132,7 +308,6 @@
 	<string name="loading_videos">Llwytho fideos</string>
 	<string name="sign_in_jetpack">Mewngofnodwch i\'ch cyfrif WordPress.com i gysylltu â Jetpack.</string>
 	<string name="two_step_sms_sent">Gwiriwch eich neges testun am god dilysu.</string>
-	<string name="media_details_dimensions">Dimensiynau:</string>
 	<string name="auth_required">Mewngofnodwch eto i barhau.</string>
 	<string name="two_step_footer_button">Anfonwch god drwy neges testun</string>
 	<string name="two_step_footer_label">Rhowch y cod o\'ch ap dilysu.</string>
@@ -141,11 +316,6 @@
 	<string name="verification_code">Cod dilysu</string>
 	<string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
 	<string name="error_publish_no_network">Methu cyhoeddi heb gysylltiad. Cadw fel drafft.</string>
-	<string name="media_details_file_url">URL ffeil:</string>
-	<string name="media_details_file_type">Math o ffeil:</string>
-	<string name="media_details_file_name">Enw ffeil:</string>
-	<string name="media_details_uploaded_on">Llwythwyd:</string>
-	<string name="media_details_added_on">Ychwanegwyd:</string>
 	<string name="tab_title_device_images">Delweddau Dyfais</string>
 	<string name="tab_title_device_videos">Fideos Dyfais</string>
 	<string name="tab_title_site_images">Delweddau Gwefan</string>
@@ -156,6 +326,8 @@
 	<string name="add_to_post">Ychwanegu at Gofnod</string>
 	<string name="device">Dyfais</string>
 	<string name="language">Iaith</string>
+	<string name="media_details_label_file_type">Math o ffeil</string>
+	<string name="media_details_label_file_name">Enw ffeil</string>
 	<string name="media_fetching">Estyn cyfrwng…</string>
 	<string name="posts_fetching">Estyn cofnodion…</string>
 	<string name="pages_fetching">Estyn tudalennau…</string>
@@ -190,11 +362,9 @@
 	<string name="stats_empty_tags_and_categories_desc">Derbyn trosolwg o\'r pynciau mwyaf poblogaidd ar eich gwefan, yn ôl y prif gofnodion yn ystod yr wythnos diwethaf.</string>
 	<string name="stats_empty_referrers_desc">Dysgu rhagor am welededd eich gwefan drwy edrych ar y gwefannau a pheiriannau chwilio sy\'n anfon y mwyaf o draffig atoch</string>
 	<string name="stats_other_recent_stats_label">Ystadegau Diweddar Eraill</string>
-	<string name="themes_fetching">Estyn themâu</string>
 	<string name="stats_timeframe_years">Blwyddyn</string>
 	<string name="stats_views">Golwg</string>
 	<string name="stats_visitors">Ymwelwyr</string>
-	<string name="stats_comments">Sylwadau</string>
 	<string name="stats_entry_clicks_link">Dolen</string>
 	<string name="stats_view_top_posts_and_pages">Cofnod a Thudalen</string>
 	<string name="stats_view_videos">Fideos</string>
@@ -243,6 +413,7 @@
 	<string name="stats_for">Ystadegau %s</string>
 	<string name="stats_view_all">Gweld y cyfan</string>
 	<string name="stats_view">Gweld</string>
+	<string name="themes_fetching">Estyn themâu…</string>
 	<string name="ssl_certificate_details">Manylion</string>
 	<string name="confirm_delete_media">Dileu\'r eitem hon?</string>
 	<string name="sure_to_remove_account">Tynnu\'r blog?</string>
@@ -270,13 +441,13 @@
 	<string name="select_a_blog">Dewis gwefan WordPress</string>
 	<string name="stats_no_blog">Nid oedd modd llwytho ystadegau\'r blog dan sylw</string>
 	<string name="older_last_week">Mwy nag wythnos</string>
+	<string name="more">Rhagor</string>
 	<string name="error_refresh_unauthorized_comments">Nid oes gennych ganiatâd i weld na golygu sylwadau</string>
 	<string name="error_refresh_unauthorized_pages">Nid oes gennych ganiatâd i weld na golygu tudalennau</string>
 	<string name="error_refresh_unauthorized_posts">Nid oes gennych ganiatâd i weld na golygu cofnodion</string>
 	<string name="error_publish_empty_post">Methu cyhoeddi cofnod gwag</string>
 	<string name="reader_title_photo_viewer">%1$d o %2$d</string>
 	<string name="reader_label_comments_on">Sylwadau ar</string>
-	<string name="reader_title_comments">Sylwadau</string>
 	<string name="reader_label_comments_closed">Mae\'r sylwadau wedi cau</string>
 	<string name="reader_label_comment_count_single">Un sylw</string>
 	<string name="reader_label_like">Hoffi</string>
@@ -287,9 +458,9 @@
 	<string name="create_new_blog_wpcom">Creu blog WordPress.com</string>
 	<string name="nux_help_description">Ewch i\'n canolfan gymorth i gael atebion i\'r cwestiynnau mwyaf cyffredin neu i\'n fforymau i ofyn rhai newydd</string>
 	<string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
-	<string name="faq_button">Cwestiynnau cyffredin</string>
 	<string name="reader_empty_posts_liked">Nid ydych wedi hoffi unrhyw gofnod</string>
 	<string name="reader_empty_followed_blogs_title">Nid ydych yn dilyn unrhyw wefan hyd yn hyn</string>
+	<string name="faq_button">Cwestiynnau Cyffredin</string>
 	<string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
 	<string name="reader_toast_err_block_blog">Methu rhwystro\'r blog hwn</string>
 	<string name="reader_toast_blog_blocked">Ni fydd cofnodion o\'r blog yn cael eu dangos bellach</string>
@@ -363,7 +534,6 @@
 	<string name="passcode_wrong_passcode">PIN anghywir</string>
 	<string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
 	<string name="error_load_comment">Methu llwytho\'r sylw</string>
-	<string name="theme_no_search_result_found">Heb ganfod canlyniadau</string>
 	<string name="error_upload">Digwyddodd gwall wrth lwytho\'r %s</string>
 	<string name="error_edit_comment">Digwyddodd gwall wrth olygu\'r sylw</string>
 	<string name="error_moderate_comment">Digwyddodd gwall wrth gymedroli</string>
@@ -501,6 +671,7 @@
 	<string name="select_categories">Dewis categorïau</string>
 	<string name="account_details">Manylion cyfrif</string>
 	<string name="xmlrpc_error">Methwyd cysylltu. Rhowch y llwybr llawn i xmlrpc.php ar eich gwefan a cheisiwch eto.</string>
+	<string name="notifications_empty_all">Dim hysbysiadau...eto.</string>
 	<string name="share_url_post">Rhannu cofnod</string>
 	<string name="share_url_page">Rhannu tudalen</string>
 	<string name="share_link">Rhannu dolen</string>
@@ -578,7 +749,6 @@
 	<string name="passcode_manage">Rheoli clo PIN</string>
 	<string name="menu_search">Chwilio</string>
 	<string name="stats_totals_plays">Chwarae</string>
-	<string name="stats_totals_comments">Sylwadau</string>
 	<string name="stats_totals_clicks">Cliciau</string>
 	<string name="stats_totals_views">Golwg</string>
 	<string name="stats_entry_referrers">Cyfeiriwr</string>
@@ -591,11 +761,9 @@
 	<string name="stats_timeframe_yesterday">Ddoe</string>
 	<string name="stats_timeframe_days">Diwrnod</string>
 	<string name="stats_timeframe_today">Heddiw</string>
-	<string name="stats_view_comments">Sylwadau</string>
 	<string name="stats_view_referrers">Cyfeirwyr</string>
 	<string name="stats_view_clicks">Cliciau</string>
 	<string name="stats_view_visitors_and_views">Ymwelwyr a Golygon</string>
-	<string name="view_stats_full_site">Gweld y wefan lawn</string>
 	<string name="stats">Ystadegau</string>
 	<string name="share_action">Rhannu</string>
 	<string name="share_action_title">Ychwanegu at …</string>
@@ -636,6 +804,7 @@
 	<string name="note_reply_successful">Ateb wedi ei gyhoeddi</string>
 	<string name="notifications">Hysbysiadau</string>
 	<string name="sign_in">Mewngofnodi</string>
+	<string name="follows">Yn Dilyn</string>
 	<string name="loading">Llwytho…</string>
 	<string name="httppassword">Cyfrinair HTTP</string>
 	<string name="httpuser">Enw defnyddiwr HTTP</string>
@@ -671,7 +840,7 @@
 	<string name="tos">Amodau Gwasanaeth</string>
 	<string name="app_title">WordPress ar gyfer Android</string>
 	<string name="about">Ynghylch</string>
-	<string name="max_thumbnail_px_width">Lled rhagosodedig y ddelwedd</string>
+	<string name="max_thumbnail_px_width">Lled Rhagosodedig y Ddelwedd</string>
 	<string name="image_alignment">Alinio</string>
 	<string name="refresh">Adnewyddu</string>
 	<string name="untitled">Dideitl</string>
@@ -711,7 +880,6 @@
 	<string name="save">Cadw</string>
 	<string name="add">Ychwanegu</string>
 	<string name="category_refresh_error">Gwall adnewyddu categori</string>
-	<string name="tab_comments">Sylwadau</string>
 	<string name="preview">Rhagolwg</string>
 	<string name="cancel">Diddymu</string>
 	<string name="error">Gwall</string>
@@ -741,7 +909,7 @@
 	</string-array>
 	<string-array name="notifications_wpcom_settings_summaries">
 		<item>Cyngor ar sut i gael y gorau o WordPress.com.</item>
-		<item>Cyfleoedd i gymryd rhan mewn ymchwil ac arolygon WordPress.com</item>
+		<item>Cyfleoedd i gymryd rhan mewn ymchwil ac arolygon WordPress.com.</item>
 		<item>Gwybodaeth am gyrsiau a digwyddiadau WordPress.com (ar-lein ac mewn person).</item>
 	</string-array>
 	<string-array name="post_filters_array">
@@ -761,5 +929,37 @@
 		<item>Safonol</item>
 		<item>Statws</item>
 		<item>Fideo</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>Mae eich gwefan yn weladwy i bawb, ac o bosib wedi ei fynegeio gan beiriannau chwilio</item>
+		<item>Mae eich gwefan yn weladwy i bawb, ond mae\'n gofyn i beiriannau chwilio i beidio mynegeio eich gwefan</item>
+		<item>Mae eich gwefan yn weladwy i chi yn unig a defnyddwyr rydych wedi eu cymeradwyo</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>Bydd angen cymeradwyaeth â llaw ar gyfer sylwadau pawb.</item>
+		<item>Cymeradwyo\'n awtomatig os yw\'r defnyddiwr eisoes wedi cael sylw wedi ei gymeradwyo.</item>
+		<item>Cymeradwyo\'n awtomatig sylwadau pawb.</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>Dim sylwadau</item>
+		<item>Sylwadau defnyddwyr hysbys</item>
+		<item>Pob defnyddiwr</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Dim</item>
+		<item>Dwy lefel</item>
+		<item>Tair lefel</item>
+		<item>Pedair lefel</item>
+		<item>Pum lefel</item>
+		<item>Chwe lefel</item>
+		<item>Saith lefel</item>
+		<item>Wyth lefel</item>
+		<item>Naw lefel</item>
+		<item>Deg lefel</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>Am Ddim</item>
+		<item>Y Cyfan</item>
+		<item>Premiwm</item>
 	</string-array>
 </resources>

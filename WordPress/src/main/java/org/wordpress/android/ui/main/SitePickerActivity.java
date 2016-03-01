@@ -35,6 +35,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import de.greenrobot.event.EventBus;
@@ -318,8 +319,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(mSearchView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            WPActivityUtils.hideKeyboard(mSearchView);
         }
     }
 

@@ -298,13 +298,15 @@ public class ReaderPostService extends Service {
                                 // if there's no overlap between server and local (ie: all server
                                 // posts are new), assume there's a gap between server and local
                                 // provided that local posts exist
-                                if (ReaderPostTable.getNumPostsWithTag(tag) > 0
+                                int numServerPosts = serverPosts.size();
+                                if (numServerPosts >= 2
+                                        && ReaderPostTable.getNumPostsWithTag(tag) > 0
                                         && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    // treat the second to last server post as having a gap
+                                    postWithGap = serverPosts.get(numServerPosts - 2);
                                     // remove the last server post to deal with the edge case of
                                     // there actually not being a gap between local & server
-                                    serverPosts.remove(serverPosts.size() - 1);
-                                    // now treat the last server post as having a gap
-                                    postWithGap = serverPosts.get(serverPosts.size() - 1);
+                                    serverPosts.remove(numServerPosts - 1);
                                     AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag.getTagNameForLog());
                                 }
                                 ReaderPostTable.removeGapMarkerForTag(tag);

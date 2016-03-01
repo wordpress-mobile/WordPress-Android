@@ -30,7 +30,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -68,6 +67,7 @@ public class NotificationsUtils {
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+    public static final String WPCOM_PUSH_DEVICE_TOKEN = "wp_pref_notifications_token";
 
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     private static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
@@ -103,7 +103,6 @@ public class NotificationsUtils {
         Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
@@ -147,6 +146,7 @@ public class NotificationsUtils {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ctx).edit();
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
                 editor.remove(WPCOM_PUSH_DEVICE_UUID);
+                editor.remove(WPCOM_PUSH_DEVICE_TOKEN);
                 editor.apply();
             }
         };
@@ -163,16 +163,6 @@ public class NotificationsUtils {
             return;
         }
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
-    }
-
-    private static String getAppPushNotificationsName() {
-        //white listing only few keys.
-        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.beta.build"))
-                return "org.wordpress.android.beta.build";
-        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.debug.build"))
-            return "org.wordpress.android.debug.build";
-
-        return "org.wordpress.android.playstore";
     }
 
     public static Spannable getSpannableContentForRanges(JSONObject subject) {

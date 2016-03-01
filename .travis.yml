@@ -15,7 +15,9 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
     - extra-android-support
-    - build-tools-23.0.1
+    - platform-tools
+    - tools
+    - build-tools-23.0.2
     - android-23
 
 env:
@@ -29,4 +31,4 @@ install:
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
 script:
-  - ./gradlew -PdisablePreDex build
+  - ./gradlew -PdisablePreDex assembleVanillaRelease lint || (grep -A20 -B2 'severity="Error"' WordPress/build/outputs/lint-results.xml; exit 1)

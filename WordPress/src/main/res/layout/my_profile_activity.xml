@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/first_name_row"
+            style="@style/MyProfileRow"
+            android:layout_marginTop="@dimen/margin_medium">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/MyProfileLabel"
+                android:text="@string/first_name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/first_name"
+                android:text="@string/first_name"
+                style="@style/MyProfileText" />
+
+        </LinearLayout>
+
+        <View style="@style/MyProfileDividerView" />
+
+        <LinearLayout
+            android:id="@+id/last_name_row"
+            style="@style/MyProfileRow">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/MyProfileLabel"
+                android:text="@string/last_name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/last_name"
+                style="@style/MyProfileText" />
+
+        </LinearLayout>
+
+        <View style="@style/MyProfileDividerView" />
+
+        <LinearLayout
+            android:id="@+id/display_name_row"
+            style="@style/MyProfileRow">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/MyProfileLabel"
+                android:text="@string/public_display_name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/display_name"
+                style="@style/MyProfileText" />
+
+        </LinearLayout>
+
+        <View style="@style/MyProfileDividerView" />
+
+        <LinearLayout
+            android:id="@+id/about_me_row"
+            style="@style/MyProfileRow">
+
+            <org.wordpress.android.widgets.WPTextView
+                style="@style/MyProfileLabel"
+                android:text="@string/about_me" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/about_me"
+                style="@style/MyProfileText" />
+
+        </LinearLayout>
+
+        <View style="@style/MyProfileDividerView" />
+
+    </LinearLayout>
+</ScrollView>

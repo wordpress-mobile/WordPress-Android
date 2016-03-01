@@ -10,7 +10,7 @@
     <org.wordpress.android.ui.main.WPMainTabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/tab_background"
         android:elevation="@dimen/tabs_elevation"
         app:tabIndicatorColor="@color/tab_indicator" />

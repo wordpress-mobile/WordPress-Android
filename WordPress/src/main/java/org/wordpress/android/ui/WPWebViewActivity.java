@@ -25,6 +25,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMeShortlinks;
+import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -94,7 +95,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -120,7 +121,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -138,7 +139,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -155,10 +156,29 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void configureWebView() {
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setDomStorageEnabled(true);
+
+        if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
+            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (blog == null) {
+                AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
+                finish();
+            }
+            mWebView.setWebViewClient(new WPWebViewClient(blog));
+        } else {
+            mWebView.setWebViewClient(new WebViewClient());
+        }
+
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    @Override
+    protected void loadContent() {
         Bundle extras = getIntent().getExtras();
 
         if (extras == null) {
@@ -167,20 +187,6 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
-            Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
-                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity");
-                finish();
-            }
-            mWebView.setWebViewClient(new WPWebViewClient(blog));
-        } else {
-            mWebView.setWebViewClient(new WebViewClient());
-        }
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
-
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
@@ -188,7 +194,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
-            Toast.makeText(this, getText(R.string.invalid_url_message),
+            Toast.makeText(this, getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -199,7 +205,7 @@ public class WPWebViewActivity extends WebViewActivity {
         } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
-                Toast.makeText(this, getText(R.string.invalid_url_message),
+                Toast.makeText(this, getText(R.string.invalid_site_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -210,7 +216,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
 
-            this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
+            loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
     }
 
@@ -242,7 +248,8 @@ public class WPWebViewActivity extends WebViewActivity {
             );
 
             // Add token authorization when signing in to WP.com
-            if (authenticationUrl.contains("wordpress.com/wp-login.php") && !TextUtils.isEmpty(token)) {
+            if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)
+                    && authenticationUrl.contains("wordpress.com/wp-login.php") && !TextUtils.isEmpty(token)) {
                 postData += "&authorization=Bearer " + URLEncoder.encode(token, ENCODING_UTF8);
             }
 

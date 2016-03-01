@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,49 @@ import java.util.List;
 public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsVideoplaysFragment.class.getSimpleName();
 
+    private VideoPlaysModel mVideos;
+
     @Override
-    protected void updateUI() {
-        if (!isAdded()) {
+    protected boolean hasDataAvailable() {
+        return mVideos != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mVideos);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mVideos = (VideoPlaysModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.VideoPlaysUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
+        mVideos = event.mVideos;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mVideos = null;
+        showErrorUI(event.mError);
+    }
+
+
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
             return;
         }
 
@@ -40,16 +76,16 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasVideoplays() {
-        return !isDataEmpty()
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays() != null
-                && ((VideoPlaysModel) mDatamodels[0]).getPlays().size() > 0;
+        return mVideos != null
+                && mVideos.getPlays() != null
+                && mVideos.getPlays().size() > 0;
     }
 
     private List<SingleItemModel> getVideoplays() {
         if (!hasVideoplays()) {
             return new ArrayList<SingleItemModel>(0);
         }
-        return ((VideoPlaysModel) mDatamodels[0]).getPlays();
+        return mVideos.getPlays();
     }
 
     @Override
@@ -121,7 +157,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.VIDEO_PLAYS
         };

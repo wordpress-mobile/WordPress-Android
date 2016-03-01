@@ -1,9 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="site_settings_image_original_size">גודל מקורי</string>
+	<string name="about_me_hint">תיאור אישי בכמה מילים…</string>
+	<string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
+	<string name="about_me">מי אני</string>
+	<string name="public_display_name">שם תצוגה ציבורי</string>
+	<string name="my_profile">הפרופיל שלי</string>
+	<string name="first_name">שם פרטי</string>
+	<string name="last_name">שם משפחה</string>
+	<string name="site_privacy_public_desc">לאפשר למנועי חיפוש לצרף את האתר לאינדקס</string>
+	<string name="site_privacy_hidden_desc">למנוע ממנועי חיפוש לצרף את האתר לאינדקס</string>
+	<string name="site_privacy_private_desc">אני רוצה שהאתר שלי יהיה פרטי וגלוי רק למשתמשים שאבחר</string>
+	<string name="cd_related_post_preview_image">תמונת תצוגה מקדימה של פוסט קשור</string>
+	<string name="error_post_remote_site_settings">לא הצלחנו לשמור את פרטי האתר</string>
+	<string name="error_fetch_remote_site_settings">לא הצלחנו לאחזר את פרטי האתר</string>
+	<string name="error_media_upload_connection">ארעה שגיאת חיבור במהלך העלאת המדיה</string>
+	<string name="site_settings_disconnected_toast">מנותק, עריכה מושבתת.</string>
+	<string name="site_settings_unsupported_version_error">גרסת WordPress לא נתמכת</string>
+	<string name="site_settings_multiple_links_dialog_description">דרוש אישור לתגובות שכוללות כמות קישורים גבוהה מזו.</string>
+	<string name="site_settings_close_after_dialog_switch_text">סגירה אוטומטית</string>
+	<string name="site_settings_close_after_dialog_description">סגירת תגובות אוטומטית במאמרים.</string>
+	<string name="site_settings_paging_dialog_description">חלוקת שרשורי תגובות למספר עמודים.</string>
+	<string name="site_settings_paging_dialog_header">תגובות לעמוד</string>
+	<string name="site_settings_close_after_dialog_title">סגור לתגובות</string>
+	<string name="site_settings_blacklist_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת, באימייל או ב-IP תסומן כתגובת זבל. אפשר להשתמש גם בחלקי מילים, כך ש-"press" תתאים למילה "WordPress".</string>
+	<string name="site_settings_hold_for_moderation_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת האתר, באימייל או ב-IP תישמר בתור המנהל. אפשר להשתמש גם בחלקי מילים, כך ש-"press" תתאים למילה "WordPress".</string>
+	<string name="site_settings_list_editor_input_hint">הזנת מילה או ביטוי</string>
+	<string name="site_settings_list_editor_no_items_text">אין פריטים</string>
+	<string name="site_settings_learn_more_caption">אפשר לעקוף הגדרות אלה בפוסטים נפרדים.</string>
+	<string name="site_settings_rp_preview3_site">תחת \'שדרוג\'</string>
+	<string name="site_settings_rp_preview3_title">המלצת שדרוג: VideoPress לחתונות</string>
+	<string name="site_settings_rp_preview2_site">תחת \'אפליקציות\'</string>
+	<string name="site_settings_rp_preview2_title">אפליקציית WordPress ל-Android עברה \'מתיחת פנים\' רצינית</string>
+	<string name="site_settings_rp_preview1_site">תחת \'נייד\'</string>
+	<string name="site_settings_rp_preview1_title">עדכון גדול ל-iPhone/‏iPad זמין עכשיו</string>
+	<string name="site_settings_rp_show_images_title">הצגת תמונות</string>
+	<string name="site_settings_rp_show_header_title">הצגת כותרת</string>
+	<string name="site_settings_rp_switch_summary">פוסטים קשורים מציגים תוכן רלוונטי מהאתר שלך, מתחת לפוסטים שלך.</string>
+	<string name="site_settings_rp_switch_title">הצג תכנים באותו נושא</string>
+	<string name="site_settings_delete_site_hint">מסיר את נתוני האתר שלך מהאפליקציה</string>
+	<string name="site_settings_blacklist_hint">תגובות שתואמות למסנן מסומנות כתגובות זבל</string>
+	<string name="site_settings_moderation_hold_hint">תגובות שתואמות למסנן עוברות לתור לאישור</string>
+	<string name="site_settings_multiple_links_hint">מתעלם ממגבלת קישורים אצל משתמשים מוכרים</string>
+	<string name="site_settings_whitelist_hint">המגיב הוא מישהו שתגובתו אושרה בעבר</string>
+	<string name="site_settings_user_account_required_hint">כדי להגיב יש להירשם לאתר ולהתחבר למערכת</string>
+	<string name="site_settings_identity_required_hint">המגיבים חייבים לכתוב את שמם ואת כתובת האימייל שלהם</string>
+	<string name="site_settings_manual_approval_hint">תגובות חייבות לעבור אישור ידני</string>
+	<string name="site_settings_paging_hint">הצגת כמות מוגדרת של תגובות</string>
+	<string name="site_settings_threading_hint">מאפשר שרשור תגובות עד עומק מסוים</string>
+	<string name="site_settings_sort_by_hint">קובע את סדר הצגת התגובות</string>
+	<string name="site_settings_close_after_hint">לא מאפשר הוספת תגובות אחרי פרק זמן מוגדר</string>
+	<string name="site_settings_receive_pingbacks_hint">מאפשר קבלת הודעות עם קישורים מבלוגים אחרים</string>
+	<string name="site_settings_send_pingbacks_hint">מנסה לשלוח הודעה לכל בלוג שהמאמר מקשר אליו</string>
+	<string name="site_settings_allow_comments_hint">מאפשר לקוראים לפרסם תגובות</string>
+	<string name="site_settings_discussion_hint">הצגה ושינוי של הגדרות הדיון באתרים שלך</string>
+	<string name="site_settings_more_hint">הצגת כל הגדרות הדיון הזמינות</string>
+	<string name="site_settings_related_posts_hint">הצגה/הסתרה של פוסטים קשורים ב-Reader</string>
+	<string name="site_settings_upload_and_link_image_hint">מאפשר תמיד להעלות תמונה בגודל מלא</string>
+	<string name="site_settings_image_width_hint">שינוי גודל של תמונות בפוסטים לרוחב זה</string>
+	<string name="site_settings_format_hint">הגדרת סוג פוסט חדש</string>
+	<string name="site_settings_category_hint">הגדרת קטגוריית פוסט חדשה</string>
+	<string name="site_settings_location_hint">הוספה אוטומטית של נתוני מיקום לפוסטים שלך</string>
+	<string name="site_settings_password_hint">שינוי סיסמה</string>
+	<string name="site_settings_username_hint">חשבון משתמש נוכחי</string>
+	<string name="site_settings_language_hint">השפה עיקרית בה כתוב בלוג זה</string>
+	<string name="site_settings_privacy_hint">מגדיר מי יכול לראות את האתר שלך</string>
+	<string name="site_settings_address_hint">האפשרות לשינוי כתובת לא נתמכת כרגע</string>
+	<string name="site_settings_tagline_hint">תיאור קצר או ביטוי קולע שמתארים את הבלוג שלך</string>
+	<string name="site_settings_title_hint">במספר מילים, הסבר במה עוסק האתר</string>
+	<string name="site_settings_whitelist_known_summary">תגובות ממשתמשים מוכרים</string>
+	<string name="site_settings_whitelist_all_summary">תגובות מכל המשתמשים</string>
+	<string name="site_settings_threading_summary">%d רמות</string>
+	<string name="site_settings_privacy_private_summary">פרטי</string>
+	<string name="site_settings_privacy_hidden_summary">מוסתר</string>
+	<string name="site_settings_delete_site_title">מחיקת אתר</string>
+	<string name="site_settings_privacy_public_summary">ציבורי</string>
+	<string name="site_settings_blacklist_title">רשימה שחורה</string>
+	<string name="site_settings_moderation_hold_title">המתנה לניהול</string>
+	<string name="site_settings_multiple_links_title">קישורים בתגובות</string>
+	<string name="site_settings_whitelist_title">אישור אוטומטי</string>
+	<string name="site_settings_threading_title">שרשור</string>
+	<string name="site_settings_paging_title">עימוד</string>
+	<string name="site_settings_sort_by_title">מיון לפי</string>
+	<string name="site_settings_account_required_title">משתמשים חייבים להתחבר</string>
+	<string name="site_settings_identity_required_title">חובה לציין שם ואימייל</string>
+	<string name="site_settings_receive_pingbacks_title">קבלת פינגבאקים</string>
+	<string name="site_settings_send_pingbacks_title">שליחת פינגבאקים</string>
+	<string name="site_settings_allow_comments_title">אפשר תגובות</string>
+	<string name="site_settings_default_format_title">סוג ברירת מחדל</string>
+	<string name="site_settings_default_category_title">קטגוריית ברירת מחדל</string>
+	<string name="site_settings_location_title">אפשר מיקום</string>
+	<string name="site_settings_address_title">כתובת</string>
+	<string name="site_settings_title_title">שם האתר</string>
+	<string name="site_settings_tagline_title">תיאור האתר</string>
+	<string name="site_settings_this_device_header">מכשיר זה</string>
+	<string name="site_settings_discussion_new_posts_header">ברירות מחדל עבור פוסטים חדשים</string>
+	<string name="site_settings_account_header">חשבון</string>
+	<string name="site_settings_writing_header">כתיבה</string>
+	<string name="site_settings_general_header">כללי</string>
+	<string name="newest_first">חדשים תחילה</string>
+	<string name="discussion">דיון</string>
+	<string name="privacy">פרטיות</string>
+	<string name="comments">תגובות</string>
+	<string name="close_after">סגור אחרי</string>
+	<string name="related_posts">באותו נושא</string>
+	<string name="oldest_first">ישנים תחילה</string>
+	<string name="media_error_no_permission_upload">אין לך הרשאה להעלות מדיה לאתר</string>
+	<string name="never">לעולם לא</string>
+	<string name="unknown">לא ידוע</string>
+	<string name="reader_err_get_post_not_found">הפוסט כבר לא קיים</string>
+	<string name="reader_err_get_post_not_authorized">אינך רשאי לראות פוסט זה</string>
+	<string name="reader_err_get_post_generic">לא ניתן לאחזר פוסט זה</string>
+	<string name="blog_name_no_spaced_allowed">כתובת האתר לא יכולה להכיל רווחים</string>
+	<string name="invalid_username_no_spaces">שם המשתמש לא יכול להכיל רווחים</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
+	<string name="edit_media">עריכת מדיה</string>
+	<string name="media_details_copy_url_toast">הכתובת הועתקה ללוח העריכה</string>
+	<string name="media_details_copy_url">העתק כתובת</string>
+	<string name="media_details_label_date_uploaded">הועלה</string>
+	<string name="media_details_label_date_added">התווסף</string>
+	<string name="selected_theme">תבנית נבחרת</string>
+	<string name="could_not_load_theme">לא ניתן לטעון תבנית</string>
+	<string name="theme_activation_error">משהו השתבש. לאניתן להפעיל תבנית</string>
+	<string name="theme_by_author_prompt_append">מאת %1$s</string>
+	<string name="theme_prompt">תודה שבחרת %1$s</string>
+	<string name="theme_view">הצג</string>
+	<string name="theme_details">פרטים</string>
+	<string name="theme_support">תמיכה</string>
+	<string name="theme_done">הושלם</string>
+	<string name="theme_manage_site">ניהול אתר</string>
+	<string name="theme_try_and_customize">נסה והתאם אישית</string>
+	<string name="title_activity_theme_support">תבניות</string>
+	<string name="theme_activate">הפעלה</string>
+	<string name="date_range_start_date">תאריך התחלה</string>
+	<string name="date_range_end_date">תאריך סיום</string>
+	<string name="current_theme">תבנית נוכחית</string>
+	<string name="details">פרטים</string>
+	<string name="support">תמיכה</string>
+	<string name="customize">התאמה אישית</string>
+	<string name="active">פעיל</string>
+	<string name="stats_referrers_spam_generic_error">משהו השתבש במהלך הפעולה. הסטטוס של הספאם לא השתנה.</string>
+	<string name="stats_referrers_marking_not_spam">מסמן כלא זבל</string>
+	<string name="stats_referrers_unspam">לא ספאם</string>
+	<string name="stats_referrers_marking_spam">מסמן כזבל</string>
+	<string name="stats_referrers_spam">ספאם</string>
+	<string name="post_published">פוסט פורסם</string>
+	<string name="page_published">עמוד פורסם</string>
+	<string name="post_updated">פוסט עודכן</string>
+	<string name="page_updated">עמוד עודכן</string>
+	<string name="theme_auth_error_authenticate">נכשל בניסיון להביא תבניות: נכשל אימות משתמש</string>
+	<string name="theme_no_search_result_found">לא נמצאו תבניות.</string>
+	<string name="media_file_name">שם קובץ: %s</string>
+	<string name="media_uploaded_on">תאריך העלאה: %s</string>
+	<string name="media_dimensions">מימדים: %s</string>
+	<string name="media_file_type">סוג קובץ: %s</string>
+	<string name="upload_queued">בתור</string>
+	<string name="reader_label_gap_marker">פוסטים נוספים</string>
+	<string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
+	<string name="search_sites">חיפוש אתרים</string>
+	<string name="unread">לא נקרא</string>
+	<string name="notifications_empty_view_reader">הצד קורא</string>
+	<string name="notifications_empty_action_followers_likes">קבל תשומת לב: תגובה לפוסטים שכבר קראת.</string>
+	<string name="notifications_empty_action_comments">הצטרף לדיון: תגובות לפוסטים באתרים אחריהם אתה עוקב.</string>
+	<string name="notifications_empty_action_unread">הצת מחדש את הדיון: כתוב פוסט חדש.</string>
+	<string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
+	<string name="notifications_empty_likes">אין לייקים חדשים... עדיין.</string>
+	<string name="notifications_empty_followers">אין עוקבים חדשים... עדיין.</string>
+	<string name="notifications_empty_comments">אין תגובות חדשות... עדיין.</string>
+	<string name="notifications_empty_unread">כולכם נתפסתם!</string>
+	<string name="stats_widget_error_jetpack_no_blogid">נא לגשת לסטטיסטיקות באפליקציה ולהוסיף וידג\'ט</string>
+	<string name="stats_widget_error_readd_widget">יש להסיר את הוידג\'ט ולהוסיף אותו שוב</string>
+	<string name="stats_widget_error_no_visible_blog">לא ניתן לגשת לסטטיסטיקות ללא אתר גלוי</string>
+	<string name="stats_widget_error_no_permissions">לא ניתן לגשת לסטטיסטיקות באתר זה באמצעות חשבון וורדפרס.קום זה</string>
+	<string name="stats_widget_error_no_account">נא להתחברת לוורדפרס</string>
+	<string name="stats_widget_error_generic">לא ניתן לטעון סטטיסטיקות</string>
+	<string name="stats_widget_loading_data">טוען נתונים...</string>
+	<string name="stats_widget_name_for_blog">סטטיסטיקות יומיות עבור %1$s</string>
+	<string name="stats_widget_name">סטטיסטיקות וורדפרס יומיות</string>
+	<string name="add_location_permission_required">נדרשות הרשאות מתאימות כדי להוסיף מיקומים</string>
+	<string name="add_media_permission_required">ההרשאות הדרושות כדי להוסיף מדיה</string>
+	<string name="access_media_permission_required">ההרשאות הדרושות כדי לגשת למדיה</string>
 	<string name="stats_enable_rest_api_in_jetpack">להצגת סטטיסטיקות, הפעילו מודול JSON API בג\'טפאק.</string>
 	<string name="error_open_list_from_notification">פוסט או עמוד זה פורסם באתר אחר</string>
-	<string name="post_uploaded">הפוסט עודכן</string>
-	<string name="page_uploaded">העמוד עודכן</string>
 	<string name="reader_short_comment_count_multi">%s תגובות</string>
 	<string name="reader_short_comment_count_one">תגובה אחת</string>
 	<string name="reader_label_submit_comment">שלח</string>
@@ -53,14 +232,12 @@
 	<string name="trashed">הועבר לפח</string>
 	<string name="button_back">חזרה</string>
 	<string name="page_deleted">העמוד נמחק</string>
-	<string name="button_more">עוד</string>
 	<string name="button_stats">נתונים סטטיסטיים</string>
 	<string name="button_trash">פח</string>
 	<string name="button_preview">תצוגה מקדימה</string>
 	<string name="button_view">הצגה</string>
 	<string name="button_edit">עריכה</string>
 	<string name="button_publish">פרסום</string>
-	<string name="button_delete">מחיקה</string>
 	<string name="my_site_no_sites_view_subtitle">האם תרצה להוסיף אחד?</string>
 	<string name="my_site_no_sites_view_title">עדיין אין לך אתרי וורדפרס.</string>
 	<string name="my_site_no_sites_view_drake">אילוסטרציה</string>
@@ -99,7 +276,6 @@
 	<string name="my_site_btn_view_site">הצגת אתר</string>
 	<string name="my_site_header_publish">פרסום</string>
 	<string name="my_site_header_look_and_feel">סגנון</string>
-	<string name="my_site_btn_comments">תגובות</string>
 	<string name="my_site_btn_site_settings">הגדרות</string>
 	<string name="my_site_btn_blog_posts">פוסטים בבלוג</string>
 	<string name="my_site_header_admin">מנהל מערכת</string>
@@ -139,12 +315,6 @@
 	<string name="two_step_sms_sent">יש לבדוק הודעות טקסט לקבלת קוד אימות.</string>
 	<string name="error_publish_no_network">לא ניתן לפרסם כאשר אין חיבור אינטרנט. נשמר כטיוטה.</string>
 	<string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
-	<string name="media_details_dimensions">ממדים:</string>
-	<string name="media_details_file_type">סוג קובץ:</string>
-	<string name="media_details_file_url">כתובת קובץ:</string>
-	<string name="media_details_file_name">שם קובץ:</string>
-	<string name="media_details_uploaded_on">הועלה ב:</string>
-	<string name="media_details_added_on">התווסף ב:</string>
 	<string name="tab_title_site_videos">וידאו מהאתר</string>
 	<string name="tab_title_site_images">תמונות מהאתר</string>
 	<string name="tab_title_device_videos">וידאו מהמכשיר</string>
@@ -156,6 +326,8 @@
 	<string name="language">שפה</string>
 	<string name="device">מכשיר</string>
 	<string name="sign_in_jetpack">יש להתחבר לחשבון וורדפרס.קום כדי להתחבר אל Jetpack.</string>
+	<string name="media_details_label_file_type">סוג קובץ</string>
+	<string name="media_details_label_file_name">שם קובץ</string>
 	<string name="media_fetching">מביא מדיה...</string>
 	<string name="posts_fetching">מביא פוסטים...</string>
 	<string name="pages_fetching">מביא עמודים...</string>
@@ -191,7 +363,6 @@
 	<string name="stats_timeframe_years">שנים</string>
 	<string name="stats_views">צפיות</string>
 	<string name="stats_pagination_label">עמוד %1$s מתוך %2$s</string>
-	<string name="stats_comments">תגובות</string>
 	<string name="stats_likes"> לייקים</string>
 	<string name="stats_view_countries">מדינות</string>
 	<string name="stats_view_followers">עוקבים</string>
@@ -258,11 +429,11 @@
 	<string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
 	<string name="reader_label_comment_count_multi">%,d תגובות</string>
 	<string name="reader_label_view_original">לצפות בפוסט המקורי</string>
-	<string name="reader_title_comments">תגובות</string>
 	<string name="reader_label_comment_count_single">תגובה אחת</string>
 	<string name="reader_label_comments_on">תגובות מופעלות</string>
 	<string name="reader_label_comments_closed">תגובות לא מופעלות</string>
 	<string name="error_publish_empty_post">לא ניתן לפרסם פוסט ריק</string>
+	<string name="more">עוד</string>
 	<string name="error_refresh_unauthorized_pages">אין לך הרשאה לערוך או לצפות בעמודים</string>
 	<string name="error_refresh_unauthorized_posts">אין לך הרשאה לערוך או לצפות בפוסטים</string>
 	<string name="reader_title_photo_viewer">%1$d מתוך %2$d</string>
@@ -335,7 +506,6 @@
 	<string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
 	<string name="invalid_url_message">ודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">האתר שנבחר לפני כן אינו גלוי עוד</string>
 	<string name="could_not_remove_account">לא ניתן היה להסיר את האתר</string>
 	<string name="out_of_memory">זיכרון המכשיר מלא</string>
 	<string name="no_network_message">אין רשת זמינה</string>
@@ -344,7 +514,6 @@
 	<string name="theme_fetch_failed">הבאת ערכות העיצוב נכשלה</string>
 	<string name="theme_set_failed">הגדרת ערכת העיצוב נכשלה</string>
 	<string name="theme_auth_error_message">ודא שיש לך הרשאה להגדיר ערכות עיצוב</string>
-	<string name="theme_no_search_result_found">לא נמצאו תוצאות</string>
 	<string name="comments_empty_list">אין תגובות</string>
 	<string name="mnu_comment_unspam">לא תגובת זבל</string>
 	<string name="no_site_error">לא ניתן היה להתחבר לאתר WordPress</string>
@@ -399,6 +568,7 @@
 	<string name="blog_name_reserved_but_may_be_available">אתר זה שמור כעת אך עשוי להיות זמין בעוד כמה ימים</string>
 	<string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
 	<string name="nux_cannot_log_in">איננו יכולים לחבר אותך</string>
+	<string name="auto_sharing_preference_reset_caused_by_error">האתר שנבחר כבר אינו גלוי</string>
 	<string name="wordpress_blog">אתר ב-WordPress</string>
 	<string name="blog_removed_successfully">האתר הוסר בהצלחה</string>
 	<string name="add_account_blog_url">כתובת האתר</string>
@@ -501,6 +671,7 @@
 	<string name="blog_name_must_include_letters">כתובת האתר חייב לכלול לפחות אות אחת (a-z)</string>
 	<string name="blog_name_invalid">כתובת אתר לא תקפה</string>
 	<string name="blog_title_invalid">כותרת אתר לא תקפה</string>
+	<string name="notifications_empty_all">אין התראות... עדיין.</string>
 	<string name="share_url_post">שתף פוסט</string>
 	<string name="share_url_page">שתף עמוד</string>
 	<string name="share_link">קישור לשיתוף</string>
@@ -601,11 +772,9 @@
 	<string name="share_action_title">הוסף ל...</string>
 	<string name="share_action">שתף</string>
 	<string name="stats">נתונים סטטיסטיים</string>
-	<string name="view_stats_full_site">צפה באתר כולו</string>
 	<string name="stats_view_visitors_and_views">מבקרים וצפיות</string>
 	<string name="stats_view_clicks">קליקים</string>
 	<string name="stats_view_referrers">הפניות</string>
-	<string name="stats_view_comments">תגובות</string>
 	<string name="stats_timeframe_today">היום</string>
 	<string name="stats_timeframe_yesterday">אתמול</string>
 	<string name="stats_timeframe_days">ימים</string>
@@ -619,7 +788,6 @@
 	<string name="stats_totals_views">צפיות</string>
 	<string name="stats_totals_clicks">קליקים</string>
 	<string name="stats_totals_plays">ניגונים</string>
-	<string name="stats_totals_comments">תגובות</string>
 	<string name="menu_search">חיפוש</string>
 	<string name="passcode_manage">ניהול חסימה בקוד אישי</string>
 	<string name="passcode_enter_passcode">הקלד את הקוד האישי שלך</string>
@@ -636,6 +804,7 @@
 	<string name="note_reply_successful">תגובה פורסמה</string>
 	<string name="new_notifications">%d התראות חדשות</string>
 	<string name="more_notifications">הוסף %d נוספים.</string>
+	<string name="follows">עוקבים</string>
 	<string name="loading">טוען...</string>
 	<string name="post_signature">חתימה</string>
 	<string name="add_tagline">הוסף חתימה לפוסטים חדשים</string>
@@ -671,7 +840,7 @@
 	<string name="tos">תנאי שימוש</string>
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
 	<string name="about">אודות</string>
-	<string name="max_thumbnail_px_width">בררת המחדל לרוחב תמונה</string>
+	<string name="max_thumbnail_px_width">ברירת מחדל לרוחב תמונה</string>
 	<string name="image_alignment">יישור</string>
 	<string name="refresh">רענון</string>
 	<string name="untitled">ללא כותרת</string>
@@ -711,7 +880,6 @@
 	<string name="cancel">בטל</string>
 	<string name="error">שגיאה</string>
 	<string name="on">ב</string>
-	<string name="tab_comments">תגובות</string>
 	<string name="category_refresh_error">שגיאה ברענון קטגוריות</string>
 	<string name="reply">תגובה</string>
 	<string name="preview">תצוגה מקדימה</string>
@@ -761,5 +929,37 @@
 		<item>רגיל</item>
 		<item>סטטוס</item>
 		<item>וידאו</item>
+	</string-array>
+	<string-array name="privacy_details">
+		<item>האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</item>
+		<item>האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</item>
+		<item>האתר גלוי רק לך ולמשתמשים שאישרת</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>אישור ידני דרוש לתגובות מכולם.</item>
+		<item>אישור אוטומטי אם תגובה קודמת של המשתמש אושרה.</item>
+		<item>אישור אוטומטי של תגובות מכולם.</item>
+	</string-array>
+	<string-array name="site_settings_auto_approve_entries">
+		<item>אין תגובות</item>
+		<item>תגובות של משתמשים מוכרים</item>
+		<item>כל המשתמשים</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>ללא</item>
+		<item>שתי רמות</item>
+		<item>שלוש רמות</item>
+		<item>ארבע רמות</item>
+		<item>חמש רמות</item>
+		<item>שש רמות</item>
+		<item>שבע רמות</item>
+		<item>שמונה רמות</item>
+		<item>תשע רמות</item>
+		<item>עשר רמות</item>
+	</string-array>
+	<string-array name="themes_filter_array">
+		<item>חינם</item>
+		<item>הכל</item>
+		<item>פרימיום</item>
 	</string-array>
 </resources>

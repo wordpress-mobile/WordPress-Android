@@ -285,8 +285,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     /**
      * This is called every time an App Widget is deleted from the App Widget host.
-     * @param context
-     * @param widgetIDs
+     * @param context The Context in which this receiver is running.
+     * @param widgetIDs Widget IDs to set blank. We cannot remove widget from home screen.
      */
     @Override
     public void onDeleted(Context context, int[] widgetIDs) {
@@ -340,6 +340,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         try {
             JSONObject prevKeys = new JSONObject(prevWidgetKeysString);
             JSONArray allKeys = prevKeys.names();
+            if (allKeys == null) {
+                return false;
+            }
             for (int i=0; i < allKeys.length(); i ++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
@@ -363,6 +366,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         try {
             JSONObject prevKeys = new JSONObject(prevWidgetKeysString);
             JSONArray allKeys = prevKeys.names();
+            if (allKeys == null) {
+                return new int[0];
+            }
             for (int i=0; i < allKeys.length(); i ++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
@@ -433,7 +439,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
 
         // At this point the remote ID cannot be null.
-        String remoteBlogID = StatsUtils.getBlogId(blog);
+        String remoteBlogID = blog.getDotComBlogId();
         // Add the following check just to be safe
         if (remoteBlogID == null) {
             showMessage(context, new int[]{widgetID},

@@ -23,7 +23,7 @@ public class PhotonUtils {
      * returns a photon url for the passed image with the resize query set to the passed
      * dimensions - note that the passed quality parameter will only affect JPEGs
      */
-    public static enum Quality {
+    public enum Quality {
         HIGH,
         MEDIUM,
         LOW
@@ -44,13 +44,6 @@ public class PhotonUtils {
 
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
-
-        // don't use with GIFs - photon breaks animated GIFs, and sometimes returns a GIF that
-        // can't be read by BitmapFactory.decodeByteArray (used by Volley in ImageRequest.java
-        // to decode the downloaded image)
-        if (imageUrl.endsWith(".gif")) {
-            return imageUrl;
-        }
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
         if (isMshotsUrl(imageUrl)) {

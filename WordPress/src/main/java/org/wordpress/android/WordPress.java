@@ -14,6 +14,9 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -76,7 +79,6 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -204,6 +206,9 @@ public class WordPress extends Application {
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
+
+        // If users uses a custom locale set it on start of application
+        WPActivityUtils.applyLocale(getContext());
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -212,9 +217,14 @@ public class WordPress extends Application {
         AnalyticsTracker.init(getContext());
         AnalyticsUtils.refreshMetadata();
 
-        // Track app upgrade
+        // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
+
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
+        if (oldVersionCode == 0) {
+            // Track application installed if there isn't old version code
+            AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+        }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
@@ -445,10 +455,10 @@ public class WordPress extends Application {
     }
 
     /**
-     * returns the blogID of the current blog or -1 if current blog is null
+     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
      */
-    public static int getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
+    public static String getCurrentRemoteBlogId() {
+        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
     }
 
     public static int getCurrentLocalTableBlogId() {
@@ -559,21 +569,51 @@ public class WordPress extends Application {
     }
 
     /**
+     * Device's default User-Agent string.
+     * E.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36"
+     */
+    private static String mDefaultUserAgent;
+    public static String getDefaultUserAgent() {
+        if (mDefaultUserAgent == null) {
+            try {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
+                } else {
+                    mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
+                }
+            } catch (AndroidRuntimeException e) {
+                // init with the empty string, it's a rare issue
+                mDefaultUserAgent = "";
+            }
+        }
+        return mDefaultUserAgent;
+    }
+
+    /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
-     * Follows the format detailed at http://tools.ietf.org/html/rfc2616#section-14.43,
-     * ie: "AppName/AppVersion (OS Version; Locale; Device)"
-     *    "wp-android/2.6.4 (Android 4.3; en_US; samsung GT-I9505/jfltezh)"
-     *    "wp-android/2.6.3 (Android 4.4.2; en_US; LGE Nexus 5/hammerhead)"
+     * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
+     * to get the full feature list of the browser and serve content accordingly, e.g.:
+     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     *    Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext())
-                       + " (Android " + Build.VERSION.RELEASE + "; "
-                       + Locale.getDefault().toString() + "; "
-                       + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";
+            String defaultUserAgent = getDefaultUserAgent();
+            if (TextUtils.isEmpty(defaultUserAgent)) {
+                mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
+            } else {
+                mUserAgent = defaultUserAgent + " "+ USER_AGENT_APPNAME + "/"
+                        + PackageUtils.getVersionName(getContext());
+            }
         }
         return mUserAgent;
     }
@@ -628,11 +668,10 @@ public class WordPress extends Application {
         boolean mIsInBackground = true;
         boolean mFirstActivityResumed = true;
 
-        private Class<?> mClass;
-        private int mOrientation = -1;
-
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
+            // Reapply locale on configuration change
+            WPActivityUtils.applyLocale(getContext());
         }
 
         @Override
@@ -735,17 +774,6 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            // Need to track orientation to apply preferred language on rotation
-            int orientation = activity.getResources().getConfiguration().orientation;
-            boolean shouldRestart =
-                    mOrientation == -1 || mOrientation != orientation || !mClass.equals(activity.getClass());
-
-            if (shouldRestart) {
-                mOrientation = orientation;
-                mClass = activity.getClass();
-            }
-            WPActivityUtils.applyLocale(activity, shouldRestart);
-
             if (mIsInBackground) {
                 // was in background before
                 onAppComesFromBackground();

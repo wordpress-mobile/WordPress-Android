@@ -6,14 +6,12 @@
 	<string name="post_deleted">Bidalketa ezabatua</string>
 	<string name="button_back">Itzuli</string>
 	<string name="page_deleted">Orrialdea ezabatua</string>
-	<string name="button_more">Gehiago</string>
 	<string name="button_stats">Estatistikak</string>
 	<string name="button_trash">Zaborra</string>
 	<string name="button_preview">Aurreikusi</string>
 	<string name="button_view">Ikusi</string>
 	<string name="button_edit">Editatu</string>
 	<string name="button_publish">Argitaratu</string>
-	<string name="button_delete">Ezabatu</string>
 	<string name="my_site_no_sites_view_subtitle">Gehitu nahi diozu bat?</string>
 	<string name="my_site_no_sites_view_title">Oraindik ez duzu WordPress gunerik.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Ezin izan da blog hori aurkitu</string>
@@ -32,7 +30,6 @@
 	<string name="my_site_btn_switch_site">Aldatu gunez</string>
 	<string name="my_site_header_look_and_feel">Itxura</string>
 	<string name="my_site_header_publish">Argitaratu</string>
-	<string name="my_site_btn_comments">Iruzkinak</string>
 	<string name="my_site_btn_site_settings">Hobespenak</string>
 	<string name="my_site_header_configuration">Konfigurazioa</string>
 	<string name="my_site_header_admin">Administratzailea</string>
@@ -63,7 +60,7 @@
 	<string name="media_gallery_date_range">Erakutsi mediak  %1$s(e)tik %2$s(e)ra</string>
 	<string name="sure_to_remove_account">Ezabatu gune hau?</string>
 	<string name="signing_out">Saioa ixten...</string>
-	<string name="reader_title_comments">Iruzkinak</string>
+	<string name="more">Gehiago</string>
 	<string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
 	<string name="reader_label_comment_count_single">Iruzkin bat</string>
 	<string name="reader_label_comment_count_multi">%,d iruzkin</string>
@@ -93,7 +90,6 @@
 	<string name="passcode_wrong_passcode">PIN okerra</string>
 	<string name="invalid_password_message">Pasahitzak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="comments_empty_list">Ez dago iruzkinik.</string>
-	<string name="theme_no_search_result_found">Ez da emaitzarik aurkitu.</string>
 	<string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
 	<string name="stats_bar_graph_empty">Ez dago estatistikarik eskuragarri.</string>
 	<string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
@@ -364,7 +360,6 @@
 	<string name="stats_view_visitors_and_views">Bisitariak eta ikuspegiak</string>
 	<string name="stats_totals_clicks">Klikak</string>
 	<string name="themes_features_label">Ezaugarriak</string>
-	<string name="stats_view_comments">Iruzkinak</string>
 	<string name="stats_totals_views">Ikuspegiak</string>
 	<string name="themes">Itxurak</string>
 	<string name="media_add_popup_capture_photo">Argazkia atera</string>
@@ -375,11 +370,9 @@
 	<string name="media_edit_description_hint">Sartu deskripzio bat hemen</string>
 	<string name="media_edit_success">Eguneratua</string>
 	<string name="theme_set_success">Itxura ondo ezarri da!</string>
-	<string name="view_stats_full_site">Ikusi gune osoa </string>
 	<string name="stats_view_tags_and_categories">Etiketak eta kategoriak</string>
 	<string name="stats_entry_referrers">Erreferentzia</string>
 	<string name="stats_entry_authors">Egilea</string>
-	<string name="stats_totals_comments">Iruzkinak</string>
 	<string name="passcode_set">Ezarri PINa</string>
 	<string name="passcode_preference_title">PINa blokeatu</string>
 	<string name="passcode_manage">Kudeatu PIN blokeatzea</string>
@@ -427,7 +420,6 @@
 	<string name="tos">Zerbitzu-baldintzak</string>
 	<string name="app_title">WordPress Android-erako</string>
 	<string name="about">Honi buruz</string>
-	<string name="max_thumbnail_px_width">Defektuzko irudi zabalera</string>
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>
@@ -464,7 +456,6 @@
 	<string name="cancel">Ezeztatu</string>
 	<string name="save">Gorde</string>
 	<string name="add">Gehitu</string>
-	<string name="tab_comments">Iruzkinak</string>
 	<string name="reply">Erantzun</string>
 	<string name="no">Ez</string>
 	<string name="yes">Bai</string>

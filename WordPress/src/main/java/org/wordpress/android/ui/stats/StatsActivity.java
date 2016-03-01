@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -12,18 +14,19 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,6 +48,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -61,7 +65,7 @@ import de.greenrobot.event.EventBus;
  * </p>
  */
 public class StatsActivity extends AppCompatActivity
-        implements ScrollViewExt.ScrollViewListener,
+        implements NestedScrollViewExt.ScrollViewListener,
                 StatsVisitorsAndViewsFragment.OnDateChangeListener,
                 StatsVisitorsAndViewsFragment.OnOverviewItemChangeListener,
                 StatsInsightsTodayFragment.OnInsightsTodayClickListener {
@@ -70,12 +74,12 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
+    private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
 
     private Spinner mSpinner;
-    private ScrollViewExt mOuterScrollView;
+    private NestedScrollViewExt mOuterScrollView;
 
     private static final int REQUEST_JETPACK = 7000;
-
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
@@ -97,6 +101,9 @@ public class StatsActivity extends AppCompatActivity
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
 
+    private boolean mThereWasAnErrorLoadingStats = false;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +121,9 @@ public class StatsActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setElevation(0);
+            actionBar.setTitle(R.string.stats);
+            actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -142,7 +151,7 @@ public class StatsActivity extends AppCompatActivity
 
         setTitle(R.string.stats);
 
-        mOuterScrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+        mOuterScrollView = (NestedScrollViewExt) findViewById(R.id.scroll_view_stats);
         mOuterScrollView.setScrollViewListener(this);
 
         if (savedInstanceState != null) {
@@ -150,6 +159,7 @@ public class StatsActivity extends AppCompatActivity
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
+            mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
             if(yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
@@ -178,6 +188,7 @@ public class StatsActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
                 }
             }
+
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -195,10 +206,8 @@ public class StatsActivity extends AppCompatActivity
         // if its internal datamodel is empty.
         createFragments(false);
 
-        if (mSpinner == null && toolbar != null) {
-            View view = View.inflate(this, R.layout.toolbar_spinner, toolbar);
-            mSpinner = (Spinner) view.findViewById(R.id.action_bar_spinner);
-
+        if (mSpinner == null) {
+            mSpinner = (Spinner) findViewById(R.id.filter_spinner);
 
             mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
 
@@ -336,6 +345,7 @@ public class StatsActivity extends AppCompatActivity
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
+        outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);
         if (mOuterScrollView.getScrollY() != 0) {
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
         }
@@ -525,7 +535,7 @@ public class StatsActivity extends AppCompatActivity
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
-                if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+                if (currentBlog.getDotComBlogId() == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -575,7 +585,7 @@ public class StatsActivity extends AppCompatActivity
                                 }
                             });
                         }
-                    }, ApiHelper.Methods.GET_OPTIONS, params);
+                    }, Method.GET_OPTIONS, params);
                 } else {
                     mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
                     createFragments(true); // Recreate the fragment and start a refresh of Stats
@@ -645,41 +655,13 @@ public class StatsActivity extends AppCompatActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.stats, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (i == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-            if (blogId == null) {
-                showJetpackMissingAlert();
-                return true;
-            }
-
-            String statsAuthenticatedUser = StatsUtils.getBlogStatsUsername(mLocalBlogID);
-            if (statsAuthenticatedUser == null) {
-                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
-                return true;
-            }
-
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
-
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser);
-            AnalyticsUtils.trackWithBlogDetails(
-                    AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION,
-                    (long) mLocalBlogID
-            );
-            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -725,13 +707,14 @@ public class StatsActivity extends AppCompatActivity
             AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
             return false;
         }
-        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             return false;
         }
+
+        final String blogId = currentBlog.getDotComBlogId();
 
         // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
         if (blogId != null) {
@@ -776,6 +759,64 @@ public class StatsActivity extends AppCompatActivity
         return true;
     }
 
+    public static class StatsWidgetPromoDialogFragment extends DialogFragment {
+
+        public static StatsWidgetPromoDialogFragment newInstance() {
+            return new StatsWidgetPromoDialogFragment();
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Dialog dialog = super.onCreateDialog(savedInstanceState);
+            // request a window without the title
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            return dialog;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
+        }
+
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            Button btn = (Button)view.findViewById(R.id.stats_widget_promo_got_it_btn);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDialog().cancel();
+                }
+            });
+        }
+    }
+
+    private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
+        if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
+            // Do nothing in case of errors or when it's still loading
+            return;
+        }
+
+        if (!StringUtils.isEmpty(AppPrefs.getStatsWidgetsKeys())) {
+            // Stats widgets already used!!
+            return;
+        }
+
+        // Bump analytics that drives the Promo widget when the loading is completed without errors.
+        AppPrefs.bumpAnalyticsForStatsWidgetPromo();
+
+        // Should we display the widget promo?
+        int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+        if (counter == 3 || counter == 1000 || counter == 10000) {
+            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            newFragment.show(getFragmentManager(), "promote_widget_dialog");
+        }
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
         if (isFinishing() || !mIsInFront) {
@@ -783,6 +824,11 @@ public class StatsActivity extends AppCompatActivity
         }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
         mIsUpdatingStats = event.mUpdating;
+
+        if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
+            // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
+            bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -793,7 +839,11 @@ public class StatsActivity extends AppCompatActivity
         mSwipeToRefreshHelper.setRefreshing(false);
 
         if (!event.isError) {
-            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
+            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (currentBlog == null) {
+                return;
+            }
+            if (currentBlog.getDotComBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 showJetpackMissingAlert();
             } else {
@@ -805,15 +855,30 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        if (isFinishing() || !mIsInFront) {
+            return;
+        }
+
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
+    }
+
+    @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.JetpackAuthError event) {
         if (isFinishing() || !mIsInFront) {
             return;
         }
 
+        // There was an error loading Stats. Don't bump stats for promo widget.
+        mThereWasAnErrorLoadingStats = true;
+
         if (event.mLocalBlogId != mLocalBlogID) {
             // The user has changed blog
             return;
         }
+
         mSwipeToRefreshHelper.setRefreshing(false);
         startWPComLoginActivity();
     }
@@ -871,7 +936,7 @@ public class StatsActivity extends AppCompatActivity
         public View getView(int position, View convertView, ViewGroup parent) {
             final View view;
             if (convertView == null) {
-                view = mInflater.inflate(R.layout.toolbar_spinner_item, parent, false);
+                view = mInflater.inflate(R.layout.filter_spinner_item, parent, false);
             } else {
                 view = convertView;
             }
@@ -919,7 +984,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+    public void onScrollChanged(NestedScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
         View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
         if (view == null) {
