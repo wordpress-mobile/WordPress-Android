@@ -61,6 +61,7 @@ import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
+    private static final String MEDIA_CAPTURE_PATH = "MEDIA_CAPTURE_PATH";
 
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
@@ -72,9 +73,19 @@ public class MeFragment extends Fragment {
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
+    private String mMediaCapturePath;
 
     public static MeFragment newInstance() {
         return new MeFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mMediaCapturePath = savedInstanceState.getString(MEDIA_CAPTURE_PATH);
+        }
     }
 
     @Override
@@ -98,7 +109,13 @@ public class MeFragment extends Fragment {
         mAvatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WordPressMediaUtils.launchPictureLibrary(MeFragment.this);
+                WordPressMediaUtils.launchPictureLibraryOrCapture(MeFragment.this, new WordPressMediaUtils
+                        .LaunchCameraCallback() {
+                    @Override
+                    public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                    }
+                });
             }
         });
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +168,10 @@ public class MeFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         if (mDisconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true);
+        }
+
+        if (mMediaCapturePath != null) {
+            outState.putString(MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
 
         super.onSaveInstanceState(outState);
@@ -271,16 +292,24 @@ public class MeFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data == null) {
-            return;
-        }
-
-        String path;
-
         switch (requestCode) {
-            case RequestCodes.PICTURE_LIBRARY:
-                Uri imageUri = data.getData();
-                startCropActivity(imageUri);
+            case RequestCodes.PICTURE_LIBRARY_OR_CAPTURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri imageUri;
+
+                    if (data == null || data.getData() == null) {
+                        // image is from a capture
+                        imageUri = Uri.fromFile(new File(mMediaCapturePath));
+                    } else {
+                        imageUri = data.getData();
+                    }
+
+                    if (imageUri != null) {
+                        startCropActivity(imageUri);
+                    } else {
+                        AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
+                    }
+                }
                 break;
             case RequestCodes.CROP_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
