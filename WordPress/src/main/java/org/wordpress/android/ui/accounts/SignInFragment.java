@@ -589,7 +589,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPOrg() {
-        String url = EditTextUtils.getText(mUrlEditText).trim();
+        String url = EditTextUtils.getText(mUrlEditText).trim().toLowerCase(); //TODO: check, double check that 'toLowercase' is OK.
         FetchBlogListWPOrg fetchBlogListWPOrg = new FetchBlogListWPOrg(mUsername, mPassword, url);
         if (mHttpUsername != null && mHttpPassword != null) {
             fetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
