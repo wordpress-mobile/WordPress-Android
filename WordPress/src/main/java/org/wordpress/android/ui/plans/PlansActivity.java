@@ -420,7 +420,13 @@ public class PlansActivity extends AppCompatActivity {
 
     private void stopInAppBillingHelper() {
         if (mIabHelper != null) {
-            mIabHelper.dispose();
+            try {
+                mIabHelper.dispose();
+            } catch (IllegalArgumentException e) {
+                // this can happen if the IAB helper was created but failed to bind to its service
+                // when started, which will occur on emulators
+                AppLog.e(AppLog.T.PLANS, e);
+            }
             mIabHelper = null;
         }
     }
