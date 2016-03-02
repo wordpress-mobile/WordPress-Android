@@ -314,7 +314,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             boolean isValid = checkXMLRPCEndpointValidity(currentURL);
             if (!isValid) {
                 // should stop immediately if SSL or Basic Auth Error
-                if (mErroneousSslCertificate || mHttpAuthRequired) {
+                // of if any of the required XML-RPC methods are missing from the endpoint
+                if (mErroneousSslCertificate || mHttpAuthRequired ||
+                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error ||
+                        mErrorMsgId == org.wordpress.android.R.string.invalid_site_url_message ) {
                     return null;
                 }
             } else {
@@ -395,6 +398,15 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             mCallback = callback;
         }
 
+        private boolean isBBPluginInstalled(String url){
+            PluginsCheckerWPOrg pluginsCheckerWPOrg = new PluginsCheckerWPOrg(url);
+            List<PluginsCheckerWPOrg.Plugin> listOfBadBehaviourPlugins = pluginsCheckerWPOrg.checkForPlugins();
+            if (listOfBadBehaviourPlugins != null && listOfBadBehaviourPlugins.size() > 0) {
+                return true;
+            }
+            return false;
+        }
+
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
             String xmlrpcUrl = null;
@@ -403,8 +415,19 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             }
 
             if (xmlrpcUrl == null) {
-                if (!mHttpAuthRequired && mErrorMsgId == 0) {
-                    //TODO: test here for plugins!
+                if (mErroneousSslCertificate || mHttpAuthRequired ||
+                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error ||
+                        //TODO remove the check for invalid_site_url_message here and in getSelfHostedXmlrpcUrl
+                        mErrorMsgId == org.wordpress.android.R.string.invalid_site_url_message ) {
+                    return null;
+                }
+
+                if (isBBPluginInstalled(mSelfHostedUrl)) {
+                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
+                    return null;
+                }
+
+                if (mErrorMsgId == 0) {
                     mErrorMsgId = org.wordpress.android.R.string.no_site_error;
                 }
                 return null;
@@ -412,6 +435,12 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
             // Validate the URL found before calling the client. Prevent a crash that can occur
             // during the setup of self-hosted sites.
+            if (!URLUtil.isValidUrl(xmlrpcUrl)) {
+                mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+                // TODO: Bump analytics here?
+                return null;
+            }
+
             URI xmlrpcUri;
             xmlrpcUri = URI.create(xmlrpcUrl);
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
@@ -450,7 +479,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             } catch (IOException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-                //TODO: test here for plugins!
+                if (isBBPluginInstalled(xmlrpcUrl)) {
+                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
+                    return null;
+                }
                 // TODO : org.apache.http.conn.ConnectTimeoutException ?
             }
             mClientResponse = client.getResponse();

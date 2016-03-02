@@ -358,6 +358,8 @@
     <!-- new account view -->
     <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
+    <string name="site_plugins_error">Couldn\'t connect to the WordPress site. There are plugins on the site that block the XML-RPC protocol. Please
+    see https://ios.forums.wordpress.org/topic/app-blocking-plugin-list for a complete list of incompatible plugins.</string>
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
