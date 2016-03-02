@@ -36,7 +36,7 @@
             <enum name="light" value="1" />
         </attr>
         <attr name="fontFamily" format="enum">
-            <enum name="openSans" value="0" />
+            <enum name="useDefault" value="0" />
             <enum name="merriweather" value="1" />
         </attr>
         <attr name="fixWidowWords" format="boolean"/>
