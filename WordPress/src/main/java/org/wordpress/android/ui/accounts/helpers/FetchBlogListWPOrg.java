@@ -303,8 +303,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 // should stop immediately if SSL or Basic Auth Error
                 // of if any of the required XML-RPC methods are missing from the endpoint
                 if (mErroneousSslCertificate || mHttpAuthRequired ||
-                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error ||
-                        mErrorMsgId == org.wordpress.android.R.string.invalid_site_url_message ) {
+                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error) {
                     return null;
                 }
             } else {
@@ -396,23 +395,24 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
-            String xmlrpcUrl = null;
-            String baseURL = null;
-
-            if (mSelfHostedUrl != null && mSelfHostedUrl.length() != 0) {
-                // Convert IDN names to punycode if necessary
-                baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedUrl);
-                // Add http to the beginning of the URL if needed
-                baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
-
-                if (!URLUtil.isValidUrl(baseURL)) {
-                    mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                    // TODO: Bump analytics here?
-                    return null;
-                }
-                //Retrieve the XML-RPC Endpoint address
-                xmlrpcUrl = getSelfHostedXmlrpcUrl(baseURL);
+            if (TextUtils.isEmpty(mSelfHostedUrl)) {
+                mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+                // TODO: Bump analytics here?
+                return null;
             }
+
+            // Convert IDN names to punycode if necessary
+            String baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedUrl);
+            // Add http to the beginning of the URL if needed
+            baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
+            if (!URLUtil.isValidUrl(baseURL)) {
+                mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+                // TODO: Bump analytics here?
+                return null;
+            }
+
+            //Retrieve the XML-RPC Endpoint address
+            String xmlrpcUrl = getSelfHostedXmlrpcUrl(baseURL);
 
             if (xmlrpcUrl == null) {
                 if (mErroneousSslCertificate || mHttpAuthRequired ||
@@ -428,6 +428,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     return null;
                 }
 
+                // CAn't find the XML-RPC endpoint return a generic message
                 if (mErrorMsgId == 0) {
                     mErrorMsgId = org.wordpress.android.R.string.no_site_error;
                 }
