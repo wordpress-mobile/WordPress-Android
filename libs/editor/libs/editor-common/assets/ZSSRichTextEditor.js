@@ -949,7 +949,7 @@ ZSSEditor.reloadImage = function(node, nCall) {
         return;
     }
     console.log("Reloading image:", node, nCall);
-    node.onerror = tryToReload(node, nCall + 1);
+    node.onerror = ZSSEditor.tryToReload(node, nCall + 1);
     // Force reloading by updating image src
     node.src = node.src;
 }
@@ -961,7 +961,7 @@ ZSSEditor.tryToReload = function (node, nCall) {
     console.log("Image not loaded:", node, "- image reloading will happen soon.");
     node.onerror = null;
     // reload the image with a variable delay: 500ms, 1000ms, 1500ms, 2000ms, etc.
-    setTimeout(reloadImage, nCall * 500, node, nCall);
+    setTimeout(ZSSEditor.reloadImage, nCall * 500, node, nCall);
 }
 
 /**
