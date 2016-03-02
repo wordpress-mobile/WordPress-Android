@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -118,9 +118,7 @@ public class DetailListPreference extends ListPreference
         ListView listView = mDialog.getListView();
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_DEFAULT_LIGHT,
-                Typeface.BOLD);
+        Typeface typeface = WPPrefUtils.getSemiboldTypeface(getContext());
 
         if (listView != null) {
             listView.setDividerHeight(0);
