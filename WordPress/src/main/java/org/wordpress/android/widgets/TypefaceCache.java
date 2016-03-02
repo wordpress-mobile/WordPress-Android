@@ -15,7 +15,7 @@ public class TypefaceCache {
 
     /**
      * Cache used for all views that support custom fonts - defaults to the system font, but
-     * Merriweather is also available via the "app:fontFamily" attribute
+     * Merriweather is also available via the "wpFontFamily" attribute
      */
     public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_DEFAULT_LIGHT = 1;
