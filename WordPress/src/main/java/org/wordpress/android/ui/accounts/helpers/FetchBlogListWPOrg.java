@@ -250,11 +250,11 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             AppLog.i(T.NUX, "Validating the XML-RPC response...");
             if (validateListMethodsResponse(methods)) {
                 // Endpoint address found and works fine.
-                AppLog.i(T.NUX, "Validating ends with success!!! Endpoint found!!!");
+                AppLog.i(T.NUX, "Validation ended with success!!! Endpoint found!!!");
                 return true;
             } else {
                 // Endpoint found, but it has problem.
-                AppLog.w(T.NUX, "Validating ends with error!!! Endpoint found but doesn't contain all the required methods.");
+                AppLog.w(T.NUX, "Validation ended with errors!!! Endpoint found but doesn't contain all the required methods.");
                 mErrorMsgId = org.wordpress.android.R.string.xmlrpc_missing_method_error;
                 return false;
             }
@@ -293,19 +293,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
     // Attempts to retrieve the xmlrpc url for a self-hosted site.
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the whole process.
     private String getSelfHostedXmlrpcUrl(String url) {
-
-        // Convert IDN names to punycode if necessary
-        url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
-
-        // Add http to the beginning of the URL if needed
-        url = UrlUtils.addUrlSchemeIfNeeded(url, false);
-
-        if (!URLUtil.isValidUrl(url)) {
-            mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-            // TODO: Bump analytics here?
-            return null;
-        }
-
         // Start cleaning the url: Array of Strings that contains the URLs we want to try in the first step. No discovery ;)
         ArrayList<String> urlsToTry = smartURLCleanerForXMLRPCCalls(url);
         AppLog.i(T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
@@ -410,19 +397,33 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
             String xmlrpcUrl = null;
+            String baseURL = null;
+
             if (mSelfHostedUrl != null && mSelfHostedUrl.length() != 0) {
-                xmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedUrl);
+                // Convert IDN names to punycode if necessary
+                baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedUrl);
+                // Add http to the beginning of the URL if needed
+                baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
+
+                if (!URLUtil.isValidUrl(baseURL)) {
+                    mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+                    // TODO: Bump analytics here?
+                    return null;
+                }
+                //Retrieve the XML-RPC Endpoint address
+                xmlrpcUrl = getSelfHostedXmlrpcUrl(baseURL);
             }
 
             if (xmlrpcUrl == null) {
                 if (mErroneousSslCertificate || mHttpAuthRequired ||
-                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error ||
-                        //TODO remove the check for invalid_site_url_message here and in getSelfHostedXmlrpcUrl
-                        mErrorMsgId == org.wordpress.android.R.string.invalid_site_url_message ) {
+                        mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error) {
                     return null;
                 }
 
-                if (isBBPluginInstalled(mSelfHostedUrl)) {
+                // Check if some Bad Behavior plugins in installed on the server
+                if (isBBPluginInstalled(baseURL)) {
+                    //TODO: Instead of returning a silly error message. Better to provide the list of plugins
+                    // that could give error
                     mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
                     return null;
                 }
@@ -433,14 +434,15 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 return null;
             }
 
-            // Validate the URL found before calling the client. Prevent a crash that can occur
-            // during the setup of self-hosted sites.
+            // Validate the XML-RPC URL we've found before. This check prevents a crash that can occur
+            // during the setup of self-hosted sites that have malformed xmlrpc URLs in their declaration.
             if (!URLUtil.isValidUrl(xmlrpcUrl)) {
                 mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
                 // TODO: Bump analytics here?
                 return null;
             }
 
+            // The XML-RPC address is now available. Call wp.getUsersBlogs and load the sites.
             URI xmlrpcUri;
             xmlrpcUri = URI.create(xmlrpcUrl);
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, mHttpUsername, mHttpPassword);
@@ -449,6 +451,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 Object[] userBlogs = (Object[]) client.call(Method.GET_BLOGS, params);
                 if (userBlogs == null) {
                     // Could happen if the returned server response is truncated
+                    //TODO: please return a different error message here
                     mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
                     mClientResponse = client.getResponse();
                     return null;
@@ -483,7 +486,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
                     return null;
                 }
-                // TODO : org.apache.http.conn.ConnectTimeoutException ?
+                // TODO : Catch org.apache.http.conn.ConnectTimeoutException and rturn a different message
             }
             mClientResponse = client.getResponse();
             return null;
