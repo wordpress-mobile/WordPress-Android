@@ -91,7 +91,7 @@ public class TypefaceCache {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
             if (a != null) {
                 try {
-                    family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
+                    family = a.getInteger(R.styleable.WPTextView_wpFontFamily, FAMILY_DEFAULT);
                 } finally {
                     a.recycle();
                 }
