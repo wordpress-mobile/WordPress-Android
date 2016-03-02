@@ -24,10 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.ui.plans.util.IabHelper;
+import org.wordpress.android.ui.plans.util.IabResult;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -56,6 +60,8 @@ public class PlansActivity extends AppCompatActivity {
     private WPViewPager mViewPager;
     private PlansPageAdapter mPageAdapter;
     private TabLayout mTabLayout;
+
+    private IabHelper mIabHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,11 +113,16 @@ public class PlansActivity extends AppCompatActivity {
                 updatePurchaseUI(position);
             }
         });
+
+        if (AppPrefs.isInAppBillingAvailable()) {
+            startInAppBillingHelper();
+        }
     }
 
     @Override
     protected void onDestroy() {
         PlanUpdateService.stopService(this);
+        stopInAppBillingHelper();
         super.onDestroy();
     }
 
@@ -377,4 +388,47 @@ public class PlansActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    /*
+     * initialize the Google Play in-app billing helper - note that IAB requires a real device,
+     * so this will always fail on an emulator
+     * TODO: for now this is just skeleton code showing how it's done
+     */
+    private void startInAppBillingHelper() {
+        mIabHelper = new IabHelper(this, BuildConfig.APP_LICENSE_KEY);
+        if (BuildConfig.DEBUG) {
+            String tag = AppLog.TAG + "-" + AppLog.T.PLANS.toString();
+            mIabHelper.enableDebugLogging(true, tag);
+        }
+        try {
+            mIabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                @Override
+                public void onIabSetupFinished(IabResult result) {
+                    if (result.isSuccess()) {
+                        AppLog.d(AppLog.T.PLANS, "IAB started successfully");
+                    } else {
+                        AppLog.w(AppLog.T.PLANS, "IAB failed with " + result);
+                    }
+                }
+            });
+        } catch (NullPointerException e) {
+            // will happen when play store isn't available on device
+            AppLog.e(AppLog.T.PLANS, e);
+            AppLog.w(AppLog.T.PLANS, "Unable to start IAB helper");
+        }
+    }
+
+    private void stopInAppBillingHelper() {
+        if (mIabHelper != null) {
+            try {
+                mIabHelper.dispose();
+            } catch (IllegalArgumentException e) {
+                // this can happen if the IAB helper was created but failed to bind to its service
+                // when started, which will occur on emulators
+                AppLog.e(AppLog.T.PLANS, e);
+            }
+            mIabHelper = null;
+        }
+    }
+
 }
