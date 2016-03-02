@@ -41,7 +41,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
+                    TypefaceCache.FAMILY_DEFAULT,
                     Typeface.NORMAL,
                     TypefaceCache.VARIATION_NORMAL);
 

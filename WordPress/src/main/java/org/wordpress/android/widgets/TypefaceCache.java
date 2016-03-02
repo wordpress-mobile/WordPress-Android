@@ -3,6 +3,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -12,34 +13,32 @@ import java.util.Hashtable;
 
 public class TypefaceCache {
     /**
-     * Cache used for all views that support custom fonts. The default is Open Sans, but
+     * Cache used for all views that support custom fonts - defaults to the system font, but
      * Merriweather is also available via the "fontFamily" attribute
      */
 
     public static final int VARIATION_NORMAL = 0;
     public static final int VARIATION_LIGHT = 1;
-    public static final int VARIATION_DEFAULT = VARIATION_NORMAL;
 
-    public static final int FAMILY_OPEN_SANS = 0;
+    public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_MERRIWEATHER = 1;
-    public static final int FAMILY_DEFAULT = FAMILY_OPEN_SANS;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
-        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_DEFAULT);
+        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_NORMAL);
     }
     public static Typeface getTypeface(Context context,
-                                        int family,
-                                        int fontStyle,
-                                        int variation) {
+                                       int family,
+                                       int fontStyle,
+                                       int variation) {
         if (context == null) {
             return null;
         }
 
-        final String typefaceName;
         if (family == FAMILY_MERRIWEATHER) {
             // note that merriweather doesn't have a light variation
+            final String typefaceName;
             switch (fontStyle) {
                 case Typeface.BOLD:
                     typefaceName = "Merriweather-Bold.ttf";
@@ -54,44 +53,22 @@ public class TypefaceCache {
                     typefaceName = "Merriweather-Regular.ttf";
                     break;
             }
-        } else {
-            // Open Sans
-            if (variation == VARIATION_LIGHT) {
-                switch (fontStyle) {
-                    case Typeface.BOLD:
-                        typefaceName = "OpenSans-LightBold.ttf";
-                        break;
-                    case Typeface.ITALIC:
-                        typefaceName = "OpenSans-LightItalic.ttf";
-                        break;
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "OpenSans-LightBoldItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "OpenSans-Light.ttf";
-                        break;
-                }
-            } else {
-                switch (fontStyle) {
-                    case Typeface.BOLD:
-                        typefaceName = "OpenSans-Bold.ttf";
-                        break;
-                    case Typeface.ITALIC:
-                        typefaceName = "OpenSans-Italic.ttf";
-                        break;
-                    case Typeface.BOLD_ITALIC:
-                        typefaceName = "OpenSans-BoldItalic.ttf";
-                        break;
-                    default:
-                        typefaceName = "OpenSans-Regular.ttf";
-                        break;
-                }
-            }
+            return getTypefaceForTypefaceName(context, typefaceName);
         }
 
-        return getTypefaceForTypefaceName(context, typefaceName);
+        // default system font - note that "sans-serif-light" was added in SDK 4.1
+        // http://developer.android.com/about/versions/android-4.1.html#Fonts
+        if (variation == VARIATION_LIGHT
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            return Typeface.create("sans-serif-light", fontStyle);
+        } else {
+            return Typeface.defaultFromStyle(fontStyle);
+        }
     }
 
+    /*
+     * returns the desired typeface from the cache, loading it from app's assets if necessary
+     */
     protected static Typeface getTypefaceForTypefaceName(Context context, String typefaceName) {
         if (!mTypefaceCache.containsKey(typefaceName)) {
             Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
@@ -106,7 +83,7 @@ public class TypefaceCache {
 
     /*
      * sets the typeface for a TextView (or TextView descendant such as EditText or Button) based on
-     * the passed attributes, defaults to normal Open Sans
+     * the passed attributes, defaults to normal
      */
     protected static void setCustomTypeface(Context context, TextView view, AttributeSet attrs) {
         if (context == null || view == null) return;
@@ -116,18 +93,24 @@ public class TypefaceCache {
 
         // defaults if not set in attributes
         int family = FAMILY_DEFAULT;
-        int variation = VARIATION_DEFAULT;
+        int variation = VARIATION_NORMAL;
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
             if (a != null) {
                 try {
                     family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
-                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_DEFAULT);
+                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_NORMAL);
                 } finally {
                     a.recycle();
                 }
             }
+        }
+
+        // nothing more to do if this is the default system font
+        if (family == FAMILY_DEFAULT
+                && variation == VARIATION_NORMAL) {
+            return;
         }
 
         // determine the font style from the existing typeface
