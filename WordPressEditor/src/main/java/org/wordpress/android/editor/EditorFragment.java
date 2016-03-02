@@ -32,6 +32,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -91,6 +92,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
+    private boolean mIsFormatBarDisabled = false;
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
     private Set<MediaGallery> mWaitingGalleries;
@@ -163,7 +165,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebView.execJavaScriptFromString("ZSSEditor.refreshVisibleViewportSize();");
+                        mWebView.execJavaScriptFromString("try {ZSSEditor.refreshVisibleViewportSize();} catch (e) " +
+                                "{console.log(e)}");
                     }
                 });
             }
@@ -292,6 +295,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 parent.addView(formatBar);
 
                 setupFormatBarButtonMap(formatBar);
+
+                if (mIsFormatBarDisabled) {
+                    updateFormatBarEnabledState(false);
+                }
 
                 // Restore the active format bar buttons
                 for (String tag : activeTags) {
@@ -703,7 +710,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             Thread.currentThread().interrupt();
         }
 
-        return StringUtils.notNullStr(mTitle);
+        return StringUtils.notNullStr(mTitle.replaceAll("&nbsp;$", ""));
     }
 
     /**
@@ -825,6 +832,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public boolean isUploadingMedia() {
+        return (mUploadingMedia.size() > 0);
+    }
+
+    @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
     }
@@ -863,7 +875,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
                                 ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
                     }
-                    mUploadingMedia.remove(localMediaId);
                 }
             });
         }
@@ -895,17 +906,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             @Override
             public void run() {
                 MediaType mediaType = mUploadingMedia.get(mediaId);
-                switch (mediaType) {
-                    case IMAGE:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
-                                + Utils.escapeQuotes(errorMessage) + "');");
-                        break;
-                    case VIDEO:
-                        mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
-                                + Utils.escapeQuotes(errorMessage) + "');");
+                if (mediaType != null) {
+                    switch (mediaType) {
+                        case IMAGE:
+                            mWebView.execJavaScriptFromString("ZSSEditor.markImageUploadFailed(" + mediaId + ", '"
+                                    + Utils.escapeQuotes(errorMessage) + "');");
+                            break;
+                        case VIDEO:
+                            mWebView.execJavaScriptFromString("ZSSEditor.markVideoUploadFailed(" + mediaId + ", '"
+                                    + Utils.escapeQuotes(errorMessage) + "');");
+                    }
+                    mFailedMediaIds.add(mediaId);
+                    mUploadingMedia.remove(mediaId);
                 }
-                mFailedMediaIds.add(mediaId);
-                mUploadingMedia.remove(mediaId);
             }
         });
     }
@@ -1169,6 +1182,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onMediaReplaced(String mediaId) {
+        mUploadingMedia.remove(mediaId);
+    }
+
+    @Override
     public void onVideoPressInfoRequested(final String videoId) {
         mEditorFragmentListener.onVideoPressInfoRequested(videoId);
     }
@@ -1209,6 +1227,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
         }
+    }
+
+    public void setWebViewErrorListener(ErrorListener errorListener) {
+        mWebView.setErrorListener(errorListener);
     }
 
     private void updateVisualEditorFields() {
@@ -1262,6 +1284,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             button.setEnabled(enabled);
             button.setAlpha(alpha);
         }
+
+        mIsFormatBarDisabled = !enabled;
     }
 
     private void clearFormatBarButtons() {
