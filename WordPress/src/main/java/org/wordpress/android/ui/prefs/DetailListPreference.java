@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -197,8 +197,7 @@ public class DetailListPreference extends ListPreference
             Resources res = getContext().getResources();
             Typeface typeface = TypefaceCache.getTypeface(getContext(),
                     TypefaceCache.FAMILY_DEFAULT,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
+                    Typeface.NORMAL);
 
             view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
@@ -228,8 +227,7 @@ public class DetailListPreference extends ListPreference
                 mainText.setText(getEntries()[position]);
                 mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
                         TypefaceCache.FAMILY_DEFAULT,
-                        Typeface.NORMAL,
-                        TypefaceCache.VARIATION_NORMAL));
+                        Typeface.NORMAL));
             }
 
             if (detailText != null) {
@@ -238,8 +236,7 @@ public class DetailListPreference extends ListPreference
                     detailText.setText(mDetails[position]);
                     detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
                             TypefaceCache.FAMILY_DEFAULT,
-                            Typeface.NORMAL,
-                            TypefaceCache.VARIATION_NORMAL));
+                            Typeface.NORMAL));
                 } else {
                     detailText.setVisibility(View.GONE);
                 }

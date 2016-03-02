@@ -17,7 +17,7 @@ public class TypefaceCache {
      * Merriweather is also available via the "fontFamily" attribute
      */
 
-    public static final int VARIATION_NORMAL = 0;
+    private static final int VARIATION_NORMAL = 0;
     public static final int VARIATION_LIGHT = 1;
 
     public static final int FAMILY_DEFAULT = 0;
@@ -27,6 +27,9 @@ public class TypefaceCache {
 
     public static Typeface getTypeface(Context context) {
         return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_NORMAL);
+    }
+    public static Typeface getTypeface(Context context, int family, int fontStyle) {
+        return getTypeface(context, family, fontStyle, VARIATION_NORMAL);
     }
     public static Typeface getTypeface(Context context,
                                        int family,

@@ -42,8 +42,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             Resources res = getContext().getResources();
             Typeface typeface = TypefaceCache.getTypeface(getContext(),
                     TypefaceCache.FAMILY_DEFAULT,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
+                    Typeface.NORMAL);
 
             titleView.setTypeface(typeface);
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
