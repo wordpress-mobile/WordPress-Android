@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -990,26 +989,6 @@ public class ApiHelper {
     }
 
     /**
-     * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
-     *
-     * @param urlString URL of the blog to get the XML-RPC endpoint for.
-     * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
-     */
-    public static String getXMLRPCUrl(String urlString) throws SSLHandshakeException {
-        Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
-                Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-        String html = getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = xmlrpcLink.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
-        }
-        return null; // never found the rsd tag
-    }
-
-    /**
      * Synchronous method to fetch the String content at the specified HTTP URL.
      *
      * @param stringUrl URL to fetch contents for.
@@ -1077,93 +1056,6 @@ public class ApiHelper {
             AppLog.e(T.API, e);
         }
         return null;
-    }
-
-    /**
-     * Regex pattern for matching the RSD link found in most WordPress sites.
-     */
-    private static final Pattern rsdLink = Pattern.compile(
-            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
-            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-    /**
-     * Returns RSD URL based on regex match
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHrefRegEx(String urlString)
-            throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = rsdLink.matcher(html);
-            if (matcher.find()) {
-                String href = matcher.group(1);
-                return href;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns RSD URL based on html tag search
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHref(String urlString)
-            throws SSLHandshakeException {
-        // get the html code
-        String data = ApiHelper.getResponse(urlString);
-        // parse the html and get the attribute for xmlrpc endpoint
-        if (data != null) {
-            // Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
-            int indexOfFirstXML = data.indexOf("<?xml");
-            if (indexOfFirstXML > 0) {
-                data = data.substring(indexOfFirstXML);
-            }
-            StringReader stringReader = new StringReader(data);
-            XmlPullParser parser = Xml.newPullParser();
-            try {
-                // auto-detect the encoding from the stream
-                parser.setInput(stringReader);
-                int eventType = parser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String name = null;
-                    String rel = "";
-                    String type = "";
-                    String href = "";
-                    switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("type"))
-                                    type = attrValue;
-                                else if (attrName.equals("href"))
-                                    href = attrValue;
-                            }
-
-                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                return href;
-                            }
-                            // currentMessage.setLink(parser.nextText());
-                        }
-                        break;
-                    }
-                    eventType = parser.next();
-                }
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
-                return null;
-            } catch (IOException e) {
-                AppLog.e(T.API, e);
-                return null;
-            }
-        }
-        return null; // never found the rsd tag
     }
 
     /*
