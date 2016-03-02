@@ -119,9 +119,8 @@ public class DetailListPreference extends ListPreference
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_DEFAULT,
-                Typeface.BOLD,
-                TypefaceCache.VARIATION_LIGHT);
+                TypefaceCache.FAMILY_DEFAULT_LIGHT,
+                Typeface.BOLD);
 
         if (listView != null) {
             listView.setDividerHeight(0);

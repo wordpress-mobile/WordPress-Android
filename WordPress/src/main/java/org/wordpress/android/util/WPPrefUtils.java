@@ -98,7 +98,7 @@ public class WPPrefUtils {
      */
     public static Typeface getSemiboldTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_DEFAULT, Typeface.BOLD, TypefaceCache.VARIATION_LIGHT);
+                TypefaceCache.FAMILY_DEFAULT_LIGHT, Typeface.BOLD);
     }
 
     /**

@@ -17,24 +17,18 @@ public class TypefaceCache {
      * Merriweather is also available via the "fontFamily" attribute
      */
 
-    private static final int VARIATION_NORMAL = 0;
-    public static final int VARIATION_LIGHT = 1;
-
     public static final int FAMILY_DEFAULT = 0;
-    public static final int FAMILY_MERRIWEATHER = 1;
+    public static final int FAMILY_DEFAULT_LIGHT = 1;
+    public static final int FAMILY_MERRIWEATHER = 2;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
-        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_NORMAL);
-    }
-    public static Typeface getTypeface(Context context, int family, int fontStyle) {
-        return getTypeface(context, family, fontStyle, VARIATION_NORMAL);
+        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL);
     }
     public static Typeface getTypeface(Context context,
                                        int family,
-                                       int fontStyle,
-                                       int variation) {
+                                       int fontStyle) {
         if (context == null) {
             return null;
         }
@@ -60,7 +54,7 @@ public class TypefaceCache {
 
         // default system font - note that "sans-serif-light" was added in SDK 4.1
         // http://developer.android.com/about/versions/android-4.1.html#Fonts
-        if (variation == VARIATION_LIGHT
+        if (family == FAMILY_DEFAULT_LIGHT
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return Typeface.create("sans-serif-light", fontStyle);
         } else {
@@ -129,7 +123,7 @@ public class TypefaceCache {
             fontStyle = Typeface.NORMAL;
         }
 
-        Typeface typeface = getTypeface(context, family, fontStyle, VARIATION_NORMAL);
+        Typeface typeface = getTypeface(context, family, fontStyle);
         if (typeface != null) {
             view.setTypeface(typeface);
         }
