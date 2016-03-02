@@ -926,9 +926,13 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
         ZSSEditor.callback("callback-input", joinedArguments);
         image.onerror = null;
         image.classList.add("image-loaded");
+        console.log("Image Loaded!");
     }
 
     image.onerror = function () {
+        // Even on an error, we swap the image for the time being - so if the user publishes the post,
+        // it won't reference a local image.
+        imageNode.attr('src', image.src);
         imageNode.addClass("wp-image-" + remoteImageId);
         ZSSEditor.markImageUploadDone(imageNodeIdentifier);
         var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
