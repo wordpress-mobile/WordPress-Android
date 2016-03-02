@@ -37,7 +37,6 @@ public class TypefaceCache {
         }
 
         if (family == FAMILY_MERRIWEATHER) {
-            // note that merriweather doesn't have a light variation
             final String typefaceName;
             switch (fontStyle) {
                 case Typeface.BOLD:
@@ -91,16 +90,13 @@ public class TypefaceCache {
         // skip at design-time
         if (view.isInEditMode()) return;
 
-        // defaults if not set in attributes
+        // default if not set in attributes
         int family = FAMILY_DEFAULT;
-        int variation = VARIATION_NORMAL;
-
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
             if (a != null) {
                 try {
                     family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
-                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_NORMAL);
                 } finally {
                     a.recycle();
                 }
@@ -108,8 +104,7 @@ public class TypefaceCache {
         }
 
         // nothing more to do if this is the default system font
-        if (family == FAMILY_DEFAULT
-                && variation == VARIATION_NORMAL) {
+        if (family == FAMILY_DEFAULT) {
             return;
         }
 
@@ -131,7 +126,7 @@ public class TypefaceCache {
             fontStyle = Typeface.NORMAL;
         }
 
-        Typeface typeface = getTypeface(context, family, fontStyle, variation);
+        Typeface typeface = getTypeface(context, family, fontStyle, VARIATION_NORMAL);
         if (typeface != null) {
             view.setTypeface(typeface);
         }
