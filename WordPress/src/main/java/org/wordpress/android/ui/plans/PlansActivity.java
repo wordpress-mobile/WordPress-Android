@@ -31,6 +31,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -113,7 +114,9 @@ public class PlansActivity extends AppCompatActivity {
             }
         });
 
-        startInAppBillingHelper();
+        if (AppPrefs.isInAppBillingAvailable()) {
+            startInAppBillingHelper();
+        }
     }
 
     @Override
