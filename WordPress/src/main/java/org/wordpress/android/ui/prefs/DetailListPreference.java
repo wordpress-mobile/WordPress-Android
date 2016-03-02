@@ -194,11 +194,6 @@ public class DetailListPreference extends ListPreference
     private void setupView(TextView view, int sizeRes, int enabledColorRes, int disabledColorRes) {
         if (view != null) {
             Resources res = getContext().getResources();
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_DEFAULT,
-                    Typeface.NORMAL);
-
-            view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
             //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
@@ -224,18 +219,12 @@ public class DetailListPreference extends ListPreference
 
             if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
-                mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                        TypefaceCache.FAMILY_DEFAULT,
-                        Typeface.NORMAL));
             }
 
             if (detailText != null) {
                 if (mDetails != null && position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
                     detailText.setVisibility(View.VISIBLE);
                     detailText.setText(mDetails[position]);
-                    detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                            TypefaceCache.FAMILY_DEFAULT,
-                            Typeface.NORMAL));
                 } else {
                     detailText.setVisibility(View.GONE);
                 }

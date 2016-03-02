@@ -12,11 +12,11 @@ import org.wordpress.android.R;
 import java.util.Hashtable;
 
 public class TypefaceCache {
+
     /**
      * Cache used for all views that support custom fonts - defaults to the system font, but
-     * Merriweather is also available via the "fontFamily" attribute
+     * Merriweather is also available via the "app:fontFamily" attribute
      */
-
     public static final int FAMILY_DEFAULT = 0;
     public static final int FAMILY_DEFAULT_LIGHT = 1;
     public static final int FAMILY_MERRIWEATHER = 2;
@@ -26,9 +26,7 @@ public class TypefaceCache {
     public static Typeface getTypeface(Context context) {
         return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL);
     }
-    public static Typeface getTypeface(Context context,
-                                       int family,
-                                       int fontStyle) {
+    public static Typeface getTypeface(Context context, int family, int fontStyle) {
         if (context == null) {
             return null;
         }
