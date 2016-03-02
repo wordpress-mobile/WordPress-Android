@@ -43,9 +43,7 @@
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/create_account_label"
                 android:text="@string/create_account_wpcom"
-                style="@style/WordPress.NUXTitle"
-                android:fontFamily="sans-serif-light"
-                android:breakStrategy="balanced"/>
+                style="@style/WordPress.NUXTitle"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"

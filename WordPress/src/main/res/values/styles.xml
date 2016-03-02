@@ -201,6 +201,8 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/nux_title_font_size</item>
         <item name="android:lineSpacingExtra">-4sp</item>
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+        <item name="android:breakStrategy" tools:ignore="NewApi">balanced</item>
     </style>
 
     <style name="WordPress.EmptyList">

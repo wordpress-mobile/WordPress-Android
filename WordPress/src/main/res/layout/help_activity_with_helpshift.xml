@@ -30,8 +30,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
                     android:text="@string/help"
-                    android:id="@+id/create_account_label"
-                    android:fontFamily="sans-serif-light" />
+                    android:id="@+id/create_account_label" />
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXGreyButtonNoBg"
