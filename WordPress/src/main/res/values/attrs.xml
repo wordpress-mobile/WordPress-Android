@@ -39,7 +39,6 @@
             <enum name="openSans" value="0" />
             <enum name="merriweather" value="1" />
         </attr>
-        <attr name="fixWidowWords" format="boolean"/>
     </declare-styleable>
 
     <!--

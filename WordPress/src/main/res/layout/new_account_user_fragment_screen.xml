@@ -45,7 +45,7 @@
                 android:text="@string/create_account_wpcom"
                 style="@style/WordPress.NUXTitle"
                 android:fontFamily="sans-serif-light"
-                app:fixWidowWords="true"/>
+                android:breakStrategy="balanced"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -246,7 +246,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 style="@style/WordPress.NUXGreyButtonNoBg"
-                app:fixWidowWords="true"/>
+                android:breakStrategy="balanced"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
