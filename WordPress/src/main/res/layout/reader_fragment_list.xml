@@ -22,7 +22,6 @@
         android:text="@string/reader_empty_recommended_blogs"
         android:textColor="@color/grey_darken_10"
         android:visibility="gone"
-        android:breakStrategy="balanced"
         tools:visibility="visible" />
 
 </RelativeLayout>

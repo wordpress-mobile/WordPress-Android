@@ -16,7 +16,6 @@
         android:text="@string/reader_empty_comments"
         android:textColor="@color/grey_darken_10"
         android:visibility="gone"
-        android:breakStrategy="balanced"
         tools:visibility="visible" />
 
     <org.wordpress.android.ui.reader.views.ReaderRecyclerView

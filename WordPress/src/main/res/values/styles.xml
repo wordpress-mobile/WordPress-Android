@@ -213,10 +213,12 @@
     <style name="WordPress.EmptyList.Title" parent="WordPress.EmptyList">
         <item name="android:textSize">@dimen/empty_list_title_text_size</item>
         <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+        <item name="android:breakStrategy" tools:ignore="NewApi">balanced</item>
     </style>
 
     <style name="WordPress.EmptyList.Description" parent="WordPress.EmptyList">
         <item name="android:textSize">@dimen/empty_list_description_text_size</item>
+        <item name="android:breakStrategy" tools:ignore="NewApi">balanced</item>
     </style>
 
     <!--
