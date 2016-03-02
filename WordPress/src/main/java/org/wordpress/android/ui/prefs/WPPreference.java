@@ -39,7 +39,7 @@ public class WPPreference extends Preference implements PreferenceHint {
 
         Resources res = getContext().getResources();
         Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
+                TypefaceCache.FAMILY_DEFAULT,
                 Typeface.NORMAL,
                 TypefaceCache.VARIATION_NORMAL);
         TextView titleView = (TextView) view.findViewById(android.R.id.title);

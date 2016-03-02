@@ -48,7 +48,6 @@ class StatsBarGraph extends GraphView {
 
         setProperties();
 
-        // Use Open Sans
         paint.setTypeface(TypefaceCache.getTypeface(getContext()));
 
         mDetector = new GestureDetectorCompat(getContext(), new MyGestureListener());
