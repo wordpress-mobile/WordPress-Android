@@ -11,6 +11,7 @@ import android.webkit.URLUtil;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
+import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
@@ -989,7 +990,7 @@ public class ApiHelper {
      * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError {
         return getResponse(stringUrl, 0);
     }
 
@@ -1010,14 +1011,15 @@ public class ApiHelper {
         return null;
     }
 
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
         request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
         WordPress.requestQueue.add(request);
         try {
             return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
             if (e.getCause() != null && e.getCause() instanceof RedirectError) {
@@ -1043,10 +1045,12 @@ public class ApiHelper {
                     AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
                     return getResponse(newURL, numberOfRedirects + 1);
                 }
+            } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
+                AppLog.e(T.API, e);
+                throw (com.android.volley.TimeoutError)e.getCause();
             } else {
                 AppLog.e(T.API, e);
             }
-
         } catch (TimeoutException e) {
             AppLog.e(T.API, e);
         }

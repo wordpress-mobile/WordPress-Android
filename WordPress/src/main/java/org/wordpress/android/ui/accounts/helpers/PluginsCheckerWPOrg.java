@@ -3,6 +3,8 @@ package org.wordpress.android.ui.accounts.helpers;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
+import com.android.volley.TimeoutError;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +33,7 @@ public class PluginsCheckerWPOrg {
         String responseHTML = null;
         try {
             responseHTML = ApiHelper.getResponse(BB_PLUGINS_LIST_URL);
-        } catch (IOException e) {
+        } catch (IOException | TimeoutError e) {
             AppLog.e(AppLog.T.NUX, "Can't download the plugins list from the server!", e);
         }
         if (TextUtils.isEmpty(responseHTML)) {

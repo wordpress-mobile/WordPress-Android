@@ -5,6 +5,9 @@ import android.text.TextUtils;
 import android.util.Xml;
 import android.webkit.URLUtil;
 
+import com.android.volley.TimeoutError;
+
+import org.apache.http.conn.ConnectTimeoutException;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
@@ -361,6 +364,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 return null;
+            } catch (TimeoutError e) {
+                AppLog.w(T.NUX, "Timeout error while connecting to the site: " + currentURL);
+                mErrorMsgId = org.wordpress.android.R.string.site_timeout_error;
+                return null;
             }
         }
 
@@ -454,8 +461,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 Object[] userBlogs = (Object[]) client.call(Method.GET_BLOGS, params);
                 if (userBlogs == null) {
                     // Could happen if the returned server response is truncated
-                    //TODO: please return a different error message here
-                    mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
+                    mErrorMsgId = org.wordpress.android.R.string.xmlrpc_malformed_response_error;
                     mClientResponse = client.getResponse();
                     return null;
                 }
@@ -482,6 +488,13 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     mErroneousSslCertificate = true;
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            } catch (ConnectTimeoutException e) {
+                AppLog.e(T.NUX, "Timeout exception when calling wp.getUsersBlogs", e);
+                mErrorMsgId = org.wordpress.android.R.string.site_timeout_error;
+                if (isBBPluginInstalled(xmlrpcUrl)) {
+                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
+                    return null;
+                }
             } catch (IOException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
@@ -489,7 +502,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
                     return null;
                 }
-                // TODO : Catch org.apache.http.conn.ConnectTimeoutException and rturn a different message
             }
             mClientResponse = client.getResponse();
             return null;

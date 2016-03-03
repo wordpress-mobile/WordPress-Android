@@ -6,6 +6,10 @@
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
+    <string name="site_plugins_error">Couldn\'t connect to the WordPress site. There are plugins on the site that block the XML-RPC protocol. Please
+    see https://ios.forums.wordpress.org/topic/app-blocking-plugin-list for a complete list of incompatible plugins.</string>
+    <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error. Make sure your server is up, and not running incompatible plugins.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
@@ -358,8 +362,6 @@
     <!-- new account view -->
     <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
-    <string name="site_plugins_error">Couldn\'t connect to the WordPress site. There are plugins on the site that block the XML-RPC protocol. Please
-    see https://ios.forums.wordpress.org/topic/app-blocking-plugin-list for a complete list of incompatible plugins.</string>
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
