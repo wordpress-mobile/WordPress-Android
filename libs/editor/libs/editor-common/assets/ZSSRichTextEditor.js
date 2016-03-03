@@ -937,10 +937,10 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
 ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier, remoteImageId) {
     imageNode.addClass("wp-image-" + remoteImageId);
     if (image.getAttribute("remoteurl")) {
-        imageNode.attr('src', image.getAttribute("remoteurl"));
-    } else {
-        imageNode.attr('src', image.src);
+        imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
+        console.log("FIXME: " + imageNode.attr('remoteurl'));
     }
+    imageNode.attr('src', image.src);
     ZSSEditor.markImageUploadDone(imageNodeIdentifier);
     var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
     ZSSEditor.callback("callback-input", joinedArguments);
@@ -951,10 +951,10 @@ ZSSEditor.reloadImage = function(image, imageNode, imageNodeIdentifier, remoteIm
     if (image.classList.contains("image-loaded")) {
         return;
     }
-    console.log("Reloading image:" + nCall + " - " + image.src);
     image.onerror = ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, nCall + 1);
     // Force reloading by updating image src
-    image.src = image.getAttribute("remoteurl");
+    image.src = image.getAttribute("remoteurl") + "?retry=" + nCall;
+    console.log("Reloading image:" + nCall + " - " + image.src);
 }
 
 ZSSEditor.tryToReload = function (image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
@@ -1018,8 +1018,9 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
-    var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
-    imageNode.wrap(linkTag);
+    console.log("FIXME: " + imageNode.attr("src"));
+    var link = $('<a>', { href: imageNode.attr("src") } );
+    imageNode.wrap(link);
     // We invoke the sendImageReplacedCallback with a delay to avoid for
     // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
@@ -1657,6 +1658,25 @@ ZSSEditor.removeImageSelectionFormattingFromHTML = function( html ) {
     return tmpDom.html();
 }
 
+ZSSEditor.removeImageRemoteUrl = function( html ) {
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+
+    var matches = tmpDom.find( "img" );
+    if ( matches.length == 0 ) {
+        return html;
+    }
+
+    for ( var i = 0; i < matches.length; i++ ) {
+        if (matches[i].getAttribute('remoteurl')) {
+            matches[i].src = matches[i].getAttribute('remoteurl');
+            matches[i].removeAttribute('remoteurl');
+        }
+    }
+
+    return tmpDom.html();
+}
+
 /**
  *  @brief       Finds all related caption nodes for the specified image node.
  *
@@ -2097,6 +2117,7 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
  */
 ZSSEditor.removeVisualFormatting = function( html ) {
     var str = html;
+    str = ZSSEditor.removeImageRemoteUrl( str );
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
