@@ -69,8 +69,8 @@
                 android:maxLines="2"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_small"
-                tools:text="text_subtitle"
-                app:fixWidowWords="true" />
+                android:breakStrategy="balanced"
+                tools:text="text_subtitle" />
 
         </LinearLayout>
     </LinearLayout>
