@@ -32,6 +32,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -388,11 +389,17 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             mCallback = callback;
         }
 
+        private void trackInvalidInsertedURL(String url){
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("user_inserted_url", mSelfHostedUrl);
+            AnalyticsTracker.track(Stat.LOGIN_INSERTED_INVALID_URL, properties);
+        }
+
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
             if (TextUtils.isEmpty(mSelfHostedUrl)) {
                 mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                // TODO: Bump analytics here?
+                trackInvalidInsertedURL(mSelfHostedUrl);
                 return null;
             }
 
@@ -402,7 +409,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
             if (!URLUtil.isValidUrl(baseURL)) {
                 mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                // TODO: Bump analytics here?
+                trackInvalidInsertedURL(baseURL);
                 return null;
             }
 
@@ -427,7 +434,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             // during the setup of self-hosted sites that have malformed xmlrpc URLs in their declaration.
             if (!URLUtil.isValidUrl(xmlrpcUrl)) {
                 mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                // TODO: Bump analytics here?
+                trackInvalidInsertedURL(xmlrpcUrl);
                 return null;
             }
 

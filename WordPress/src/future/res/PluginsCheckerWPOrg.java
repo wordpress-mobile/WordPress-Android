@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PluginsCheckerWPOrg {
-    //TODO: update the address with a valid .org site
     private final static String BB_PLUGINS_LIST_URL = "https://raw.githubusercontent.com/wordpress-mobile/app-blocking-plugins/master/xmlrpc-plugins.json";
 
     // Do not use the WP-APP user agent. Requests could be blocked if made from our app UA.
