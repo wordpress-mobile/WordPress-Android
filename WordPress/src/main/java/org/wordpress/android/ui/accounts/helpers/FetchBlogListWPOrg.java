@@ -102,7 +102,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
     private boolean validateListMethodsResponse(Object[] availableMethods) {
         if (availableMethods == null) {
-            AppLog.e(T.NUX, "The response of system.listMethods was empty! All required methods are missing on the server.");
+            AppLog.e(T.NUX, "The response of system.listMethods was empty!");
             return false;
         }
         // validate xmlrpc methods
@@ -248,6 +248,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
     private boolean checkXMLRPCEndpointValidity(String url) {
         try {
             Object[] methods = (Object[]) doSystemListMethodsXMLRPC(url);
+            if (methods == null) {
+                AppLog.e(T.NUX, "The response of system.listMethods was empty!");
+                return false;
+            }
             // Exit the loop on the first URL that replies with a XML-RPC doc.
             AppLog.i(T.NUX, "system.listMethods replied with XML-RPC objects on the URL: " + url);
             AppLog.i(T.NUX, "Validating the XML-RPC response...");
