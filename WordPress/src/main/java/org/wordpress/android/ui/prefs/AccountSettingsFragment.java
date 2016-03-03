@@ -296,14 +296,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
             mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
         } else {
             mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
-
-            // Track the change only if the user selected a non default Device language. This is only used in
-            // Mixpanel, because we have both the device language and app selected language data in Tracks
-            // metadata.
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("forced_app_locale", conf.locale.toString());
-            AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED, properties);
         }
+
+        // Track language change on Mixpanel because we have both the device language and app selected language
+        // data in Tracks metadata.
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("app_locale", conf.locale.toString());
+        AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
         AnalyticsUtils.refreshMetadata();

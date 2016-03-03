@@ -32,6 +32,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -164,7 +165,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebView.execJavaScriptFromString("ZSSEditor.refreshVisibleViewportSize();");
+                        mWebView.execJavaScriptFromString("try {ZSSEditor.refreshVisibleViewportSize();} catch (e) " +
+                                "{console.log(e)}");
                     }
                 });
             }
@@ -1225,6 +1227,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
         }
+    }
+
+    public void setWebViewErrorListener(ErrorListener errorListener) {
+        mWebView.setErrorListener(errorListener);
     }
 
     private void updateVisualEditorFields() {

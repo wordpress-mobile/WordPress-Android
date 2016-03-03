@@ -414,8 +414,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case THEMES_DETAILS_ACCESSED:
                 eventName = "themes_details_accessed";
                 break;
-            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
-                eventName = "account_settings_language_selection_forced";
+            case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
+                eventName = "account_settings_language_changed";
                 break;
             case SITE_SETTINGS_ACCESSED:
                 eventName = "site_settings_accessed";
