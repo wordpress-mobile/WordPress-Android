@@ -41,6 +41,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -2034,6 +2035,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         fillContentEditorFields();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
+            mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);
             ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
