@@ -17,7 +17,7 @@ import java.util.List;
 
 public class PluginsCheckerWPOrg {
     //TODO: update the address with a valid .org site
-    private final static String BB_PLUGINS_LIST_URL = "http://xmlrpc.eritreo.it/test.json";
+    private final static String BB_PLUGINS_LIST_URL = "https://raw.githubusercontent.com/wordpress-mobile/app-blocking-plugins/master/xmlrpc-plugins.json";
 
     // Do not use the WP-APP user agent. Requests could be blocked if made from our app UA.
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36";
@@ -80,6 +80,8 @@ public class PluginsCheckerWPOrg {
                     currentBBPLugin.url = currentObject.getString("url");
                     listOfBBPlugins.add(currentBBPLugin);
                     AppLog.i(AppLog.T.NUX, "Plugin found on the server: " + currentObject.getString("name"));
+                } else {
+                    AppLog.i(AppLog.T.NUX, "Plugin NOT found on the server: " + currentObject.getString("name"));
                 }
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NUX, "Error while parsing the " + i + " in the list of plugins returned from the server.", e);
