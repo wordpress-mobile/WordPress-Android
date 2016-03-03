@@ -107,17 +107,10 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         }
         // validate xmlrpc methods
         String[] requiredMethods =  { "wp.getUsersBlogs", "wp.getPage", "wp.getCommentStatusList", "wp.newComment",
-                "wp.editComment", "wp.deleteComment", "wp.getComments",	"wp.getComment", "wp.setOptions",
-                "wp.getOptions", "wp.getPageTemplates", "wp.getPageStatusList", "wp.getPostStatusList",
-                "wp.getCommentCount", "wp.uploadFile", "wp.suggestCategories", "wp.deleteCategory", "wp.newCategory",
-                "wp.getTags", "wp.getCategories", "wp.getAuthors", "wp.getPageList", "wp.editPage", "wp.deletePage",
-                "wp.newPage", "wp.getPages", "mt.publishPost", "mt.getTrackbackPings",
-                "mt.supportedTextFilters", "mt.supportedMethods", "mt.setPostCategories", "mt.getPostCategories",
-                "mt.getRecentPostTitles", "mt.getCategoryList", "metaWeblog.getUsersBlogs",
-                "metaWeblog.deletePost", "metaWeblog.newMediaObject", "metaWeblog.getCategories",
-                "metaWeblog.getRecentPosts", "metaWeblog.getPost", "metaWeblog.editPost", "metaWeblog.newPost",
-                "blogger.deletePost", "blogger.editPost", "blogger.newPost",
-                "blogger.getRecentPosts", "blogger.getPost", "blogger.getUserInfo", "blogger.getUsersBlogs" };
+                "wp.editComment", "wp.deleteComment", "wp.getComments",	"wp.getComment",
+                "wp.getOptions", "wp.uploadFile", "wp.newCategory",
+                "wp.getTags", "wp.getCategories", "wp.editPage", "wp.deletePage",
+                "wp.newPage", "wp.getPages" };
 
         for (String currentRequiredMethod: requiredMethods) {
             boolean match = false;
@@ -359,7 +352,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     AppLog.i(T.NUX, "Found the XML-RPC endpoint in the HTML document!!!");
                     break;
                 } else {
-                    AppLog.i(T.NUX, "XML-RPC endpoint NOT found analysing the URL: " + currentURL);
+                    AppLog.i(T.NUX, "XML-RPC endpoint NOT found");
                 }
             } catch (SSLHandshakeException e) {
                 if (!WPUrlUtils.isWordPressCom(url)) {
@@ -395,15 +388,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             mCallback = callback;
         }
 
-        private boolean isBBPluginInstalled(String url){
-            PluginsCheckerWPOrg pluginsCheckerWPOrg = new PluginsCheckerWPOrg(url);
-            List<PluginsCheckerWPOrg.Plugin> listOfBadBehaviourPlugins = pluginsCheckerWPOrg.checkForPlugins();
-            if (listOfBadBehaviourPlugins != null && listOfBadBehaviourPlugins.size() > 0) {
-                return true;
-            }
-            return false;
-        }
-
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
             if (TextUtils.isEmpty(mSelfHostedUrl)) {
@@ -429,14 +413,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 // Stop immediately if SSL or Basic Auth Error, or when any of the required XML-RPC methods is missing.
                 if (mErroneousSslCertificate || mHttpAuthRequired ||
                         mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error) {
-                    return null;
-                }
-
-                // Check if some Bad Behavior plugins in installed on the server
-                if (isBBPluginInstalled(baseURL)) {
-                    //TODO: Instead of returning a silly error message. Better to provide the list of plugins
-                    // that could give error
-                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
                     return null;
                 }
 
@@ -494,17 +470,9 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             } catch (ConnectTimeoutException e) {
                 AppLog.e(T.NUX, "Timeout exception when calling wp.getUsersBlogs", e);
                 mErrorMsgId = org.wordpress.android.R.string.site_timeout_error;
-                if (isBBPluginInstalled(xmlrpcUrl)) {
-                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
-                    return null;
-                }
             } catch (IOException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
-                if (isBBPluginInstalled(xmlrpcUrl)) {
-                    mErrorMsgId = org.wordpress.android.R.string.site_plugins_error;
-                    return null;
-                }
             }
             mClientResponse = client.getResponse();
             return null;
