@@ -21,7 +21,7 @@ import java.util.List;
 
 public class PluginsCheckerWPOrg {
     //TODO: update the address with a valid .org site
-    private final static String BB_PLUGINS_LIST_URL = "http://www.eritreo.it/test.json";
+    private final static String BB_PLUGINS_LIST_URL = "http://xmlrpc.eritreo.it/test.json";
 
     String mOriginalURL;
 
@@ -52,7 +52,7 @@ public class PluginsCheckerWPOrg {
         String baseURL = getBaseURL(mOriginalURL);
 
         if (!baseURL.contains("/plugins")) {
-            baseURL = baseURL + "/plugins/";
+            baseURL = baseURL + "/wp-content/plugins/";
         }
 
         if (!URLUtil.isValidUrl(baseURL)) {
