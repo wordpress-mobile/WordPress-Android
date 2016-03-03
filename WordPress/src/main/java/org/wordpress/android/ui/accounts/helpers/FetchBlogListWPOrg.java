@@ -282,10 +282,9 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 mHttpAuthRequired = true;
             }
         } catch (IllegalArgumentException e) {
-            // TODO: Hopefully a temporary log - remove it if we find a pattern of failing URLs
-            CrashlyticsUtils.setString(ExtraKey.ENTERED_URL, url);
-            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.NUX);
+            // The XML-RPC client returns this error in case of redirect to an invalid URL.
             mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
+            AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
         }
 
         return false;
