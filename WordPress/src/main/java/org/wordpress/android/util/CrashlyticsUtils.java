@@ -2,6 +2,8 @@ package org.wordpress.android.util;
 
 import com.crashlytics.android.Crashlytics;
 
+import io.fabric.sdk.android.Fabric;
+
 public class CrashlyticsUtils {
     final private static String EXCEPTION_KEY = "exception";
     final private static String TAG_KEY = "tag";
@@ -10,6 +12,9 @@ public class CrashlyticsUtils {
     public enum ExtraKey {IMAGE_ANGLE, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_RESIZE_SCALE, NOTE_HTMLDATA, ENTERED_URL}
 
     public static void logException(Throwable tr, ExceptionType exceptionType, AppLog.T tag, String message) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         if (tag != null) {
             Crashlytics.setString(TAG_KEY, tag.name());
         }
@@ -31,18 +36,30 @@ public class CrashlyticsUtils {
     // Utility functions to force us to use and reuse a limited set of keys
 
     public static void setInt(ExtraKey key, int value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setInt(key.name(), value);
     }
 
     public static void setFloat(ExtraKey key, float value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setFloat(key.name(), value);
     }
 
     public static void setString(ExtraKey key, String value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setString(key.name(), value);
     }
 
     public static void setBool(ExtraKey key, boolean value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setBool(key.name(), value);
     }
 }

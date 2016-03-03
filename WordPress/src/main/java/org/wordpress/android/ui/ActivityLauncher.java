@@ -27,9 +27,9 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -175,9 +175,8 @@ public class ActivityLauncher {
     public static void browsePostOrPage(Context context, Blog blog, Post post) {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
-        String url = post.getPermaLink();
-        // Add the preview parameter if the post is not published yet
-        url = UrlUtils.appendUrlParameter(url, "preview", "true");
+        // always add the preview parameter to avoid bumping stats when viewing posts
+        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
