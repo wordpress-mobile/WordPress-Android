@@ -12,32 +12,26 @@ import org.wordpress.android.R;
 import java.util.Hashtable;
 
 public class TypefaceCache {
+
     /**
      * Cache used for all views that support custom fonts - defaults to the system font, but
-     * Merriweather is also available via the "fontFamily" attribute
+     * Merriweather is also available via the "wpFontFamily" attribute
      */
-
-    public static final int VARIATION_NORMAL = 0;
-    public static final int VARIATION_LIGHT = 1;
-
     public static final int FAMILY_DEFAULT = 0;
-    public static final int FAMILY_MERRIWEATHER = 1;
+    public static final int FAMILY_DEFAULT_LIGHT = 1;
+    public static final int FAMILY_MERRIWEATHER = 2;
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<>();
 
     public static Typeface getTypeface(Context context) {
-        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL, VARIATION_NORMAL);
+        return getTypeface(context, FAMILY_DEFAULT, Typeface.NORMAL);
     }
-    public static Typeface getTypeface(Context context,
-                                       int family,
-                                       int fontStyle,
-                                       int variation) {
+    public static Typeface getTypeface(Context context, int family, int fontStyle) {
         if (context == null) {
             return null;
         }
 
         if (family == FAMILY_MERRIWEATHER) {
-            // note that merriweather doesn't have a light variation
             final String typefaceName;
             switch (fontStyle) {
                 case Typeface.BOLD:
@@ -58,7 +52,7 @@ public class TypefaceCache {
 
         // default system font - note that "sans-serif-light" was added in SDK 4.1
         // http://developer.android.com/about/versions/android-4.1.html#Fonts
-        if (variation == VARIATION_LIGHT
+        if (family == FAMILY_DEFAULT_LIGHT
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return Typeface.create("sans-serif-light", fontStyle);
         } else {
@@ -91,16 +85,13 @@ public class TypefaceCache {
         // skip at design-time
         if (view.isInEditMode()) return;
 
-        // defaults if not set in attributes
+        // default if not set in attributes
         int family = FAMILY_DEFAULT;
-        int variation = VARIATION_NORMAL;
-
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
             if (a != null) {
                 try {
-                    family = a.getInteger(R.styleable.WPTextView_fontFamily, FAMILY_DEFAULT);
-                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, VARIATION_NORMAL);
+                    family = a.getInteger(R.styleable.WPTextView_wpFontFamily, FAMILY_DEFAULT);
                 } finally {
                     a.recycle();
                 }
@@ -108,8 +99,7 @@ public class TypefaceCache {
         }
 
         // nothing more to do if this is the default system font
-        if (family == FAMILY_DEFAULT
-                && variation == VARIATION_NORMAL) {
+        if (family == FAMILY_DEFAULT) {
             return;
         }
 
@@ -131,7 +121,7 @@ public class TypefaceCache {
             fontStyle = Typeface.NORMAL;
         }
 
-        Typeface typeface = getTypeface(context, family, fontStyle, variation);
+        Typeface typeface = getTypeface(context, family, fontStyle);
         if (typeface != null) {
             view.setTypeface(typeface);
         }
