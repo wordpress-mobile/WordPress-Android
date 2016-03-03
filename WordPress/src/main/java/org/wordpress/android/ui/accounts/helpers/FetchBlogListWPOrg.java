@@ -268,13 +268,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 mErroneousSslCertificate = true;
             }
             AppLog.e(T.NUX, "SSL error. Erroneous SSL certificate detected.", e);
-        } catch (IOException e) {
-            AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
-            AppLog.e(T.NUX, "system.listMethods failed on: " + url, e);
-            if (isHTTPAuthErrorMessage(e)) {
-                mHttpAuthRequired = true;
-            }
-        } catch (XmlPullParserException e) {
+        } catch (IOException | XmlPullParserException e) {
             AnalyticsTracker.track(Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(T.NUX, "system.listMethods failed on: " + url, e);
             if (isHTTPAuthErrorMessage(e)) {
@@ -346,13 +340,20 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     }
                 } else {
                     AppLog.i(T.NUX, "RSD endpoint found at the following address: " + rsdUrl);
-                    AppLog.i(T.NUX, "Getting the XML-RPC url by downloading the RSD doc");
+                    AppLog.i(T.NUX, "Downloading the RSD document...");
                     String rsdEndpointDocument = ApiHelper.getResponse(rsdUrl);
+                    if (TextUtils.isEmpty(rsdEndpointDocument)) {
+                        AppLog.w(T.NUX, "Content downloaded but it's empty or null. Skipping this RSD document URL.");
+                        continue;
+                    }
+                    AppLog.i(T.NUX, "Extracting the XML-RPC Endpoint address from the RSD document");
                     xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(getXMLRPCApiLink(rsdEndpointDocument), false);
                 }
                 if (xmlrpcUrl != null) {
                     AppLog.i(T.NUX, "Found the XML-RPC endpoint in the HTML document!!!");
                     break;
+                } else {
+                    AppLog.i(T.NUX, "XML-RPC endpoint NOT found analysing the URL: " + currentURL);
                 }
             } catch (SSLHandshakeException e) {
                 if (!WPUrlUtils.isWordPressCom(url)) {
@@ -415,6 +416,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             String xmlrpcUrl = getSelfHostedXmlrpcUrl(baseURL);
 
             if (xmlrpcUrl == null) {
+                // Stop immediately if SSL or Basic Auth Error, or when any of the required XML-RPC methods is missing.
                 if (mErroneousSslCertificate || mHttpAuthRequired ||
                         mErrorMsgId == org.wordpress.android.R.string.xmlrpc_missing_method_error) {
                     return null;
@@ -428,7 +430,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                     return null;
                 }
 
-                // CAn't find the XML-RPC endpoint return a generic message
+                // Can't find the XML-RPC endpoint return a generic message
                 if (mErrorMsgId == 0) {
                     mErrorMsgId = org.wordpress.android.R.string.no_site_error;
                 }
