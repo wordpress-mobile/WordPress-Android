@@ -919,49 +919,53 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
     var image = new Image;
 
     image.onload = function () {
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
-        image.onerror = null;
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId)
         image.classList.add("image-loaded");
         console.log("Image Loaded!");
     }
 
     image.onerror = function () {
-        // Even on an error, we swap the image for the time being - so if the user publishes the post,
-        // it won't reference a local image.
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
+        // Add a remoteUrl attribute, remoteUrl and src must be swapped before publishing.
+        image.setAttribute('remoteurl', image.src);
         // Try to reload the image on error.
-        ZSSEditor.tryToReload(image, 1);
+        ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, 1);
     }
 
     image.src = remoteImageUrl;
 };
 
-ZSSEditor.reloadImage = function(node, nCall) {
-    if (node.classList.contains("image-loaded")) {
-        return;
+ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier, remoteImageId) {
+    imageNode.addClass("wp-image-" + remoteImageId);
+    if (image.getAttribute("remoteurl")) {
+        imageNode.attr('src', image.getAttribute("remoteurl"));
+    } else {
+        imageNode.attr('src', image.src);
     }
-    console.log("Reloading image:", node, nCall);
-    node.onerror = ZSSEditor.tryToReload(node, nCall + 1);
-    // Force reloading by updating image src
-    node.src = node.src;
+    ZSSEditor.markImageUploadDone(imageNodeIdentifier);
+    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
+    ZSSEditor.callback("callback-input", joinedArguments);
+    image.onerror = null;
 }
 
-ZSSEditor.tryToReload = function (node, nCall) {
-    if (nCall > 8) { // 7 tries: 22500 ms total
+ZSSEditor.reloadImage = function(image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (image.classList.contains("image-loaded")) {
         return;
     }
-    console.log("Image not loaded:", node, "- image reloading will happen soon.");
-    node.onerror = null;
+    console.log("Reloading image:" + nCall + " - " + image.src);
+    image.onerror = ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, nCall + 1);
+    // Force reloading by updating image src
+    image.src = image.getAttribute("remoteurl");
+}
+
+ZSSEditor.tryToReload = function (image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (nCall > 8) { // 7 tries: 22500 ms total
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId);
+        return;
+    }
+    image.onerror = null;
+    console.log("Image not loaded");
     // reload the image with a variable delay: 500ms, 1000ms, 1500ms, 2000ms, etc.
-    setTimeout(ZSSEditor.reloadImage, nCall * 500, node, nCall);
+    setTimeout(ZSSEditor.reloadImage, nCall * 500, image, imageNode, imageNodeIdentifier, remoteImageId, nCall);
 }
 
 /**
