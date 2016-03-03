@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -118,10 +118,7 @@ public class DetailListPreference extends ListPreference
         ListView listView = mDialog.getListView();
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_DEFAULT,
-                Typeface.BOLD,
-                TypefaceCache.VARIATION_LIGHT);
+        Typeface typeface = WPPrefUtils.getSemiboldTypeface(getContext());
 
         if (listView != null) {
             listView.setDividerHeight(0);
@@ -195,12 +192,6 @@ public class DetailListPreference extends ListPreference
     private void setupView(TextView view, int sizeRes, int enabledColorRes, int disabledColorRes) {
         if (view != null) {
             Resources res = getContext().getResources();
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_DEFAULT,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
-
-            view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
             //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
@@ -226,20 +217,12 @@ public class DetailListPreference extends ListPreference
 
             if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
-                mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                        TypefaceCache.FAMILY_DEFAULT,
-                        Typeface.NORMAL,
-                        TypefaceCache.VARIATION_NORMAL));
             }
 
             if (detailText != null) {
                 if (mDetails != null && position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
                     detailText.setVisibility(View.VISIBLE);
                     detailText.setText(mDetails[position]);
-                    detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                            TypefaceCache.FAMILY_DEFAULT,
-                            Typeface.NORMAL,
-                            TypefaceCache.VARIATION_NORMAL));
                 } else {
                     detailText.setVisibility(View.GONE);
                 }
