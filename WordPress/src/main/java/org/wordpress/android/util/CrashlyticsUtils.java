@@ -36,18 +36,30 @@ public class CrashlyticsUtils {
     // Utility functions to force us to use and reuse a limited set of keys
 
     public static void setInt(ExtraKey key, int value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setInt(key.name(), value);
     }
 
     public static void setFloat(ExtraKey key, float value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setFloat(key.name(), value);
     }
 
     public static void setString(ExtraKey key, String value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setString(key.name(), value);
     }
 
     public static void setBool(ExtraKey key, boolean value) {
+        if (!Fabric.isInitialized()) {
+            return;
+        }
         Crashlytics.setBool(key.name(), value);
     }
 }
