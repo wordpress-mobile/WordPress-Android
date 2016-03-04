@@ -342,6 +342,8 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void addItemDecoration(RecyclerView.ItemDecoration decor){
+        if (mRecyclerView == null) return;
+
         mRecyclerView.addItemDecoration(decor);
     }
 

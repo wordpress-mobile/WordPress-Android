@@ -273,7 +273,7 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
         mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_none),
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));
 
         return view;
