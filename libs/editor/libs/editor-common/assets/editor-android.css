@@ -72,7 +72,7 @@ display:block on the image and setting a width limit we get around this issue. *
     width:100%;
     z-index: 100;
     min-width: 60px;
-    font-family:OpenSans;
+    font-family: sans-serif;
     font-size:20px;
     font-weight:600;
     text-align: center;
