@@ -42,12 +42,13 @@
         android:layout_gravity="right|end"
         android:padding="8dp">
 
-        <org.wordpress.android.widgets.WPButton
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/promo_dialog_cancel_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
             android:textColor="@color/blue_medium"
+            android:textAllCaps="true"
             tools:text="@string/stats_widget_promo_ok_btn_label" />
     </LinearLayout>
 </LinearLayout>
