@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,7 +13,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
@@ -48,7 +46,6 @@ public class PostsListActivity extends AppCompatActivity {
 
         showErrorDialogIfNeeded(getIntent().getExtras());
         showWarningToastIfNeeded(getIntent().getExtras());
-        showVisualEditorPromoDialogIfNeeded();
     }
 
     @Override
@@ -61,16 +58,6 @@ public class PostsListActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
-    }
-
-    private void showVisualEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
-            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
-                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
-                    R.string.new_editor_promo_button_label);
-            newFragment.show(getFragmentManager(), "visual-editor-promo");
-            AppPrefs.setVisualEditorPromoRequired(false);
-        }
     }
 
     /**
