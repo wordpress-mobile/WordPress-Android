@@ -51,7 +51,9 @@ public class HealthCheckTest extends InstrumentationTestCase {
     }
 
     private void runUrlCanonicalization(String testCaseComment, JSONObject testSetup) throws JSONException {
-        final String inputUrl = testSetup.getJSONObject("input").getString("siteUrl");
+        final JSONObject input = testSetup.getJSONObject("input");
+
+        final String inputUrl = input.isNull("siteUrl") ? null : input.getString("siteUrl");
 
         final JSONObject output = testSetup.getJSONObject("output");
 
