@@ -19,8 +19,7 @@ public class PromoDialog extends DialogFragment {
     private int mDescriptionId;
     private int mButtonLabelId;
 
-    public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId,
-                                   int buttonLabelId) {
+    public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId, int buttonLabelId) {
         PromoDialog fragment = new PromoDialog();
         Bundle args = new Bundle();
         args.putInt("drawableId", drawableId);
@@ -54,13 +53,13 @@ public class PromoDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn = (Button)view.findViewById(R.id.promo_dialog_cancel_button);
+        Button btn = (Button) view.findViewById(R.id.promo_dialog_cancel_button);
         btn.setText(mButtonLabelId);
-        ImageView image = (ImageView)view.findViewById(R.id.promo_dialog_image);
+        ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         image.setImageDrawable(getResources().getDrawable(mDrawableId));
-        WPTextView title = (WPTextView)view.findViewById(R.id.promo_dialog_title);
+        WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
         title.setText(mTitleId);
-        WPTextView desc = (WPTextView)view.findViewById(R.id.promo_dialog_description);
+        WPTextView desc = (WPTextView) view.findViewById(R.id.promo_dialog_description);
         desc.setText(mDescriptionId);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
