@@ -16,6 +16,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
+import org.wordpress.android.util.HealthCheckUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -397,24 +398,17 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         @Override
         protected List<Map<String, Object>> doInBackground(Void... notUsed) {
-            if (TextUtils.isEmpty(mSelfHostedUrl)) {
-                mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                trackInvalidInsertedURL(mSelfHostedUrl);
-                return null;
-            }
-
-            // Convert IDN names to punycode if necessary
-            String baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(mSelfHostedUrl);
-            // Add http to the beginning of the URL if needed
-            baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
-            if (!URLUtil.isValidUrl(baseURL)) {
-                mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                trackInvalidInsertedURL(baseURL);
+            String baseUrl = null;
+            try {
+                baseUrl = HealthCheckUtils.canonicalizeSiteUrl(mSelfHostedUrl);
+            } catch (HealthCheckUtils.HealthCheckException hce) {
+                mErrorMsgId = hce.errorMsgId;
+                trackInvalidInsertedURL(hce.failedUrl);
                 return null;
             }
 
             //Retrieve the XML-RPC Endpoint address
-            String xmlrpcUrl = getSelfHostedXmlrpcUrl(baseURL);
+            String xmlrpcUrl = getSelfHostedXmlrpcUrl(baseUrl);
 
             if (xmlrpcUrl == null) {
                 // Stop immediately if SSL or Basic Auth Error, or when any of the required XML-RPC methods is missing.

@@ -1,0 +1,49 @@
+{
+  "testcases": [
+    {
+      "comment": "testing empty url",
+      "realm": "URL_CANONICALIZATION",
+      "setup": {
+        "input": {
+          "siteUrl": ""
+        },
+        "output": {
+          "error": {
+            "type": "SITE_URL_CANNOT_BE_EMPTY",
+            "message": "Check that the site URL entered is valid"
+          }
+        }
+      }
+    },
+    {
+      "comment": "testing whitespace url",
+      "realm": "URL_CANONICALIZATION",
+      "setup": {
+        "input": {
+          "siteUrl": " "
+        },
+        "output": {
+          "error": {
+            "type": "SITE_URL_CANNOT_BE_EMPTY",
+            "message": "Check that the site URL entered is valid"
+          }
+        }
+      }
+    },
+    {
+      "comment": "testing null url",
+      "realm": "URL_CANONICALIZATION",
+      "setup": {
+        "input": {
+          "siteUrl": null
+        },
+        "output": {
+          "error": {
+            "type": "SITE_URL_CANNOT_BE_EMPTY",
+            "message": "Check that the site URL entered is valid"
+          }
+        }
+      }
+    }
+  ]
+}
