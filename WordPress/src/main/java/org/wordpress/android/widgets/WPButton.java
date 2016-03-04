@@ -1,10 +1,10 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
-public class WPButton extends Button {
+public class WPButton extends AppCompatButton {
     public WPButton(Context context) {
         super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
