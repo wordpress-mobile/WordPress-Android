@@ -16,7 +16,7 @@ public class HealthCheckUtils {
     }
 
     public static String canonicalizeSiteUrl(String siteUrl) throws HealthCheckException {
-        if (TextUtils.isEmpty(siteUrl)) {
+        if (TextUtils.isEmpty(siteUrl) || TextUtils.isEmpty(siteUrl.trim())) {
             throw new HealthCheckException(org.wordpress.android.R.string.invalid_site_url_message, siteUrl);
         }
 
