@@ -5,4 +5,4 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:contentDescription="@string/reader_menu_tags"
-    android:src="@drawable/my_site_icon_settings" />
+    android:src="@drawable/reader_settings" />

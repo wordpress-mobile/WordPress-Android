@@ -451,8 +451,7 @@ public class ReaderPostListFragment extends Fragment
         // having the tag toolbar take up more vertical space than necessary
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
-        boolean skipFirstItem = (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
-        mRecyclerView.getInternalRecyclerView().addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, skipFirstItem));
+        mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         if (!ReaderUtils.isLoggedOutReader()) {
             View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);

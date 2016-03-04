@@ -37,7 +37,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private Spinner mSpinner;
     private boolean mSelectingRememberedFilterOnCreate = false;
 
-    protected RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private View mCustomEmptyView;
     private LinearLayout mCustomComponentsContainer;
@@ -341,11 +341,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    /*
-    * use this to access the internal RecyclerView if you need to, for example, add items decoration
-    * */
-    public RecyclerView getInternalRecyclerView(){
-        return mRecyclerView;
+    public void addItemDecoration(RecyclerView.ItemDecoration decor){
+        mRecyclerView.addItemDecoration(decor);
     }
 
     /*
