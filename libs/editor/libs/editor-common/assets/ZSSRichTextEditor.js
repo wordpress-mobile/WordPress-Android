@@ -835,6 +835,17 @@ ZSSEditor.extractMediaIdentifier = function(node) {
     return "";
 };
 
+ZSSEditor.onDomNodeRemoved = function(event) {
+    if (event.target.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
+    } else if (event.target.parentNode.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target.parentNode);
+    } else {
+        return;
+    }
+    ZSSEditor.sendMediaRemovedCallback(mediaId);
+};
+
 ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
     var arguments = ['id=' + encodeURIComponent(mediaNodeIdentifier)];
     var joinedArguments = arguments.join(defaultCallbackSeparator);
@@ -897,6 +908,12 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+    if (nativeState.androidApiLevel < 19) {
+        this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).bind("DOMNodeRemoved", function(event) {
+            ZSSEditor.onDomNodeRemoved(event); });
+
+    }
+
     this.sendEnabledStyles();
 };
 
@@ -1236,6 +1253,11 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var html = videoContainerStart + progressElement + image + videoContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
+    if (nativeState.androidApiLevel < 19) {
+        this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).bind("DOMNodeRemoved", function(event) {
+            ZSSEditor.onDomNodeRemoved(event); });
+    }
     this.sendEnabledStyles();
 };
 
@@ -2709,7 +2731,12 @@ ZSSField.prototype.bindListeners = function() {
     this.wrappedObject.bind('compositionstart', function(e) { thisObj.handleCompositionStartEvent(e); });
     this.wrappedObject.bind('compositionend', function(e) { thisObj.handleCompositionEndEvent(e); });
 
-    this.bindMutationObserver();
+    // Use a MutationObserver to catch user deletions of uploading or failed media
+    // This is unsupported on API<19 - for those API levels we're using the deprecated DOMNodeRemoved event,
+    // set on individual upload containers, instead
+    if (nativeState.androidApiLevel > 18) {
+        this.bindMutationObserver();
+    }
 };
 
 ZSSField.prototype.bindMutationObserver = function () {
