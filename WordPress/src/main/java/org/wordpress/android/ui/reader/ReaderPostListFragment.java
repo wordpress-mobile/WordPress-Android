@@ -359,14 +359,6 @@ public class ReaderPostListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_cards, container, false);
         mRecyclerView = (ReaderRecyclerView) rootView.findViewById(R.id.recycler_view);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                hideNewPostsBar();
-            }
-        });
-
         Context context = container.getContext();
 
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
@@ -939,6 +931,15 @@ public class ReaderPostListFragment extends Fragment
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
 
+        // hide the bar when the recycler is scrolled
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                hideNewPostsBar();
+            }
+        });
+
         // remove the gap marker if it's showing, since it's no longer valid
         getPostAdapter().removeGapMarker();
     }
@@ -949,6 +950,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mIsAnimatingOutNewPostsBar = true;
+        mRecyclerView.clearOnScrollListeners();
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
