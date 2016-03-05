@@ -87,7 +87,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
-    private int mHideNewPostsBarOnScrollOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -96,6 +95,9 @@ public class ReaderPostListFragment extends Fragment
 
     private static boolean mHasPurgedReaderDb;
     private static Date mLastAutoUpdateDt;
+
+    private int mHideNewPostsBarOnScrollOffsetPx;
+    private static final int HIDE_NEW_POSTS_BAR_ON_SCROLL_OFFSET_DP = 10;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -383,7 +385,7 @@ public class ReaderPostListFragment extends Fragment
         });
 
         // determine how far the user has to scroll before the "new posts" bar is hidden
-        mHideNewPostsBarOnScrollOffset = DisplayUtils.dpToPx(context, 10);
+        mHideNewPostsBarOnScrollOffsetPx = DisplayUtils.dpToPx(context, HIDE_NEW_POSTS_BAR_ON_SCROLL_OFFSET_DP);
 
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
@@ -941,7 +943,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy >= mHideNewPostsBarOnScrollOffset) {
+                if (dy >= mHideNewPostsBarOnScrollOffsetPx) {
                     hideNewPostsBar();
                 }
             }
