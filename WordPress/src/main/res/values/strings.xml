@@ -871,6 +871,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="new_editor_promo_button_label">Great, thanks!</string>
+    <string name="new_editor_promo_title">Brand new editor</string>
+    <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
+    editor. Try it out by creating a new post.</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
