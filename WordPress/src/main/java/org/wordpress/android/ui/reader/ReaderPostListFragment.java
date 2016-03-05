@@ -805,7 +805,7 @@ public class ReaderPostListFragment extends Fragment
                 && !isFirstPostVisible()) {
             showNewPostsBar();
         } else if (event.getResult().isNewOrChanged()) {
-            refreshPosts();
+            showNewPostsBar(); // TODO: refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
             setEmptyTitleAndDescription(requestFailed);
@@ -943,7 +943,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy >= mHideNewPostsBarOnScrollOffsetPx) {
+                if (Math.abs(dy) >= mHideNewPostsBarOnScrollOffsetPx) {
                     hideNewPostsBar();
                 }
             }
