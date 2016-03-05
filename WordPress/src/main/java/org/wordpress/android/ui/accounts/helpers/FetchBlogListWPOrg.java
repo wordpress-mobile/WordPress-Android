@@ -79,10 +79,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
     }
 
     private boolean isHTTPAuthErrorMessage(Exception e) {
-        if (e != null && e.getMessage() != null && e.getMessage().contains("401")) {
-            return true;
-        }
-        return false;
+        return e != null && e.getMessage() != null && e.getMessage().contains("401");
     }
 
     private Object doSystemListMethodsXMLRPC(String url) throws XMLRPCException, IOException, XmlPullParserException {
