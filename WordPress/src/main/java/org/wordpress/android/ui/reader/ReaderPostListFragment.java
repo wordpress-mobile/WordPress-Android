@@ -47,6 +47,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -86,6 +87,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
+    private int mHideNewPostsBarOnScrollOffset;
 
     private boolean mIsUpdating;
     private boolean mWasPaused;
@@ -379,6 +381,9 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         });
+
+        // determine how far the user has to scroll before the "new posts" bar is hidden
+        mHideNewPostsBarOnScrollOffset = DisplayUtils.dpToPx(context, 10);
 
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
@@ -936,7 +941,9 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                hideNewPostsBar();
+                if (dy >= mHideNewPostsBarOnScrollOffset) {
+                    hideNewPostsBar();
+                }
             }
         });
 
@@ -950,6 +957,8 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mIsAnimatingOutNewPostsBar = true;
+
+        // remove the onScrollListener assigned in showNewPostsBar()
         mRecyclerView.clearOnScrollListeners();
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
