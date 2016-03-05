@@ -47,7 +47,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -95,9 +94,6 @@ public class ReaderPostListFragment extends Fragment
 
     private static boolean mHasPurgedReaderDb;
     private static Date mLastAutoUpdateDt;
-
-    private int mHideNewPostsBarOnScrollOffsetPx;
-    private static final int HIDE_NEW_POSTS_BAR_ON_SCROLL_OFFSET_DP = 10;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -383,9 +379,6 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         });
-
-        // determine how far the user has to scroll before the "new posts" bar is hidden
-        mHideNewPostsBarOnScrollOffsetPx = DisplayUtils.dpToPx(context, HIDE_NEW_POSTS_BAR_ON_SCROLL_OFFSET_DP);
 
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
@@ -938,9 +931,7 @@ public class ReaderPostListFragment extends Fragment
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if (Math.abs(dy) >= mHideNewPostsBarOnScrollOffsetPx) {
-                hideNewPostsBar();
-            }
+            hideNewPostsBar();
         }
     };
 
@@ -952,8 +943,17 @@ public class ReaderPostListFragment extends Fragment
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
 
-        // hide the bar when the recycler is scrolled
-        mRecyclerView.addOnScrollListener(mOnScrollListener);
+        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
+        // it right away since the user may be scrolling when the bar appears (which would cause it
+        // to disappear as soon as it's displayed)
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded() && isNewPostsBarShowing()) {
+                    mRecyclerView.addOnScrollListener(mOnScrollListener);
+                }
+            }
+        }, 1000L);
 
         // remove the gap marker if it's showing, since it's no longer valid
         getPostAdapter().removeGapMarker();
