@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -62,6 +63,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private int  mAppBarElevation;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -126,6 +128,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             }
         });
 
+        mAppBarElevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
+
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -133,10 +137,21 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 AppPrefs.setMainTabIndex(position);
 
                 switch (position) {
+                    case WPMainTabAdapter.TAB_MY_SITE:
+                        setTabLayoutElevation(mAppBarElevation);
+                        break;
+                    case WPMainTabAdapter.TAB_READER:
+                        setTabLayoutElevation(0);
+                    break;
+                    case WPMainTabAdapter.TAB_ME:
+                        setTabLayoutElevation(mAppBarElevation);
+                    break;
                     case WPMainTabAdapter.TAB_NOTIFS:
+                        setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
+
                 trackLastVisibleTab(position, true);
             }
 
@@ -172,6 +187,14 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
             } else {
                 ActivityLauncher.showSignInForResult(this);
+            }
+        }
+    }
+
+    private void setTabLayoutElevation(int elevation){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (mTabLayout != null) {
+                mTabLayout.setElevation(elevation); //reset shadow
             }
         }
     }
