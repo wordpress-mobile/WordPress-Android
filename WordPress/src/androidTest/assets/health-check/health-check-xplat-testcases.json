@@ -44,6 +44,18 @@
           }
         }
       }
+    },
+    {
+      "comment": "testing padding whitespace",
+      "realm": "URL_CANONICALIZATION",
+      "setup": {
+        "input": {
+          "siteUrl": "  \t http://wordpress.com \t "
+        },
+        "output": {
+          "siteUrl": "http://wordpress.com"
+        }
+      }
     }
   ]
 }

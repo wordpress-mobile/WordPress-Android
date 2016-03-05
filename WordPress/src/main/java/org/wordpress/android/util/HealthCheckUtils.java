@@ -20,8 +20,11 @@ public class HealthCheckUtils {
             throw new HealthCheckException(org.wordpress.android.R.string.invalid_site_url_message, siteUrl);
         }
 
+        // remove padding whitespace
+        String baseURL = siteUrl.trim();
+
         // Convert IDN names to punycode if necessary
-        String baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(siteUrl);
+        baseURL = UrlUtils.convertUrlToPunycodeIfNeeded(baseURL);
         // Add http to the beginning of the URL if needed
         baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
         if (!URLUtil.isValidUrl(baseURL)) {
