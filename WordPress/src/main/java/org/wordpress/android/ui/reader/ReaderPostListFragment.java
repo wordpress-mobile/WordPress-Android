@@ -468,8 +468,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium),
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+                getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
+                getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
