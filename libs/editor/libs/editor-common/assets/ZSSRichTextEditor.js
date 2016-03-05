@@ -835,6 +835,15 @@ ZSSEditor.extractMediaIdentifier = function(node) {
     return "";
 };
 
+ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
+    var imageContainerNode = ZSSEditor.getImageContainerNodeWithIdentifier(mediaNodeIdentifier);
+    if (imageContainerNode.length > 0) {
+        return imageContainerNode;
+    } else {
+        return ZSSEditor.getVideoContainerNodeWithIdentifier(mediaNodeIdentifier);
+    }
+};
+
 ZSSEditor.onDomNodeRemoved = function(event) {
     if (event.target.id.length > 0) {
         var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
@@ -1157,6 +1166,12 @@ ZSSEditor.getFailedMedia = function() {
             mediaId = matches[i].getAttribute("data-wpid");
         } else if (matches[i].hasAttribute("data-video_wpid")) {
             mediaId = matches[i].getAttribute("data-video_wpid");
+        }
+
+        // Track pre-existing failed media nodes for manual deletion events
+        if (nativeState.androidApiLevel < 19) {
+            this.getMediaContainerNodeWithIdentifier(mediaId).bind("DOMNodeRemoved", function(event) {
+                ZSSEditor.onDomNodeRemoved(event); });
         }
 
         if (mediaId.length > 0) {
