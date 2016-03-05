@@ -74,7 +74,7 @@
             android:maxLines="3"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            app:fontFamily="merriweather"
+            app:wpFontFamily="merriweather"
             tools:text="text_description" />
 
     </FrameLayout>

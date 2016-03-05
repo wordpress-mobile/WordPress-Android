@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,10 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -70,8 +70,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
-
-    protected static final int BUTTON_ID_LOG_HTML = 555;
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -164,7 +162,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebView.execJavaScriptFromString("ZSSEditor.refreshVisibleViewportSize();");
+                        mWebView.execJavaScriptFromString("try {ZSSEditor.refreshVisibleViewportSize();} catch (e) " +
+                                "{console.log(e)}");
                     }
                 });
             }
@@ -405,8 +404,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         if (mDebugModeEnabled) {
             enableWebDebugging(true);
-            // Enable the HTML logging button
-            setHasOptionsMenu(true);
         }
     }
 
@@ -483,6 +480,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             Bundle dialogBundle = new Bundle();
 
+            // Pass potential URL from user clipboard
+            String clipboardUri = Utils.getUrlFromClipboard(getActivity());
+            if (clipboardUri != null) {
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, clipboardUri);
+            }
+
             // Pass selected text to dialog
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 // HTML mode
@@ -490,14 +493,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mSelectionEnd = mSourceViewContent.getSelectionEnd();
 
                 String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
-                dialogBundle.putString("linkText", selectedText);
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, selectedText);
             } else {
                 // Visual mode
                 mGetSelectedTextCountDownLatch = new CountDownLatch(1);
                 mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
                 try {
                     if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
-                        dialogBundle.putString("linkText", mJavaScriptResult);
+                        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
                     }
                 } catch (InterruptedException e) {
                     AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
@@ -505,7 +508,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
 
             linkDialogFragment.setArguments(dialogBundle);
-            linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+            linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
         } else {
             if (v instanceof ToggleButton) {
                 onFormattingButtonClicked((ToggleButton) v);
@@ -559,12 +562,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 return;
             }
 
-            String linkUrl = extras.getString("linkURL");
-            String linkText = extras.getString("linkText");
+            String linkUrl = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_URL);
+            String linkText = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT);
 
             if (linkText == null || linkText.equals("")) {
                 linkText = linkUrl;
             }
+
+            if (TextUtils.isEmpty(Uri.parse(linkUrl).getScheme())) linkUrl = "http://" + linkUrl;
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 Editable content = mSourceViewContent.getText();
@@ -628,38 +633,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @SuppressLint("NewApi")
     private void enableWebDebugging(boolean enable) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AppLog.i(T.EDITOR, "Enabling web debugging");
             WebView.setWebContentsDebuggingEnabled(enable);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, BUTTON_ID_LOG_HTML, 0, "Log HTML")
-                .setIcon(R.drawable.ic_log_html)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == BUTTON_ID_LOG_HTML) {
-            if (mDebugModeEnabled) {
-                // Log the raw html
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.execJavaScriptFromString("console.log(document.body.innerHTML);");
-                    }
-                });
-            } else {
-                AppLog.d(T.EDITOR, "Could not execute JavaScript - debug mode not enabled");
-            }
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        mWebView.setDebugModeEnabled(mDebugModeEnabled);
     }
 
     @Override
@@ -1172,8 +1150,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         Bundle dialogBundle = new Bundle();
 
-        dialogBundle.putString("linkURL", url);
-        dialogBundle.putString("linkText", title);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, url);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, title);
 
         linkDialogFragment.setArguments(dialogBundle);
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
@@ -1232,6 +1210,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
         }
+    }
+
+    public void setWebViewErrorListener(ErrorListener errorListener) {
+        mWebView.setErrorListener(errorListener);
     }
 
     private void updateVisualEditorFields() {
