@@ -1177,7 +1177,7 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
         // Reset id before removal to avoid triggering the manual media removal callback
-        imageContainerNode.attr("id","");
+        imageNode.attr("id","");
         imageNode.remove();
     }
 
