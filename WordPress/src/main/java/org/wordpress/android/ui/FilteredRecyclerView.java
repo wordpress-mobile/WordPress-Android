@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,6 +43,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private View mCustomEmptyView;
     private LinearLayout mCustomComponentsContainer;
     private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
 
     private List<FilterCriteria> mFilterCriteriaOptions;
     private FilterCriteria mCurrentFilter;
@@ -124,6 +126,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         mCustomComponentsContainer = (LinearLayout) findViewById(R.id.custom_components_toolbar_container);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_with_spinner);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
 
@@ -345,6 +348,14 @@ public class FilteredRecyclerView extends RelativeLayout {
         if (mRecyclerView == null) return;
 
         mRecyclerView.addItemDecoration(decor);
+    }
+
+    public void hideToolbar(){
+        mAppBarLayout.setExpanded(false, true);
+    }
+
+    public void showToolbar(){
+        mAppBarLayout.setExpanded(true, true);
     }
 
     /*

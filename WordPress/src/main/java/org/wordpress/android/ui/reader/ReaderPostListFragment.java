@@ -1200,6 +1200,7 @@ public class ReaderPostListFragment extends Fragment
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
+            mRecyclerView.showToolbar();
         }
     }
 
