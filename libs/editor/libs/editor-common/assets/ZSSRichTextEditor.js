@@ -70,8 +70,9 @@ ZSSEditor.defaultParagraphSeparator = 'p';
 ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
 // We use a MutationObserver to catch user deletions of uploading or failed media
-// This only supported on API>18 - for older API levels we're using the deprecated DOMNodeRemoved event instead
-ZSSEditor.mutationObserver = new MutationObserver(function(mutations) { ZSSEditor.onMutationObserved(mutations);} );
+// This is only officially supported on API>18; when the WebView doesn't recognize the MutationObserver,
+// we fall back to the deprecated DOMNodeRemoved event
+ZSSEditor.mutationObserver;
 
 ZSSEditor.defaultMutationObserverConfig = { attributes: false, childList: true, characterData: false };
 
@@ -116,6 +117,15 @@ ZSSEditor.init = function() {
 			}
 		}
 	}, false);
+
+    // Attempt to instantiate a MutationObserver. This should fail for API<19, unless the OEM of the device has
+    // modified the WebView. If it fails, the editor will fall back to DOMNodeRemoved events.
+    try {
+        ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
+            ZSSEditor.onMutationObserved(mutations);} );
+    } catch(e) {
+        // no op
+    }
 
 }; //end
 
@@ -207,15 +217,16 @@ ZSSEditor.execFunctionForResult = function(methodName) {
  *  @brief      Register a node to be tracked for modifications
  */
 ZSSEditor.trackNodeForMutation = function(target) {
-    if (nativeState.androidApiLevel > 18) {
+    if (ZSSEditor.mutationObserver != undefined) {
         ZSSEditor.mutationObserver.observe(target[0], ZSSEditor.defaultMutationObserverConfig);
     } else {
+        // The WebView doesn't support MutationObservers - fall back to DOMNodeRemoved events
         target.bind("DOMNodeRemoved", function(event) { ZSSEditor.onDomNodeRemoved(event); });
     }
 };
 
 /**
- *  @brief      Called when the MutationObserver registers a mutation to a node it's listening to (API>18)
+ *  @brief      Called when the MutationObserver registers a mutation to a node it's listening to
  */
 ZSSEditor.onMutationObserved = function(mutations) {
     mutations.forEach(function(mutation) {
@@ -245,7 +256,8 @@ ZSSEditor.onMutationObserved = function(mutations) {
 };
 
 /**
- *  @brief      Called when a DOMNodeRemoved event is triggered for an element we're tracking (API<19)
+ *  @brief      Called when a DOMNodeRemoved event is triggered for an element we're tracking
+ *              (only used when MutationObserver is unsupported by the WebView)
  */
 ZSSEditor.onDomNodeRemoved = function(event) {
     if (event.target.id.length > 0) {
