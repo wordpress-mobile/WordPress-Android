@@ -69,6 +69,37 @@ ZSSEditor.defaultParagraphSeparator = 'p';
 // mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
 ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
+// We use a MutationObserver to catch user deletions of uploading or failed media
+// This is unsupported on API<19 - for those API levels we're using the deprecated DOMNodeRemoved event instead
+ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        for (var i = 0; i < mutation.removedNodes.length; i++) {
+            var removedNode = mutation.removedNodes[i];
+            if (ZSSEditor.isMediaContainerNode(removedNode)) {
+                // An uploading or failed container node was deleted manually - notify native
+                var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-wpid")) {
+                // An uploading or failed image was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeImage(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
+                // An uploading or failed video was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeVideo(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            }
+        }
+    });
+});
+
+ZSSEditor.defaultMutationObserverConfig = { attributes: false, childList: true, characterData: false };
+
 /**
  * The initializer function that must be called onLoad
  */
@@ -905,6 +936,9 @@ ZSSEditor.getFailedMedia = function() {
         if (nativeState.androidApiLevel < 19) {
             this.getMediaContainerNodeWithIdentifier(mediaId).bind("DOMNodeRemoved", function(event) {
                 ZSSEditor.onDomNodeRemoved(event); });
+        } else {
+            var target = this.getMediaContainerNodeWithIdentifier(mediaId)[0];
+            ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
         }
 
         if (mediaId.length > 0) {
@@ -972,10 +1006,13 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
     if (nativeState.androidApiLevel < 19) {
         this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).bind("DOMNodeRemoved", function(event) {
             ZSSEditor.onDomNodeRemoved(event); });
-
+    } else {
+        var target = this.getImageContainerNodeWithIdentifier(imageNodeIdentifier)[0];
+        ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
     }
 
     this.sendEnabledStyles();
@@ -1272,7 +1309,11 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     if (nativeState.androidApiLevel < 19) {
         this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).bind("DOMNodeRemoved", function(event) {
             ZSSEditor.onDomNodeRemoved(event); });
+    } else {
+        var target = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier)[0];
+        ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
     }
+
     this.sendEnabledStyles();
 };
 
@@ -2079,6 +2120,7 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
 }
 
 // MARK: - Galleries
+
 ZSSEditor.insertGallery = function( imageIds, type, columns ) {
     var shortcode;
     if (type) {
@@ -2745,51 +2787,6 @@ ZSSField.prototype.bindListeners = function() {
     this.wrappedObject.bind('input', function(e) { thisObj.handleInputEvent(e); });
     this.wrappedObject.bind('compositionstart', function(e) { thisObj.handleCompositionStartEvent(e); });
     this.wrappedObject.bind('compositionend', function(e) { thisObj.handleCompositionEndEvent(e); });
-
-    // Use a MutationObserver to catch user deletions of uploading or failed media
-    // This is unsupported on API<19 - for those API levels we're using the deprecated DOMNodeRemoved event,
-    // set on individual upload containers, instead
-    if (nativeState.androidApiLevel > 18) {
-        this.bindMutationObserver();
-    }
-};
-
-ZSSField.prototype.bindMutationObserver = function () {
-    var target = this.wrappedObject[0];
-    var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            for (var i = 0; i < mutation.removedNodes.length; i++) {
-                var removedNode = mutation.removedNodes[i];
-                if (ZSSEditor.isMediaContainerNode(removedNode)) {
-                    // An uploading or failed container node was deleted manually - notify native
-                    var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
-                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-                } else if (removedNode.attributes.getNamedItem("data-wpid")) {
-                    // An uploading or failed image was deleted manually - remove its container and send the callback
-                    var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
-                    var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
-                    ZSSEditor.removeImage(mediaIdentifier);
-                    ZSSEditor.setRange(parentRange);
-                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-                } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
-                    // An uploading or failed video was deleted manually - remove its container and send the callback
-                    var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
-                    var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
-                    ZSSEditor.removeVideo(mediaIdentifier);
-                    ZSSEditor.setRange(parentRange);
-                    ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-                }
-            }
-        });
-    });
-
-    // Configure observer: listen for changes to both the child list and changes to the children themselves
-    // This is needed because using only childList will ignore cases where an uploading image is deleted: it's within
-    // a <span> container which is itself within a paragraph tag, and the observer is only called for top-level DOM
-    // changes. The span container is unaffected, so the p tag won't notice the image deletion at the childList level
-    var config = { attributes: false, childList: true, characterData: false, subtree: true };
-
-    observer.observe(target, config);
 };
 
 // MARK: - Emptying the field when it should be, well... empty (HTML madness)
