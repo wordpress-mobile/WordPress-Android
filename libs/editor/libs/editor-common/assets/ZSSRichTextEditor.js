@@ -71,32 +71,7 @@ ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
 // We use a MutationObserver to catch user deletions of uploading or failed media
 // This only supported on API>18 - for older API levels we're using the deprecated DOMNodeRemoved event instead
-ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        for (var i = 0; i < mutation.removedNodes.length; i++) {
-            var removedNode = mutation.removedNodes[i];
-            if (ZSSEditor.isMediaContainerNode(removedNode)) {
-                // An uploading or failed container node was deleted manually - notify native
-                var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
-                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-            } else if (removedNode.attributes.getNamedItem("data-wpid")) {
-                // An uploading or failed image was deleted manually - remove its container and send the callback
-                var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
-                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
-                ZSSEditor.removeImage(mediaIdentifier);
-                ZSSEditor.setRange(parentRange);
-                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-            } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
-                // An uploading or failed video was deleted manually - remove its container and send the callback
-                var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
-                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
-                ZSSEditor.removeVideo(mediaIdentifier);
-                ZSSEditor.setRange(parentRange);
-                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
-            }
-        }
-    });
-});
+ZSSEditor.mutationObserver = new MutationObserver(function(mutations) { ZSSEditor.onMutationObserved(mutations);} );
 
 ZSSEditor.defaultMutationObserverConfig = { attributes: false, childList: true, characterData: false };
 
@@ -224,7 +199,9 @@ ZSSEditor.execFunctionForResult = function(methodName) {
     var functionArgument = "function=" + methodName;
     var resultArgument = "result=" + window["ZSSEditor"][methodName].apply();
     ZSSEditor.callback('callback-response-string', functionArgument +  defaultCallbackSeparator + resultArgument);
-}
+};
+
+// MARK: - Mutation observing
 
 /**
  *  @brief      Register a node to be tracked for modifications
@@ -235,6 +212,50 @@ ZSSEditor.trackNodeForMutation = function(target) {
     } else {
         target.bind("DOMNodeRemoved", function(event) { ZSSEditor.onDomNodeRemoved(event); });
     }
+};
+
+/**
+ *  @brief      Called when the MutationObserver registers a mutation to a node it's listening to (API>18)
+ */
+ZSSEditor.onMutationObserved = function(mutations) {
+    mutations.forEach(function(mutation) {
+        for (var i = 0; i < mutation.removedNodes.length; i++) {
+            var removedNode = mutation.removedNodes[i];
+            if (ZSSEditor.isMediaContainerNode(removedNode)) {
+                // An uploading or failed container node was deleted manually - notify native
+                var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-wpid")) {
+                // An uploading or failed image was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeImage(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
+                // An uploading or failed video was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeVideo(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            }
+        }
+    });
+};
+
+/**
+ *  @brief      Called when a DOMNodeRemoved event is triggered for an element we're tracking (API<19)
+ */
+ZSSEditor.onDomNodeRemoved = function(event) {
+    if (event.target.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
+    } else if (event.target.parentNode.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target.parentNode);
+    } else {
+        return;
+    }
+    ZSSEditor.sendMediaRemovedCallback(mediaId);
 };
 
 // MARK: - Logging
@@ -884,17 +905,6 @@ ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
     } else {
         return ZSSEditor.getVideoContainerNodeWithIdentifier(mediaNodeIdentifier);
     }
-};
-
-ZSSEditor.onDomNodeRemoved = function(event) {
-    if (event.target.id.length > 0) {
-        var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
-    } else if (event.target.parentNode.id.length > 0) {
-        var mediaId = ZSSEditor.extractMediaIdentifier(event.target.parentNode);
-    } else {
-        return;
-    }
-    ZSSEditor.sendMediaRemovedCallback(mediaId);
 };
 
 ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
