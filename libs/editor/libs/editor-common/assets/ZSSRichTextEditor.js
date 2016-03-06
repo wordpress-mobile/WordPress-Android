@@ -70,7 +70,7 @@ ZSSEditor.defaultParagraphSeparator = 'p';
 ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
 // We use a MutationObserver to catch user deletions of uploading or failed media
-// This is unsupported on API<19 - for those API levels we're using the deprecated DOMNodeRemoved event instead
+// This only supported on API>18 - for older API levels we're using the deprecated DOMNodeRemoved event instead
 ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         for (var i = 0; i < mutation.removedNodes.length; i++) {
@@ -225,6 +225,17 @@ ZSSEditor.execFunctionForResult = function(methodName) {
     var resultArgument = "result=" + window["ZSSEditor"][methodName].apply();
     ZSSEditor.callback('callback-response-string', functionArgument +  defaultCallbackSeparator + resultArgument);
 }
+
+/**
+ *  @brief      Register a node to be tracked for modifications
+ */
+ZSSEditor.trackNodeForMutation = function(target) {
+    if (nativeState.androidApiLevel > 18) {
+        ZSSEditor.mutationObserver.observe(target[0], ZSSEditor.defaultMutationObserverConfig);
+    } else {
+        target.bind("DOMNodeRemoved", function(event) { ZSSEditor.onDomNodeRemoved(event); });
+    }
+};
 
 // MARK: - Logging
 
@@ -933,13 +944,7 @@ ZSSEditor.getFailedMedia = function() {
         }
 
         // Track pre-existing failed media nodes for manual deletion events
-        if (nativeState.androidApiLevel < 19) {
-            this.getMediaContainerNodeWithIdentifier(mediaId).bind("DOMNodeRemoved", function(event) {
-                ZSSEditor.onDomNodeRemoved(event); });
-        } else {
-            var target = this.getMediaContainerNodeWithIdentifier(mediaId)[0];
-            ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
-        }
+        ZSSEditor.trackNodeForMutation(this.getMediaContainerNodeWithIdentifier(mediaId));
 
         if (mediaId.length > 0) {
             mediaIdArray.push(mediaId);
@@ -1007,13 +1012,7 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
 
     this.insertHTML(this.wrapInParagraphTags(html));
 
-    if (nativeState.androidApiLevel < 19) {
-        this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).bind("DOMNodeRemoved", function(event) {
-            ZSSEditor.onDomNodeRemoved(event); });
-    } else {
-        var target = this.getImageContainerNodeWithIdentifier(imageNodeIdentifier)[0];
-        ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
-    }
+    ZSSEditor.trackNodeForMutation(this.getImageContainerNodeWithIdentifier(imageNodeIdentifier));
 
     this.sendEnabledStyles();
 };
@@ -1306,13 +1305,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
 
     this.insertHTML(this.wrapInParagraphTags(html));
 
-    if (nativeState.androidApiLevel < 19) {
-        this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).bind("DOMNodeRemoved", function(event) {
-            ZSSEditor.onDomNodeRemoved(event); });
-    } else {
-        var target = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier)[0];
-        ZSSEditor.mutationObserver.observe(target, ZSSEditor.defaultMutationObserverConfig);
-    }
+    ZSSEditor.trackNodeForMutation(this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier));
 
     this.sendEnabledStyles();
 };
