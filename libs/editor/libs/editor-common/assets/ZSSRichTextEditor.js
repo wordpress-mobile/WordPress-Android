@@ -861,6 +861,61 @@ ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
     this.callback("callback-media-removed", joinedArguments);
 };
 
+/**
+ *  @brief      Marks all in-progress images as failed to upload
+ */
+ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.uploading");
+
+    for(var i = 0; i < matches.size(); i++) {
+        if (matches[i].hasAttribute('data-wpid')) {
+            var mediaId = matches[i].getAttribute('data-wpid');
+            ZSSEditor.markImageUploadFailed(mediaId, message);
+        } else if (matches[i].hasAttribute('data-video_wpid')) {
+            var videoId = matches[i].getAttribute('data-video_wpid');
+            ZSSEditor.markVideoUploadFailed(videoId, message);
+        }
+    }
+};
+
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedMedia = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.failed");
+
+    var functionArgument = "function=getFailedMedia";
+    var mediaIdArray = [];
+
+    for (var i = 0; i < matches.size(); i++) {
+        var mediaId;
+        if (matches[i].hasAttribute("data-wpid")) {
+            mediaId = matches[i].getAttribute("data-wpid");
+        } else if (matches[i].hasAttribute("data-video_wpid")) {
+            mediaId = matches[i].getAttribute("data-video_wpid");
+        }
+
+        // Track pre-existing failed media nodes for manual deletion events
+        if (nativeState.androidApiLevel < 19) {
+            this.getMediaContainerNodeWithIdentifier(mediaId).bind("DOMNodeRemoved", function(event) {
+                ZSSEditor.onDomNodeRemoved(event); });
+        }
+
+        if (mediaId.length > 0) {
+            mediaIdArray.push(mediaId);
+        }
+    }
+
+    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
+    ZSSEditor.callback('callback-response-string', joinedArguments);
+};
+
 // MARK: - Images
 
 ZSSEditor.updateImage = function(url, alt) {
@@ -1126,61 +1181,6 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
 
     // Display the compatibility overlay again if present
     imageContainerNode.find("span.upload-overlay").removeClass("failed");
-};
-
-/**
- *  @brief      Marks all in-progress images as failed to upload
- */
-ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.uploading");
-
-    for(var i = 0; i < matches.size(); i++) {
-        if (matches[i].hasAttribute('data-wpid')) {
-            var mediaId = matches[i].getAttribute('data-wpid');
-            ZSSEditor.markImageUploadFailed(mediaId, message);
-        } else if (matches[i].hasAttribute('data-video_wpid')) {
-            var videoId = matches[i].getAttribute('data-video_wpid');
-            ZSSEditor.markVideoUploadFailed(videoId, message);
-        }
-    }
-};
-
-/**
- *  @brief      Sends a callback with a list of failed images
- */
-ZSSEditor.getFailedMedia = function() {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.failed");
-
-    var functionArgument = "function=getFailedMedia";
-    var mediaIdArray = [];
-
-    for (var i = 0; i < matches.size(); i++) {
-        var mediaId;
-        if (matches[i].hasAttribute("data-wpid")) {
-            mediaId = matches[i].getAttribute("data-wpid");
-        } else if (matches[i].hasAttribute("data-video_wpid")) {
-            mediaId = matches[i].getAttribute("data-video_wpid");
-        }
-
-        // Track pre-existing failed media nodes for manual deletion events
-        if (nativeState.androidApiLevel < 19) {
-            this.getMediaContainerNodeWithIdentifier(mediaId).bind("DOMNodeRemoved", function(event) {
-                ZSSEditor.onDomNodeRemoved(event); });
-        }
-
-        if (mediaId.length > 0) {
-            mediaIdArray.push(mediaId);
-        }
-    }
-
-    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
-    ZSSEditor.callback('callback-response-string', joinedArguments);
 };
 
 /**
