@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -205,6 +207,16 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         }
     }
 
+    private void showVisualEditorPromoDialogIfNeeded() {
+        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
+            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
+                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
+                    R.string.new_editor_promo_button_label);
+            newFragment.show(getFragmentManager(), "visual-editor-promo");
+            AppPrefs.setVisualEditorPromoRequired(false);
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -300,6 +312,9 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
+        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
+            showVisualEditorPromoDialogIfNeeded();
+        }
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
