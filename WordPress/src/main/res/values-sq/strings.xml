@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">S’u ruajtën dot rregullimet e llogarisë tuaj</string>
+	<string name="error_post_my_profile">S’u ruajt dot profili juaj</string>
+	<string name="error_fetch_account_settings">S’u morën dot rregullimet e llogarisë tuaj</string>
+	<string name="error_fetch_my_profile">S’u mor dot profili juaj</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, e mora vesh</string>
+	<string name="stats_widget_promo_desc">Shtojeni widget-in te skena juaj e kreut që të hyni te Statistikat tuaja me një klikim.</string>
+	<string name="stats_widget_promo_title">Widget Statistikash te Kreu</string>
+	<string name="site_settings_unknown_language_code_error">Kod gjuhe i papranuar</string>
+	<string name="site_settings_threading_dialog_description">Lejo komente të folezëzuar në rrjedha.</string>
+	<string name="site_settings_threading_dialog_header">Rrjedhë deri në</string>
+	<string name="remove">Hiqe</string>
+	<string name="search">Kërkoni</string>
+	<string name="add_category">Shtoni kategori</string>
+	<string name="disabled">E çaktivizuar</string>
 	<string name="site_settings_image_original_size">Madhësia Origjinale</string>
 	<string name="about_me_hint">Pak fjalë rreth jush…</string>
 	<string name="public_display_name_hint">Nëse nuk caktohet një i tillë, si emër ekrani do të përdoret emri juaj i përdoruesit</string>
@@ -785,7 +799,6 @@
 	<string name="stats_totals_views">Parje</string>
 	<string name="stats_totals_clicks">Klikime</string>
 	<string name="stats_totals_plays">Luajtje</string>
-	<string name="menu_search">Kërko</string>
 	<string name="passcode_manage">Administroni kyçje PIN-i</string>
 	<string name="passcode_enter_passcode">Jepni PIN-in tuaj:</string>
 	<string name="passcode_enter_old_passcode">Jepni PIN-in tuaj të vjetër</string>
@@ -832,7 +845,6 @@
 	<string name="blogusername">emërpërdoruesiblogu</string>
 	<string name="upload_scaled_image">Ngarkoje dhe lidhe te figura e ripërmasuar</string>
 	<string name="scaled_image">Gjerësi figure të ripërmasuar</string>
-	<string name="remove_location">Hiqe</string>
 	<string name="scheduled">E planifikuar</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Postuar me WordPress për Android</string>
@@ -944,18 +956,6 @@
 		<item>Pa komente</item>
 		<item>Komente përdoruesish të njohur</item>
 		<item>Krejt përdoruesit</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Asnjë</item>
-		<item>Dy nivele</item>
-		<item>Tre nivele</item>
-		<item>Katër nivele</item>
-		<item>Pesë nivele</item>
-		<item>Gjashtë nivele</item>
-		<item>Shtatë nivele</item>
-		<item>Tetë nivele</item>
-		<item>Nëntë nivele</item>
-		<item>Dhjetë nivele</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Falas</item>
