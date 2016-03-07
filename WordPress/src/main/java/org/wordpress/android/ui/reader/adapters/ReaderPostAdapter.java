@@ -33,7 +33,6 @@ import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
-import org.wordpress.android.ui.reader.views.ReaderTagToolbar;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -60,7 +59,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final String mReadingTimeFmtStr;
 
     private boolean mCanRequestMorePosts;
-    private final boolean mShowTagToolbar;
     private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
@@ -68,7 +66,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
-    private ReaderTagToolbar.OnTagChangedListener mOnTagChangedListener;
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -86,8 +83,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_XPOST       = 1;
     private static final int VIEW_TYPE_BLOG_INFO   = 2;
     private static final int VIEW_TYPE_TAG_INFO    = 3;
-    private static final int VIEW_TYPE_TAG_TOOLBAR = 4;
-    private static final int VIEW_TYPE_GAP_MARKER  = 5;
+    private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
@@ -175,14 +171,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class TagToolbarViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderTagToolbar mTagToolbar;
-        public TagToolbarViewHolder(View itemView) {
-            super(itemView);
-            mTagToolbar = (ReaderTagToolbar) itemView;
-        }
-    }
-
     class BlogInfoViewHolder extends RecyclerView.ViewHolder {
         private final ReaderBlogInfoView mBlogInfoView;
         public BlogInfoViewHolder(View itemView) {
@@ -209,10 +197,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && mShowTagToolbar) {
-            // first item is a pseudo-toolbar enabling changing the current tag
-            return VIEW_TYPE_TAG_TOOLBAR;
-        } else if (position == 0 && isBlogPreview()) {
+        if (position == 0 && isBlogPreview()) {
             // first item is a ReaderBlogInfoView
             return VIEW_TYPE_BLOG_INFO;
         } else if (position == 0 && isTagPreview()) {
@@ -231,9 +216,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case VIEW_TYPE_TAG_TOOLBAR:
-                return new TagToolbarViewHolder(new ReaderTagToolbar(context));
-
             case VIEW_TYPE_BLOG_INFO:
                 return new BlogInfoViewHolder(new ReaderBlogInfoView(context));
 
@@ -266,10 +248,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof TagInfoViewHolder) {
             TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
             tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
-        } else if (holder instanceof TagToolbarViewHolder) {
-            TagToolbarViewHolder toolbarHolder = (TagToolbarViewHolder) holder;
-            toolbarHolder.mTagToolbar.setCurrentTag(mCurrentTag);
-            toolbarHolder.mTagToolbar.setOnTagChangedListener(mOnTagChangedListener);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -533,13 +511,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPhotonWidth = displayWidth - (cardMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
-        mShowTagToolbar = (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-
         setHasStableIds(true);
     }
 
     private boolean hasCustomFirstItem() {
-        return mShowTagToolbar || isBlogPreview() || isTagPreview();
+        return isBlogPreview() || isTagPreview();
     }
 
     private boolean isBlogPreview() {
@@ -575,13 +551,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public void setOnTagSelectedListener(ReaderInterfaces.OnTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
-    }
-
-    /*
-     * called when user selects a tag from the toolbar
-     */
-    public void setOnTagChangedListener(ReaderTagToolbar.OnTagChangedListener listener) {
-        mOnTagChangedListener = listener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {

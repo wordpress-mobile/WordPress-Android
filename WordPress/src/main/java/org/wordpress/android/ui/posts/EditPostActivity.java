@@ -41,7 +41,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
+import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -52,6 +54,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.AccountHelper;
@@ -80,6 +83,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -107,6 +112,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -1129,8 +1135,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
-                    getMaximumThumbnailWidthForEditor()));
+            if (mEditorFragment instanceof EditorFragment) {
+                mEditorFragment.setContent(text);
+            } else {
+                mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
+                        getMaximumThumbnailWidthForEditor()));
+            }
         }
 
         // Check for shared media
@@ -2027,6 +2037,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onEditorFragmentInitialized() {
         fillContentEditorFields();
+        // Set the error listener
+        if (mEditorFragment instanceof EditorFragment) {
+            mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);
+            ((EditorFragment) mEditorFragment).setWebViewErrorListener(new ErrorListener() {
+                @Override
+                public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
+                    CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
+                            ExceptionType.SPECIFIC, T.EDITOR,
+                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
+                }
+
+                @Override
+                public void onJavaScriptAlert(String url, String message) {
+                    // no op
+                }
+            });
+        }
     }
 
     @Override

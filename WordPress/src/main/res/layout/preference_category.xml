@@ -15,6 +15,6 @@
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        app:fontVariation="light" />
+        android:fontFamily="sans-serif-light" />
 
 </LinearLayout>
