@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -191,10 +192,15 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         }
     }
 
-    private void setTabLayoutElevation(int elevation){
+    private void setTabLayoutElevation(float newElevation){
+        if (mTabLayout == null) return;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (mTabLayout != null) {
-                mTabLayout.setElevation(elevation); //reset shadow
+            float oldElevation = mTabLayout.getElevation();
+            if (oldElevation != newElevation) {
+                ObjectAnimator.ofFloat(mTabLayout, "elevation", oldElevation, newElevation)
+                        .setDuration(1000L)
+                        .start();
             }
         }
     }
