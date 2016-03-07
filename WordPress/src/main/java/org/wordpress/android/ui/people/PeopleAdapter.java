@@ -73,7 +73,7 @@ public class PeopleAdapter extends BaseAdapter {
         Person person = getItem(position);
 
         if (person != null) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getImageUrl(), mAvatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtDisplayName.setText(person.getDisplayName());
             holder.txtUsername.setText(person.getUsername());

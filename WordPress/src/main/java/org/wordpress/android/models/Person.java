@@ -7,7 +7,7 @@ public class Person {
     private String firstName;
     private String lastName;
     private String displayName;
-    private String imageUrl;
+    private String avatarUrl;
     private Role role;
 
     public Person(long personID,
@@ -15,15 +15,19 @@ public class Person {
                   String firstName,
                   String lastName,
                   String displayName,
-                  String imageUrl,
+                  String avatarUrl,
                   Role role) {
         this.personID = personID;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.displayName = displayName;
-        this.imageUrl = imageUrl;
+        this.avatarUrl = avatarUrl;
         this.role = role;
+    }
+
+    public long getPersonId() {
+        return personID;
     }
 
     public String getUsername() {
@@ -66,11 +70,11 @@ public class Person {
         this.role = role;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

@@ -1,12 +1,18 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 
 public class PeopleTable {
     public static final String PEOPLE_TABLE = "people";
+
+    private static SQLiteDatabase getWritableDb() {
+        return WordPress.wpDB.getDatabase();
+    }
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
@@ -16,6 +22,25 @@ public class PeopleTable {
                 + "last_name               TEXT,"
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT)");
+    }
+
+    private static void dropTables(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + PEOPLE_TABLE);
+    }
+
+    public static void save(Person person) {
+        save(person, getWritableDb());
+    }
+
+    public static void save(Person person, SQLiteDatabase database) {
+        ContentValues values = new ContentValues();
+        values.put("person_id", person.getPersonId());
+        values.put("user_name", person.getUsername());
+        values.put("first_name", person.getFirstName());
+        values.put("last_name", person.getLastName());
+        values.put("display_name", person.getDisplayName());
+        values.put("avatar_url", person.getAvatarUrl());
+        database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     /**

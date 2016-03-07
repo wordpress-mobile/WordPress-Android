@@ -64,7 +64,7 @@ public class PersonActivity extends AppCompatActivity {
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getImageUrl(), avatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             txtDisplayName.setText(person.getDisplayName());
