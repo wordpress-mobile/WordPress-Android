@@ -131,7 +131,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
         }
 
         if (!url.contains("xmlrpc.php")) { // Do not use 'ends' here! Some hosting wants parameters passed to baseURL/xmlrpc-php?my-authcode=XXX
-            if (url.substring(url.length() - 1, url.length()).equals("/")) {
+            if (url.charAt(url.length() - 1) == '/') {
                 url = url.substring(0, url.length() - 1);
             }
             url += "/xmlrpc.php";
