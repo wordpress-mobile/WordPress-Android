@@ -244,6 +244,10 @@ public class StatsActivity extends AppCompatActivity
                     // nop
                 }
             });
+
+            Toolbar spinnerToolbar = (Toolbar) findViewById(R.id.toolbar_filter);
+            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+
         }
 
         selectCurrentTimeframeInActionBar();
