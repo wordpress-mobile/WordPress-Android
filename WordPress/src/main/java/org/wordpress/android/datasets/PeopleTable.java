@@ -1,15 +1,19 @@
 package org.wordpress.android.datasets;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
+import org.wordpress.android.util.SqlUtils;
 
 public class PeopleTable {
     public static final String PEOPLE_TABLE = "people";
 
+    private static SQLiteDatabase getReadableDb() {
+        return WordPress.wpDB.getDatabase();
+    }
     private static SQLiteDatabase getWritableDb() {
         return WordPress.wpDB.getDatabase();
     }
@@ -45,11 +49,27 @@ public class PeopleTable {
 
     /**
      * retrieve a single person
-     * @param personId - unique id in person table
+     * @param personId - unique id in people table
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(int personId) {
-        // This is a stub method for now so it returns a mock object, once implemented it will query the db
-        return new Person(4, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR);
+    private static Person getPerson(long personId) {
+        String[] args = { Long.toString(personId) };
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=?", args);
+
+        try {
+            if (!c.moveToFirst()) {
+                return null;
+            }
+
+            String username = c.getString(c.getColumnIndex("user_name"));
+            String firstName = c.getString(c.getColumnIndex("first_name"));
+            String lastName = c.getString(c.getColumnIndex("last_name"));
+            String displayName = c.getString(c.getColumnIndex("display_name"));
+            String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
+
+            return new Person(personId, username, firstName, lastName, displayName, avatarUrl, null);
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
     }
 }
