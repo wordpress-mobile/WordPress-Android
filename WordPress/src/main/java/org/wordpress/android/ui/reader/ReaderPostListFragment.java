@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -973,6 +974,18 @@ public class ReaderPostListFragment extends Fragment
         return (mNewPostsBar != null && mNewPostsBar.getVisibility() == View.VISIBLE);
     }
 
+    /*
+     * scroll listener assigned to the recycler when the "new posts" bar is shown to hide
+     * it upon scrolling
+     */
+    private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            hideNewPostsBar();
+        }
+    };
+
     private void showNewPostsBar() {
         if (!isAdded() || isNewPostsBarShowing()) {
             return;
@@ -980,6 +993,18 @@ public class ReaderPostListFragment extends Fragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
+        // assign the scroll listener to hide the bar when the recycler is scrolled, but don't assign
+        // it right away since the user may be scrolling when the bar appears (which would cause it
+        // to disappear as soon as it's displayed)
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded() && isNewPostsBarShowing()) {
+                    mRecyclerView.addOnScrollListener(mOnScrollListener);
+                }
+            }
+        }, 1000L);
 
         // remove the gap marker if it's showing, since it's no longer valid
         getPostAdapter().removeGapMarker();
@@ -991,6 +1016,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mIsAnimatingOutNewPostsBar = true;
+
+        // remove the onScrollListener assigned in showNewPostsBar()
+        mRecyclerView.removeOnScrollListener(mOnScrollListener);
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
