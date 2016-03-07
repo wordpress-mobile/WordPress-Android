@@ -112,7 +112,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             for (Object currentAvailableMethod: availableMethods) {
                 if ((currentAvailableMethod).equals(currentRequiredMethod)) {
                     match = true;
-                    continue;
+                    break;
                 }
             }
 
