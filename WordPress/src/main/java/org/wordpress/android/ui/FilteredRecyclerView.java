@@ -350,6 +350,18 @@ public class FilteredRecyclerView extends RelativeLayout {
         mRecyclerView.addItemDecoration(decor);
     }
 
+    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
+        if (mRecyclerView != null) {
+            mRecyclerView.addOnScrollListener(listener);
+        }
+    }
+
+    public void removeOnScrollListener(RecyclerView.OnScrollListener listener) {
+        if (mRecyclerView != null) {
+            mRecyclerView.removeOnScrollListener(listener);
+        }
+    }
+
     public void hideToolbar(){
         mAppBarLayout.setExpanded(false, true);
     }
