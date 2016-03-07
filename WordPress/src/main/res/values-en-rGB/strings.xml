@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
+	<string name="error_post_my_profile">Couldn\'t save your profile</string>
+	<string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+	<string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+	<string name="stats_widget_promo_ok_btn_label">OK, got it</string>
+	<string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
+	<string name="stats_widget_promo_title">Home Screen Stats Widget</string>
+	<string name="site_settings_unknown_language_code_error">Language code not recognised</string>
+	<string name="site_settings_threading_dialog_description">Allow comments to be nested in threads.</string>
+	<string name="site_settings_threading_dialog_header">Thread up to</string>
+	<string name="add_category">Add category</string>
+	<string name="disabled">Disabled</string>
+	<string name="remove">Remove</string>
+	<string name="search">Search</string>
 	<string name="site_settings_image_original_size">Original Size</string>
 	<string name="about_me_hint">A few words about you…</string>
 	<string name="about_me">About me</string>
@@ -787,7 +801,6 @@
 	<string name="share_action">Share</string>
 	<string name="stats">Stats</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
-	<string name="menu_search">Search</string>
 	<string name="passcode_manage">Manage PIN lock</string>
 	<string name="passcode_enter_passcode">Enter your PIN</string>
 	<string name="passcode_enter_old_passcode">Enter your old PIN</string>
@@ -832,7 +845,6 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Upload and link to scaled image</string>
 	<string name="scaled_image">Scaled image width</string>
-	<string name="remove_location">Remove</string>
 	<string name="scheduled">Scheduled</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Posted from WordPress for Android</string>
@@ -933,6 +945,7 @@
 	<string-array name="privacy_details">
 		<item>Your site is visible to everyone and may be indexed by search engines</item>
 		<item>Your site is visible to everyone but asks search engines not to index it</item>
+		<item>Your site is visible only to you and users you approve</item>
 	</string-array>
 	<string-array name="site_settings_auto_approve_details">
 		<item>Require manual approval for everyone\'s comments.</item>
@@ -943,18 +956,6 @@
 		<item>No comments</item>
 		<item>Known users\' comments</item>
 		<item>All users</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>None</item>
-		<item>Two levels</item>
-		<item>Three levels</item>
-		<item>Four levels</item>
-		<item>Five levels</item>
-		<item>Six levels</item>
-		<item>Seven levels</item>
-		<item>Eight levels</item>
-		<item>Nine levels</item>
-		<item>Ten levels</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Free</item>

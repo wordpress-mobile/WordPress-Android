@@ -38,7 +38,7 @@
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
-            app:fontVariation="light"
+            android:fontFamily="sans-serif-light"
             tools:text="Full Name" />
 
         <org.wordpress.android.widgets.WPTextView

@@ -1,5 +1,9 @@
 package org.wordpress.android.editor;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -14,12 +18,16 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.wordpress.android.editor.Utils.buildMapFromKeyValuePairs;
 import static org.wordpress.android.editor.Utils.decodeHtml;
 import static org.wordpress.android.editor.Utils.escapeHtml;
 import static org.wordpress.android.editor.Utils.getChangeMapFromSets;
 import static org.wordpress.android.editor.Utils.splitDelimitedString;
 import static org.wordpress.android.editor.Utils.splitValuePairDelimitedString;
+import static org.wordpress.android.editor.Utils.getUrlFromClipboard;
 
 @Config(sdk = 18)
 @RunWith(RobolectricTestRunner.class)
@@ -160,5 +168,48 @@ public class UtilsTest {
 
         // Test empty sets
         assertEquals(Collections.emptyMap(), getChangeMapFromSets(Collections.emptySet(), Collections.emptySet()));
+    }
+
+    @Test
+    public void testClipboardUrlWithNullContext() {
+        assertNull(getUrlFromClipboard(null));
+    }
+
+    @Test
+    public void testClipboardUrlWithNoClipData() {
+        assertNull(getClipboardUrlHelper(0, null));
+    }
+
+    @Test
+    public void testClipboardUrlWithNonUriData() {
+        assertNull(getClipboardUrlHelper(1, "not a URL"));
+    }
+
+    @Test
+    public void testClipboardUrlWithLocalUriData() {
+        assertNull(getClipboardUrlHelper(1, "file://test.png"));
+    }
+
+    @Test
+    public void testClipboardWithUrlData() {
+        String testUrl = "google.com";
+        assertEquals(testUrl, getClipboardUrlHelper(1, testUrl));
+    }
+
+    private String getClipboardUrlHelper(int itemCount, String clipText) {
+        ClipData.Item mockItem = mock(ClipData.Item.class);
+        when(mockItem.getText()).thenReturn(clipText);
+
+        ClipData mockPrimary = mock(ClipData.class);
+        when(mockPrimary.getItemCount()).thenReturn(itemCount);
+        when(mockPrimary.getItemAt(0)).thenReturn(mockItem);
+
+        ClipboardManager mockManager = mock(ClipboardManager.class);
+        when(mockManager.getPrimaryClip()).thenReturn(mockPrimary);
+
+        Context mockContext = mock(Context.class);
+        when(mockContext.getSystemService(Context.CLIPBOARD_SERVICE)).thenReturn(mockManager);
+
+        return getUrlFromClipboard(mockContext);
     }
 }
