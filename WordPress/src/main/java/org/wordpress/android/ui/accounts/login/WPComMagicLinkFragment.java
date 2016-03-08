@@ -11,19 +11,19 @@ import android.widget.Button;
 import org.wordpress.android.R;
 
 public class WPComMagicLinkFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
 
     private Button mMagicLinkButton;
-    private String mParam1;
+    private String mEmail;
     private OnFragmentInteractionListener mListener;
 
     public WPComMagicLinkFragment() {
     }
 
-    public static WPComMagicLinkFragment newInstance(String param1) {
+    public static WPComMagicLinkFragment newInstance(String email) {
         WPComMagicLinkFragment fragment = new WPComMagicLinkFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_EMAIL_ADDRESS, email);
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,7 +32,7 @@ public class WPComMagicLinkFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
         }
     }
 
