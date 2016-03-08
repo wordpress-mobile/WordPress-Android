@@ -893,6 +893,10 @@ public class ReaderPostListFragment extends Fragment
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
         }
+        if (tag == null) {
+            AppLog.w(T.READER, "null tag passed to updatePostsWithTag");
+            return;
+        }
         AppLog.d(T.READER, "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostService.startServiceForTag(getActivity(), tag, updateAction);
     }
