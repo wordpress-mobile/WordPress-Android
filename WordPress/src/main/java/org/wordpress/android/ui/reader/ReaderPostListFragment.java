@@ -428,8 +428,8 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                mCurrentTag = AppPrefs.getReaderTag();
-                return mCurrentTag;
+                ReaderTag tag = AppPrefs.getReaderTag();
+                return tag;
             }
 
             @Override
