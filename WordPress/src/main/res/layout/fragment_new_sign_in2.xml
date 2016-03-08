@@ -100,7 +100,7 @@
                     style="@style/WordPress.NUXPrimaryButton"
                     android:layout_width="match_parent"
                     android:clickable="true"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:gravity="center"
                     android:text="@string/sign_in" />
 
