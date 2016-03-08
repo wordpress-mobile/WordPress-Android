@@ -35,8 +35,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        vectorDrawables.generatedDensities = ['hdpi', 'xhdpi', 'xxhdpi']
         buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
+		vectorDrawables.generatedDensities = ['hdpi', 'xhdpi', 'xxhdpi']
     }
 
     productFlavors {
