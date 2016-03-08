@@ -56,6 +56,58 @@
           "siteUrl": "http://wordpress.com"
         }
       }
+    },
+    {
+      "comment": "testing xmlrpc.php missing",
+      "realm": "XMLPRC_DISCOVERY",
+      "setup": {
+        "input": {
+          "serverMock": [
+            {
+              "request": {
+                "method": "GET",
+                "path": "/"
+              },
+              "response": {
+                "statusCode": 404
+              }
+            },
+            {
+              "request": {
+                "method": "GET",
+                "path": "/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 404
+              }
+            },
+            {
+              "request": {
+                "method": "POST",
+                "path": "/"
+              },
+              "response": {
+                "statusCode": 404
+              }
+            },
+            {
+              "request": {
+                "method": "POST",
+                "path": "/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 404
+              }
+            }
+          ]
+        },
+        "output": {
+          "error": {
+            "type": "XMLRPC_MISSING",
+            "message": "Couldn't connect to the WordPress site"
+          }
+        }
+      }
     }
   ]
 }
