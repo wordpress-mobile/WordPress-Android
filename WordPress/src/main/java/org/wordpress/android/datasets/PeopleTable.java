@@ -52,7 +52,7 @@ public class PeopleTable {
      * @param personId - unique id in people table
      * @return Person if found, null otherwise
      */
-    private static Person getPerson(long personId) {
+    public static Person getPerson(long personId) {
         String[] args = { Long.toString(personId) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=?", args);
 

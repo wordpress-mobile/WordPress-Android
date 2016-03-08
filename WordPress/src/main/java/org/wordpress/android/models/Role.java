@@ -21,7 +21,7 @@ public enum Role {
         this.backgroundColor = backgroundColor;
     }
 
-    public static String toString(Context context, Role role) {
+    public static String getLabel(Context context, Role role) {
         return context.getString(role.label);
     }
 

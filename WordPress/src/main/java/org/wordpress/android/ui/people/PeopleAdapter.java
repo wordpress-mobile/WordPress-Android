@@ -77,7 +77,7 @@ public class PeopleAdapter extends BaseAdapter {
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtDisplayName.setText(person.getDisplayName());
             holder.txtUsername.setText(person.getUsername());
-            holder.txtRole.setText(Role.toString(mContext, person.getRole()));
+            holder.txtRole.setText(Role.getLabel(mContext, person.getRole()));
             holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
         }
 
