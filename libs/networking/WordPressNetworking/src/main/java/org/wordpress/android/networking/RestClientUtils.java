@@ -272,6 +272,11 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+    public void exportContentAll(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/exports/start", siteId);
+        post(path, listener, errorListener);
+    }
+
     /**
      * Make GET request
      */
