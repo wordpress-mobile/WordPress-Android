@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,16 @@ public class NewSignInActivityFragment extends Fragment {
         });
 
         return view;
+    }
+    
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnEmailCheckListener) {
+            mListener = (OnEmailCheckListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnEmailCheckListener");
+        }
     }
 
     private void checkEmail() {
