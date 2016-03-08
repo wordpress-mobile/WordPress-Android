@@ -543,7 +543,6 @@
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>
 	<string name="media_gallery_type">Növ</string>
-	<string name="menu_search">Axtar</string>
 	<string name="media_edit_caption_text">Başlıq</string>
 	<string name="media_edit_success">Yenilənib</string>
 	<string name="media_edit_title_hint">Buraya bir şüar daxil edin</string>
@@ -619,7 +618,6 @@
 	<string name="blogusername">bloqistifadəçiadı</string>
 	<string name="upload_scaled_image">Ölçüləndirilmiş təsviri yüklə və bağlantı ver</string>
 	<string name="scaled_image">Mütənasib təsvirin genişliyi</string>
-	<string name="remove_location">Sil</string>
 	<string name="scheduled">Ertələndi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Android üçün WordPress ilə göndərilmişdir</string>

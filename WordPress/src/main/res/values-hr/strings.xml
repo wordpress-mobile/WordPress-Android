@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Neuspjelo snimanje postavki vašeg računa</string>
+	<string name="error_post_my_profile">Neuspjelo snimanje vašeg profila</string>
+	<string name="error_fetch_account_settings">Neuspjelo dohvaćanje postavki vašeg računa</string>
+	<string name="error_fetch_my_profile">Neuspjelo dohvaćanje vašeg profila</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, uspjelo</string>
+	<string name="stats_widget_promo_desc">Dodajte widget na početni zaslon za pristup Statistici u jednom kliku.</string>
+	<string name="stats_widget_promo_title">Widget statistike početnog zaslona</string>
+	<string name="site_settings_unknown_language_code_error">Jezični kod nije prepoznat</string>
+	<string name="site_settings_threading_dialog_description">Dopusti grananje komentara.</string>
+	<string name="site_settings_threading_dialog_header">Grananje do </string>
+	<string name="remove">Ukloni</string>
+	<string name="search">Pretraga</string>
+	<string name="add_category">Dodaj kategoriju</string>
+	<string name="disabled">Onemogući</string>
 	<string name="site_settings_image_original_size">Originalna veličina</string>
 	<string name="about_me_hint">Nekoliko riječi o vama...</string>
 	<string name="about_me">O meni</string>
@@ -747,7 +761,6 @@
 	<string name="stats_entry_referrers">Preporučitelj</string>
 	<string name="stats_totals_views">Pregleda</string>
 	<string name="stats_totals_clicks">Klikova</string>
-	<string name="menu_search">Pretraživanje</string>
 	<string name="stats_view_referrers">Preporučitelji</string>
 	<string name="stats_timeframe_today">Danas</string>
 	<string name="stats_timeframe_yesterday">Jučer</string>
@@ -832,7 +845,6 @@
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Prenesi i poveži do dimenzionirane slike</string>
 	<string name="scaled_image">Širina dimenzionirane slike</string>
-	<string name="remove_location">Ukloni</string>
 	<string name="scheduled">Zakazano</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Objavljeno pomoću WordPress za Android</string>
@@ -944,18 +956,6 @@
 		<item>Nema komentara</item>
 		<item>Komentari poznatih korisnika</item>
 		<item>Svi korisnici</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Ništa</item>
-		<item>Dva nivoa</item>
-		<item>Tri nivoa</item>
-		<item>Četiri nivoa</item>
-		<item>Pet nivoa</item>
-		<item>Šest nivoa</item>
-		<item>Sedam nivoa</item>
-		<item>Osam nivoa</item>
-		<item>Devet nivoa</item>
-		<item>Deset nivoa</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Besplatno</item>
