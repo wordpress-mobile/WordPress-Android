@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.util.SqlUtils;
 
 public class PeopleTable {
@@ -25,7 +26,8 @@ public class PeopleTable {
                 + "first_name              TEXT,"
                 + "last_name               TEXT,"
                 + "display_name            TEXT,"
-                + "avatar_url              TEXT)");
+                + "avatar_url              TEXT,"
+                + "role                    TEXT)");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -44,6 +46,7 @@ public class PeopleTable {
         values.put("last_name", person.getLastName());
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
+        values.put("role", Role.toString(person.getRole()));
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -66,8 +69,9 @@ public class PeopleTable {
             String lastName = c.getString(c.getColumnIndex("last_name"));
             String displayName = c.getString(c.getColumnIndex("display_name"));
             String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
+            Role role = Role.fromString(c.getString(c.getColumnIndex("role")));
 
-            return new Person(personId, username, firstName, lastName, displayName, avatarUrl, null);
+            return new Person(personId, username, firstName, lastName, displayName, avatarUrl, role);
         } finally {
             SqlUtils.closeCursor(c);
         }
