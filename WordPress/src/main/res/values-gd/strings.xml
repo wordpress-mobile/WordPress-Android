@@ -532,7 +532,6 @@
 	<string name="stats_totals_views">Seallaidhean</string>
 	<string name="stats_totals_clicks">Briogaidhean</string>
 	<string name="stats_totals_plays">Air a chluich</string>
-	<string name="menu_search">Lorg</string>
 	<string name="passcode_enter_passcode">Cuir a-steach am PIN agad</string>
 	<string name="passcode_re_enter_passcode">Cuir a-steach am PIN agad a-rithist</string>
 	<string name="passcode_change_passcode">Atharraich am PIN</string>
@@ -575,7 +574,6 @@
 	<string name="ok">Ceart ma-thà</string>
 	<string name="upload_scaled_image">Luchdaich suas is dèan ceangal ris an dealbh sgèilichte</string>
 	<string name="scaled_image">Leud an deilbh sgèilichte</string>
-	<string name="remove_location">Thoir air falbh</string>
 	<string name="scheduled">Air an sgeideal</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Air a phostadh o WordPress airson Android</string>
