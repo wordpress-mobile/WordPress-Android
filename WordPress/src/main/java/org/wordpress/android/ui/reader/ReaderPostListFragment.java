@@ -428,8 +428,8 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                mCurrentTag = AppPrefs.getReaderTag();
-                return mCurrentTag;
+                ReaderTag tag = AppPrefs.getReaderTag();
+                return tag;
             }
 
             @Override
@@ -891,6 +891,10 @@ public class ReaderPostListFragment extends Fragment
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
+            return;
+        }
+        if (tag == null) {
+            AppLog.w(T.READER, "null tag passed to updatePostsWithTag");
             return;
         }
         AppLog.d(T.READER, "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
