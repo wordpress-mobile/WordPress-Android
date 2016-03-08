@@ -12,12 +12,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewSignInActivityFragment extends Fragment {
-    private String mEmail = "";
-    private OnEmailCheckListener mListener;
-
     public interface OnEmailCheckListener {
         void onEmailChecked(Boolean isWPCom);
     }
+
+    private String mEmail = "";
+    private OnEmailCheckListener mListener;
 
     public NewSignInActivityFragment() {
     }
@@ -37,7 +37,7 @@ public class NewSignInActivityFragment extends Fragment {
 
         return view;
     }
-    
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
