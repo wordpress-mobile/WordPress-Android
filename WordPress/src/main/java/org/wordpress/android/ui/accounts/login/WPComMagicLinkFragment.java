@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.WPTextView;
 
 public class WPComMagicLinkFragment extends Fragment {
     public interface OnMagicLinkFragmentInteraction {
@@ -18,7 +19,7 @@ public class WPComMagicLinkFragment extends Fragment {
 
     private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
 
-    private Button mMagicLinkButton;
+    private WPTextView mMagicLinkButton;
     private String mEmail;
     private OnMagicLinkFragmentInteraction mListener;
 
@@ -44,7 +45,7 @@ public class WPComMagicLinkFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wpcom_magic_link, container, false);
-        mMagicLinkButton = (Button) view.findViewById(R.id.magic_button);
+        mMagicLinkButton = (WPTextView) view.findViewById(R.id.magic_button);
         mMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
