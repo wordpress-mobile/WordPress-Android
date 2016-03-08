@@ -33,7 +33,7 @@ public enum Role {
     }
 
     // Returns the key for that role
-    public static String toString(Role role) {
+    public static String toKey(Role role) {
         switch (role) {
             case SUPER_ADMIN:
                 return KEY_SUPER_ADMIN;
@@ -50,8 +50,8 @@ public enum Role {
         }
     }
 
-    // This method is be used to determine the role of the user from network request
-    public static Role fromString(String value) {
+    // This method is be used to determine the role of the user from network request & db
+    public static Role fromKey(String value) {
         if (value == null)
             return Role.UNSUPPORTED;
         if (value.equals(KEY_SUPER_ADMIN))

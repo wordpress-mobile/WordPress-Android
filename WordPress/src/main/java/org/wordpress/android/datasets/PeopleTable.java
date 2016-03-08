@@ -46,7 +46,7 @@ public class PeopleTable {
         values.put("last_name", person.getLastName());
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
-        values.put("role", Role.toString(person.getRole()));
+        values.put("role", Role.toKey(person.getRole()));
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -69,7 +69,7 @@ public class PeopleTable {
             String lastName = c.getString(c.getColumnIndex("last_name"));
             String displayName = c.getString(c.getColumnIndex("display_name"));
             String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
-            Role role = Role.fromString(c.getString(c.getColumnIndex("role")));
+            Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
 
             return new Person(personId, username, firstName, lastName, displayName, avatarUrl, role);
         } finally {
