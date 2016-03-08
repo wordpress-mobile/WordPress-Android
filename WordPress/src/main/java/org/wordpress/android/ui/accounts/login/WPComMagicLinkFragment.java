@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,39 +10,16 @@ import android.widget.Button;
 
 import org.wordpress.android.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link WPComMagicLinkFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link WPComMagicLinkFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WPComMagicLinkFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private Button mMagicLinkButton;
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
-
     private OnFragmentInteractionListener mListener;
 
     public WPComMagicLinkFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment WPComMagicLinkFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static WPComMagicLinkFragment newInstance(String param1) {
         WPComMagicLinkFragment fragment = new WPComMagicLinkFragment();
         Bundle args = new Bundle();
@@ -61,9 +37,7 @@ public class WPComMagicLinkFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wpcom_magic_link, container, false);
         mMagicLinkButton = (Button) view.findViewById(R.id.magic_button);
         mMagicLinkButton.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +50,6 @@ public class WPComMagicLinkFragment extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Boolean shouldSendMagicLink) {
         if (mListener != null) {
             mListener.onFragmentInteraction(shouldSendMagicLink);
@@ -89,8 +62,7 @@ public class WPComMagicLinkFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -100,18 +72,7 @@ public class WPComMagicLinkFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Boolean shouldSendMagicLink);
     }
 }
