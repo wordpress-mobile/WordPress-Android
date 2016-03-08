@@ -26,7 +26,8 @@
             android:text="This feature is a work-in-progress"
             android:textColor="@color/alert_red"
             android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"/>
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_plan_icon"
