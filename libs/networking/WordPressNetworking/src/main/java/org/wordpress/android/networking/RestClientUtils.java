@@ -267,6 +267,11 @@ public class RestClientUtils {
         post(path, listener, errorListener);
     }
 
+    public void getSitePurchases(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/purchases", siteId);
+        get(path, listener, errorListener);
+    }
+
     /**
      * Make GET request
      */

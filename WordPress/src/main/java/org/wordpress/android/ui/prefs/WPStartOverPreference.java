@@ -18,25 +18,25 @@ import org.wordpress.android.models.Blog;
  * with id R.id.button, an onPreferenceClick listener is added.
  */
 
-public class WPDeleteSitePreference extends WPPreference {
+public class WPStartOverPreference extends WPPreference {
     private String mButtonText;
     private int mButtonTextColor;
     private boolean mButtonTextAllCaps;
 
-    public WPDeleteSitePreference(Context context, AttributeSet attrs) {
+    public WPStartOverPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mButtonTextColor = ContextCompat.getColor(context, R.color.black);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPDeleteSitePreference);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPStartOverPreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
             int index = array.getIndex(i);
-            if (index == R.styleable.WPDeleteSitePreference_buttonText) {
+            if (index == R.styleable.WPStartOverPreference_buttonText) {
                 mButtonText = array.getString(index);
-            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextColor) {
+            } else if (index == R.styleable.WPStartOverPreference_buttonTextColor) {
                 mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
-            } else if (index == R.styleable.WPDeleteSitePreference_buttonTextAllCaps) {
+            } else if (index == R.styleable.WPStartOverPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
         }
@@ -49,7 +49,7 @@ public class WPDeleteSitePreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPDeleteSitePreference deleteSitePreference = this;
+            final WPStartOverPreference deleteSitePreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);

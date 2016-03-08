@@ -38,12 +38,15 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -106,8 +109,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
     private static final String DELETE_SITE_TAG = "delete-site";
+    private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
+    private static final String PURCHASE_ACTIVE_KEY = "active";
 
     private static final long FETCH_DELAY = 1000;
+    public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
 
     // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
     private Blog mBlog;
@@ -271,9 +277,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                     onPreferenceChange(mMultipleLinksPref, numLinks);
                     break;
-				case DELETE_SITE_REQUEST_CODE:
-                	deleteSite();
-                	break;
+            }
+        } else {
+            switch (requestCode) {
+                case DELETE_SITE_REQUEST_CODE:
+                    deleteSite();
+                    break;
             }
         }
 
@@ -338,14 +347,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                     AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
 
             return setupMorePreferenceScreen();
-        } else if (preference == findPreference(getString(R.string.pref_key_site_delete_site_screen))) {
-            Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog == null) return false;
-
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
-
-            String title = getString(R.string.site_settings_delete_site_title);
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog == null) return false;
@@ -384,9 +385,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
         } else if (preference == mExportSitePref) {
-            showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
-            showDeleteSiteDialog();
+            requestPurchasesForDeletionCheck();
         } else {
             return false;
         }
@@ -702,18 +702,72 @@ public class SiteSettingsFragment extends PreferenceFragment
         });
     }
 
-    private void showExportContentDialog() {
+    private void requestPurchasesForDeletionCheck() {
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
+        WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                progressDialog.dismiss();
+                if (isAdded()) {
+                    showPurchasesOrDeleteSiteDialog(response, currentBlog);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
+                    AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
+                }
+            }
+        });
+    }
+
+    private void showPurchasesOrDeleteSiteDialog(JSONObject response, final Blog currentBlog) {
+        try {
+            JSONArray purchases = response.getJSONArray(PURCHASE_ORIGINAL_RESPONSE_KEY);
+            if (hasActivePurchases(purchases)) {
+                showPurchasesDialog(currentBlog);
+            } else {
+                showDeleteSiteDialog();
+            }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Error occurred while trying to delete site: " + e.toString());
+        }
+    }
+
+    private void showPurchasesDialog(final Blog currentBlog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.export_content);
-        builder.setMessage(R.string.export_content_message);
-        builder.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.premium_upgrades_title);
+        builder.setMessage(R.string.premium_upgrades_message);
+        builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL, AccountHelper.getCurrentUsernameForBlog(currentBlog));
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         builder.show();
+    }
+
+    private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
+        for (int i = 0; i < purchases.length(); i++) {
+            JSONObject purchase = purchases.getJSONObject(i);
+            int active = purchase.getInt(PURCHASE_ACTIVE_KEY);
+
+            if (active == 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void showDeleteSiteDialog() {
@@ -1063,20 +1117,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             dialogBuilder.setCancelable(true);
             dialogBuilder.create().show();
         }
-    }
-
-    private void removeBlogWithConfirmation() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
-        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                removeBlog();
-            }
-        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
-        dialogBuilder.setCancelable(false);
-        dialogBuilder.create().show();
     }
 
     private boolean shouldShowListPreference(DetailListPreference preference) {
