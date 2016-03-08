@@ -41,7 +41,14 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
 
     @Override
     public void onMagicLinkSent() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        MagicLinkSentFragment fragment = new MagicLinkSentFragment();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
