@@ -37,7 +37,7 @@
             android:shadowDx="0"
             android:shadowDy="1"
             android:shadowRadius="2"
-            app:fontVariation="light"
+            android:fontFamily="sans-serif-light"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
 

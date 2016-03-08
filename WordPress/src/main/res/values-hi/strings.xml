@@ -411,7 +411,6 @@
 	<string name="themes_features_label">विशेषताएँ</string>
 	<string name="images">छविया</string>
 	<string name="stats_timeframe_months">महीने</string>
-	<string name="menu_search">खोजें</string>
 	<string name="share_action">साझा करे</string>
 	<string name="themes">थीम्स</string>
 	<string name="stats_totals_clicks">क्लिक</string>
@@ -486,7 +485,6 @@
 	<string name="ok">ओके</string>
 	<string name="upload_scaled_image">अपलोड करें और बढाये गए छवि से जोड़े</string>
 	<string name="scaled_image">बढाये गए छवि की चौड़ाई</string>
-	<string name="remove_location">हटाये</string>
 	<string name="scheduled">	नियत किया गया</string>
 	<string name="link_enter_url">यूआरएल</string>
 	<string name="posted_from">एंड्राइड के लिए वर्डप्रेस से प्रकाशित किया गया</string>

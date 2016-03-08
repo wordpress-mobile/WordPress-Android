@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.wordpress.android.widgets.OpenSansEditText
+            <org.wordpress.android.widgets.WPEditText
                 android:id="@+id/author_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
                 android:inputType="textPersonName|textNoSuggestions"
                 android:singleLine="true" />
 
-            <org.wordpress.android.widgets.OpenSansEditText
+            <org.wordpress.android.widgets.WPEditText
                 android:id="@+id/author_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:inputType="textEmailAddress"
                 android:singleLine="true" />
 
-            <org.wordpress.android.widgets.OpenSansEditText
+            <org.wordpress.android.widgets.WPEditText
                 android:id="@+id/author_url"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:inputType="textUri"
                 android:singleLine="true" />
 
-            <org.wordpress.android.widgets.OpenSansEditText
+            <org.wordpress.android.widgets.WPEditText
                 android:id="@+id/edit_comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

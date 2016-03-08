@@ -21,7 +21,7 @@
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/grey_darken_10" />
 
-    <org.wordpress.android.widgets.OpenSansButton
+    <org.wordpress.android.widgets.WPButton
         android:id="@+id/learn_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,6 +33,6 @@
         android:text="@string/learn_more"
         android:textSize="@dimen/text_sz_medium"
         android:textColor="@color/blue_medium"
-        app:fontVariation="light" />
+        android:fontFamily="sans-serif-light" />
 
 </LinearLayout>

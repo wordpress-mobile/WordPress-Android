@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
 
 public class WPPreference extends Preference implements PreferenceHint {
     private String mHint;
@@ -38,19 +36,13 @@ public class WPPreference extends Preference implements PreferenceHint {
         super.onBindView(view);
 
         Resources res = getContext().getResources();
-        Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.NORMAL,
-                TypefaceCache.VARIATION_NORMAL);
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
         if (titleView != null) {
-            titleView.setTypeface(typeface);
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
             titleView.setTextColor(res.getColor(isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
         }
         if (summaryView != null) {
-            summaryView.setTypeface(typeface);
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));
             summaryView.setTextColor(res.getColor(isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10));
         }
