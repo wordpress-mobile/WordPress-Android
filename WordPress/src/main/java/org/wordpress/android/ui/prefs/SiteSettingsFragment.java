@@ -253,7 +253,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             RelatedPostsDialog.SHOW_HEADER_KEY, false));
                     mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
                             RelatedPostsDialog.SHOW_IMAGES_KEY, false));
-                    onPreferenceChange(mRelatedPostsPref, mSiteSettings.getRelatedPostsDescription());
+                    mSiteSettings.saveSettings();
                     break;
                 case THREADING_REQUEST_CODE:
                     int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
@@ -416,7 +416,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
             changeLanguageValue(mSiteSettings.getLanguageCode());
         } else if (preference == mPrivacyPref) {
-            mSiteSettings.setPrivacy(Integer.parseInt(newValue.toString()));
+            mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
             setDetailListPreferenceValue(mPrivacyPref,
                     String.valueOf(mSiteSettings.getPrivacy()),
                     mSiteSettings.getPrivacyDescription());
@@ -477,12 +477,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getMaxImageWidth());
         } else if (preference == mUploadAndLinkPref) {
             mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
-        } else if (preference == mRelatedPostsPref) {
-            mRelatedPostsPref.setSummary(newValue.toString());
-        } else if (preference == mModerationHoldPref) {
-            mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        } else if (preference == mBlacklistPref) {
-            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
         } else {
             return false;
         }
@@ -520,11 +514,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        if (mEditingList == mSiteSettings.getModerationKeys()) {
-            onPreferenceChange(mModerationHoldPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
-            onPreferenceChange(mBlacklistPref, mEditingList.size());
-        }
+        mSiteSettings.saveSettings();
         mEditingList = null;
     }
 
@@ -855,9 +845,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
         mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
-        mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
-        mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
     }
 
     private void setCategories() {
@@ -996,8 +983,20 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void updateWhitelistSettings(int val) {
-        mSiteSettings.setManualApproval(val == -1);
-        mSiteSettings.setUseCommentWhitelist(val == 0);
+        switch (val) {
+            case -1:
+                mSiteSettings.setManualApproval(true);
+                mSiteSettings.setUseCommentWhitelist(false);
+                break;
+            case 0:
+                mSiteSettings.setManualApproval(true);
+                mSiteSettings.setUseCommentWhitelist(true);
+                break;
+            case 1:
+                mSiteSettings.setManualApproval(false);
+                mSiteSettings.setUseCommentWhitelist(false);
+                break;
+        }
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
@@ -1073,7 +1072,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
-                        if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
+                        if (!mEditingList.contains(entry)) {
                             mEditingList.add(entry);
                             list.setAdapter(new ArrayAdapter<>(getActivity(),
                                     R.layout.wp_simple_list_item_1,

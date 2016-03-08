@@ -469,6 +469,7 @@
 	<string name="stats_totals_views">Wizyty</string>
 	<string name="stats_totals_clicks">Kliknięcia</string>
 	<string name="stats_totals_plays">Odtworzenia</string>
+	<string name="menu_search">Szukaj</string>
 	<string name="passcode_enter_passcode">Podaj swój PIN</string>
 	<string name="passcode_enter_old_passcode">Podaj swój stary PIN</string>
 	<string name="passcode_re_enter_passcode">Powtórz swój PIN</string>
@@ -527,6 +528,7 @@
 	<string name="ok">OK</string>
 	<string name="scaled_image">Zmień szerokosć obrazu</string>
 	<string name="upload_scaled_image">Załaduj i wprowadź adres do przeskalowanego obrazu</string>
+	<string name="remove_location">Usuń</string>
 	<string name="scheduled">Zaplanowane</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Opublikowano przez WordPress dla Androida</string>

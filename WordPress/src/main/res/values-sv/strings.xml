@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Kunde inte spara dina kontoinställningar</string>
-	<string name="error_post_my_profile">Kunde inte spara din profil</string>
-	<string name="error_fetch_account_settings">Kunde inte hämta dina kontoinställningar</string>
-	<string name="error_fetch_my_profile">Kunde inte hämta din profil</string>
-	<string name="stats_widget_promo_ok_btn_label">Ok, klart</string>
-	<string name="stats_widget_promo_desc">Lägg till denna widget på startskärmen för att med ett enda klick få tillgång till din statistik.</string>
-	<string name="stats_widget_promo_title">Startskärmens statuswidget</string>
-	<string name="site_settings_unknown_language_code_error">Språkkoden känns inte igen</string>
-	<string name="site_settings_threading_dialog_description">Tillåt att kommentarer staplas i trådar.</string>
-	<string name="site_settings_threading_dialog_header">Trådar upp till</string>
-	<string name="remove">Ta bort</string>
-	<string name="search">Sök</string>
-	<string name="add_category">Lägg till kategori</string>
-	<string name="disabled">Inaktiverad</string>
 	<string name="site_settings_image_original_size">Originalstorlek</string>
 	<string name="about_me_hint">Ett par ord om dig själv…</string>
 	<string name="public_display_name_hint">Om det inte anges något annat kommer visningsnamnet som standard att vara ditt användarnamn</string>
@@ -802,6 +788,7 @@
 	<string name="stats_totals_views">Visningar</string>
 	<string name="stats_totals_clicks">Klick</string>
 	<string name="stats_totals_plays">Spelningar</string>
+	<string name="menu_search">Sök</string>
 	<string name="passcode_manage">Ändra PIN-kodlås</string>
 	<string name="passcode_enter_passcode">Skriv din PIN-kod</string>
 	<string name="passcode_enter_old_passcode">Skriv din gamla PIN-kod</string>
@@ -845,6 +832,7 @@
 	<string name="ok">OK</string>
 	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="upload_scaled_image">Ladda upp och länka till skalad bild</string>
+	<string name="remove_location">Ta bort</string>
 	<string name="scheduled">Tidsinställt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Postat med WordPress för Android</string>
@@ -956,6 +944,18 @@
 		<item>Inga kommentarer</item>
 		<item>Kända användares kommentarer</item>
 		<item>Alla användare</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Ingen</item>
+		<item>Två nivåer</item>
+		<item>Tre nivåer</item>
+		<item>Fyra nivåer</item>
+		<item>Fem nivåer</item>
+		<item>Sex nivåer</item>
+		<item>Sju nivåer</item>
+		<item>Åtta nivåer</item>
+		<item>Nio nivåer</item>
+		<item>Tio nivåer</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratis</item>

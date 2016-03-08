@@ -264,6 +264,7 @@
 	<string name="reader_likes_one">En person liker dette</string>
 	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="limit_reached">Midlertidig begrenset. Du kan prøve igjen om 1 minutt. Dersom du prøver igjen før dette, vil begrensningsperioden bli utvidet. Dersom du mener dette er en feil, vennligst ta kontakt med brukerstøtte.</string>
+	<string name="menu_search">Søk</string>
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>
 	<string name="images">Bilder</string>
@@ -358,6 +359,7 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Last og og lenk til det redigerte bildet</string>
 	<string name="scaled_image">Bildebredde</string>
+	<string name="remove_location">Fjern</string>
 	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Publisert med WordPress for Android</string>

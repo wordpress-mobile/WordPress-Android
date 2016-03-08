@@ -602,6 +602,7 @@
 	<string name="stats_totals_views">Vistas</string>
 	<string name="stats_totals_clicks">Clics</string>
 	<string name="stats_totals_plays">Juegos</string>
+	<string name="menu_search">Buscar</string>
 	<string name="passcode_manage">Administrar el PIN de bloqueo</string>
 	<string name="passcode_enter_passcode">Introduce tu PIN</string>
 	<string name="passcode_re_enter_passcode">Vuelve a introducir el PIN</string>
@@ -649,6 +650,7 @@
 	<string name="blogusername">Nombre de Usuario del blog</string>
 	<string name="upload_scaled_image">Subir y enlazar a la imagen escalada</string>
 	<string name="scaled_image">Ancho de la imagen en escala</string>
+	<string name="remove_location">Quitar</string>
 	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Publicado desde WordPress para Android</string>

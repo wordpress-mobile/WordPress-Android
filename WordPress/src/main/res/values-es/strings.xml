@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">No se pudieron guardar los ajustes de la cuenta</string>
-	<string name="error_post_my_profile">No se pudo guardar tu perfil</string>
-	<string name="error_fetch_account_settings">No se pudieron recuperar los ajustes de la cuenta</string>
-	<string name="error_fetch_my_profile">No se pudo obtener tu perfil</string>
-	<string name="stats_widget_promo_ok_btn_label">Bien, lo tenemos</string>
-	<string name="stats_widget_promo_desc">Añade el widget a tu pantalla de inicio para acceder a tus estadísticas en un clic.</string>
-	<string name="stats_widget_promo_title">Widget de estadísticas en portada</string>
-	<string name="site_settings_unknown_language_code_error">No se pudo reconocer el código del idioma</string>
-	<string name="site_settings_threading_dialog_description">Permite los comentarios anidados.</string>
-	<string name="site_settings_threading_dialog_header">Anidar hasta</string>
-	<string name="remove">Eliminar</string>
-	<string name="disabled">Desactivado</string>
-	<string name="search">Buscar</string>
-	<string name="add_category">Añadir categoría</string>
 	<string name="site_settings_image_original_size">Tamaño original</string>
 	<string name="about_me_hint">Algunas palabras sobre ti...</string>
 	<string name="about_me">Sobre mí</string>
@@ -52,7 +38,7 @@
 	<string name="site_settings_rp_show_header_title">Mostrar cabecera</string>
 	<string name="site_settings_rp_switch_summary">Las entradas relacionadas muestran contenido relevante de tu sitio debajo de las entradas.</string>
 	<string name="site_settings_rp_switch_title">Mostrar entradas relacionadas</string>
-	<string name="site_settings_delete_site_hint">Elimina los datos de tu sitio de la aplicación</string>
+	<string name="site_settings_delete_site_hint">Borra los datos de tu sitio de la aplicación</string>
 	<string name="site_settings_blacklist_hint">Los comentarios que coinciden con un filtro, son marcados como spam</string>
 	<string name="site_settings_moderation_hold_hint">Los comentarios que coinciden con un filtro, son puestos en la cola para moderar</string>
 	<string name="site_settings_multiple_links_hint">Ignorar límite de enlaces de usuarios conocidos</string>
@@ -648,6 +634,7 @@
 	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
+	<string name="reader_toast_err_remove_tag">No se pudo quitar esta etiqueta</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
 	<string name="xmlrpc_error">No se pudo conectar. Ingresa la ruta completa a xmlrpc.php en tu sitio e intenta de nuevo.</string>
 	<string name="trash_no">No enviar a la papelera</string>
@@ -685,7 +672,6 @@
 	<string name="email_cant_be_used_to_signup">No puedes usar esta dirección de correo electrónico para registrarte, ya que bloquea algunos de nuestros correos. Utiliza otro proveedor de correo.</string>
 	<string name="email_reserved">Esta dirección de correo electrónico ya se ha utilizado. Comprueba si tienes en tu bandeja de entrada un correo de activación. Si no activas ahora el correo, puedes intentarlo dentro de unos días.</string>
 	<string name="notifications_empty_all">No hay notificaciones... todavía.</string>
-	<string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
 	<string name="deleting_post">Borrando entrada</string>
 	<string name="share_url_post">Compartir entrada</string>
 	<string name="share_url_page">Compartir página</string>
@@ -785,6 +771,7 @@
 	<string name="stats_entry_tags_and_categories">Tema</string>
 	<string name="stats_entry_authors">Autor</string>
 	<string name="stats_entry_referrers">Referencias</string>
+	<string name="menu_search">Buscar</string>
 	<string name="passcode_manage">Administrar el PIN de bloqueo</string>
 	<string name="passcode_enter_passcode">Introduce tu PIN</string>
 	<string name="passcode_enter_old_passcode">Introduce tu viejo PIN</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">Usuario del blog</string>
 	<string name="upload_scaled_image">Subir y enlazar a la imagen escalada</string>
 	<string name="scaled_image">Ancho de la imagen en escala</string>
+	<string name="remove_location">Quitar</string>
 	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Publicado desde WordPress para Android</string>
@@ -955,6 +943,18 @@
 		<item>Sin comentarios</item>
 		<item>Comentarios de usuarios conocidos</item>
 		<item>Todos los usuarios</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Ninguna</item>
+		<item>Dos niveles</item>
+		<item>Tres niveles</item>
+		<item>Cuatro niveles</item>
+		<item>Cinco niveles</item>
+		<item>Seis niveles</item>
+		<item>Siete niveles</item>
+		<item>Ocho niveles</item>
+		<item>Nueve niveles</item>
+		<item>Diez niveles</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratuito</item>

@@ -21,11 +21,12 @@ public class RippleToggleButton extends ToggleButton {
     private Paint mStrokePaint;
 
     public RippleToggleButton(Context context) {
-        this(context, null);
-   }
+        super(context);
+    }
 
     public RippleToggleButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init();
     }
 
     public RippleToggleButton(Context context, AttributeSet attrs, int defStyle) {

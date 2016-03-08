@@ -47,9 +47,6 @@ ZSSEditor.currentSelection;
 // The current editing image
 ZSSEditor.currentEditingImage;
 
-// The current editing video
-ZSSEditor.currentEditingVideo;
-
 // The current editing link
 ZSSEditor.currentEditingLink;
 
@@ -64,10 +61,6 @@ ZSSEditor.lastTappedNode = null;
 
 // The default paragraph separator
 ZSSEditor.defaultParagraphSeparator = 'p';
-
-// Video format tags supported by the [video] shortcode: https://codex.wordpress.org/Video_Shortcode
-// mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
-ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
 /**
  * The initializer function that must be called onLoad
@@ -227,11 +220,7 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
 	if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
     } else if (isUsingAndroid) {
-        if (nativeState.androidApiLevel < 17) {
-            ZSSEditor.callbackThroughIFrame(url);
-        } else {
-            nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
-        }
+        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
 	} else {
 		console.log(url);
 	}
@@ -248,7 +237,6 @@ ZSSEditor.callback = function(callbackScheme, callbackPath) {
  */
 ZSSEditor.callbackThroughIFrame = function(url) {
     var iframe = document.createElement("IFRAME");
-    iframe.setAttribute('sandbox', '');
     iframe.setAttribute("src", url);
 
     // IMPORTANT: the IFrame was showing up as a black box below our text.  By setting its borders
@@ -640,25 +628,6 @@ ZSSEditor.setBackgroundColor = function(color) {
 	ZSSEditor.sendEnabledStyles();
 };
 
-/**
- *  @brief      Wraps given HTML in paragraph tags and appends a new line
- *  @details    This method makes sure that passed HTML is wrapped in a separate paragraph.
- *              It also appends a new opening paragraph tag and a space. This step is necessary to keep any spans or
- *              divs in the HTML from being read by the WebView as a style and applied to all future paragraphs.
- */
-ZSSEditor.wrapInParagraphTags = function(html) {
-    var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
-
-    if (this.getFocusedField().getHTML().length == 0) {
-        html = paragraphOpenTag + html;
-    }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
-
-    return html;
-};
-
 // Needs addClass method
 
 ZSSEditor.insertLink = function(url, title) {
@@ -833,9 +802,18 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+
     var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
 
-    this.insertHTML(this.wrapInParagraphTags(html));
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
+
+    this.insertHTML(html);
     this.sendEnabledStyles();
 };
 
@@ -853,26 +831,23 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
  *                                      does not check for that.  It would be a mistake.
  */
 ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
+    var space = '<br>';
+    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
+    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
     var progressIdentifier = this.getImageProgressIdentifier(imageNodeIdentifier);
     var imageContainerIdentifier = this.getImageContainerIdentifier(imageNodeIdentifier);
-
-    if (nativeState.androidApiLevel > 18) {
-        var imgContainerClass = 'img_container';
-        var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator" contenteditable="false"></progress>';
-    } else {
-        // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
-        var imgContainerClass = 'img_container compat';
-        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.localizedStringUploading
-                              + '</span><span class="upload-overlay-bg"></span>';
-    }
-
-    var imgContainerStart = '<span id="' + imageContainerIdentifier + '" class="' + imgContainerClass
-                            + '" contenteditable="false">';
+    var imgContainerStart = '<span id="' + imageContainerIdentifier+'" class="img_container" contenteditable="false" data-failed="Tap to try again!">';
     var imgContainerEnd = '</span>';
+    var progress = '<progress id="' + progressIdentifier+'" value=0  class="wp_media_indicator"  contenteditable="false"></progress>';
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
-    var html = imgContainerStart + progressElement + image + imgContainerEnd;
+    var html = imgContainerStart + progress+image + imgContainerEnd;
 
-    this.insertHTML(this.wrapInParagraphTags(html));
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = paragraphOpenTag + html;
+    }
+    html = html + paragraphCloseTag + paragraphOpenTag + space;
+
+    this.insertHTML(html);
     this.sendEnabledStyles();
 };
 
@@ -957,12 +932,6 @@ ZSSEditor.setProgressOnImage = function(imageNodeIdentifier, progress) {
         imageNode.addClass("uploading");
     }
 
-    // Revert to non-compatibility image container once image upload has begun. This centers the overlays on the image
-    // (instead of the screen), while still circumventing the small container bug the compat class was added to fix
-    if (progress > 0) {
-        this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).removeClass("compat");
-    }
-
     var imageProgressNode = this.getImageProgressNodeWithIdentifier(imageNodeIdentifier);
     if (imageProgressNode.length == 0){
           return;
@@ -976,6 +945,9 @@ ZSSEditor.setProgressOnImage = function(imageNodeIdentifier, progress) {
  *  @param      imageNodeIdentifier     The unique image ID for the uploaded image
  */
 ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
+
+    this.sendImageReplacedCallback(imageNodeIdentifier);
+
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length == 0){
         return;
@@ -994,9 +966,6 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
     // Wrap link around image
     var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
     imageNode.wrap(linkTag);
-
-    var thisObj = this;
-    setTimeout(function() { thisObj.sendImageReplacedCallback(imageNodeIdentifier);}, 500);
 };
 
 /**
@@ -1045,9 +1014,6 @@ ZSSEditor.markImageUploadFailed = function(imageNodeIdentifier, message) {
     if (imageProgressNode.length != 0){
         imageProgressNode.addClass('failed');
     }
-
-    // Delete the compatibility overlay if present
-    imageContainerNode.find("span.upload-overlay").addClass("failed");
 };
 
 /**
@@ -1055,7 +1021,7 @@ ZSSEditor.markImageUploadFailed = function(imageNodeIdentifier, message) {
  *
  *  @param      imageNodeIdentifier     This is a unique ID provided by the caller.
  */
-ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
+ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier, message) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
         imageNode.removeClass('failed');
@@ -1071,27 +1037,21 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
     if (imageProgressNode.length != 0){
         imageProgressNode.removeClass('failed');
     }
-
-    // Display the compatibility overlay again if present
-    imageContainerNode.find("span.upload-overlay").removeClass("failed");
 };
 
 /**
  *  @brief      Marks all in-progress images as failed to upload
  */
-ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
+ZSSEditor.markAllUploadingImagesAsFailed = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
     var matches = tmpDom.find("img.uploading");
 
     for(var i = 0; i < matches.size(); i++) {
-        if (matches[i].hasAttribute('data-wpid')) {
-            var mediaId = matches[i].getAttribute('data-wpid');
-            ZSSEditor.markImageUploadFailed(mediaId, message);
-        } else if (matches[i].hasAttribute('data-video_wpid')) {
-            var videoId = matches[i].getAttribute('data-video_wpid');
-            ZSSEditor.markVideoUploadFailed(videoId, message);
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
+            ZSSEditor.markImageUploadFailed(mediaId);
         }
     }
 };
@@ -1099,24 +1059,18 @@ ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
 /**
  *  @brief      Sends a callback with a list of failed images
  */
-ZSSEditor.getFailedMedia = function() {
+ZSSEditor.getFailedImages = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
     var matches = tmpDom.find("img.failed");
 
-    var functionArgument = "function=getFailedMedia";
+    var functionArgument = "function=getFailedImages";
     var mediaIdArray = [];
 
-    for (var i = 0; i < matches.size(); i++) {
-        var mediaId;
-        if (matches[i].hasAttribute("data-wpid")) {
-            mediaId = matches[i].getAttribute("data-wpid");
-        } else if (matches[i].hasAttribute("data-video_wpid")) {
-            mediaId = matches[i].getAttribute("data-video_wpid");
-        }
-
-        if (mediaId.length > 0) {
+    for (var i = 0; i < matches.size(); i ++) {
+        var mediaId = matches[i].getAttribute("data-wpid");
+        if (mediaId != null) {
             mediaIdArray.push(mediaId);
         }
     }
@@ -1142,414 +1096,6 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
         imageContainerNode.remove();
     }
 };
-
-/**
- *  @brief Inserts a video tag using the videoURL as source and posterURL as the
- *  image to show while video is loading.
- *
- *  @param videoURL     the url of the video
- *  @param posterURL    the url of an image to show while the video is loading
- *  @param videoPressID the VideoPress ID of the video, when applicable
- *
- */
-ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
-    var html = '<video webkit-playsinline src="' + videoURL + '" onclick="" controls="controls" preload="metadata"';
-
-    if (posterURL != '') {
-        html += ' poster="' + posterURL + '"';
-    }
-
-    if (videopressID != '') {
-        html += ' data-wpvideopress="' + videopressID + '"';
-    }
-
-    html += '></video>';
-
-    this.insertHTML(this.wrapInParagraphTags(html));
-    this.sendEnabledStyles();
-};
-
-/**
- *  @brief      Inserts a placeholder image tag for in-progress video uploads, marked with an identifier.
- *  @details    The image shown can be the video's poster if available - otherwise the default poster image is used.
- *              Using an image instead of a video placeholder is a departure from iOS, necessary because the original
- *              method caused occasional WebView freezes on Android.
- *              Once the video is successfully uploaded, the application should call replaceLocalVideoWithRemoteVideo().
- *
- *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.  It exists as
- *                                      a mechanism to update the video node with the remote URL
- *                                      when replaceLocalVideoWithRemoteVideo() is called.
- *  @param      posterURL               The URL of a poster image to display while the video is being uploaded.
- */
-ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
-    var progressIdentifier = this.getVideoProgressIdentifier(videoNodeIdentifier);
-    var videoContainerIdentifier = this.getVideoContainerIdentifier(videoNodeIdentifier);
-
-    if (nativeState.androidApiLevel > 18) {
-        var videoContainerClass = 'video_container';
-        var progressElement = '<progress id="' + progressIdentifier + '" value=0 class="wp_media_indicator"'
-                + 'contenteditable="false"></progress>';
-    } else {
-        // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
-        var videoContainerClass = 'video_container compat';
-        var progressElement = '<span class="upload-overlay" contenteditable="false">' + nativeState.localizedStringUploading
-                + '</span><span class="upload-overlay-bg"></span>';
-    }
-
-    var videoContainerStart = '<span id="' + videoContainerIdentifier + '" class="' + videoContainerClass
-            + '" contenteditable="false">';
-    var videoContainerEnd = '</span>';
-
-    if (posterURL == '') {
-       posterURL = "wpposter.svg";
-    }
-
-    var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
-    var html = videoContainerStart + progressElement + image + videoContainerEnd;
-
-    this.insertHTML(this.wrapInParagraphTags(html));
-    this.sendEnabledStyles();
-};
-
-ZSSEditor.getVideoNodeWithIdentifier = function(videoNodeIdentifier) {
-    var videoNode = $('img[data-video_wpid="' + videoNodeIdentifier+'"]');
-    if (videoNode.length == 0) {
-        videoNode = $('video[data-wpid="' + videoNodeIdentifier+'"]');
-    }
-    return videoNode;
-};
-
-ZSSEditor.getVideoProgressIdentifier = function(videoNodeIdentifier) {
-    return 'progress_' + videoNodeIdentifier;
-};
-
-ZSSEditor.getVideoProgressNodeWithIdentifier = function(videoNodeIdentifier) {
-    return $('#'+this.getVideoProgressIdentifier(videoNodeIdentifier));
-};
-
-ZSSEditor.getVideoContainerIdentifier = function(videoNodeIdentifier) {
-    return 'video_container_' + videoNodeIdentifier;
-};
-
-ZSSEditor.getVideoContainerNodeWithIdentifier = function(videoNodeIdentifier) {
-    return $('#'+this.getVideoContainerIdentifier(videoNodeIdentifier));
-};
-
-/**
- *  @brief      Replaces the image placeholder with a video element containing the uploaded video's attributes,
- *              and removes the upload container.
- *
- *  @param      videoNodeIdentifier     The unique id of the video upload
- *  @param      remoteVideoUrl          The URL of the remote video to display
- *  @param      remotePosterUrl         The URL of the remote poster image to display
- *  @param      videopressID            The VideoPress ID of the video, where applicable
- */
-ZSSEditor.replaceLocalVideoWithRemoteVideo = function(videoNodeIdentifier, remoteVideoUrl, remotePosterUrl, videopressID) {
-    var imagePlaceholderNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-
-    if (imagePlaceholderNode.length != 0) {
-        var videoNode = document.createElement("video");
-        videoNode.setAttribute('webkit-playsinline', '');
-        videoNode.setAttribute('onclick', '');
-        videoNode.setAttribute('src', remoteVideoUrl);
-        videoNode.setAttribute('controls', 'controls');
-        videoNode.setAttribute('preload', 'metadata');
-        if (videopressID != '') {
-           videoNode.setAttribute('data-wpvideopress', videopressID);
-        }
-        videoNode.setAttribute('poster', remotePosterUrl);
-
-        // Replace upload container and placeholder image with the uploaded video node
-        var containerNode = imagePlaceholderNode.parent();
-        containerNode.replaceWith(videoNode);
-    }
-
-    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-    ZSSEditor.callback("callback-input", joinedArguments);
-    // We invoke the sendVideoReplacedCallback with a delay to avoid for
-    // it to be ignored by the webview because of the previous callback being done.
-    var thisObj = this;
-    setTimeout(function() { thisObj.sendVideoReplacedCallback(videoNodeIdentifier);}, 500);
-};
-
-/**
- *  @brief      Update the progress indicator for the Video identified with the value in progress.
- *
- *  @param      VideoNodeIdentifier This is a unique ID provided by the caller.
- *  @param      progress    A value between 0 and 1 indicating the progress on the Video.
- */
-ZSSEditor.setProgressOnVideo = function(videoNodeIdentifier, progress) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length == 0){
-        return;
-    }
-    if (progress < 1){
-        videoNode.addClass("uploading");
-    }
-
-    // Revert to non-compatibility video container once video upload has begun. This centers the overlays on the
-    // placeholder image (instead of the screen), while still circumventing the small container bug the compat class
-    // was added to fix
-    if (progress > 0) {
-        this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).removeClass("compat");
-    }
-
-    var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
-    if (videoProgressNode.length == 0){
-        return;
-    }
-    videoProgressNode.attr("value",progress);
-};
-
-/**
- *  @brief      Callbacks to native that the video upload as finished and the local url was replaced by the remote url
- *
- *  @param      videoNodeIdentifier    the unique video ID for the uploaded Video
- */
-ZSSEditor.sendVideoReplacedCallback = function( videoNodeIdentifier ) {
-    var arguments = ['id=' + encodeURIComponent( videoNodeIdentifier )];
-
-    var joinedArguments = arguments.join( defaultCallbackSeparator );
-
-    this.callback("callback-video-replaced", joinedArguments);
-};
-
-/**
- *  @brief      Callbacks to native that the video upload as finished and the local url was replaced by the remote url
- *
- *  @param      videoNodeIdentifier    the unique video ID for the uploaded Video
- */
-ZSSEditor.sendVideoPressInfoRequest = function( videoPressID ) {
-    var arguments = ['id=' + encodeURIComponent( videoPressID )];
-
-    var joinedArguments = arguments.join( defaultCallbackSeparator );
-
-    this.callback("callback-videopress-info-request", joinedArguments);
-};
-
-
-/**
- *  @brief      Marks the Video as failed to upload
- *
- *  @param      VideoNodeIdentifier     This is a unique ID provided by the caller.
- *  @param      message                 A message to show to the user, overlayed on the Video
- */
-ZSSEditor.markVideoUploadFailed = function(videoNodeIdentifier, message) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length == 0){
-        return;
-    }
-
-    var sizeClass = '';
-    if ( videoNode[0].width > 480 && videoNode[0].height > 240 ) {
-        sizeClass = "largeFail";
-    } else if ( videoNode[0].width < 100 || videoNode[0].height < 100 ) {
-        sizeClass = "smallFail";
-    }
-
-    videoNode.addClass('failed');
-
-    var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
-    if(videoContainerNode.length != 0){
-        videoContainerNode.attr("data-failed", message);
-        videoNode.removeClass("uploading");
-        videoContainerNode.addClass('failed');
-        videoContainerNode.addClass(sizeClass);
-    }
-
-    var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
-    if (videoProgressNode.length != 0){
-        videoProgressNode.addClass('failed');
-    }
-
-    // Delete the compatibility overlay if present
-    videoContainerNode.find("span.upload-overlay").addClass("failed");
-};
-
-/**
- *  @brief      Unmarks the Video as failed to upload
- *
- *  @param      VideoNodeIdentifier     This is a unique ID provided by the caller.
- */
-ZSSEditor.unmarkVideoUploadFailed = function(videoNodeIdentifier) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length != 0){
-        videoNode.removeClass('failed');
-    }
-
-    var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
-    if(videoContainerNode.length != 0){
-        videoContainerNode.removeAttr("data-failed");
-        videoContainerNode.removeClass('failed');
-    }
-
-    var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
-    if (videoProgressNode.length != 0){
-        videoProgressNode.removeClass('failed');
-    }
-
-    // Display the compatibility overlay again if present
-    videoContainerNode.find("span.upload-overlay").removeClass("failed");
-};
-
-/**
- *  @brief      Remove the Video from the DOM.
- *
- *  @param      videoNodeIdentifier     This is a unique ID provided by the caller.
- */
-ZSSEditor.removeVideo = function(videoNodeIdentifier) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length != 0){
-        videoNode.remove();
-    }
-
-    // if Video is inside options container we need to remove the container
-    var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
-    if (videoContainerNode.length != 0){
-        //reset id before removal to avoid detection of user removal
-        videoContainerNode.attr("id","");
-        videoContainerNode.remove();
-    }
-};
-
-ZSSEditor.replaceVideoPressVideosForShortcode = function ( html) {
-    // call methods to restore any transformed content from its visual presentation to its source code.
-    var regex = /<video[^>]*data-wpvideopress="([\s\S]+?)"[^>]*>*<\/video>/g;
-    var str = html.replace( regex, ZSSEditor.removeVideoPressVisualFormattingCallback );
-
-    return str;
-}
-
-ZSSEditor.replaceVideosForShortcode = function ( html) {
-    var regex = /<video(?:(?!data-wpvideopress).)*><\/video>/g;
-    var str = html.replace( regex, ZSSEditor.removeVideoVisualFormattingCallback );
-
-    return str;
-}
-
-ZSSEditor.removeVideoPressVisualFormattingCallback = function( match, content ) {
-    return "[wpvideo " + content + "]";
-}
-
-ZSSEditor.removeVideoVisualFormattingCallback = function( match, content ) {
-    var videoElement = $.parseHTML(match)[0];
-
-    // Remove editor playback attributes
-    videoElement.removeAttribute("onclick");
-    videoElement.removeAttribute("controls");
-    videoElement.removeAttribute("webkit-playsinline");
-    if (videoElement.getAttribute("preload") == "metadata") {
-        // The "metadata" setting is the WP default and is usually automatically stripped from the shortcode.
-        // If it's present, it was probably set by this editor and we should remove it. Even if it wasn't, removing it
-        // won't affect anything as it's the default setting for the preload attribute.
-        videoElement.removeAttribute("preload");
-    }
-
-    // If filetype attributes exist, the src attribute wasn't there originally and we should remove it
-    for (var i = 0; i < ZSSEditor.videoShortcodeFormats.length; i++) {
-        var format = ZSSEditor.videoShortcodeFormats[i];
-        if (videoElement.hasAttribute(format)) {
-            videoElement.removeAttribute("src");
-            break;
-        }
-    }
-
-    var shortcode = videoElement.outerHTML.replace(/</g, "[");
-    shortcode = shortcode.replace(/>/g, "]");
-    return shortcode;
-}
-
-ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
-    if (match.attrs.numeric.length == 0) {
-        return match.content;
-    }
-    var videopressID = match.attrs.numeric[0];
-    var posterSVG = '"wpposter.svg"';
-    // The empty 'onclick' is important. It prevents the cursor jumping to the end
-    // of the content body when `-webkit-user-select: none` is set and the video is tapped.
-    var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster='
-           + posterSVG +' onclick="" onerror="ZSSEditor.sendVideoPressInfoRequest(\'' + videopressID +'\');"></video>';
-
-    out = out + '<br>';
-    return out;
-}
-
-ZSSEditor.applyVideoFormattingCallback = function( match ) {
-    // Find the tag containing the video source
-    var srcTag = "";
-
-    if (match.attrs.named['src']) {
-        srcTag = "src";
-    } else {
-        for (var i = 0; i < ZSSEditor.videoShortcodeFormats.length; i++) {
-            var format = ZSSEditor.videoShortcodeFormats[i];
-            if (match.attrs.named[format]) {
-                srcTag = format;
-                break;
-            }
-        }
-    }
-
-    if (srcTag.length == 0) {
-        return match.content;
-    }
-
-    var out = '<video webkit-playsinline src="' + match.attrs.named[srcTag] + '"';
-
-    // Preserve all existing tags
-    for (var item in match.attrs.named) {
-        out += ' ' + item + '="' + match.attrs.named[item] + '"';
-    }
-
-    if (!match.attrs.named['preload']) {
-        out += ' preload="metadata"';
-    }
-
-    out += ' onclick="" controls="controls"></video><br>';
-
-    return out;
-}
-
-/**
- *  @brief      Sets the VideoPress video URL and poster URL on a video tag.
- *  @details    When switching from HTML to visual mode, wpvideo shortcodes are replaced by video tags.
- *              A request is sent using ZSSEditor.sendVideoPressInfoRequest() to obtain the video url matching each
- *              wpvideo shortcode. This function must be called to set the url for each videopress id.
- *
- *  @param      videopressID      VideoPress identifier of the video.
- *  @param      videoURL          URL of the video file to display.
- *  @param      posterURL         URL of the poster image to display
- */
-ZSSEditor.setVideoPressLinks = function(videopressID, videoURL, posterURL ) {
-    var videoNode = $('video[data-wpvideopress="' + videopressID + '"]');
-    if (videoNode.length == 0) {
-        return;
-    }
-
-    if (videoURL.length == 0) {
-        // If no URL is being passed, the host activity probably doesn't have a record of this videopressID
-        // Drop the error event since it can cause an infinite loop in this case
-        // The user is still able to manually retry by tapping the video element
-        videoNode.attr('onError', '');
-        return;
-    }
-
-    videoNode.attr('src', videoURL);
-    videoNode.attr('controls', '');
-    videoNode.attr('poster', posterURL);
-    var thisObj = this;
-    videoNode.load();
-};
-
-/**
- *  @brief  Stops all video of playing
- *
- */
-ZSSEditor.pauseAllVideos = function () {
-    $('video').each(function() {
-        this.pause();
-    });
-}
 
 /**
  *  @brief      Updates the currently selected image, replacing its markup with
@@ -1586,8 +1132,7 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
         sizeClass = " small";
     }
 
-    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
-                  + nativeState.localizedStringEdit + '</span></span>';
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">Edit</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -2013,37 +1558,6 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
     return out;
 }
 
-// MARK: - Galleries
-ZSSEditor.insertGallery = function( imageIds, type, columns ) {
-    var shortcode;
-    if (type) {
-        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
-    } else {
-        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
-    }
-
-    this.insertHTML(this.wrapInParagraphTags(shortcode));
-}
-
-ZSSEditor.insertLocalGallery = function( placeholderId ) {
-    var container = '<span id="' + placeholderId + '" class="gallery_container">['
-                    + nativeState.localizedStringUploadingGallery + ']</span>';
-    this.insertHTML(this.wrapInParagraphTags(container));
-}
-
-ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, columns ) {
-    var span = 'span#' + placeholderId + '.gallery_container';
-
-    var shortcode;
-    if (type) {
-        shortcode = '[gallery type="' + type + '" ids="' + imageIds + '"]';
-    } else {
-        shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
-    }
-
-    $(span).replaceWith(shortcode);
-}
-
 // MARK: - Commands
 
 /**
@@ -2055,8 +1569,6 @@ ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, c
  */
 ZSSEditor.applyVisualFormatting  = function( html ) {
     var str = wp.shortcode.replace( 'caption', html, ZSSEditor.applyCaptionFormatting );
-    str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoPressFormattingCallback );
-    str = wp.shortcode.replace( 'video', str, ZSSEditor.applyVideoFormattingCallback );
 
     return str;
 }
@@ -2072,8 +1584,6 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     var str = html;
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
-    str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
-    str = ZSSEditor.replaceVideosForShortcode( str );
     return str;
 }
 
@@ -2686,11 +2196,10 @@ ZSSField.prototype.emptyFieldIfNoContents = function() {
     if (text.length == 0 || text == '\u000A') {
 
         var hasChildImages = (this.wrappedObject.find('img').length > 0);
-        var hasChildVideos = (this.wrappedObject.find('video').length > 0);
         var hasUnorderedList = (this.wrappedObject.find('ul').length > 0);
         var hasOrderedList = (this.wrappedObject.find('ol').length > 0);
 
-        if (!hasChildImages && !hasChildVideos && !hasUnorderedList && !hasOrderedList) {
+        if (!hasChildImages && !hasUnorderedList && !hasOrderedList) {
             this.wrappedObject.empty();
         }
     }
@@ -2790,7 +2299,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
-            if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
+            if ( targetNode.dataset.wpid ) {
                 this.sendImageTappedCallback( targetNode );
                 return;
             }
@@ -2826,58 +2335,24 @@ ZSSField.prototype.handleTapEvent = function(e) {
             return;
         }
 
-        if (targetNode.className.indexOf('upload-overlay') != -1 ||
-            targetNode.className.indexOf('upload-overlay-bg') != -1 ) {
-            // Select the image node associated with the selected upload overlay
-            var imageNode = targetNode.parentNode.getElementsByTagName('img')[0];
-
-            this.sendImageTappedCallback( imageNode );
-            return;
-        }
-
         if ( ZSSEditor.currentEditingImage ) {
             ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
             ZSSEditor.currentEditingImage = null;
         }
-
-        if (targetNode.nodeName.toLowerCase() == 'video') {
-        // If the video is uploading, or is a local image do not select it.
-            if (targetNode.dataset.wpvideopress) {
-                if (targetNode.src.length == 0 || targetNode.src == 'file:///android_asset/') {
-                    // If the tapped video is a placeholder for a VideoPress video, send out an update request.
-                    // This provides a way to load the video for Android API<19, where the onError property function in
-                    // the placeholder video isn't being triggered, and sendVideoPressInfoRequest is never called.
-                    // This is also used to manually retry loading a VideoPress video after the onError attribute has
-                    // been stripped for the video tag.
-                    targetNode.setAttribute("onerror", "");
-                    ZSSEditor.sendVideoPressInfoRequest(targetNode.dataset.wpvideopress);
-                    return;
-                }
-            }
-
-            if (targetNode.dataset.wpid) {
-                this.sendVideoTappedCallback( targetNode );
-                return;
-            }
-        }
     }
 };
 
-ZSSField.prototype.sendImageTappedCallback = function(imageNode) {
-    var meta = JSON.stringify(ZSSEditor.extractImageMeta(imageNode));
-    var imageId = "", mediaType = "image";
-    if (imageNode.hasAttribute('data-wpid')){
-        imageId = imageNode.getAttribute('data-wpid');
-    } else if (imageNode.hasAttribute('data-video_wpid')){
-        imageId = imageNode.getAttribute('data-video_wpid');
-        mediaType = "video";
+ZSSField.prototype.sendImageTappedCallback = function( imageNode ) {
+    var meta = JSON.stringify( ZSSEditor.extractImageMeta( imageNode ) );
+    var imageId = "";
+    if ( imageNode.hasAttribute( 'data-wpid' ) ){
+        imageId = imageNode.getAttribute( 'data-wpid' )
     }
-    var arguments = ['id=' + encodeURIComponent(imageId),
-                     'url=' + encodeURIComponent(imageNode.src),
-                     'meta=' + encodeURIComponent(meta),
-                     'type=' + mediaType];
+    var arguments = ['id=' + encodeURIComponent( imageId ),
+                     'url=' + encodeURIComponent( imageNode.src ),
+                     'meta=' + encodeURIComponent( meta )];
 
-    var joinedArguments = arguments.join(defaultCallbackSeparator);
+    var joinedArguments = arguments.join( defaultCallbackSeparator );
 
     var thisObj = this;
 
@@ -2886,22 +2361,10 @@ ZSSField.prototype.sendImageTappedCallback = function(imageNode) {
     setTimeout(function() { thisObj.callback('callback-image-tap', joinedArguments);}, 500);
 }
 
-ZSSField.prototype.sendVideoTappedCallback = function( videoNode ) {
-    var videoId = "";
-    if ( videoNode.hasAttribute( 'data-wpid' ) ){
-        videoId = videoNode.getAttribute( 'data-wpid' )
-    }
-    var arguments = ['id=' + encodeURIComponent( videoId ),
-                     'url=' + encodeURIComponent( videoNode.src )];
-
-    var joinedArguments = arguments.join( defaultCallbackSeparator );
-
-    ZSSEditor.callback('callback-video-tap', joinedArguments);
-}
-
 // MARK: - Callback Execution
 
 ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
+
     var url = callbackScheme + ":";
 
     url = url + "id=" + this.getNodeId();
@@ -2913,11 +2376,7 @@ ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
     if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
     } else if (isUsingAndroid) {
-        if (nativeState.androidApiLevel < 17) {
-            ZSSEditor.callbackThroughIFrame(url);
-        } else {
-            nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
-        }
+        nativeCallbackHandler.executeCallback(callbackScheme, callbackPath);
     } else {
         console.log(url);
     }

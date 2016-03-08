@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Nelze uložit nastavení účtu</string>
-	<string name="error_post_my_profile">Nelze uložit váš profil</string>
-	<string name="error_fetch_account_settings">Nelze načíst nastavení účtu</string>
-	<string name="error_fetch_my_profile">Nelze načíst váš profil</string>
-	<string name="add_category">Vytvořit novou rubriku</string>
-	<string name="search">Hledat</string>
-	<string name="remove">Odstranit</string>
-	<string name="disabled">Deaktivováno</string>
 	<string name="site_settings_image_original_size">Originální velikost</string>
 	<string name="about_me_hint">Osobní informace</string>
 	<string name="about_me">O mě</string>
@@ -67,7 +59,7 @@
 	<string name="site_settings_upload_and_link_image_hint">Povolte pokud chcete vždy nahrávat plnou velikost obrázků</string>
 	<string name="site_settings_image_width_hint">Změní velikost obrázků v příspěvcích na tuto šířku</string>
 	<string name="site_settings_format_hint">Nastaví nový formát příspěvku</string>
-	<string name="site_settings_category_hint">Nastaví novou rubriku příspěvku</string>
+	<string name="site_settings_category_hint">Nastaví novou kategorii příspěvku</string>
 	<string name="site_settings_location_hint">Automaticky vkládat data polohy do vašich příspěvků</string>
 	<string name="site_settings_password_hint">Změňte si své heslo</string>
 	<string name="site_settings_username_hint">Aktuální uživatelský účet</string>
@@ -96,11 +88,11 @@
 	<string name="site_settings_send_pingbacks_title">Odesílat pingbacky</string>
 	<string name="site_settings_allow_comments_title">Povolit komentáře</string>
 	<string name="site_settings_default_format_title">Výchozí formát</string>
-	<string name="site_settings_default_category_title">Výchozí rubrika</string>
+	<string name="site_settings_default_category_title">Výchozí kategorie</string>
 	<string name="site_settings_location_title">Povolit polohu</string>
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Popis webu</string>
-	<string name="site_settings_title_title">Název webu</string>
+	<string name="site_settings_title_title">Nadpis webu</string>
 	<string name="site_settings_this_device_header">Toto zařízení</string>
 	<string name="site_settings_discussion_new_posts_header">Výchozí pro nové příspěvky</string>
 	<string name="site_settings_writing_header">Psaní</string>
@@ -254,8 +246,8 @@
 	<string name="undo">Zpět</string>
 	<string name="tabbar_accessibility_label_me">Já</string>
 	<string name="tabbar_accessibility_label_my_site">Moje stránky</string>
+	<string name="passcodelock_prompt_message">Zadej PIN</string>
 	<string name="editor_toast_changes_saved">Změny byly uloženy</string>
-	<string name="passcodelock_prompt_message">Zadejte PIN</string>
 	<string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
 	<string name="ignore">Ignorovat</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% shlédnutí</string>
@@ -486,8 +478,8 @@
 	<string name="search_location">Hledat</string>
 	<string name="search_current_location">Lokalizovat</string>
 	<string name="preference_privacy">Soukromé</string>
+	<string name="preference_send_usage_stats">Poslat statistiky</string>
 	<string name="preference_send_usage_stats_summary">Automaticky odesílat statistiky používání pro zlepšení WordPressu pro Android</string>
-	<string name="preference_send_usage_stats">Odesílat statistiky</string>
 	<string name="update_verb">Aktualizovat</string>
 	<string name="schedule_verb">Rozvrh</string>
 	<string name="reader_toast_err_get_blog_info">Nepodařilo se zobrazit tento web</string>
@@ -521,6 +513,10 @@
 	<string name="theme_auth_error_message">Ujisti se, že máš práva k nastavení motivu</string>
 	<string name="comments_empty_list">Žádný komentář</string>
 	<string name="mnu_comment_unspam">Není spam</string>
+	<string name="adding_cat_failed">Chyba při přidávání kategorie</string>
+	<string name="adding_cat_success">Kategorie úspěšně přidána</string>
+	<string name="cat_name_required">Jméno kategorie musí být vyplněno</string>
+	<string name="category_automatically_renamed">Jméno kategorie %1$s není platné. Bylo změněno na %2$s.</string>
 	<string name="no_account">Nebyl nalezen žádný WordPress účet. Přidej účet a zkus znovu</string>
 	<string name="auto_sharing_preference_reset">Reset nastavení automatického sdílení </string>
 	<string name="sdcard_message">Pro nahrání media musí být připojená SD karta</string>
@@ -573,10 +569,6 @@
 	<string name="invalid_url_message">Zkontrolujte platnost zadané adresy webu</string>
 	<string name="blog_not_found">Nastala chyba při přístupu na tento web</string>
 	<string name="no_site_error">Nemohu se připojit k serveru WordPress</string>
-	<string name="adding_cat_failed">Chyba při přidávání rubriky</string>
-	<string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
-	<string name="cat_name_required">Název rubriky je vyžadován</string>
-	<string name="category_automatically_renamed">Název rubriky %1$s není platný. Byl změněn na %2$s.</string>
 	<string name="reader_share_link">Odkaz pro sdílení</string>
 	<string name="view_site">Zobrazit stránku</string>
 	<string name="new_media">Nahrát soubor</string>
@@ -605,6 +597,7 @@
 	<string name="add_comment">Přidat komentář</string>
 	<string name="post_format">Formát příspěvku</string>
 	<string name="remove_account">Odstranit web</string>
+	<string name="select_categories">Vyber kategorie</string>
 	<string name="account_details">Detaily účtu</string>
 	<string name="edit_post">Uprav článek</string>
 	<string name="comment_status_unapproved">Čekající na schválení</string>
@@ -649,6 +642,9 @@
 	<string name="email_hint">E-mail</string>
 	<string name="username_email">Uživatelské jméno nebo e-mail</string>
 	<string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
+	<string name="category_slug">Název kategorie v URL (nepovinné)</string>
+	<string name="category_desc">Popis kategorie (nepovinné)</string>
+	<string name="category_parent">Nadřazená kategorie (nepovinné):</string>
 	<string name="open_source_licenses">Licence Open source</string>
 	<string name="local_changes">Místní změny</string>
 	<string name="privacy_policy">Zásady ochrany osobních údajů</string>
@@ -676,10 +672,6 @@
 	<string name="xmlrpc_error">Nelze se připojit. Vlož celou cestu k xmlrpc.php na svém webu a zkus znovu.</string>
 	<string name="add_account_blog_url">Zadej URL webu</string>
 	<string name="blog_removed_successfully">Web byl úspěšně odstraněn</string>
-	<string name="select_categories">Vyberte rubriku</string>
-	<string name="category_slug">Název rubriky v URL (nepovinné)</string>
-	<string name="category_desc">Popis rubriky (nepovinné)</string>
-	<string name="category_parent">Nadřazená rubrika (nepovinné):</string>
 	<string name="share_url_page">Sdílení stránky</string>
 	<string name="deleting_page">Mazání stránky</string>
 	<string name="deleting_post">Smazat příspěvek</string>
@@ -745,6 +737,7 @@
 	<string name="reader_label_added_tag">%s byl přidán</string>
 	<string name="limit_reached">Dosažen limit. Můžete to zkusit za 1 minutu. Další pokusy před vypršením limitu, tento limit pouze prodlouží. Pokud se domníváte, že je to chyba, kontaktujte prosím podporu.</string>
 	<string name="reader_likes_only_you">To se vám líbí</string>
+	<string name="menu_search">Hledat</string>
 	<string name="stats_entry_posts_and_pages">Nadpis</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_totals_views">Zobrazení</string>
@@ -839,6 +832,7 @@
 	<string name="blogusername">Jmémo blogera</string>
 	<string name="scaled_image">Šířka zmenšeného obrázku</string>
 	<string name="upload_scaled_image">Nahrát a odkazovat na zmenšený obrázek</string>
+	<string name="remove_location">Odstranit</string>
 	<string name="scheduled">Načasováno</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Zasláno z WordPressu pro Android</string>
@@ -865,8 +859,8 @@
 	<string name="publish_post">Publikováno</string>
 	<string name="upload_full_size_image">Nahrát a odkazovat na plný obrázek</string>
 	<string name="title">Název</string>
-	<string name="categories">Rubriky</string>
-	<string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>
+	<string name="tags_separate_with_commas">Tagy (oddělte tagy čárkami)</string>
+	<string name="categories">Kategorie</string>
 	<string name="notification_sound">Přehrát zvuk oznámení</string>
 	<string name="notification_blink">Blikat při upozornění</string>
 	<string name="notification_vibrate">Vibrovat</string>
@@ -888,8 +882,8 @@
 	<string name="notification_settings">Nastavení upozornění</string>
 	<string name="yes">Ano</string>
 	<string name="no">Ne</string>
+	<string name="category_refresh_error">Chyba obnovení kategorii</string>
 	<string name="error">Chyba</string>
-	<string name="category_refresh_error">Chyba obnovení rubrik</string>
 	<string-array name="alignment_array">
 		<item>Žádné</item>
 		<item>Vlevo</item>
@@ -950,6 +944,18 @@
 		<item>Žádné komentáře</item>
 		<item>Komentáře známých uživatelů</item>
 		<item>Všichni uživatelé</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Žádné</item>
+		<item>Dvě úrovně</item>
+		<item>Tři úrovně</item>
+		<item>Čtyři úrovně</item>
+		<item>Pět úrovní</item>
+		<item>Šest úrovní</item>
+		<item>Sedm úrovní</item>
+		<item>Osm úrovní</item>
+		<item>Devět úrovní</item>
+		<item>Deset úrovní</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Zdarma</item>

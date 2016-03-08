@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.WPEditText;
+import org.wordpress.android.widgets.OpenSansEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class DialogUtils {
@@ -24,7 +24,7 @@ public class DialogUtils {
         alertDialogBuilder.setView(promptView);
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
-        final WPEditText editText = (WPEditText) promptView.findViewById(R.id.my_profile_dialog_input);
+        final OpenSansEditText editText = (OpenSansEditText) promptView.findViewById(R.id.my_profile_dialog_input);
         final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
 
         textView.setText(title);

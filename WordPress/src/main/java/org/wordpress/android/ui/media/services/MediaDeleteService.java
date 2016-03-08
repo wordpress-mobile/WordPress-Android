@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaUploadState;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
@@ -105,7 +104,7 @@ public class MediaDeleteService extends Service {
                 // Instead we'll just set them as "deleted" so they don't show up in the delete queue.
                 // Otherwise the service will continuously try to delete an item they can't delete.
 
-                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.DELETED);
+                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "deleted");
 
                 mDeleteInProgress = false;
                 mHandler.post(mFetchQueueTask);

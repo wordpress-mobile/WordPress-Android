@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Nid oedd modd i ni gadw manylion eich cyfrif</string>
-	<string name="error_post_my_profile">Nid oedd modd cadw eich proffil</string>
-	<string name="error_fetch_account_settings">Methu adfer gosodiadau eich cyfrif</string>
-	<string name="error_fetch_my_profile">Methu adfer eich proffil</string>
-	<string name="stats_widget_promo_ok_btn_label">Iawn, rwy\'n ei ddeall</string>
-	<string name="stats_widget_promo_desc">Ychwanegwch y teclyn i\'ch sgrin cartref er mwyn cael mynediad at eich Ystadegau mewn un clic.</string>
-	<string name="stats_widget_promo_title">Teclyn Ystadegau\'r Sgrin Cartref</string>
-	<string name="site_settings_unknown_language_code_error">Heb adnabd y cod iaith</string>
-	<string name="site_settings_threading_dialog_description">Caniatáu sylwadau i\'w nythu mewn edafedd.</string>
-	<string name="site_settings_threading_dialog_header">Edafedd hyd at</string>
-	<string name="remove">Tynnu</string>
-	<string name="search">Chwilio</string>
-	<string name="add_category">Ychwanegu categori</string>
-	<string name="disabled">Analluogwyd</string>
 	<string name="site_settings_image_original_size">Maint Gwreiddiol</string>
 	<string name="about_me_hint">Ychydig o eiriau amdanoch chi…</string>
 	<string name="public_display_name_hint">Bydd yr enw dangos yn defnyddio eich enw defnyddiwr os yw wedi ei osod</string>
@@ -761,6 +747,7 @@
 	<string name="passcode_enter_passcode">Rhowch eich PIN</string>
 	<string name="passcode_enter_old_passcode">Rhowch eich hen PIN</string>
 	<string name="passcode_manage">Rheoli clo PIN</string>
+	<string name="menu_search">Chwilio</string>
 	<string name="stats_totals_plays">Chwarae</string>
 	<string name="stats_totals_clicks">Cliciau</string>
 	<string name="stats_totals_views">Golwg</string>
@@ -845,6 +832,7 @@
 	<string name="ok">Iawn</string>
 	<string name="scaled_image">Lled y ddelwedd graddedig</string>
 	<string name="upload_scaled_image">Llwytho a chysylltu â delwedd graddedig</string>
+	<string name="remove_location">Tynnu</string>
 	<string name="scheduled">Amserlennwyd</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Cofnod o WordPress ar gyfer Android</string>
@@ -956,6 +944,18 @@
 		<item>Dim sylwadau</item>
 		<item>Sylwadau defnyddwyr hysbys</item>
 		<item>Pob defnyddiwr</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Dim</item>
+		<item>Dwy lefel</item>
+		<item>Tair lefel</item>
+		<item>Pedair lefel</item>
+		<item>Pum lefel</item>
+		<item>Chwe lefel</item>
+		<item>Saith lefel</item>
+		<item>Wyth lefel</item>
+		<item>Naw lefel</item>
+		<item>Deg lefel</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Am Ddim</item>

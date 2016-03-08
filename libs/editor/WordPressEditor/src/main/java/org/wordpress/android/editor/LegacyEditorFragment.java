@@ -54,6 +54,8 @@ import android.widget.ToggleButton;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.legacy.EditLinkActivity;
 import org.wordpress.android.editor.legacy.WPEditImageSpan;
 import org.wordpress.android.util.AppLog;
@@ -413,22 +415,22 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.bold) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BOLD_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BOLD);
                 onFormatButtonClick(mBoldToggleButton, TAG_FORMAT_BAR_BUTTON_STRONG);
             } else if (id == R.id.em) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.ITALIC_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
                 onFormatButtonClick(mEmToggleButton, TAG_FORMAT_BAR_BUTTON_EM);
             } else if (id == R.id.underline) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNDERLINE_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
                 onFormatButtonClick(mUnderlineToggleButton, TAG_FORMAT_BAR_BUTTON_UNDERLINE);
             } else if (id == R.id.strike) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.STRIKETHROUGH_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
                 onFormatButtonClick(mStrikeToggleButton, TAG_FORMAT_BAR_BUTTON_STRIKE);
             } else if (id == R.id.bquote) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_BLOCKQUOTE);
                 onFormatButtonClick(mBquoteToggleButton, TAG_FORMAT_BAR_BUTTON_QUOTE);
             } else if (id == R.id.more) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.MORE_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
                 if (str != null) {
@@ -437,7 +439,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
             } else if (id == R.id.link) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
                 mSelectionEnd = mContentEditText.getSelectionEnd();
@@ -455,7 +457,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 }
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
                 mEditorFragmentListener.onAddMediaClicked();
                 if (isAdded()) {
                     getActivity().openContextMenu(mAddPictureButton);
@@ -1126,16 +1128,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
         editableText.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         editableText.insert(selectionEnd + 1, "\n\n");
-    }
-
-    @Override
-    public void setUrlForVideoPressId(String videoPressId, String url, String posterUrl) {
-
-    }
-
-    @Override
-    public boolean isUploadingMedia() {
-        return false;
     }
 
     @Override

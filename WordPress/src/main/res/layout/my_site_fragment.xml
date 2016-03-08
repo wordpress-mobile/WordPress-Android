@@ -48,7 +48,7 @@
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
-                        android:fontFamily="sans-serif-light" />
+                        app:fontVariation="light" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_subtitle_label"
@@ -352,7 +352,7 @@
             android:text="@string/my_site_no_sites_view_title"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_double_extra_large"
-            android:fontFamily="sans-serif-light" />
+            app:fontVariation="light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"

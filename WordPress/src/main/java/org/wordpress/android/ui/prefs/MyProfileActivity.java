@@ -14,7 +14,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.DialogUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -34,6 +33,8 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AccountHelper.getDefaultAccount().fetchAccountSettings();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -90,17 +91,7 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
-        }
     }
 
     @Override

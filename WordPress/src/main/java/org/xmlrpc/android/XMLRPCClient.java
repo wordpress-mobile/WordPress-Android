@@ -255,13 +255,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return id;
     }
 
-    /**
-     * Cancel the current call
-     */
-    public void cancel() {
-        mPostMethod.abort();
-    }
-
     @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
             throws XMLRPCException, IOException, XmlPullParserException, NumberFormatException {

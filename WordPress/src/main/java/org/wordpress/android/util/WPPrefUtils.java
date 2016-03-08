@@ -82,23 +82,23 @@ public class WPPrefUtils {
     }
 
     /**
-     * Font      : Default
+     * Font      : Open Sans
      * Style     : Normal
      * Variation : Normal
      */
     public static Typeface getNormalTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_DEFAULT, Typeface.NORMAL);
+                TypefaceCache.FAMILY_OPEN_SANS, Typeface.NORMAL, TypefaceCache.VARIATION_NORMAL);
     }
 
     /**
-     * Font      : Default
+     * Font      : Open Sans
      * Style     : Bold
      * Variation : Light
      */
     public static Typeface getSemiboldTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_DEFAULT_LIGHT, Typeface.BOLD);
+                TypefaceCache.FAMILY_OPEN_SANS, Typeface.BOLD, TypefaceCache.VARIATION_LIGHT);
     }
 
     /**

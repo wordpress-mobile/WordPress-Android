@@ -3,7 +3,7 @@
 <string-array name="available_languages" translatable="false">
 
 <item>
-en_us
+en-US
 </item>
 
 <item>
@@ -23,7 +23,7 @@ es
 </item>
 
 <item>
-es_cl
+es-CL
 </item>
 
 <item>
@@ -87,19 +87,19 @@ uz
 </item>
 
 <item>
-zh_cn
+zh-CN
 </item>
 
 <item>
-zh_tw
+zh-TW
 </item>
 
 <item>
-zh_hk
+zh-HK
 </item>
 
 <item>
-en_gb
+en-GB
 </item>
 
 <item>
@@ -115,7 +115,7 @@ he
 </item>
 
 <item>
-pt_br
+pt-BR
 </item>
 
 <item>
@@ -131,7 +131,7 @@ mk
 </item>
 
 <item>
-en_au
+en-AU
 </item>
 
 <item>
@@ -164,10 +164,6 @@ hr
 
 <item>
 cs
-</item>
-
-<item>
-en-CA
 </item>
 
 </string-array>

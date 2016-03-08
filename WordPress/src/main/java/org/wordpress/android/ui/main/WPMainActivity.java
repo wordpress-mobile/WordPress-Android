@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.main;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -36,9 +33,8 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -70,7 +66,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
-    private int  mAppBarElevation;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -135,8 +130,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             }
         });
 
-        mAppBarElevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
-
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -144,21 +137,10 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 AppPrefs.setMainTabIndex(position);
 
                 switch (position) {
-                    case WPMainTabAdapter.TAB_MY_SITE:
-                        setTabLayoutElevation(mAppBarElevation);
-                        break;
-                    case WPMainTabAdapter.TAB_READER:
-                        setTabLayoutElevation(0);
-                    break;
-                    case WPMainTabAdapter.TAB_ME:
-                        setTabLayoutElevation(mAppBarElevation);
-                    break;
                     case WPMainTabAdapter.TAB_NOTIFS:
-                        setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
-
                 trackLastVisibleTab(position, true);
             }
 
@@ -195,29 +177,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             } else {
                 ActivityLauncher.showSignInForResult(this);
             }
-        }
-    }
-
-    private void setTabLayoutElevation(float newElevation){
-        if (mTabLayout == null) return;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            float oldElevation = mTabLayout.getElevation();
-            if (oldElevation != newElevation) {
-                ObjectAnimator.ofFloat(mTabLayout, "elevation", oldElevation, newElevation)
-                        .setDuration(1000L)
-                        .start();
-            }
-        }
-    }
-
-    private void showVisualEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
-            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
-                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
-                    R.string.new_editor_promo_button_label);
-            newFragment.show(getFragmentManager(), "visual-editor-promo");
-            AppPrefs.setVisualEditorPromoRequired(false);
         }
     }
 
@@ -316,9 +275,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
-        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
-            showVisualEditorPromoDialogIfNeeded();
-        }
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
@@ -438,7 +394,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
                 break;
             case RequestCodes.ACCOUNT_SETTINGS:
-                if (resultCode == AccountSettingsFragment.LANGUAGE_CHANGED) {
+                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
                 }
                 break;

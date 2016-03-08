@@ -13,7 +13,6 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.ApiHelper.Param;
@@ -339,12 +338,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.showRelatedPostImages;
     }
 
-    public @NonNull String getRelatedPostsDescription() {
-        if (mActivity == null) return "";
-        String desc = mActivity.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
-        return StringUtils.capitalize(desc);
-    }
-
     public boolean getAllowComments() {
         return mSettings.allowComments;
     }
@@ -380,8 +373,11 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
-        if (!getShouldCloseAfter() || period == 0) return mActivity.getString(R.string.never);
+        if (!getShouldCloseAfter()) {
+            return mActivity.getString(R.string.never);
+        }
 
+        if (period == 0) return mActivity.getString(R.string.never);
         return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
     }
 
@@ -471,31 +467,13 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) mSettings.holdForModeration = new ArrayList<>();
+        if (mSettings.holdForModeration == null) return new ArrayList<>();
         return mSettings.holdForModeration;
     }
 
-    public @NonNull String getModerationHoldDescription() {
-        return getKeysDescription(getModerationKeys().size());
-    }
-
     public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) mSettings.blacklist = new ArrayList<>();
+        if (mSettings.blacklist == null) return new ArrayList<>();
         return mSettings.blacklist;
-    }
-
-    public @NonNull String getBlacklistDescription() {
-        return getKeysDescription(getBlacklistKeys().size());
-    }
-
-    public @NonNull String getKeysDescription(int count) {
-        if (mActivity == null) return "";
-
-        if (count > 0) {
-            return mActivity.getResources().getQuantityString(
-                    R.plurals.site_settings_list_editor_summary, count, count);
-        }
-        return mActivity.getString(R.string.site_settings_list_editor_no_items_text);
     }
 
     public void setTitle(String title) {
@@ -815,6 +793,7 @@ public abstract class SiteSettingsInterface {
                         }
                     }
                     mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
+                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
                     SiteSettingsTable.saveSettings(mSettings);
 
                     notifyUpdatedOnUiThread(null);

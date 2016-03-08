@@ -1,13 +1,13 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.util.AttributeSet;
+import android.widget.CheckBox;
 
 /**
  * A CheckBox that uses the default font from TypefaceCache
  */
-public class WPCheckBox extends AppCompatCheckBox {
+public class WPCheckBox extends CheckBox {
     public WPCheckBox(Context context) {
         super(context);
         TypefaceCache.setCustomTypeface(context, this, null);

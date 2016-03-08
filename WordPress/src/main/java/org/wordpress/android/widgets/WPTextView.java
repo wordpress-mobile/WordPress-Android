@@ -2,12 +2,12 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 
@@ -15,7 +15,7 @@ import org.wordpress.android.R;
  * custom TextView used in layouts - enables keeping custom typeface handling in one place (so we
  * avoid having to set the typeface for every single TextView in every single activity)
  */
-public class WPTextView extends AppCompatTextView {
+public class WPTextView extends TextView {
     protected boolean mFixWidowWordEnabled;
 
     public WPTextView(Context context) {

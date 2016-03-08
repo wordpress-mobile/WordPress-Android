@@ -72,7 +72,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setCustomView(R.layout.preferences_actionbar);
+                actionBar.setCustomView(R.layout.site_settings_actionbar);
             }
 
             FragmentManager fragmentManager = getFragmentManager();
@@ -81,7 +81,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             if (siteSettingsFragment == null) {
                 siteSettingsFragment = new SiteSettingsFragment();
                 siteSettingsFragment.setArguments(getIntent().getExtras());
-                fragmentManager.beginTransaction()
+                getFragmentManager().beginTransaction()
                         .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                         .commit();
             }

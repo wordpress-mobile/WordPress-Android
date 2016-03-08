@@ -95,7 +95,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -121,7 +121,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -139,7 +139,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
-            Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -194,7 +194,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
-            Toast.makeText(this, getText(R.string.invalid_site_url_message),
+            Toast.makeText(this, getText(R.string.invalid_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -205,7 +205,7 @@ public class WPWebViewActivity extends WebViewActivity {
         } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
-                Toast.makeText(this, getText(R.string.invalid_site_url_message),
+                Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }

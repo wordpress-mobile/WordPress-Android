@@ -30,6 +30,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -103,6 +104,7 @@ public class NotificationsUtils {
         Map<String, String> contentStruct = new HashMap<>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
+        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model", Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
@@ -163,6 +165,16 @@ public class NotificationsUtils {
             return;
         }
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
+    }
+
+    private static String getAppPushNotificationsName() {
+        //white listing only few keys.
+        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.beta.build"))
+                return "org.wordpress.android.beta.build";
+        if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.debug.build"))
+            return "org.wordpress.android.debug.build";
+
+        return "org.wordpress.android.playstore";
     }
 
     public static Spannable getSpannableContentForRanges(JSONObject subject) {

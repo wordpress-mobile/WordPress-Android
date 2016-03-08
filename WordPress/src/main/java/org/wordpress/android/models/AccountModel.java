@@ -73,15 +73,14 @@ public class AccountModel {
     }
 
     public void updateAccountSettingsFromRestResponse(JSONObject json) {
-        if (json.has(RestParam.FIRST_NAME.getDescription())) mFirstName = json.optString(RestParam.FIRST_NAME.getDescription());
-        if (json.has(RestParam.LAST_NAME.getDescription())) mLastName = json.optString(RestParam.LAST_NAME.getDescription());
-        if (json.has(RestParam.DISPLAY_NAME.getDescription())) mDisplayName = json.optString(RestParam.DISPLAY_NAME.getDescription());
-        if (json.has(RestParam.ABOUT_ME.getDescription())) mAboutMe = json.optString(RestParam.ABOUT_ME.getDescription());
-        if (json.has(RestParam.EMAIL.getDescription())) mEmail = json.optString(RestParam.EMAIL.getDescription());
-        if (json.has(RestParam.NEW_EMAIL.getDescription())) mNewEmail = json.optString(RestParam.NEW_EMAIL.getDescription());
-        if (json.has(RestParam.EMAIL_CHANGE_PENDING.getDescription())) mPendingEmailChange = json.optBoolean(RestParam.EMAIL_CHANGE_PENDING.getDescription());
-        if (json.has(RestParam.PRIMARY_BLOG.getDescription())) mPrimaryBlogId = json.optLong(RestParam.PRIMARY_BLOG.getDescription());
-        if (json.has(RestParam.WEB_ADDRESS.getDescription())) mWebAddress = json.optString(RestParam.WEB_ADDRESS.getDescription());
+        mFirstName = json.optString(RestParam.FIRST_NAME.getDescription());
+        mLastName = json.optString(RestParam.LAST_NAME.getDescription());
+        mDisplayName = json.optString(RestParam.DISPLAY_NAME.getDescription());
+        mAboutMe = json.optString(RestParam.ABOUT_ME.getDescription());
+        mNewEmail = json.optString(RestParam.NEW_EMAIL.getDescription());
+        mPendingEmailChange = json.optBoolean(RestParam.EMAIL_CHANGE_PENDING.getDescription());
+        mPrimaryBlogId = json.optLong(RestParam.PRIMARY_BLOG.getDescription());
+        mWebAddress = json.optString(RestParam.WEB_ADDRESS.getDescription());
     }
 
     public long getUserId() {
@@ -239,6 +238,10 @@ public class AccountModel {
 
         RestParam(String description) {
             this.description = description;
+        }
+
+        public static String toString(RestParam param) {
+            return param.description;
         }
 
         public String getDescription() {

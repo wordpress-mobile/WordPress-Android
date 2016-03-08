@@ -33,7 +33,6 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,17 +198,8 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
-                ArrayList<FilterCriteria> criterias = new ArrayList();
-                for (CommentStatus criteria : commentStatuses) {
-                    criterias.add(criteria);
-                }
-                return criterias;
-            }
-
-            @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                //noop
+            public FilterCriteria[] onLoadFilterCriteriaOptions() {
+                return commentStatuses;
             }
 
             @Override
@@ -261,20 +251,7 @@ public class CommentsListFragment extends Fragment {
                 }
 
             }
-
-            @Override
-            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-                //noop
-            }
         });
-
-        // the following will change the look and feel of the toolbar to match the current design
-        mFilteredCommentsView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
-        mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
-        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
-        mFilteredCommentsView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
-                getResources().getDimensionPixelSize(R.dimen.margin_none));
 
         return view;
     }

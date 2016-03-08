@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">계정 설정을 저장할 수 없습니다.</string>
-	<string name="error_post_my_profile">프로필을 저장할 수 없습니다.</string>
-	<string name="error_fetch_account_settings">계정 설정을 검색할 수 없습니다.</string>
-	<string name="error_fetch_my_profile">프로필을 검색할 수 없습니다.</string>
-	<string name="stats_widget_promo_ok_btn_label">네, 이해했습니다.</string>
-	<string name="stats_widget_promo_desc">홈 화면에 위젯을 추가하여 클릭 한 번으로 통계에 액세스하세요.</string>
-	<string name="stats_widget_promo_title">홈 화면 통계 위젯</string>
-	<string name="site_settings_unknown_language_code_error">언어 코드가 인식되지 않음</string>
-	<string name="site_settings_threading_dialog_description">스레드에서 댓글이 계층화되도록 허용합니다.</string>
-	<string name="site_settings_threading_dialog_header">최대 스레드</string>
-	<string name="remove">제거</string>
-	<string name="search">검색</string>
-	<string name="add_category">카테고리 추가</string>
-	<string name="disabled">해제</string>
 	<string name="site_settings_image_original_size">원래 크기</string>
 	<string name="about_me_hint">사용자에 대한 몇 가지 정보...</string>
 	<string name="public_display_name_hint">대화명을 설정하지 않을 경우 기본적으로 사용자명으로 설정됩니다.</string>
@@ -769,6 +755,7 @@
 	<string name="stats_timeframe_months">월</string>
 	<string name="stats_timeframe_days">일</string>
 	<string name="stats_entry_country">국가</string>
+	<string name="menu_search">검색</string>
 	<string name="share_action">공유</string>
 	<string name="stats">통계</string>
 	<string name="stats_entry_posts_and_pages">제목</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">변경 후의 이미지 폭</string>
 	<string name="upload_scaled_image">업로드 하여 크기를 조정 한 이미지 링크</string>
+	<string name="remove_location">제거</string>
 	<string name="scheduled">예약</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress for Android에서 작성</string>
@@ -956,6 +944,18 @@
 		<item>댓글 없음</item>
 		<item>알려진 사용자의 댓글</item>
 		<item>모든 사용자</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>없음</item>
+		<item>2개 레벨</item>
+		<item>3개 레벨</item>
+		<item>4개 레벨</item>
+		<item>5개 레벨</item>
+		<item>6개 레벨</item>
+		<item>7개 레벨</item>
+		<item>8개 레벨</item>
+		<item>9개 레벨</item>
+		<item>10개 레벨</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>무료</item>

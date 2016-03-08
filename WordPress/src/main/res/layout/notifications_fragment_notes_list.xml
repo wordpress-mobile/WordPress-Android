@@ -108,7 +108,7 @@
             android:gravity="center"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_double_extra_large"
-            android:fontFamily="sans-serif-light"
+            app:fontVariation="light"
             android:id="@+id/text_empty"
             android:text="@string/notifications_empty_list" />
 

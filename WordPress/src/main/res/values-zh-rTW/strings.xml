@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">無法儲存你的帳號設定</string>
-	<string name="error_post_my_profile">無法儲存你的個人檔案</string>
-	<string name="error_fetch_account_settings">無法擷取你的帳號設定</string>
-	<string name="error_fetch_my_profile">無法擷取你的個人檔案</string>
-	<string name="stats_widget_promo_ok_btn_label">好，知道了</string>
-	<string name="stats_widget_promo_desc">將小工具新增至主畫面，輕鬆按一下即可存取統計資料。</string>
-	<string name="stats_widget_promo_title">主畫面統計資料小工具</string>
-	<string name="site_settings_unknown_language_code_error">無法辨識語言代碼</string>
-	<string name="site_settings_threading_dialog_description">允許留言以階層式嵌入留言串中。</string>
-	<string name="site_settings_threading_dialog_header">留言串最多</string>
-	<string name="remove">移除</string>
-	<string name="search">搜尋</string>
-	<string name="add_category">新增類別</string>
-	<string name="disabled">已停用</string>
 	<string name="site_settings_image_original_size">原始尺寸</string>
 	<string name="about_me_hint">簡單介紹一下自己…</string>
 	<string name="public_display_name_hint">如果未設定，顯示名稱會預設為你的使用者名稱</string>
@@ -802,6 +788,7 @@
 	<string name="stats_totals_views">點閱數</string>
 	<string name="stats_totals_clicks">點擊率</string>
 	<string name="stats_totals_plays">播放次數</string>
+	<string name="menu_search">搜尋</string>
 	<string name="passcode_manage">管理 PIN 鎖定</string>
 	<string name="passcode_enter_passcode">輸入你的 PIN</string>
 	<string name="passcode_enter_old_passcode">輸入你的舊 PIN</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">網誌使用者帳號</string>
 	<string name="upload_scaled_image">上傳並建立縮圖連結</string>
 	<string name="scaled_image">圖片縮放寬度</string>
+	<string name="remove_location">移除</string>
 	<string name="scheduled">定時</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">發自 WordPress for Android</string>
@@ -956,6 +944,18 @@
 		<item>無留言</item>
 		<item>已知使用者的留言</item>
 		<item>所有使用者</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>無</item>
+		<item>兩層</item>
+		<item>三層</item>
+		<item>四層</item>
+		<item>五層</item>
+		<item>六層</item>
+		<item>七層</item>
+		<item>八層</item>
+		<item>九層</item>
+		<item>十層</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>免費</item>

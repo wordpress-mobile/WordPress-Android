@@ -13,9 +13,9 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_extra_large"
         android:textStyle="bold"
-        android:fontFamily="sans-serif-light" />
+        app:fontVariation="light" />
 
-    <org.wordpress.android.widgets.WPEditText
+    <org.wordpress.android.widgets.OpenSansEditText
         android:id="@+id/my_profile_dialog_input"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />

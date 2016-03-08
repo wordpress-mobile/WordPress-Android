@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">הגדרות החשבון לא נשמרו</string>
-	<string name="error_post_my_profile">הפרופיל לא נשמר</string>
-	<string name="error_fetch_account_settings">לא ניתן לאחזר את הגדרות החשבון שלך</string>
-	<string name="error_fetch_my_profile">לא ניתן לאחזר את הפרופיל שלך</string>
-	<string name="stats_widget_promo_ok_btn_label">אוקי, הבנתי</string>
-	<string name="stats_widget_promo_desc">להוסיף את הווידג׳ט למסך הבית כדי להגיע לסטטיסטיקות בקליק אחד.</string>
-	<string name="stats_widget_promo_title">וידג׳ט סטטיסטיקות למסך הבית</string>
-	<string name="site_settings_unknown_language_code_error">קוד שפה לא מזוהה</string>
-	<string name="site_settings_threading_dialog_description">אפשר תגובות משורשרות</string>
-	<string name="site_settings_threading_dialog_header">שרשור עד עומק של</string>
-	<string name="search">לחפש</string>
-	<string name="add_category">הוספת קטגוריה</string>
-	<string name="remove">להסיר</string>
-	<string name="disabled">לא מופעל</string>
 	<string name="site_settings_image_original_size">גודל מקורי</string>
 	<string name="about_me_hint">תיאור אישי בכמה מילים…</string>
 	<string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
@@ -802,6 +788,7 @@
 	<string name="stats_totals_views">צפיות</string>
 	<string name="stats_totals_clicks">קליקים</string>
 	<string name="stats_totals_plays">ניגונים</string>
+	<string name="menu_search">חיפוש</string>
 	<string name="passcode_manage">ניהול חסימה בקוד אישי</string>
 	<string name="passcode_enter_passcode">הקלד את הקוד האישי שלך</string>
 	<string name="passcode_enter_old_passcode">הקלד את הקוד האישי הישן שלך</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">שם משתמש</string>
 	<string name="scaled_image">רוחב תמונה</string>
 	<string name="upload_scaled_image">העלאה וקישור לתמונה</string>
+	<string name="remove_location">הסרה</string>
 	<string name="scheduled">תוזמן</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">פורסם דרך וורדפרס עבור אנדרואיד</string>
@@ -956,6 +944,18 @@
 		<item>אין תגובות</item>
 		<item>תגובות של משתמשים מוכרים</item>
 		<item>כל המשתמשים</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>ללא</item>
+		<item>שתי רמות</item>
+		<item>שלוש רמות</item>
+		<item>ארבע רמות</item>
+		<item>חמש רמות</item>
+		<item>שש רמות</item>
+		<item>שבע רמות</item>
+		<item>שמונה רמות</item>
+		<item>תשע רמות</item>
+		<item>עשר רמות</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>חינם</item>

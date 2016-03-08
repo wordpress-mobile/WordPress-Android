@@ -24,7 +24,7 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 
 [build-instructions]: https://github.com/wordpress-mobile/WordPress-Android#build-instructions
 [pr]: https://github.com/wordpress-mobile/WordPress-Android/compare/
-[style]: https://github.com/wordpress-mobile/WordPress-Android/blob/develop/CODESTYLE.md
+[style]: https://github.com/wordpress-mobile/WordPress-Android/CODESTYLE.md
 
 # Versioning
 

@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">N-am putut salva setările tale de cont</string>
-	<string name="error_post_my_profile">N-am putut salva profilul tău</string>
-	<string name="error_fetch_account_settings">N-am putut aduce setările tale de cont</string>
-	<string name="error_fetch_my_profile">N-am putut aduce profilul tău</string>
-	<string name="stats_widget_promo_ok_btn_label">Ok, am înțețes</string>
-	<string name="stats_widget_promo_desc">Adaugă piesa ecranului tău de pornire pentru a accesa statisticile dintr-un clic.</string>
-	<string name="stats_widget_promo_title">Piesă de statistici pe ecranul de pornire</string>
-	<string name="site_settings_unknown_language_code_error">Cod de limbă nerecunoscut</string>
-	<string name="site_settings_threading_dialog_description">Permite imbricarea comentariilor în fire.</string>
-	<string name="site_settings_threading_dialog_header">Pe fire până la</string>
-	<string name="remove">Înlătură</string>
-	<string name="search">Caută</string>
-	<string name="add_category">Adaugă categorie</string>
-	<string name="disabled">Invalidat</string>
 	<string name="site_settings_image_original_size">Mărime originală</string>
 	<string name="about_me_hint">Câteva cuvinte despre tine...</string>
 	<string name="public_display_name_hint">Numele afișat va fi implicit numele utilizator dacă nu este setat</string>
@@ -760,6 +746,7 @@
 	<string name="passcode_enter_passcode">Introdu PIN-ul tău</string>
 	<string name="passcode_enter_old_passcode">Introdu vechiul tău PIN</string>
 	<string name="passcode_re_enter_passcode">Re-introdu PIN-ul tău</string>
+	<string name="menu_search">Caută</string>
 	<string name="passcode_manage">Gestionează PIN-ul de blocare</string>
 	<string name="share_action">Partajare</string>
 	<string name="stats_totals_clicks">Clicuri</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">nume utilizator blog</string>
 	<string name="scaled_image">Lățime imagine scalată</string>
 	<string name="upload_scaled_image">Încarcă și leagă la imaginea scalată</string>
+	<string name="remove_location">Îndepărtează</string>
 	<string name="scheduled">Programat</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Publicat de pe WordPress pentru Android</string>
@@ -956,6 +944,18 @@
 		<item>Fără comnetarii</item>
 		<item>Comentariile utilizatorilor cunoscuți</item>
 		<item>Toți utilizatorii</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Niciuna</item>
+		<item>Două nivele</item>
+		<item>Trei nivele</item>
+		<item>Patru nivele</item>
+		<item>Cinci nivele</item>
+		<item>Șase nivele</item>
+		<item>Șapte nivele</item>
+		<item>Opt nivele</item>
+		<item>Nouă nivele</item>
+		<item>Zece nivele</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratis</item>

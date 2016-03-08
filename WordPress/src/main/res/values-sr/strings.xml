@@ -578,6 +578,7 @@
 	<string name="passcode_enter_old_passcode">Унесите свој стари ПИН</string>
 	<string name="passcode_enter_passcode">Унесите свој ПИН</string>
 	<string name="passcode_manage">Управљајте ПИН лозинком</string>
+	<string name="menu_search">Претрага</string>
 	<string name="stats_view_clicks">Притискања</string>
 	<string name="stats_view_visitors_and_views">Посетиоци и прегледи</string>
 	<string name="stats">Статистике</string>
@@ -644,6 +645,7 @@
 	<string name="ok">У реду</string>
 	<string name="scaled_image">Ширина сразмерне слике</string>
 	<string name="upload_scaled_image">Отпреми и повежи са сразмерном сликом</string>
+	<string name="remove_location">Уклони</string>
 	<string name="scheduled">Заказано</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Објављено са Вордпреса за Андроид</string>

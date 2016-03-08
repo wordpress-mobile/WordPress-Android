@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Impossibile salvare le impostazioni dell\'account</string>
-	<string name="error_post_my_profile">Impossibile salvare il profilo</string>
-	<string name="error_fetch_account_settings">Impossibile recuperare le impostazioni dell\'account</string>
-	<string name="error_fetch_my_profile">Impossibile recuperare il profilo</string>
-	<string name="stats_widget_promo_ok_btn_label">OK</string>
-	<string name="stats_widget_promo_desc">Aggiungi il widget alla schermata Home per accedere alle tue statistiche con un clic.</string>
-	<string name="stats_widget_promo_title">Widget delle statistiche della schermata Home</string>
-	<string name="site_settings_unknown_language_code_error">Codice lingua non riconosciuto</string>
-	<string name="site_settings_threading_dialog_description">Consenti di nidificare i commenti in thread.</string>
-	<string name="site_settings_threading_dialog_header">Thread fino a</string>
-	<string name="remove">Rimuovi</string>
-	<string name="search">Cerca</string>
-	<string name="add_category">Aggiungi categoria</string>
-	<string name="disabled">Disattivata</string>
 	<string name="site_settings_image_original_size">Dimensioni originali</string>
 	<string name="about_me_hint">Alcune informazioni su di te…</string>
 	<string name="public_display_name_hint">Se non viene impostato, il nome visualizzato coinciderà con il nome utente per impostazione predefinita</string>
@@ -208,7 +194,7 @@
 	<string name="reader_short_like_count_multi">%s Mi piace </string>
 	<string name="reader_short_like_count_one">1 Mi piace</string>
 	<string name="reader_label_follow_count">%,d ti seguono</string>
-	<string name="reader_short_like_count_none">Mi piace</string>
+	<string name="reader_short_like_count_none">Mi paice</string>
 	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Modifica tag e blog</string>
 	<string name="reader_label_word_count">%,d parole</string>
@@ -803,6 +789,7 @@
 	<string name="stats_entry_tags_and_categories">Argomenti</string>
 	<string name="media_no_video_message">Scarica l\'aggiornamento di VideoPress per caricare dei video!</string>
 	<string name="theme_activating_button">Attivazione</string>
+	<string name="menu_search">Cerca</string>
 	<string name="passcode_manage">Gestione blocco PIN</string>
 	<string name="media_gallery_type_slideshow">Visualizza come slideshow</string>
 	<string name="share_action">Condividi</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">nomeutenteblog</string>
 	<string name="upload_scaled_image">Carica e inserisci link all\'immagine ridimensionata</string>
 	<string name="scaled_image">Larghezza immagine ridimensionata</string>
+	<string name="remove_location">Rimuovi</string>
 	<string name="scheduled">Programmato</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Scritto con WordPress per Android</string>
@@ -905,7 +893,7 @@
 	<string-array name="notifications_blog_settings">
 		<item>Commenti sul mio sito</item>
 		<item>Mi piace ai miei commenti</item>
-		<item>Mi piace ai miei articoli</item>
+		<item>Mi paice ai miei articoli</item>
 		<item>Seguono il sito</item>
 		<item>Traguardi del sito</item>
 		<item>Menzioni del nome utente</item>
@@ -956,6 +944,18 @@
 		<item>Nessun commento</item>
 		<item>Commenti di utenti conosciuti</item>
 		<item>Tutti gli utenti</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Nessuno</item>
+		<item>Due livelli</item>
+		<item>Tre livelli</item>
+		<item>Quattro livelli</item>
+		<item>Cinque livelli</item>
+		<item>Sei livelli</item>
+		<item>Sette livelli</item>
+		<item>Otto livelli</item>
+		<item>Nove livelli</item>
+		<item>Dieci livelli</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratuito</item>

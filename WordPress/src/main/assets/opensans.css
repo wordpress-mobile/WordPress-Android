@@ -1,0 +1,35 @@
+/*
+ * CSS to enable WebViews to use Open Sans font assets, ex:
+ * <link href='file:///android_asset/opensans.css' rel='stylesheet' type='text/css'>
+ */
+
+/* normal */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(file:///android_asset/fonts/OpenSans-Regular.ttf);
+}
+
+/* bold */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(file:///android_asset/fonts/OpenSans-Bold.ttf);
+}
+
+/* italic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(file:///android_asset/fonts/OpenSans-Italic.otf);
+}
+
+/* bold italic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'), url(file:///android_asset/fonts/OpenSans-BoldItalic.otf);

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 public class LinkDialogFragment extends DialogFragment {
@@ -16,9 +15,6 @@ public class LinkDialogFragment extends DialogFragment {
     public static final int LINK_DIALOG_REQUEST_CODE_ADD = 1;
     public static final int LINK_DIALOG_REQUEST_CODE_UPDATE = 2;
     public static final int LINK_DIALOG_REQUEST_CODE_DELETE = 3;
-
-    public static final String LINK_DIALOG_ARG_URL  = "linkURL";
-    public static final String LINK_DIALOG_ARG_TEXT = "linkText";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -35,8 +31,8 @@ public class LinkDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
-                        intent.putExtra(LINK_DIALOG_ARG_URL, urlEditText.getText().toString());
-                        intent.putExtra(LINK_DIALOG_ARG_TEXT, linkEditText.getText().toString());
+                        intent.putExtra("linkURL", urlEditText.getText().toString());
+                        intent.putExtra("linkText", linkEditText.getText().toString());
                         getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
                     }
                 })
@@ -59,18 +55,15 @@ public class LinkDialogFragment extends DialogFragment {
         // Prepare initial state of EditTexts
         Bundle bundle = getArguments();
         if (bundle != null) {
-            linkEditText.setText(bundle.getString(LINK_DIALOG_ARG_TEXT));
+            linkEditText.setText(bundle.getString("linkText"));
 
-            String url = bundle.getString(LINK_DIALOG_ARG_URL);
+            String url = bundle.getString("linkURL");
             if (url != null) {
                 urlEditText.setText(url);
             }
-            urlEditText.selectAll();
+            urlEditText.setSelection(urlEditText.length());
         }
 
-        AlertDialog dialog =  builder.create();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
-        return dialog;
+        return builder.create();
     }
 }

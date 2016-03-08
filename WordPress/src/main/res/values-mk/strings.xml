@@ -402,6 +402,7 @@
 	<string name="media_edit_success">Ажурирано</string>
 	<string name="passcode_enter_old_passcode">Воведи го твојот стар ПИН</string>
 	<string name="stats_timeframe_weeks">Седмици</string>
+	<string name="menu_search">Пребарување</string>
 	<string name="passcode_manage">Управување со PIN заклучување</string>
 	<string name="passcode_enter_passcode">Внесете го вашиот PIN</string>
 	<string name="passcode_re_enter_passcode">Внесете го повторно вашиот PIN</string>
@@ -471,6 +472,7 @@
 	<string name="blogusername">блогкорисник</string>
 	<string name="upload_scaled_image">Испрати и сврзи со намелана слика</string>
 	<string name="scaled_image">Ширина на прилагодена слика</string>
+	<string name="remove_location">Одстрани</string>
 	<string name="scheduled">Распоредени</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Објавено од WordPress за Android</string>

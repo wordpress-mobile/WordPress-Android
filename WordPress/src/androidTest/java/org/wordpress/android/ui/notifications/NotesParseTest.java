@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
 import junit.framework.TestCase;

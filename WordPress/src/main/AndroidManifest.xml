@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.wordpress.android"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.wordpress.android"
+    android:installLocation="auto" >
 
     <supports-screens
         android:anyDensity="true"
@@ -29,11 +29,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- self-defined permission prevents other apps to hijack PNs -->
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+    <permission android:name="org.wordpress.android.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -52,71 +50,68 @@
         android:required="false" />
 
     <application
-        android:name=".WordPress"
+        android:name="WordPress"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_scheme"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:theme="@style/WordPress"
+        android:largeHeap="true"
         tools:replace="allowBackup, icon">
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Main tab activity -->
-        <activity
-            android:name=".ui.main.WPMainActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.main.WPMainActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Account activities -->
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.accounts.NewAccountActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/SignInTheme" />
+        <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/SignInTheme"/>
         <activity
             android:name=".ui.accounts.HelpActivity"
-            android:label=""
-            android:theme="@style/CalypsoTheme.NoActionBarShadow" />
-        <!-- empty title -->
+            android:theme="@style/CalypsoTheme.NoActionBarShadow"
+            android:label=""/> <!-- empty title -->
 
         <!-- Preferences activities -->
         <activity
             android:name=".ui.prefs.AboutActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.prefs.AccountSettingsActivity"
-            android:configChanges="locale|orientation|screenSize"
-            android:theme="@style/CalypsoTheme" />
+            android:name=".ui.prefs.SettingsActivity"
+            android:configChanges="locale|orientation"
+            android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"/>
         <activity
             android:name=".networking.SSLCertsViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -131,7 +126,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"/>
 
         <!-- Posts activities -->
         <activity
@@ -146,118 +141,122 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/CalypsoTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
-
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
         <activity-alias
             android:name=".ui.posts.PostsActivity"
-            android:enabled="true"
-            android:targetActivity=".ui.WPLaunchActivity">
+            android:targetActivity=".ui.WPLaunchActivity"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity-alias>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar">
+        </activity>
         <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"/>
 
         <!-- Stats Activities -->
-        <activity
-            android:name=".ui.stats.StatsActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity
-            android:name=".ui.stats.StatsViewAllActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsSingleItemDetailsActivity"
-            android:theme="@style/CalypsoTheme" />
-        <activity
-            android:name=".ui.stats.StatsWidgetConfigureActivity"
-            android:label="@string/site_picker_title"
-            android:theme="@style/CalypsoTheme">
+        <activity android:name=".ui.stats.StatsActivity"
+                  android:theme="@style/Calypso.NoActionBar"/>
+
+        <activity android:name=".ui.stats.StatsViewAllActivity"
+                  android:theme="@style/CalypsoTheme"/>
+
+        <activity android:name=".ui.stats.StatsSingleItemDetailsActivity"
+            android:theme="@style/CalypsoTheme"/>
+
+        <activity android:name=".ui.stats.StatsWidgetConfigureActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_picker_title">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.WPWebViewActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+
+        <activity android:name=".ui.WPWebViewActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaPickerActivity"
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.media.MediaGalleryActivity" />
-        <activity android:name=".ui.media.MediaGalleryPickerActivity" />
+
+        <activity android:name=".ui.media.MediaBrowserActivity"
+                  android:theme="@style/Calypso.NoActionBar" >
+        </activity>
+
+        <activity android:name=".ui.media.MediaGalleryActivity">
+        </activity>
+
+        <activity android:name=".ui.media.MediaGalleryPickerActivity">
+        </activity>
 
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar" >
+        </activity>
+
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
-            android:parentActivityName=".ui.themes.ThemeBrowserActivity">
+            android:parentActivityName=".ui.themes.ThemeBrowserActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.themes.ThemeBrowserActivity" />
+                android:value="org.wordpress.android.ui.themes.ThemeBrowserActivity" />
         </activity>
 
         <!-- Deep Linking Activity -->
         <activity
             android:name=".ui.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/Calypso.NoActionBar">
+            android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="viewpost"
-                    android:scheme="wordpress" />
+                    android:scheme="wordpress" >
+                </data>
             </intent-filter>
         </activity>
 
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
-            android:label="@string/reader"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:label="@string/reader_title_post_detail"
             android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/reader_title_post_detail"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
-            android:label="@string/reader_title_comments"
             android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/reader_title_comments"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
-            android:label="@string/reader_title_applog"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -272,15 +271,11 @@
 
         <!-- Other activities -->
 
-        <activity
-            android:name=".ui.ShareIntentReceiverActivity"
-            android:theme="@style/Calypso.FloatingActivity">
+        <activity android:name=".ui.ShareIntentReceiverActivity" android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
                 <data android:mimeType="image/*" />
                 <data android:mimeType="video/*" />
@@ -289,119 +284,106 @@
 
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
-            android:label="WordPress QuickPress">
+            android:label="WordPress QuickPress" >
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/Calypso.NoActionBar" />
+
         <activity
             android:name=".ui.main.SitePickerActivity"
-            android:label="@string/site_picker_title"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_picker_title" />
 
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
             android:theme="@style/CalypsoTheme" />
 
-        <!-- Passcode lock activities -->
+        <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
 
-        <!-- Me activities -->
+        <!--Me activities-->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
             android:label="@string/my_profile"
             android:theme="@style/CalypsoTheme" />
 
-        <activity android:name=".ui.VisualEditorOptionsReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="editor"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
-
-        <!-- Services -->
+		<!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" />
         <service
             android:name=".ui.posts.services.PostMediaService"
-            android:exported="false"
-            android:label="Post Media Service" />
+            android:label="Post Media Service"
+            android:exported="false" />
         <service
             android:name=".ui.posts.services.PostUpdateService"
-            android:exported="false"
-            android:label="Post Update Service" />
+            android:label="Post Update Service"
+            android:exported="false" />
+
         <service
             android:name=".ui.media.services.MediaUploadService"
-            android:label="Media Upload Service" />
+            android:label="Media Upload Service" >
+        </service>
+
         <service
             android:name=".ui.media.services.MediaDeleteService"
-            android:label="Media Delete Service" />
-        <service
-            android:name=".ui.stats.service.StatsService"
-            android:exported="false"
-            android:label="Stats Update Service" />
-        <service
-            android:name=".ui.reader.services.ReaderUpdateService"
-            android:exported="false"
-            android:label="Reader Update Service" />
-        <service
-            android:name=".ui.reader.services.ReaderPostService"
-            android:exported="false"
-            android:label="Reader Post Service" />
-        <service
-            android:name=".ui.reader.services.ReaderCommentService"
-            android:exported="false"
-            android:label="Reader Comment Service" />
+            android:label="Media Delete Service" >
+        </service>
+
+        <service android:name=".ui.stats.service.StatsService"
+            android:label="Stats Update Service"
+            android:exported="false" />
+
+        <service android:name=".ui.reader.services.ReaderUpdateService"
+            android:label="Reader Update Service"
+            android:exported="false"/>
+        <service android:name=".ui.reader.services.ReaderPostService"
+            android:label="Reader Post Service"
+            android:exported="false"/>
+        <service android:name=".ui.reader.services.ReaderCommentService"
+            android:label="Reader Comment Service"
+            android:exported="false"/>
+
         <service
             android:name=".ui.suggestion.service.SuggestionService"
-            android:exported="false"
-            android:label="Suggestion Service" />
+            android:label="Suggestion Service"
+            android:exported="false" >
+        </service>
 
-        <uses-library
-            android:name="com.sec.android.app.multiwindow"
-            android:required="false" />
-
-        <meta-data
-            android:name="com.sec.android.support.multiwindow"
-            android:value="true" />
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver
-            android:name=".networking.ConnectionChangeReceiver"
-            android:enabled="false">
+
+        <receiver android:name=".networking.ConnectionChangeReceiver"
+                  android:enabled="false">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".ui.stats.StatsWidgetProvider"
+
+        <receiver android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">
-            <intent-filter>
+            <intent-filter >
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
@@ -415,22 +397,22 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="${applicationId}" />
+                <category android:name="org.wordpress.android" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".GCMRegistrationIntentService"
-            android:exported="false" />
-
+            android:exported="false">
+        </service>
         <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
         <service
             android:name=".GCMMessageService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -439,9 +421,8 @@
             android:name=".InstanceIDService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
         </service>
     </application>
-
 </manifest>

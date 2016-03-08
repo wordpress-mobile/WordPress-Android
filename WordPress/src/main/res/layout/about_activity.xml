@@ -34,7 +34,7 @@
                 style="@style/WordPress.NUXTitle"
                 android:id="@+id/about_first_line"
                 android:text="@string/app_title"
-                android:fontFamily="sans-serif-light"
+                app:fontVariation="light"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_marginBottom="@dimen/margin_small"/>
 

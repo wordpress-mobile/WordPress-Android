@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Tidak dapat menyimpan pengaturan akun Anda</string>
-	<string name="error_post_my_profile">Tidak dapat menyimpan profil Anda</string>
-	<string name="error_fetch_account_settings">Tidak dapat mengambil pengaturan akun Anda</string>
-	<string name="error_fetch_my_profile">Tidak dapat mengambil profil Anda</string>
-	<string name="stats_widget_promo_ok_btn_label">Baik, mengerti</string>
-	<string name="stats_widget_promo_desc">Tambahkan widget ke layar awal Anda untuk mengakses Statistik Anda dalam sekali klik.</string>
-	<string name="stats_widget_promo_title">Widget Statistik Layar Awal</string>
-	<string name="site_settings_unknown_language_code_error">Kode bahasa tidak dikenali</string>
-	<string name="site_settings_threading_dialog_description">Izinkan komentar ditumpuk dalam utas.</string>
-	<string name="site_settings_threading_dialog_header">Utas hingga</string>
-	<string name="remove">Buang</string>
-	<string name="search">Cari</string>
-	<string name="add_category">Tambahkan kategori</string>
-	<string name="disabled">Dinonaktifkan</string>
 	<string name="site_settings_image_original_size">Ukuran Asli</string>
 	<string name="about_me_hint">Beberapa kata tentang Anda...</string>
 	<string name="about_me">Tentang saya</string>
@@ -802,6 +788,7 @@
 	<string name="stats_entry_tags_and_categories">Topik</string>
 	<string name="stats_entry_authors">Penulis</string>
 	<string name="stats_entry_referrers">Pengacu</string>
+	<string name="menu_search">Cari</string>
 	<string name="passcode_set">Pasang PIN</string>
 	<string name="passcode_preference_title">Kunci PIN</string>
 	<string name="passcode_turn_off">Matikan kunci PIN</string>
@@ -845,6 +832,7 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Unggah dan tautkan ke gambar terskala</string>
 	<string name="scaled_image">Lebar gambar terskala</string>
+	<string name="remove_location">Hapus</string>
 	<string name="scheduled">Dijadwalkan</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Ditulis dari WordPress untuk Android</string>
@@ -956,6 +944,18 @@
 		<item>Belum ada komentar</item>
 		<item>Komentar pengguna yang diketahui</item>
 		<item>Semua pengguna</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Tidak ada</item>
+		<item>Dua Level</item>
+		<item>Tiga Level</item>
+		<item>Empat Level</item>
+		<item>Lima Level</item>
+		<item>Enam Level</item>
+		<item>Tujuh Level</item>
+		<item>Delapan Level</item>
+		<item>Sembilan Level</item>
+		<item>Sepuluh Level</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratis</item>

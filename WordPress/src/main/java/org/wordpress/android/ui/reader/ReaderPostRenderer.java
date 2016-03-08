@@ -319,8 +319,9 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
+        // use Merriweather and OpenSans font assets
         .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
+        .append("<link href='file:///android_asset/opensans.css' rel='stylesheet' type='text/css'>")
 
         .append("<style type='text/css'>")
         .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
@@ -379,7 +380,7 @@ class ReaderPostRenderer {
         // attribution for Discover posts
         .append("  div#discover { ")
         .append("       margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
-        .append("       font-family: sans-serif;")
+        .append("       font-family: 'Open Sans', sans-serif;")
         .append(" }")
 
         // horizontally center iframes

@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashMap;

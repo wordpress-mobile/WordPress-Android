@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Impossible d\'enregistrer vos réglages de compte</string>
-	<string name="error_post_my_profile">Impossible d\'enregistrer votre profil</string>
-	<string name="error_fetch_account_settings">Impossible de récupérer vos réglages de compte</string>
-	<string name="error_fetch_my_profile">Impossible de récupérer votre profil</string>
-	<string name="stats_widget_promo_ok_btn_label">Ok, j\'ai compris</string>
-	<string name="stats_widget_promo_desc">Ajoutez le widget à votre écran d\'accueil afin d\'accéder à vos statistiques en un clic.</string>
-	<string name="stats_widget_promo_title">Widget Stats pour Écran d\'Accueil</string>
-	<string name="site_settings_unknown_language_code_error">Code de langue non reconnu</string>
-	<string name="site_settings_threading_dialog_description">Autoriser les commentaires à se faire en discussion imbriquées.</string>
-	<string name="site_settings_threading_dialog_header">Imbriquer jusqu\'à</string>
-	<string name="remove">Enlever</string>
-	<string name="search">Rechercher</string>
-	<string name="add_category">Ajouter la catégorie</string>
-	<string name="disabled">Désactivé(e)</string>
 	<string name="site_settings_image_original_size">Taille originale</string>
 	<string name="about_me_hint">Quelques mots à propos de vous...</string>
 	<string name="about_me">À propos de moi</string>
@@ -762,6 +748,7 @@
 	<string name="media_add_popup_capture_video">Capturer vidéo</string>
 	<string name="passcode_preference_title">code PIN</string>
 	<string name="passcode_turn_on">Activer le code PIN</string>
+	<string name="menu_search">Rechercher</string>
 	<string name="passcode_manage">Gérer le code PIN</string>
 	<string name="passcode_enter_passcode">Entrer le code PIN</string>
 	<string name="passcode_enter_old_passcode">Entrer l\'ancien code PIN</string>
@@ -845,6 +832,7 @@
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Largeur de l\'image à l\'échelle</string>
 	<string name="upload_scaled_image">Envoyer et lier l\'image à l\'échelle</string>
+	<string name="remove_location">Supprimer</string>
 	<string name="scheduled">Programmé</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Posté avec Wordpress pour Android</string>
@@ -956,6 +944,18 @@
 		<item>0 Commentaires</item>
 		<item>Commentaires des utilisateurs connus</item>
 		<item>Tous les utilisateurs</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>Aucun</item>
+		<item>Deux niveaux</item>
+		<item>Trois niveaux</item>
+		<item>Quatre niveaux</item>
+		<item>Cinq niveaux</item>
+		<item>Six niveaux</item>
+		<item>Sept niveaux</item>
+		<item>Huit niveaux</item>
+		<item>Neuf niveaux</item>
+		<item>Dix niveaux</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratuit</item>

@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">不能保存您的账户设置</string>
-	<string name="error_post_my_profile">无法保存您的个人资料</string>
-	<string name="error_fetch_account_settings">无法检索您的帐户设置</string>
-	<string name="error_fetch_my_profile">无法检索您的个人资料</string>
-	<string name="stats_widget_promo_ok_btn_label">好的，知道了</string>
-	<string name="stats_widget_promo_desc">在主屏幕中添加小组件，即可一键访问统计信息。</string>
-	<string name="stats_widget_promo_title">主屏幕统计信息小组件</string>
-	<string name="site_settings_unknown_language_code_error">无法识别语言代码</string>
-	<string name="site_settings_threading_dialog_description">允许在线程中嵌入评论。</string>
-	<string name="site_settings_threading_dialog_header">线程级数上限</string>
-	<string name="search">搜索</string>
-	<string name="remove">移除</string>
-	<string name="disabled">禁用</string>
-	<string name="add_category">添加分类目录</string>
 	<string name="site_settings_image_original_size">原始大小</string>
 	<string name="about_me_hint">有关您的一些字词…</string>
 	<string name="public_display_name_hint">显示名称（如果未设置）将默认为您的用户名</string>
@@ -761,6 +747,7 @@
 	<string name="passcode_enter_old_passcode">输入旧的PIN</string>
 	<string name="passcode_re_enter_passcode">再次输入你的PIN</string>
 	<string name="passcode_enter_passcode">输入新PIN</string>
+	<string name="menu_search">搜索</string>
 	<string name="stats_timeframe_today">今天</string>
 	<string name="stats_timeframe_yesterday">昨天</string>
 	<string name="stats_timeframe_days">天</string>
@@ -845,6 +832,7 @@
 	<string name="ok">确定</string>
 	<string name="upload_scaled_image">上传并创建缩略图链接</string>
 	<string name="scaled_image">图像缩放宽度</string>
+	<string name="remove_location">移除</string>
 	<string name="scheduled">定时</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">发自 WordPress for Android</string>
@@ -956,6 +944,18 @@
 		<item>没有评论</item>
 		<item>已知用户的评论</item>
 		<item>所有用户</item>
+	</string-array>
+	<string-array name="site_settings_threading_entries">
+		<item>无</item>
+		<item>两个级别</item>
+		<item>三个级别</item>
+		<item>四个级别</item>
+		<item>五个级别</item>
+		<item>六个级别</item>
+		<item>七个级别</item>
+		<item>八个级别</item>
+		<item>九个级别</item>
+		<item>十个级别</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>免费</item>
