@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 
-public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnFragmentInteractionListener, NewSignInActivityFragment.OnEmailCheckListener {
+public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInActivityFragment.OnEmailCheckListener {
     public String email = "";
 
     @Override
@@ -24,15 +24,6 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
     }
 
     @Override
-    public void onFragmentInteraction(Boolean shouldSendMagicLink) {
-        if (shouldSendMagicLink) {
-            // request url
-        } else {
-            // send to password screen
-        }
-    }
-
-    @Override
     public void onEmailChecked(Boolean isWPCom) {
         if (isWPCom) {
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -46,5 +37,15 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
         } else {
             // self-hosted flow
         }
+    }
+
+    @Override
+    public void onMagicLinkSent() {
+
+    }
+
+    @Override
+    public void onSelfHostedRequested() {
+
     }
 }

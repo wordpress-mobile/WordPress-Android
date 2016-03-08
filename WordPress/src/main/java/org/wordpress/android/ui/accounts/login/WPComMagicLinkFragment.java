@@ -11,11 +11,16 @@ import android.widget.Button;
 import org.wordpress.android.R;
 
 public class WPComMagicLinkFragment extends Fragment {
+    public interface OnMagicLinkFragmentInteraction {
+        void onMagicLinkSent();
+        void onSelfHostedRequested();
+    }
+
     private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
 
     private Button mMagicLinkButton;
     private String mEmail;
-    private OnFragmentInteractionListener mListener;
+    private OnMagicLinkFragmentInteraction mListener;
 
     public WPComMagicLinkFragment() {
     }
@@ -43,24 +48,18 @@ public class WPComMagicLinkFragment extends Fragment {
         mMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onButtonPressed(true);
+                sendMagicLinkRequest();
             }
         });
 
         return view;
     }
 
-    public void onButtonPressed(Boolean shouldSendMagicLink) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(shouldSendMagicLink);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnMagicLinkFragmentInteraction) {
+            mListener = (OnMagicLinkFragmentInteraction) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
@@ -72,7 +71,13 @@ public class WPComMagicLinkFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Boolean shouldSendMagicLink);
+    private void sendMagicLinkRequest() {
+        // send magic link
+        boolean ok = true;
+        if (ok) {
+            if (mListener != null) {
+                mListener.onMagicLinkSent();
+            }
+        }
     }
 }
