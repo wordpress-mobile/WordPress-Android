@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.wordpress.android.R;
 
 public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInActivityFragment.OnEmailCheckListener {
-    public String email = "";
+    public String mEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            WPComMagicLinkFragment fragment = WPComMagicLinkFragment.newInstance(email);
+            WPComMagicLinkFragment fragment = WPComMagicLinkFragment.newInstance(mEmail);
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.addToBackStack(null);
