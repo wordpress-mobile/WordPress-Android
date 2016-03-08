@@ -22,12 +22,10 @@ import android.webkit.MimeTypeMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -73,13 +71,17 @@ public class PostUploadService extends Service {
     private static Context mContext;
     private static final ArrayList<Post> mPostsList = new ArrayList<Post>();
     private static Post mCurrentUploadingPost = null;
+    private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
-    private FeatureSet mFeatureSet;
 
     public static void addPostToUpload(Post currentPost) {
         synchronized (mPostsList) {
             mPostsList.add(currentPost);
         }
+    }
+
+    public static void setLegacyMode(boolean enabled) {
+        mUseLegacyMode = enabled;
     }
 
     /*
@@ -138,18 +140,6 @@ public class PostUploadService extends Service {
         return START_STICKY;
     }
 
-    private FeatureSet synchronousGetFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag()) {
-            return null;
-        }
-        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures();
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        mFeatureSet = task.doSynchronously(apiArgs);
-
-        return mFeatureSet;
-    }
-
     private void uploadNextPost() {
         synchronized (mPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
@@ -180,7 +170,6 @@ public class PostUploadService extends Service {
 
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
-        private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
 
@@ -200,8 +189,7 @@ public class PostUploadService extends Service {
                 mPostUploadNotifier.cancelNotification();
                 mPostUploadNotifier.updateNotificationSuccess(mPost, mLatestIcon, mIsFirstPublishing);
             } else {
-                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
-                        mErrorUnavailableVideoPress);
+                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage());
             }
 
             postUploaded();
@@ -213,14 +201,12 @@ public class PostUploadService extends Service {
             super.onCancelled(aBoolean);
             // mPostUploadNotifier and mPost can be null if onCancelled is called before doInBackground
             if (mPostUploadNotifier != null && mPost != null) {
-                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage(),
-                        mErrorUnavailableVideoPress);
+                mPostUploadNotifier.updateNotificationError(mErrorMessage, mIsMediaError, mPost.isPage());
             }
         }
 
         @Override
         protected Boolean doInBackground(Post... posts) {
-            mErrorUnavailableVideoPress = false;
             mPost = posts[0];
 
             mPostUploadNotifier = new PostUploadNotifier(mPost);
@@ -363,9 +349,19 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // featured image
-            if (featuredImageID != -1) {
-                contentStruct.put("wp_post_thumbnail", featuredImageID);
+            // Featured images
+            if (mUseLegacyMode) {
+                // Support for legacy editor - images are identified as featured as they're being uploaded with the post
+                if (featuredImageID != -1) {
+                    contentStruct.put("wp_post_thumbnail", featuredImageID);
+                }
+            } else if (mPost.featuredImageHasChanged()) {
+                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
+                    // The featured image was removed from a live post
+                    contentStruct.put("wp_post_thumbnail", "");
+                } else {
+                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                }
             }
 
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
@@ -422,11 +418,20 @@ public class PostUploadService extends Service {
             return false;
         }
 
+        private boolean hasGallery() {
+            Pattern galleryTester = Pattern.compile("\\[.*?gallery.*?\\]");
+            Matcher matcher = galleryTester.matcher(mPost.getContent());
+            return matcher.find();
+        }
+
         private void trackUploadAnalytics() {
             // Calculate the words count
             Map<String, Object> properties = new HashMap<String, Object>();
             properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
+            if (hasGallery()) {
+                properties.put("with_galleries", true);
+            }
             if (mHasImage) {
                 properties.put("with_photos", true);
             }
@@ -439,9 +444,7 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
-
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
-
+            AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }
 
         /**
@@ -728,39 +731,30 @@ public class PostUploadService extends Service {
 
             Object[] params = {1, mBlog.getUsername(), mBlog.getPassword(), m};
 
-            FeatureSet featureSet = synchronousGetFeatureSet();
-            boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
-            boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
-            if (isVideoEnabled) {
-                File tempFile;
-                try {
-                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                    tempFile = createTempUploadFile(fileExtension);
-                } catch (IOException e) {
-                    mErrorMessage = getResources().getString(R.string.file_error_create);
-                    return null;
-                }
+            File tempFile;
+            try {
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                tempFile = createTempUploadFile(fileExtension);
+            } catch (IOException e) {
+                mErrorMessage = getResources().getString(R.string.file_error_create);
+                return null;
+            }
 
-                Object result = uploadFileHelper(params, tempFile);
-                Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                if (resultMap != null && resultMap.containsKey("url")) {
-                    String resultURL = resultMap.get("url").toString();
-                    if (resultMap.containsKey(MediaFile.VIDEOPRESS_SHORTCODE_ID)) {
-                        resultURL = resultMap.get(MediaFile.VIDEOPRESS_SHORTCODE_ID).toString() + "\n";
-                    } else {
-                        resultURL = String.format(
-                                "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                xRes, yRes, resultURL, mimeType, resultURL);
-                    }
-
-                    return resultURL;
+            Object result = uploadFileHelper(params, tempFile);
+            Map<?, ?> resultMap = (HashMap<?, ?>) result;
+            if (resultMap != null && resultMap.containsKey("url")) {
+                String resultURL = resultMap.get("url").toString();
+                if (resultMap.containsKey(MediaFile.VIDEOPRESS_SHORTCODE_ID)) {
+                    resultURL = resultMap.get(MediaFile.VIDEOPRESS_SHORTCODE_ID).toString() + "\n";
                 } else {
-                    mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
-                    return null;
+                    resultURL = String.format(
+                            "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                            xRes, yRes, resultURL, mimeType, resultURL);
                 }
+
+                return resultURL;
             } else {
-                mErrorMessage = getString(R.string.media_no_video_message);
-                mErrorUnavailableVideoPress = true;
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
                 return null;
             }
         }
@@ -963,8 +957,7 @@ public class PostUploadService extends Service {
             return post.getLocalTableBlogId() + remotePostId;
         }
 
-        public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage,
-                                                boolean isVideoPressError) {
+        public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
             AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
 
             Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -974,10 +967,6 @@ public class PostUploadService extends Service {
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
             notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, mErrorMessage);
-            if (isVideoPressError) {
-                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
-                notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
-            }
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -980,20 +980,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void updateWhitelistSettings(int val) {
-        switch (val) {
-            case -1:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-            case 0:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(true);
-                break;
-            case 1:
-                mSiteSettings.setManualApproval(false);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-        }
+        mSiteSettings.setManualApproval(val == -1);
+        mSiteSettings.setUseCommentWhitelist(val == 0);
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));

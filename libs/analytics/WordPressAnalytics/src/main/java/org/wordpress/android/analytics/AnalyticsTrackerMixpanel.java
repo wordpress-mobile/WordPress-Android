@@ -858,9 +858,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Details Accessed");
                 break;
-            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+            case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                        mixpanelInstructionsForEventName("Account Settings - Changed Language");
                 break;
             case SITE_SETTINGS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

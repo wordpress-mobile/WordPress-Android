@@ -18,6 +18,8 @@ public class Post implements Serializable {
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
 
+    private static int FEATURED_IMAGE_INIT_VALUE = -2;
+
     private long localTablePostId;
     private int localTableBlogId;
     private String categories;
@@ -52,7 +54,8 @@ public class Post implements Serializable {
     private String quickPostType;
     private PostLocation mPostLocation;
 
-    private int featuredImageId;
+    private int lastKnownRemoteFeaturedImageId;
+    private int featuredImageId = FEATURED_IMAGE_INIT_VALUE;
 
     public Post() {
     }
@@ -476,10 +479,27 @@ public class Post implements Serializable {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
 
+    public boolean hasEmptyContentFields() {
+        return TextUtils.isEmpty(this.getTitle()) && TextUtils.isEmpty(this.getContent());
+    }
+
     public int getFeaturedImageId() {
+        if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
+            return 0;
+        }
+
         return featuredImageId;
     }
+
     public void setFeaturedImageId(int id) {
-        this.featuredImageId = id;
+        if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
+            lastKnownRemoteFeaturedImageId = id;
+        }
+
+        featuredImageId = id;
+    }
+
+    public boolean featuredImageHasChanged() {
+        return (lastKnownRemoteFeaturedImageId != featuredImageId);
     }
 }
