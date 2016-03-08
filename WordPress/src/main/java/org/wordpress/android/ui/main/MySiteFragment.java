@@ -180,12 +180,14 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        mPlanContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
-            }
-        });
+        if (isPlansEnabled()) {
+            mPlanContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+                }
+            });
+        }
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,6 +246,13 @@ public class MySiteFragment extends Fragment
         });
 
         return rootView;
+    }
+
+    /*
+     * plans is a work-in-progress and is currently only exposed to alpha testers
+     */
+    private static boolean isPlansEnabled() {
+        return AppPrefs.isInAppBillingAvailable();
     }
 
     private void showSitePicker() {
@@ -361,10 +370,14 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView.setText(homeURL);
 
         // Hide the Plan item if the Plans feature is not available.
-        String planShortName = blog.getPlanShortName();
-        if (!TextUtils.isEmpty(planShortName)) {
-            mCurrentPlanNameTextView.setText(planShortName);
-            mPlanContainer.setVisibility(View.VISIBLE);
+        if (isPlansEnabled()) {
+            String planShortName = blog.getPlanShortName();
+            if (!TextUtils.isEmpty(planShortName)) {
+                mCurrentPlanNameTextView.setText(planShortName);
+                mPlanContainer.setVisibility(View.VISIBLE);
+            } else {
+                mPlanContainer.setVisibility(View.GONE);
+            }
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
