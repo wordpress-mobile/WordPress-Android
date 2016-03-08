@@ -1,15 +1,13 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 
-public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnFragmentInteractionListener {
+public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnFragmentInteractionListener, NewSignInActivityFragment.OnEmailCheckListener {
     public String email = "";
 
     @Override
@@ -25,9 +23,17 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
         fragmentTransaction.commit();
     }
 
-    public void logIn() {
-        // Logic for checking if WordPress.com or self-hosted
-        boolean isWPCom = true;
+    @Override
+    public void onFragmentInteraction(Boolean shouldSendMagicLink) {
+        if (shouldSendMagicLink) {
+            // request url
+        } else {
+            // send to password screen
+        }
+    }
+
+    @Override
+    public void onEmailChecked(Boolean isWPCom) {
         if (isWPCom) {
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -39,19 +45,6 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
             fragmentTransaction.commit();
         } else {
             // self-hosted flow
-        }
-    }
-
-    public void requestMagicLink() {
-
-    }
-
-    @Override
-    public void onFragmentInteraction(Boolean shouldSendMagicLink) {
-        if (shouldSendMagicLink) {
-            // request url
-        } else {
-            // send to password screen
         }
     }
 }
