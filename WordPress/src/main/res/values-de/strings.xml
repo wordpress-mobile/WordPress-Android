@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Deine Kontoeinstellungen konnten nicht gespeichert werden.</string>
+	<string name="error_post_my_profile">Konnte dein Profil nicht speichern</string>
+	<string name="error_fetch_account_settings">Deine Kontoeinstellungen konnten nicht abgerufen werden.</string>
+	<string name="error_fetch_my_profile">Dein Profil konnte nicht abgerufen werden.</string>
+	<string name="stats_widget_promo_ok_btn_label">Okay, habe verstanden</string>
+	<string name="stats_widget_promo_desc">Füge das Widget zu deinem Startbildschirm hinzu, um auf deine Statistiken mit einem Klick zugreifen zu können.</string>
+	<string name="stats_widget_promo_title">Statistik-Widget für den Startbildschirm</string>
+	<string name="site_settings_unknown_language_code_error">Sprachcode nicht erkannt</string>
+	<string name="site_settings_threading_dialog_description">Zulassen, dass Kommentare in Threads verschachtelt werden.</string>
+	<string name="site_settings_threading_dialog_header">Verschachteln bis zu</string>
+	<string name="remove">Entfernen</string>
+	<string name="search">Suche</string>
+	<string name="add_category">Kategorie hinzufügen</string>
+	<string name="disabled">Deaktiviert</string>
 	<string name="site_settings_image_original_size">Originalgröße</string>
 	<string name="about_me_hint">Ein paar Infos über dich ...</string>
 	<string name="about_me">Über mich</string>
@@ -766,7 +780,6 @@
 	<string name="stats_entry_posts_and_pages">Titel</string>
 	<string name="stats_entry_tags_and_categories">Thema</string>
 	<string name="stats_entry_authors">Autor</string>
-	<string name="menu_search">Suche</string>
 	<string name="passcode_enter_passcode">Gib deine PIN ein</string>
 	<string name="passcode_enter_old_passcode">Gib deine alte PIN ein</string>
 	<string name="custom_date">Benutzerdefiniertes Datum</string>
@@ -832,7 +845,6 @@
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Skalierte Bildbreite</string>
 	<string name="upload_scaled_image">Hochladen und zum skalierten Bild verlinken</string>
-	<string name="remove_location">Entfernen</string>
 	<string name="scheduled">Geplant</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Veröffentlicht mit WordPress für Android</string>
@@ -944,18 +956,6 @@
 		<item>Keine Kommentare</item>
 		<item>Kommentare bekannter Benutzer</item>
 		<item>Alle Benutzer</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Deaktiviert</item>
-		<item>Zwei Ebenen</item>
-		<item>Drei Ebenen</item>
-		<item>Vier Ebenen</item>
-		<item>Fünf Ebenen</item>
-		<item>Sechs Ebenen</item>
-		<item>Sieben Ebenen</item>
-		<item>Acht Ebenen</item>
-		<item>Neun Ebenen</item>
-		<item>Zehn Ebenen</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Kostenlos</item>
