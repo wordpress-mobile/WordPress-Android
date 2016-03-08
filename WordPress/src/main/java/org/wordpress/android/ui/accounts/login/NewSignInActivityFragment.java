@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.WPTextView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -25,7 +26,7 @@ public class NewSignInActivityFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_new_sign_in2, container, false);
         final EditText email = (EditText) view.findViewById(R.id.email_address);
-        Button button = (Button) view.findViewById(R.id.magic_link_button);
+        WPTextView button = (WPTextView) view.findViewById(R.id.magic_link_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
