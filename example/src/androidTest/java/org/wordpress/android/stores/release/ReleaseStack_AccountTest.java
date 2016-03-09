@@ -63,7 +63,7 @@ public class ReleaseStack_AccountTest extends ReleaseStack_Base {
 
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
-        assertEquals(BuildConfig.TEST_WPCOM_USERNAME, mAccountStore.getAccount().getUserName());
+        assertEquals(BuildConfig.TEST_WPCOM_USERNAME_TEST1, mAccountStore.getAccount().getUserName());
         mCountDownLatch.countDown();
     }
 }
