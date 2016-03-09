@@ -73,6 +73,12 @@ public class SiteStore extends Store {
         return getSitesCount() != 0;
     }
 
+    public SiteModel getSiteByLocalId(int id) {
+        return WellSql.selectUnique(SiteModel.class)
+                .where().equals(SiteModelTable.ID, id).endWhere()
+                .getAsModel().get(0);
+    }
+
     public int getDotComSitesCount() {
         return WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
@@ -101,6 +107,23 @@ public class SiteStore extends Store {
 
     public boolean hasJetpackSite() {
         return getJetpackSitesCount() != 0;
+    }
+
+    public boolean hasSiteWithSiteId(int siteId, String xmlRpcUrl) {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.SITE_ID, siteId)
+                .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
+                .endGroup().endWhere()
+                .getAsCursor().getCount() > 0;
+    }
+
+    public boolean hasSiteWithLocalId(int id) {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .endGroup().endWhere()
+                .getAsCursor().getCount() > 0;
     }
 
     public List<SiteModel> getVisibleDotComSites() {
