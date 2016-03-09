@@ -56,11 +56,26 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
+
+    static {
+        blogOptionsXMLRPCParameters.put("software_version", "software_version");
+        blogOptionsXMLRPCParameters.put("post_thumbnail", "post_thumbnail");
+        blogOptionsXMLRPCParameters.put("jetpack_client_id", "jetpack_client_id");
+        blogOptionsXMLRPCParameters.put("blog_public", "blog_public");
+        blogOptionsXMLRPCParameters.put("home_url", "home_url");
+        blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
+        blogOptionsXMLRPCParameters.put("login_url", "login_url");
+        blogOptionsXMLRPCParameters.put("blog_title", "blog_title");
+        blogOptionsXMLRPCParameters.put("time_zone", "time_zone");
+    }
+
     public void pullSite(final SiteModel site) {
         List<Object> params = new ArrayList<>(2);
         params.add(site.getSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
+        params.add(blogOptionsXMLRPCParameters);
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXMLRpcUrl(), "wp.getOptions", params,
                 new Listener<Object>() {
@@ -100,6 +115,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setXMLRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
             // TODO: siteMap.get("isPrimary")
+
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
@@ -115,7 +131,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
-        // TODO: plenty of other options to read here
+        // TODO: plenty of other options to read here from requested blogOptionsXMLRPCParameters
         Map<?, ?> blogOptions = (Map<?, ?>) response;
         oldModel.setName(getOption(blogOptions, "blog_title", String.class));
         // TODO: set a canonical URL here
