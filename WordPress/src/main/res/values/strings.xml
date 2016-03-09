@@ -1234,6 +1234,7 @@
 
     <!--Me-->
     <string name="me_btn_account_settings">Account Settings</string>
+    <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>

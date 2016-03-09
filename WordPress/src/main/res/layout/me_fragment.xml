@@ -88,6 +88,23 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/row_app_settings"
+            style="@style/MeListRowLayout">
+
+            <ImageView
+                android:id="@+id/me_app_settings_icon"
+                style="@style/MeListRowIcon"
+                android:src="@drawable/me_icon_account_settings"
+                android:contentDescription="@string/me_btn_app_settings"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/me_app_settings_text_view"
+                style="@style/MeListRowTextView"
+                android:text="@string/me_btn_app_settings" />
+
+        </LinearLayout>
+
         <View style="@style/MeListSectionDividerView" />
 
         <LinearLayout
