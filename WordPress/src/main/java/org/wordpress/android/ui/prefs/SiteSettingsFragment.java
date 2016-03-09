@@ -706,16 +706,22 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void showExportContentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Export your content");
-        builder.setMessage("Exports your shit, yo");
-        builder.setPositiveButton("Export my shit, yo", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                exportSite();
-            }
-        });
+        builder.setTitle(R.string.export_your_content);
+        builder.setMessage(R.string.export_your_content_message);
+        builder.setPositiveButton(R.string.site_settings_export_content_title, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        exportSite();
+                    }
+                });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                };
 
-        builder.show();
+                builder.show();
     }
 
     private void requestPurchasesForDeletionCheck() {

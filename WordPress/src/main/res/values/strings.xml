@@ -1306,7 +1306,6 @@
     <string name="confirm_delete_site">Confirm Delete Site</string>
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
-    <string name="export_content_message">Currently exporting is only available through the web interface. Please go to WordPress.com on your browser to export content.</string>
     <string name="error_deleting_site">Error deleting site</string>
     <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
     <string name="primary_domain">Primary Domain</string>
@@ -1334,5 +1333,7 @@
     <string name="web_address">Web Address</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
+    <string name="export_your_content">Export your content</string>
+    <string name="export_your_content_message">All your posts, pages, and settings will be packaged into a .zip file that you can use in the future to resume where you left off. Keep in mind that this content can not be recovered in the future.</string>
 
 </resources>
