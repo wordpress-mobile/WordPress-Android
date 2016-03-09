@@ -1039,10 +1039,10 @@ public class ApiHelper {
     public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
-        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
         WordPress.requestQueue.add(request);
         try {
-            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
