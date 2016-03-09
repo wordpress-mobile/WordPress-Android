@@ -576,17 +576,21 @@ public class WordPress extends Application {
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
                 } else {
                     mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
                 }
-            } catch (AndroidRuntimeException e) {
+            } catch (AndroidRuntimeException |  NullPointerException e) {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
+
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
+
         }
         return mDefaultUserAgent;
     }
