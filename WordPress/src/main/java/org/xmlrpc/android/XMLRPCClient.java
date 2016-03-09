@@ -319,8 +319,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             String faultString = String.valueOf(map.get(TAG_FAULT_STRING));
             int faultCode;
             try {
-                faultCode = Integer.parseInt(String.valueOf(map.get(TAG_FAULT_CODE)));
-            } catch (NumberFormatException e) {
+                faultCode = (int) map.get(TAG_FAULT_CODE);
+            } catch (NumberFormatException | ClassCastException e) {
                 throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> value is not an integer");
             }
             consumeHttpEntity(entity);
