@@ -721,7 +721,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     }
                 };
 
-                builder.show();
+        builder.show();
     }
 
     private void requestPurchasesForDeletionCheck() {
