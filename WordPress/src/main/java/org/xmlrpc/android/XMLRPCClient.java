@@ -62,8 +62,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class XMLRPCClient implements XMLRPCClientInterface {
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
-    public static final int DEFAULT_SOCKET_TIMEOUT = 60000;
+    public static final int DEFAULT_CONNECTION_TIMEOUT_MS = 30000;
+    public static final int DEFAULT_SOCKET_TIMEOUT_MS = 60000;
 
     public interface OnBytesUploadedListener {
         public void onBytesUploaded(long uploadedBytes);
@@ -157,8 +157,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT_MS);
+        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT_MS);
 
         // Setup HTTP Basic Auth if necessary
         if (usernamePasswordCredentials != null) {
