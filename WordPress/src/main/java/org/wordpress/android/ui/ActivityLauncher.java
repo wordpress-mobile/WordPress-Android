@@ -190,7 +190,7 @@ public class ActivityLauncher {
 
     public static void viewAppSettings(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
-        // TODO: add analytics
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
     }
 

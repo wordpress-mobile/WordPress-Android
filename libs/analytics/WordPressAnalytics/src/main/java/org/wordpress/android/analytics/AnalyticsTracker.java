@@ -101,6 +101,7 @@ public final class AnalyticsTracker {
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
         OPENED_ACCOUNT_SETTINGS, // Future
+        OPENED_APP_SETTINGS, // Future
         OPENED_MY_PROFILE, // Future
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,
