@@ -15,7 +15,6 @@
             android:layout_marginRight="@dimen/link_dialog_margin_outer"
             android:layout_marginBottom="@dimen/link_dialog_margin_inner"
             android:hint="@string/link_enter_url"
-            android:text="http://"
             android:imeOptions="actionNext"
             tools:ignore="HardcodedText"/>
 

@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
-import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.TypefaceCache;
+import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -90,12 +90,7 @@ public class DetailListPreference extends ListPreference
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mSelectedIndex != which) {
-                            mSelectedIndex = which;
-                            mListAdapter.notifyDataSetChanged();
-                            setValue(getEntryValues()[mSelectedIndex].toString());
-                            notifyChanged();
-                        }
+                        mSelectedIndex = which;
                     }
                 });
 
@@ -123,10 +118,7 @@ public class DetailListPreference extends ListPreference
         ListView listView = mDialog.getListView();
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                TypefaceCache.FAMILY_OPEN_SANS,
-                Typeface.BOLD,
-                TypefaceCache.VARIATION_LIGHT);
+        Typeface typeface = WPPrefUtils.getSemiboldTypeface(getContext());
 
         if (listView != null) {
             listView.setDividerHeight(0);
@@ -165,8 +157,6 @@ public class DetailListPreference extends ListPreference
         if (values != null && index >= 0 && index < values.length) {
             String value = String.valueOf(values[index]);
             callChangeListener(value);
-        } else {
-            callChangeListener(mStartingValue);
         }
     }
 
@@ -202,12 +192,6 @@ public class DetailListPreference extends ListPreference
     private void setupView(TextView view, int sizeRes, int enabledColorRes, int disabledColorRes) {
         if (view != null) {
             Resources res = getContext().getResources();
-            Typeface typeface = TypefaceCache.getTypeface(getContext(),
-                    TypefaceCache.FAMILY_OPEN_SANS,
-                    Typeface.NORMAL,
-                    TypefaceCache.VARIATION_NORMAL);
-
-            view.setTypeface(typeface);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
             //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
@@ -215,6 +199,8 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
+        private RadioButton mSelectedRadioButton;
+
         public DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -231,26 +217,19 @@ public class DetailListPreference extends ListPreference
 
             if (mainText != null && getEntries() != null && position < getEntries().length) {
                 mainText.setText(getEntries()[position]);
-                mainText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                        TypefaceCache.FAMILY_OPEN_SANS,
-                        Typeface.NORMAL,
-                        TypefaceCache.VARIATION_NORMAL));
             }
 
             if (detailText != null) {
                 if (mDetails != null && position < mDetails.length && !TextUtils.isEmpty(mDetails[position])) {
                     detailText.setVisibility(View.VISIBLE);
                     detailText.setText(mDetails[position]);
-                    detailText.setTypeface(TypefaceCache.getTypeface(getContext(),
-                            TypefaceCache.FAMILY_OPEN_SANS,
-                            Typeface.NORMAL,
-                            TypefaceCache.VARIATION_NORMAL));
                 } else {
                     detailText.setVisibility(View.GONE);
                 }
             }
 
             if (radioButton != null) {
+                if (mSelectedIndex == position) mSelectedRadioButton = radioButton;
                 radioButton.setChecked(mSelectedIndex == position);
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -274,9 +253,12 @@ public class DetailListPreference extends ListPreference
             CharSequence[] values = getEntryValues();
 
             if (radioButton != null && values != null && position < values.length) {
+                if (mSelectedRadioButton != null) {
+                    mSelectedRadioButton.setChecked(false);
+                }
                 mSelectedIndex = position;
                 radioButton.setChecked(true);
-                callChangeListener(values[position]);
+                mSelectedRadioButton = radioButton;
             }
         }
     }

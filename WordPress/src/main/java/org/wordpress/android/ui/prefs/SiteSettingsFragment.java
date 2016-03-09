@@ -16,6 +16,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -52,7 +53,6 @@ import org.wordpress.android.util.WPPrefUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -165,6 +165,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Delete site option (NOTE: only for WP.org)
     private Preference mDeleteSitePref;
 
+    private boolean mEditingEnabled = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,7 +241,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             RelatedPostsDialog.SHOW_HEADER_KEY, false));
                     mSiteSettings.setShowRelatedPostImages(data.getBooleanExtra(
                             RelatedPostsDialog.SHOW_IMAGES_KEY, false));
-                    mSiteSettings.saveSettings();
+                    onPreferenceChange(mRelatedPostsPref, mSiteSettings.getRelatedPostsDescription());
                     break;
                 case THREADING_REQUEST_CODE:
                     int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
@@ -366,7 +368,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue == null) return false;
+        if (newValue == null || !mEditingEnabled) return false;
 
         if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
@@ -384,7 +386,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
             changeLanguageValue(mSiteSettings.getLanguageCode());
         } else if (preference == mPrivacyPref) {
-            mSiteSettings.setPrivacy(Integer.valueOf(newValue.toString()));
+            mSiteSettings.setPrivacy(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mPrivacyPref,
                     String.valueOf(mSiteSettings.getPrivacy()),
                     mSiteSettings.getPrivacyDescription());
@@ -445,6 +447,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     mBlog.getMaxImageWidth());
         } else if (preference == mUploadAndLinkPref) {
             mBlog.setFullSizeImage(Boolean.valueOf(newValue.toString()));
+        } else if (preference == mRelatedPostsPref) {
+            mRelatedPostsPref.setSummary(newValue.toString());
+        } else if (preference == mModerationHoldPref) {
+            mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
+        } else if (preference == mBlacklistPref) {
+            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
         } else {
             return false;
         }
@@ -482,7 +490,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mSiteSettings.saveSettings();
+        if (mEditingList == mSiteSettings.getModerationKeys()) {
+            onPreferenceChange(mModerationHoldPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
+            onPreferenceChange(mBlacklistPref, mEditingList.size());
+        }
         mEditingList = null;
     }
 
@@ -572,6 +584,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
 
+        sortLanguages();
+
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
         if (mBlog.isDotcomFlag()) {
             removeSelfHostedOnlyPreferences();
@@ -581,6 +595,25 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // hide all options except for Delete site and Enable Location if user is not admin
         if (!mBlog.isAdmin()) hideAdminRequiredPreferences();
+    }
+
+    public void setEditingEnabled(boolean enabled) {
+        // excludes mAddressPref, mMorePreference
+        final Preference[] editablePreference = {
+                mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
+                mPasswordPref, mLocationPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
+                mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
+                mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
+                mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
+                mImageWidthPref, mUploadAndLinkPref, mDeleteSitePref
+        };
+
+        for(Preference preference : editablePreference) {
+            if(preference!=null) preference.setEnabled(enabled);
+        }
+
+        mEditingEnabled = enabled;
     }
 
     private void showRelatedPostsDialog() {
@@ -699,6 +732,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
         mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
+        mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
+        mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
+        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
     }
 
     private void setCategories() {
@@ -802,14 +838,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary()) ||
                 !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
-
-            // update details to display in selected locale
-            CharSequence[] languageCodes = mLanguagePref.getEntryValues();
-            mLanguagePref.setEntries(createLanguageDisplayStrings(languageCodes));
-            mLanguagePref.setDetails(createLanguageDetailDisplayStrings(languageCodes, newValue));
             mLanguagePref.refreshAdapter();
+        }
+    }
+
+    private void sortLanguages() {
+        if (mLanguagePref == null) return;
+
+        Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        if (pair != null) {
+            String[] sortedEntries = pair.first;
+            String[] sortedValues = pair.second;
+
+            mLanguagePref.setEntries(sortedEntries);
+            mLanguagePref.setEntryValues(sortedValues);
+            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
         }
     }
 
@@ -828,20 +873,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void updateWhitelistSettings(int val) {
-        switch (val) {
-            case -1:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-            case 0:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(true);
-                break;
-            case 1:
-                mSiteSettings.setManualApproval(false);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-        }
+        mSiteSettings.setManualApproval(val == -1);
+        mSiteSettings.setUseCommentWhitelist(val == 0);
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
@@ -917,7 +950,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
-                        if (!mEditingList.contains(entry)) {
+                        if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
                             list.setAdapter(new ArrayAdapter<>(getActivity(),
                                     R.layout.wp_simple_list_item_1,
@@ -995,56 +1028,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
-    }
-
-    /**
-     * Generates display strings for given language codes. Used as entries in language preference.
-     */
-    private String[] createLanguageDisplayStrings(CharSequence[] languageCodes) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        String[] displayStrings = new String[languageCodes.length];
-
-        for (int i = 0; i < languageCodes.length; ++i) {
-            displayStrings[i] = StringUtils.capitalize(getLanguageString(
-                    String.valueOf(languageCodes[i]), WPPrefUtils.languageLocale(languageCodes[i].toString())));
-        }
-
-        return displayStrings;
-    }
-
-    /**
-     * Generates detail display strings in the currently selected locale. Used as detail text
-     * in language preference dialog.
-     */
-    public String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes, String locale) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
-
-        String[] detailStrings = new String[languageCodes.length];
-        for (int i = 0; i < languageCodes.length; ++i) {
-            detailStrings[i] = StringUtils.capitalize(
-                    getLanguageString(languageCodes[i].toString(), WPPrefUtils.languageLocale(locale)));
-        }
-
-        return detailStrings;
-    }
-
-    /**
-     * Return a non-null display string for a given language code.
-     */
-    private String getLanguageString(String languageCode, Locale displayLocale) {
-        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
-            return "";
-        }
-
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
-        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
-        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
-
-        if (!TextUtils.isEmpty(displayCountry)) {
-            return displayLanguage + " (" + displayCountry + ")";
-        }
-        return displayLanguage;
     }
 
     private boolean setupMorePreferenceScreen() {

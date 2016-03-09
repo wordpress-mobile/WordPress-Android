@@ -685,7 +685,6 @@
 	<string name="passcode_manage">Spravovať funkciu overovanie PIN kódom</string>
 	<string name="passcode_turn_on">Zapnúť funkciu overovanie PIN kódom</string>
 	<string name="passcode_turn_off">Vypnúť funkciu overovanie PIN kódom</string>
-	<string name="menu_search">Vyhľadávanie</string>
 	<string name="stats_view_tags_and_categories">Značky a kategórie</string>
 	<string name="upload">Nahrať</string>
 	<string name="notifications">Upozornenia</string>
@@ -721,7 +720,6 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Nahrať a zobraziť odkaz na zmenšený obrázok</string>
 	<string name="scaled_image">Šírka zmenšeného obrázku</string>
-	<string name="remove_location">Odstrániť</string>
 	<string name="scheduled">Načasované</string>
 	<string name="link_enter_url">URL adresa</string>
 	<string name="posted_from">Odoslané z WordPress pre Android</string>

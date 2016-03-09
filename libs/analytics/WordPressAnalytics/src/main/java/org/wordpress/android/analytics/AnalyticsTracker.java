@@ -63,7 +63,7 @@ public final class AnalyticsTracker {
         EDITOR_CLOSED,
         EDITOR_PUBLISHED_POST,
         EDITOR_SAVED_DRAFT,
-        EDITOR_DISCARDED_CHANGES, // Visual editor only
+        EDITOR_DISCARDED_CHANGES,
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_ENABLED_NEW_VERSION, // Visual editor only
         EDITOR_TOGGLED_OFF, // Visual editor only
@@ -131,7 +131,7 @@ public final class AnalyticsTracker {
         THEMES_CUSTOMIZE_ACCESSED,
         THEMES_SUPPORT_ACCESSED,
         THEMES_DETAILS_ACCESSED,
-        ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED,
+        ACCOUNT_SETTINGS_LANGUAGE_CHANGED,
         SITE_SETTINGS_ACCESSED,
         SITE_SETTINGS_ACCESSED_MORE_SETTINGS,
         SITE_SETTINGS_LEARN_MORE_CLICKED,
