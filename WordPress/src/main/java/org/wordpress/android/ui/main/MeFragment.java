@@ -73,7 +73,7 @@ public class MeFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.row_account_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAccountSettings(getActivity());

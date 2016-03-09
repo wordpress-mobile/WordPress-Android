@@ -72,18 +72,18 @@
         <View style="@style/MeListSectionDividerView" />
 
         <LinearLayout
-            android:id="@+id/row_settings"
+            android:id="@+id/row_account_settings"
             style="@style/MeListRowLayout">
 
             <ImageView
-                android:id="@+id/me_settings_icon"
+                android:id="@+id/me_account_settings_icon"
                 style="@style/MeListRowIcon"
                 android:src="@drawable/me_icon_account_settings" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/me_settings_text_view"
+                android:id="@+id/me_account_settings_text_view"
                 style="@style/MeListRowTextView"
-                android:text="@string/me_btn_settings" />
+                android:text="@string/me_btn_account_settings" />
 
         </LinearLayout>
 
