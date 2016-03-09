@@ -17,6 +17,18 @@
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin">
 
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:gravity="center"
+            android:text="This feature is a work-in-progress"
+            android:textColor="@color/alert_red"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"/>
+
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_plan_icon"
             android:layout_width="@dimen/plan_icon_size"
