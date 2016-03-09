@@ -719,7 +719,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                };
+                });
 
         builder.show();
     }
