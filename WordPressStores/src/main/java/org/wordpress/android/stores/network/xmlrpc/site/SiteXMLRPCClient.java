@@ -95,9 +95,11 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             // From the response
             site.setSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
+            // TODO: set a canonical URL here
+            site.setUrl((String) siteMap.get("url"));
             site.setXMLRpcUrl((String) siteMap.get("xmlrpc"));
-            site.setUrl((String) siteMap.get("xmlrpcEndpoint"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
+            // TODO: siteMap.get("isPrimary")
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
@@ -116,6 +118,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // TODO: plenty of other options to read here
         Map<?, ?> blogOptions = (Map<?, ?>) response;
         oldModel.setName(getOption(blogOptions, "blog_title", String.class));
+        // TODO: set a canonical URL here
         oldModel.setUrl(getOption(blogOptions, "home_url", String.class));
         oldModel.setSoftwareVersion(getOption(blogOptions, "software_version", String.class));
         oldModel.setIsFeaturedImageSupported(getOption(blogOptions, "post_thumbnail", Boolean.class));
