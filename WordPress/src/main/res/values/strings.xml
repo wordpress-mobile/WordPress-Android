@@ -1334,6 +1334,6 @@
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>
-    <string name="export_your_content_message">All your posts, pages, and settings will be packaged into a .zip file that you can use in the future to resume where you left off. Keep in mind that this content can not be recovered in the future.</string>
+    <string name="export_your_content_message">All your posts, pages, and settings will be packaged into a .zip file that you can use in the future to resume where you left off. Keep in mind that this content can not be recovered in the future.\n\nThe export will be sent to %s</string>
 
 </resources>
