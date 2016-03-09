@@ -1,10 +1,12 @@
 package org.wordpress.android.stores.store;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.squareup.otto.Subscribe;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
+import com.yarolegovich.wellsql.mapper.InsertMapper;
 
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.Payload;
@@ -99,6 +101,56 @@ public class SiteStore extends Store {
 
     public boolean hasJetpackSite() {
         return getJetpackSitesCount() != 0;
+    }
+
+    public List<SiteModel> getVisibleDotComSites() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, 1)
+                .equals(SiteModelTable.IS_VISIBLE, 1)
+                .endGroup().endWhere()
+                .getAsModel();
+    }
+
+    public int getVisibleDotComSitesCount() {
+        return getVisibleDotComSites().size();
+    }
+
+    public void setAllDotComSitesVisibility(boolean visible) {
+        WellSql.update(SiteModel.class)
+                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
+                .put(visible, new InsertMapper<Boolean>() {
+                    @Override
+                    public ContentValues toCv(Boolean item) {
+                        ContentValues cv = new ContentValues();
+                        cv.put(SiteModelTable.IS_VISIBLE, item);
+                        return cv;
+                    }
+                }).execute();
+    }
+
+    public void setDotComSiteVisibilityByLocalId(int id, boolean visible) {
+        WellSql.update(SiteModel.class)
+                .whereId(id)
+                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
+                .put(visible, new InsertMapper<Boolean>() {
+                    @Override
+                    public ContentValues toCv(Boolean item) {
+                        ContentValues cv = new ContentValues();
+                        cv.put(SiteModelTable.IS_VISIBLE, item);
+                        return cv;
+                    }
+                }).execute();
+    }
+
+    public boolean isDotComSiteVisibleByLocalId(int id) {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .equals(SiteModelTable.IS_WPCOM, 1)
+                .equals(SiteModelTable.IS_VISIBLE, 1)
+                .endGroup().endWhere()
+                .getAsCursor().getCount() > 0;
     }
 
     @Subscribe
