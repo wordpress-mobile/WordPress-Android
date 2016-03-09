@@ -16,6 +16,8 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
 
     public BaseRequest(int method, String url, ErrorListener listener) {
         super(method, url, listener);
+        // Make sure all our custom Requests are never cached.
+        setShouldCache(false);
     }
 
     @Override
