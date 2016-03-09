@@ -35,7 +35,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        vectorDrawables.generatedDensities = ['hdpi', 'xhdpi', 'xxhdpi']
+        vectorDrawables.useSupportLibrary = true
         buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
     }
 
