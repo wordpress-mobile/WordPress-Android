@@ -16,6 +16,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
@@ -385,6 +386,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
         } else if (preference == mExportSitePref) {
+            showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
             requestPurchasesForDeletionCheck();
         } else {
@@ -700,6 +702,20 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return mSiteSettings.getThreadingDescriptionForLevel(value);
             }
         });
+    }
+
+    private void showExportContentDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Export your content");
+        builder.setMessage("Exports your shit, yo");
+        builder.setPositiveButton("Export my shit, yo", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                exportSite();
+            }
+        });
+
+        builder.show();
     }
 
     private void requestPurchasesForDeletionCheck() {
@@ -1185,6 +1201,25 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
+    }
+
+    private void exportSite() {
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog.isDotcomFlag()) {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Exporting content...", true, true);
+            WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            progressDialog.dismiss();
+                            Snackbar.make(getView(), "Export email sent!", Snackbar.LENGTH_LONG).show();
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
+                        }
+                    });
+        }
     }
 
     private void deleteSite() {
