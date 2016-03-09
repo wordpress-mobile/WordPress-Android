@@ -1206,17 +1206,21 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void exportSite() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog.isDotcomFlag()) {
-            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", "Exporting content...", true, true);
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
             WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            progressDialog.dismiss();
-                            Snackbar.make(getView(), "Export email sent!", Snackbar.LENGTH_LONG).show();
+                            if (isAdded()) {
+                                progressDialog.dismiss();
+                                Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
+                            }
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            progressDialog.dismiss();
+                            if (isAdded()) {
+                                progressDialog.dismiss();
+                            }
                         }
                     });
         }
