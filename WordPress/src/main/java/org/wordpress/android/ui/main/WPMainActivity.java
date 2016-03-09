@@ -38,6 +38,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -441,8 +442,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     }
                 }
                 break;
-            case RequestCodes.ACCOUNT_SETTINGS:
-                if (resultCode == AccountSettingsFragment.LANGUAGE_CHANGED) {
+            case RequestCodes.APP_SETTINGS:
+                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
                 }
                 break;

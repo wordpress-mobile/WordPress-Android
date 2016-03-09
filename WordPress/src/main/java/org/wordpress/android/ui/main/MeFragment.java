@@ -80,6 +80,13 @@ public class MeFragment extends Fragment {
             }
         });
 
+        rootView.findViewById(R.id.row_app_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewAppSettings(getActivity());
+            }
+        });
+
         mNotificationsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
