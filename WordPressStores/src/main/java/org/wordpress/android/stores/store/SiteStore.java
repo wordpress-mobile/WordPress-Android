@@ -57,58 +57,94 @@ public class SiteStore extends Store {
         emitChange(new OnSiteChanged());
     }
 
+    /**
+     * Returns all sites in the store as a {@link SiteModel} list.
+     */
     public List<SiteModel> getSites() {
         return WellSql.select(SiteModel.class).getAsModel();
     }
 
+    /**
+     * Returns all sites in the store as a {@link Cursor}.
+     */
     public Cursor getSitesCursor() {
         return WellSql.select(SiteModel.class).getAsCursor();
     }
 
+    /**
+     * Returns the number of sites of any kind in the store.
+     */
     public int getSitesCount() {
         return getSitesCursor().getCount();
     }
 
+    /**
+     * Checks whether the store contains any sites of any kind.
+     */
     public boolean hasSite() {
         return getSitesCount() != 0;
     }
 
+    /**
+     * Obtains the site with the given (local) id and returns it as a {@link SiteModel}.
+     */
     public SiteModel getSiteByLocalId(int id) {
         return WellSql.selectUnique(SiteModel.class)
                 .where().equals(SiteModelTable.ID, id).endWhere()
                 .getAsModel().get(0);
     }
 
+    /**
+     * Returns the number of .COM sites in the store.
+     */
     public int getDotComSitesCount() {
         return WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
                 .getAsCursor().getCount();
     }
 
+    /**
+     * Checks whether the store contains at least one .COM site.
+     */
     public boolean hasDotComSite() {
         return getDotComSitesCount() != 0;
     }
 
+    /**
+     * Returns the number of self-hosted sites (can be Jetpack) in the store.
+     */
     public int getSelfHostedSitesCount() {
         return WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
                 .getAsCursor().getCount();
     }
 
+    /**
+     * Checks whether the store contains at least one self-hosted site (can be Jetpack).
+     */
     public boolean hasSelfHostedSite() {
         return getSelfHostedSitesCount() != 0;
     }
 
+    /**
+     * Returns the number of Jetpack sites in the store.
+     */
     public int getJetpackSitesCount() {
         return WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.IS_JETPACK, 1).endWhere()
                 .getAsCursor().getCount();
     }
 
+    /**
+     * Checks whether the store contains at least one Jetpack site.
+     */
     public boolean hasJetpackSite() {
         return getJetpackSitesCount() != 0;
     }
 
+    /**
+     * Checks whether the store contains a site matching the given (remote) site id and XML-RPC URL.
+     */
     public boolean hasSiteWithSiteId(int siteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -118,6 +154,9 @@ public class SiteStore extends Store {
                 .getAsCursor().getCount() > 0;
     }
 
+    /**
+     * Checks whether the store contains a site matching the given (local) id.
+     */
     public boolean hasSiteWithLocalId(int id) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -126,6 +165,9 @@ public class SiteStore extends Store {
                 .getAsCursor().getCount() > 0;
     }
 
+    /**
+     * Returns all visible .COM sites as {@link SiteModel}s.
+     */
     public List<SiteModel> getVisibleDotComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -135,10 +177,16 @@ public class SiteStore extends Store {
                 .getAsModel();
     }
 
+    /**
+     * Returns the number of visible .COM sites.
+     */
     public int getVisibleDotComSitesCount() {
         return getVisibleDotComSites().size();
     }
 
+    /**
+     * Sets the visibility of all .COM sites to the given value.
+     */
     public void setAllDotComSitesVisibility(boolean visible) {
         WellSql.update(SiteModel.class)
                 .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
@@ -152,6 +200,9 @@ public class SiteStore extends Store {
                 }).execute();
     }
 
+    /**
+     * Sets the visibility of the .COM site with the given (local) id to the given value.
+     */
     public void setDotComSiteVisibilityByLocalId(int id, boolean visible) {
         WellSql.update(SiteModel.class)
                 .whereId(id)
@@ -166,6 +217,9 @@ public class SiteStore extends Store {
                 }).execute();
     }
 
+    /**
+     * Checks whether the .COM site with the given (local) id is visible.
+     */
     public boolean isDotComSiteVisibleByLocalId(int id) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
