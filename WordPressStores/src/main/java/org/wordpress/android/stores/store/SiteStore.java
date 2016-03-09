@@ -63,19 +63,42 @@ public class SiteStore extends Store {
         return WellSql.select(SiteModel.class).getAsCursor();
     }
 
-
     public int getSitesCount() {
-        return WellSql.select(SiteModel.class).getAsCursor().getCount();
-    }
-
-    public boolean hasSelfHostedSite() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
-                .getAsCursor().getCount() != 0;
+        return getSitesCursor().getCount();
     }
 
     public boolean hasSite() {
-        return WellSql.select(SiteModel.class).getAsCursor().getCount() != 0;
+        return getSitesCount() != 0;
+    }
+
+    public int getDotComSitesCount() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
+                .getAsCursor().getCount();
+    }
+
+    public boolean hasDotComSite() {
+        return getDotComSitesCount() != 0;
+    }
+
+    public int getSelfHostedSitesCount() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
+                .getAsCursor().getCount();
+    }
+
+    public boolean hasSelfHostedSite() {
+        return getSelfHostedSitesCount() != 0;
+    }
+
+    public int getJetpackSitesCount() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_JETPACK, 1).endWhere()
+                .getAsCursor().getCount();
+    }
+
+    public boolean hasJetpackSite() {
+        return getJetpackSitesCount() != 0;
     }
 
     @Subscribe
