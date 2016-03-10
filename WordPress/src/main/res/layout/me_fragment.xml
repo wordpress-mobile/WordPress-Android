@@ -88,6 +88,8 @@
 
         </LinearLayout>
 
+        <View style="@style/MeListSectionDividerView" />
+
         <LinearLayout
             android:id="@+id/row_app_settings"
             style="@style/MeListRowLayout">

@@ -67,7 +67,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.account_settings);
 
-        mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
+        mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_account_settings_root));
 
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_email));
@@ -186,7 +186,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private void updateVisualEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
-                    .getString(R.string.pref_key_settings_root));
+                    .getString(R.string.pref_key_account_settings_root));
             PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
                     .getString(R.string.pref_key_editor));
             if (preferenceScreen != null && editor != null) {
