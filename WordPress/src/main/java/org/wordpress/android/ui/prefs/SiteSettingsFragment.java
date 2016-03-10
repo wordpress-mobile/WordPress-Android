@@ -722,7 +722,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
-        String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_one,
+        String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
                 R.string.site_settings_multiple_links_summary_one,
                 R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
         mMultipleLinksPref.setSummary(s);
