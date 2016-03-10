@@ -23,7 +23,7 @@ public class ReleaseStack_Base extends InstrumentationTestCase {
                 .appContextModule(new AppContextModule(mAppContext))
                 .build();
         WellSqlConfig config = new WellSqlConfig(mAppContext);
-        config.reset();
         WellSql.init(config);
+        config.reset();
     }
 }

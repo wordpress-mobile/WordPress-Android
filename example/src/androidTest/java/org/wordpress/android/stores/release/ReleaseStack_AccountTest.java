@@ -39,8 +39,8 @@ public class ReleaseStack_AccountTest extends ReleaseStack_Base {
     public void testWPCOMAuthenticationOK() throws InterruptedException {
         // Authenticate a test user (actual credentials declared in gradle.properties)
         AuthenticatePayload payload = new AuthenticatePayload();
-        payload.username = BuildConfig.TEST_WPCOM_USERNAME;
-        payload.password = BuildConfig.TEST_WPCOM_PASSWORD;
+        payload.username = BuildConfig.TEST_WPCOM_USERNAME_TEST1;
+        payload.password = BuildConfig.TEST_WPCOM_PASSWORD_TEST1;
 
         // Correct user we should get an OnAuthenticationChanged message
         mDispatcher.dispatch(AuthenticationAction.AUTHENTICATE, payload);
@@ -63,7 +63,7 @@ public class ReleaseStack_AccountTest extends ReleaseStack_Base {
 
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
-        assertEquals(BuildConfig.TEST_WPCOM_USERNAME, mAccountStore.getAccount().getUserName());
+        assertEquals(BuildConfig.TEST_WPCOM_USERNAME_TEST1, mAccountStore.getAccount().getUserName());
         mCountDownLatch.countDown();
     }
 }
