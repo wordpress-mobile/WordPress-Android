@@ -316,6 +316,6 @@ public class StringUtils {
         if (count == 1) {
             return context.getString(one);
         }
-        return context.getString(other, count);
+        return String.format(context.getString(other), count);
     }
 }
