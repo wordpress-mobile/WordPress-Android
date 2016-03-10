@@ -1,5 +1,7 @@
 # WordPress-Stores-Android
 
+[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Stores-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Stores-Android)
+
 ## Building the library
 
 The [gradle build system][2] will fetch all dependencies and generate
@@ -14,7 +16,8 @@ our example:
 ## Building and running tests and the example app
 
     $ cp example/gradle.properties-example example/gradle.properties
-    $ ./gradlew cAT
+    $ ./gradlew cAT // Regression tests
+    $ ./gradlew testDebug // Unit tests
 
 Note: this is the default `example/gradle.properties` file. You'll have to get
 a WordPress.com OAuth2 ID and secret.
