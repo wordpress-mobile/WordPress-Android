@@ -84,11 +84,11 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String canonicalizedUrl = null;
         try {
-            canonicalizedUrl = HealthCheckUtils.canonicalizeSiteUrl(inputUrl);
+            canonicalizedUrl = WPOrgUtils.canonicalizeSiteUrl(inputUrl);
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (HealthCheckUtils.HealthCheckException hce) {
+        } catch (WPOrgUtils.WPOrgUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 
@@ -118,12 +118,12 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String xmlrpcUrl = null;
         try {
-            xmlrpcUrl = HealthCheckUtils.getSelfHostedXmlrpcUrl(inputUrl, input.optString("username", null),
+            xmlrpcUrl = WPOrgUtils.getSelfHostedXmlrpcUrl(inputUrl, input.optString("username", null),
                     input.optString("username", null));
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (HealthCheckUtils.HealthCheckException hce) {
+        } catch (WPOrgUtils.WPOrgUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 

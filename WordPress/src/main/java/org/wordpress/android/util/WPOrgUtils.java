@@ -2,13 +2,20 @@ package org.wordpress.android.util;
 
 import com.android.volley.TimeoutError;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.wordpress.android.analytics.AnalyticsTracker;
+
+import org.wordpress.android.util.WPOrgUtils.WPOrgUtilsException.Kind;
+
+import org.wordpress.android.R;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -19,14 +26,17 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
 
-public class HealthCheckUtils {
-    public static class HealthCheckException extends Exception {
+public class WPOrgUtils {
+    public static class WPOrgUtilsException extends Exception {
         public enum Kind {
             SITE_URL_CANNOT_BE_EMPTY,
             INVALID_URL,
@@ -34,7 +44,9 @@ public class HealthCheckUtils {
             ERRONEOUS_SSL_CERTIFICATE,
             HTTP_AUTH_REQUIRED,
             SITE_TIME_OUT,
-            NO_SITE_ERROR
+            NO_SITE_ERROR,
+            XMLRPC_MALFORMED_RESPONSE,
+            XMLRPC_ERROR
         }
 
         public final Kind kind;
@@ -44,7 +56,7 @@ public class HealthCheckUtils {
         public final String failedUrl;
         public final String clientResponse;
 
-        public HealthCheckException(Kind kind, @StringRes int errorMsgId, String failedUrl, String clientResponse) {
+        public WPOrgUtilsException(Kind kind, @StringRes int errorMsgId, String failedUrl, String clientResponse) {
             this.kind = kind;
             this.errorMsgId = errorMsgId;
             this.failedUrl = failedUrl;
@@ -52,9 +64,9 @@ public class HealthCheckUtils {
         }
     }
 
-    public static String canonicalizeSiteUrl(String siteUrl) throws HealthCheckException {
+    public static String canonicalizeSiteUrl(String siteUrl) throws WPOrgUtilsException {
         if (TextUtils.isEmpty(siteUrl) || TextUtils.isEmpty(siteUrl.trim())) {
-            throw new HealthCheckException(HealthCheckException.Kind.SITE_URL_CANNOT_BE_EMPTY, org.wordpress.android
+            throw new WPOrgUtilsException(WPOrgUtilsException.Kind.SITE_URL_CANNOT_BE_EMPTY, org.wordpress.android
                     .R.string.invalid_site_url_message, siteUrl, null);
         }
 
@@ -66,7 +78,7 @@ public class HealthCheckUtils {
         // Add http to the beginning of the URL if needed
         baseURL = UrlUtils.addUrlSchemeIfNeeded(baseURL, false);
         if (!URLUtil.isValidUrl(baseURL)) {
-            throw new HealthCheckException(HealthCheckException.Kind.INVALID_URL, org.wordpress.android.R.string
+            throw new WPOrgUtilsException(WPOrgUtilsException.Kind.INVALID_URL, org.wordpress.android.R.string
                     .invalid_site_url_message, baseURL, null);
         }
 
@@ -77,7 +89,7 @@ public class HealthCheckUtils {
     // See diagrams here https://github.com/wordpress-mobile/WordPress-Android/issues/3805 for details about the
     // whole process.
     public static String getSelfHostedXmlrpcUrl(String url, String httpUsername, String httpPassword) throws
-            HealthCheckException {
+            WPOrgUtilsException {
         // Start cleaning the url: Array of Strings that contains the URLs we want to try in the first step. No
         // discovery ;)
         ArrayList<String> urlsToTry = smartURLCleanerForXMLRPCCalls(url);
@@ -144,13 +156,13 @@ public class HealthCheckUtils {
                 }
             } catch (SSLHandshakeException e) {
                 if (!WPUrlUtils.isWordPressCom(url)) {
-                    throw new HealthCheckException(HealthCheckException.Kind.ERRONEOUS_SSL_CERTIFICATE, 0, url, null);
+                    throw new WPOrgUtilsException(WPOrgUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE, 0, url, null);
                 }
                 AppLog.w(AppLog.T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 return null;
             } catch (TimeoutError e) {
                 AppLog.w(AppLog.T.NUX, "Timeout error while connecting to the site: " + currentURL);
-                throw new HealthCheckException(HealthCheckException.Kind.SITE_TIME_OUT, org.wordpress.android.R
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.SITE_TIME_OUT, org.wordpress.android.R
                         .string.site_timeout_error, url, null);
             }
         }
@@ -162,7 +174,7 @@ public class HealthCheckUtils {
             }
         }
 
-        throw new HealthCheckException(HealthCheckException.Kind.NO_SITE_ERROR, org.wordpress.android.R
+        throw new WPOrgUtilsException(WPOrgUtilsException.Kind.NO_SITE_ERROR, org.wordpress.android.R
                 .string.no_site_error, null, null);
     }
 
@@ -276,7 +288,7 @@ public class HealthCheckUtils {
     }
 
     private static boolean checkXMLRPCEndpointValidity(String url, String httpUsername, String httpPassword) throws
-            HealthCheckException {
+            WPOrgUtilsException {
         try {
             Object[] methods = (Object[]) doSystemListMethodsXMLRPC(url, httpUsername, httpPassword);
             if (methods == null) {
@@ -294,29 +306,29 @@ public class HealthCheckUtils {
                 // Endpoint found, but it has problem.
                 AppLog.w(AppLog.T.NUX, "Validation ended with errors!!! Endpoint found but doesn't contain all the " +
                         "required methods.");
-                throw new HealthCheckException(HealthCheckException.Kind.MISSING_XMLRPC_METHOD, org.wordpress.android
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.MISSING_XMLRPC_METHOD, org.wordpress.android
                         .R.string.xmlrpc_missing_method_error, url, null);
             }
         } catch (XMLRPCException e) {
             AppLog.e(AppLog.T.NUX, "system.listMethods failed on: " + url, e);
             if (isHTTPAuthErrorMessage(e)) {
-                throw new HealthCheckException(HealthCheckException.Kind.HTTP_AUTH_REQUIRED, 0, url, null);
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.HTTP_AUTH_REQUIRED, 0, url, null);
             }
         } catch (SSLHandshakeException | SSLPeerUnverifiedException e) {
             if (!WPUrlUtils.isWordPressCom(url)) {
-                throw new HealthCheckException(HealthCheckException.Kind.ERRONEOUS_SSL_CERTIFICATE, 0, url, null);
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE, 0, url, null);
             }
             AppLog.e(AppLog.T.NUX, "SSL error. Erroneous SSL certificate detected.", e);
         } catch (IOException | XmlPullParserException e) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
             AppLog.e(AppLog.T.NUX, "system.listMethods failed on: " + url, e);
             if (isHTTPAuthErrorMessage(e)) {
-                throw new HealthCheckException(HealthCheckException.Kind.HTTP_AUTH_REQUIRED, 0, url, null);
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.HTTP_AUTH_REQUIRED, 0, url, null);
             }
         } catch (IllegalArgumentException e) {
             // The XML-RPC client returns this error in case of redirect to an invalid URL.
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED_TO_GUESS_XMLRPC);
-            throw new HealthCheckException(HealthCheckException.Kind.INVALID_URL, org.wordpress.android.R.string
+            throw new WPOrgUtilsException(WPOrgUtilsException.Kind.INVALID_URL, org.wordpress.android.R.string
                     .invalid_site_url_message, url, null);
         }
 
@@ -324,10 +336,10 @@ public class HealthCheckUtils {
     }
 
     private static Object doSystemListMethodsXMLRPC(String url, String httpUsername, String httpPassword) throws
-            XMLRPCException, IOException, XmlPullParserException, HealthCheckException {
+            XMLRPCException, IOException, XmlPullParserException, WPOrgUtilsException {
         if (!UrlUtils.isValidUrlAndHostNotNull(url)) {
             AppLog.e(AppLog.T.NUX, "invalid URL: " + url);
-            throw new HealthCheckException(HealthCheckException.Kind.INVALID_URL, org.wordpress.android.R.string
+            throw new WPOrgUtilsException(WPOrgUtilsException.Kind.INVALID_URL, org.wordpress.android.R.string
                     .invalid_site_url_message, url, null);
         }
 
@@ -365,6 +377,74 @@ public class HealthCheckUtils {
             }
         }
         return true;
+    }
+
+    public static List<Map<String, Object>> getUserBlogList(URI xmlrpcUri, String username, String password, String
+            httpUsername, String httpPassword)
+            throws WPOrgUtilsException {
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, httpUsername, httpPassword);
+        Object[] params = { username, password };
+        try {
+            Object[] userBlogs = (Object[]) client.call(ApiHelper.Method.GET_BLOGS, params);
+            if (userBlogs == null) {
+                // Could happen if the returned server response is truncated
+                throw new WPOrgUtilsException(Kind.XMLRPC_MALFORMED_RESPONSE, R.string.xmlrpc_malformed_response_error,
+                        xmlrpcUri.toString(), client.getResponse());
+            }
+            Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
+            List<Map<String, Object>> userBlogList = new ArrayList<>();
+            for (Object blog : userBlogs) {
+                try {
+                    userBlogList.add((Map<String, Object>) blog);
+                } catch (ClassCastException e) {
+                    AppLog.e(AppLog.T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
+                }
+            }
+            return userBlogList;
+        } catch (XmlPullParserException parserException) {
+            AppLog.e(AppLog.T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
+            throw new WPOrgUtilsException(Kind.XMLRPC_ERROR, R.string.xmlrpc_error, xmlrpcUri.toString(), client
+                    .getResponse());
+        } catch (XMLRPCFault xmlRpcFault) {
+            AppLog.e(AppLog.T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+            @StringRes int errorMsgId;
+            switch (xmlRpcFault.getFaultCode()) {
+                case 403:
+                    errorMsgId = org.wordpress.android.R.string.username_or_password_incorrect;
+                    break;
+                case 404:
+                    errorMsgId = org.wordpress.android.R.string.xmlrpc_error;
+                    break;
+                case 425:
+                    errorMsgId = org.wordpress.android.R.string.account_two_step_auth_enabled;
+                    break;
+                default:
+                    errorMsgId = org.wordpress.android.R.string.no_site_error;
+                    break;
+            }
+            throw new WPOrgUtilsException(Kind.XMLRPC_ERROR, errorMsgId, xmlrpcUri.toString(), client.getResponse());
+        } catch (XMLRPCException xmlRpcException) {
+            AppLog.e(AppLog.T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
+            throw new WPOrgUtilsException(Kind.XMLRPC_ERROR, R.string.no_site_error, xmlrpcUri.toString(), client
+                    .getResponse());
+        } catch (SSLHandshakeException e) {
+            if (!WPUrlUtils.isWordPressCom(xmlrpcUri.toString())) {
+                throw new WPOrgUtilsException(WPOrgUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE, 0, xmlrpcUri
+                        .toString(), null);
+            }
+            AppLog.w(AppLog.T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+        } catch (ConnectTimeoutException e) {
+            AppLog.e(AppLog.T.NUX, "Timeout exception when calling wp.getUsersBlogs", e);
+            throw new WPOrgUtilsException(WPOrgUtilsException.Kind.SITE_TIME_OUT, R.string.site_timeout_error,
+                    xmlrpcUri.toString(), client.getResponse());
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+            throw new WPOrgUtilsException(Kind.XMLRPC_ERROR, R.string.no_site_error, xmlrpcUri.toString(), client
+                    .getResponse());
+        }
+
+        throw new WPOrgUtilsException(Kind.XMLRPC_ERROR, R.string.no_site_error, xmlrpcUri.toString(), client
+                .getResponse());
     }
 
     /**
