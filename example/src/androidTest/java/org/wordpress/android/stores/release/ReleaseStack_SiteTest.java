@@ -35,24 +35,74 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         mDispatcher.register(this);
     }
 
-    public void testSelfHostedFetchSites() throws InterruptedException {
+    public void testSelfHostedSimpleFetchSites() throws InterruptedException {
         RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
-        payload.username = BuildConfig.TEST_WPORG_USERNAME_1;
-        payload.password = BuildConfig.TEST_WPORG_PASSWORD_1;
-        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_1;
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SIMPLE;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SIMPLE;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SIMPLE;
         mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         mCountDownLatch = new CountDownLatch(1);
         // Wait for a network response / onChanged event
         assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 
-    public void testSelfHostedSelfSignedFetchSites() throws InterruptedException {
+    public void testSelfHostedSimpleContributorFetchSites() throws InterruptedException {
         RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
-        payload.username = BuildConfig.TEST_WPORG_USERNAME_3;
-        payload.password = BuildConfig.TEST_WPORG_PASSWORD_3;
-        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_3;
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SIMPLE_CONTRIB;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SIMPLE_CONTRIB;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SIMPLE_CONTRIB;
         mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         mCountDownLatch = new CountDownLatch(1);
+        // Wait for a network response / onChanged event
+        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+    }
+
+    public void testSelfHostedMutliSiteFetchSites() throws InterruptedException {
+        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_MULTISITE;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_MULTISITE;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_MULTISITE;
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mCountDownLatch = new CountDownLatch(1);
+        // Wait for a network response / onChanged event
+        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+    }
+
+    public void testSelfHostedSimpleHTTPSFetchSites() throws InterruptedException {
+        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_VALID_SSL;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_VALID_SSL;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_VALID_SSL;
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mCountDownLatch = new CountDownLatch(1);
+        // Wait for a network response / onChanged event
+        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+    }
+
+    public void testSelfHostedSelfSignedSSLFetchSites() throws InterruptedException {
+        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SELFSIGNED_SSL;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SELFSIGNED_SSL;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SELFSIGNED_SSL;
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mCountDownLatch = new CountDownLatch(1);
+        // TODO: should get a SSL Warning event
+
+        // Wait for a network response / onChanged event
+        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+    }
+
+    public void testSelfHostedHTTPAuthFetchSites() throws InterruptedException {
+        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
+        payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_HTTPAUTH;
+        payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_HTTPAUTH;
+        payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_HTTPAUTH;
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mCountDownLatch = new CountDownLatch(1);
+        // TODO: should get a HTTP AUTH required event
+        // then reply with TEST_WPORG_HTTPAUTH_USERNAME_SH_HTTPAUTH and TEST_WPORG_HTTPAUTH_PASSWORD_SH_HTTPAUTH
+        // to finish the setup
+
         // Wait for a network response / onChanged event
         assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
     }

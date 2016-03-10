@@ -40,6 +40,7 @@ public class MainExampleActivity extends AppCompatActivity {
     private TextView mLogView;
     private Button mAccountInfos;
     private Button mListSites;
+    private Button mLogSites;
     private Button mUpdateFirstSite;
 
     @Override
@@ -67,6 +68,16 @@ public class MainExampleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDispatcher.dispatch(SiteAction.FETCH_SITE, mSiteStore.getSites().get(0));
+            }
+        });
+
+        mLogSites = (Button) findViewById(R.id.log_sites);
+        mLogSites.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (SiteModel site : mSiteStore.getSites()) {
+                    AppLog.i(T.API, LogUtils.toString(site));
+                }
             }
         });
 
