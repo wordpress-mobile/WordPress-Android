@@ -131,6 +131,99 @@
           "xmlrpcEndpoint": "http://mockserver/xmlrpc.php"
         }
       }
+    },
+    {
+      "comment": "testing xmlrpc.php discovered after redirect",
+      "realm": "XMLPRC_DISCOVERY",
+      "setup": {
+        "input": {
+          "siteUrl": "http://mockserver/wp",
+          "serverMock": [
+            {
+              "request": {
+                "method": "GET",
+                "path": "/wp"
+              },
+              "response": {
+                "statusCode": 301,
+                "headers": {
+                  "Location": "/wpnew/"
+                },
+                "body": "Page has moved!"
+              }
+            },
+            {
+              "request": {
+                "method": "POST",
+                "path": "/wp"
+              },
+              "response": {
+                "statusCode": 307,
+                "headers": {
+                  "Location": "/wpnew/"
+                },
+                "body": "Page has moved! POST to new address!"
+              }
+            },
+            {
+              "request": {
+                "method": "POST",
+                "path": "/wp/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 307,
+                "headers": {
+                  "Location": "/wpnew/xmlrpc.php"
+                },
+                "body": "Page has moved! POST to new address!"
+              }
+            },
+            {
+              "request": {
+                "method": "GET",
+                "path": "/wpnew/"
+              },
+              "response": {
+                "statusCode": 200,
+                "body": "asset:index_with_redirect.html"
+              }
+            },
+            {
+              "request": {
+                "method": "GET",
+                "path": "/wpnew/xmlrpc.php?rsd"
+              },
+              "response": {
+                "statusCode": 200,
+                "body": "asset:rsd_with_redirect.xml"
+              }
+            },
+            {
+              "request": {
+                "method": "GET",
+                "path": "/wpnew/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 405,
+                "body": "XML-RPC server accepts POST requests only."
+              }
+            },
+            {
+              "request": {
+                "method": "POST",
+                "path": "/wpnew/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 200,
+                "body": "asset:listMethodsResponse.xml"
+              }
+            }
+          ]
+        },
+        "output": {
+          "xmlrpcEndpoint": "http://mockserver/wpnew/xmlrpc.php"
+        }
+      }
     }
   ]
 }
