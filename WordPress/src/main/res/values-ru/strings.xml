@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Не удалось сохранить настройки учетной записи.</string>
+	<string name="error_post_my_profile">Не удалось сохранить профиль.</string>
+	<string name="error_fetch_account_settings">Не удалось загрузить настройки учетной записи.</string>
+	<string name="error_fetch_my_profile">Не удалось загрузить профиль.</string>
+	<string name="stats_widget_promo_ok_btn_label">ОК</string>
+	<string name="stats_widget_promo_desc">Добавив виджет на домашний экран, вы сможете переходить к своей статистике одним нажатием.</string>
+	<string name="stats_widget_promo_title">Виджет статистики для домашнего экрана</string>
+	<string name="site_settings_unknown_language_code_error">Код языка не распознан.</string>
+	<string name="site_settings_threading_dialog_description">Разрешить вложение комментариев в ветках.</string>
+	<string name="site_settings_threading_dialog_header">Ветки до</string>
+	<string name="remove">Удалить</string>
+	<string name="search">Поиск</string>
+	<string name="add_category">Добавить рубрику</string>
+	<string name="disabled">Отключено</string>
 	<string name="site_settings_image_original_size">Исходный размер</string>
 	<string name="about_me_hint">Несколько слов о себе…</string>
 	<string name="public_display_name_hint">Если отображаемое имя не задано, вместо него по умолчанию используется имя пользователя.</string>
@@ -738,7 +752,6 @@
 	<string name="reader_toast_err_tag_invalid">Это неверная метка</string>
 	<string name="reader_toast_err_tag_exists">Вы уже подписаны на эту метку</string>
 	<string name="themes">Темы</string>
-	<string name="menu_search">Поиск</string>
 	<string name="media_gallery_type">Тип</string>
 	<string name="stats_view_tags_and_categories">Теги и Рубрики</string>
 	<string name="stats_timeframe_days">Дни</string>
@@ -832,7 +845,6 @@
 	<string name="blogusername">имя пользователя</string>
 	<string name="upload_scaled_image">Загружать и ссылаться на уменьшенное изображение</string>
 	<string name="scaled_image">Ширина уменьшенного изображения</string>
-	<string name="remove_location">Удалить</string>
 	<string name="scheduled">Запланировано</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Опубликовано из WordPress для Android</string>
@@ -944,18 +956,6 @@
 		<item>Нет комментариев</item>
 		<item>Комментарии известных пользователей</item>
 		<item>Все пользователи</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Нет</item>
-		<item>2 уровня</item>
-		<item>3 уровня</item>
-		<item>4 уровня</item>
-		<item>5 уровней</item>
-		<item>6 уровней</item>
-		<item>7 уровней</item>
-		<item>8 уровней</item>
-		<item>9 уровней</item>
-		<item>10 уровней</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Бесплатно</item>

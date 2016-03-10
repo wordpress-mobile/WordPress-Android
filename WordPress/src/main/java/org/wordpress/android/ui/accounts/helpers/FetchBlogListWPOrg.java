@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -355,7 +356,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 return null;
-            } catch (TimeoutError e) {
+            } catch (TimeoutError | TimeoutException e) {
                 AppLog.w(T.NUX, "Timeout error while connecting to the site: " + currentURL);
                 mErrorMsgId = org.wordpress.android.R.string.site_timeout_error;
                 return null;

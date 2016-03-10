@@ -665,7 +665,6 @@
 	<string name="stats_totals_views">Εμφανίσεις</string>
 	<string name="stats_totals_clicks">Κλικ</string>
 	<string name="stats_totals_plays">Αναπαραγωγές</string>
-	<string name="menu_search">Αναζήτηση</string>
 	<string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
 	<string name="passcode_enter_passcode">Πληκτρολογήστε το PIN σας</string>
 	<string name="passcode_enter_old_passcode">Πληκτρολογήστε το παλιό σας PIN</string>
@@ -709,7 +708,6 @@
 	<string name="ok">ΟΚ</string>
 	<string name="upload_scaled_image">Φορτώστε και συνδέστε με την εικόνα στις νέες της διαστάσεις</string>
 	<string name="scaled_image">Νέο πλάτος εικόνας</string>
-	<string name="remove_location">Διαγραφή</string>
 	<string name="scheduled">Προγραμματισμένο</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Αναρτήθηκε από το WordPress για το Android</string>

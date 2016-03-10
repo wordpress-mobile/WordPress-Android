@@ -990,7 +990,7 @@ public class ApiHelper {
      * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError {
+    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError, TimeoutException {
         return getResponse(stringUrl, 0);
     }
 
@@ -1011,15 +1011,14 @@ public class ApiHelper {
         return null;
     }
 
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError {
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError, TimeoutException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
-        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
         WordPress.requestQueue.add(request);
         try {
-            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
-        }
-        catch (InterruptedException e) {
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
             if (e.getCause() != null && e.getCause() instanceof RedirectError) {
@@ -1047,12 +1046,10 @@ public class ApiHelper {
                 }
             } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
                 AppLog.e(T.API, e);
-                throw (com.android.volley.TimeoutError)e.getCause();
+                throw (com.android.volley.TimeoutError) e.getCause();
             } else {
                 AppLog.e(T.API, e);
             }
-        } catch (TimeoutException e) {
-            AppLog.e(T.API, e);
         }
         return null;
     }

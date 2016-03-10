@@ -1,0 +1,203 @@
+{
+  "originalResponse": [
+    {
+      "product_slug": "free-blog",
+      "title": "WordPress.com Site",
+      "description": "Your own space to create posts and pages with basic customization.",
+      "icon": "",
+      "plans": {
+        "1": true,
+        "1003": true,
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "ecommerce",
+      "title": "eCommerce",
+      "description": "Sell stuff right on your blog with Ecwid and Shopify.",
+      "icon": "",
+      "plans": {
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "custom-domain",
+      "title": "Custom site address",
+      "description": "Make your site easier to find and easier to remember.",
+      "icon": "",
+      "not_part_of_free_trial": true,
+      "plans": {
+        "1003": true,
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "space",
+      "title": "Space",
+      "description": "Increase your available storage space and add the ability to upload audio files.",
+      "icon": "",
+      "plans": {
+        "1": {
+          "title": "Media storage",
+          "description": "Upload up to 3GB of photos, videos, or music.",
+          "icon": ""
+        },
+        "1003": {
+          "title": "Expanded media storage",
+          "description": "Upload up to 13GB of photos, videos, or music.",
+          "icon": ""
+        },
+        "1008": {
+          "title": "Unlimited media storage",
+          "description": "You can upload unlimited photos, videos, or music.",
+          "icon": ""
+        }
+      }
+    },
+    {
+      "product_slug": "no-adverts\/no-adverts.php",
+      "title": "No ads",
+      "description": "WordPress.com ads will not display on your site.",
+      "icon": "",
+      "plans": {
+        "1003": true,
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "custom-design",
+      "title": "Custom fonts, colors, & CSS",
+      "description": "Change your theme's font, colors, and CSS for a unique look",
+      "icon": "",
+      "plans": {
+        "1003": true,
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "videopress",
+      "title": "Video storage & hosting",
+      "description": "Upload and host videos on your site without advertising.",
+      "icon": "",
+      "plans": {
+        "1003": true,
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "premium-themes",
+      "title": "Unlimited Premium Themes",
+      "description": "Exclusive access to our best themes. Try many as you like.",
+      "icon": "",
+      "plans": {
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "google-analytics",
+      "title": "Google Analytics",
+      "description": "Google Analytics is a free service that offers a complementary view of your traffic to our built-in Stats feature.",
+      "icon": "",
+      "plans": {
+        "1008": true
+      }
+    },
+    {
+      "product_slug": "akismet",
+      "title": "Spam protection",
+      "description": "Spam protection",
+      "icon": "",
+      "plans": {
+        "2002": "Akismet Basic",
+        "2000": "Akismet Plus",
+        "2001": "Akismet Unlimited"
+      }
+    },
+    {
+      "product_slug": "vaultpress-backups",
+      "title": "Database backups",
+      "description": "Database backups",
+      "icon": "",
+      "plans": {
+        "2000": "VaultPress Daily",
+        "2001": "VaultPress Real-time"
+      }
+    },
+    {
+      "product_slug": "vaultpress-backup-archive",
+      "title": "Backup archive",
+      "description": "Backup archive",
+      "icon": "",
+      "plans": {
+        "2000": "30 days",
+        "2001": "Full archive"
+      }
+    },
+    {
+      "product_slug": "vaultpress-automated-restores",
+      "title": "Automated Restores",
+      "description": "Automated Restores",
+      "icon": "",
+      "plans": {
+        "2000": true,
+        "2001": true
+      }
+    },
+    {
+      "product_slug": "vaultpress-security-scanning",
+      "title": "Security scanning",
+      "description": "Security scanning",
+      "icon": "",
+      "plans": {
+        "2001": true
+      }
+    },
+    {
+      "product_slug": "polldaddy",
+      "title": "Polls and Ratings",
+      "description": "Polls and Ratings",
+      "icon": "",
+      "plans": {
+        "2001": "PollDaddy Pro"
+      }
+    },
+    {
+      "product_slug": "support",
+      "title": "Support",
+      "description": "For those times when you can't find an answer on our Support site",
+      "icon": "",
+      "plans": {
+        "1": {
+          "title": "Community support",
+          "description": "Find answers to your questions in our community forum.",
+          "icon": ""
+        },
+        "1003": {
+          "title": "Priority support",
+          "description": "Ask our happiness engineers questions anytime you need.",
+          "icon": ""
+        },
+        "1008": {
+          "title": "Live chat support",
+          "description": "Chat live with our happiness engineers questions anytime you need.",
+          "icon": ""
+        },
+        "2002": {
+          "title": "Direct email",
+          "description": "The kind of support we offer for Jetpack Free.",
+          "icon": ""
+        },
+        "2000": {
+          "title": "Expert security support",
+          "description": "The kind of support we offer for Jetpack Premium.",
+          "icon": ""
+        },
+        "2001": {
+          "title": "Priority security support",
+          "description": "The kind of support we offer for Jetpack Business.",
+          "icon": ""
+        }
+      }
+    }
+  ]
+}
