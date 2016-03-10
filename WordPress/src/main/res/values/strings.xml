@@ -80,6 +80,10 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
 
+    <string name="button_skip">Skip</string>
+    <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
+
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -1257,6 +1261,7 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
+    <string name="vertical_line" translatable="false">\u007C</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
@@ -1303,5 +1308,11 @@
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
+
+    <!-- Plans -->
+    <string name="plan">Plan</string>
+    <string name="plans">Plans</string>
+    <string name="plans_loading_error">Unable to load plans</string>
+    <string name="plan_purchase_now">Purchase Now</string>
 
 </resources>
