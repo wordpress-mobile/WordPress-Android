@@ -18,7 +18,7 @@ env:
 
 install:
   # Setup gradle.properties
-  - cp WordPress/gradle.properties-example WordPress/gradle.properties
+  - cp example/gradle.properties-example example/gradle.properties
 
 script:
   - ./gradlew build
