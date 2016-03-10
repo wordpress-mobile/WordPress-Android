@@ -1,24 +1,3 @@
 # We should use test credentials
 wp.OAUTH.APP.ID = wp
 wp.OAUTH.APP.SECRET = wp
-
-# Test users and sites
-wp.TEST_WPCOM_USERNAME = wp
-wp.TEST_WPCOM_PASSWORD = wp
-
-# Simple SSL self hosted
-wp.TEST_WPORG_USERNAME_1 = wp
-wp.TEST_WPORG_PASSWORD_1 = wp
-wp.TEST_WPORG_URL_1 = https://wp/xmlrpc.php
-
-# Self hosted - Self signed SSL
-wp.TEST_WPORG_USERNAME_2 = wp
-wp.TEST_WPORG_PASSWORD_2 = wp
-wp.TEST_WPORG_URL_2 = https://wp/xmlrpc.php
-
-# Self hosted - HTTP AUTH
-wp.TEST_WPORG_USERNAME_3 = wp
-wp.TEST_WPORG_PASSWORD_3 = wp
-wp.TEST_WPORG_HTTPAUTH_USERNAME_3 = wp
-wp.TEST_WPORG_HTTPAUTH_PASSWORD_3 = wp
-wp.TEST_WPORG_URL_3 = https://wp/xmlrpc.php
