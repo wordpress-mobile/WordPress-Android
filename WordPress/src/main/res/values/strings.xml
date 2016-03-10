@@ -233,11 +233,15 @@
     <string name="button_revert">Revert</string>
 
     <!-- dropdown filter above post cards -->
-    <string-array name="post_filters_array">
-        <item>Published</item>
-        <item>Drafts</item>
-        <item>Scheduled</item>
-        <item>Trashed</item>
+    <string name="filter_published_posts">Published</string>
+    <string name="filter_draft_posts">Drafts</string>
+    <string name="filter_scheduled_posts">Scheduled</string>
+    <string name="filter_trashed_posts">Trashed</string>
+    <string-array name="post_filters_array" translatable="false">
+        <item>@string/filter_published_posts</item>
+        <item>@string/filter_draft_posts</item>
+        <item>@string/filter_scheduled_posts</item>
+        <item>@string/filter_trashed_posts</item>
     </string-array>
 
     <!-- post view -->
@@ -418,10 +422,8 @@
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
-    <plurals name="days_quantity">
-        <item quantity="one">1 day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
+    <string name="days_quantity_one">1 day</string>
+    <string name="days_quantity_other">%d days</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -471,30 +473,39 @@
     <string name="site_settings_whitelist_all_summary">Comments from all users</string>
     <string name="site_settings_whitelist_known_summary">Comments from known users</string>
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
-    <string-array name="site_settings_auto_approve_details">
-        <item>Require manual approval for everyone\'s comments.</item>
-        <item>Automatically approve if the user has a previously approved comment.</item>
-        <item>Automatically approve everyone\'s comments.</item>
+
+    <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
+    <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
+    <string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
+    <string-array name="site_settings_auto_approve_details" translatable="false">
+        <item>@string/detail_approve_manual</item>
+        <item>@string/detail_approve_auto_if_previously_approved</item>
+        <item>@string/detail_approve_auto</item>
     </string-array>
-    <plurals name="site_settings_multiple_links_summary">
-        <item quantity="one">Require approval for more than 1 link</item>
-        <item quantity="other">Require approval for more than %d links</item>
-    </plurals>
-    <plurals name="site_settings_paging_summary">
-        <item quantity="one">1 comment per page</item>
-        <item quantity="other">%d comments per page</item>
-    </plurals>
-    <string-array name="privacy_details">
-        <item>Your site is visible to everyone and may be indexed by search engines</item>
-        <item>Your site is visible to everyone but asks search engines not to index it</item>
-        <item>Your site is visible only to you and users you approve</item>
+
+    <string name="site_settings_multiple_links_summary_zero">Require approval for more than 0 links</string>
+    <string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
+    <string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
+    <string name="site_settings_paging_summary_one">1 comment per page</string>
+    <string name="site_settings_paging_summary_other">%d comments per page</string>
+
+    <string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
+    <string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
+    <string name="privacy_private">Your site is visible only to you and users you approve</string>
+    <string-array name="privacy_details" translatable="false">
+        <item>@string/privacy_public</item>
+        <item>@string/privacy_public_not_indexed</item>
+        <item>@string/privacy_private</item>
     </string-array>
 
     <!-- Preference Entries -->
-    <string-array name="site_settings_auto_approve_entries">
-        <item>No comments</item>
-        <item>Known users\' comments</item>
-        <item>All users</item>
+    <string name="approve_manual">No comments</string>
+    <string name="approve_auto_if_previously_approved">Known users\' comments</string>
+    <string name="approve_auto">All users</string>
+    <string-array name="site_settings_auto_approve_entries" translatable="false">
+        <item>@string/approve_manual</item>
+        <item>@string/approve_auto_if_previously_approved</item>
+        <item>@string/approve_auto</item>
     </string-array>
 
     <string-array name="site_settings_privacy_entries" translatable="false">
@@ -558,10 +569,9 @@
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
-    <plurals name="site_settings_list_editor_summary">
-        <item quantity="one">1 item</item>
-        <item quantity="other">%d items</item>
-    </plurals>
+    <string name="site_settings_list_editor_summary_one">1 item</string>
+    <string name="site_settings_list_editor_summary_other">%d items</string>
+
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -840,27 +850,44 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
-    <string-array name="notifications_blog_settings">
-        <item>Comments on my site</item>
-        <item>Likes on my comments</item>
-        <item>Likes on my posts</item>
-        <item>Site follows</item>
-        <item>Site achievements</item>
-        <item>Username mentions</item>
+
+    <string name="comments_on_my_site">Comments on my site</string>
+    <string name="likes_on_my_comments">Likes on my comments</string>
+    <string name="likes_on_my_posts">Likes on my posts</string>
+    <string name="site_follows">Site follows</string>
+    <string name="site_achievements">Site achievements</string>
+    <string name="username_mentions">Username mentions</string>
+    <string-array name="notifications_blog_settings" translatable="false">
+        <item>@string/comments_on_my_site</item>
+        <item>@string/likes_on_my_comments</item>
+        <item>@string/likes_on_my_posts</item>
+        <item>@string/site_follows</item>
+        <item>@string/site_achievements</item>
+        <item>@string/username_mentions</item>
     </string-array>
-    <string-array name="notifications_other_settings">
-        <item>Replies to my comments</item>
-        <item>Likes on my comments</item>
+
+    <string name="replies_to_my_comments">Replies to my comments</string>
+    <string-array name="notifications_other_settings" translatable="false">
+        <item>@string/replies_to_my_comments</item>
+        <item>@string/likes_on_my_comments</item>
     </string-array>
-    <string-array name="notifications_wpcom_settings">
-        <item>Suggestions</item>
-        <item>Research</item>
-        <item>Community</item>
+
+    <string name="notif_suggestions">Suggestions</string>
+    <string name="notif_research">Research</string>
+    <string name="notif_community">Community</string>
+    <string-array name="notifications_wpcom_settings" translatable="false">
+        <item>@string/notif_suggestions</item>
+        <item>@string/notif_research</item>
+        <item>@string/notif_community</item>
     </string-array>
-    <string-array name="notifications_wpcom_settings_summaries">
-        <item>Tips for getting the most out of WordPress.com.</item>
-        <item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
-        <item>Information on WordPress.com courses and events (online &amp; in-person).</item>
+
+    <string name="notif_tips">Tips for getting the most out of WordPress.com.</string>
+    <string name="notif_surveys">Opportunities to participate in WordPress.com research &amp; surveys.</string>
+    <string name="notif_events">Information on WordPress.com courses and events (online &amp; in-person).</string>
+    <string-array name="notifications_wpcom_settings_summaries" translatable="false">
+        <item>@string/notif_tips</item>
+        <item>@string/notif_surveys</item>
+        <item>@string/notif_events</item>
     </string-array>
 
     <!-- reader -->
@@ -882,17 +909,27 @@
 
 
     <!-- Post Formats -->
-    <string-array name="post_formats_array">
-        <item>Aside</item>
-        <item>Audio</item>
-        <item>Chat</item>
-        <item>Gallery</item>
-        <item>Image</item>
-        <item>Link</item>
-        <item>Quote</item>
-        <item>Standard</item>
-        <item>Status</item>
-        <item>Video</item>
+    <string name="post_format_aside">Aside</string>
+    <string name="post_format_audio">Audio</string>
+    <string name="post_format_chat">Chat</string>
+    <string name="post_format_gallery">Gallery</string>
+    <string name="post_format_image">Image</string>
+    <string name="post_format_link">Link</string>
+    <string name="post_format_quote">Quote</string>
+    <string name="post_format_standard">Standard</string>
+    <string name="post_format_status">Status</string>
+    <string name="post_format_video">Video</string>
+    <string-array name="post_formats_array" translatable="false">
+        <item>@string/post_format_aside</item>
+        <item>@string/post_format_audio</item>
+        <item>@string/post_format_chat</item>
+        <item>@string/post_format_gallery</item>
+        <item>@string/post_format_image</item>
+        <item>@string/post_format_link</item>
+        <item>@string/post_format_quote</item>
+        <item>@string/post_format_standard</item>
+        <item>@string/post_format_status</item>
+        <item>@string/post_format_video</item>
     </string-array>
 
     <!-- Menu Buttons -->
@@ -904,11 +941,15 @@
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
 
-    <string-array name="alignment_array">
-        <item>None</item>
-        <item>Left</item>
-        <item>Center</item>
-        <item>Right</item>
+    <string name="align_none">None</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
+    <string-array name="alignment_array" translatable="false">
+        <item>@string/align_none</item>
+        <item>@string/align_left</item>
+        <item>@string/align_center</item>
+        <item>@string/align_right</item>
     </string-array>
 
     <!-- About View -->
@@ -1269,10 +1310,13 @@
     <string name="support">Support</string>
     <string name="active">Active</string>
 
-    <string-array name="themes_filter_array">
-        <item>Free</item>
-        <item>All</item>
-        <item>Premium</item>
+    <string name="theme_free">Free</string>
+    <string name="theme_all">All</string>
+    <string name="theme_premium">Premium</string>
+    <string-array name="themes_filter_array" translatable="false">
+        <item>@string/theme_free</item>
+        <item>@string/theme_all</item>
+        <item>@string/theme_premium</item>
     </string-array>
 
     <string name="title_activity_theme_support">Themes</string>
