@@ -103,8 +103,7 @@ public class HealthCheckTest extends InstrumentationTestCase {
     private void runXmlrpcDiscovery(String testCaseComment, JSONObject testSetup) throws JSONException, IOException {
         final MockWebServer server = new MockWebServer();
 
-        testSetup = new JSONObject(testSetup.toString().replaceAll(sServerAddressMagicString,
-                server.getHostName() + ":" + server.getPort()));
+        testSetup = new JSONObject(replaceServerMagicName(server, testSetup.toString()));
 
         final JSONObject input = testSetup.getJSONObject("input");
 
@@ -159,6 +158,8 @@ public class HealthCheckTest extends InstrumentationTestCase {
                         (sServerResponsesMagicScheme.length()));
             }
 
+            body = replaceServerMagicName(server, body);
+
             final MockResponse resp = new MockResponse()
                     .setResponseCode(respJson.getInt("statusCode"))
                     .setHeaders(respHeaders)
@@ -182,6 +183,11 @@ public class HealthCheckTest extends InstrumentationTestCase {
         });
 
         return server;
+    }
+
+    private String replaceServerMagicName(MockWebServer server, String str) {
+        return str.replaceAll(sServerAddressMagicString, server.getHostName() + ":" + server.getPort());
+
     }
 
     private Headers json2Headers(JSONObject headersJson) throws JSONException {
