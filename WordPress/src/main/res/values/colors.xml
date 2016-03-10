@@ -154,4 +154,8 @@
     <color name="theme_price">#4FB769</color>
     <color name="theme_active">#A9E9FC</color>
 
+    <!-- dividers -->
+    <!-- TODO: consolidate divider colors -->
+    <color name="divider_grey">#D8E3EA</color>
+
 </resources>

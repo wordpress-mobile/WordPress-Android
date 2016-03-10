@@ -36,6 +36,7 @@ android {
         targetSdkVersion 23
 
         buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
+        buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
 
     productFlavors {
@@ -43,11 +44,13 @@ android {
 
         zalpha { // alpha version - enable experimental features
             buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
         }
     }
@@ -85,7 +88,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-aar:4.2.0-support'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.2'
+    compile 'com.automattic:rest:1.0.3'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
 
