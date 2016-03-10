@@ -133,6 +133,8 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         assertEquals(testCaseMessage("XMLRPC URL does not match the defined one!", testCaseComment), outputUrl,
                 xmlrpcUrl);
+
+        server.shutdown();
     }
 
     private MockWebServer setupMockHttpServer(MockWebServer server, JSONObject requestResponsesJson) throws
