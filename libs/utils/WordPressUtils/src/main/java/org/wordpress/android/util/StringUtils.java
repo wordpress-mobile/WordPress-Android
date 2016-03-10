@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.support.annotation.StringRes;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -63,7 +65,7 @@ public class StringUtils {
                 String trimmed = asploded[i].trim();
                 if (trimmed.length() > 0) {
                     trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>").replace("<br>\n", "<br>")
-                                     .replace("\n", "<br>");
+                            .replace("\n", "<br>");
                     wrappedHTML.append("<p>");
                     wrappedHTML.append(trimmed);
                     wrappedHTML.append("</p>");
@@ -186,7 +188,7 @@ public class StringUtils {
             return str;
         }
 
-        return str.substring(0, str.length() -1);
+        return str.substring(0, str.length() - 1);
     }
 
     /*
@@ -223,14 +225,13 @@ public class StringUtils {
      * Used to convert a language code ([lc]_[rc] where lc is language code (en, fr, es, etc...)
      * and rc is region code (zh-CN, zh-HK, zh-TW, etc...) to a displayable string with the languages
      * name.
-     *
+     * <p/>
      * The input string must be between 2 and 6 characters, inclusive. An empty string is returned
      * if that is not the case.
-     *
+     * <p/>
      * If the input string is recognized by {@link Locale} the result of this method is the given
      *
-     * @return
-     *  non-null
+     * @return non-null
      */
     public static String getLanguageString(String languagueCode, Locale displayLocale) {
         if (languagueCode == null || languagueCode.length() < 2 || languagueCode.length() > 6) {
@@ -262,11 +263,11 @@ public class StringUtils {
         for (int i = 0; i < in.length(); i++) {
             current = in.charAt(i); // NOTE: No IndexOutOfBoundsException caught here; it should not happen.
             if ((current == 0x9) ||
-                (current == 0xA) ||
-                (current == 0xD) ||
-                ((current >= 0x20) && (current <= 0xD7FF)) ||
-                ((current >= 0xE000) && (current <= 0xFFFD)) ||
-                ((current >= 0x10000) && (current <= 0x10FFFF))) {
+                    (current == 0xA) ||
+                    (current == 0xD) ||
+                    ((current >= 0x20) && (current <= 0xD7FF)) ||
+                    ((current >= 0xE000) && (current <= 0xFFFD)) ||
+                    ((current >= 0x10000) && (current <= 0x10FFFF))) {
                 out.append(current);
             }
         }
@@ -279,6 +280,7 @@ public class StringUtils {
     public static int stringToInt(String s) {
         return stringToInt(s, 0);
     }
+
     public static int stringToInt(String s, int defaultValue) {
         if (s == null)
             return defaultValue;
@@ -292,6 +294,7 @@ public class StringUtils {
     public static long stringToLong(String s) {
         return stringToLong(s, 0L);
     }
+
     public static long stringToLong(String s, long defaultValue) {
         if (s == null)
             return defaultValue;
@@ -300,5 +303,25 @@ public class StringUtils {
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+
+    /**
+     * Formats the string for the given quantity, using the given arguments.
+     * We need this because our translation platform doesn't support Android plurals.
+     *
+     * @param zero The desired string identifier to get when quantity is exactly 0
+     * @param one The desired string identifier to get when quantity is exactly 1
+     * @param other The desired string identifier to get when quantity is not (0 or 1)
+     * @param quantity The number used to get the correct string
+     */
+    public static String getQuantityString(Context context, @StringRes int zero, @StringRes int one,
+                                           @StringRes int other, int quantity) {
+        if (quantity == 0) {
+            return context.getString(zero);
+        }
+        if (quantity == 1) {
+            return context.getString(one);
+        }
+        return String.format(context.getString(other), quantity);
     }
 }
