@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="org.wordpress.android.stores.example.MainExampleActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -22,16 +22,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="Fetch Account" />
+            android:text="Fetch Account"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentRight="false"
+            android:layout_below="@+id/list_sites_button" />
 
         <Button
             android:id="@+id/update_first_site"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="Fetch first site" />
+            android:text="Fetch first site"
+            android:layout_toRightOf="@+id/list_sites_button"
+            android:layout_toEndOf="@+id/list_sites_button" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/log_sites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Sites"
+            android:layout_toRightOf="@+id/account_infos_button"
+            android:layout_toEndOf="@+id/account_infos_button"
+            android:layout_below="@+id/list_sites_button" />
+
+    </RelativeLayout>
 
 
     <TextView

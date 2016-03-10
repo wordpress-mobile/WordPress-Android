@@ -38,8 +38,8 @@ public class AccountStoreTest extends InstrumentationTestCase {
                 .build();
         testComponent.inject(this);
         WellSqlConfig config = new WellSqlConfig(appContext);
-        config.reset();
         WellSql.init(config);
+        config.reset();
 
         // Register
         mDispatcher.register(this);
