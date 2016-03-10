@@ -483,6 +483,7 @@
         <item>@string/detail_approve_auto</item>
     </string-array>
 
+    <string name="site_settings_multiple_links_summary_zero">Require approval for more than 0 links</string>
     <string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
     <string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
     <string name="site_settings_paging_summary_one">1 comment per page</string>

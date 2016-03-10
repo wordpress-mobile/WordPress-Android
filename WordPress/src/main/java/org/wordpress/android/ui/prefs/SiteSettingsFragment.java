@@ -418,7 +418,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             updateWhitelistSettings(Integer.parseInt(newValue.toString()));
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
-            String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_one,
+            String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
                     R.string.site_settings_multiple_links_summary_one,
                     R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
             mMultipleLinksPref.setSummary(s);
