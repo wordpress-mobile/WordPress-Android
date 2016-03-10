@@ -107,5 +107,9 @@ public class XMLRPCRequest extends BaseRequest<Object> {
                 return;
             }
         }
+        if (error instanceof AuthFailureError) {
+            mOnAuthFailedListener.onAuthFailed(AuthError.HTTP_AUTH_ERROR);
+            return;
+        }
     }
 }

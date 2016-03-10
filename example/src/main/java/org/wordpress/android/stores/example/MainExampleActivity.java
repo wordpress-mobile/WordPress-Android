@@ -18,6 +18,7 @@ import org.wordpress.android.stores.action.AuthenticationAction;
 import org.wordpress.android.stores.action.SiteAction;
 import org.wordpress.android.stores.example.SignInDialog.Listener;
 import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.network.AuthError;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
@@ -116,6 +117,10 @@ public class MainExampleActivity extends AppCompatActivity {
         mAccountInfos.setEnabled(mAccountStore.hasAccessToken());
         if (event.isError) {
             prependToLog("Authentication error: " + event.authError);
+            if (event.authError == AuthError.HTTP_AUTH_ERROR) {
+                // Show a Dialog prompting for http username and password
+                showHttpAuthDialog();
+            }
         }
     }
 
@@ -145,6 +150,17 @@ public class MainExampleActivity extends AppCompatActivity {
                 signInAction(username, password, url);
             }
         });
+        newFragment.show(ft, "dialog");
+    }
+
+    private void showHttpAuthDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        DialogFragment newFragment = SignInDialog.newInstance(new Listener() {
+            @Override
+            public void onClick(String username, String password, String url) {
+                signInAction(username, password, url);
+            }
+        }, false);
         newFragment.show(ft, "dialog");
     }
 

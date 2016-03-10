@@ -25,6 +25,14 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
         return mHeaders;
     }
 
+    public void setHTTPAuthHeader(HTTPAuthManager httpAuthManager) {
+        if (httpAuthManager.match(getUrl())) {
+            // FIXME:
+            // Add Auth headers
+        }
+    }
+
+
     public void setOnAuthFailedListener(OnAuthFailedListener onAuthFailedListener) {
         mOnAuthFailedListener = onAuthFailedListener;
     }
