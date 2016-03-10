@@ -465,7 +465,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
                 mErrorMsgId = org.wordpress.android.R.string.no_site_error;
             } catch (SSLHandshakeException e) {
-                if (WPUrlUtils.isWordPressCom(xmlrpcUri)) {
+                if (!WPUrlUtils.isWordPressCom(xmlrpcUri)) {
                     mErroneousSslCertificate = true;
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
