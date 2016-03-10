@@ -306,16 +306,22 @@ public class StringUtils {
     }
 
     /**
-     * We need this because our translation platform doesn't support plurals.
+     * Formats the string for the given quantity, using the given arguments.
+     * We need this because our translation platform doesn't support Android plurals.
+     *
+     * @param zero The desired string identifier to get when quantity is exactly 0
+     * @param one The desired string identifier to get when quantity is exactly 1
+     * @param other The desired string identifier to get when quantity is not (0 or 1)
+     * @param quantity The number used to get the correct string
      */
     public static String getQuantityString(Context context, @StringRes int zero, @StringRes int one,
-                                         @StringRes int other, int count) {
-        if (count == 0) {
+                                           @StringRes int other, int quantity) {
+        if (quantity == 0) {
             return context.getString(zero);
         }
-        if (count == 1) {
+        if (quantity == 1) {
             return context.getString(one);
         }
-        return String.format(context.getString(other), count);
+        return String.format(context.getString(other), quantity);
     }
 }
