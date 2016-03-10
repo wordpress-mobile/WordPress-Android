@@ -429,7 +429,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
             // during the setup of self-hosted sites that have malformed xmlrpc URLs in their declaration.
             if (!URLUtil.isValidUrl(xmlrpcUrl)) {
                 mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                trackInvalidInsertedURL(xmlrpcUrl);
                 return null;
             }
 
