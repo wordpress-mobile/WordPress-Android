@@ -422,10 +422,8 @@
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
-    <plurals name="days_quantity">
-        <item quantity="one">1 day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
+    <string name="days_quantity_one">1 day</string>
+    <string name="days_quantity_other">%d days</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -485,14 +483,10 @@
         <item>@string/detail_approve_auto</item>
     </string-array>
 
-    <plurals name="site_settings_multiple_links_summary">
-        <item quantity="one">Require approval for more than 1 link</item>
-        <item quantity="other">Require approval for more than %d links</item>
-    </plurals>
-    <plurals name="site_settings_paging_summary">
-        <item quantity="one">1 comment per page</item>
-        <item quantity="other">%d comments per page</item>
-    </plurals>
+    <string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
+    <string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
+    <string name="site_settings_paging_summary_one">1 comment per page</string>
+    <string name="site_settings_paging_summary_other">%d comments per page</string>
 
     <string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
     <string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
@@ -574,10 +568,9 @@
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
-    <plurals name="site_settings_list_editor_summary">
-        <item quantity="one">1 item</item>
-        <item quantity="other">%d items</item>
-    </plurals>
+    <string name="site_settings_list_editor_summary_one">1 item</string>
+    <string name="site_settings_list_editor_summary_other">%d items</string>
+
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
