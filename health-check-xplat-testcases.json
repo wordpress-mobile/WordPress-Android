@@ -108,6 +108,29 @@
           }
         }
       }
+    },
+    {
+      "comment": "testing xmlrpc.php found",
+      "realm": "XMLPRC_DISCOVERY",
+      "setup": {
+        "input": {
+          "serverMock": [
+            {
+              "request": {
+                "method": "POST",
+                "path": "/xmlrpc.php"
+              },
+              "response": {
+                "statusCode": 200,
+                "body": "asset:listMethodsResponse.xml"
+              }
+            }
+          ]
+        },
+        "output": {
+          "xmlrpcEndpoint": "http://mockserver/xmlrpc.php"
+        }
+      }
     }
   ]
 }
