@@ -65,7 +65,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(R.xml.account_settings);
 
         mPreferenceScreen = (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_settings_root));
 
