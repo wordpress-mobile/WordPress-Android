@@ -1,8 +1,6 @@
 package org.wordpress.android.util;
 
-import com.android.volley.toolbox.Volley;
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -12,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.TestUtils;
+import org.wordpress.android.WordPress;
 import org.xmlrpc.android.LoggedInputStream;
 
 import android.content.Context;
@@ -23,28 +22,33 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class HealthCheckTest extends InstrumentationTestCase {
+    private static final String sAssetPathBase = "health-check/";
+    private static final String sServerAddressMagicString = "mockserver";
+    private static final String sServerResponsesMagicScheme = "asset:";
 
     @Override
     protected void setUp() {
         Context targetContext = getInstrumentation().getTargetContext();
 
-        // Setup Volley request qeueue to work around https://github.com/wordpress-mobile/WordPress-Android/issues/3835
-        Volley.newRequestQueue(targetContext, VolleyUtils.getHTTPClientStack(targetContext));
+        WordPress.setupVolleyQueue();
     }
 
     @Override
     protected void tearDown() {
     }
 
-    private static JSONObject jsonFromAsset(Context context, String assetFilename) throws IOException, JSONException {
+    private static String stringFromAsset(Context context, String assetFilename) throws IOException {
         LoggedInputStream mLoggedInputStream = new LoggedInputStream(context.getAssets().open(assetFilename));
-        String jsonString = TestUtils.convertStreamToString(mLoggedInputStream);
-        return new JSONObject(jsonString);
+        return TestUtils.convertStreamToString(mLoggedInputStream);
+    }
+
+    private static JSONObject jsonFromAsset(Context context, String assetFilename) throws IOException, JSONException {
+        return new JSONObject(stringFromAsset(context, assetFilename));
     }
 
     public void testHealthCheckXplat() throws JSONException, IOException {
-        JSONArray testCases = jsonFromAsset(getInstrumentation().getContext(),
-                "health-check/health-check-xplat-testcases.json").getJSONArray("testcases");
+        JSONArray testCases = jsonFromAsset(getInstrumentation().getContext(), sAssetPathBase +
+                "health-check-xplat-testcases.json").getJSONArray("testcases");
 
         for (int i = 0; i < testCases.length(); i++) {
             final JSONObject testCase = testCases.getJSONObject(i);
@@ -97,21 +101,26 @@ public class HealthCheckTest extends InstrumentationTestCase {
     }
 
     private void runXmlrpcDiscovery(String testCaseComment, JSONObject testSetup) throws JSONException, IOException {
+        final MockWebServer server = new MockWebServer();
+
+        testSetup = new JSONObject(testSetup.toString().replaceAll(sServerAddressMagicString,
+                server.getHostName() + ":" + server.getPort()));
+
         final JSONObject input = testSetup.getJSONObject("input");
+
+        setupMockHttpServer(server, input);
+
+        final String inputUrl = input.isNull("siteUrl") ? server.url("").toString() : input.getString("siteUrl");
 
         final JSONObject output = testSetup.getJSONObject("output");
 
-        final String outputUrl = output.optString("siteUrl", null);
+        final String outputUrl = output.optString("xmlrpcEndpoint", null);
         final JSONObject error = output.optJSONObject("error");
-
-        MockWebServer server = setupMockHttpServer(input);
-
-        HttpUrl serverUrl = server.url("");
 
         String xmlrpcUrl = null;
         try {
-            xmlrpcUrl = HealthCheckUtils.getSelfHostedXmlrpcUrl(serverUrl.toString(), input.optString("username",
-                    null), input.optString("username", null));
+            xmlrpcUrl = HealthCheckUtils.getSelfHostedXmlrpcUrl(inputUrl, input.optString("username", null),
+                    input.optString("username", null));
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
@@ -127,7 +136,8 @@ public class HealthCheckTest extends InstrumentationTestCase {
                 xmlrpcUrl);
     }
 
-    private MockWebServer setupMockHttpServer(JSONObject requestResponsesJson) throws JSONException, IOException {
+    private MockWebServer setupMockHttpServer(MockWebServer server, JSONObject requestResponsesJson) throws
+            JSONException, IOException {
         final Map<RecordedRequest, MockResponse> mockRequestResponses = new HashMap<>();
 
         final JSONArray serverMock = requestResponsesJson.getJSONArray("serverMock");
@@ -142,17 +152,22 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
             final JSONObject respJson = reqRespJson.getJSONObject("response");
             Headers respHeaders = json2Headers(respJson.optJSONObject("headers"));
+
+            String body = respJson.optString("body");
+            if (body.startsWith(sServerResponsesMagicScheme)) {
+                body = stringFromAsset(getInstrumentation().getContext(), sAssetPathBase + body.substring
+                        (sServerResponsesMagicScheme.length()));
+            }
+
             final MockResponse resp = new MockResponse()
                     .setResponseCode(respJson.getInt("statusCode"))
                     .setHeaders(respHeaders)
-                    .setBody(respJson.optString("body"));
+                    .setBody(body);
 
             mockRequestResponses.put(recordedRequest, resp);
         }
 
-        MockWebServer server = new MockWebServer();
-
-        final Dispatcher dispatcher = new Dispatcher() {
+        server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
 
@@ -164,9 +179,7 @@ public class HealthCheckTest extends InstrumentationTestCase {
                 }
                 return new MockResponse().setResponseCode(404).setBody("");
             }
-        };
-        server.setDispatcher(dispatcher);
-        server.start();
+        });
 
         return server;
     }
