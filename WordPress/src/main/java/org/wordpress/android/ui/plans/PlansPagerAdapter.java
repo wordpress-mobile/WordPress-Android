@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.plans;
 
 import android.app.FragmentManager;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.util.AppLog;
 
 /**
  * ViewPager adapter for the main plans activity
@@ -68,5 +70,23 @@ class PlansPagerAdapter extends FragmentPagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         mFragmentMap.remove(position);
         super.destroyItem(container, position, object);
+    }
+
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+        // work around "Fragement no longer exists for key" Android bug
+        // https://code.google.com/p/android/issues/detail?id=42601
+        try {
+            AppLog.d(AppLog.T.PLANS, "plans pager > adapter restoreState");
+            super.restoreState(state, loader);
+        } catch (IllegalStateException e) {
+            AppLog.e(AppLog.T.PLANS, e);
+        }
+    }
+
+    @Override
+    public Parcelable saveState() {
+        AppLog.d(AppLog.T.PLANS, "plans pager > adapter saveState");
+        return super.saveState();
     }
 }
