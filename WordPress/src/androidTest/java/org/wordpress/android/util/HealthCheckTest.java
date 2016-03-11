@@ -13,6 +13,7 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.xmlrpc.android.LoggedInputStream;
+import org.xmlrpc.android.XMLRPCUtils;
 
 import android.content.Context;
 import android.test.InstrumentationTestCase;
@@ -83,11 +84,11 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String canonicalizedUrl = null;
         try {
-            canonicalizedUrl = FetchBlogListWPOrg.canonicalizeSiteUrl(inputUrl);
+            canonicalizedUrl = XMLRPCUtils.sanitizeSiteUrl(inputUrl);
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (FetchBlogListWPOrg.WPOrgUtilsException hce) {
+        } catch (XMLRPCUtils.XMLRPCUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 
@@ -117,12 +118,12 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String xmlrpcUrl = null;
         try {
-            xmlrpcUrl = new FetchBlogListWPOrg("", "", inputUrl).getSelfHostedXmlrpcUrl(inputUrl, input.optString
-                    ("username", null), input.optString("username", null));
+            xmlrpcUrl = XMLRPCUtils.verifyOrDiscoverXmlRpcUrl(inputUrl, input.optString("username", null), input
+                    .optString("username", null));
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (FetchBlogListWPOrg.WPOrgUtilsException hce) {
+        } catch (XMLRPCUtils.XMLRPCUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 
