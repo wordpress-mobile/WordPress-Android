@@ -319,18 +319,18 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
             // deserialize fault result
             Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
+            consumeHttpEntity(entity);
             //Check that required tags are in the response
             if (!map.containsKey(TAG_FAULT_STRING) || !map.containsKey(TAG_FAULT_CODE)) {
-                throw new XMLRPCException("Bad XMLRPC Fault response received - neither <faultCode> nor <faultString>");
+                throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> and/or <faultString> missing!");
             }
             String faultString = String.valueOf(map.get(TAG_FAULT_STRING));
             int faultCode;
             try {
                 faultCode = (int) map.get(TAG_FAULT_CODE);
             } catch (NumberFormatException | ClassCastException e) {
-                throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> value is not an integer");
+                throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> value is not a valid integer");
             }
-            consumeHttpEntity(entity);
             throw new XMLRPCFault(faultString, faultCode);
         } else {
             consumeHttpEntity(entity);
