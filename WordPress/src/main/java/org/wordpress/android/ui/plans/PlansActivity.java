@@ -37,7 +37,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -281,15 +280,8 @@ public class PlansActivity extends AppCompatActivity {
 
     private PlansPagerAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            List<Fragment> fragments = new ArrayList<>();
-            if (mAvailablePlans != null) {
-                for (SitePlan plan : mAvailablePlans) {
-                    fragments.add(PlanFragment.newInstance(plan));
-                }
-            }
-
             FragmentManager fm = getFragmentManager();
-            mPageAdapter = new PlansPagerAdapter(fm, fragments);
+            mPageAdapter = new PlansPagerAdapter(getFragmentManager(), mAvailablePlans);
         }
         return mPageAdapter;
     }

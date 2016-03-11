@@ -2,19 +2,27 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import org.wordpress.android.ui.plans.models.SitePlan;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * ViewPager adapter for the main plans activity
  */
 class PlansPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragments;
+    private final List<Fragment> mFragments = new ArrayList<>();
+    private final SitePlan[] mSitePlans;
 
-    PlansPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public PlansPagerAdapter(FragmentManager fm, @NonNull SitePlan[] sitePlans) {
         super(fm);
-        mFragments = fragments;
+        mSitePlans = sitePlans.clone();
+        for (SitePlan plan : mSitePlans) {
+            mFragments.add(PlanFragment.newInstance(plan));
+        }
     }
 
     @Override
