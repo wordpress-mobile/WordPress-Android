@@ -34,6 +34,11 @@ public class SiteModel implements Identifiable, Payload {
     @Column private boolean mIsVisible;
     @Column private boolean mIsVideoPressSupported;
 
+    // Jetpack specifics
+    // The .com site ID for Jetpack sites (for Jetpack sites, the siteId is local to their network,
+    // just as for normal self-hosted sites)
+    @Column private long mDotComIdForJetpack;
+
     @Override
     public int getId() {
         return mId;
@@ -165,5 +170,13 @@ public class SiteModel implements Identifiable, Payload {
 
     public void setIsVideoPressSupported(boolean videoPressSupported) {
         mIsVideoPressSupported = videoPressSupported;
+    }
+
+    public long getDotComIdForJetpack() {
+        return mDotComIdForJetpack;
+    }
+
+    public void setDotComIdForJetpack(long dotComIdForJetpack) {
+        mDotComIdForJetpack = dotComIdForJetpack;
     }
 }
