@@ -78,10 +78,15 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
-        site.setSiteId(from.ID);
+        if (from.jetpack) {
+            site.setDotComIdForJetpack(from.ID);
+        } else {
+            site.setSiteId(from.ID);
+        }
         site.setUrl(from.URL);
         site.setName(from.name);
         site.setDescription(from.description);
+        site.setIsJetpack(from.jetpack);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read blog options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
