@@ -42,6 +42,19 @@ public class SiteStore extends Store {
     // OnChanged Events
     public class OnSiteChanged extends OnChanged {}
 
+    public class OnSitesDeleted extends OnChanged {
+        public SitesModel mSites;
+
+        public OnSitesDeleted(SiteModel site) {
+            mSites = new SitesModel();
+            mSites.add(site);
+        }
+
+        public OnSitesDeleted(SitesModel sites) {
+            mSites = sites;
+        }
+    }
+
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
 
@@ -399,12 +412,29 @@ public class SiteStore extends Store {
                 // TODO: check for WP-REST-API plugin and use it here
                 mSiteXMLRPCClient.pullSite(site);
             }
+        } else if (actionType == SiteAction.DELETE_SITE) {
+            SiteSqlUtils.deleteSite((SiteModel) action.getPayload());
+            // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
+            // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
+            // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
+            emitChange(new OnSitesDeleted((SiteModel) action.getPayload()));
+        } else if (actionType == SiteAction.DELETE_WPCOM_SITES) {
+            SitesModel wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
+            deleteSites(wpComSites);
+            // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
+            emitChange(new OnSitesDeleted(wpComSites));
         }
     }
 
     private void createOrUpdateSites(SitesModel sites) {
         for (SiteModel site : sites) {
             SiteSqlUtils.insertOrUpdateSite(site);
+        }
+    }
+
+    private void deleteSites(SitesModel sites) {
+        for (SiteModel site : sites) {
+            SiteSqlUtils.deleteSite(site);
         }
     }
 }

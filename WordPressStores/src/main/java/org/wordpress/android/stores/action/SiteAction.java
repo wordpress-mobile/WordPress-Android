@@ -6,4 +6,6 @@ public enum SiteAction implements IAction {
     FETCH_SITES_XMLRPC,
     UPDATE_SITE,
     UPDATE_SITES,
+    DELETE_SITE,
+    DELETE_WPCOM_SITES,
 }

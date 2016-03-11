@@ -4,10 +4,17 @@ import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.model.SitesModel;
 
 import java.util.List;
 
 public class SiteSqlUtils {
+    public static SitesModel getAllSitesWith(String field, Object value) {
+        return (SitesModel) WellSql.select(SiteModel.class)
+                .where().equals(field, value).endWhere()
+                .getAsModel();
+    }
+
     public static void insertOrUpdateSite(SiteModel site) {
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -23,5 +30,11 @@ public class SiteSqlUtils {
             WellSql.update(SiteModel.class).whereId(oldId)
                     .put(site, new UpdateAllExceptId<SiteModel>()).execute();
         }
+    }
+
+    public static void deleteSite(SiteModel site) {
+         WellSql.delete(SiteModel.class)
+                 .where().equals(SiteModelTable.ID, site.getId()).endWhere()
+                 .execute();
     }
 }
