@@ -20,7 +20,7 @@ public class XMLSerializerUtils {
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
 
-    public static StringWriter serialize(XmlSerializer serializer, String method, Object[] params)
+    public static StringWriter serialize(XmlSerializer serializer, XMLRPC method, Object[] params)
             throws IOException {
         StringWriter bodyWriter = new StringWriter();
         serializer.setOutput(bodyWriter);
@@ -28,7 +28,7 @@ public class XMLSerializerUtils {
         serializer.startDocument(null, null);
         serializer.startTag(null, TAG_METHOD_CALL);
         // set method name
-        serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+        serializer.startTag(null, TAG_METHOD_NAME).text(method.toString()).endTag(null, TAG_METHOD_NAME);
         if (params != null && params.length != 0) {
             // set method params
             serializer.startTag(null, TAG_PARAMS);
