@@ -261,4 +261,8 @@
     <dimen name="delete_site_icon_size">24dp</dimen>
     <dimen name="delete_site_icon_margin_right">13dp</dimen>
 
+    <!-- plans -->
+    <dimen name="plan_indicator_size">12dp</dimen>
+    <dimen name="plan_indicator_margin">6dp</dimen>
+    <dimen name="plan_icon_size">79dp</dimen>
 </resources>

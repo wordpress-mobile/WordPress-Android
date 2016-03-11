@@ -448,10 +448,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             updateWhitelistSettings(Integer.parseInt(newValue.toString()));
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
-            mMultipleLinksPref.setSummary(getResources()
-                    .getQuantityString(R.plurals.site_settings_multiple_links_summary,
-                            mSiteSettings.getMultipleLinks(),
-                            mSiteSettings.getMultipleLinks()));
+            String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
+                    R.string.site_settings_multiple_links_summary_one,
+                    R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
+            mMultipleLinksPref.setSummary(s);
         } else if (preference == mUsernamePref) {
             mSiteSettings.setUsername(newValue.toString());
             changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
@@ -852,10 +852,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
-        mMultipleLinksPref.setSummary(getResources()
-                .getQuantityString(R.plurals.site_settings_multiple_links_summary,
-                        mSiteSettings.getMultipleLinks(),
-                        mSiteSettings.getMultipleLinks()));
+        String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
+                R.string.site_settings_multiple_links_summary_one,
+                R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
+        mMultipleLinksPref.setSummary(s);
         mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
