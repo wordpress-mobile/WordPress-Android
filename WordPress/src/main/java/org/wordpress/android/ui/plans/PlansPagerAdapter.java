@@ -7,6 +7,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 
@@ -16,22 +17,11 @@ import org.wordpress.android.util.AppLog;
 class PlansPagerAdapter extends FragmentPagerAdapter {
     private final SitePlan[] mSitePlans;
     private final SparseArray<PlanFragment> mFragmentMap = new SparseArray<>();
+    private static final String UNICODE_CHECKMARK = "\u2713";
 
     public PlansPagerAdapter(FragmentManager fm, @NonNull SitePlan[] sitePlans) {
         super(fm);
         mSitePlans = sitePlans.clone();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        if (isValidPosition(position)) {
-            PlanFragment fragment = mFragmentMap.get(position);
-            if (fragment == null) {
-                fragment = getItem(position);
-            }
-            return fragment.getTitle();
-        }
-        return super.getPageTitle(position);
     }
 
     @Override
@@ -55,6 +45,22 @@ class PlansPagerAdapter extends FragmentPagerAdapter {
             }
         }
         return -1;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        if (isValidPosition(position)) {
+            Plan planDetails = PlansUtils.getGlobalPlan(mSitePlans[position].getProductID());
+            if (planDetails == null) {
+                AppLog.w(AppLog.T.PLANS, "plans pager > empty plan details in getPageTitle");
+                return "";
+            } else if (mSitePlans[position].isCurrentPlan()) {
+                return UNICODE_CHECKMARK + " " + planDetails.getProductNameShort();
+            } else {
+                return planDetails.getProductNameShort();
+            }
+        }
+        return super.getPageTitle(position);
     }
 
     @Override

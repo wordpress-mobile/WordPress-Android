@@ -363,7 +363,7 @@ public class PlansActivity extends AppCompatActivity {
             });
         } catch (NullPointerException e) {
             // will happen when play store isn't available on device
-            AppLog.e(AppLog.T.PLANS, e);
+            //AppLog.e(AppLog.T.PLANS, e);
             AppLog.w(AppLog.T.PLANS, "Unable to start IAB helper");
         }
     }
@@ -375,7 +375,7 @@ public class PlansActivity extends AppCompatActivity {
             } catch (IllegalArgumentException e) {
                 // this can happen if the IAB helper was created but failed to bind to its service
                 // when started, which will occur on emulators
-                AppLog.e(AppLog.T.PLANS, e);
+                //AppLog.e(AppLog.T.PLANS, e);
             }
             mIabHelper = null;
         }
