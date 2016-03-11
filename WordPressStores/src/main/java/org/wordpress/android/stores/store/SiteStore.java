@@ -2,11 +2,13 @@ package org.wordpress.android.stores.store;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
+import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.Payload;
@@ -228,6 +230,148 @@ public class SiteStore extends Store {
                 .equals(SiteModelTable.IS_VISIBLE, 1)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
+    }
+
+    /**
+     * Given a (remote) site id, returns the corresponding (local) id.
+     */
+    public int getLocalIdForRemoteSiteId(int siteId) {
+        int localId =  WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
+                .getAsModel(new SelectMapper<SiteModel>() {
+                    @Override
+                    public SiteModel convert(Cursor cursor) {
+                        SiteModel siteModel = new SiteModel();
+                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                        return siteModel;
+                    }
+                }).get(0).getId();
+        if (localId == 0) {
+            localId = getLocalIdForJetpackRemoteId(siteId, null);
+        }
+        return localId;
+    }
+
+    /**
+     * Given a (remote) site id and XML-RPC url, returns the corresponding (local) id.
+     */
+    public int getLocalIdForRemoteSiteIdAndXmlRpcUrl(int siteId, String xmlRpcUrl) {
+        int localId =  WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.SITE_ID, siteId)
+                .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
+                .endGroup().endWhere()
+                .getAsModel(new SelectMapper<SiteModel>() {
+                    @Override
+                    public SiteModel convert(Cursor cursor) {
+                        SiteModel siteModel = new SiteModel();
+                        siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                        return siteModel;
+                    }
+                }).get(0).getId();
+
+        if (localId == 0) {
+            localId = getLocalIdForJetpackRemoteId(siteId, xmlRpcUrl);
+        }
+
+        return localId;
+    }
+
+    /**
+     * Given a (remote) Jetpack id and optional XML-RPC URL, returns the corresponding (local) id.
+     */
+    public int getLocalIdForJetpackRemoteId(int jetpackRemoteId, String xmlRpcUrl) {
+        int localId;
+        if (TextUtils.isEmpty(xmlRpcUrl)) {
+            localId =  WellSql.select(SiteModel.class)
+                    .where().beginGroup()
+                    .equals(SiteModelTable.IS_WPCOM, 0)
+                    .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
+                    .endGroup().endWhere()
+                    .getAsModel(new SelectMapper<SiteModel>() {
+                        @Override
+                        public SiteModel convert(Cursor cursor) {
+                            SiteModel siteModel = new SiteModel();
+                            siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                            return siteModel;
+                        }
+                    }).get(0).getId();
+        } else {
+            localId =  WellSql.select(SiteModel.class)
+                    .where().beginGroup()
+                    .equals(SiteModelTable.IS_WPCOM, 0)
+                    .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
+                    .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
+                    .endGroup().endWhere()
+                    .getAsModel(new SelectMapper<SiteModel>() {
+                        @Override
+                        public SiteModel convert(Cursor cursor) {
+                            SiteModel siteModel = new SiteModel();
+                            siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
+                            return siteModel;
+                        }
+                    }).get(0).getId();
+        }
+        return localId;
+    }
+
+    /**
+     * Given a (local) id, returns the (remote) site id. Searches first for self-hosted and .COM, then looks for Jetpack
+     * sites.
+     */
+    public long getSiteIdForLocalId(int id) {
+        SiteModel result =  WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, id)
+                .endGroup().endWhere()
+                .getAsModel(new SelectMapper<SiteModel>() {
+                    @Override
+                    public SiteModel convert(Cursor cursor) {
+                        SiteModel siteModel = new SiteModel();
+                        siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
+                        siteModel.setDotComIdForJetpack(cursor.getLong(cursor.getColumnIndex(
+                                SiteModelTable.DOT_COM_ID_FOR_JETPACK)));
+                        return siteModel;
+                    }
+                }).get(0);
+
+        if (result.getSiteId() > 0) {
+            return result.getSiteId();
+        } else {
+            return result.getDotComIdForJetpack();
+        }
+    }
+
+    /**
+     * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
+     * (returns false for non-Jetpack self-hosted sites).
+     */
+    public boolean hasDotComOrJetpackSiteWithSiteId(int siteId) {
+        int localId = getLocalIdForRemoteSiteId(siteId);
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.ID, localId)
+                .beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, 1).or().equals(SiteModelTable.IS_JETPACK, 1)
+                .endGroup().endGroup().endWhere()
+                .getAsCursor().getCount() > 0;
+    }
+
+    /**
+     * Given a .COM site ID (either a .COM site id, or the .COM id of a Jetpack site), returns the site as a
+     * {@link SiteModel}.
+     */
+    public SiteModel getSiteByDotComSiteId(String dotComSiteId) {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, dotComSiteId)
+                .or()
+                .beginGroup()
+                .equals(SiteModelTable.SITE_ID, dotComSiteId)
+                .equals(SiteModelTable.IS_WPCOM, 1)
+                .endGroup()
+                .endGroup().endWhere()
+                .getAsModel().get(0);
     }
 
     @Subscribe
