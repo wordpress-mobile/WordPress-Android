@@ -16,6 +16,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
@@ -385,6 +386,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mCategoryPref || preference == mFormatPref) {
             return !shouldShowListPreference((DetailListPreference) preference);
         } else if (preference == mExportSitePref) {
+            showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
             requestPurchasesForDeletionCheck();
         } else {
@@ -700,6 +702,22 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return mSiteSettings.getThreadingDescriptionForLevel(value);
             }
         });
+    }
+
+    private void showExportContentDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.export_your_content);
+        String email = AccountHelper.getDefaultAccount().getEmail();
+        builder.setMessage(getString(R.string.export_your_content_message, email));
+        builder.setPositiveButton(R.string.site_settings_export_content_title, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                exportSite();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+
+        builder.show();
     }
 
     private void requestPurchasesForDeletionCheck() {
@@ -1185,6 +1203,29 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
+    }
+
+    private void exportSite() {
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog.isDotcomFlag()) {
+            final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
+            WordPress.getRestClientUtils().exportContentAll(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (isAdded()) {
+                                progressDialog.dismiss();
+                                Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (isAdded()) {
+                                progressDialog.dismiss();
+                            }
+                        }
+                    });
+        }
     }
 
     private void deleteSite() {
