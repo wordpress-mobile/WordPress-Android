@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.xmlrpc.android.LoggedInputStream;
 
 import android.content.Context;
@@ -28,8 +29,6 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
     @Override
     protected void setUp() {
-        Context targetContext = getInstrumentation().getTargetContext();
-
         WordPress.setupVolleyQueue();
     }
 
@@ -84,11 +83,11 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String canonicalizedUrl = null;
         try {
-            canonicalizedUrl = WPOrgUtils.canonicalizeSiteUrl(inputUrl);
+            canonicalizedUrl = FetchBlogListWPOrg.canonicalizeSiteUrl(inputUrl);
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (WPOrgUtils.WPOrgUtilsException hce) {
+        } catch (FetchBlogListWPOrg.WPOrgUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 
@@ -118,12 +117,12 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String xmlrpcUrl = null;
         try {
-            xmlrpcUrl = WPOrgUtils.getSelfHostedXmlrpcUrl(inputUrl, input.optString("username", null),
-                    input.optString("username", null));
+            xmlrpcUrl = new FetchBlogListWPOrg("", "", inputUrl).getSelfHostedXmlrpcUrl(inputUrl, input.optString
+                    ("username", null), input.optString("username", null));
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);
-        } catch (WPOrgUtils.WPOrgUtilsException hce) {
+        } catch (FetchBlogListWPOrg.WPOrgUtilsException hce) {
             assertNotNull(testCaseMessage("Error occurred but testcase does not define an error!", testCaseComment),
                     error);
 
