@@ -160,7 +160,7 @@ public class SiteStore extends Store {
     /**
      * Checks whether the store contains a site matching the given (remote) site id and XML-RPC URL.
      */
-    public boolean hasSiteWithSiteId(int siteId, String xmlRpcUrl) {
+    public boolean hasSiteWithSiteId(long siteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
@@ -260,7 +260,7 @@ public class SiteStore extends Store {
     /**
      * Given a (remote) site id, returns the corresponding (local) id.
      */
-    public int getLocalIdForRemoteSiteId(int siteId) {
+    public int getLocalIdForRemoteSiteId(long siteId) {
         int localId =  WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
@@ -280,7 +280,7 @@ public class SiteStore extends Store {
     /**
      * Given a (remote) site id and XML-RPC url, returns the corresponding (local) id.
      */
-    public int getLocalIdForRemoteSiteIdAndXmlRpcUrl(int siteId, String xmlRpcUrl) {
+    public int getLocalIdForRemoteSiteIdAndXmlRpcUrl(long siteId, String xmlRpcUrl) {
         int localId =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
@@ -305,7 +305,7 @@ public class SiteStore extends Store {
     /**
      * Given a (remote) Jetpack id and optional XML-RPC URL, returns the corresponding (local) id.
      */
-    public int getLocalIdForJetpackRemoteId(int jetpackRemoteId, String xmlRpcUrl) {
+    public int getLocalIdForJetpackRemoteId(long jetpackRemoteId, String xmlRpcUrl) {
         int localId;
         if (TextUtils.isEmpty(xmlRpcUrl)) {
             localId =  WellSql.select(SiteModel.class)
@@ -371,7 +371,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
      * (returns false for non-Jetpack self-hosted sites).
      */
-    public boolean hasDotComOrJetpackSiteWithSiteId(int siteId) {
+    public boolean hasDotComOrJetpackSiteWithSiteId(long siteId) {
         int localId = getLocalIdForRemoteSiteId(siteId);
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -386,7 +386,7 @@ public class SiteStore extends Store {
      * Given a .COM site ID (either a .COM site id, or the .COM id of a Jetpack site), returns the site as a
      * {@link SiteModel}.
      */
-    public SiteModel getSiteByDotComSiteId(String dotComSiteId) {
+    public SiteModel getSiteByDotComSiteId(long dotComSiteId) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, dotComSiteId)
