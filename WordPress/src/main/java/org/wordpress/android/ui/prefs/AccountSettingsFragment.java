@@ -22,6 +22,7 @@ import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.HashMap;
@@ -192,7 +193,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mPrimarySitePreference.setValue(blogId);
         Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId(blogId);
         if (primaryBlog != null) {
-            mPrimarySitePreference.setSummary(primaryBlog.getNameOrHostUrl());
+            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(primaryBlog.getNameOrHostUrl()));
             mPrimarySitePreference.refreshAdapter();
         }
     }
