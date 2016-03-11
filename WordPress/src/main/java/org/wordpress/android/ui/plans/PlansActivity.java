@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +57,7 @@ public class PlansActivity extends AppCompatActivity {
     private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     private WPViewPager mViewPager;
-    private PlansPageAdapter mPageAdapter;
+    private PlansPagerAdapter mPageAdapter;
     private TabLayout mTabLayout;
 
     private IabHelper mIabHelper;
@@ -249,47 +248,6 @@ public class PlansActivity extends AppCompatActivity {
         progress.setVisibility(View.VISIBLE);
     }
 
-    private class PlansPageAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments;
-
-        PlansPageAdapter(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            mFragments = fragments;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (mFragments != null && isValidPosition(position)) {
-                return ((PlanFragment)mFragments.get(position)).getTitle();
-            }
-            return super.getPageTitle(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        public boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
-        }
-
-        public int getPositionOfPlan(long planID) {
-            for (int i = 0; i < getCount(); i++) {
-                PlanFragment fragment = (PlanFragment) getItem(i);
-                if (fragment.getSitePlan().getProductID() == planID) {
-                    return  i;
-                }
-            }
-            return -1;
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -321,7 +279,7 @@ public class PlansActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private PlansPageAdapter getPageAdapter() {
+    private PlansPagerAdapter getPageAdapter() {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<>();
             if (mAvailablePlans != null) {
@@ -331,7 +289,7 @@ public class PlansActivity extends AppCompatActivity {
             }
 
             FragmentManager fm = getFragmentManager();
-            mPageAdapter = new PlansPageAdapter(fm, fragments);
+            mPageAdapter = new PlansPagerAdapter(fm, fragments);
         }
         return mPageAdapter;
     }
