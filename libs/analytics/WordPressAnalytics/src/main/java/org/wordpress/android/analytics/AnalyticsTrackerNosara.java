@@ -363,6 +363,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
                 break;
+            case LOGIN_INSERTED_INVALID_URL:
+                eventName = "login_inserted_invalid_url";
+                break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";
                 break;
