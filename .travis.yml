@@ -5,7 +5,9 @@ android:
   components:
     - extra-android-m2repository
     - extra-android-support
-    - build-tools-23.0.1
+    - platform-tools
+    - tools
+    - build-tools-23.0.2
     - android-23
 
 env:
@@ -13,6 +15,11 @@ env:
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
+
+install:
+  # Setup gradle.properties and tests.properties
+  - cp example/gradle.properties-example example/gradle.properties
+  - cp example/tests.properties-example example/tests.properties
 
 script:
   - ./gradlew build
