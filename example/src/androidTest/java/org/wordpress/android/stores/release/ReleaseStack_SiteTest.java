@@ -23,8 +23,17 @@ import javax.inject.Inject;
 public class ReleaseStack_SiteTest extends ReleaseStack_Base {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+    @Inject HTTPAuthManager mHTTPAuthManager;
 
     CountDownLatch mCountDownLatch;
+
+    enum TEST_EVENTS {
+        NONE,
+        HTTP_AUTH_ERROR,
+        SITE_CHANGED
+    }
+    private TEST_EVENTS mExpectedEvent;
 
     @Override
     protected void setUp() throws Exception {
@@ -32,7 +41,10 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         mReleaseStackAppComponent.inject(this);
         // Register
         mDispatcher.register(mSiteStore);
+        mDispatcher.register(mAccountStore);
         mDispatcher.register(this);
+        // Reset expected test event
+        mExpectedEvent = TEST_EVENTS.NONE;
     }
 
     public void testSelfHostedSimpleFetchSites() throws InterruptedException {
@@ -40,10 +52,11 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SIMPLE;
         payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SIMPLE;
         payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SIMPLE;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
         mCountDownLatch = new CountDownLatch(1);
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     public void testSelfHostedSimpleContributorFetchSites() throws InterruptedException {
@@ -51,10 +64,11 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SIMPLE_CONTRIB;
         payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SIMPLE_CONTRIB;
         payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SIMPLE_CONTRIB;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
         mCountDownLatch = new CountDownLatch(1);
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     public void testSelfHostedMutliSiteFetchSites() throws InterruptedException {
@@ -62,10 +76,11 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_MULTISITE;
         payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_MULTISITE;
         payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_MULTISITE;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
         mCountDownLatch = new CountDownLatch(1);
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     public void testSelfHostedSimpleHTTPSFetchSites() throws InterruptedException {
@@ -73,10 +88,11 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_VALID_SSL;
         payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_VALID_SSL;
         payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_VALID_SSL;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
         mCountDownLatch = new CountDownLatch(1);
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     public void testSelfHostedSelfSignedSSLFetchSites() throws InterruptedException {
@@ -84,12 +100,13 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         payload.username = BuildConfig.TEST_WPORG_USERNAME_SH_SELFSIGNED_SSL;
         payload.password = BuildConfig.TEST_WPORG_PASSWORD_SH_SELFSIGNED_SSL;
         payload.xmlrpcEndpoint = BuildConfig.TEST_WPORG_URL_SH_SELFSIGNED_SSL;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
         mCountDownLatch = new CountDownLatch(1);
+        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         // TODO: should get a SSL Warning event
 
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(10000, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     public void testSelfHostedHTTPAuthFetchSites() throws InterruptedException {
