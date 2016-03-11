@@ -4,8 +4,6 @@ import android.app.FragmentManager;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.util.SparseArray;
-import android.view.ViewGroup;
 
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
@@ -16,7 +14,6 @@ import org.wordpress.android.util.AppLog;
  */
 class PlansPagerAdapter extends FragmentPagerAdapter {
     private final SitePlan[] mSitePlans;
-    private final SparseArray<PlanFragment> mFragmentMap = new SparseArray<>();
     private static final String UNICODE_CHECKMARK = "\u2713";
 
     public PlansPagerAdapter(FragmentManager fm, @NonNull SitePlan[] sitePlans) {
@@ -61,21 +58,6 @@ class PlansPagerAdapter extends FragmentPagerAdapter {
             }
         }
         return super.getPageTitle(position);
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        Object item = super.instantiateItem(container, position);
-        if (item instanceof PlanFragment) {
-            mFragmentMap.put(position, (PlanFragment) item);
-        }
-        return item;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        mFragmentMap.remove(position);
-        super.destroyItem(container, position, object);
     }
 
     @Override
