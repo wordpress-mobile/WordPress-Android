@@ -1,5 +1,7 @@
 # WordPress-Stores-Android
 
+[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Stores-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Stores-Android)
+
 WordPress-Stores-Android is a networking and persistence library that helps to connect and sync data from a WordPress site (self hosted, or wordpress.com site). It's not ready for prime time yet.
 
 Based on the [Flux](https://facebook.github.io/flux/docs/overview.html) pattern, we're using: [Dagger2](https://google.github.io/dagger/) for dependency injection, [WellSql](https://github.com/yarolegovich/wellsql) for persistence.
@@ -19,7 +21,8 @@ our example:
 
     $ cp example/gradle.properties-example example/gradle.properties
     $ cp example/tests.properties-example example/tests.properties
-    $ ./gradlew cAT
+    $ ./gradlew cAT // Regression tests
+    $ ./gradlew testDebug // Unit tests
 
 Note: this is the default `example/gradle.properties` file. You'll have to get
 a WordPress.com OAuth2 ID and secret.
