@@ -1,10 +1,12 @@
-package org.wordpress.android.ui.plans;
+package org.wordpress.android.ui.plans.adapters;
 
 import android.app.FragmentManager;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import org.wordpress.android.ui.plans.PlanFragment;
+import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
@@ -12,7 +14,7 @@ import org.wordpress.android.util.AppLog;
 /**
  * ViewPager adapter for the main plans activity
  */
-class PlansPagerAdapter extends FragmentPagerAdapter {
+public class PlansPagerAdapter extends FragmentPagerAdapter {
     private final SitePlan[] mSitePlans;
     private static final String UNICODE_CHECKMARK = "\u2713";
 
