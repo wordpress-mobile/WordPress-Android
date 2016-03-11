@@ -85,7 +85,7 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public HTTPAuthManager provideHTTPAuthManager(Context appContext) {
-        return new HTTPAuthManager(appContext);
+    public HTTPAuthManager provideHTTPAuthManager() {
+        return new HTTPAuthManager();
     }
 }
