@@ -715,12 +715,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 exportSite();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, null);
 
         builder.show();
     }
