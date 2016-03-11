@@ -1,46 +1,45 @@
 package org.wordpress.android.ui.plans;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 
 import org.wordpress.android.ui.plans.models.SitePlan;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ViewPager adapter for the main plans activity
  */
 class PlansPagerAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragments = new ArrayList<>();
     private final SitePlan[] mSitePlans;
+    private final SparseArray<PlanFragment> mFragmentMap = new SparseArray<>();
 
     public PlansPagerAdapter(FragmentManager fm, @NonNull SitePlan[] sitePlans) {
         super(fm);
         mSitePlans = sitePlans.clone();
-        for (SitePlan plan : mSitePlans) {
-            mFragments.add(PlanFragment.newInstance(plan));
-        }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (mFragments != null && isValidPosition(position)) {
-            return ((PlanFragment) mFragments.get(position)).getTitle();
+        if (isValidPosition(position)) {
+            PlanFragment fragment = mFragmentMap.get(position);
+            if (fragment == null) {
+                fragment = getItem(position);
+            }
+            return fragment.getTitle();
         }
         return super.getPageTitle(position);
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return mFragments.get(position);
+    public PlanFragment getItem(int position) {
+        return PlanFragment.newInstance(mSitePlans[position]);
     }
 
     @Override
     public int getCount() {
-        return mFragments.size();
+        return mSitePlans.length;
     }
 
     public boolean isValidPosition(int position) {
@@ -49,11 +48,25 @@ class PlansPagerAdapter extends FragmentPagerAdapter {
 
     public int getPositionOfPlan(long planID) {
         for (int i = 0; i < getCount(); i++) {
-            PlanFragment fragment = (PlanFragment) getItem(i);
-            if (fragment.getSitePlan().getProductID() == planID) {
+            if (mSitePlans[i].getProductID() == planID) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Object item = super.instantiateItem(container, position);
+        if (item instanceof PlanFragment) {
+            mFragmentMap.put(position, (PlanFragment) item);
+        }
+        return item;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        mFragmentMap.remove(position);
+        super.destroyItem(container, position, object);
     }
 }
