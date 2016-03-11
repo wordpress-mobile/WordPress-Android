@@ -20,15 +20,25 @@ public class SignInDialog extends DialogFragment {
     private EditText mUsernameView;
     private EditText mPasswordView;
     private EditText mUrlView;
+    private boolean mUrlEnabled;
 
     public void setListener(Listener onClickListener) {
         mListener = onClickListener;
     }
 
-    public static SignInDialog newInstance(Listener onClickListener) {
+    public static SignInDialog newInstance(Listener onClickListener, boolean enableUrl) {
         SignInDialog fragment = new SignInDialog();
         fragment.setListener(onClickListener);
+        fragment.setUrlEnabled(enableUrl);
         return fragment;
+    }
+
+    public boolean isUrlEnabled() {
+        return mUrlEnabled;
+    }
+
+    public void setUrlEnabled(boolean urlEnabled) {
+        mUrlEnabled = urlEnabled;
     }
 
     @Override
@@ -40,6 +50,9 @@ public class SignInDialog extends DialogFragment {
         mUsernameView = (EditText) view.findViewById(R.id.username);
         mPasswordView = (EditText) view.findViewById(R.id.password);
         mUrlView = (EditText) view.findViewById(R.id.url);
+        if (!mUrlEnabled) {
+            mUrlView.setVisibility(View.GONE);
+        }
         builder.setView(view)
                 .setPositiveButton(android.R.string.ok, new OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
