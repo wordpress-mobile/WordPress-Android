@@ -35,6 +35,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
+        vectorDrawables.useSupportLibrary = true
         buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
         buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
