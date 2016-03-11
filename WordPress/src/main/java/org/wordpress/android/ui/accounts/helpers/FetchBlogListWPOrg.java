@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,7 +103,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
     }
 
     private boolean isHTTPAuthErrorMessage(Exception e) {
-        return (e != null && e.getMessage() != null && e.getMessage().contains("401"));
+        return e != null && e.getMessage() != null && e.getMessage().contains("401");
     }
 
     private Object doSystemListMethodsXMLRPC(String url, String httpUsername, String httpPassword) throws
@@ -157,7 +158,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
 
         if (!url.contains("xmlrpc.php")) { // Do not use 'ends' here! Some hosting wants parameters passed to
             // baseURL/xmlrpc-php?my-authcode=XXX
-            if (url.substring(url.length() - 1, url.length()).equals("/")) {
+            if (url.charAt(url.length() - 1) == '/') {
                 url = url.substring(0, url.length() - 1);
             }
             url += "/xmlrpc.php";
@@ -381,7 +382,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 }
                 AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
                 return null;
-            } catch (TimeoutError e) {
+            } catch (TimeoutError | TimeoutException e) {
                 AppLog.w(T.NUX, "Timeout error while connecting to the site: " + currentURL);
                 throw new WPOrgUtilsException(WPOrgUtilsException.Kind.SITE_TIME_OUT, org.wordpress.android.R
                         .string.site_timeout_error, url, null);
@@ -428,7 +429,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 // during the setup of self-hosted sites that have malformed xmlrpc URLs in their declaration.
                 if (!URLUtil.isValidUrl(xmlrpcUrl)) {
                     mErrorMsgId = org.wordpress.android.R.string.invalid_site_url_message;
-                    trackInvalidInsertedURL(xmlrpcUrl);
                     return null;
                 }
 

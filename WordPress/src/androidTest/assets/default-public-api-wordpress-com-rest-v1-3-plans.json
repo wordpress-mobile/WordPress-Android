@@ -1,0 +1,245 @@
+{
+  "originalResponse": [
+    {
+      "product_id": 2002,
+      "product_name": "Free",
+      "prices": {
+        "USD": 0,
+        "EUR": 0
+      },
+      "product_name_short": "Free",
+      "product_slug": "jetpack_free",
+      "tagline": "Get started",
+      "description": "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.",
+      "cost": 0,
+      "bill_period": -1,
+      "product_type": "jetpack",
+      "available": "yes",
+      "width": 500,
+      "height": 435,
+      "bill_period_label": "for life",
+      "price": "\u20ac0",
+      "formatted_price": "\u20ac0",
+      "raw_price": 0
+    },
+    {
+      "product_id": 2000,
+      "product_name": "Premium",
+      "prices": {
+        "USD": 99,
+        "EUR": 99
+      },
+      "product_name_short": "Premium",
+      "product_slug": "jetpack_premium",
+      "tagline": "Backup and spam protection",
+      "description": "Keep your site's content backed up and secure, and enable state-of-the-art spam filtering.",
+      "feature_1": "Automated backups with easy restores",
+      "feature_2": "30-day backup archive",
+      "feature_3": "Help from the WordPress experts",
+      "cost": 99,
+      "original": 114,
+      "saving": 13,
+      "bill_period": 365,
+      "product_type": "jetpack",
+      "available": "yes",
+      "width": 500,
+      "height": 435,
+      "bill_period_label": "per year",
+      "price": "\u20ac99",
+      "formatted_price": "\u20ac99",
+      "formatted_original_price": "\u20ac114",
+      "raw_price": 99
+    },
+    {
+      "product_id": 2001,
+      "product_name": "Business",
+      "prices": {
+        "USD": 299,
+        "EUR": 299
+      },
+      "product_name_short": "Business",
+      "product_slug": "jetpack_business",
+      "tagline": "Faster backups, security scans, and repairs",
+      "description": "Get everything included with Premium, as well as real-time backups, security scans, and more.",
+      "feature_1": "Real-time database backups",
+      "feature_2": "Unlimited  backup archive",
+      "feature_3": "Daily security scans with one-click repairs",
+      "cost": 299,
+      "original": 915,
+      "saving": 65,
+      "bill_period": 365,
+      "product_type": "jetpack",
+      "available": "yes",
+      "width": 500,
+      "height": 435,
+      "bill_period_label": "per year",
+      "price": "\u20ac299",
+      "formatted_price": "\u20ac299",
+      "formatted_original_price": "\u20ac915",
+      "raw_price": 299
+    },
+    {
+      "product_id": 1,
+      "product_name": "WordPress.com Free",
+      "prices": {
+        "USD": 0,
+        "AUD": 0,
+        "CAD": 0,
+        "EUR": 0,
+        "GBP": 0,
+        "JPY": 0
+      },
+      "product_name_short": "Free",
+      "product_slug": "free_plan",
+      "tagline": "Perfect for anyone creating a basic blog or site",
+      "description": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
+      "icon": "",
+      "capability": "manage_options",
+      "cost": 0,
+      "bill_period": -1,
+      "product_type": "bundle",
+      "available": "yes",
+      "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "free-blog",
+            "space",
+            "support"
+          ]
+        }
+      ],
+      "bill_period_label": "for life",
+      "price": "\u20ac0",
+      "formatted_price": "\u20ac0",
+      "raw_price": 0
+    },
+    {
+      "product_id": 1003,
+      "product_name": "WordPress.com Premium",
+      "prices": {
+        "USD": 99,
+        "NZD": 139,
+        "AUD": 129,
+        "CAD": 129,
+        "JPY": 11800,
+        "EUR": 99,
+        "GBP": 85
+      },
+      "product_name_short": "Premium",
+      "product_slug": "value_bundle",
+      "tagline": "Perfect for bloggers, creatives, and other professionals",
+      "description": "Your own domain name, powerful customization options, and lots of space for audio and video.",
+      "icon": "",
+      "capability": "manage_options",
+      "cost": 99,
+      "bill_period": 365,
+      "product_type": "bundle",
+      "available": "yes",
+      "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "custom-design",
+            "videopress",
+            "support",
+            "space",
+            "custom-domain",
+            "no-adverts\/no-adverts.php"
+          ]
+        },
+        {
+          "title": "Included with all plans",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
+      "width": 500,
+      "height": 250,
+      "multi": 0,
+      "support_document": "bundles",
+      "bundle_product_ids": [
+        9,
+        12,
+        45,
+        15,
+        5,
+        16,
+        6,
+        46,
+        54
+      ],
+      "bill_period_label": "per year",
+      "price": "\u20ac99",
+      "formatted_price": "\u20ac99",
+      "raw_price": 99
+    },
+    {
+      "product_id": 1008,
+      "product_name": "WordPress.com Business",
+      "prices": {
+        "USD": 299,
+        "NZD": 399,
+        "AUD": 399,
+        "CAD": 389,
+        "JPY": 35800,
+        "EUR": 299,
+        "GBP": 250
+      },
+      "product_name_short": "Business",
+      "product_slug": "business-bundle",
+      "tagline": "Perfect for power users, business website and blogs",
+      "description": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
+      "icon": "",
+      "capability": "manage_options",
+      "cost": 299,
+      "features_highlight": [
+        {
+          "items": [
+            "premium-themes",
+            "space",
+            "support"
+          ]
+        },
+        {
+          "title": "Includes WordPress.com Premium features:",
+          "items": [
+            "custom-design",
+            "videopress",
+            "no-adverts\/no-adverts.php",
+            "custom-domain"
+          ]
+        },
+        {
+          "title": "Included with all plans:",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
+      "bill_period": 365,
+      "width": 500,
+      "height": 435,
+      "product_type": "bundle",
+      "available": "yes",
+      "bundle_product_ids": [
+        12,
+        45,
+        15,
+        5,
+        48,
+        50,
+        49,
+        16,
+        6,
+        46,
+        54
+      ],
+      "bill_period_label": "per year",
+      "price": "\u20ac299",
+      "formatted_price": "\u20ac299",
+      "raw_price": 299
+    }
+  ]
+}

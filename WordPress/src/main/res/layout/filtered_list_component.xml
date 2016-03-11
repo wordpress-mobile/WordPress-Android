@@ -7,22 +7,45 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_height="@dimen/toolbar_subtitle_height"
         android:layout_width="match_parent">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_with_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/FilteredRecyclerViewFilterContainer"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <Spinner
-                style="@style/FilteredRecyclerViewSpinner.WordPress"
-                android:id="@+id/filter_spinner"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:overlapAnchor="false"/>
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                >
+
+                <Spinner
+                    style="@style/FilteredRecyclerViewSpinner.WordPress"
+                    android:id="@+id/filter_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:overlapAnchor="false"/>
+
+                <LinearLayout
+                    android:id="@+id/custom_components_toolbar_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    >
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 
@@ -41,7 +64,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
