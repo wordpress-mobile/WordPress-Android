@@ -5,7 +5,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -30,7 +29,7 @@ a single section to highlight.
             }
         ],
  */
-public class PlanFeaturesHighlightSection implements Serializable {
+public class PlanFeaturesHighlightSection {
     private String mTitle; // title (if available) of this section
     private ArrayList<String> mItems; // slug of the features to highlight in this section
 
