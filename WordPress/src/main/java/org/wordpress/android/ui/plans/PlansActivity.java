@@ -2,7 +2,6 @@ package org.wordpress.android.ui.plans;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
@@ -46,13 +45,9 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
-    private static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
-
-    private static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
     private SitePlan[] mAvailablePlans;
-    private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
 
     private WPViewPager mViewPager;
     private PlansPagerAdapter mPageAdapter;
@@ -72,7 +67,6 @@ public class PlansActivity extends AppCompatActivity {
             if (serializable instanceof SitePlan[]) {
                 mAvailablePlans = (SitePlan[]) serializable;
             }
-            mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
@@ -182,18 +176,6 @@ public class PlansActivity extends AppCompatActivity {
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        // Move the viewpager on the blog plan if no prev position is available
-        if (mViewpagerPosSelected == NO_PREV_POS_SELECTED_VIEWPAGER) {
-            for (SitePlan currentSitePlan : mAvailablePlans) {
-                if (currentSitePlan.isCurrentPlan()) {
-                    mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
-                }
-            }
-        }
-        if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
-            mViewPager.setCurrentItem(mViewpagerPosSelected);
-        }
-
         if (mViewPager.getVisibility() != View.VISIBLE) {
             // use a circular reveal on API 21+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -263,20 +245,30 @@ public class PlansActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
-        if (mViewPager != null) {
-            outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
-            // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
-            mViewpagerPosSelected = mViewPager.getCurrentItem();
-        }
         super.onSaveInstanceState(outState);
     }
 
     private PlansPagerAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            FragmentManager fm = getFragmentManager();
             mPageAdapter = new PlansPagerAdapter(getFragmentManager(), mAvailablePlans);
         }
         return mPageAdapter;
+    }
+
+    /*
+     * move the ViewPager to the plan for the current blog
+     */
+    private void selectCurrentPlan() {
+        int position = -1;
+        for (SitePlan currentSitePlan : mAvailablePlans) {
+            if (currentSitePlan.isCurrentPlan()) {
+                position = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
+                break;
+            }
+        }
+        if (getPageAdapter().isValidPosition(position)) {
+            mViewPager.setCurrentItem(position);
+        }
     }
 
     /*
@@ -303,6 +295,7 @@ public class PlansActivity extends AppCompatActivity {
         });
 
         setupPlansUI();
+        selectCurrentPlan();
     }
 
     /*
