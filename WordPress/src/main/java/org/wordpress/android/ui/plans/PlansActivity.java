@@ -2,7 +2,6 @@ package org.wordpress.android.ui.plans;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Point;
@@ -125,12 +124,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void updatePurchaseUI(int position) {
-        Fragment fragment = getPageAdapter().getItem(position);
-        if (!(fragment instanceof PlanFragment)) {
-            return;
-        }
-
-        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
+        SitePlan sitePlan = getPageAdapter().getSitePlan(position);
         Plan globalPlan = PlansUtils.getGlobalPlan(sitePlan.getProductID());
         if (globalPlan == null) {
             AppLog.w(AppLog.T.PLANS, "unable to match global plan " + sitePlan.getProductID());

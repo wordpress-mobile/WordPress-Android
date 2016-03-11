@@ -44,6 +44,13 @@ class PlansPagerAdapter extends FragmentPagerAdapter {
         return -1;
     }
 
+    public SitePlan getSitePlan(int position) {
+        if (isValidPosition(position)) {
+            return mSitePlans[position];
+        }
+        return null;
+    }
+
     @Override
     public CharSequence getPageTitle(int position) {
         if (isValidPosition(position)) {
