@@ -174,7 +174,6 @@ public class PlansActivity extends AppCompatActivity {
 
         hideProgress();
 
-        mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
