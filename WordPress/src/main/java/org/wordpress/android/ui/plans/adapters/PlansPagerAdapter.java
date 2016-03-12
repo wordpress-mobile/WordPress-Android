@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.plans.adapters;
 
 import android.app.FragmentManager;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 
@@ -47,24 +46,6 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
             }
         }
         return super.getPageTitle(position);
-    }
-
-    @Override
-    public void restoreState(Parcelable state, ClassLoader loader) {
-        // work around "Fragement no longer exists for key" Android bug
-        // https://code.google.com/p/android/issues/detail?id=42601
-        try {
-            AppLog.d(AppLog.T.PLANS, "plans pager > adapter restoreState");
-            super.restoreState(state, loader);
-        } catch (IllegalStateException e) {
-            AppLog.e(AppLog.T.PLANS, e);
-        }
-    }
-
-    @Override
-    public Parcelable saveState() {
-        AppLog.d(AppLog.T.PLANS, "plans pager > adapter saveState");
-        return super.saveState();
     }
 
     public boolean isValidPosition(int position) {
