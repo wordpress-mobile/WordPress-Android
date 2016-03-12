@@ -33,26 +33,6 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
         return mSitePlans.length;
     }
 
-    public boolean isValidPosition(int position) {
-        return (position >= 0 && position < getCount());
-    }
-
-    public int getPositionOfPlan(long planID) {
-        for (int i = 0; i < getCount(); i++) {
-            if (mSitePlans[i].getProductID() == planID) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public SitePlan getSitePlan(int position) {
-        if (isValidPosition(position)) {
-            return mSitePlans[position];
-        }
-        return null;
-    }
-
     @Override
     public CharSequence getPageTitle(int position) {
         if (isValidPosition(position)) {
@@ -85,5 +65,25 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
     public Parcelable saveState() {
         AppLog.d(AppLog.T.PLANS, "plans pager > adapter saveState");
         return super.saveState();
+    }
+
+    public boolean isValidPosition(int position) {
+        return (position >= 0 && position < getCount());
+    }
+
+    public int getPositionOfPlan(long planID) {
+        for (int i = 0; i < getCount(); i++) {
+            if (mSitePlans[i].getProductID() == planID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public SitePlan getSitePlan(int position) {
+        if (isValidPosition(position)) {
+            return mSitePlans[position];
+        }
+        return null;
     }
 }

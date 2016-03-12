@@ -109,6 +109,14 @@ public class PlansActivity extends AppCompatActivity {
         if (AppPrefs.isInAppBillingAvailable()) {
             startInAppBillingHelper();
         }
+
+        // Download plans if not already available
+        if (mAvailablePlans == null) {
+            showProgress();
+            PlanUpdateService.startService(this, mLocalBlogID);
+        } else {
+            setupPlansUI();
+        }
     }
 
     @Override
@@ -116,6 +124,18 @@ public class PlansActivity extends AppCompatActivity {
         PlanUpdateService.stopService(this);
         stopInAppBillingHelper();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     private void updatePurchaseUI(int position) {
@@ -221,25 +241,6 @@ public class PlansActivity extends AppCompatActivity {
     private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading_plans);
         progress.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-        // Download plans if not already available
-        if (mAvailablePlans == null) {
-            showProgress();
-            PlanUpdateService.startService(this, mLocalBlogID);
-        } else {
-            setupPlansUI();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -362,7 +363,7 @@ public class PlansActivity extends AppCompatActivity {
             } catch (IllegalArgumentException e) {
                 // this can happen if the IAB helper was created but failed to bind to its service
                 // when started, which will occur on emulators
-                //AppLog.e(AppLog.T.PLANS, e);
+                AppLog.w(AppLog.T.PLANS, "Unable to dispose IAB helper");
             }
             mIabHelper = null;
         }
