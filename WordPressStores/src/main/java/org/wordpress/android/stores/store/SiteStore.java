@@ -429,6 +429,7 @@ public class SiteStore extends Store {
             // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
             emitChange(new OnSitesRemoved((SiteModel) action.getPayload()));
         } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
+            // TODO: This should also remove Jetpack sites downloaded over REST but not over XML-RPC (no dotOrgSiteId)
             SitesModel wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
             deleteSites(wpComSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
