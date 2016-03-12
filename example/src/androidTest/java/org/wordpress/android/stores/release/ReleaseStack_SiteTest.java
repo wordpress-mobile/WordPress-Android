@@ -111,7 +111,7 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.e(T.API, "count " + mSiteStore.getSitesCount());
         assertEquals(true, mSiteStore.hasSite());
-        assertEquals(true, mSiteStore.hasSelfHostedSite());
+        assertEquals(true, mSiteStore.hasDotOrgSite());
         mCountDownLatch.countDown();
     }
 }
