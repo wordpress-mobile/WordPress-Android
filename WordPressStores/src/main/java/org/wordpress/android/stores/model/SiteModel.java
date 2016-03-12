@@ -14,6 +14,7 @@ public class SiteModel implements Identifiable, Payload {
 
     @PrimaryKey
     @Column private int mId;
+    // Only given a value for .COM and Jetpack sites - self-hosted sites use mDotOrgSiteId
     @Column private long mSiteId;
     @Column private String mUrl;
     @Column private String mAdminUrl;
@@ -24,6 +25,8 @@ public class SiteModel implements Identifiable, Payload {
     @Column private boolean mIsFeaturedImageSupported;
 
     // Self hosted specifics
+    // The siteId for .org sites. Jetpack sites will also have a mSiteId, which is their id on .COM
+    @Column private long mDotOrgSiteId;
     @Column private String mUsername;
     @Column private String mPassword;
     @Column private String mXMLRpcUrl;
@@ -33,11 +36,6 @@ public class SiteModel implements Identifiable, Payload {
     @Column private boolean mIsJetpack;
     @Column private boolean mIsVisible;
     @Column private boolean mIsVideoPressSupported;
-
-    // Jetpack specifics
-    // The .com site ID for Jetpack sites (for Jetpack sites, the siteId is local to their network,
-    // just as for normal self-hosted sites)
-    @Column private long mDotComIdForJetpack;
 
     @Override
     public int getId() {
@@ -116,6 +114,14 @@ public class SiteModel implements Identifiable, Payload {
         mXMLRpcUrl = XMLRpcUrl;
     }
 
+    public long getDotOrgSiteId() {
+        return mDotOrgSiteId;
+    }
+
+    public void setDotOrgSiteId(long dotOrgSiteId) {
+        mDotOrgSiteId = dotOrgSiteId;
+    }
+
     public boolean isAdmin() {
         return mIsAdmin;
     }
@@ -170,13 +176,5 @@ public class SiteModel implements Identifiable, Payload {
 
     public void setIsVideoPressSupported(boolean videoPressSupported) {
         mIsVideoPressSupported = videoPressSupported;
-    }
-
-    public long getDotComIdForJetpack() {
-        return mDotComIdForJetpack;
-    }
-
-    public void setDotComIdForJetpack(long dotComIdForJetpack) {
-        mDotComIdForJetpack = dotComIdForJetpack;
     }
 }

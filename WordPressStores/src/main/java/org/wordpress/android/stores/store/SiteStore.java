@@ -128,7 +128,7 @@ public class SiteStore extends Store {
     /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
-    public int getSelfHostedSitesCount() {
+    public int getDotOrgSitesCount() {
         return WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
                 .getAsCursor().getCount();
@@ -137,8 +137,8 @@ public class SiteStore extends Store {
     /**
      * Checks whether the store contains at least one self-hosted site (can be Jetpack).
      */
-    public boolean hasSelfHostedSite() {
-        return getSelfHostedSitesCount() != 0;
+    public boolean hasDotOrgSite() {
+        return getDotOrgSitesCount() != 0;
     }
 
     /**
@@ -158,12 +158,12 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Checks whether the store contains a site matching the given (remote) site id and XML-RPC URL.
+     * Checks whether the store contains a self-hosted site matching the given (remote) site id and XML-RPC URL.
      */
-    public boolean hasSiteWithSiteIdAndXmlRpcUrl(long siteId, String xmlRpcUrl) {
+    public boolean hasDotOrgSiteWithSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
                 .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
@@ -250,8 +250,11 @@ public class SiteStore extends Store {
      */
     public boolean isCurrentUserAdminOfSiteId(long siteId) {
         return WellSql.select(SiteModel.class)
-                .where().beginGroup()
+                .where().beginGroup().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
+                .or()
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .endGroup()
                 .equals(SiteModelTable.IS_ADMIN, 1)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
@@ -262,7 +265,11 @@ public class SiteStore extends Store {
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
         List<SiteModel> sites =  WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
+                .where().beginGroup()
+                .equals(SiteModelTable.SITE_ID, siteId)
+                .or()
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
+                .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
                     @Override
                     public SiteModel convert(Cursor cursor) {
@@ -273,18 +280,17 @@ public class SiteStore extends Store {
                 });
         if (sites.size() > 0) {
             return sites.get(0).getId();
-        } else {
-            return getLocalIdForJetpackRemoteId(siteId, null);
         }
+        return 0;
     }
 
     /**
-     * Given a (remote) site id and XML-RPC url, returns the corresponding (local) id.
+     * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
-    public int getLocalIdForRemoteSiteIdAndXmlRpcUrl(long siteId, String xmlRpcUrl) {
-        int localId =  WellSql.select(SiteModel.class)
+    public int getLocalIdForDotOrgSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
+        return  WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.SITE_ID, siteId)
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
                 .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
@@ -295,59 +301,10 @@ public class SiteStore extends Store {
                         return siteModel;
                     }
                 }).get(0).getId();
-
-        if (localId == 0) {
-            localId = getLocalIdForJetpackRemoteId(siteId, xmlRpcUrl);
-        }
-
-        return localId;
     }
 
     /**
-     * Given a (remote) Jetpack id and optional XML-RPC URL, returns the corresponding (local) id.
-     */
-    public int getLocalIdForJetpackRemoteId(long jetpackRemoteId, String xmlRpcUrl) {
-        List<SiteModel> sites;
-        if (TextUtils.isEmpty(xmlRpcUrl)) {
-            sites = WellSql.select(SiteModel.class)
-                    .where().beginGroup()
-                    .equals(SiteModelTable.IS_WPCOM, 0)
-                    .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
-                    .endGroup().endWhere()
-                    .getAsModel(new SelectMapper<SiteModel>() {
-                        @Override
-                        public SiteModel convert(Cursor cursor) {
-                            SiteModel siteModel = new SiteModel();
-                            siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                            return siteModel;
-                        }
-                    });
-        } else {
-            sites = WellSql.select(SiteModel.class)
-                    .where().beginGroup()
-                    .equals(SiteModelTable.IS_WPCOM, 0)
-                    .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
-                    .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
-                    .endGroup().endWhere()
-                    .getAsModel(new SelectMapper<SiteModel>() {
-                        @Override
-                        public SiteModel convert(Cursor cursor) {
-                            SiteModel siteModel = new SiteModel();
-                            siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
-                            return siteModel;
-                        }
-                    });
-        }
-
-        if (sites.size() > 0) {
-            return sites.get(0).getId();
-        }
-
-        return 0;
-    }
-
-    /**
-     * Given a (local) id, returns the (remote) site id. Searches first for self-hosted and .COM, then looks for Jetpack
+     * Given a (local) id, returns the (remote) site id. Searches first for .COM and Jetpack, then looks for self-hosted
      * sites.
      */
     public long getSiteIdForLocalId(int id) {
@@ -360,8 +317,7 @@ public class SiteStore extends Store {
                     public SiteModel convert(Cursor cursor) {
                         SiteModel siteModel = new SiteModel();
                         siteModel.setSiteId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.SITE_ID)));
-                        siteModel.setDotComIdForJetpack(cursor.getLong(cursor.getColumnIndex(
-                                SiteModelTable.DOT_COM_ID_FOR_JETPACK)));
+                        siteModel.setDotOrgSiteId(cursor.getLong(cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
                         return siteModel;
                     }
                 }).get(0);
@@ -369,7 +325,7 @@ public class SiteStore extends Store {
         if (result.getSiteId() > 0) {
             return result.getSiteId();
         } else {
-            return result.getDotComIdForJetpack();
+            return result.getDotOrgSiteId();
         }
     }
 
@@ -392,16 +348,9 @@ public class SiteStore extends Store {
      * Given a .COM site ID (either a .COM site id, or the .COM id of a Jetpack site), returns the site as a
      * {@link SiteModel}.
      */
-    public SiteModel getSiteByDotComSiteId(long dotComSiteId) {
+    public SiteModel getSiteBySiteId(long siteId) {
         return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, dotComSiteId)
-                .or()
-                .beginGroup()
-                .equals(SiteModelTable.SITE_ID, dotComSiteId)
-                .equals(SiteModelTable.IS_WPCOM, 1)
-                .endGroup()
-                .endGroup().endWhere()
+                .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
                 .getAsModel().get(0);
     }
 

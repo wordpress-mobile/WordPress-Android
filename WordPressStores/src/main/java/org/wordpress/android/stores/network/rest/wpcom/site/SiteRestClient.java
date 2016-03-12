@@ -78,11 +78,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
-        if (from.jetpack) {
-            site.setDotComIdForJetpack(from.ID);
-        } else {
-            site.setSiteId(from.ID);
-        }
+        site.setSiteId(from.ID);
         site.setUrl(from.URL);
         site.setName(from.name);
         site.setDescription(from.description);

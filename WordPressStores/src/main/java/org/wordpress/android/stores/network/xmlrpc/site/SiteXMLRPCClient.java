@@ -108,7 +108,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             HashMap<String, ?> siteMap = (HashMap<String, ?>) siteObject;
             SiteModel site = new SiteModel();
             // From the response
-            site.setSiteId(Integer.parseInt((String) siteMap.get("blogid")));
+            site.setDotOrgSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
             // TODO: set a canonical URL here
             site.setUrl((String) siteMap.get("url"));
@@ -139,7 +139,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setSoftwareVersion(getOption(blogOptions, "software_version", String.class));
         oldModel.setIsFeaturedImageSupported(getOption(blogOptions, "post_thumbnail", Boolean.class));
         long dotComIdForJetpack = getOption(blogOptions, "jetpack_client_id", Long.class);
-        oldModel.setDotComIdForJetpack(dotComIdForJetpack);
+        oldModel.setSiteId(dotComIdForJetpack);
         if (dotComIdForJetpack != 0) {
             oldModel.setIsJetpack(true);
         }
