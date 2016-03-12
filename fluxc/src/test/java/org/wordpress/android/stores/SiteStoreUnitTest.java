@@ -19,6 +19,8 @@ import org.wordpress.android.stores.store.SiteStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -137,6 +139,58 @@ public class SiteStoreUnitTest {
     }
 
     @Test
+    public void testDotComSiteVisibility() {
+        // Should not cause any errors
+        mSiteStore.isDotComSiteVisibleByLocalId(45);
+        mSiteStore.setDotComSiteVisibilityByLocalId(45, true);
+
+        SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
+        SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
+
+        // Attempt to use with id of self-hosted site
+        mSiteStore.setDotComSiteVisibilityByLocalId(selfHostedNonJPSite.getId(), false);
+        // The self-hosted site should not be affected
+        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
+
+
+        SiteModel dotComSite = generateDotComSite();
+        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+
+        // Attempt to use with legitimate .com site
+        mSiteStore.setDotComSiteVisibilityByLocalId(selfHostedNonJPSite.getId(), false);
+        assertFalse(mSiteStore.getSiteByLocalId(dotComSite.getId()).isVisible());
+        assertFalse(mSiteStore.isDotComSiteVisibleByLocalId(dotComSite.getId()));
+    }
+
+    @Test
+    public void testSetAllDotComSitesVisibility() {
+        // Should not cause any errors
+        mSiteStore.setAllDotComSitesVisibility(false);
+
+        SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
+        SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
+
+        // Attempt to use with id of self-hosted site
+        mSiteStore.setAllDotComSitesVisibility(false);
+        // The self-hosted site should not be affected
+        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
+
+        SiteModel dotComSite1 = generateDotComSite();
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setId(44);
+        dotComSite2.setSiteId(284);
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+
+        // Attempt to use with legitimate .com site
+        mSiteStore.setAllDotComSitesVisibility(false);
+        assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
+        assertFalse(mSiteStore.getSiteByLocalId(dotComSite1.getId()).isVisible());
+        assertFalse(mSiteStore.getSiteByLocalId(dotComSite2.getId()).isVisible());
+    }
+
+    @Test
     public void testIsCurrentUserAdminOfSiteId() {
         assertFalse(mSiteStore.isCurrentUserAdminOfSiteId(0));
 
@@ -151,6 +205,65 @@ public class SiteStoreUnitTest {
 
         assertTrue(mSiteStore.getSiteByLocalId(site.getId()).isAdmin());
         assertTrue(mSiteStore.isCurrentUserAdminOfSiteId(site.getSiteId()));
+    }
+
+    @Test
+    public void testGetIdForIdMethods() {
+        assertEquals(0, mSiteStore.getLocalIdForRemoteSiteId(555));
+        assertEquals(0, mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(2626, ""));
+        assertEquals(0, mSiteStore.getSiteIdForLocalId(5577));
+
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        SiteModel dotComSite = generateDotComSite();
+        SiteModel jetpackSite = generateJetpackSite();
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+
+        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotOrgSite.getDotOrgSiteId()));
+        assertEquals(dotComSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(dotComSite.getSiteId()));
+
+        // Should be able to look up a Jetpack site by .com and by .org id (assuming it's been set)
+        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getSiteId()));
+        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getDotOrgSiteId()));
+
+        assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
+                dotOrgSite.getDotOrgSiteId(), dotOrgSite.getXMLRpcUrl()));
+        assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
+                jetpackSite.getDotOrgSiteId(), jetpackSite.getXMLRpcUrl()));
+
+        assertEquals(dotOrgSite.getDotOrgSiteId(), mSiteStore.getSiteIdForLocalId(dotOrgSite.getId()));
+        assertEquals(dotComSite.getSiteId(), mSiteStore.getSiteIdForLocalId(dotComSite.getId()));
+        assertEquals(jetpackSite.getSiteId(), mSiteStore.getSiteIdForLocalId(jetpackSite.getId()));
+    }
+
+    @Test
+    public void testGetSiteBySiteId() {
+        assertNull(mSiteStore.getSiteBySiteId(555));
+
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        SiteModel dotComSite = generateDotComSite();
+        SiteModel jetpackSite = generateJetpackSite();
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+
+        assertNotNull(mSiteStore.getSiteBySiteId(dotComSite.getSiteId()));
+        assertNotNull(mSiteStore.getSiteBySiteId(jetpackSite.getSiteId()));
+        assertNull(mSiteStore.getSiteBySiteId(dotOrgSite.getSiteId()));
+    }
+
+    @Test
+    public void testDeleteSite() {
+        SiteModel dotComSite = generateDotComSite();
+
+        // Should not cause any errors
+        SiteSqlUtils.deleteSite(dotComSite);
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.deleteSite(dotComSite);
+
+        assertEquals(0, mSiteStore.getSitesCount());
     }
 
     public SiteModel generateDotComSite() {
@@ -168,6 +281,7 @@ public class SiteStoreUnitTest {
         example.setDotOrgSiteId(6);
         example.setIsWPCom(false);
         example.setIsJetpack(false);
+        example.setIsVisible(true);
         example.setXMLRpcUrl("http://some.url/xmlrpc.php");
         return example;
     }
@@ -179,6 +293,7 @@ public class SiteStoreUnitTest {
         example.setDotOrgSiteId(8);
         example.setIsWPCom(false);
         example.setIsJetpack(true);
+        example.setIsVisible(true);
         example.setXMLRpcUrl("http://jetpack.url/xmlrpc.php");
         return example;
     }
