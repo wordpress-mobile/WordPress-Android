@@ -29,7 +29,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public void getMe() {
-        final String url = WPCOM_PREFIX_V1_1 + WPCOMREST.ME;
+        final String url = WPCOMREST.ME.getUrlV1_1();
         final WPComGsonRequest<AccountResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, AccountResponse.class,
                 new Listener<AccountResponse>() {
