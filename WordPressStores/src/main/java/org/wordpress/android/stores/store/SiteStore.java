@@ -2,7 +2,6 @@ package org.wordpress.android.stores.store;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 import com.wellsql.generated.SiteModelTable;
@@ -331,7 +330,7 @@ public class SiteStore extends Store {
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     public int getLocalIdForDotOrgSiteIdAndXmlRpcUrl(long dotOrgSiteId, String xmlRpcUrl) {
-        return  WellSql.select(SiteModel.class)
+        List<SiteModel> sites =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
                 .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
@@ -343,7 +342,11 @@ public class SiteStore extends Store {
                         siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
                         return siteModel;
                     }
-                }).get(0).getId();
+                });
+        if (sites.size() > 0) {
+            return sites.get(0).getId();
+        }
+        return 0;
     }
 
     /**
@@ -351,7 +354,7 @@ public class SiteStore extends Store {
      * sites.
      */
     public long getSiteIdForLocalId(int id) {
-        SiteModel result =  WellSql.select(SiteModel.class)
+        List<SiteModel> result =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
                 .endGroup().endWhere()
@@ -363,12 +366,15 @@ public class SiteStore extends Store {
                         siteModel.setDotOrgSiteId(cursor.getLong(cursor.getColumnIndex(SiteModelTable.DOT_ORG_SITE_ID)));
                         return siteModel;
                     }
-                }).get(0);
+                });
+        if (result.isEmpty()) {
+            return 0;
+        }
 
-        if (result.getSiteId() > 0) {
-            return result.getSiteId();
+        if (result.get(0).getSiteId() > 0) {
+            return result.get(0).getSiteId();
         } else {
-            return result.getDotOrgSiteId();
+            return result.get(0).getDotOrgSiteId();
         }
     }
 
@@ -392,9 +398,19 @@ public class SiteStore extends Store {
      * {@link SiteModel}.
      */
     public SiteModel getSiteBySiteId(long siteId) {
-        return WellSql.select(SiteModel.class)
+        if (siteId == 0) {
+            return null;
+        }
+
+        List<SiteModel> sites = WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
-                .getAsModel().get(0);
+                .getAsModel();
+
+        if (sites.isEmpty()) {
+            return null;
+        } else {
+            return sites.get(0);
+        }
     }
 
     @Subscribe
