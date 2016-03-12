@@ -252,7 +252,7 @@ public class SiteStore extends Store {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
-                .equals(SiteModelTable.IS_ADMIN, true)
+                .equals(SiteModelTable.IS_ADMIN, 1)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
@@ -261,7 +261,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
-        int localId =  WellSql.select(SiteModel.class)
+        List<SiteModel> sites =  WellSql.select(SiteModel.class)
                 .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
                     @Override
@@ -270,11 +270,12 @@ public class SiteStore extends Store {
                         siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
                         return siteModel;
                     }
-                }).get(0).getId();
-        if (localId == 0) {
-            localId = getLocalIdForJetpackRemoteId(siteId, null);
+                });
+        if (sites.size() > 0) {
+            return sites.get(0).getId();
+        } else {
+            return getLocalIdForJetpackRemoteId(siteId, null);
         }
-        return localId;
     }
 
     /**
@@ -306,9 +307,9 @@ public class SiteStore extends Store {
      * Given a (remote) Jetpack id and optional XML-RPC URL, returns the corresponding (local) id.
      */
     public int getLocalIdForJetpackRemoteId(long jetpackRemoteId, String xmlRpcUrl) {
-        int localId;
+        List<SiteModel> sites;
         if (TextUtils.isEmpty(xmlRpcUrl)) {
-            localId =  WellSql.select(SiteModel.class)
+            sites = WellSql.select(SiteModel.class)
                     .where().beginGroup()
                     .equals(SiteModelTable.IS_WPCOM, 0)
                     .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
@@ -320,9 +321,9 @@ public class SiteStore extends Store {
                             siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
                             return siteModel;
                         }
-                    }).get(0).getId();
+                    });
         } else {
-            localId =  WellSql.select(SiteModel.class)
+            sites = WellSql.select(SiteModel.class)
                     .where().beginGroup()
                     .equals(SiteModelTable.IS_WPCOM, 0)
                     .equals(SiteModelTable.DOT_COM_ID_FOR_JETPACK, jetpackRemoteId)
@@ -335,9 +336,14 @@ public class SiteStore extends Store {
                             siteModel.setId(cursor.getInt(cursor.getColumnIndex(SiteModelTable.ID)));
                             return siteModel;
                         }
-                    }).get(0).getId();
+                    });
         }
-        return localId;
+
+        if (sites.size() > 0) {
+            return sites.get(0).getId();
+        }
+
+        return 0;
     }
 
     /**
