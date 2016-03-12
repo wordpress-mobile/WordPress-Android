@@ -12,6 +12,7 @@ import org.wordpress.android.stores.model.SitesModel;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.stores.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.stores.network.xmlrpc.XMLRPC;
 import org.wordpress.android.stores.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -33,7 +34,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(username);
         params.add(password);
         final XMLRPCRequest request = new XMLRPCRequest(
-                xmlrpcUrl, "wp.getUsersBlogs", params,
+                xmlrpcUrl, XMLRPC.GET_USERS_BLOGS, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
@@ -77,7 +78,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(blogOptionsXMLRPCParameters);
         final XMLRPCRequest request = new XMLRPCRequest(
-                site.getXMLRpcUrl(), "wp.getOptions", params,
+                site.getXMLRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {

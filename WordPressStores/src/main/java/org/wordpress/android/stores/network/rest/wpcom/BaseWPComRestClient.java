@@ -16,12 +16,6 @@ public class BaseWPComRestClient {
     protected final Dispatcher mDispatcher;
     private UserAgent mUserAgent;
 
-    private static final String WPCOM_REST_PREFIX = "https://public-api.wordpress.com/rest";
-    protected static final String WPCOM_PREFIX_V1 = WPCOM_REST_PREFIX + "/v1";
-    protected static final String WPCOM_PREFIX_V1_1 = WPCOM_REST_PREFIX + "/v1.1";
-    protected static final String WPCOM_PREFIX_V1_2 = WPCOM_REST_PREFIX + "/v1.2";
-    protected static final String WPCOM_PREFIX_V1_3 = WPCOM_REST_PREFIX + "/v1.3";
-
     protected OnAuthFailedListener mOnAuthFailedListener;
 
     public BaseWPComRestClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,

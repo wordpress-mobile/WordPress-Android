@@ -12,6 +12,7 @@ import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.model.SitesModel;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.stores.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.stores.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.stores.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
@@ -30,7 +31,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSites() {
-        String url = WPCOM_PREFIX_V1_1 + "/me/sites/";
+        String url = WPCOMREST.ME_SITES.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -55,7 +56,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = WPCOM_PREFIX_V1_1 + "/sites/" + site.getSiteId();
+        String url = WPCOMREST.SITES.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
