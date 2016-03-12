@@ -32,11 +32,11 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private static final String PROTOCOL_CONTENT_TYPE = String.format("text/xml; charset=%s", PROTOCOL_CHARSET);
 
     private final Listener mListener;
-    private final String mMethod;
+    private final XMLRPC mMethod;
     private final Object[] mParams;
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
-    public XMLRPCRequest(String url, String method, List<Object> params, Listener listener,
+    public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
                          ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;

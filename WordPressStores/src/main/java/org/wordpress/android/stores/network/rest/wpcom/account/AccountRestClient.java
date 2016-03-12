@@ -11,6 +11,7 @@ import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.stores.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.stores.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.util.AppLog;
@@ -28,7 +29,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public void getMe() {
-        final String url = WPCOM_PREFIX_V1_1 + "/me/";
+        final String url = WPCOMREST.ME.getUrlV1_1();
         final WPComGsonRequest<AccountResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, AccountResponse.class,
                 new Listener<AccountResponse>() {
