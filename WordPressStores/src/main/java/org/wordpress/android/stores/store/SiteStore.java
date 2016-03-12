@@ -160,7 +160,7 @@ public class SiteStore extends Store {
     /**
      * Checks whether the store contains a site matching the given (remote) site id and XML-RPC URL.
      */
-    public boolean hasSiteWithSiteId(long siteId, String xmlRpcUrl) {
+    public boolean hasSiteWithSiteIdAndXmlRpcUrl(long siteId, String xmlRpcUrl) {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
