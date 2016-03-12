@@ -110,6 +110,15 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns all .COM sites in the store.
+     */
+    public List<SiteModel> getDotComSites() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
+                .getAsModel();
+    }
+
+    /**
      * Returns the number of .COM sites in the store.
      */
     public int getDotComSitesCount() {
@@ -126,6 +135,15 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns all self-hosted sites in the store.
+     */
+    public List<SiteModel> getDotOrgSites() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
+                .getAsModel();
+    }
+
+    /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
     public int getDotOrgSitesCount() {
@@ -139,6 +157,15 @@ public class SiteStore extends Store {
      */
     public boolean hasDotOrgSite() {
         return getDotOrgSitesCount() != 0;
+    }
+
+    /**
+     * Returns all Jetpack sites in the store.
+     */
+    public List<SiteModel> getJetpackSites() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_JETPACK, 1).endWhere()
+                .getAsModel();
     }
 
     /**
@@ -178,6 +205,22 @@ public class SiteStore extends Store {
                 .equals(SiteModelTable.ID, id)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
+    }
+
+    /**
+     * Returns all visible sites as {@link SiteModel}s. All self-hosted sites over XML-RPC are visible by default.
+     */
+    public List<SiteModel> getVisibleSites() {
+        return WellSql.select(SiteModel.class)
+                .where().equals(SiteModelTable.IS_VISIBLE, 1).endWhere()
+                .getAsModel();
+    }
+
+    /**
+     * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
+     */
+    public int getVisibleSitesCount() {
+        return getVisibleSites().size();
     }
 
     /**

@@ -114,6 +114,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setUrl((String) siteMap.get("url"));
             site.setXMLRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
+            site.setIsVisible(true);
             // TODO: siteMap.get("isPrimary")
 
             // From what we know about the host
