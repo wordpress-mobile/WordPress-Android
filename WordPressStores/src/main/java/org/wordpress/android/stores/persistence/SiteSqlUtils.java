@@ -4,15 +4,20 @@ import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.model.SitesModel;
 
 import java.util.List;
 
 public class SiteSqlUtils {
-    public static SitesModel getAllSitesWith(String field, Object value) {
-        return (SitesModel) WellSql.select(SiteModel.class)
+    public static List<SiteModel> getAllSitesWith(String field, Object value) {
+        return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
                 .getAsModel();
+    }
+
+    public static int getNumberOfSitesWith(String field, Object value) {
+        return WellSql.select(SiteModel.class)
+                .where().equals(field, value).endWhere()
+                .getAsCursor().getCount();
     }
 
     public static void insertOrUpdateSite(SiteModel site) {

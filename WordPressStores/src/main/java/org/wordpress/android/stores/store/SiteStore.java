@@ -42,14 +42,14 @@ public class SiteStore extends Store {
     public class OnSiteChanged extends OnChanged {}
 
     public class OnSitesRemoved extends OnChanged {
-        public SitesModel mSites;
+        public List<SiteModel> mSites;
 
         public OnSitesRemoved(SiteModel site) {
             mSites = new SitesModel();
             mSites.add(site);
         }
 
-        public OnSitesRemoved(SitesModel sites) {
+        public OnSitesRemoved(List<SiteModel> sites) {
             mSites = sites;
         }
     }
@@ -103,27 +103,32 @@ public class SiteStore extends Store {
      * Obtains the site with the given (local) id and returns it as a {@link SiteModel}.
      */
     public SiteModel getSiteByLocalId(int id) {
-        return WellSql.selectUnique(SiteModel.class)
-                .where().equals(SiteModelTable.ID, id).endWhere()
-                .getAsModel().get(0);
+        List<SiteModel> result = SiteSqlUtils.getAllSitesWith(SiteModelTable.ID, id);
+        if (result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Checks whether the store contains a site matching the given (local) id.
+     */
+    public boolean hasSiteWithLocalId(int id) {
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.ID, id) > 0;
     }
 
     /**
      * Returns all .COM sites in the store.
      */
     public List<SiteModel> getDotComSites() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
-                .getAsModel();
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
     public int getDotComSitesCount() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
-                .getAsCursor().getCount();
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, 1);
     }
 
     /**
@@ -137,18 +142,14 @@ public class SiteStore extends Store {
      * Returns all self-hosted sites in the store.
      */
     public List<SiteModel> getDotOrgSites() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
-                .getAsModel();
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 0);
     }
 
     /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
     public int getDotOrgSitesCount() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
-                .getAsCursor().getCount();
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, 0);
     }
 
     /**
@@ -162,18 +163,14 @@ public class SiteStore extends Store {
      * Returns all Jetpack sites in the store.
      */
     public List<SiteModel> getJetpackSites() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_JETPACK, 1).endWhere()
-                .getAsModel();
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK, 1);
     }
 
     /**
      * Returns the number of Jetpack sites in the store.
      */
     public int getJetpackSitesCount() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_JETPACK, 1).endWhere()
-                .getAsCursor().getCount();
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK, 1);
     }
 
     /**
@@ -196,23 +193,10 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Checks whether the store contains a site matching the given (local) id.
-     */
-    public boolean hasSiteWithLocalId(int id) {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, id)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
-    }
-
-    /**
      * Returns all visible sites as {@link SiteModel}s. All self-hosted sites over XML-RPC are visible by default.
      */
     public List<SiteModel> getVisibleSites() {
-        return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_VISIBLE, 1).endWhere()
-                .getAsModel();
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_VISIBLE, 1);
     }
 
     /**
@@ -402,9 +386,7 @@ public class SiteStore extends Store {
             return null;
         }
 
-        List<SiteModel> sites = WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.SITE_ID, siteId).endWhere()
-                .getAsModel();
+        List<SiteModel> sites = SiteSqlUtils.getAllSitesWith(SiteModelTable.SITE_ID, siteId);
 
         if (sites.isEmpty()) {
             return null;
@@ -446,7 +428,7 @@ public class SiteStore extends Store {
             emitChange(new OnSitesRemoved((SiteModel) action.getPayload()));
         } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
             // TODO: This should also remove Jetpack sites downloaded over REST but not over XML-RPC (no dotOrgSiteId)
-            SitesModel wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
+            List<SiteModel> wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
             deleteSites(wpComSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
             emitChange(new OnSitesRemoved(wpComSites));
@@ -459,7 +441,7 @@ public class SiteStore extends Store {
         }
     }
 
-    private void deleteSites(SitesModel sites) {
+    private void deleteSites(List<SiteModel> sites) {
         for (SiteModel site : sites) {
             SiteSqlUtils.deleteSite(site);
         }
