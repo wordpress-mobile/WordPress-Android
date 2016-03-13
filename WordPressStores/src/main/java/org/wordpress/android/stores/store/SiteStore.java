@@ -432,6 +432,16 @@ public class SiteStore extends Store {
             deleteSites(wpComSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
             emitChange(new OnSitesRemoved(wpComSites));
+        } else if (actionType == SiteAction.SHOW_SITES) {
+            toggleSitesVisibility((SitesModel) action.getPayload(), true);
+        } else if (actionType == SiteAction.HIDE_SITES) {
+            toggleSitesVisibility((SitesModel) action.getPayload(), false);
+        }
+    }
+
+    private void toggleSitesVisibility(SitesModel sites, boolean visible) {
+        for (SiteModel site : sites) {
+            setDotComSiteVisibilityByLocalId(site.getId(), visible);
         }
     }
 
