@@ -68,4 +68,17 @@ public class SiteSqlUtils {
                     }
                 }).execute();
     }
+
+    public static List<SiteModel> getAllRestApiSites() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_WPCOM, 1)
+                .or()
+                .beginGroup()
+                .equals(SiteModelTable.IS_JETPACK, 1)
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, 0)
+                .endGroup()
+                .endGroup().endWhere()
+                .getAsModel();
+    }
 }

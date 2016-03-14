@@ -391,12 +391,14 @@ public class SiteStore extends Store {
             // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
             // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
             emitChange(new OnSitesRemoved((SiteModel) action.getPayload()));
-        } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
+        } else if (actionType == SiteAction.LOGOUT_WPCOM) {
             // TODO: This should also remove Jetpack sites downloaded over REST but not over XML-RPC (no dotOrgSiteId)
-            List<SiteModel> wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
-            removeSites(wpComSites);
+            // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
+            // REST API only (they don't have a .org site id)
+            List<SiteModel> restApiSites = SiteSqlUtils.getAllRestApiSites();
+            removeSites(restApiSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
-            emitChange(new OnSitesRemoved(wpComSites));
+            emitChange(new OnSitesRemoved(restApiSites));
         } else if (actionType == SiteAction.SHOW_SITES) {
             toggleSitesVisibility((SitesModel) action.getPayload(), true);
         } else if (actionType == SiteAction.HIDE_SITES) {

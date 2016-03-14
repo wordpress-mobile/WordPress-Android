@@ -7,7 +7,7 @@ public enum SiteAction implements IAction {
     UPDATE_SITE,
     UPDATE_SITES,
     REMOVE_SITE,
-    REMOVE_WPCOM_SITES,
+    LOGOUT_WPCOM,
     SHOW_SITES,
     HIDE_SITES;
 }
