@@ -119,14 +119,14 @@ public class SiteStore extends Store {
      * Returns all .COM sites in the store.
      */
     public List<SiteModel> getDotComSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
      * Returns the number of .COM sites in the store.
      */
     public int getDotComSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, 1);
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
     }
 
     /**
@@ -140,14 +140,14 @@ public class SiteStore extends Store {
      * Returns all self-hosted sites in the store.
      */
     public List<SiteModel> getDotOrgSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 0);
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
      * Returns the number of self-hosted sites (can be Jetpack) in the store.
      */
     public int getDotOrgSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, 0);
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, false);
     }
 
     /**
@@ -161,14 +161,14 @@ public class SiteStore extends Store {
      * Returns all Jetpack sites in the store.
      */
     public List<SiteModel> getJetpackSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK, 1);
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_JETPACK, true);
     }
 
     /**
      * Returns the number of Jetpack sites in the store.
      */
     public int getJetpackSitesCount() {
-        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK, 1);
+        return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_JETPACK, true);
     }
 
     /**
@@ -194,7 +194,7 @@ public class SiteStore extends Store {
      * Returns all visible sites as {@link SiteModel}s. All self-hosted sites over XML-RPC are visible by default.
      */
     public List<SiteModel> getVisibleSites() {
-        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_VISIBLE, 1);
+        return SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_VISIBLE, true);
     }
 
     /**
@@ -210,8 +210,8 @@ public class SiteStore extends Store {
     public List<SiteModel> getVisibleDotComSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, 1)
-                .equals(SiteModelTable.IS_VISIBLE, 1)
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .equals(SiteModelTable.IS_VISIBLE, true)
                 .endGroup().endWhere()
                 .getAsModel();
     }
@@ -230,8 +230,8 @@ public class SiteStore extends Store {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
-                .equals(SiteModelTable.IS_WPCOM, 1)
-                .equals(SiteModelTable.IS_VISIBLE, 1)
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .equals(SiteModelTable.IS_VISIBLE, true)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
@@ -246,7 +246,7 @@ public class SiteStore extends Store {
                 .or()
                 .equals(SiteModelTable.DOT_ORG_SITE_ID, siteId)
                 .endGroup()
-                .equals(SiteModelTable.IS_ADMIN, 1)
+                .equals(SiteModelTable.IS_ADMIN, true)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
@@ -337,7 +337,7 @@ public class SiteStore extends Store {
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, localId)
                 .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, 1).or().equals(SiteModelTable.IS_JETPACK, 1)
+                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK, true)
                 .endGroup().endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }

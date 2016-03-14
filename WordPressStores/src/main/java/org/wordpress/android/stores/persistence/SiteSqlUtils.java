@@ -58,7 +58,7 @@ public class SiteSqlUtils {
         }
         WellSql.update(SiteModel.class)
                 .whereId(site.getId())
-                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
+                .where().equals(SiteModelTable.IS_WPCOM, true).endWhere()
                 .put(visible, new InsertMapper<Boolean>() {
                     @Override
                     public ContentValues toCv(Boolean item) {
@@ -72,11 +72,11 @@ public class SiteSqlUtils {
     public static List<SiteModel> getAllRestApiSites() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, 1)
+                .equals(SiteModelTable.IS_WPCOM, true)
                 .or()
                 .beginGroup()
-                .equals(SiteModelTable.IS_JETPACK, 1)
-                .equals(SiteModelTable.DOT_ORG_SITE_ID, 0)
+                .equals(SiteModelTable.IS_JETPACK, true)
+                .equals(SiteModelTable.DOT_ORG_SITE_ID, false)
                 .endGroup()
                 .endGroup().endWhere()
                 .getAsModel();
