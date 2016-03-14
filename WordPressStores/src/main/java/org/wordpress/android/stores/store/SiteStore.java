@@ -1,12 +1,10 @@
 package org.wordpress.android.stores.store;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.squareup.otto.Subscribe;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
-import com.yarolegovich.wellsql.mapper.InsertMapper;
 import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.wordpress.android.stores.Dispatcher;
@@ -396,7 +394,7 @@ public class SiteStore extends Store {
         } else if (actionType == SiteAction.REMOVE_WPCOM_SITES) {
             // TODO: This should also remove Jetpack sites downloaded over REST but not over XML-RPC (no dotOrgSiteId)
             List<SiteModel> wpComSites = SiteSqlUtils.getAllSitesWith(SiteModelTable.IS_WPCOM, 1);
-            deleteSites(wpComSites);
+            removeSites(wpComSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
             emitChange(new OnSitesRemoved(wpComSites));
         } else if (actionType == SiteAction.SHOW_SITES) {
@@ -412,7 +410,7 @@ public class SiteStore extends Store {
         }
     }
 
-    private void deleteSites(List<SiteModel> sites) {
+    private void removeSites(List<SiteModel> sites) {
         for (SiteModel site : sites) {
             SiteSqlUtils.deleteSite(site);
         }
