@@ -164,7 +164,7 @@ public class ReleaseStack_SiteTest extends ReleaseStack_Base {
         mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
         mCountDownLatch = new CountDownLatch(1);
         // Wait for a network response / onChanged event
-        mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
 
         mExpectedEvent = TEST_EVENTS.SITE_REMOVED;
         mCountDownLatch = new CountDownLatch(1);
