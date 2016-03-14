@@ -17,7 +17,19 @@ public class SiteSqlUtils {
                 .getAsModel();
     }
 
+    public static List<SiteModel> getAllSitesWith(String field, boolean value) {
+        return WellSql.select(SiteModel.class)
+                .where().equals(field, value).endWhere()
+                .getAsModel();
+    }
+
     public static int getNumberOfSitesWith(String field, Object value) {
+        return WellSql.select(SiteModel.class)
+                .where().equals(field, value).endWhere()
+                .getAsCursor().getCount();
+    }
+
+    public static int getNumberOfSitesWith(String field, boolean value) {
         return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
                 .getAsCursor().getCount();
