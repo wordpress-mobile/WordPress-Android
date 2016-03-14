@@ -9,12 +9,11 @@ import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Plan implements Serializable {
+public class Plan {
     private long mProductID;
     private String mProductName;
     private final Hashtable<String, Integer> mPrices = new Hashtable<>();
