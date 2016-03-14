@@ -112,6 +112,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
     private static final String PURCHASE_ACTIVE_KEY = "active";
+    private static final String ANALYTICS_ERROR_PROPERTY_KEY = "error";
 
     private static final long FETCH_DELAY = 1000;
     public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
@@ -352,8 +353,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog == null) return false;
 
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            AnalyticsUtils.trackWithCurrentBlogDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED);
 
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             String title = getString(R.string.start_over);
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
@@ -376,6 +379,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mStartOverPref) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED);
             HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER);
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
@@ -388,6 +393,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mExportSitePref) {
             showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED);
             requestPurchasesForDeletionCheck();
         } else {
             return false;
@@ -712,17 +719,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.site_settings_export_content_title, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_REQUESTED);
                 exportSite();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
 
         builder.show();
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED);
     }
 
     private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED);
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -763,6 +776,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED);
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL, AccountHelper.getCurrentUsernameForBlog(currentBlog));
             }
         });
@@ -773,6 +788,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN);
     }
 
     private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
@@ -1213,6 +1230,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         @Override
                         public void onResponse(JSONObject response) {
                             if (isAdded()) {
+                                AnalyticsUtils.trackWithCurrentBlogDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK);
                                 progressDialog.dismiss();
                                 Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                             }
@@ -1221,6 +1240,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (isAdded()) {
+                                HashMap<String, Object> errorProperty = new HashMap<>();
+                                errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
+                                AnalyticsUtils.trackWithCurrentBlogDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR, errorProperty);
                                 progressDialog.dismiss();
                             }
                         }
@@ -1232,15 +1255,23 @@ public class SiteSettingsFragment extends PreferenceFragment
         final Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog.isDotcomFlag()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
+            AnalyticsUtils.trackWithCurrentBlogDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED);
             WordPress.getRestClientUtils().deleteSite(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_OK);
                             progressDialog.dismiss();
                             removeBlog();
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            HashMap<String, Object> errorProperty = new HashMap<>();
+                            errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
+                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, errorProperty);
                             progressDialog.dismiss();
                             handleDeleteSiteError();
                         }
