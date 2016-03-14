@@ -4,7 +4,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class TestUtils {
-    public static int DEFAULT_TIMEOUT = 60000;
+    public static int DEFAULT_TIMEOUT_MS = 30000;
 
     public static void waitFor(long milliseconds) {
         try {
@@ -15,7 +15,7 @@ public class TestUtils {
     }
 
     public static void waitForNetworkCall() {
-        waitFor(DEFAULT_TIMEOUT);
+        waitFor(DEFAULT_TIMEOUT_MS);
     }
 }
 

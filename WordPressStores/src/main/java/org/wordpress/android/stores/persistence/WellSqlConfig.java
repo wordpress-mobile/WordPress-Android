@@ -11,6 +11,7 @@ import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.network.HTTPAuthModel;
 
 import java.util.Map;
 
@@ -21,7 +22,8 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     private static Class[] TABLES = {
             AccountModel.class,
-            SiteModel.class
+            SiteModel.class,
+            HTTPAuthModel.class
     };
 
     @Override

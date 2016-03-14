@@ -8,6 +8,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
 
 import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.network.HTTPAuthManager;
 import org.wordpress.android.stores.network.OkHttpStack;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.account.AccountRestClient;
@@ -65,8 +66,8 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public SiteXMLRPCClient provideSiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken token,
-                                                    UserAgent userAgent) {
-        return new SiteXMLRPCClient(dispatcher, requestQueue, token, userAgent);
+                                                    UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new SiteXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -80,5 +81,11 @@ public class ReleaseNetworkModule {
     @Provides
     public AccessToken provideAccountToken(Context appContext) {
         return new AccessToken(appContext);
+    }
+
+    @Singleton
+    @Provides
+    public HTTPAuthManager provideHTTPAuthManager() {
+        return new HTTPAuthManager();
     }
 }

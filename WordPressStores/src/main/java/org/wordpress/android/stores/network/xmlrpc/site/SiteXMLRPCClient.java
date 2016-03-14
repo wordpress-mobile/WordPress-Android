@@ -9,6 +9,7 @@ import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.SiteAction;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.model.SitesModel;
+import org.wordpress.android.stores.network.HTTPAuthManager;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.stores.network.xmlrpc.BaseXMLRPCClient;
@@ -25,8 +26,8 @@ import java.util.Map;
 
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
     public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                            UserAgent userAgent) {
-        super(dispatcher, requestQueue, accessToken, userAgent);
+                            UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
     }
 
     public void pullSites(final String xmlrpcUrl, final String username, final String password) {
