@@ -29,7 +29,7 @@ public class SiteModel implements Identifiable, Payload {
     @Column private long mDotOrgSiteId;
     @Column private String mUsername;
     @Column private String mPassword;
-    @Column private String mXMLRpcUrl;
+    @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
     @Column private String mSoftwareVersion;
 
     // WPCom specifics
@@ -106,12 +106,12 @@ public class SiteModel implements Identifiable, Payload {
         mPassword = password;
     }
 
-    public String getXMLRpcUrl() {
-        return mXMLRpcUrl;
+    public String getXmlRpcUrl() {
+        return mXmlRpcUrl;
     }
 
-    public void setXMLRpcUrl(String XMLRpcUrl) {
-        mXMLRpcUrl = XMLRpcUrl;
+    public void setXmlRpcUrl(String xmlRpcUrl) {
+        mXmlRpcUrl = xmlRpcUrl;
     }
 
     public long getDotOrgSiteId() {

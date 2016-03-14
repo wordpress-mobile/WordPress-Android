@@ -79,7 +79,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(blogOptionsXMLRPCParameters);
         final XMLRPCRequest request = new XMLRPCRequest(
-                site.getXMLRpcUrl(), XMLRPC.GET_OPTIONS, params,
+                site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
@@ -114,7 +114,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setName((String) siteMap.get("blogName"));
             // TODO: set a canonical URL here
             site.setUrl((String) siteMap.get("url"));
-            site.setXMLRpcUrl((String) siteMap.get("xmlrpc"));
+            site.setXmlRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
             site.setIsVisible(true);
             // TODO: siteMap.get("isPrimary")

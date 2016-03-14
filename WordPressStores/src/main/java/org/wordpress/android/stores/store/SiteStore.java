@@ -185,7 +185,7 @@ public class SiteStore extends Store {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
-                .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
+                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsCursor().getCount() > 0;
     }
@@ -282,7 +282,7 @@ public class SiteStore extends Store {
         List<SiteModel> sites =  WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.DOT_ORG_SITE_ID, dotOrgSiteId)
-                .equals(SiteModelTable.X_MLRPC_URL, xmlRpcUrl)
+                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
                 .endGroup().endWhere()
                 .getAsModel(new SelectMapper<SiteModel>() {
                     @Override
