@@ -111,13 +111,13 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
 
         assertTrue(mSiteStore.hasDotOrgSiteWithSiteIdAndXmlRpcUrl(selfHostedSite.getDotOrgSiteId(),
-                selfHostedSite.getXMLRpcUrl()));
+                selfHostedSite.getXmlRpcUrl()));
 
         SiteModel jetpackSite = generateJetpackSite();
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
         assertTrue(mSiteStore.hasDotOrgSiteWithSiteIdAndXmlRpcUrl(jetpackSite.getDotOrgSiteId(),
-                jetpackSite.getXMLRpcUrl()));
+                jetpackSite.getXmlRpcUrl()));
     }
 
     @Test
@@ -229,9 +229,9 @@ public class SiteStoreUnitTest {
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForRemoteSiteId(jetpackSite.getDotOrgSiteId()));
 
         assertEquals(dotOrgSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
-                dotOrgSite.getDotOrgSiteId(), dotOrgSite.getXMLRpcUrl()));
+                dotOrgSite.getDotOrgSiteId(), dotOrgSite.getXmlRpcUrl()));
         assertEquals(jetpackSite.getId(), mSiteStore.getLocalIdForDotOrgSiteIdAndXmlRpcUrl(
-                jetpackSite.getDotOrgSiteId(), jetpackSite.getXMLRpcUrl()));
+                jetpackSite.getDotOrgSiteId(), jetpackSite.getXmlRpcUrl()));
 
         assertEquals(dotOrgSite.getDotOrgSiteId(), mSiteStore.getSiteIdForLocalId(dotOrgSite.getId()));
         assertEquals(dotComSite.getSiteId(), mSiteStore.getSiteIdForLocalId(dotComSite.getId()));
@@ -283,7 +283,7 @@ public class SiteStoreUnitTest {
         example.setIsWPCom(false);
         example.setIsJetpack(false);
         example.setIsVisible(true);
-        example.setXMLRpcUrl("http://some.url/xmlrpc.php");
+        example.setXmlRpcUrl("http://some.url/xmlrpc.php");
         return example;
     }
 
@@ -295,7 +295,7 @@ public class SiteStoreUnitTest {
         example.setIsWPCom(false);
         example.setIsJetpack(true);
         example.setIsVisible(true);
-        example.setXMLRpcUrl("http://jetpack.url/xmlrpc.php");
+        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
         return example;
     }
 }
