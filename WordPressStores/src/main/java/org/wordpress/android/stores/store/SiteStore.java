@@ -226,39 +226,6 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Sets the visibility of all .COM sites to the given value.
-     */
-    public void setAllDotComSitesVisibility(boolean visible) {
-        WellSql.update(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
-                .put(visible, new InsertMapper<Boolean>() {
-                    @Override
-                    public ContentValues toCv(Boolean item) {
-                        ContentValues cv = new ContentValues();
-                        cv.put(SiteModelTable.IS_VISIBLE, item);
-                        return cv;
-                    }
-                }).execute();
-    }
-
-    /**
-     * Sets the visibility of the .COM site with the given (local) id to the given value.
-     */
-    public void setDotComSiteVisibilityByLocalId(int id, boolean visible) {
-        WellSql.update(SiteModel.class)
-                .whereId(id)
-                .where().equals(SiteModelTable.IS_WPCOM, 1).endWhere()
-                .put(visible, new InsertMapper<Boolean>() {
-                    @Override
-                    public ContentValues toCv(Boolean item) {
-                        ContentValues cv = new ContentValues();
-                        cv.put(SiteModelTable.IS_VISIBLE, item);
-                        return cv;
-                    }
-                }).execute();
-    }
-
-    /**
      * Checks whether the .COM site with the given (local) id is visible.
      */
     public boolean isDotComSiteVisibleByLocalId(int id) {
@@ -439,12 +406,6 @@ public class SiteStore extends Store {
         }
     }
 
-    private void toggleSitesVisibility(SitesModel sites, boolean visible) {
-        for (SiteModel site : sites) {
-            setDotComSiteVisibilityByLocalId(site.getId(), visible);
-        }
-    }
-
     private void createOrUpdateSites(SitesModel sites) {
         for (SiteModel site : sites) {
             SiteSqlUtils.insertOrUpdateSite(site);
@@ -454,6 +415,12 @@ public class SiteStore extends Store {
     private void deleteSites(List<SiteModel> sites) {
         for (SiteModel site : sites) {
             SiteSqlUtils.deleteSite(site);
+        }
+    }
+
+    private void toggleSitesVisibility(SitesModel sites, boolean visible) {
+        for (SiteModel site : sites) {
+            SiteSqlUtils.setSiteVisibility(site, visible);
         }
     }
 }

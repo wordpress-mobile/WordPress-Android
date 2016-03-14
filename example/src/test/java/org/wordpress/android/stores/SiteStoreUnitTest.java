@@ -142,13 +142,13 @@ public class SiteStoreUnitTest {
     public void testDotComSiteVisibility() {
         // Should not cause any errors
         mSiteStore.isDotComSiteVisibleByLocalId(45);
-        mSiteStore.setDotComSiteVisibilityByLocalId(45, true);
+        SiteSqlUtils.setSiteVisibility(null, true);
 
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
         // Attempt to use with id of self-hosted site
-        mSiteStore.setDotComSiteVisibilityByLocalId(selfHostedNonJPSite.getId(), false);
+        SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
         // The self-hosted site should not be affected
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
 
@@ -157,21 +157,20 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(dotComSite);
 
         // Attempt to use with legitimate .com site
-        mSiteStore.setDotComSiteVisibilityByLocalId(selfHostedNonJPSite.getId(), false);
+        SiteSqlUtils.setSiteVisibility(selfHostedNonJPSite, false);
         assertFalse(mSiteStore.getSiteByLocalId(dotComSite.getId()).isVisible());
         assertFalse(mSiteStore.isDotComSiteVisibleByLocalId(dotComSite.getId()));
     }
 
     @Test
     public void testSetAllDotComSitesVisibility() {
-        // Should not cause any errors
-        mSiteStore.setAllDotComSitesVisibility(false);
-
         SiteModel selfHostedNonJPSite = generateSelfHostedNonJPSite();
         SiteSqlUtils.insertOrUpdateSite(selfHostedNonJPSite);
 
         // Attempt to use with id of self-hosted site
-        mSiteStore.setAllDotComSitesVisibility(false);
+        for (SiteModel site : mSiteStore.getDotComSites()) {
+            SiteSqlUtils.setSiteVisibility(site, false);
+        }
         // The self-hosted site should not be affected
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
 
@@ -184,7 +183,9 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(dotComSite2);
 
         // Attempt to use with legitimate .com site
-        mSiteStore.setAllDotComSitesVisibility(false);
+        for (SiteModel site : mSiteStore.getDotComSites()) {
+            SiteSqlUtils.setSiteVisibility(site, false);
+        }
         assertTrue(mSiteStore.getSiteByLocalId(selfHostedNonJPSite.getId()).isVisible());
         assertFalse(mSiteStore.getSiteByLocalId(dotComSite1.getId()).isVisible());
         assertFalse(mSiteStore.getSiteByLocalId(dotComSite2.getId()).isVisible());
