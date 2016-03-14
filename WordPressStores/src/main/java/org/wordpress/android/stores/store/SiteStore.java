@@ -392,7 +392,6 @@ public class SiteStore extends Store {
             // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
             emitChange(new OnSitesRemoved((SiteModel) action.getPayload()));
         } else if (actionType == SiteAction.LOGOUT_WPCOM) {
-            // TODO: This should also remove Jetpack sites downloaded over REST but not over XML-RPC (no dotOrgSiteId)
             // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
             // REST API only (they don't have a .org site id)
             List<SiteModel> restApiSites = SiteSqlUtils.getAllRestApiSites();

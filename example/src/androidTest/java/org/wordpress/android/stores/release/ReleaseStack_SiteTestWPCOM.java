@@ -47,27 +47,6 @@ public class ReleaseStack_SiteTestWPCOM extends ReleaseStack_Base {
         mExpectedEvent = TEST_EVENTS.NONE;
     }
 
-    public void testWPCOMSiteFetch() throws InterruptedException {
-        // Authenticate a test user (actual credentials declared in gradle.properties)
-        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload();
-        payload.username = BuildConfig.TEST_WPCOM_USERNAME_TEST1;
-        payload.password = BuildConfig.TEST_WPCOM_PASSWORD_TEST1;
-
-        mCountDownLatch = new CountDownLatch(1);
-
-        // Correct user we should get an OnAuthenticationChanged message
-        mDispatcher.dispatch(AuthenticationAction.AUTHENTICATE, payload);
-        // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
-
-        // Fetch sites from REST API, and wait for OnSiteChanged event
-        mCountDownLatch = new CountDownLatch(1);
-        mExpectedEvent = TEST_EVENTS.SITE_CHANGED;
-        mDispatcher.dispatch(SiteAction.FETCH_SITES);
-
-        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
-    }
-
     public void testWPCOMSiteFetchAndLogout() throws InterruptedException {
         // Authenticate a test user (actual credentials declared in gradle.properties)
         AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload();
