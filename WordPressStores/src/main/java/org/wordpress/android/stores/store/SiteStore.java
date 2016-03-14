@@ -70,7 +70,7 @@ public class SiteStore extends Store {
 
     public boolean hasSelfHostedSite() {
         return WellSql.select(SiteModel.class)
-                .where().equals(SiteModelTable.IS_WPCOM, 0).endWhere()
+                .where().equals(SiteModelTable.IS_WPCOM, false).endWhere()
                 .getAsCursor().getCount() != 0;
     }
 
