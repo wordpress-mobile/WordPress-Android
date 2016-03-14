@@ -923,6 +923,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case SITE_SETTINGS_DELETE_SITE_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Accessed");
                 break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Purchases Requested");
+                break;
             case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Purchases Shown");
                 break;

@@ -462,6 +462,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SITE_SETTINGS_DELETE_SITE_ACCESSED:
                 eventName = "site_settings_delete_site_accessed";
                 break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
+                eventName = "site_settings_delete_site_purchases_requested";
+                break;
             case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
                 eventName = "site_settings_delete_site_purchases_shown";
                 break;
