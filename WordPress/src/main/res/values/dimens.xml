@@ -13,8 +13,8 @@
     <dimen name="fab_margin_tablet">24dp</dimen>
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
-    <dimen name="appbar_elevation">8dp</dimen>
-    <dimen name="filter_subbar_elevation">4dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="filter_subbar_elevation">@dimen/appbar_elevation</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -249,7 +249,11 @@
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
 
+    <!-- plans -->
+    <dimen name="plan_indicator_size">12dp</dimen>
+    <dimen name="plan_indicator_margin">6dp</dimen>
+    <dimen name="plan_icon_size">79dp</dimen>
+
     <!--people management-->
     <dimen name="people_list_row_height">84dp</dimen>
-
 </resources>

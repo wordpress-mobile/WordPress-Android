@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/link_dialog_margin_inner"
+        android:layout_marginLeft="@dimen/link_dialog_margin_outer"
+        android:layout_marginRight="@dimen/link_dialog_margin_outer"
+        android:layout_marginTop="@dimen/link_dialog_margin_outer">
 
         <EditText
             android:id="@+id/linkURL"
-            android:inputType="textUri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/link_dialog_margin_outer"
-            android:layout_marginLeft="@dimen/link_dialog_margin_outer"
-            android:layout_marginRight="@dimen/link_dialog_margin_outer"
-            android:layout_marginBottom="@dimen/link_dialog_margin_inner"
             android:hint="@string/link_enter_url"
-            android:text="http://"
             android:imeOptions="actionNext"
-            tools:ignore="HardcodedText"/>
+            android:inputType="textUri"
+            tools:ignore="HardcodedText" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/link_dialog_margin_outer"
+        android:layout_marginLeft="@dimen/link_dialog_margin_outer"
+        android:layout_marginRight="@dimen/link_dialog_margin_outer"
+        android:layout_marginTop="@dimen/link_dialog_margin_inner">
 
         <EditText
             android:id="@+id/linkText"
-            android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/link_dialog_margin_inner"
-            android:layout_marginLeft="@dimen/link_dialog_margin_outer"
-            android:layout_marginRight="@dimen/link_dialog_margin_outer"
-            android:layout_marginBottom="@dimen/link_dialog_margin_outer"
-            android:hint="@string/link_enter_url_text" />
+            android:hint="@string/link_enter_url_text"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- for now in-app billing is only enabled in zalpha and wasabi builds -->
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
+</manifest>

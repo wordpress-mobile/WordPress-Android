@@ -380,9 +380,10 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
-        if (!getShouldCloseAfter() || period == 0) return mActivity.getString(R.string.never);
+        if (!getShouldCloseAfter()) return mActivity.getString(R.string.never);
 
-        return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
+        return StringUtils.getQuantityString(mActivity, R.string.never, R.string.days_quantity_one,
+                R.string.days_quantity_other, period);
     }
 
     public int getCommentSorting() {
@@ -446,8 +447,8 @@ public abstract class SiteSettingsInterface {
         }
 
         int count = getPagingCountForDescription();
-        if (count == 0) return mActivity.getString(R.string.none);
-        return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
+        return StringUtils.getQuantityString(mActivity, R.string.none, R.string.site_settings_paging_summary_one,
+                R.string.site_settings_paging_summary_other, count);
     }
 
     public boolean getManualApproval() {
@@ -491,11 +492,10 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
-        if (count > 0) {
-            return mActivity.getResources().getQuantityString(
-                    R.plurals.site_settings_list_editor_summary, count, count);
-        }
-        return mActivity.getString(R.string.site_settings_list_editor_no_items_text);
+        return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
+                R.string.site_settings_list_editor_summary_one,
+                R.string.site_settings_list_editor_summary_other, count);
+
     }
 
     public void setTitle(String title) {

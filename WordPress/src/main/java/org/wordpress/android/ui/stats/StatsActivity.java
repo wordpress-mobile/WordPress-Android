@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,10 +16,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +33,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -246,6 +244,10 @@ public class StatsActivity extends AppCompatActivity
                     // nop
                 }
             });
+
+            Toolbar spinnerToolbar = (Toolbar) findViewById(R.id.toolbar_filter);
+            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+
         }
 
         selectCurrentTimeframeInActionBar();
@@ -759,42 +761,6 @@ public class StatsActivity extends AppCompatActivity
         return true;
     }
 
-    public static class StatsWidgetPromoDialogFragment extends DialogFragment {
-
-        public static StatsWidgetPromoDialogFragment newInstance() {
-            return new StatsWidgetPromoDialogFragment();
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Dialog dialog = super.onCreateDialog(savedInstanceState);
-            // request a window without the title
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            return dialog;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
-        }
-
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            Button btn = (Button)view.findViewById(R.id.stats_widget_promo_got_it_btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getDialog().cancel();
-                }
-            });
-        }
-    }
-
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
         if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
             // Do nothing in case of errors or when it's still loading
@@ -810,9 +776,11 @@ public class StatsActivity extends AppCompatActivity
         AppPrefs.bumpAnalyticsForStatsWidgetPromo();
 
         // Should we display the widget promo?
-        int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+        int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         if (counter == 3 || counter == 1000 || counter == 10000) {
-            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.stats_widget_promo_header,
+                    R.string.stats_widget_promo_title, R.string.stats_widget_promo_desc,
+                    R.string.stats_widget_promo_ok_btn_label);
             newFragment.show(getFragmentManager(), "promote_widget_dialog");
         }
     }
