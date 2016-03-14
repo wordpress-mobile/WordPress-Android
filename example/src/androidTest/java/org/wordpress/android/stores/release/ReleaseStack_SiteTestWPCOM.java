@@ -35,6 +35,8 @@ public class ReleaseStack_SiteTestWPCOM extends ReleaseStack_Base {
     }
     private TEST_EVENTS mExpectedEvent;
 
+    private int mExpectedRowsAffected;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -45,6 +47,7 @@ public class ReleaseStack_SiteTestWPCOM extends ReleaseStack_Base {
         mDispatcher.register(this);
         // Reset expected test event
         mExpectedEvent = TEST_EVENTS.NONE;
+        mExpectedRowsAffected = 0;
     }
 
     public void testWPCOMSiteFetchAndLogout() throws InterruptedException {
@@ -70,6 +73,7 @@ public class ReleaseStack_SiteTestWPCOM extends ReleaseStack_Base {
         // Clear WP.com sites, and wait for OnSitesRemoved event
         mCountDownLatch = new CountDownLatch(1);
         mExpectedEvent = TEST_EVENTS.SITE_REMOVED;
+        mExpectedRowsAffected = mSiteStore.getSitesCount();
         mDispatcher.dispatch(SiteAction.LOGOUT_WPCOM);
 
         assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
@@ -93,6 +97,7 @@ public class ReleaseStack_SiteTestWPCOM extends ReleaseStack_Base {
     @Subscribe
     public void OnSitesRemoved(SiteStore.OnSitesRemoved event) {
         AppLog.e(T.TESTS, "site count " + mSiteStore.getSitesCount());
+        assertEquals(mExpectedRowsAffected, event.mRowsAffected);
         assertEquals(false, mSiteStore.hasSite());
         assertEquals(false, mSiteStore.hasDotComSite());
         assertEquals(TEST_EVENTS.SITE_REMOVED, mExpectedEvent);

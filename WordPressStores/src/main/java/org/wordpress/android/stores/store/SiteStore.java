@@ -37,18 +37,19 @@ public class SiteStore extends Store {
     }
 
     // OnChanged Events
-    public class OnSiteChanged extends OnChanged {}
+    public class OnSiteChanged extends OnChanged {
+        public int mRowsAffected;
+
+        public OnSiteChanged(int rowsAffected) {
+            mRowsAffected = rowsAffected;
+        }
+    }
 
     public class OnSitesRemoved extends OnChanged {
-        public List<SiteModel> mSites;
+        public int mRowsAffected;
 
-        public OnSitesRemoved(SiteModel site) {
-            mSites = new SitesModel();
-            mSites.add(site);
-        }
-
-        public OnSitesRemoved(List<SiteModel> sites) {
-            mSites = sites;
+        public OnSitesRemoved(int rowsAffected) {
+            mRowsAffected = rowsAffected;
         }
     }
 
@@ -66,7 +67,7 @@ public class SiteStore extends Store {
     public void onRegister() {
         AppLog.d(T.API, "SiteStore onRegister");
         // TODO: I'm really not sure about emitting OnChange event here.
-        emitChange(new OnSiteChanged());
+        emitChange(new OnSiteChanged(0));
     }
 
     /**
@@ -365,13 +366,13 @@ public class SiteStore extends Store {
     public void onAction(Action action) {
         IAction actionType = action.getType();
         if (actionType == SiteAction.UPDATE_SITE) {
-            SiteSqlUtils.insertOrUpdateSite((SiteModel) action.getPayload());
+            int rowsAffected = SiteSqlUtils.insertOrUpdateSite((SiteModel) action.getPayload());
             // Would be great to send an event only if the site actually changed.
-            emitChange(new OnSiteChanged());
+            emitChange(new OnSiteChanged(rowsAffected));
         } else if (actionType == SiteAction.UPDATE_SITES) {
-            createOrUpdateSites((SitesModel) action.getPayload());
+            int rowsAffected = createOrUpdateSites((SitesModel) action.getPayload());
             // Would be great to send an event only if a site actually changed.
-            emitChange(new OnSiteChanged());
+            emitChange(new OnSiteChanged(rowsAffected));
         } else if (actionType == SiteAction.FETCH_SITES) {
             mSiteRestClient.pullSites();
         } else if (actionType == SiteAction.FETCH_SITES_XMLRPC) {
@@ -386,18 +387,18 @@ public class SiteStore extends Store {
                 mSiteXMLRPCClient.pullSite(site);
             }
         } else if (actionType == SiteAction.REMOVE_SITE) {
-            SiteSqlUtils.deleteSite((SiteModel) action.getPayload());
+            int rowsAffected = SiteSqlUtils.deleteSite((SiteModel) action.getPayload());
             // TODO: This should be captured by 'QuickPressShortcutsStore' so it can handle deleting any QP shortcuts
             // TODO: Probably, we can inject QuickPressShortcutsStore into SiteStore and act on it directly
             // See WordPressDB.deleteQuickPressShortcutsForLocalTableBlogId(Context ctx, int blogId)
-            emitChange(new OnSitesRemoved((SiteModel) action.getPayload()));
+            emitChange(new OnSitesRemoved(rowsAffected));
         } else if (actionType == SiteAction.LOGOUT_WPCOM) {
             // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were pulled over the WP.com
             // REST API only (they don't have a .org site id)
             List<SiteModel> restApiSites = SiteSqlUtils.getAllRestApiSites();
-            removeSites(restApiSites);
+            int rowsAffected = removeSites(restApiSites);
             // TODO: Same as above, this needs to be captured and handled by QuickPressShortcutsStore
-            emitChange(new OnSitesRemoved(restApiSites));
+            emitChange(new OnSitesRemoved(rowsAffected));
         } else if (actionType == SiteAction.SHOW_SITES) {
             toggleSitesVisibility((SitesModel) action.getPayload(), true);
         } else if (actionType == SiteAction.HIDE_SITES) {
@@ -405,21 +406,27 @@ public class SiteStore extends Store {
         }
     }
 
-    private void createOrUpdateSites(SitesModel sites) {
+    private int createOrUpdateSites(SitesModel sites) {
+        int rowsAffected = 0;
         for (SiteModel site : sites) {
-            SiteSqlUtils.insertOrUpdateSite(site);
+            rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
         }
+        return rowsAffected;
     }
 
-    private void removeSites(List<SiteModel> sites) {
+    private int removeSites(List<SiteModel> sites) {
+        int rowsAffected = 0;
         for (SiteModel site : sites) {
-            SiteSqlUtils.deleteSite(site);
+            rowsAffected += SiteSqlUtils.deleteSite(site);
         }
+        return rowsAffected;
     }
 
-    private void toggleSitesVisibility(SitesModel sites, boolean visible) {
+    private int toggleSitesVisibility(SitesModel sites, boolean visible) {
+        int rowsAffected = 0;
         for (SiteModel site : sites) {
-            SiteSqlUtils.setSiteVisibility(site, visible);
+            rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
         }
+        return rowsAffected;
     }
 }

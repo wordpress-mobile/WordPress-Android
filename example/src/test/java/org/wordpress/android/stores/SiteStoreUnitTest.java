@@ -265,8 +265,9 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.deleteSite(dotComSite);
 
         SiteSqlUtils.insertOrUpdateSite(dotComSite);
-        SiteSqlUtils.deleteSite(dotComSite);
+        int affectedRows = SiteSqlUtils.deleteSite(dotComSite);
 
+        assertEquals(1, affectedRows);
         assertEquals(0, mSiteStore.getSitesCount());
     }
 

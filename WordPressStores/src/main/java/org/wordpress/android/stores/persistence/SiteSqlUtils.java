@@ -35,9 +35,9 @@ public class SiteSqlUtils {
                 .getAsCursor().getCount();
     }
 
-    public static void insertOrUpdateSite(SiteModel site) {
+    public static int insertOrUpdateSite(SiteModel site) {
         if (site == null) {
-            return;
+            return 0;
         }
         List<SiteModel> siteResult = WellSql.select(SiteModel.class)
                 .where().beginGroup()
@@ -47,28 +47,29 @@ public class SiteSqlUtils {
         if (siteResult.isEmpty()) {
             // insert
             WellSql.insert(site).asSingleTransaction(true).execute();
+            return 0;
         } else {
             // update
             int oldId = siteResult.get(0).getId();
-            WellSql.update(SiteModel.class).whereId(oldId)
+            return WellSql.update(SiteModel.class).whereId(oldId)
                     .put(site, new UpdateAllExceptId<SiteModel>()).execute();
         }
     }
 
-    public static void deleteSite(SiteModel site) {
+    public static int deleteSite(SiteModel site) {
         if (site == null) {
-            return;
+            return 0;
         }
-         WellSql.delete(SiteModel.class)
+        return WellSql.delete(SiteModel.class)
                  .where().equals(SiteModelTable.ID, site.getId()).endWhere()
                  .execute();
     }
 
-    public static void setSiteVisibility(SiteModel site, boolean visible) {
+    public static int setSiteVisibility(SiteModel site, boolean visible) {
         if (site == null) {
-            return;
+            return 0;
         }
-        WellSql.update(SiteModel.class)
+        return WellSql.update(SiteModel.class)
                 .whereId(site.getId())
                 .where().equals(SiteModelTable.IS_WPCOM, true).endWhere()
                 .put(visible, new InsertMapper<Boolean>() {
