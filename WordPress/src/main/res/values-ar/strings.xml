@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Deine Kontoeinstellungen konnten nicht gespeichert werden.</string>
+	<string name="error_post_my_profile">تعذر حفظ الملف الشخصي</string>
+	<string name="error_fetch_account_settings">Deine Kontoeinstellungen konnten nicht abgerufen werden.</string>
+	<string name="error_fetch_my_profile">Dein Profil konnte nicht abgerufen werden.</string>
+	<string name="stats_widget_promo_ok_btn_label">حسنًا، فهمت</string>
+	<string name="stats_widget_promo_desc">Füge das Widget zu deinem Startbildschirm hinzu, um auf deine Statistiken mit einem Klick zugreifen zu können.</string>
+	<string name="stats_widget_promo_title">Statistik-Widget für den Startbildschirm</string>
+	<string name="site_settings_unknown_language_code_error">Sprachcode nicht erkannt</string>
+	<string name="site_settings_threading_dialog_description">Zulassen, dass Kommentare in Threads verschachtelt werden.</string>
+	<string name="site_settings_threading_dialog_header">Verschachteln bis zu</string>
+	<string name="remove">إزالة</string>
+	<string name="search">بحث</string>
+	<string name="add_category">إضافة فئة</string>
+	<string name="disabled">معطّلة</string>
 	<string name="site_settings_image_original_size">الحجم الأصلي</string>
 	<string name="about_me_hint">كلمات قليلة عنك...</string>
 	<string name="public_display_name_hint">سيكون اسم العرض افتراضيًا لاسم المستخدم الخاص بك إذا لم يتم تعيينه</string>
@@ -763,7 +777,6 @@
 	<string name="media_edit_caption_hint">أدخل الكلمات التوضيحية هنا</string>
 	<string name="stats">الإحصائيات</string>
 	<string name="stats_entry_tags_and_categories">الموضوع</string>
-	<string name="menu_search">البحث</string>
 	<string name="passcode_re_enter_passcode">اعادة إدخال مفتاح الـ PIN</string>
 	<string name="passcode_change_passcode">تغيير مفتاح الـ PIN</string>
 	<string name="passcode_enter_old_passcode">أدخل مفتاح الـ PIN القديم</string>
@@ -832,7 +845,6 @@
 	<string name="ok">موافق</string>
 	<string name="scaled_image">تحجيم عرض الصورة</string>
 	<string name="upload_scaled_image">الرفع والربط بالصورة المحجمة</string>
-	<string name="remove_location">إزالة</string>
 	<string name="scheduled">مجدول</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">نشر من تطبيق ووردبريس للأندرويد</string>
@@ -944,18 +956,6 @@
 		<item>لا توجد تعليقات</item>
 		<item>تعليقات المستخدمين المعروفة</item>
 		<item>جميع المستخدمين</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>بلا</item>
-		<item>مستويان</item>
-		<item>المستويات الثلاثة</item>
-		<item>المستويات الأربعة</item>
-		<item>المستويات الخمسة</item>
-		<item>المستويات الستة</item>
-		<item>المستويات السبعة</item>
-		<item>المستويات الثمانية</item>
-		<item>المستويات التسعة</item>
-		<item>المستويات العشرة</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>مجاني</item>

@@ -418,10 +418,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             updateWhitelistSettings(Integer.parseInt(newValue.toString()));
         } else if (preference == mMultipleLinksPref) {
             mSiteSettings.setMultipleLinks(Integer.parseInt(newValue.toString()));
-            mMultipleLinksPref.setSummary(getResources()
-                    .getQuantityString(R.plurals.site_settings_multiple_links_summary,
-                            mSiteSettings.getMultipleLinks(),
-                            mSiteSettings.getMultipleLinks()));
+            String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
+                    R.string.site_settings_multiple_links_summary_one,
+                    R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
+            mMultipleLinksPref.setSummary(s);
         } else if (preference == mUsernamePref) {
             mSiteSettings.setUsername(newValue.toString());
             changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
@@ -722,10 +722,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mSiteSettings.getUseCommentWhitelist() ? 0
                         : -1 : 1;
         setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
-        mMultipleLinksPref.setSummary(getResources()
-                .getQuantityString(R.plurals.site_settings_multiple_links_summary,
-                        mSiteSettings.getMultipleLinks(),
-                        mSiteSettings.getMultipleLinks()));
+        String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
+                R.string.site_settings_multiple_links_summary_one,
+                R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
+        mMultipleLinksPref.setSummary(s);
         mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
@@ -873,20 +873,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void updateWhitelistSettings(int val) {
-        switch (val) {
-            case -1:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-            case 0:
-                mSiteSettings.setManualApproval(true);
-                mSiteSettings.setUseCommentWhitelist(true);
-                break;
-            case 1:
-                mSiteSettings.setManualApproval(false);
-                mSiteSettings.setUseCommentWhitelist(false);
-                break;
-        }
+        mSiteSettings.setManualApproval(val == -1);
+        mSiteSettings.setUseCommentWhitelist(val == 0);
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));

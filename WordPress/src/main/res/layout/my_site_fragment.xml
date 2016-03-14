@@ -48,7 +48,7 @@
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
-                        app:fontVariation="light" />
+                        android:fontFamily="sans-serif-light" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_subtitle_label"
@@ -123,6 +123,30 @@
                     style="@style/MySiteListRowTextView"
                     android:layout_toRightOf="@id/my_site_stats_icon"
                     android:text="@string/stats" />
+
+            </RelativeLayout>
+
+            <!--Plan-->
+            <RelativeLayout
+                android:id="@+id/row_plan"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_plan_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:src="@drawable/gridicons_clipboard" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_plan_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_plan_icon"
+                    android:text="@string/plan" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_current_plan_text_view"
+                    style="@style/MySiteListRowSecodaryTextView"
+                    android:layout_toRightOf="@id/my_site_plan_text_view"
+                    android:text="@string/plan" />
 
             </RelativeLayout>
 
@@ -371,7 +395,7 @@
             android:text="@string/my_site_no_sites_view_title"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_double_extra_large"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
