@@ -18,6 +18,8 @@ import org.wordpress.android.stores.action.AuthenticationAction;
 import org.wordpress.android.stores.action.SiteAction;
 import org.wordpress.android.stores.example.SignInDialog.Listener;
 import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.network.AuthError;
+import org.wordpress.android.stores.network.HTTPAuthManager;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
@@ -36,12 +38,15 @@ public class MainExampleActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
+    @Inject HTTPAuthManager mHTTPAuthManager;
 
     private TextView mLogView;
     private Button mAccountInfos;
     private Button mListSites;
     private Button mLogSites;
     private Button mUpdateFirstSite;
+    // Would be great to not have to keep this state, but it makes HTTPAuth and self signed SSL management easier
+    private RefreshSitesXMLRPCPayload mSelfhostedPayload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +121,10 @@ public class MainExampleActivity extends AppCompatActivity {
         mAccountInfos.setEnabled(mAccountStore.hasAccessToken());
         if (event.isError) {
             prependToLog("Authentication error: " + event.authError);
+            if (event.authError == AuthError.HTTP_AUTH_ERROR) {
+                // Show a Dialog prompting for http username and password
+                showHTTPAuthDialog(mSelfhostedPayload.xmlrpcEndpoint);
+            }
         }
     }
 
@@ -144,7 +153,24 @@ public class MainExampleActivity extends AppCompatActivity {
             public void onClick(String username, String password, String url) {
                 signInAction(username, password, url);
             }
-        });
+        }, true);
+        newFragment.show(ft, "dialog");
+    }
+
+    private void showHTTPAuthDialog(final String url) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        DialogFragment newFragment = SignInDialog.newInstance(new Listener() {
+            @Override
+            public void onClick(String username, String password, String dummy) {
+                // Add credentials
+                mHTTPAuthManager.addHTTPAuthCredentials(username, password, url, null);
+                // Retry login action
+                if (mSelfhostedPayload != null) {
+                    selfHostedFetchSites(mSelfhostedPayload.username, mSelfhostedPayload.password,
+                            mSelfhostedPayload.xmlrpcEndpoint);
+                }
+            }
+        }, false);
         newFragment.show(ft, "dialog");
     }
 
@@ -187,6 +213,7 @@ public class MainExampleActivity extends AppCompatActivity {
         payload.username = username;
         payload.password = password;
         payload.xmlrpcEndpoint = xmlrpcEndpoint;
+        mSelfhostedPayload = payload;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
         mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
     }

@@ -12,7 +12,7 @@
         android:hint="Username" />
     <EditText
         android:id="@+id/password"
-        android:inputType="textPassword"
+        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"

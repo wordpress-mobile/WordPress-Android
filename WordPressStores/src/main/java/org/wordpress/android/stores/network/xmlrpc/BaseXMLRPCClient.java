@@ -8,6 +8,7 @@ import org.wordpress.android.stores.action.AuthenticationAction;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.network.AuthError;
 import org.wordpress.android.stores.network.BaseRequest.OnAuthFailedListener;
+import org.wordpress.android.stores.network.HTTPAuthManager;
 import org.wordpress.android.stores.network.UserAgent;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 
@@ -18,13 +19,15 @@ public class BaseXMLRPCClient {
     protected final Dispatcher mDispatcher;
     private UserAgent mUserAgent;
     protected OnAuthFailedListener mOnAuthFailedListener;
+    private HTTPAuthManager mHTTPAuthManager;
 
     public BaseXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                            UserAgent userAgent) {
+                            UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         mRequestQueue = requestQueue;
         mDispatcher = dispatcher;
         mAccessToken = accessToken;
         mUserAgent = userAgent;
+        mHTTPAuthManager = httpAuthManager;
         mOnAuthFailedListener = new OnAuthFailedListener() {
             @Override
             public void onAuthFailed(AuthError authError) {
@@ -40,6 +43,7 @@ public class BaseXMLRPCClient {
     private XMLRPCRequest setRequestAuthParams(XMLRPCRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setUserAgent(mUserAgent.getUserAgent());
+        request.setHTTPAuthHeaderOnMatchingURL(mHTTPAuthManager);
         return request;
     }
 }

@@ -46,13 +46,13 @@ public class ReleaseStack_AccountTest extends ReleaseStack_Base {
         mDispatcher.dispatch(AuthenticationAction.AUTHENTICATE, payload);
         mCountDownLatch = new CountDownLatch(1);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
 
         // Get user infos
         mDispatcher.dispatch(AccountAction.FETCH);
         mCountDownLatch = new CountDownLatch(1);
         // Wait for a network response / onChanged event
-        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS));
+        assertEquals(true, mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
     @Subscribe
