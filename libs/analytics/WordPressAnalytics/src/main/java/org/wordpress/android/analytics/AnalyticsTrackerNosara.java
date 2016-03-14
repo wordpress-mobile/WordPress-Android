@@ -441,6 +441,42 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SITE_SETTINGS_SAVED_REMOTELY:
                 eventName = "site_settings_saved_remotely";
                 break;
+            case SITE_SETTINGS_START_OVER_ACCESSED:
+                eventName = "site_settings_start_over_accessed";
+                break;
+            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
+                eventName = "site_settings_start_over_contact_support_clicked";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
+                eventName = "site_settings_export_site_accessed";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
+                eventName = "site_settings_export_site_requested";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
+                eventName = "site_settings_export_site_response_ok";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
+                eventName = "site_settings_export_site_response_error";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
+                eventName = "site_settings_delete_site_accessed";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
+                eventName = "site_settings_delete_site_purchases_shown";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
+                eventName = "site_settings_delete_site_purchases_show_clicked";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
+                eventName = "site_settings_delete_site_requested";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
+                eventName = "site_settings_delete_site_response_ok";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
+                eventName = "site_settings_delete_site_response_error";
+                break;
             default:
                 eventName = null;
                 break;

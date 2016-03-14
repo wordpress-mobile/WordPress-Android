@@ -902,6 +902,42 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Settings - Saved Remotely");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_updated_remotely");
                 break;
+            case SITE_SETTINGS_START_OVER_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Start Over Accessed");
+                break;
+            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Start Over Contact Support Clicked");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Accessed");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Requested");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Response OK");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Response Error");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Accessed");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Purchases Shown");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Show Purchases Clicked");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Requested");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response OK");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
+                break;
             default:
                 instructions = null;
                 break;
