@@ -17,8 +17,11 @@ import org.wordpress.android.stores.persistence.SiteSqlUtils;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.stores.store.SiteStore;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -267,6 +270,24 @@ public class SiteStoreUnitTest {
         assertEquals(0, mSiteStore.getSitesCount());
     }
 
+    @Test
+    public void testGetRestApiSites() {
+        SiteModel dotComSite = generateDotComSite();
+        SiteModel jetpackSiteOverDotOrg = generateJetpackSite();
+        SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverDotOrg);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
+
+        List<SiteModel> restApiSites = SiteSqlUtils.getAllRestApiSites();
+
+        assertEquals(2, restApiSites.size());
+        for (SiteModel site : restApiSites) {
+            assertNotEquals(jetpackSiteOverDotOrg.getId(), site.getId());
+        }
+    }
+
     public SiteModel generateDotComSite() {
         SiteModel example = new SiteModel();
         example.setId(1);
@@ -292,6 +313,17 @@ public class SiteStoreUnitTest {
         example.setId(3);
         example.setSiteId(982);
         example.setDotOrgSiteId(8);
+        example.setIsWPCom(false);
+        example.setIsJetpack(true);
+        example.setIsVisible(true);
+        example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
+        return example;
+    }
+
+    public SiteModel generateJetpackSiteOverRestOnly() {
+        SiteModel example = new SiteModel();
+        example.setId(4);
+        example.setSiteId(5623);
         example.setIsWPCom(false);
         example.setIsJetpack(true);
         example.setIsVisible(true);
