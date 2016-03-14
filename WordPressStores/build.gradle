@@ -51,7 +51,7 @@ dependencies {
         exclude group: "com.mcxiaoke.volley";
     }
 
-    // Custom WellSQL version
+    // Custom WellSql version
     compile 'org.wordpress:wellsql:1.0.6'
     apt 'org.wordpress:wellsql-processor:1.0.6'
 
