@@ -79,7 +79,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(blogOptionsXMLRPCParameters);
         final XMLRPCRequest request = new XMLRPCRequest(
-                site.getXMLRpcUrl(), XMLRPC.GET_OPTIONS, params,
+                site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
@@ -110,12 +110,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             HashMap<String, ?> siteMap = (HashMap<String, ?>) siteObject;
             SiteModel site = new SiteModel();
             // From the response
-            site.setSiteId(Integer.parseInt((String) siteMap.get("blogid")));
+            site.setDotOrgSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
             // TODO: set a canonical URL here
             site.setUrl((String) siteMap.get("url"));
-            site.setXMLRpcUrl((String) siteMap.get("xmlrpc"));
+            site.setXmlRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
+            site.setIsVisible(true);
             // TODO: siteMap.get("isPrimary")
 
             // From what we know about the host
@@ -140,6 +141,11 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setUrl(getOption(blogOptions, "home_url", String.class));
         oldModel.setSoftwareVersion(getOption(blogOptions, "software_version", String.class));
         oldModel.setIsFeaturedImageSupported(getOption(blogOptions, "post_thumbnail", Boolean.class));
+        long dotComIdForJetpack = getOption(blogOptions, "jetpack_client_id", Long.class);
+        oldModel.setSiteId(dotComIdForJetpack);
+        if (dotComIdForJetpack != 0) {
+            oldModel.setIsJetpack(true);
+        }
         return oldModel;
     }
 

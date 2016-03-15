@@ -14,6 +14,7 @@ public class SiteModel implements Identifiable, Payload {
 
     @PrimaryKey
     @Column private int mId;
+    // Only given a value for .COM and Jetpack sites - self-hosted sites use mDotOrgSiteId
     @Column private long mSiteId;
     @Column private String mUrl;
     @Column private String mAdminUrl;
@@ -24,9 +25,11 @@ public class SiteModel implements Identifiable, Payload {
     @Column private boolean mIsFeaturedImageSupported;
 
     // Self hosted specifics
+    // The siteId for .org sites. Jetpack sites will also have a mSiteId, which is their id on .COM
+    @Column private long mDotOrgSiteId;
     @Column private String mUsername;
     @Column private String mPassword;
-    @Column private String mXMLRpcUrl;
+    @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
     @Column private String mSoftwareVersion;
 
     // WPCom specifics
@@ -103,12 +106,20 @@ public class SiteModel implements Identifiable, Payload {
         mPassword = password;
     }
 
-    public String getXMLRpcUrl() {
-        return mXMLRpcUrl;
+    public String getXmlRpcUrl() {
+        return mXmlRpcUrl;
     }
 
-    public void setXMLRpcUrl(String XMLRpcUrl) {
-        mXMLRpcUrl = XMLRpcUrl;
+    public void setXmlRpcUrl(String xmlRpcUrl) {
+        mXmlRpcUrl = xmlRpcUrl;
+    }
+
+    public long getDotOrgSiteId() {
+        return mDotOrgSiteId;
+    }
+
+    public void setDotOrgSiteId(long dotOrgSiteId) {
+        mDotOrgSiteId = dotOrgSiteId;
     }
 
     public boolean isAdmin() {

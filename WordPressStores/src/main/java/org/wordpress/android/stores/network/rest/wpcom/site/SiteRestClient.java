@@ -83,6 +83,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setUrl(from.URL);
         site.setName(from.name);
         site.setDescription(from.description);
+        site.setIsJetpack(from.jetpack);
+        site.setIsVisible(from.visible);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read blog options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
