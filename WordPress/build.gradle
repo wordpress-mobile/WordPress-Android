@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0-beta6'
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
@@ -18,6 +19,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     useLibrary 'org.apache.http.legacy'
@@ -106,6 +108,11 @@ dependencies {
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.1.0'
     compile 'org.wordpress:emailchecker:0.3'
+
+    // Dagger
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'

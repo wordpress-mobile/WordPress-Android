@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
+import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -39,11 +40,17 @@ import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.modules.AppComponent;
+import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.SiteAction;
+import org.wordpress.android.stores.module.AppContextModule;
+import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -82,6 +89,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
@@ -104,6 +113,13 @@ public class WordPress extends Application {
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
+
+    @Inject Dispatcher mDispatcher;
+
+    private AppComponent mAppComponent;
+    public AppComponent component() {
+        return mAppComponent;
+    }
 
     /**
      *  Updates Options for the current blog in background.
@@ -166,8 +182,16 @@ public class WordPress extends Application {
         super.onCreate();
         long startDate = SystemClock.elapsedRealtime();
 
-        mContext = this;
+        // Init Dagger
+        mAppComponent = DaggerAppComponent.builder()
+                .appContextModule(new AppContextModule(getApplicationContext()))
+                .build();
+        component().inject(this);
 
+        // Init WellSql
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
+
+        mContext = this;
         ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
