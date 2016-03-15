@@ -70,6 +70,17 @@ public class DetailListPreference extends ListPreference
     }
 
     @Override
+    public CharSequence getEntry() {
+        int index = findIndexOfValue(getValue());
+        CharSequence[] entries = getEntries();
+
+        if (entries != null && index >= 0 && index < entries.length) {
+            return entries[index];
+        }
+        return null;
+    }
+
+    @Override
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
