@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.AnalyticsUtils;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
     public static final String SITE_DOMAIN_KEY = "site-domain";
@@ -31,6 +33,8 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AnalyticsUtils.trackWithCurrentBlogDetails(
+                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED);
         retrieveSiteDomain();
         configureAlertViewBuilder(builder);
 
