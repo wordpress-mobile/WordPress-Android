@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 public class PeopleTable {
@@ -32,6 +33,12 @@ public class PeopleTable {
 
     private static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + PEOPLE_TABLE);
+    }
+
+    public static void reset(SQLiteDatabase db) {
+        AppLog.i(AppLog.T.COMMENTS, "resetting people table");
+        dropTables(db);
+        createTables(db);
     }
 
     public static void save(Person person) {
