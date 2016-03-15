@@ -36,6 +36,7 @@ public class PlanFragment extends Fragment {
     public static PlanFragment newInstance(SitePlan sitePlan) {
         PlanFragment fragment = new PlanFragment();
         fragment.setSitePlan(sitePlan);
+        AppLog.d(AppLog.T.PLANS, "PlanFragment newInstance");
         return fragment;
     }
 
@@ -175,17 +176,5 @@ public class PlanFragment extends Fragment {
 
     public SitePlan getSitePlan() {
         return mSitePlan;
-    }
-
-    private static final String UNICODE_CHECKMARK = "\u2713";
-    String getTitle() {
-        if (mSitePlan == null || mPlanDetails == null) {
-            AppLog.w(AppLog.T.PLANS, "empty plan data in fragment getTitle");
-            return "";
-        } else if (mSitePlan.isCurrentPlan()) {
-            return UNICODE_CHECKMARK + " " + mPlanDetails.getProductNameShort();
-        } else {
-            return mPlanDetails.getProductNameShort();
-        }
     }
 }
