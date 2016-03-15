@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,15 +22,14 @@ import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlanFragment extends Fragment {
     private static final String SITE_PLAN = "SITE_PLAN";
-    private static final String PLAN_DETAILS = "PLAN_DETAILS";
 
     private ViewGroup mPlanContainerView;
-
     private SitePlan mSitePlan;
     private Plan mPlanDetails;
 
@@ -44,10 +44,10 @@ public class PlanFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SITE_PLAN)) {
-                mSitePlan = (SitePlan) savedInstanceState.getSerializable(SITE_PLAN);
-            }
-            if (savedInstanceState.containsKey(PLAN_DETAILS)) {
-                mPlanDetails = (Plan) savedInstanceState.getSerializable(PLAN_DETAILS);
+                Serializable serial = savedInstanceState.getSerializable(SITE_PLAN);
+                if (serial instanceof SitePlan) {
+                    setSitePlan((SitePlan) serial);
+                }
             }
         }
     }
@@ -70,7 +70,6 @@ public class PlanFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(SITE_PLAN, mSitePlan);
-        outState.putSerializable(PLAN_DETAILS, mPlanDetails);
         super.onSaveInstanceState(outState);
     }
 
@@ -169,7 +168,7 @@ public class PlanFragment extends Fragment {
         mPlanContainerView.addView(view);
     }
 
-    private void setSitePlan(SitePlan sitePlan) {
+    private void setSitePlan(@NonNull SitePlan sitePlan) {
         mSitePlan = sitePlan;
         mPlanDetails = PlansUtils.getGlobalPlan(mSitePlan.getProductID());
     }
