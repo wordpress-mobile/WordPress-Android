@@ -57,8 +57,6 @@ public class SignInActivity extends Activity {
             default:
                 break;
         }
-
-
     }
 
     @Override

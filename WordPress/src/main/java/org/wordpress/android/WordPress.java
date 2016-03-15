@@ -52,7 +52,6 @@ import org.wordpress.android.stores.action.SiteAction;
 import org.wordpress.android.stores.module.AppContextModule;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -124,7 +123,7 @@ public class WordPress extends Application {
     /**
      *  Updates Options for the current blog in background.
      */
-    public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
+    public RateLimitedTask mUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
         protected boolean run() {
             Blog currentBlog = WordPress.getCurrentBlog();
             if (currentBlog != null) {
@@ -140,10 +139,11 @@ public class WordPress extends Application {
      *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
      *  list changed.
      */
-    public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
+    public RateLimitedTask mUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
             if (AccountHelper.isSignedInWordPressDotCom()) {
-                new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                // TODO: STORES: should only update WPCOM SITES
+                mDispatcher.dispatch(SiteAction.FETCH_SITES);
             }
             return true;
         }
@@ -815,10 +815,10 @@ public class WordPress extends Application {
                 updatePushNotificationTokenIfNotLimited();
 
                 // Rate limited WPCom blog list Update
-                sUpdateWordPressComBlogList.runIfNotLimited();
+                mUpdateWordPressComBlogList.runIfNotLimited();
 
                 // Rate limited blog options Update
-                sUpdateCurrentBlogOption.runIfNotLimited();
+                mUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }
