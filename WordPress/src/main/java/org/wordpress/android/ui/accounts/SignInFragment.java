@@ -771,11 +771,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public void onStart() {
         super.onStart();
-        // Order is important here since onRegister could fire onChanged events. "register(this)" should probably go
-        // first everywhere.
+        mDispatcher.register(this);
         mDispatcher.register(mSiteStore);
         mDispatcher.register(mAccountStore);
-        mDispatcher.register(this);
     }
 
     @Override

@@ -66,8 +66,6 @@ public class SiteStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(T.API, "SiteStore onRegister");
-        // TODO: I'm really not sure about emitting OnChange event here.
-        emitChange(new OnSiteChanged(0));
     }
 
     /**
