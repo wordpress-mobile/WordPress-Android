@@ -21,8 +21,8 @@ our example:
 
     $ cp example/gradle.properties-example example/gradle.properties
     $ cp example/tests.properties-example example/tests.properties
-    $ ./gradlew cAT // Regression tests
-    $ ./gradlew testDebug // Unit tests
+    $ ./gradlew cAT       # Regression tests
+    $ ./gradlew testDebug # Unit tests
 
 Note: this is the default `example/gradle.properties` file. You'll have to get
 a WordPress.com OAuth2 ID and secret.
