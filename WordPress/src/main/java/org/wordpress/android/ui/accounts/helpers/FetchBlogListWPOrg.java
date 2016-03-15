@@ -55,7 +55,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 String xmlrpcUrl = XMLRPCUtils.verifyOrDiscoverXmlRpcUrl(mSelfHostedUrl, mHttpUsername, mHttpPassword);
 
                 // The XML-RPC address is now available. Call wp.getUsersBlogs and load the sites.
-                return XMLRPCUtils.getUserBlogList(URI.create(xmlrpcUrl), mUsername, mPassword, mHttpUsername,
+                return XMLRPCUtils.getUserBlogsList(URI.create(xmlrpcUrl), mUsername, mPassword, mHttpUsername,
                         mHttpPassword);
             } catch (XMLRPCUtilsException hce) {
                 mErrorMsgId = hce.errorMsgId;

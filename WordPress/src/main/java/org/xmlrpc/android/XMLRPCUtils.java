@@ -396,7 +396,7 @@ public class XMLRPCUtils {
         throw new XMLRPCUtilsException(Kind.NO_SITE_ERROR, org.wordpress.android.R.string.no_site_error, null, null);
     }
 
-    public static List<Map<String, Object>> getUserBlogList(URI xmlrpcUri, String username, String password, String
+    public static List<Map<String, Object>> getUserBlogsList(URI xmlrpcUri, String username, String password, String
             httpUsername, String httpPassword) throws XMLRPCUtilsException {
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, httpUsername, httpPassword);
         Object[] params = { username, password };
