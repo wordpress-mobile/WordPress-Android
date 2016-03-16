@@ -643,6 +643,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened Account Settings");
                 break;
+            case OPENED_APP_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened App Settings");
+                break;
             case OPENED_MY_PROFILE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened My Profile");

@@ -32,10 +32,10 @@ public final class AnalyticsTracker {
         READER_BLOG_UNFOLLOWED,
         READER_DISCOVER_VIEWED,
         READER_INFINITE_SCROLL,
-        READER_LIST_FOLLOWED, // Future
+        READER_LIST_FOLLOWED,
         READER_LIST_LOADED,
-        READER_LIST_PREVIEWED, // Future
-        READER_LIST_UNFOLLOWED, // Future
+        READER_LIST_PREVIEWED,
+        READER_LIST_UNFOLLOWED,
         READER_TAG_FOLLOWED,
         READER_TAG_LOADED,
         READER_TAG_PREVIEWED,
@@ -100,8 +100,9 @@ public final class AnalyticsTracker {
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
-        OPENED_ACCOUNT_SETTINGS, // Future
-        OPENED_MY_PROFILE, // Future
+        OPENED_ACCOUNT_SETTINGS,
+        OPENED_APP_SETTINGS,
+        OPENED_MY_PROFILE,
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
