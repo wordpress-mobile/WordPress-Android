@@ -1,7 +1,5 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
 import org.wordpress.android.datasets.AccountTable;
 
 /**
@@ -23,14 +21,5 @@ public class AccountHelper {
 
     public static boolean isSignedInWordPressDotCom() {
         return getDefaultAccount().hasAccessToken();
-    }
-
-    public static String getCurrentUsernameForBlog(Blog blog) {
-        if (!TextUtils.isEmpty(getDefaultAccount().getUserName())) {
-            return getDefaultAccount().getUserName();
-        } else if (blog != null) {
-            return blog.getUsername();
-        }
-        return "";
     }
 }
