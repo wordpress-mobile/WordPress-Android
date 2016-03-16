@@ -115,7 +115,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     private void retrieveSiteDomain() {
         Bundle args = getArguments();
-        mSiteDomain = getString(R.string.delete).toLowerCase();
+        mSiteDomain = getString(R.string.dot_wordpress_dot_com_url).toLowerCase();
         if (args != null) {
             mSiteDomain = args.getString(SITE_DOMAIN_KEY);
         }
