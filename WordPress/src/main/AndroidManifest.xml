@@ -119,7 +119,7 @@
         <activity
             android:name=".ui.prefs.AppSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
-            android:label="@string/account_settings"
+            android:label="@string/me_btn_app_settings"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
