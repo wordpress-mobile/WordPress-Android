@@ -5,10 +5,10 @@
     android:orientation="vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:paddingRight="@dimen/delete_site_preference_margin_large"
-    android:paddingLeft="@dimen/delete_site_preference_margin_large"
-    android:paddingTop="@dimen/delete_site_preference_margin_large"
-    android:paddingBottom="@dimen/delete_site_preference_margin_large"
+    android:paddingRight="@dimen/start_over_preference_margin_large"
+    android:paddingLeft="@dimen/start_over_preference_margin_large"
+    android:paddingTop="@dimen/start_over_preference_margin_large"
+    android:paddingBottom="@dimen/start_over_preference_margin_large"
     android:background="?android:attr/selectableItemBackground"
     android:baselineAligned="false">
 
@@ -19,10 +19,10 @@
 
         <ImageView
             android:id="@+android:id/icon"
-            android:layout_width="@dimen/delete_site_icon_size"
-            android:layout_height="@dimen/delete_site_icon_size"
-            android:layout_marginRight="@dimen/delete_site_icon_margin_right"
-            android:padding="@dimen/delete_site_icon_padding"
+            android:layout_width="@dimen/start_over_icon_size"
+            android:layout_height="@dimen/start_over_icon_size"
+            android:layout_marginRight="@dimen/start_over_icon_margin_right"
+            android:padding="@dimen/start_over_icon_padding"
             android:layout_gravity="center_vertical"
             android:tint="@color/grey_darken_30"/>
 
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:paddingLeft="@dimen/delete_site_title_margin"
+            android:paddingLeft="@dimen/start_over_title_margin"
             android:layout_gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
@@ -41,10 +41,10 @@
 
     <TextView
         android:id="@android:id/summary"
-        android:layout_marginTop="@dimen/delete_site_preference_margin_medium"
-        android:layout_marginBottom="@dimen/delete_site_preference_margin_medium"
-        android:layout_marginLeft="@dimen/delete_site_summary_margin"
-        android:paddingLeft="@dimen/delete_site_preference_margin_small"
+        android:layout_marginTop="@dimen/start_over_preference_margin_medium"
+        android:layout_marginBottom="@dimen/start_over_preference_margin_medium"
+        android:layout_marginLeft="@dimen/start_over_summary_margin"
+        android:paddingLeft="@dimen/start_over_preference_margin_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -52,7 +52,7 @@
 
     <LinearLayout
         android:id="@android:id/widget_frame"
-        android:layout_marginLeft="@dimen/delete_site_summary_margin"
+        android:layout_marginLeft="@dimen/start_over_summary_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

@@ -49,7 +49,7 @@ public class WPStartOverPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPStartOverPreference deleteSitePreference = this;
+            final WPStartOverPreference wpStartOverPreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
@@ -58,7 +58,7 @@ public class WPStartOverPreference extends WPPreference {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPreferenceClickListener().onPreferenceClick(deleteSitePreference);
+                    getOnPreferenceClickListener().onPreferenceClick(wpStartOverPreference);
                 }
             });
         }

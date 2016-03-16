@@ -296,8 +296,8 @@
                 android:icon="@drawable/gridicons_history"
                 android:title="@string/let_us_help"
                 android:summary="@string/start_over_text"
-                android:widgetLayout="@layout/delete_site_preference_button"
-                android:layout="@layout/delete_site_preference"
+                android:widgetLayout="@layout/start_over_preference_button"
+                android:layout="@layout/start_over_preference"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
                 app:buttonTextAllCaps="true" />
