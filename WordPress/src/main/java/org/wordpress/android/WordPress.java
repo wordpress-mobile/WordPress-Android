@@ -146,7 +146,7 @@ public class WordPress extends Application {
      */
     public RateLimitedTask mUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (AccountHelper.isSignedInWordPressDotCom()) {
+            if (mAccountStore.hasAccessToken()) {
                 // TODO: STORES: should only update WPCOM SITES
                 mDispatcher.dispatch(SiteAction.FETCH_SITES);
             }

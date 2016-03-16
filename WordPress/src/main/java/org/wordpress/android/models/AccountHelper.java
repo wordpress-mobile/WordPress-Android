@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
 
 /**
