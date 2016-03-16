@@ -1,7 +1,8 @@
 package org.wordpress.android.models;
 
 public class Person {
-    public long personID;
+    private long personID;
+    private long blogID;
 
     private String username;
     private String firstName;
@@ -11,6 +12,7 @@ public class Person {
     private Role role;
 
     public Person(long personID,
+                  long blogID,
                   String username,
                   String firstName,
                   String lastName,
@@ -18,6 +20,7 @@ public class Person {
                   String avatarUrl,
                   Role role) {
         this.personID = personID;
+        this.blogID = blogID;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,6 +31,10 @@ public class Person {
 
     public long getPersonId() {
         return personID;
+    }
+
+    public long getBlogId() {
+        return blogID;
     }
 
     public String getUsername() {

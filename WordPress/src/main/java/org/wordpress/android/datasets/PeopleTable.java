@@ -22,13 +22,16 @@ public class PeopleTable {
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
-                + "person_id               INTEGER PRIMARY KEY DEFAULT 0,"
+                + "person_id               INTEGER DEFAULT 0,"
+                + "blog_id                 INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
                 + "last_name               TEXT,"
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
-                + "role                    TEXT)");
+                + "role                    TEXT,"
+                + "PRIMARY KEY (person_id, blog_id)"
+                + ");");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -48,6 +51,7 @@ public class PeopleTable {
     public static void save(Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonId());
+        values.put("blog_id", person.getBlogId());
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
         values.put("last_name", person.getLastName());
@@ -59,12 +63,13 @@ public class PeopleTable {
 
     /**
      * retrieve a single person
-     * @param personId - unique id in people table
+     * @param personId - id of a person in a particular blog
+     * @param blogId - blog the person belongs to
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId) {
-        String[] args = { Long.toString(personId) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=?", args);
+    public static Person getPerson(long personId, long blogId) {
+        String[] args = { Long.toString(personId), Long.toString(blogId) };
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND blog_id=?", args);
 
         try {
             if (!c.moveToFirst()) {
@@ -78,7 +83,7 @@ public class PeopleTable {
             String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
             Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
 
-            return new Person(personId, username, firstName, lastName, displayName, avatarUrl, role);
+            return new Person(personId, blogId, username, firstName, lastName, displayName, avatarUrl, role);
         } finally {
             SqlUtils.closeCursor(c);
         }
