@@ -101,6 +101,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
+     * url that points to wordpress.com purchases
+     */
+    public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
+
+    /**
      * Used to move the Uncategorized category to the beginning of the category list.
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
@@ -120,7 +125,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final String ANALYTICS_ERROR_PROPERTY_KEY = "error";
 
     private static final long FETCH_DELAY = 1000;
-    public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
 
     // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
     private Blog mBlog;
