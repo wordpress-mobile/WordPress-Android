@@ -21,8 +21,7 @@ import java.util.List;
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     private RestClientCustomizableMock mRestClientV1_2;
-
-    private RestClientCustomizableMock mRestClientV1_3;
+    private RestClientCustomizableMock mRestClientV1_1;
 
     @Override
     protected void setUp() throws Exception {
@@ -31,7 +30,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         // Set the version of the REST client to v1.2
         RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
         mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_2);
-        mRestClientV1_3 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_3);
+        mRestClientV1_1 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_1);
     }
 
     private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
@@ -58,7 +57,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         abstract void parseResponse(JSONObject response) throws JSONException;
     }
 
-    public void testGlobalPlans() throws Exception {
+    public void testSitePlans() throws Exception {
         PlansRestRequestAbstractListener listener = new PlansRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -93,7 +92,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             }
         };
 
-        mRestClientV1_3.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.3/plans",
+
+        mRestClientV1_1.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/plans",
                 null,
                 listener,
                 errListener
