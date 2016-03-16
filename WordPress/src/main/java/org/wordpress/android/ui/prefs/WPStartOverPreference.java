@@ -35,7 +35,7 @@ public class WPStartOverPreference extends WPPreference {
             if (index == R.styleable.WPStartOverPreference_buttonText) {
                 mButtonText = array.getString(index);
             } else if (index == R.styleable.WPStartOverPreference_buttonTextColor) {
-                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
+                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.grey_dark));
             } else if (index == R.styleable.WPStartOverPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
@@ -49,7 +49,7 @@ public class WPStartOverPreference extends WPPreference {
         super.onBindView(view);
 
         if (view.findViewById(R.id.button) != null) {
-            final WPStartOverPreference deleteSitePreference = this;
+            final WPStartOverPreference wpStartOverPreference = this;
 
             Button button = (Button) view.findViewById(R.id.button);
             button.setText(mButtonText);
@@ -58,7 +58,7 @@ public class WPStartOverPreference extends WPPreference {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPreferenceClickListener().onPreferenceClick(deleteSitePreference);
+                    getOnPreferenceClickListener().onPreferenceClick(wpStartOverPreference);
                 }
             });
         }

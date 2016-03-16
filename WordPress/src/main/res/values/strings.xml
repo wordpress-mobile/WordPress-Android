@@ -979,6 +979,7 @@
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
+    <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1370,7 +1371,7 @@
     <string name="delete_site_hint">Delete your site</string>
     <string name="pref_key_site_start_over_screen">wp_pref_key_site_start_over_screen</string>
     <string name="delete_site_progress">Deleting site…</string>
-    <string name="purchases_request_error">Something went wrong. Please contact support</string>
+    <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
     <string name="premium_upgrades_title">Premium Upgrades</string>
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
