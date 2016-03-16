@@ -63,13 +63,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        getActivity().setTitle(R.string.me_btn_app_settings);
-    }
-
-    @Override
     public boolean onPreferenceClick(Preference preference) {
         String preferenceKey = preference != null ? preference.getKey() : "";
 
