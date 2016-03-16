@@ -86,8 +86,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             AccountHelper.getDefaultAccount().fetchAccountSettings();
         }
-
-        getActivity().setTitle(R.string.account_settings);
     }
 
     @Override
