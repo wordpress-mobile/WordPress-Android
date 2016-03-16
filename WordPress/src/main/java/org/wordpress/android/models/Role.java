@@ -13,6 +13,12 @@ public enum Role {
     CONTRIBUTOR(R.string.role_contributor, R.color.blue_wordpress),
     UNSUPPORTED(R.string.role_unsupported, R.color.blue_wordpress);
 
+    private static String KEY_SUPER_ADMIN = "super_administrator";
+    private static String KEY_ADMIN = "administrator";
+    private static String KEY_EDITOR = "editor";
+    private static String KEY_AUTHOR = "author";
+    private static String KEY_CONTRIBUTOR = "contributor";
+
     private final int label;
     private final int backgroundColor;
 
@@ -21,21 +27,42 @@ public enum Role {
         this.backgroundColor = backgroundColor;
     }
 
-    public static String toString(Context context, Role role) {
+    // Label to be used in UI
+    public static String getLabel(Context context, Role role) {
         return context.getString(role.label);
     }
 
-    // This method will be used to determine the role of the user from network request
-    public static Role fromString(String value) {
+    // Returns the key for that role
+    public static String toKey(Role role) {
+        switch (role) {
+            case SUPER_ADMIN:
+                return KEY_SUPER_ADMIN;
+            case ADMIN:
+                return KEY_ADMIN;
+            case EDITOR:
+                return KEY_EDITOR;
+            case AUTHOR:
+                return KEY_AUTHOR;
+            case CONTRIBUTOR:
+                return KEY_CONTRIBUTOR;
+            default:
+                return "unsupported";
+        }
+    }
+
+    // This method is be used to determine the role of the user from network request & db
+    public static Role fromKey(String value) {
         if (value == null)
             return Role.UNSUPPORTED;
-        if (value.equals("administrator"))
+        if (value.equals(KEY_SUPER_ADMIN))
+            return Role.SUPER_ADMIN;
+        if (value.equals(KEY_ADMIN))
             return Role.ADMIN;
-        if (value.equals("editor"))
+        if (value.equals(KEY_EDITOR))
             return Role.EDITOR;
-        if (value.equals("author"))
+        if (value.equals(KEY_AUTHOR))
             return Role.AUTHOR;
-        if (value.equals("contributor"))
+        if (value.equals(KEY_CONTRIBUTOR))
             return Role.CONTRIBUTOR;
         return Role.UNSUPPORTED;
     }

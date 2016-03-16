@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.PersonTable;
+import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -17,14 +17,17 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonActivity extends AppCompatActivity {
     public static final String EXTRA_PERSON_ID = "EXTRA_PERSON_ID";
+    public static final String EXTRA_BLOG_ID = "EXTRA_BLOG_ID";
 
-    private int mPersonId;
+    private long mPersonId;
+    private long mBlogId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPersonId = getIntent().getExtras().getInt(EXTRA_PERSON_ID);
+        mPersonId = getIntent().getExtras().getLong(EXTRA_PERSON_ID);
+        mBlogId = getIntent().getExtras().getLong(EXTRA_BLOG_ID);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -60,16 +63,16 @@ public class PersonActivity extends AppCompatActivity {
         TextView txtRole = (TextView) findViewById(R.id.person_role);
         TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
-        Person person = PersonTable.getPerson(mPersonId);
+        Person person = PeopleTable.getPerson(mPersonId, mBlogId);
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getImageUrl(), avatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             txtDisplayName.setText(person.getDisplayName());
             txtUsername.setText(person.getUsername());
-            txtRole.setText(Role.toString(this, person.getRole()));
+            txtRole.setText(Role.getLabel(this, person.getRole()));
             txtRemove.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
 
             txtRemove.setOnClickListener(new View.OnClickListener() {
