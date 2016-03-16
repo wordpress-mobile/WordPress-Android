@@ -35,7 +35,7 @@ public class WPStartOverPreference extends WPPreference {
             if (index == R.styleable.WPStartOverPreference_buttonText) {
                 mButtonText = array.getString(index);
             } else if (index == R.styleable.WPStartOverPreference_buttonTextColor) {
-                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
+                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.grey_dark));
             } else if (index == R.styleable.WPStartOverPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             }
