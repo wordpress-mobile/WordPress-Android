@@ -59,7 +59,7 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
         return -1;
     }
 
-    public Plan getSitePlan(int position) {
+    public Plan getPlan(int position) {
         if (isValidPosition(position)) {
             return mSitePlans[position];
         }

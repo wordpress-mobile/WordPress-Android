@@ -35,8 +35,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -138,7 +136,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void updatePurchaseUI(int position) {
-        Plan plan = getPageAdapter().getSitePlan(position);
+        Plan plan = getPageAdapter().getPlan(position);
         boolean showPurchaseButton;
         if (plan.isCurrentPlan()) {
             showPurchaseButton = false;
