@@ -131,6 +131,10 @@ public class AccountStore extends Store {
         return mAccessToken.exists();
     }
 
+    public String getAccessToken() {
+        return mAccessToken.get();
+    }
+
     /**
      * Checks if an Account is currently signed in to WordPress.com or any WordPress.org sites.
      */
