@@ -302,7 +302,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         @Override
         public void onClick(View v) {
             if (mOnNoteClickListener != null && v.getTag() instanceof String) {
-                mOnNoteClickListener.onClickNote(StringUtils.notNullStr((String)v.getTag()));
+                mOnNoteClickListener.onClickNote((String)v.getTag());
             }
         }
     };
