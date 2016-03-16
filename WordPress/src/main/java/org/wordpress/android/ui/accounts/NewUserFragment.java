@@ -294,7 +294,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
-                        AnalyticsUtils.refreshMetadata(username, email);
+                        AnalyticsUtils.refreshMetadata(username, email, true, true, false, 1);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
                         // Set visual editor available when user signup

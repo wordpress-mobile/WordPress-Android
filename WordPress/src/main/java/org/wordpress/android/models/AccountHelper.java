@@ -1,8 +1,5 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
 
 /**
@@ -22,24 +19,7 @@ public class AccountHelper {
         return sAccount;
     }
 
-    public static boolean isSignedIn() {
-        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
-    }
-
     public static boolean isSignedInWordPressDotCom() {
         return getDefaultAccount().hasAccessToken();
-    }
-
-    public static boolean isJetPackUser() {
-        return WordPress.wpDB.hasAnyJetpackBlogs();
-    }
-
-    public static String getCurrentUsernameForBlog(Blog blog) {
-        if (!TextUtils.isEmpty(getDefaultAccount().getUserName())) {
-            return getDefaultAccount().getUserName();
-        } else if (blog != null) {
-            return blog.getUsername();
-        }
-        return "";
     }
 }

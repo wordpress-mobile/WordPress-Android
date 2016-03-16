@@ -23,11 +23,11 @@ import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -36,8 +36,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -55,18 +55,21 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
-
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private int  mAppBarElevation;
+
+    @Inject AccountStore mAccountStore;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -81,6 +84,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
+        ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
@@ -174,7 +178,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         });
 
         if (savedInstanceState == null) {
-            if (AccountHelper.isSignedIn()) {
+            if (mAccountStore.isSignedIn()) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -405,7 +409,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     // Register for Cloud messaging
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                     resetFragments();
-                } else if (!AccountHelper.isSignedIn()) {
+                } else if (!mAccountStore.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -431,7 +435,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             case RequestCodes.BLOG_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     // user removed the current (self-hosted) blog from blog settings
-                    if (!AccountHelper.isSignedIn()) {
+                    if (!mAccountStore.isSignedIn()) {
                         ActivityLauncher.showSignInForResult(this);
                     } else {
                         MySiteFragment mySiteFragment = getMySiteFragment();
@@ -479,11 +483,13 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     // Events
 
+    // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
     }
 
+    // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutCompletely event) {
         ActivityLauncher.showSignInForResult(this);

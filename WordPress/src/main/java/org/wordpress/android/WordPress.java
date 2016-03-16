@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
+import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -39,13 +40,21 @@ import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.modules.AppComponent;
+import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.action.SiteAction;
+import org.wordpress.android.stores.module.AppContextModule;
+import org.wordpress.android.stores.persistence.WellSqlConfig;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -82,6 +91,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
@@ -105,10 +116,19 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
+    private AppComponent mAppComponent;
+    public AppComponent component() {
+        return mAppComponent;
+    }
+
     /**
      *  Updates Options for the current blog in background.
      */
-    public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
+    public RateLimitedTask mUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
         protected boolean run() {
             Blog currentBlog = WordPress.getCurrentBlog();
             if (currentBlog != null) {
@@ -124,10 +144,11 @@ public class WordPress extends Application {
      *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
      *  list changed.
      */
-    public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
+    public RateLimitedTask mUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            if (AccountHelper.isSignedInWordPressDotCom()) {
-                new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (mAccountStore.hasAccessToken()) {
+                // TODO: STORES: should only update WPCOM SITES
+                mDispatcher.dispatch(SiteAction.FETCH_SITES);
             }
             return true;
         }
@@ -166,8 +187,16 @@ public class WordPress extends Application {
         super.onCreate();
         long startDate = SystemClock.elapsedRealtime();
 
-        mContext = this;
+        // Init WellSql
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
 
+        // Init Dagger
+        mAppComponent = DaggerAppComponent.builder()
+                .appContextModule(new AppContextModule(getApplicationContext()))
+                .build();
+        component().inject(this);
+
+        mContext = this;
         ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
@@ -217,7 +246,8 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
-        AnalyticsUtils.refreshMetadata();
+
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
@@ -255,16 +285,16 @@ public class WordPress extends Application {
         configureSimperium();
 
         // Refresh account informations
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountAction.FETCH_ACCOUNT);
         }
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
+        if (mAccountStore.hasAccessToken()) {
             AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
+            SimperiumUtils.configureSimperium(this, mAccountStore.getAccessToken());
         }
     }
 
@@ -480,17 +510,19 @@ public class WordPress extends Application {
      * Sign out from wpcom account.
      * Note: This method must not be called on UI Thread.
      */
-    public static void WordPressComSignOut(Context context) {
+    public void wordPressComSignOut() {
         // Keep the analytics tracking at the beginning, before the account data is actual removed.
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
 
-        removeWpComUserRelatedData(context);
+        removeWpComUserRelatedData(getApplicationContext());
 
+        // TODO: STORES: kill this when we have a signout action in AccountStore
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
         // broadcast an event only if the user is completely signed out
-        if (!AccountHelper.isSignedIn()) {
+        if (!mAccountStore.isSignedIn()) {
+            // TODO: STORES: kill this when we have a signout action in AccountStore
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
     }
@@ -521,7 +553,6 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
-
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -541,6 +572,7 @@ public class WordPress extends Application {
         wpDB.deleteWordPressComBlogs(context);
 
         // reset default account
+        // TODO: STORES: dispatch a SIGN_OUT action
         AccountHelper.getDefaultAccount().signout();
 
         // reset all reader-related prefs & data
@@ -549,7 +581,7 @@ public class WordPress extends Application {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
-        StatsWidgetProvider.updateWidgetsOnLogout(context);
+        StatsWidgetProvider.refreshAllWidgets(context);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
@@ -764,7 +796,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
+            if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
                 startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
@@ -783,7 +815,7 @@ public class WordPress extends Application {
         public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
-            AnalyticsUtils.refreshMetadata();
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
@@ -791,10 +823,10 @@ public class WordPress extends Application {
                 updatePushNotificationTokenIfNotLimited();
 
                 // Rate limited WPCom blog list Update
-                sUpdateWordPressComBlogList.runIfNotLimited();
+                mUpdateWordPressComBlogList.runIfNotLimited();
 
                 // Rate limited blog options Update
-                sUpdateCurrentBlogOption.runIfNotLimited();
+                mUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }

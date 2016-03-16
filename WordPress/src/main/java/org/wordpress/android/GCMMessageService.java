@@ -22,6 +22,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -40,6 +41,8 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -67,6 +70,14 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_FOLLOW = "follow";
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
+
+    @Inject AccountStore mAccountStore;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
+    }
 
     // Add to the analytics properties map a subset of the push notification payload.
     private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
@@ -396,7 +407,7 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
+        if (!mAccountStore.hasAccessToken()) {
             return;
         }
 

@@ -11,4 +11,9 @@
 
     <issue id="HardcodedText" severity="error" />
     <issue id="InconsistentArrays" severity="warning" />
+
+    <!-- Known okio issue: https://github.com/square/okio/issues/58 -->
+    <issue id="InvalidPackage">
+      <ignore regexp="okio-1.6.0.jar" />
+    </issue>
 </lint>

@@ -29,6 +29,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -53,6 +55,8 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -87,6 +91,9 @@ public class StatsActivity extends AppCompatActivity
         NOTIFICATIONS
     }
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     private int mResultCode = -1;
     private boolean mIsInFront;
     private int mLocalBlogID = -1;
@@ -105,6 +112,7 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
@@ -551,7 +559,7 @@ public class StatsActivity extends AppCompatActivity
                             if (result != null && (result instanceof HashMap)) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
-                                AnalyticsUtils.refreshMetadata();
+                                AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
                                 AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, currentBlog);
                                 AnalyticsUtils.trackWithBlogDetails(
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN, currentBlog);

@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -35,7 +34,6 @@ import org.wordpress.android.util.NetworkUtils;
 import java.util.ArrayList;
 
 public class StatsWidgetProvider extends AppWidgetProvider {
-
     private static void showMessage(Context context, int[] allWidgets, String message){
         if (allWidgets.length == 0){
             return;
@@ -143,14 +141,6 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         } else {
             showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic));
         }
-    }
-
-    public static void updateWidgetsOnLogout(Context context) {
-        refreshAllWidgets(context);
-    }
-
-    public static void updateWidgetsOnLogin(Context context) {
-        refreshAllWidgets(context);
     }
 
     // This is called by the Stats service in case of error
@@ -473,10 +463,12 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     private static void refreshWidgets(Context context, int[] appWidgetIds) {
         // If not signed into WordPress inform the user
-        if (!AccountHelper.isSignedIn()) {
-            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
-            return;
-        }
+        // TODO: STORES: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
+        // here in the AppWidgetProvider.
+        // if (!mAccountStore.isSignedIn()) {
+        //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
+        //     return;
+        // }
 
         SparseArray<ArrayList<Integer>> blogsToWidgetIDs = new SparseArray<>();
         for (int widgetId : appWidgetIds) {
@@ -532,7 +524,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void refreshAllWidgets(Context context) {
+    public static void refreshAllWidgets(Context context) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
