@@ -93,6 +93,11 @@ public class SiteSettingsFragment extends PreferenceFragment
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
 
+    /**
+     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
+     *
+     * Used to format user-facing {@link String}'s in certain preferences.
+     */
     public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
