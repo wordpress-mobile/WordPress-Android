@@ -795,6 +795,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError) {
             // TODO: STORES: adapt this method to take a parameter
             showAuthErrorMessage();
+            endProgress();
         }
     }
 
