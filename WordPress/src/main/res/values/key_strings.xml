@@ -8,7 +8,8 @@
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
 
     <!-- Preference keys -->
-    <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_app_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
