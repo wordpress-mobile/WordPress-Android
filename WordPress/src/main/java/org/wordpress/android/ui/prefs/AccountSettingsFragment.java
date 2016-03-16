@@ -33,6 +33,8 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -43,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -60,9 +64,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
     private Snackbar mEmailSnackbar;
     private SharedPreferences mSettings;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.settings);
@@ -305,7 +313,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
-        AnalyticsUtils.refreshMetadata();
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         // Refresh the app
         Intent refresh = new Intent(getActivity(), getActivity().getClass());

@@ -48,9 +48,12 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.action.SiteAction;
 import org.wordpress.android.stores.module.AppContextModule;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -114,6 +117,8 @@ public class WordPress extends Application {
     private static BitmapLruCache mBitmapCache;
 
     @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private AppComponent mAppComponent;
     public AppComponent component() {
@@ -182,14 +187,14 @@ public class WordPress extends Application {
         super.onCreate();
         long startDate = SystemClock.elapsedRealtime();
 
+        // Init WellSql
+        WellSql.init(new WellSqlConfig(getApplicationContext()));
+
         // Init Dagger
         mAppComponent = DaggerAppComponent.builder()
                 .appContextModule(new AppContextModule(getApplicationContext()))
                 .build();
         component().inject(this);
-
-        // Init WellSql
-        WellSql.init(new WellSqlConfig(getApplicationContext()));
 
         mContext = this;
         ProfilingUtils.start("App Startup");
@@ -241,7 +246,8 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
-        AnalyticsUtils.refreshMetadata();
+
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
@@ -279,16 +285,16 @@ public class WordPress extends Application {
         configureSimperium();
 
         // Refresh account informations
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AccountHelper.getDefaultAccount().fetchAccountDetails();
+        if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountAction.FETCH_ACCOUNT);
         }
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
+        if (mAccountStore.hasAccessToken()) {
             AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
+            SimperiumUtils.configureSimperium(this, mAccountStore.getAccessToken());
         }
     }
 
@@ -504,17 +510,19 @@ public class WordPress extends Application {
      * Sign out from wpcom account.
      * Note: This method must not be called on UI Thread.
      */
-    public static void WordPressComSignOut(Context context) {
+    public void wordPressComSignOut() {
         // Keep the analytics tracking at the beginning, before the account data is actual removed.
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT);
 
-        removeWpComUserRelatedData(context);
+        removeWpComUserRelatedData(getApplicationContext());
 
+        // TODO: STORES: kill this when we have a signout action in AccountStore
         // broadcast an event: wpcom user signed out
         EventBus.getDefault().post(new UserSignedOutWordPressCom());
 
         // broadcast an event only if the user is completely signed out
-        if (!AccountHelper.isSignedIn()) {
+        if (!mAccountStore.isSignedIn()) {
+            // TODO: STORES: kill this when we have a signout action in AccountStore
             EventBus.getDefault().post(new UserSignedOutCompletely());
         }
     }
@@ -545,7 +553,6 @@ public class WordPress extends Application {
         wpDB.dangerouslyDeleteAllContent();
     }
 
-
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -565,6 +572,7 @@ public class WordPress extends Application {
         wpDB.deleteWordPressComBlogs(context);
 
         // reset default account
+        // TODO: STORES: dispatch a SIGN_OUT action
         AccountHelper.getDefaultAccount().signout();
 
         // reset all reader-related prefs & data
@@ -573,7 +581,7 @@ public class WordPress extends Application {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
-        StatsWidgetProvider.updateWidgetsOnLogout(context);
+        StatsWidgetProvider.refreshAllWidgets(context);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
@@ -788,7 +796,7 @@ public class WordPress extends Application {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && AccountHelper.isSignedInWordPressDotCom()) {
+            if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
                 startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
@@ -807,7 +815,7 @@ public class WordPress extends Application {
         public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
-            AnalyticsUtils.refreshMetadata();
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {

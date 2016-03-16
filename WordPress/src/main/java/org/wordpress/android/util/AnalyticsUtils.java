@@ -7,10 +7,10 @@ import android.text.Html;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,37 +23,24 @@ public class AnalyticsUtils {
     private static String IS_JETPACK_KEY = "is_jetpack";
 
     /**
-     * Utility method to refresh mixpanel metadata.
-     *
-     * @param username WordPress.com username
-     * @param email WordPress.com email address
+     * Utility methods to refresh Tracks and Mixpanel metadata.
      */
-    public static void refreshMetadata(String username, String email) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
-        boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getNumBlogs();
-        int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
-        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
-                versionCode, username, email);
+    public static void refreshMetadata(AccountStore accountStore, SiteStore siteStore) {
+        refreshMetadata(
+                accountStore.getAccount().getUserName(),
+                accountStore.getAccount().getEmail(),
+                accountStore.isSignedIn(),
+                accountStore.hasAccessToken(),
+                siteStore.hasJetpackSite(),
+                siteStore.getSitesCount());
     }
 
-    /**
-     * Utility method to refresh mixpanel metadata.
-     */
-    public static void refreshMetadata() {
+    public static void refreshMetadata(String username, String email, boolean isUserConnected,
+                                       boolean isWpComUser, boolean isJetpackUser, int siteCount) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
-        boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getNumBlogs();
         int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
-        String username = AccountHelper.getDefaultAccount().getUserName();
-        String email = AccountHelper.getDefaultAccount().getEmail();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
+        AnalyticsTracker.refreshMetadata(isUserConnected, isWpComUser, isJetpackUser, sessionCount, siteCount,
                 versionCode, username, email);
     }
 

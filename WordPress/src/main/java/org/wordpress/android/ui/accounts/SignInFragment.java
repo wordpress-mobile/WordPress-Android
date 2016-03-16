@@ -406,7 +406,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     };
 
     private void trackAnalyticsSignIn() {
-        AnalyticsUtils.refreshMetadata();
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
@@ -796,13 +796,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // TODO: STORES: adapt this method to take a parameter
             showAuthErrorMessage();
             endProgress();
+            return;
         }
+
     }
 
     @Subscribe
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         // Sites updated, login step is successful. Note: the user can have zero sites.
+
+        // Login Successful
+        trackAnalyticsSignIn();
         finishCurrentActivity();
     }
 }

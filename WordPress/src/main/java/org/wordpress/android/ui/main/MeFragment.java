@@ -246,7 +246,7 @@ public class MeFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             Context context = mWeakContext.get();
             if (context != null) {
-                WordPress.WordPressComSignOut(context);
+                ((WordPress) getActivity().getApplication()).wordPressComSignOut();
             }
             return null;
         }
