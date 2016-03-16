@@ -95,17 +95,6 @@ public class PlansUtils {
     }
 
     /**
-     * Compares two plan products - assumes lower product IDs are "lesser" than higher product IDs
-     */
-    public static final int LESSER_PRODUCT = -1;
-    public static final int EQUAL_PRODUCT = 0;
-    public static final int GREATER_PRODUCT = 1;
-    public static int compareProducts(long lhsProductId, long rhsProductId) {
-        // this duplicates Long.compare(), which wasn't added until API 19
-        return lhsProductId < rhsProductId ? LESSER_PRODUCT : (lhsProductId == rhsProductId ? EQUAL_PRODUCT : GREATER_PRODUCT);
-    }
-
-    /**
      * Removes stored plan data - for testing purposes
      */
     @SuppressWarnings("unused")

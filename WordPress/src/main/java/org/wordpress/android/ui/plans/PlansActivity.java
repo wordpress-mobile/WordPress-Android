@@ -138,22 +138,22 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void updatePurchaseUI(int position) {
-        Plan sitePlan = getPageAdapter().getSitePlan(position);
+        Plan plan = getPageAdapter().getSitePlan(position);
         boolean showPurchaseButton;
-        if (sitePlan.isCurrentPlan()) {
+        if (plan.isCurrentPlan()) {
             showPurchaseButton = false;
         } else {
             // don't show the purchase button unless the plan at this position is "greater" than
             // the current plan for this site
             long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
-            showPurchaseButton = (PlansUtils.compareProducts(sitePlan.getProductID(), currentPlanProductId) == PlansUtils.GREATER_PRODUCT);
+            showPurchaseButton = plan.isAvailable() && plan.getProductID() > currentPlanProductId;
         }
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
-            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(sitePlan));
+            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(plan));
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -279,14 +279,6 @@ public class PlansActivity extends AppCompatActivity {
         List<Plan> plans = event.getPlans();
         mAvailablePlans = new Plan[plans.size()];
         plans.toArray(mAvailablePlans);
-
-        // make sure plans are correctly sorted
-        Arrays.sort(mAvailablePlans, new Comparator<Plan>() {
-            @Override
-            public int compare(Plan lhs, Plan rhs) {
-                return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
-            }
-        });
 
         setupPlansUI();
         selectCurrentPlan();
