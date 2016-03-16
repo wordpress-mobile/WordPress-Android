@@ -65,10 +65,6 @@ public class AccountStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(T.API, "AccountStore onRegister");
-        // TODO: I'm really not sure about emitting OnChange events here. It helps by having startup events, but
-        // activity listeners must be registered before
-        emitChange(new OnAccountChanged());
-        emitChange(new OnAuthenticationChanged());
     }
 
     @Subscribe
