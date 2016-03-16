@@ -2,7 +2,6 @@ package org.wordpress.android.stores.store;
 
 import com.android.volley.VolleyError;
 import com.squareup.otto.Subscribe;
-import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.Payload;
@@ -13,14 +12,15 @@ import org.wordpress.android.stores.action.IAction;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.network.AuthError;
 import org.wordpress.android.stores.network.rest.wpcom.account.AccountRestClient;
+import org.wordpress.android.stores.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.stores.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.stores.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.stores.persistence.UpdateAllExceptId;
+import org.wordpress.android.stores.persistence.AccountSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -36,9 +36,15 @@ public class AccountStore extends Store {
         public Action nextAction;
     }
 
+    public static class PostAccountSettingsPayload implements Payload {
+        public PostAccountSettingsPayload() {}
+        public Map<String, String> params;
+    }
+
     // OnChanged Events
     public class OnAccountChanged extends OnChanged {
         public boolean accountInfosChanged;
+        public AccountAction causeOfChange;
     }
 
     public class OnAuthenticationChanged extends OnChanged {
@@ -48,7 +54,6 @@ public class AccountStore extends Store {
 
     private AccountRestClient mAccountRestClient;
     private Authenticator mAuthenticator;
-
     private AccountModel mAccount;
     private AccessToken mAccessToken;
 
@@ -84,13 +89,38 @@ public class AccountStore extends Store {
             AuthenticatePayload payload = (AuthenticatePayload) action.getPayload();
             authenticate(payload.username, payload.password, payload);
         } else if (actionType == AccountAction.FETCH) {
-            mAccountRestClient.getMe();
+            // fetch Account and Account Settings
+            mAccountRestClient.fetchAccount();
+            mAccountRestClient.fetchAccountSettings();
+        } else if (actionType == AccountAction.FETCH_ACCOUNT) {
+            // fetch only Account
+            mAccountRestClient.fetchAccount();
+        } else if (actionType == AccountAction.FETCH_SETTINGS) {
+            // fetch only Account Settings
+            mAccountRestClient.fetchAccountSettings();
+        } else if (actionType == AccountAction.POST_SETTINGS) {
+            PostAccountSettingsPayload payload = (PostAccountSettingsPayload) action.getPayload();
+            mAccountRestClient.postAccountSettings(payload.params);
+        } else if (actionType == AccountAction.FETCHED_ACCOUNT) {
+            AccountRestPayload data = (AccountRestPayload) action.getPayload();
+            if (!checkError(data, "Error fetching Account via REST API (/me)")) {
+                mAccount.copyAccountAttributes(data.account);
+                update(mAccount, AccountAction.FETCH_ACCOUNT);
+            }
+        } else if (actionType == AccountAction.FETCHED_SETTINGS) {
+            AccountRestPayload data = (AccountRestPayload) action.getPayload();
+            if (!checkError(data, "Error fetching Account Settings via REST API (/me/settings)")) {
+                mAccount.copyAccountSettingsAttributes(data.account);
+                update(mAccount, AccountAction.FETCH_SETTINGS);
+            }
+        } else if (actionType == AccountAction.POSTED_SETTINGS) {
+            AccountRestPayload data = (AccountRestPayload) action.getPayload();
+            if (!checkError(data, "Error saving Account Settings via REST API (/me/settings)")) {
+                update(data.account, AccountAction.POST_SETTINGS);
+            }
         } else if (actionType == AccountAction.UPDATE) {
             AccountModel accountModel = (AccountModel) action.getPayload();
-            update(accountModel);
-            OnAccountChanged accountChanged = new OnAccountChanged();
-            accountChanged.accountInfosChanged = true;
-            emitChange(accountChanged);
+            update(accountModel, AccountAction.UPDATE);
         }
     }
 
@@ -98,33 +128,35 @@ public class AccountStore extends Store {
         return mAccount;
     }
 
+    /**
+     * Can be used to check if Account is signed into WordPress.com.
+     */
     public boolean hasAccessToken() {
         return mAccessToken.exists();
     }
 
-    private void update(AccountModel accountModel) {
+    /**
+     * Checks if an Account is currently signed in to WordPress.com or any WordPress.org sites.
+     */
+    public boolean isSignedIn() {
+        return hasAccessToken() || mAccount.getVisibleSiteCount() > 0;
+    }
+
+    private void update(AccountModel accountModel, AccountAction cause) {
         // Update memory instance
         mAccount = accountModel;
-        // Update DB
-        List<AccountModel> accountResults = WellSql.selectUnique(AccountModel.class).getAsModel();
-        if (accountResults.isEmpty()) {
-            // insert
-            WellSql.insert(accountModel).execute();
-        } else {
-            // update
-            int oldId = accountResults.get(0).getId();
-            WellSql.update(AccountModel.class).whereId(oldId)
-                    .put(accountModel, new UpdateAllExceptId<AccountModel>()).execute();
-        }
+
+        AccountSqlUtils.insertOrUpdateAccount(accountModel);
+
+        OnAccountChanged accountChanged = new OnAccountChanged();
+        accountChanged.accountInfosChanged = true;
+        accountChanged.causeOfChange = cause;
+        emitChange(accountChanged);
     }
 
     private AccountModel loadAccount() {
-        List<AccountModel> accountResults = WellSql.selectUnique(AccountModel.class).getAsModel();
-        if (accountResults.isEmpty()) {
-            return new AccountModel();
-        } else {
-            return accountResults.get(0);
-        }
+        AccountModel account = AccountSqlUtils.getDefaultAccount();
+        return account == null ? new AccountModel() : account;
     }
 
     private void authenticate(String username, String password, final AuthenticatePayload payload) {
@@ -146,5 +178,13 @@ public class AccountStore extends Store {
                 emitChange(event);
             }
         });
+    }
+
+    private boolean checkError(AccountRestPayload payload, String log) {
+        if (payload.isError()) {
+            AppLog.w(T.API, log + "\nError: " + payload.error.getMessage());
+            return true;
+        }
+        return false;
     }
 }

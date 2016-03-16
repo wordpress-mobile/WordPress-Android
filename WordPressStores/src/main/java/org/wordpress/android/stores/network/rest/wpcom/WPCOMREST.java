@@ -2,6 +2,7 @@ package org.wordpress.android.stores.network.rest.wpcom;
 
 public enum WPCOMREST {
     ME("/me/"),
+    ME_SETTINGS("/me/settings/"),
     ME_SITES("/me/sites/"),
     SITES("/sites/");
 
