@@ -108,7 +108,6 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     private void configureUrlConfirmation(AlertDialog.Builder builder) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
         mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
-        mUrlConfirmation.setHint(mSiteDomain);
         mUrlConfirmation.addTextChangedListener(this);
         builder.setView(view);
     }
@@ -123,7 +122,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     private boolean isUrlConfirmationTextValid() {
         String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase();
-        String hintText = mUrlConfirmation.getHint().toString().toLowerCase();
+        String hintText = mSiteDomain.toLowerCase();
 
         return confirmationText.equals(hintText);
     }
