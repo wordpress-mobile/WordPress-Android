@@ -2,7 +2,7 @@ package org.wordpress.android.ui.plans;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.ui.plans.models.Plan;
 
 import java.util.List;
 
@@ -12,16 +12,16 @@ import java.util.List;
 public class PlanEvents {
 
     public static class PlansUpdated {
-        private final List<SitePlan> mPlans;
+        private final List<Plan> mPlans;
         private final int mLocalBlogId;
-        public PlansUpdated(int localBlogId, @NonNull List<SitePlan> plans) {
+        public PlansUpdated(int localBlogId, @NonNull List<Plan> plans) {
             mLocalBlogId = localBlogId;
             mPlans = plans;
         }
         public int getLocalBlogId() {
             return mLocalBlogId;
         }
-        public List<SitePlan> getPlans() {
+        public List<Plan> getPlans() {
             return mPlans;
         }
     }

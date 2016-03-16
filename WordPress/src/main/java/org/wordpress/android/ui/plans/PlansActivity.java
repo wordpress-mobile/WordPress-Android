@@ -26,7 +26,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -48,7 +47,7 @@ public class PlansActivity extends AppCompatActivity {
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
 
     private int mLocalBlogID = -1;
-    private SitePlan[] mAvailablePlans;
+    private Plan[] mAvailablePlans;
 
     private WPViewPager mViewPager;
     private PlansPagerAdapter mPageAdapter;
@@ -65,8 +64,8 @@ public class PlansActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
-            if (serializable instanceof SitePlan[]) {
-                mAvailablePlans = (SitePlan[]) serializable;
+            if (serializable instanceof Plan[]) {
+                mAvailablePlans = (Plan[]) serializable;
             }
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
@@ -139,14 +138,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void updatePurchaseUI(int position) {
-        SitePlan sitePlan = getPageAdapter().getSitePlan(position);
-        Plan globalPlan = PlansUtils.getGlobalPlan(sitePlan.getProductID());
-        if (globalPlan == null) {
-            AppLog.w(AppLog.T.PLANS, "unable to match global plan " + sitePlan.getProductID());
-            finish();
-            return;
-        }
-
+        Plan sitePlan = getPageAdapter().getSitePlan(position);
         boolean showPurchaseButton;
         if (sitePlan.isCurrentPlan()) {
             showPurchaseButton = false;
@@ -161,7 +153,7 @@ public class PlansActivity extends AppCompatActivity {
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
-            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(globalPlan));
+            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(sitePlan));
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -262,7 +254,7 @@ public class PlansActivity extends AppCompatActivity {
      */
     private void selectCurrentPlan() {
         int position = -1;
-        for (SitePlan currentSitePlan : mAvailablePlans) {
+        for (Plan currentSitePlan : mAvailablePlans) {
             if (currentSitePlan.isCurrentPlan()) {
                 position = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
                 break;
@@ -284,14 +276,14 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        List<SitePlan> plans = event.getPlans();
-        mAvailablePlans = new SitePlan[plans.size()];
+        List<Plan> plans = event.getPlans();
+        mAvailablePlans = new Plan[plans.size()];
         plans.toArray(mAvailablePlans);
 
         // make sure plans are correctly sorted
-        Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
+        Arrays.sort(mAvailablePlans, new Comparator<Plan>() {
             @Override
-            public int compare(SitePlan lhs, SitePlan rhs) {
+            public int compare(Plan lhs, Plan rhs) {
                 return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
             }
         });
