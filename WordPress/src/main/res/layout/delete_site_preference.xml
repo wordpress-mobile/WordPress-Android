@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:paddingRight="?android:attr/scrollbarSize"
+    android:paddingRight="@dimen/delete_site_preference_margin_large"
     android:paddingLeft="@dimen/delete_site_preference_margin_large"
     android:paddingTop="@dimen/delete_site_preference_margin_large"
     android:paddingBottom="@dimen/delete_site_preference_margin_large"
