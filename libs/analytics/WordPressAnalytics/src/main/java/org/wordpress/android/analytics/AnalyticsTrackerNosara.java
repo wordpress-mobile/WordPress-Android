@@ -275,6 +275,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_ACCOUNT_SETTINGS:
                 eventName = "me_opened_account_settings";
                 break;
+            case OPENED_APP_SETTINGS:
+                eventName = "me_opened_app_settings";
+                break;
             case OPENED_MY_PROFILE:
                 eventName = "me_opened_my_profile";
                 break;

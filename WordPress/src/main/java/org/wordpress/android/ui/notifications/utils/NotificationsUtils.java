@@ -35,6 +35,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -358,16 +359,20 @@ public class NotificationsUtils {
                 break;
             case STAT:
             case FOLLOW:
-                // We can open native stats, but only if the site is stored in the app locally.
-                int localTableSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                        (int) clickedSpan.getSiteId()
-                );
+                // We can open native stats if the site is a wpcom or Jetpack + stored in the app locally.
+                // Note that for Jetpack sites we need the options already synced. That happens when the user
+                // selects the site in the sites picker. So adding it to the app doesn't always populate options.
 
-                if (localTableSiteId > 0) {
-                    activity.showStatsActivityForSite(localTableSiteId, clickedSpan.getRangeType());
-                } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+               // Do not load Jetpack shadow sites here. They've empty options and Stats can't be loaded for them.
+                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(
+                        String.valueOf(clickedSpan.getSiteId())
+                );
+                // Make sure blog is not null, and it's either JP or dotcom. Better safe than sorry.
+                if (blog == null ||  blog.getLocalTableBlogId() <= 0 || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
                     activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                    break;
                 }
+                activity.showStatsActivityForSite(blog.getLocalTableBlogId(), clickedSpan.getRangeType());
                 break;
             case LIKE:
                 if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {

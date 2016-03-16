@@ -79,6 +79,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -95,6 +96,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
+    private static RestClientUtils mRestClientUtilsVersion1_3;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -335,6 +337,14 @@ public class WordPress extends Application {
             mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return mRestClientUtilsVersion1_2;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_3() {
+        if (mRestClientUtilsVersion1_3 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+        }
+        return mRestClientUtilsVersion1_3;
     }
 
     /**
@@ -580,17 +590,21 @@ public class WordPress extends Application {
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
                 } else {
                     mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
                 }
-            } catch (AndroidRuntimeException e) {
+            } catch (AndroidRuntimeException |  NullPointerException e) {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
+
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
+
         }
         return mDefaultUserAgent;
     }
@@ -650,6 +664,18 @@ public class WordPress extends Application {
                 wpDB.updateLastBlogId(id);
             }
         }
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static Map<String, String> getRestLocaleParams() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
     /**
