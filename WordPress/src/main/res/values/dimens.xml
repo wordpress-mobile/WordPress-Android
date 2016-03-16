@@ -256,6 +256,7 @@
     <dimen name="delete_site_preference_margin_large">15dp</dimen>
     <dimen name="delete_site_preference_margin_medium">6dp</dimen>
     <dimen name="delete_site_preference_margin_small">4dp</dimen>
+    <dimen name="start_over_preference_padding_left">30dp</dimen>
     <dimen name="delete_site_icon_padding">2dp</dimen>
     <dimen name="delete_site_text_margin_left">37dp</dimen>
     <dimen name="delete_site_icon_size">24dp</dimen>
@@ -265,4 +266,6 @@
     <dimen name="plan_indicator_size">12dp</dimen>
     <dimen name="plan_indicator_margin">6dp</dimen>
     <dimen name="plan_icon_size">79dp</dimen>
+    <dimen name="delete_site_title_margin">19dp</dimen>
+    <dimen name="delete_site_summary_margin">53dp</dimen>
 </resources>
