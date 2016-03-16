@@ -24,11 +24,13 @@ import org.wordpress.android.stores.store.AccountStore;
 
 @RunWith(RobolectricTestRunner.class)
 public class AccountStoreTest {
+    private Context mContext;
+
     @Before
     public void setUp() {
-        Context appContext = RuntimeEnvironment.application.getApplicationContext();
+        mContext = RuntimeEnvironment.application.getApplicationContext();
 
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, AccountModel.class);
+        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(mContext, AccountModel.class);
         WellSql.init(config);
         config.reset();
     }
@@ -67,6 +69,21 @@ public class AccountStoreTest {
         testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertTrue(testStore.isSignedIn());
+    }
+
+    @Test
+    public void testSignOut() {
+        AccountModel testAccount = new AccountModel();
+        AccessToken testToken = new AccessToken(mContext);
+        testToken.set("TESTTOKEN");
+        testAccount.setUserId(24);
+        AccountSqlUtils.insertOrUpdateAccount(testAccount);
+        AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
+                getMockAuthenticator(), testToken);
+        Assert.assertTrue(testStore.isSignedIn());
+        testStore.signOut();
+        Assert.assertFalse(testStore.isSignedIn());
+        Assert.assertNull(AccountSqlUtils.getAccountByLocalId(testAccount.getId()));
     }
 
     private AccountRestClient getMockRestClient() {
