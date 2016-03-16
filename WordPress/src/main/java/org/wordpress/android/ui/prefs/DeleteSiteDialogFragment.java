@@ -108,13 +108,14 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     private void configureUrlConfirmation(AlertDialog.Builder builder) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
         mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
+        mUrlConfirmation.setHint(mSiteDomain);
         mUrlConfirmation.addTextChangedListener(this);
         builder.setView(view);
     }
 
     private void retrieveSiteDomain() {
         Bundle args = getArguments();
-        mSiteDomain = getString(R.string.dot_wordpress_dot_com_url).toLowerCase();
+        mSiteDomain = getString(R.string.delete).toLowerCase();
         if (args != null) {
             mSiteDomain = args.getString(SITE_DOMAIN_KEY);
         }
@@ -122,7 +123,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     private boolean isUrlConfirmationTextValid() {
         String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase();
-        String hintText = mSiteDomain.toLowerCase();
+        String hintText = mUrlConfirmation.getHint().toString().toLowerCase();
 
         return confirmationText.equals(hintText);
     }
