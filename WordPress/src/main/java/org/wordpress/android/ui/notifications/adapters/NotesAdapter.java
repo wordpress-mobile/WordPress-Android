@@ -18,7 +18,6 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -152,7 +151,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
     @Override
     public void onBindViewHolder(NoteViewHolder noteViewHolder, Cursor cursor) {
         final Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-        final String noteId = objectCursor.getSimperiumKey();
+        noteViewHolder.itemView.setTag(objectCursor.getSimperiumKey());
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
@@ -236,18 +235,13 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         boolean isUnread = SqlUtils.sqlToBool(getIntForColumnName(objectCursor, Note.Schema.UNREAD_INDEX));
 
         String noticonCharacter = getStringForColumnName(objectCursor, Note.Schema.NOTICON_INDEX);
-        if (!TextUtils.isEmpty(noticonCharacter)) {
-            noteViewHolder.noteIcon.setText(noticonCharacter);
-            if (commentStatus == CommentStatus.UNAPPROVED) {
-                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
-            } else if (isUnread) {
-                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
-            } else {
-                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
-            }
-            noteViewHolder.noteIcon.setVisibility(View.VISIBLE);
+        noteViewHolder.noteIcon.setText(noticonCharacter);
+        if (commentStatus == CommentStatus.UNAPPROVED) {
+            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
+        } else if (isUnread) {
+            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
         } else {
-            noteViewHolder.noteIcon.setVisibility(View.GONE);
+            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
         }
 
         if (isUnread) {
@@ -255,15 +249,6 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         } else {
             noteViewHolder.itemView.setBackgroundColor(mColorRead);
         }
-
-        noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnNoteClickListener != null && noteId != null) {
-                    mOnNoteClickListener.onClickNote(noteId);
-                }
-            }
-        });
     }
 
     public int getPositionForNote(String noteId) {
@@ -285,7 +270,7 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
         mOnNoteClickListener = mNoteClickListener;
     }
 
-    static class NoteViewHolder extends RecyclerView.ViewHolder {
+    class NoteViewHolder extends RecyclerView.ViewHolder {
         private final View headerView;
         private final View contentView;
         private final TextView headerText;
@@ -308,6 +293,17 @@ public class NotesAdapter extends CursorRecyclerViewAdapter<NotesAdapter.NoteVie
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
             progressBar = view.findViewById(R.id.moderate_progress);
+
+            itemView.setOnClickListener(mOnClickListener);
         }
     }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mOnNoteClickListener != null && v.getTag() instanceof String) {
+                mOnNoteClickListener.onClickNote((String)v.getTag());
+            }
+        }
+    };
 }
