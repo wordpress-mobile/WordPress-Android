@@ -21,7 +21,7 @@ Then edit the `settings.py` file. Copy the example file and edit it. Change the 
 
 	$ ./playstore-screenshots.py PACKAGE_NAME APK_FILE
 	$ # Example: ./playstore-screenshots.py org.wordpress.android WordPress-vanilla-release.apk
-	$ # Example: ./playstore-screenshots.py org.wordpress.android.beta WordPress-zbetagroup-release.apk
+	$ # Example: ./playstore-screenshots.py org.wordpress.android.wasabi WordPress-wasabi-release.apk
 
 ## Example usage
 
