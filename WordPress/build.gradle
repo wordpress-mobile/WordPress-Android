@@ -66,8 +66,6 @@ android {
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             ext.enableCrashlytics = false
-            applicationIdSuffix ".debug"
-            versionNameSuffix ".debug"
         }
     }
 }
