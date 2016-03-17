@@ -437,6 +437,7 @@
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_this_device_header">This device</string>
+    <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -978,6 +979,7 @@
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
+    <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1278,7 +1280,8 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
-    <string name="me_btn_settings">Account Settings</string>
+    <string name="me_btn_account_settings">Account Settings</string>
+    <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
@@ -1346,12 +1349,43 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+    <string name="start_over">Start Over</string>
+    <string name="site_settings_start_over_hint">Start your site over</string>
+    <string name="let_us_help">Let Us Help</string>
+    <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
+    <string name="contact_support">Contact support</string>
+    <string name="confirm_delete_site">Confirm Delete Site</string>
+    <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
+    <string name="site_settings_export_content_title">Export content</string>
+    <string name="error_deleting_site">Error deleting site</string>
+    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+    <string name="primary_domain">Primary Domain</string>
+    <string name="domain_removal">Domain Removal</string>
+    <string name="domain_removal_summary">Be careful! Deleting your site will also remove your domain(s) listed below.</string>
+    <string name="domain_removal_hint">The domains that will not work once you remove your site</string>
+    <string name="keep_your_content">Keep Your Content</string>
+    <string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
+    <string name="export_site_hint">Export your site to an XML file</string>
+    <string name="are_you_sure">Are You Sure?</string>
+    <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
+    <string name="delete_site_hint">Delete your site</string>
+    <string name="pref_key_site_start_over_screen">wp_pref_key_site_start_over_screen</string>
+    <string name="delete_site_progress">Deleting site…</string>
+    <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
+    <string name="premium_upgrades_title">Premium Upgrades</string>
+    <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
+    <string name="show_purchases">Show purchases</string>
+    <string name="checking_purchases">Checking purchases</string>
 
     <!--Account Settings-->
-    <string name="account_settings">@string/me_btn_settings</string>
+    <string name="account_settings">@string/me_btn_account_settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
+    <string name="exporting_content_progress">Exporting content…</string>
+    <string name="export_email_sent">Export email sent!</string>
+    <string name="export_your_content">Export your content</string>
+    <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
 
     <!-- Plans -->
     <string name="plan">Plan</string>

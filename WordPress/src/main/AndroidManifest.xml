@@ -106,13 +106,20 @@
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
+            android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/account_settings"
+            android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.prefs.AppSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
+            android:label="@string/me_btn_app_settings"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"

@@ -58,8 +58,6 @@ public class PlansUtils {
         }
     }
 
-
-
     @Nullable
     public static Plan getGlobalPlan(long planId) {
         List<Plan> plans = getGlobalPlans();

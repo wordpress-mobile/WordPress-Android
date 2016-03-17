@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
@@ -115,7 +114,7 @@ public class EditPostSettingsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getActivity() != null) {
-            PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
+            PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
     }
 

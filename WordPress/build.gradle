@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -30,8 +30,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-3"
-        versionCode 245
+        versionName "alpha-4"
+        versionCode 248
         minSdkVersion 14
         targetSdkVersion 23
 
