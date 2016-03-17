@@ -3,8 +3,9 @@ package org.wordpress.android.ui.main;
 import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.soundcloud.android.crop.Crop;
 import com.wordpress.rest.RestRequest;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -21,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -311,19 +313,34 @@ public class MeFragment extends Fragment {
                     }
                 }
                 break;
-            case RequestCodes.CROP_PHOTO:
+            case UCrop.REQUEST_CROP:
                 if (resultCode == Activity.RESULT_OK) {
-                    fetchMedia(Crop.getOutput(data));
-                } else if (resultCode == Crop.RESULT_ERROR) {
-                    AppLog.e(AppLog.T.API, Crop.getError(data).getMessage());
+                    fetchMedia(UCrop.getOutput(data));
+                } else if (resultCode == UCrop.RESULT_ERROR) {
+                    final Throwable cropError = UCrop.getError(data);
+                    AppLog.e(AppLog.T.MAIN, "Image cropping failed!", cropError);
                 }
                 break;
         }
     }
 
     private void startCropActivity(Uri uri) {
-        Crop.of(uri, Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"))).asSquare().start(getActivity(),
-                this, RequestCodes.CROP_PHOTO);
+        final Context context = getActivity();
+
+        if (context == null) {
+            return;
+        }
+
+        UCrop.Options options = new UCrop.Options();
+        options.setShowCropGrid(false);
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
+        options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
+        options.setAllowedGestures(UCropActivity.ALL, UCropActivity.ALL, UCropActivity.ALL);
+
+        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
+                .withAspectRatio(1, 1)
+                .withOptions(options)
+                .start(getActivity(), this);
     }
 
     private void fetchMedia(Uri mediaUri) {

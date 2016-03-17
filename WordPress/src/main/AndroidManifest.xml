@@ -341,7 +341,9 @@
 
         <!-- Lib activities-->
         <activity
-            android:name="com.soundcloud.android.crop.CropImageActivity" />
+                android:name="com.yalantis.ucrop.UCropActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Services -->
         <service
