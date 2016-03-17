@@ -49,14 +49,16 @@ public class Plan implements Serializable {
     private String mAndroidSKU;
 
     // Info attached to the current site/user
-    protected int mRawDiscount;
-    protected String mFormattedDiscount;
-    protected boolean mIsCurrentPlan;
-    protected boolean mCanStartTrial;
-    protected String mExpiry;
-    protected boolean mFreeTrial;
-    protected String mUserFacingExpiry;
-    protected String mSubscribedDate;
+    private int mRawDiscount;
+    private String mFormattedDiscount;
+    private boolean mIsCurrentPlan;
+    private boolean mCanStartTrial;
+    private String mExpiry;
+    private boolean mFreeTrial;
+    private String mUserFacingExpiry;
+    private String mSubscribedDate;
+    private String mBundleSubscriptionID;
+
 
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
@@ -126,6 +128,7 @@ public class Plan implements Serializable {
         mUserFacingExpiry = planJSONObject.optString("user_facing_expiry");
         mSubscribedDate = planJSONObject.optString("subscribed_date");
         mFreeTrial = JSONUtils.getBool(planJSONObject, "free_trial");
+        mBundleSubscriptionID = planJSONObject.optString("bundle_subscription_id");
     }
 
 
@@ -278,5 +281,9 @@ public class Plan implements Serializable {
 
     public String getAndroidSKU() {
         return StringUtils.notNullStr(mAndroidSKU);
+    }
+
+    public String getBundleSubscriptionID() {
+        return StringUtils.notNullStr(mBundleSubscriptionID);
     }
 }

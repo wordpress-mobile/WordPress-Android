@@ -69,31 +69,37 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                     plans.add(currentPlan);
                 }
 
-                assertEquals(6, plans.size());
+                assertEquals(3, plans.size());
 
                 Plan currentPlan = plans.get(0);
-                assertEquals(currentPlan.getDescription(), "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.");
-                assertEquals(currentPlan.getProductID(), 2002L);
-                assertEquals(currentPlan.getProductName(), "Free");
+                assertEquals(currentPlan.getDescription(), "Get a free blog and be on your way to publishing your first post in less than five minutes.");
+                assertEquals(currentPlan.getProductID(), 1L);
+                assertEquals(currentPlan.getProductName(), "WordPress.com Free");
                 assertEquals(currentPlan.getBillPeriod(), -1);
                 assertEquals(currentPlan.getRawPrice(), 0);
                 assertEquals(currentPlan.getCost(), 0);
                 assertEquals(currentPlan.isAvailable(), true);
 
+                currentPlan = plans.get(1);
+                assertEquals(currentPlan.isFreeTrial(), false);
+                assertEquals(currentPlan.getBundleSubscriptionID(), "5683566");
+                assertEquals(currentPlan.getExpiry(), "2017-03-07");
+                assertEquals(currentPlan.getUserFacingExpiry(), "2017-03-04");
+                assertEquals(currentPlan.getSubscribedDate(), "2016-03-07 08:56:13");
 
-                currentPlan = plans.get(5);
+                currentPlan = plans.get(2);
                 assertEquals(currentPlan.getDescription(), "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.");
                 assertEquals(currentPlan.getProductID(), 1008L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Business");
                 assertEquals(currentPlan.getBillPeriod(), 365);
-                assertEquals(currentPlan.getRawPrice(), 299);
-                assertEquals(currentPlan.getCost(), 299);
+                assertEquals(currentPlan.getRawPrice(), 199);
+                assertEquals(currentPlan.getCost(), 199);
                 assertEquals(currentPlan.isAvailable(), true);
             }
         };
 
 
-        mRestClientV1_1.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/plans",
+        mRestClientV1_1.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/sites/123456/plans",
                 null,
                 listener,
                 errListener

@@ -122,7 +122,7 @@ public class PlanUpdateService extends Service {
      */
     private void downloadAvailablePlansForSite() {
         int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
-        WordPress.getRestClientUtilsV1_1().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
