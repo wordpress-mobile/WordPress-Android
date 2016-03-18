@@ -1,83 +1,6 @@
 {
-  "originalResponse": [
-    {
-      "product_id": 2002,
-      "product_name": "Free",
-      "prices": {
-        "USD": 0,
-        "EUR": 0
-      },
-      "product_name_short": "Free",
-      "product_slug": "jetpack_free",
-      "tagline": "Get started",
-      "description": "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.",
-      "cost": 0,
-      "bill_period": -1,
-      "product_type": "jetpack",
-      "available": "yes",
-      "width": 500,
-      "height": 435,
-      "bill_period_label": "for life",
-      "price": "\u20ac0",
-      "formatted_price": "\u20ac0",
-      "raw_price": 0
-    },
-    {
-      "product_id": 2000,
-      "product_name": "Premium",
-      "prices": {
-        "USD": 99,
-        "EUR": 99
-      },
-      "product_name_short": "Premium",
-      "product_slug": "jetpack_premium",
-      "tagline": "Backup and spam protection",
-      "description": "Keep your site's content backed up and secure, and enable state-of-the-art spam filtering.",
-      "feature_1": "Automated backups with easy restores",
-      "feature_2": "30-day backup archive",
-      "feature_3": "Help from the WordPress experts",
-      "cost": 99,
-      "original": 114,
-      "saving": 13,
-      "bill_period": 365,
-      "product_type": "jetpack",
-      "available": "yes",
-      "width": 500,
-      "height": 435,
-      "bill_period_label": "per year",
-      "price": "\u20ac99",
-      "formatted_price": "\u20ac99",
-      "formatted_original_price": "\u20ac114",
-      "raw_price": 99
-    },
-    {
-      "product_id": 2001,
-      "product_name": "Business",
-      "prices": {
-        "USD": 299,
-        "EUR": 299
-      },
-      "product_name_short": "Business",
-      "product_slug": "jetpack_business",
-      "tagline": "Faster backups, security scans, and repairs",
-      "description": "Get everything included with Premium, as well as real-time backups, security scans, and more.",
-      "feature_1": "Real-time database backups",
-      "feature_2": "Unlimited  backup archive",
-      "feature_3": "Daily security scans with one-click repairs",
-      "cost": 299,
-      "original": 915,
-      "saving": 65,
-      "bill_period": 365,
-      "product_type": "jetpack",
-      "available": "yes",
-      "width": 500,
-      "height": 435,
-      "bill_period_label": "per year",
-      "price": "\u20ac299",
-      "formatted_price": "\u20ac299",
-      "formatted_original_price": "\u20ac915",
-      "raw_price": 299
-    },
+  "originalResponse":
+  [
     {
       "product_id": 1,
       "product_name": "WordPress.com Free",
@@ -93,9 +16,12 @@
       "product_slug": "free_plan",
       "tagline": "Perfect for anyone creating a basic blog or site",
       "description": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
-      "icon": "",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-free.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-free-active.png",
       "capability": "manage_options",
       "cost": 0,
+      "apple_sku": "",
+      "android_sku": "",
       "bill_period": -1,
       "product_type": "bundle",
       "available": "yes",
@@ -110,9 +36,11 @@
         }
       ],
       "bill_period_label": "for life",
-      "price": "\u20ac0",
-      "formatted_price": "\u20ac0",
-      "raw_price": 0
+      "price": "$0",
+      "formatted_price": "$0",
+      "raw_price": 0,
+      "raw_discount": 0,
+      "formatted_discount": "$0"
     },
     {
       "product_id": 1003,
@@ -130,9 +58,12 @@
       "product_slug": "value_bundle",
       "tagline": "Perfect for bloggers, creatives, and other professionals",
       "description": "Your own domain name, powerful customization options, and lots of space for audio and video.",
-      "icon": "",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-premium.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-premium-active.png",
       "capability": "manage_options",
       "cost": 99,
+      "apple_sku": "",
+      "android_sku": "",
       "bill_period": 365,
       "product_type": "bundle",
       "available": "yes",
@@ -171,9 +102,17 @@
         54
       ],
       "bill_period_label": "per year",
-      "price": "\u20ac99",
-      "formatted_price": "\u20ac99",
-      "raw_price": 99
+      "price": "$99",
+      "formatted_price": "$99",
+      "raw_price": 99,
+      "raw_discount": 0,
+      "formatted_discount": "$0",
+      "current_plan": true,
+      "bundle_subscription_id": "5683566",
+      "expiry": "2017-03-07",
+      "free_trial": false,
+      "user_facing_expiry": "2017-03-04",
+      "subscribed_date": "2016-03-07 08:56:13"
     },
     {
       "product_id": 1008,
@@ -189,11 +128,14 @@
       },
       "product_name_short": "Business",
       "product_slug": "business-bundle",
-      "tagline": "Perfect for power users, business website and blogs",
+      "tagline": "Perfect for power users, business websites and blogs",
       "description": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
-      "icon": "",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-business.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-business-active.png",
       "capability": "manage_options",
-      "cost": 299,
+      "cost": 199,
+      "apple_sku": "",
+      "android_sku": "",
       "features_highlight": [
         {
           "items": [
@@ -236,10 +178,14 @@
         46,
         54
       ],
+      "orig_cost": 299,
       "bill_period_label": "per year",
-      "price": "\u20ac299",
-      "formatted_price": "\u20ac299",
-      "raw_price": 299
+      "price": "$199",
+      "formatted_price": "$199",
+      "raw_price": 199,
+      "raw_discount": 100,
+      "formatted_discount": "$100",
+      "can_start_trial": false
     }
   ]
 }
