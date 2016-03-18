@@ -428,7 +428,12 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                return mCurrentTag;
+                if (hasCurrentTag()) {
+                    return getCurrentTag();
+                } else {
+                    AppLog.w(T.READER, "reader post list > no current tag in onRecallSelection");
+                    return ReaderTag.getDefaultTag();
+                }
             }
 
             @Override
