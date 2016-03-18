@@ -5,19 +5,17 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 
 import org.wordpress.android.ui.plans.PlanFragment;
-import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 
 /**
  * ViewPager adapter for the main plans activity
  */
 public class PlansPagerAdapter extends FragmentPagerAdapter {
-    private final SitePlan[] mSitePlans;
+    private final Plan[] mSitePlans;
     private static final String UNICODE_CHECKMARK = "\u2713";
 
-    public PlansPagerAdapter(FragmentManager fm, @NonNull SitePlan[] sitePlans) {
+    public PlansPagerAdapter(FragmentManager fm, @NonNull Plan[] sitePlans) {
         super(fm);
         mSitePlans = sitePlans.clone();
     }
@@ -35,7 +33,7 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (isValidPosition(position)) {
-            Plan planDetails = PlansUtils.getGlobalPlan(mSitePlans[position].getProductID());
+            Plan planDetails = mSitePlans[position];
             if (planDetails == null) {
                 AppLog.w(AppLog.T.PLANS, "plans pager > empty plan details in getPageTitle");
                 return "";
@@ -61,7 +59,7 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
         return -1;
     }
 
-    public SitePlan getSitePlan(int position) {
+    public Plan getPlan(int position) {
         if (isValidPosition(position)) {
             return mSitePlans[position];
         }

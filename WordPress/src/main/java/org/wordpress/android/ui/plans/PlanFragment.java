@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 
@@ -30,10 +29,9 @@ public class PlanFragment extends Fragment {
     private static final String SITE_PLAN = "SITE_PLAN";
 
     private ViewGroup mPlanContainerView;
-    private SitePlan mSitePlan;
     private Plan mPlanDetails;
 
-    public static PlanFragment newInstance(SitePlan sitePlan) {
+    public static PlanFragment newInstance(Plan sitePlan) {
         PlanFragment fragment = new PlanFragment();
         fragment.setSitePlan(sitePlan);
         AppLog.d(AppLog.T.PLANS, "PlanFragment newInstance");
@@ -46,8 +44,8 @@ public class PlanFragment extends Fragment {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SITE_PLAN)) {
                 Serializable serial = savedInstanceState.getSerializable(SITE_PLAN);
-                if (serial instanceof SitePlan) {
-                    setSitePlan((SitePlan) serial);
+                if (serial instanceof Plan) {
+                    setSitePlan((Plan) serial);
                 }
             }
         }
@@ -70,7 +68,7 @@ public class PlanFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(SITE_PLAN, mSitePlan);
+        outState.putSerializable(SITE_PLAN, mPlanDetails);
         super.onSaveInstanceState(outState);
     }
 
@@ -78,7 +76,7 @@ public class PlanFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (mSitePlan == null || mPlanDetails == null) {
+        if (mPlanDetails == null) {
             // TODO This should never happen - Fix this. Close the activity?
             AppLog.w(AppLog.T.PLANS, "empty plan data in fragment");
             return;
@@ -86,7 +84,7 @@ public class PlanFragment extends Fragment {
 
         int iconSize = getActivity().getResources().getDimensionPixelSize(R.dimen.plan_icon_size);
         NetworkImageView imgPlan = (NetworkImageView) mPlanContainerView.findViewById(R.id.image_plan_icon);
-        String iconUrl = PlansUtils.getIconUrlForPlan(mSitePlan.getProductID(), iconSize);
+        String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
             imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
             imgPlan.setVisibility(View.VISIBLE);
@@ -169,12 +167,11 @@ public class PlanFragment extends Fragment {
         mPlanContainerView.addView(view);
     }
 
-    private void setSitePlan(@NonNull SitePlan sitePlan) {
-        mSitePlan = sitePlan;
-        mPlanDetails = PlansUtils.getGlobalPlan(mSitePlan.getProductID());
+    private void setSitePlan(@NonNull Plan sitePlan) {
+        mPlanDetails = sitePlan;
     }
 
-    public SitePlan getSitePlan() {
-        return mSitePlan;
+    public Plan getSitePlan() {
+        return mPlanDetails;
     }
 }

@@ -24,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -54,6 +56,9 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
+
+import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -430,19 +435,11 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 break;
             case RequestCodes.BLOG_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    // user removed the current (self-hosted) blog from blog settings
-                    if (!AccountHelper.isSignedIn()) {
-                        ActivityLauncher.showSignInForResult(this);
-                    } else {
-                        MySiteFragment mySiteFragment = getMySiteFragment();
-                        if (mySiteFragment != null) {
-                            mySiteFragment.setBlog(WordPress.getCurrentBlog());
-                        }
-                    }
+                    handleBlogRemoved();
                 }
                 break;
-            case RequestCodes.ACCOUNT_SETTINGS:
-                if (resultCode == AccountSettingsFragment.LANGUAGE_CHANGED) {
+            case RequestCodes.APP_SETTINGS:
+                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
                 }
                 break;
@@ -533,6 +530,23 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             AniUtils.animateBottomBar(mConnectionBar, false);
         } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, true);
+        }
+    }
+
+    private void handleBlogRemoved() {
+        if (!AccountHelper.isSignedIn()) {
+            ActivityLauncher.showSignInForResult(this);
+        } else {
+            Blog blog = WordPress.getCurrentBlog();
+            MySiteFragment mySiteFragment = getMySiteFragment();
+            if (mySiteFragment != null) {
+                mySiteFragment.setBlog(blog);
+            }
+
+            if (blog != null) {
+                int blogId = blog.getLocalTableBlogId();
+                ActivityLauncher.showSitePickerForResult(this, blogId);
+            }
         }
     }
 

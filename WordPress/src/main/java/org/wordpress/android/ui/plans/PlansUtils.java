@@ -14,11 +14,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
 
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 
 public class PlansUtils {
@@ -59,46 +57,6 @@ public class PlansUtils {
     }
 
     @Nullable
-    public static Plan getGlobalPlan(long planId) {
-        List<Plan> plans = getGlobalPlans();
-        if (plans == null || plans.size() == 0) {
-            return null;
-        }
-
-        for (Plan current: plans) {
-            if (current.getProductID() == planId) {
-                return  current;
-            }
-        }
-
-        return null;
-    }
-
-    @Nullable
-    private static List<Plan> getGlobalPlans() {
-        String plansString = AppPrefs.getGlobalPlans();
-        if (TextUtils.isEmpty(plansString)) {
-            return null;
-        }
-
-        List<Plan> plans = new ArrayList<>();
-        try {
-            JSONObject plansJSONObject = new JSONObject(plansString);
-            JSONArray plansArray = plansJSONObject.getJSONArray("originalResponse");
-            for (int i=0; i < plansArray.length(); i ++) {
-                JSONObject currentPlanJSON = plansArray.getJSONObject(i);
-                Plan currentPlan = new Plan(currentPlanJSON);
-                plans.add(currentPlan);
-            }
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
-            return null;
-        }
-
-        return plans;
-    }
-
-    @Nullable
     public static HashMap<String, Feature> getFeatures() {
         String featuresString = AppPrefs.getGlobalPlansFeatures();
         if (TextUtils.isEmpty(featuresString)) {
@@ -125,12 +83,11 @@ public class PlansUtils {
     /**
      * Returns the url of the image to display for the passed plan
      *
-     * @param planId - ID of the global plan
+     * @param plan - The plan
      * @param iconSize - desired size of the returned image
      * @return string containing photon-ized url for the plan icon
      */
-    public static String getIconUrlForPlan(long planId, int iconSize) {
-        Plan plan = getGlobalPlan(planId);
+    public static String getIconUrlForPlan(Plan plan, int iconSize) {
         if (plan == null || !plan.hasIconUrl()) {
             return null;
         }
@@ -138,22 +95,10 @@ public class PlansUtils {
     }
 
     /**
-     * Compares two plan products - assumes lower product IDs are "lesser" than higher product IDs
-     */
-    public static final int LESSER_PRODUCT = -1;
-    public static final int EQUAL_PRODUCT = 0;
-    public static final int GREATER_PRODUCT = 1;
-    public static int compareProducts(long lhsProductId, long rhsProductId) {
-        // this duplicates Long.compare(), which wasn't added until API 19
-        return lhsProductId < rhsProductId ? LESSER_PRODUCT : (lhsProductId == rhsProductId ? EQUAL_PRODUCT : GREATER_PRODUCT);
-    }
-
-    /**
      * Removes stored plan data - for testing purposes
      */
     @SuppressWarnings("unused")
     public static void clearPlanData() {
-        AppPrefs.setGlobalPlans(null);
         AppPrefs.setGlobalPlansFeatures(null);
     }
 

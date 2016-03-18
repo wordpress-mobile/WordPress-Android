@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.plans.models.SitePlan;
+import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 
@@ -30,7 +30,7 @@ public class PlanUpdateService extends Service {
     private static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     private int mNumActiveRequests;
     private int mLocalBlogId;
-    private final List<SitePlan> mSitePlans = new ArrayList<>();
+    private final List<Plan> mSitePlans = new ArrayList<>();
 
     public static void startService(Context context, int localTableBlogId) {
         Intent intent = new Intent(context, PlanUpdateService.class);
@@ -66,8 +66,7 @@ public class PlanUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
 
-        mNumActiveRequests = 3;
-        downloadGlobalPlans();
+        mNumActiveRequests = 2;
         downloadPlanFeatures();
         downloadAvailablePlansForSite();
 
@@ -90,32 +89,6 @@ public class PlanUpdateService extends Service {
      */
     private void requestFailed() {
         EventBus.getDefault().post(new PlanEvents.PlansUpdateFailed());
-    }
-
-    /*
-     * download global plans
-     */
-    private void downloadGlobalPlans() {
-        WordPress.getRestClientUtilsV1_3().get("plans/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (response != null) {
-                    AppLog.d(AppLog.T.PLANS, response.toString());
-                    // Store the response into App Prefs
-                    AppPrefs.setGlobalPlans(response.toString());
-                    requestCompleted();
-                } else {
-                    AppLog.w(AppLog.T.PLANS, "Empty response downloading global Plans");
-                    requestFailed();
-                }
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.PLANS, "Error loading plans", volleyError);
-                requestFailed();
-            }
-        });
     }
 
     /*
@@ -149,7 +122,7 @@ public class PlanUpdateService extends Service {
      */
     private void downloadAvailablePlansForSite() {
         int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
-        WordPress.getRestClientUtils().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
@@ -160,19 +133,15 @@ public class PlanUpdateService extends Service {
 
                 AppLog.d(AppLog.T.PLANS, response.toString());
                 mSitePlans.clear();
+
                 try {
-                    JSONArray planIDs = response.names();
-                    if (planIDs != null) {
-                        for (int i = 0; i < planIDs.length(); i++) {
-                            String currentKey = planIDs.getString(i);
-                            JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                            SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, mLocalBlogId);
-                            mSitePlans.add(currentPlan);
-                        }
+                    JSONArray plansArray = response.getJSONArray("originalResponse");
+                    for (int i=0; i < plansArray.length(); i ++) {
+                        JSONObject currentPlanJSON = plansArray.getJSONObject(i);
+                        Plan currentPlan = new Plan(currentPlanJSON);
+                        mSitePlans.add(currentPlan);
                     }
-
                     requestCompleted();
-
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
                     requestFailed();
