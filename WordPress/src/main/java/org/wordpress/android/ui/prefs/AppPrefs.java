@@ -59,7 +59,6 @@ public class AppPrefs {
 
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
-
     }
 
     /**
@@ -78,6 +77,9 @@ public class AppPrefs {
 
         // When we need to show the Visual Editor Promo Dialog
         VISUAL_EDITOR_PROMO_REQUIRED,
+
+        // Global plans features
+        GLOBAL_PLANS_PLANS_FEATURES,
     }
 
     private static SharedPreferences prefs() {
@@ -349,5 +351,20 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
+    }
+
+    public static boolean isInAppBillingAvailable() {
+        return BuildConfig.IN_APP_BILLING_AVAILABLE;
+    }
+
+    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
+        if (jsonOfFeatures != null) {
+            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
+        } else {
+            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
+        }
+    }
+    public static String getGlobalPlansFeatures() {
+        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
 }

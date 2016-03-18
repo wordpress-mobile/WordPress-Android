@@ -206,7 +206,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         setContentView(R.layout.new_edit_post_activity);
 
         // Check whether to show the visual editor
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
