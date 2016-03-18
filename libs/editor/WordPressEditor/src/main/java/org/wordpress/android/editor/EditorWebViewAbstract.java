@@ -225,6 +225,7 @@ public abstract class EditorWebViewAbstract extends WebView {
             // Log the raw html
             execJavaScriptFromString("console.log(document.body.innerHTML);");
             ToastUtils.showToast(getContext(), "Debug: Raw HTML has been logged");
+            return true;
         }
         return super.onKeyPreIme(keyCode, event);
     }

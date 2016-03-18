@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -478,6 +480,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             Bundle dialogBundle = new Bundle();
 
+            // Pass potential URL from user clipboard
+            String clipboardUri = Utils.getUrlFromClipboard(getActivity());
+            if (clipboardUri != null) {
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, clipboardUri);
+            }
+
             // Pass selected text to dialog
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 // HTML mode
@@ -485,14 +493,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mSelectionEnd = mSourceViewContent.getSelectionEnd();
 
                 String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
-                dialogBundle.putString("linkText", selectedText);
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, selectedText);
             } else {
                 // Visual mode
                 mGetSelectedTextCountDownLatch = new CountDownLatch(1);
                 mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
                 try {
                     if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
-                        dialogBundle.putString("linkText", mJavaScriptResult);
+                        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
                     }
                 } catch (InterruptedException e) {
                     AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
@@ -500,7 +508,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
 
             linkDialogFragment.setArguments(dialogBundle);
-            linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+            linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
         } else {
             if (v instanceof ToggleButton) {
                 onFormattingButtonClicked((ToggleButton) v);
@@ -554,12 +562,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 return;
             }
 
-            String linkUrl = extras.getString("linkURL");
-            String linkText = extras.getString("linkText");
+            String linkUrl = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_URL);
+            String linkText = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT);
 
             if (linkText == null || linkText.equals("")) {
                 linkText = linkUrl;
             }
+
+            if (TextUtils.isEmpty(Uri.parse(linkUrl).getScheme())) linkUrl = "http://" + linkUrl;
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 Editable content = mSourceViewContent.getText();
@@ -1140,8 +1150,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         Bundle dialogBundle = new Bundle();
 
-        dialogBundle.putString("linkURL", url);
-        dialogBundle.putString("linkText", title);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, url);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, title);
 
         linkDialogFragment.setArguments(dialogBundle);
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");

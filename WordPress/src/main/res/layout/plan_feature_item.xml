@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/image_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        tools:background="@drawable/noticon_publish"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_feature_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@+id/image_icon"
+        android:ellipsize="end"
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        tools:text="text_feature_title"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_feature_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_feature_title"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toRightOf="@+id/image_icon"
+        android:ellipsize="end"
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="text_feature_description"/>
+
+</RelativeLayout>

@@ -206,7 +206,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         setContentView(R.layout.new_edit_post_activity);
 
         // Check whether to show the visual editor
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
@@ -1135,8 +1135,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
-                    getMaximumThumbnailWidthForEditor()));
+            if (mEditorFragment instanceof EditorFragment) {
+                mEditorFragment.setContent(text);
+            } else {
+                mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
+                        getMaximumThumbnailWidthForEditor()));
+            }
         }
 
         // Check for shared media

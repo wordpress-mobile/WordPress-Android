@@ -2,9 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +18,6 @@ import org.wordpress.android.util.ToastUtils;
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
-    public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
     public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
 
     private boolean mIsPage = false;
@@ -75,8 +70,6 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-        final String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
-        final String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
 
         if (TextUtils.isEmpty(errorMessage)) {
             return;
@@ -87,16 +80,6 @@ public class PostsListActivity extends AppCompatActivity {
                .setMessage(errorMessage)
                .setPositiveButton(R.string.ok, null)
                .setCancelable(true);
-
-        // enable browsing error link if one exists
-        if (!TextUtils.isEmpty(errorInfoTitle) && !TextUtils.isEmpty(errorInfoLink)) {
-            builder.setNeutralButton(errorInfoTitle,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(errorInfoLink)));
-                        }
-                    });
-        }
 
         builder.create().show();
     }

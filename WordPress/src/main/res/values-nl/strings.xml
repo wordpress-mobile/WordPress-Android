@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Opslaan van je accountinstellingen mislukt</string>
+	<string name="error_post_my_profile">Opslaan van je profiel mislukt</string>
+	<string name="error_fetch_account_settings">Ophalen van je accountinstellingen mislukt</string>
+	<string name="error_fetch_my_profile">Ophalen van je profiel mislukt</string>
+	<string name="stats_widget_promo_ok_btn_label">OK, duidelijk</string>
+	<string name="stats_widget_promo_desc">Voeg de widget toe aan je startscherm om in één klik toegang te krijgen tot je Statistieken.</string>
+	<string name="stats_widget_promo_title">Startscherm Statistieken Widget</string>
+	<string name="site_settings_unknown_language_code_error">Taalcode niet herkend</string>
+	<string name="site_settings_threading_dialog_description">Geneste reacties in threads toestaan.</string>
+	<string name="site_settings_threading_dialog_header">Thread omhoog naar</string>
+	<string name="remove">Verwijderen</string>
+	<string name="search">Zoeken</string>
+	<string name="add_category">Categorie toevoegen</string>
+	<string name="disabled">Uitgeschakeld</string>
 	<string name="site_settings_image_original_size">Oorspronkelijke grootte</string>
 	<string name="about_me_hint">Enkele woorden over jou…</string>
 	<string name="public_display_name_hint">De weergavenaam is standaard je gebruikersnaam, tenzij hij anders is ingesteld</string>
@@ -777,7 +791,6 @@
 	<string name="passcode_preference_title">PIN slot</string>
 	<string name="passcode_turn_off">Zet PIN slot uit</string>
 	<string name="passcode_turn_on">Zet PIN slot uit</string>
-	<string name="menu_search">Zoeken</string>
 	<string name="passcode_manage">Beheer PIN slot</string>
 	<string name="passcode_enter_passcode">Voer je PIN in</string>
 	<string name="passcode_enter_old_passcode">Voer je oude PIN in</string>
@@ -832,7 +845,6 @@
 	<string name="ok">Ok</string>
 	<string name="upload_scaled_image">Upload en link naar afbeelding</string>
 	<string name="scaled_image">Breedte geschaalde afbeelding</string>
-	<string name="remove_location">Verwijderen</string>
 	<string name="scheduled">Gepland</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Geplaatst met WordPress voor Android</string>
@@ -944,18 +956,6 @@
 		<item>Geen reacties</item>
 		<item>Reacties van bekende gebruikers</item>
 		<item>Alle gebruikers</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Geen</item>
-		<item>Twee niveaus</item>
-		<item>Drie niveaus</item>
-		<item>Vier niveaus</item>
-		<item>Vijf niveaus</item>
-		<item>Zes niveaus</item>
-		<item>Zeven niveaus</item>
-		<item>Acht niveaus</item>
-		<item>Negen niveaus</item>
-		<item>Tien niveaus</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Gratis</item>
