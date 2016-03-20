@@ -78,9 +78,6 @@ public class AppPrefs {
         // When we need to show the Visual Editor Promo Dialog
         VISUAL_EDITOR_PROMO_REQUIRED,
 
-        // Global plans
-        GLOBAL_PLANS,
-
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
     }
@@ -360,17 +357,6 @@ public class AppPrefs {
         return BuildConfig.IN_APP_BILLING_AVAILABLE;
     }
 
-    // Plans
-    public static void setGlobalPlans(String jsonOfPlans) {
-        if (jsonOfPlans != null) {
-            setString(UndeletablePrefKey.GLOBAL_PLANS, jsonOfPlans);
-        } else {
-            remove(UndeletablePrefKey.GLOBAL_PLANS);
-        }
-    }
-    public static String getGlobalPlans() {
-        return getString(UndeletablePrefKey.GLOBAL_PLANS, "");
-    }
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {
         if (jsonOfFeatures != null) {
             setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
