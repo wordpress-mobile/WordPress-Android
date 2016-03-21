@@ -10,6 +10,7 @@ if [ x"$3" == x ]; then
   exit 1
 fi
 
+current_branch=`git rev-parse --abbrev-ref HEAD`
 release_branch=$1
 beta_branch=$2
 alpha_branch=$3
@@ -47,6 +48,7 @@ build_apk $beta_branch Vanilla
 beta_code=$?
 build_apk $alpha_branch Zalpha
 alpha_code=$?
+git checkout $current_branch
 
 echo "Version codes - release: $release_code, beta: $beta_code, alpha: $alpha_code"
 echo "Full log in: $LOGFILE"
