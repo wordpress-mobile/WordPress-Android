@@ -2,13 +2,16 @@
 
 OUTDIR="WordPress/build/outputs/apk/"
 BUILDFILE="WordPress/build.gradle"
-LOGFILE="build.log"
+BUILDDIR="build"
+LOGFILE="$BUILDDIR/build.log"
 
 if [ x"$3" == x ]; then
   echo "Usage:   $0 release-branch beta-branch alpha-branch"
   echo "Example: $0 5.2 release/5.3 alpha-6"
   exit 1
 fi
+
+mkdir -p $BUILDDIR
 
 current_branch=`git rev-parse --abbrev-ref HEAD`
 release_branch=$1
@@ -36,7 +39,7 @@ function build_apk {
   ./gradlew clean --offline >> $LOGFILE 2>&1
   echo "Building $version_name / $version_code - $apk..." | tee -a $LOGFILE
   ./gradlew assemble"$flavor"Release --offline >> $LOGFILE 2>&1
-  cp -v $OUTDIR/$apk $name | tee -a $LOGFILE
+  cp -v $OUTDIR/$apk $BUILDDIR/$name | tee -a $LOGFILE
   echo "APK ready: $name" | tee -a $LOGFILE
   return $version_code
 }
