@@ -84,15 +84,9 @@ function checkNewLanguages() {
 	fi
 }
 
-function checkVersions() {
+function printVersion() {
 	gradle_version=$(grep -E 'versionName' $BUILDFILE | sed s/versionName// | grep -Eo "[a-zA-Z0-9.-]+" )
-	tag=$(git for-each-ref --sort=taggerdate --format '%(tag)' refs/tags|tail -1)
-	if [[ $gradle_version != $tag ]]; then
-		/bin/echo -n "$BUILDFILE version and git tag version mismatch..."
-		pFail
-	fi
 	echo "$BUILDFILE version $gradle_version"
-	echo "last git tag version is $tag"
 }
 
 function checkGradleProperties() {
@@ -108,8 +102,8 @@ function checkGradleProperties() {
 
 checkNewLanguages
 checkENStrings
-checkVersions
 checkSamsungWorkaround
 checkGradleProperties
+printVersion
 # checkDeviceToTest
 # runConnectedTests
