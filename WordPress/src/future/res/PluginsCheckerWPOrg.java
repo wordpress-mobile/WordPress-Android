@@ -15,6 +15,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * This class can test a WordPress installation for plugins/themes that cause problems with WordPress for Android connecting correctly.
+ *
+ * The tool is a black box scanner, it allows remote testing of a WordPress installation.
+ * Find problematic plugins and themes, configuration issues and other glitches that can cause problems with our apps.
+ *
+ */
 public class PluginsCheckerWPOrg {
     private final static String BB_PLUGINS_LIST_URL = "https://raw.githubusercontent.com/wordpress-mobile/app-blocking-plugins/master/xmlrpc-plugins.json";
 
@@ -30,6 +38,10 @@ public class PluginsCheckerWPOrg {
         mOriginalURL = url;
     }
 
+    /**
+     * This routine does a black box scanning on the plugis folder of the remote host, and tries to find plugins that cause
+     * problems connecting to the host from one of our mobile apps.
+     */
     public List<Plugin> checkForPlugins() {
         String responseHTML = downloadPluginsList();
         if (TextUtils.isEmpty(responseHTML)) {
