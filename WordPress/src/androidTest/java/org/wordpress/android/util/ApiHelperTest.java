@@ -22,13 +22,10 @@ import java.util.concurrent.TimeUnit;
 public class ApiHelperTest extends InstrumentationTestCase {
     protected Context mTargetContext;
 
-    public ApiHelperTest() {
-        super();
-        FactoryUtils.initWithTestFactories();
-    }
-
     @Override
     protected void setUp() {
+        FactoryUtils.initWithTestFactories();
+
         // Clean application state
         mTargetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
         TestUtils.clearApplicationState(mTargetContext);
@@ -46,6 +43,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
 
     @Override
     protected void tearDown() {
+        FactoryUtils.clearFactories();
     }
 
     // This test failed before #773 was fixed

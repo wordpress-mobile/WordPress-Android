@@ -28,6 +28,12 @@ public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
         setupService();
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        FactoryUtils.clearFactories();
+        super.tearDown();
+    }
+
     public void testShouldCircularizeNoteIcon() {
         GCMMessageService intentService = new GCMMessageService();
 
