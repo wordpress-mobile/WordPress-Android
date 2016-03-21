@@ -69,6 +69,13 @@ ZSSEditor.defaultParagraphSeparator = 'p';
 // mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
 ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
+// We use a MutationObserver to catch user deletions of uploading or failed media
+// This is only officially supported on API>18; when the WebView doesn't recognize the MutationObserver,
+// we fall back to the deprecated DOMNodeRemoved event
+ZSSEditor.mutationObserver;
+
+ZSSEditor.defaultMutationObserverConfig = { attributes: false, childList: true, characterData: false };
+
 /**
  * The initializer function that must be called onLoad
  */
@@ -110,6 +117,15 @@ ZSSEditor.init = function() {
 			}
 		}
 	}, false);
+
+    // Attempt to instantiate a MutationObserver. This should fail for API<19, unless the OEM of the device has
+    // modified the WebView. If it fails, the editor will fall back to DOMNodeRemoved events.
+    try {
+        ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
+            ZSSEditor.onMutationObserved(mutations);} );
+    } catch(e) {
+        // no op
+    }
 
 }; //end
 
@@ -193,7 +209,66 @@ ZSSEditor.execFunctionForResult = function(methodName) {
     var functionArgument = "function=" + methodName;
     var resultArgument = "result=" + window["ZSSEditor"][methodName].apply();
     ZSSEditor.callback('callback-response-string', functionArgument +  defaultCallbackSeparator + resultArgument);
-}
+};
+
+// MARK: - Mutation observing
+
+/**
+ *  @brief      Register a node to be tracked for modifications
+ */
+ZSSEditor.trackNodeForMutation = function(target) {
+    if (ZSSEditor.mutationObserver != undefined) {
+        ZSSEditor.mutationObserver.observe(target[0], ZSSEditor.defaultMutationObserverConfig);
+    } else {
+        // The WebView doesn't support MutationObservers - fall back to DOMNodeRemoved events
+        target.bind("DOMNodeRemoved", function(event) { ZSSEditor.onDomNodeRemoved(event); });
+    }
+};
+
+/**
+ *  @brief      Called when the MutationObserver registers a mutation to a node it's listening to
+ */
+ZSSEditor.onMutationObserved = function(mutations) {
+    mutations.forEach(function(mutation) {
+        for (var i = 0; i < mutation.removedNodes.length; i++) {
+            var removedNode = mutation.removedNodes[i];
+            if (ZSSEditor.isMediaContainerNode(removedNode)) {
+                // An uploading or failed container node was deleted manually - notify native
+                var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-wpid")) {
+                // An uploading or failed image was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeImage(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
+                // An uploading or failed video was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeVideo(mediaIdentifier);
+                ZSSEditor.setRange(parentRange);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            }
+        }
+    });
+};
+
+/**
+ *  @brief      Called when a DOMNodeRemoved event is triggered for an element we're tracking
+ *              (only used when MutationObserver is unsupported by the WebView)
+ */
+ZSSEditor.onDomNodeRemoved = function(event) {
+    if (event.target.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
+    } else if (event.target.parentNode.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target.parentNode);
+    } else {
+        return;
+    }
+    ZSSEditor.sendMediaRemovedCallback(mediaId);
+};
 
 // MARK: - Logging
 
@@ -817,6 +892,91 @@ ZSSEditor.turnBlockquoteOnForNode = function(node) {
     }
 };
 
+// MARK: - Generic media
+
+ZSSEditor.isMediaContainerNode = function(node) {
+    if (node.id === undefined) {
+        return false;
+    }
+    return (node.id.search("img_container_") == 0) || (node.id.search("video_container_") == 0);
+};
+
+ZSSEditor.extractMediaIdentifier = function(node) {
+    if (node.id.search("img_container_") == 0) {
+        return node.id.replace("img_container_", "");
+    } else if (node.id.search("video_container_") == 0) {
+        return node.id.replace("video_container_", "");
+    }
+    return "";
+};
+
+ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
+    var imageContainerNode = ZSSEditor.getImageContainerNodeWithIdentifier(mediaNodeIdentifier);
+    if (imageContainerNode.length > 0) {
+        return imageContainerNode;
+    } else {
+        return ZSSEditor.getVideoContainerNodeWithIdentifier(mediaNodeIdentifier);
+    }
+};
+
+ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
+    var arguments = ['id=' + encodeURIComponent(mediaNodeIdentifier)];
+    var joinedArguments = arguments.join(defaultCallbackSeparator);
+    this.callback("callback-media-removed", joinedArguments);
+};
+
+/**
+ *  @brief      Marks all in-progress images as failed to upload
+ */
+ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.uploading");
+
+    for(var i = 0; i < matches.size(); i++) {
+        if (matches[i].hasAttribute('data-wpid')) {
+            var mediaId = matches[i].getAttribute('data-wpid');
+            ZSSEditor.markImageUploadFailed(mediaId, message);
+        } else if (matches[i].hasAttribute('data-video_wpid')) {
+            var videoId = matches[i].getAttribute('data-video_wpid');
+            ZSSEditor.markVideoUploadFailed(videoId, message);
+        }
+    }
+};
+
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedMedia = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.failed");
+
+    var functionArgument = "function=getFailedMedia";
+    var mediaIdArray = [];
+
+    for (var i = 0; i < matches.size(); i++) {
+        var mediaId;
+        if (matches[i].hasAttribute("data-wpid")) {
+            mediaId = matches[i].getAttribute("data-wpid");
+        } else if (matches[i].hasAttribute("data-video_wpid")) {
+            mediaId = matches[i].getAttribute("data-video_wpid");
+        }
+
+        // Track pre-existing failed media nodes for manual deletion events
+        ZSSEditor.trackNodeForMutation(this.getMediaContainerNodeWithIdentifier(mediaId));
+
+        if (mediaId.length > 0) {
+            mediaIdArray.push(mediaId);
+        }
+    }
+
+    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
+    ZSSEditor.callback('callback-response-string', joinedArguments);
+};
+
 // MARK: - Images
 
 ZSSEditor.updateImage = function(url, alt) {
@@ -873,6 +1033,9 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
+    ZSSEditor.trackNodeForMutation(this.getImageContainerNodeWithIdentifier(imageNodeIdentifier));
+
     this.sendEnabledStyles();
 };
 
@@ -989,6 +1152,8 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
 
     // Remove all extra formatting nodes for progress
     if (imageNode.parent().attr("id") == this.getImageContainerIdentifier(imageNodeIdentifier)) {
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageNode.parent().attr("id", "");
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
@@ -1077,55 +1242,6 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
 };
 
 /**
- *  @brief      Marks all in-progress images as failed to upload
- */
-ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.uploading");
-
-    for(var i = 0; i < matches.size(); i++) {
-        if (matches[i].hasAttribute('data-wpid')) {
-            var mediaId = matches[i].getAttribute('data-wpid');
-            ZSSEditor.markImageUploadFailed(mediaId, message);
-        } else if (matches[i].hasAttribute('data-video_wpid')) {
-            var videoId = matches[i].getAttribute('data-video_wpid');
-            ZSSEditor.markVideoUploadFailed(videoId, message);
-        }
-    }
-};
-
-/**
- *  @brief      Sends a callback with a list of failed images
- */
-ZSSEditor.getFailedMedia = function() {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.failed");
-
-    var functionArgument = "function=getFailedMedia";
-    var mediaIdArray = [];
-
-    for (var i = 0; i < matches.size(); i++) {
-        var mediaId;
-        if (matches[i].hasAttribute("data-wpid")) {
-            mediaId = matches[i].getAttribute("data-wpid");
-        } else if (matches[i].hasAttribute("data-video_wpid")) {
-            mediaId = matches[i].getAttribute("data-video_wpid");
-        }
-
-        if (mediaId.length > 0) {
-            mediaIdArray.push(mediaId);
-        }
-    }
-
-    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
-    ZSSEditor.callback('callback-response-string', joinedArguments);
-};
-
-/**
  *  @brief      Remove the image from the DOM.
  *
  *  @param      imageNodeIdentifier     This is a unique ID provided by the caller.
@@ -1133,6 +1249,8 @@ ZSSEditor.getFailedMedia = function() {
 ZSSEditor.removeImage = function(imageNodeIdentifier) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageNode.attr("id","");
         imageNode.remove();
     }
 
@@ -1208,6 +1326,9 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var html = videoContainerStart + progressElement + image + videoContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
+    ZSSEditor.trackNodeForMutation(this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier));
+
     this.sendEnabledStyles();
 };
 
@@ -1406,7 +1527,7 @@ ZSSEditor.removeVideo = function(videoNodeIdentifier) {
     // if Video is inside options container we need to remove the container
     var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
     if (videoContainerNode.length != 0){
-        //reset id before removal to avoid detection of user removal
+        // Reset id before removal to avoid triggering the manual media removal callback
         videoContainerNode.attr("id","");
         videoContainerNode.remove();
     }
@@ -2014,6 +2135,7 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
 }
 
 // MARK: - Galleries
+
 ZSSEditor.insertGallery = function( imageIds, type, columns ) {
     var shortcode;
     if (type) {
@@ -2639,6 +2761,17 @@ ZSSEditor.parentTags = function() {
     return parentTags;
 };
 
+// MARK: - Range handling
+
+ZSSEditor.getParentRangeOfFocusedNode = function() {
+    var selection = window.getSelection();
+    return selection.getRangeAt(selection.focusNode.parentNode);
+};
+
+ZSSEditor.setRange = function(range) {
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+};
 // MARK: - ZSSField Constructor
 
 function ZSSField(wrappedObject) {
