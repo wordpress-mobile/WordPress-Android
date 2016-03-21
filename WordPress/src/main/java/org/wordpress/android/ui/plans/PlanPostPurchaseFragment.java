@@ -130,6 +130,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 break;
         }
 
-        // TODO: close the activity
+        // the user launched another activity, so we close this one
+        getActivity().finish();
     }
 }
