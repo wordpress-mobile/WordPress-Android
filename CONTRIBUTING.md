@@ -64,6 +64,14 @@ The Android build tools now allow drawable resources to be provided exclusively 
 From the [release notes](http://tools.android.com/tech-docs/new-build-system):
 `PNGs are generated for every vector drawable found in a resource directory that does not specify an API version (or specifies a version lower than 21).`
 
+# Subtree'd projects
+
+The [WordPress-HealthCheck-Common][healthcheck] project is used in the tests and loaded from `assets` on tests run. Use the following command to pull in newer commits from the external project:
+
+        $ git subtree pull --prefix=WordPress/src/androidTest/assets/health-check/ https://github.com/wordpress-mobile/WordPress-HealthCheck-Common.git develop
+
+[healthcheck]: https://github.com/wordpress-mobile/WordPress-HealthCheck-Common
+
 # Contribute to translations
 
 We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: http://translate.wordpress.org/projects/apps/android/dev. To add new translations or fix existing ones, create an account over at GlotPress and submit your changes over at the GlotPress site.
