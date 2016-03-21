@@ -16,11 +16,14 @@ import org.xmlrpc.android.LoggedInputStream;
 import org.xmlrpc.android.XMLRPCUtils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.test.InstrumentationTestCase;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 public class HealthCheckTest extends InstrumentationTestCase {
@@ -28,9 +31,21 @@ public class HealthCheckTest extends InstrumentationTestCase {
     private static final String sServerAddressMagicString = "mockserver";
     private static final String sServerResponsesMagicScheme = "asset:";
 
+    private void setLocale(String language, String country) {
+        Locale locale = new Locale(language, country);
+        Locale.setDefault(locale);
+        Resources res = getInstrumentation().getTargetContext().getResources();
+        Configuration config = res.getConfiguration();
+        config.locale = locale;
+        res.updateConfiguration(config, res.getDisplayMetrics());
+    }
+
     @Override
     protected void setUp() {
         WordPress.setupVolleyQueue();
+
+        // set the app locale to english since the tests only support English for now
+        setLocale("en", "US");
     }
 
     @Override
