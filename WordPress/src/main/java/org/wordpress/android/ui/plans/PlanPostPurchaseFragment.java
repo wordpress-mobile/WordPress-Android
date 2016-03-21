@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.themes.ThemeWebActivity;
 import org.wordpress.android.util.AppLog;
 
 /**
@@ -108,7 +109,7 @@ public class PlanPostPurchaseFragment extends Fragment {
             button.setVisibility(View.GONE);
         }
 
-        // TODO: image is a placeholders until we have assets
+        // TODO: image is a placeholder until we have assets
         image.setImageResource(R.drawable.penandink);
 
         return rootView;
@@ -117,7 +118,9 @@ public class PlanPostPurchaseFragment extends Fragment {
     private void handleButtonClick() {
         switch (mPageNumber) {
             case PAGE_NUMBER_CUSTOMIZE:
-                // TODO: we don't have customization yet!
+                String blogId = WordPress.getCurrentRemoteBlogId();
+                String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
+                ThemeWebActivity.openTheme(getActivity(), themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW, true);
                 break;
             case PAGE_NUMBER_THEMES:
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
@@ -126,5 +129,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.currentBlog, false);
                 break;
         }
+
+        // TODO: close the activity
     }
 }
