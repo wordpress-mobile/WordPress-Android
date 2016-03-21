@@ -48,10 +48,10 @@ beta_code=$?
 build_apk $alpha_branch Zalpha
 alpha_code=$?
 
+echo "Version codes - release: $release_code, beta: $beta_code, alpha: $alpha_code"
+echo "Full log in: $LOGFILE"
 if [ $release_code -ge $beta_code -o $beta_code -ge $alpha_code ]; then
   echo "(ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ) (ಥ﹏ಥ)"
   echo "Wrong version codes (╯°□°）╯︵ ┻━┻"
   exit 2
 fi
-echo "Version codes - release: $release_code, beta: $beta_code, alpha: $alpha_code"
-echo "Full log in: $LOGFILE"
