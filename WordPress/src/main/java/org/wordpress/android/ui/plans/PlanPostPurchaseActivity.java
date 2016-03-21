@@ -87,7 +87,7 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<>();
             for (int i = 0; i < NUM_PAGES; i++) {
-                fragments.add(PlanPostPurchaseFragment.newInstance());
+                fragments.add(PlanPostPurchaseFragment.newInstance(i));
             }
 
             FragmentManager fm = getFragmentManager();
