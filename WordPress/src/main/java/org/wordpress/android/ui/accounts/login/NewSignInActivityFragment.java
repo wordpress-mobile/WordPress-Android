@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewSignInActivityFragment extends Fragment {
     public interface OnEmailCheckListener {
         void onEmailChecked(Boolean isWPCom);
+        void onSelfHostedRequested();
     }
 
     private String mEmail = "";
@@ -32,6 +34,14 @@ public class NewSignInActivityFragment extends Fragment {
             public void onClick(View v) {
                 mEmail = email.getText().toString();
                 checkEmail();
+            }
+        });
+
+        WPTextView selfHostedSite = (WPTextView) view.findViewById(R.id.nux_self_hosted_button);
+        selfHostedSite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onSelfHostedRequested();
             }
         });
 
