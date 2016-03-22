@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import org.wordpress.android.R;
@@ -11,7 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityId;
 
-public class SignInActivity extends Activity {
+public class SignInActivity extends AppCompatActivity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;

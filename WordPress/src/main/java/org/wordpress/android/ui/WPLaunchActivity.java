@@ -1,8 +1,8 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -10,7 +10,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
-public class WPLaunchActivity extends Activity {
+public class WPLaunchActivity extends AppCompatActivity {
 
     /*
      * this the main (default) activity, which does nothing more than launch the
