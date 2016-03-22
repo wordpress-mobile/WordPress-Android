@@ -78,6 +78,17 @@ def action_open_editor_and_type_text(device, serialno):
     view.type(settings.example_post_content)
     time.sleep(2)
 
+def action_open_stats(device, serialno):
+    print("open stats tab")
+    device.press('KEYCODE_TAB')
+    for i in range(5):
+        device.press('KEYCODE_DPAD_LEFT')
+    viewclient = ViewClient(device, serialno)
+    viewclient.dump()
+    view = viewclient.findViewById("org.wordpress.android:id/row_stats")
+    view.touch()
+    time.sleep(5)
+
 # Utilities
 
 def lose_focus(serialno):
