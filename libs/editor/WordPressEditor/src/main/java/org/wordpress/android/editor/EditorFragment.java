@@ -450,6 +450,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mContentHtml = mSourceViewContent.getText().toString();
                 updateVisualEditorFields();
 
+                // Update the list of failed media uploads
+                mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
+
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
             }
         } else if (id == R.id.format_bar_button_media) {
@@ -1155,6 +1158,13 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         linkDialogFragment.setArguments(dialogBundle);
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+    }
+
+    @Override
+    public void onMediaRemoved(String mediaId) {
+        mUploadingMedia.remove(mediaId);
+        mFailedMediaIds.remove(mediaId);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
     }
 
     @Override
