@@ -41,7 +41,7 @@ public class MenuLocationTable {
     public static final String PRIMARY_KEY = "CONSTRAINT " + PRIMARY_KEY_COLUMN + " PRIMARY KEY";
 
     /** SQL query to create the Menu Locations table */
-    public static final String CREATE_MENU_LOCATIONS_TABLE_SQL =
+    public static final String CREATE_MENU_LOCATION_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " + MENU_LOCATIONS_TABLE_NAME + " (" +
                     SITE_ID_COLUMN + " INTEGER NOT NULL," +
                     NAME_COLUMN + " TEXT NOT NULL, " +

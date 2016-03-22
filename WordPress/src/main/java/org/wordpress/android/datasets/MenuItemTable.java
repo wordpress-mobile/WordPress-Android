@@ -50,7 +50,7 @@ public class MenuItemTable {
     //
     public static final String MENU_ITEMS_TABLE_NAME = "menu_items";
 
-    public static final String CREATE_MENU_ITEMS_TABLE_SQL =
+    public static final String CREATE_MENU_ITEM_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
                     MENU_ITEMS_TABLE_NAME + " (" +
                     ID_COLUMN + " INTEGER PRIMARY KEY, " +
@@ -101,7 +101,6 @@ public class MenuItemTable {
         cursor.moveToFirst();
         MenuItemModel item = deserializeFromDatabase(cursor);
         cursor.close();
-
         return item;
     }
 
@@ -138,6 +137,7 @@ public class MenuItemTable {
         item.typeFamily = getStringFromCursor(cursor, TYPE_FAMILY_COLUMN);
         item.typeLabel = getStringFromCursor(cursor, TYPE_LABEL_COLUMN);
         item.setChildrenFromStringList(getStringFromCursor(cursor, CHILDREN_COLUMN));
+        return item;
     }
 
     /**
