@@ -1082,28 +1082,53 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
     var image = new Image;
 
     image.onload = function () {
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
-
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId)
+        image.classList.add("image-loaded");
+        console.log("Image Loaded!");
     }
 
     image.onerror = function () {
-        // Even on an error, we swap the image for the time being.  This is because private
-        // blogs are currently failing to download images due to access privilege issues.
-        //
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
-
+        // Add a remoteUrl attribute, remoteUrl and src must be swapped before publishing.
+        image.setAttribute('remoteurl', image.src);
+        // Try to reload the image on error.
+        ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, 1);
     }
 
     image.src = remoteImageUrl;
 };
+
+ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier, remoteImageId) {
+    imageNode.addClass("wp-image-" + remoteImageId);
+    if (image.getAttribute("remoteurl")) {
+        imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
+    }
+    imageNode.attr('src', image.src);
+    ZSSEditor.markImageUploadDone(imageNodeIdentifier);
+    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
+    ZSSEditor.callback("callback-input", joinedArguments);
+    image.onerror = null;
+}
+
+ZSSEditor.reloadImage = function(image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (image.classList.contains("image-loaded")) {
+        return;
+    }
+    image.onerror = ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, nCall + 1);
+    // Force reloading by updating image src
+    image.src = image.getAttribute("remoteurl") + "?retry=" + nCall;
+    console.log("Reloading image:" + nCall + " - " + image.src);
+}
+
+ZSSEditor.tryToReload = function (image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (nCall > 8) { // 7 tries: 22500 ms total
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId);
+        return;
+    }
+    image.onerror = null;
+    console.log("Image not loaded");
+    // reload the image with a variable delay: 500ms, 1000ms, 1500ms, 2000ms, etc.
+    setTimeout(ZSSEditor.reloadImage, nCall * 500, image, imageNode, imageNodeIdentifier, remoteImageId, nCall);
+}
 
 /**
  *  @brief      Update the progress indicator for the image identified with the value in progress.
@@ -1157,9 +1182,10 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
-    var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
-    imageNode.wrap(linkTag);
-
+    var link = $('<a>', { href: imageNode.attr("src") } );
+    imageNode.wrap(link);
+    // We invoke the sendImageReplacedCallback with a delay to avoid for
+    // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
     setTimeout(function() { thisObj.sendImageReplacedCallback(imageNodeIdentifier);}, 500);
 };
@@ -1751,6 +1777,28 @@ ZSSEditor.removeImageSelectionFormattingFromHTML = function( html ) {
     return tmpDom.html();
 }
 
+ZSSEditor.removeImageRemoteUrl = function(html) {
+    var tmp = document.createElement("div");
+    var tmpDom = $(tmp).html(html);
+
+    var matches = tmpDom.find("img");
+    if (matches.length == 0) {
+        return html;
+    }
+
+    for (var i = 0; i < matches.length; i++) {
+        if (matches[i].getAttribute('remoteurl')) {
+            if (matches[i].parentNode && matches[i].parentNode.href === matches[i].src) {
+                matches[i].parentNode.href = matches[i].getAttribute('remoteurl')
+            }
+            matches[i].src = matches[i].getAttribute('remoteurl');
+            matches[i].removeAttribute('remoteurl');
+        }
+    }
+
+    return tmpDom.html();
+}
+
 /**
  *  @brief       Finds all related caption nodes for the specified image node.
  *
@@ -2192,6 +2240,7 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
  */
 ZSSEditor.removeVisualFormatting = function( html ) {
     var str = html;
+    str = ZSSEditor.removeImageRemoteUrl( str );
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
