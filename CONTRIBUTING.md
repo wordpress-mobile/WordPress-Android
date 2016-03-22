@@ -65,6 +65,10 @@ A number of library dependencies are managed as separate open source projects an
 
 and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics` respectively.
 
+Similarly, issue a `subtree push` to push changes committed to the main app repo, upstream to the library repo:
+
+        $ git subtree push --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
+
 Here are the libraries currently maintained and subtree'd:
 
 * Analytics
