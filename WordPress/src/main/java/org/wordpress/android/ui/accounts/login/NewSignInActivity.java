@@ -2,10 +2,12 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInFragment;
 
 public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInActivityFragment.OnEmailCheckListener {
@@ -54,16 +56,8 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
 
     @Override
     public void onSelfHostedRequested() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        SignInFragment fragment = new SignInFragment();
-        Bundle args = new Bundle();
-        args.putBoolean(SignInFragment.KEY_IS_SELF_HOSTED, true);
-        fragment.setArguments(args);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        Intent intent = new Intent(this, SignInActivity.class);
+        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN);
+        startActivity(intent);
     }
 }

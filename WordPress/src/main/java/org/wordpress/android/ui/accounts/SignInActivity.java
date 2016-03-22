@@ -15,6 +15,7 @@ public class SignInActivity extends Activity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
+    public static final int NEW_LOGIN = 3;
     public static final int SHOW_CERT_DETAILS = 4;
     public static String START_FRAGMENT_KEY = "start-fragment";
     public static final String ARG_JETPACK_SITE_AUTH = "ARG_JETPACK_SITE_AUTH";
@@ -54,6 +55,8 @@ public class SignInActivity extends Activity {
             case ADD_SELF_HOSTED_BLOG:
                 mSignInFragment.forceSelfHostedMode();
                 break;
+            case NEW_LOGIN:
+                mSignInFragment.setNewLoginView();
             default:
                 break;
         }
