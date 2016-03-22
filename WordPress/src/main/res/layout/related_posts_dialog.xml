@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/rppreview1" />
+                app:srcCompat="@drawable/rppreview1" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title1"
@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/rppreview2" />
+                app:srcCompat="@drawable/rppreview2" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title2"
@@ -153,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/rppreview3" />
+                app:srcCompat="@drawable/rppreview3" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title3"
