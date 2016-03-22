@@ -1658,17 +1658,20 @@ ZSSEditor.removeImageSelectionFormattingFromHTML = function( html ) {
     return tmpDom.html();
 }
 
-ZSSEditor.removeImageRemoteUrl = function( html ) {
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
+ZSSEditor.removeImageRemoteUrl = function(html) {
+    var tmp = document.createElement("div");
+    var tmpDom = $(tmp).html(html);
 
-    var matches = tmpDom.find( "img" );
-    if ( matches.length == 0 ) {
+    var matches = tmpDom.find("img");
+    if (matches.length == 0) {
         return html;
     }
 
-    for ( var i = 0; i < matches.length; i++ ) {
+    for (var i = 0; i < matches.length; i++) {
         if (matches[i].getAttribute('remoteurl')) {
+            if (matches[i].parentNode && matches[i].parentNode.href === matches[i].src) {
+                matches[i].parentNode.href = matches[i].getAttribute('remoteurl')
+            }
             matches[i].src = matches[i].getAttribute('remoteurl');
             matches[i].removeAttribute('remoteurl');
         }
