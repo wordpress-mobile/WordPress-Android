@@ -75,7 +75,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
-    private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
+    public static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -125,6 +125,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
+        } else if (getArguments() != null) {
+            mSelfHosted = getArguments().getBoolean(KEY_IS_SELF_HOSTED);
         }
     }
 
