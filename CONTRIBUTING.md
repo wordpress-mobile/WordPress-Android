@@ -59,10 +59,7 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 # Drawable Resources
 
-The Android build tools now allow drawable resources to be provided exclusively in vector format, PNG's are automatically generated at build time if necessary.
-
-From the [release notes](http://tools.android.com/tech-docs/new-build-system):
-`PNGs are generated for every vector drawable found in a resource directory that does not specify an API version (or specifies a version lower than 21).`
+The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
 
 # Contribute to translations
 
