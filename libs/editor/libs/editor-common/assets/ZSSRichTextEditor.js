@@ -938,7 +938,6 @@ ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier,
     imageNode.addClass("wp-image-" + remoteImageId);
     if (image.getAttribute("remoteurl")) {
         imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
-        console.log("FIXME: " + imageNode.attr('remoteurl'));
     }
     imageNode.attr('src', image.src);
     ZSSEditor.markImageUploadDone(imageNodeIdentifier);
@@ -1018,7 +1017,6 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
-    console.log("FIXME: " + imageNode.attr("src"));
     var link = $('<a>', { href: imageNode.attr("src") } );
     imageNode.wrap(link);
     // We invoke the sendImageReplacedCallback with a delay to avoid for
