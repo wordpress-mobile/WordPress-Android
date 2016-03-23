@@ -453,7 +453,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
 
-                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                // Reset selection to avoid buggy cursor behavior
+                mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
             }
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
@@ -818,6 +819,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public boolean hasFailedMediaUploads() {
         return (mFailedMediaIds.size() > 0);
+    }
+
+    @Override
+    public void removeAllFailedMediaUploads() {
+        mWebView.execJavaScriptFromString("ZSSEditor.removeAllFailedMediaUploads();");
     }
 
     @Override
