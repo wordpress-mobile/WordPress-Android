@@ -241,14 +241,18 @@ ZSSEditor.onMutationObserved = function(mutations) {
                 var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
                 var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
                 ZSSEditor.removeImage(mediaIdentifier);
-                ZSSEditor.setRange(parentRange);
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
                 ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
             } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
                 // An uploading or failed video was deleted manually - remove its container and send the callback
                 var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
                 var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
                 ZSSEditor.removeVideo(mediaIdentifier);
-                ZSSEditor.setRange(parentRange);
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
                 ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
             }
         }
@@ -2778,6 +2782,9 @@ ZSSEditor.parentTags = function() {
 
 ZSSEditor.getParentRangeOfFocusedNode = function() {
     var selection = window.getSelection();
+    if (selection.focusNode == null) {
+        return null;
+    }
     return selection.getRangeAt(selection.focusNode.parentNode);
 };
 
