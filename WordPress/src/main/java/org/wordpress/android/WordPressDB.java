@@ -16,9 +16,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.datasets.MenusTable;
 import org.wordpress.android.datasets.MenuItemTable;
 import org.wordpress.android.datasets.MenuLocationTable;
+import org.wordpress.android.datasets.MenuTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
@@ -246,6 +246,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_THEMES);
         db.execSQL(MenuLocationTable.CREATE_MENU_LOCATION_TABLE_SQL);
         db.execSQL(MenuItemTable.CREATE_MENU_ITEM_TABLE_SQL);
+        db.execSQL(MenuTable.CREATE_MENU_TABLE_SQL);
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
