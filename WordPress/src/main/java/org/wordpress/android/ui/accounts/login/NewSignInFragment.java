@@ -35,8 +35,10 @@ public class NewSignInFragment extends SignInFragment {
 
         if (mSelfHosted) {
             mPasswordLayout.setVisibility(View.VISIBLE);
+            mForgotPassword.setVisibility(View.VISIBLE);
         } else {
             mPasswordLayout.setVisibility(View.GONE);
+            mForgotPassword.setVisibility(View.GONE);
         }
     }
 }
