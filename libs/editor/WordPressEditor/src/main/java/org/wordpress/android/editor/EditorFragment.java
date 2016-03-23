@@ -991,6 +991,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     mWebView.execJavaScriptFromString("ZSSEditor.focusFirstEditableField();");
                 }
 
+                // Show the keyboard
+                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .showSoftInput(mWebView, InputMethodManager.SHOW_IMPLICIT);
+
                 ProfilingUtils.split("EditorFragment.onDomLoaded completed");
                 ProfilingUtils.dump();
                 ProfilingUtils.stop();
