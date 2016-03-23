@@ -1400,5 +1400,6 @@
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plan_purchase_now">Purchase Now</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
 
 </resources>
