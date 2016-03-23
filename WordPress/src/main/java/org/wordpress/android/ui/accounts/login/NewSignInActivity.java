@@ -10,7 +10,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInFragment;
 
-public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInFragment.OnEmailCheckListener {
+public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInFragment.OnMagicLinkRequestListener {
     public String mEmail = "";
 
     @Override
@@ -24,22 +24,6 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
         NewSignInFragment fragment = new NewSignInFragment();
         fragmentTransaction.add(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onEmailChecked(boolean isWPCom) {
-        if (isWPCom) {
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-            WPComMagicLinkFragment fragment = WPComMagicLinkFragment.newInstance(mEmail);
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        } else {
-            // self-hosted flow
-        }
     }
 
     @Override
@@ -64,5 +48,17 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
             intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN_SELF_HOSTED);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void onMagicLinkRequestSuccess() {
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        WPComMagicLinkFragment fragment = WPComMagicLinkFragment.newInstance(mEmail);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.setTransition(android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

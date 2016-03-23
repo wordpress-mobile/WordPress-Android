@@ -8,12 +8,22 @@ import android.view.ViewGroup;
 import org.wordpress.android.ui.accounts.SignInFragment;
 
 public class NewSignInFragment extends SignInFragment {
-    public interface OnEmailCheckListener {
-        void onEmailChecked(boolean isWPCom);
+    public interface OnMagicLinkRequestListener {
+        void onMagicLinkRequestSuccess();
     }
 
     public NewSignInFragment() {
         super();
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnMagicLinkRequestListener) {
+
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestListener");
+
+        }
     }
 
     @Override
