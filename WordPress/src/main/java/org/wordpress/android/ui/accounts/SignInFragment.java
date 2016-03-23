@@ -687,7 +687,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mUsernameEditText).trim().length() > 0
-               && EditTextUtils.getText(mPasswordEditText).trim().length() > 0
+               && (mPasswordLayout.getVisibility() == View.GONE || EditTextUtils.getText(mPasswordEditText).trim().length() > 0)
                && (mTwoStepLayout.getVisibility() == View.GONE || EditTextUtils.getText(mTwoStepEditText).trim().length() > 0);
     }
 
