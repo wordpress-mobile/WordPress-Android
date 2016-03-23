@@ -14,8 +14,8 @@ import org.wordpress.android.widgets.WPTextView;
 
 public class NewSignInActivityFragment extends Fragment {
     public interface OnEmailCheckListener {
-        void onEmailChecked(Boolean isWPCom);
-        void onSelfHostedRequested();
+        void onEmailChecked(boolean isWPCom);
+        void onSelfHostedRequested(boolean isWPCom);
     }
 
     private String mEmail = "";
@@ -41,7 +41,7 @@ public class NewSignInActivityFragment extends Fragment {
         selfHostedSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onSelfHostedRequested();
+                mListener.onSelfHostedRequested(false);
             }
         });
 

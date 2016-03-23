@@ -27,7 +27,7 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
     }
 
     @Override
-    public void onEmailChecked(Boolean isWPCom) {
+    public void onEmailChecked(boolean isWPCom) {
         if (isWPCom) {
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -55,9 +55,14 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
     }
 
     @Override
-    public void onSelfHostedRequested() {
+    public void onSelfHostedRequested(boolean isWPCom) {
         Intent intent = new Intent(this, SignInActivity.class);
-        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN);
+
+        if (isWPCom) {
+            intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN_WP_COM);
+        } else {
+            intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN_SELF_HOSTED);
+        }
         startActivity(intent);
     }
 }
