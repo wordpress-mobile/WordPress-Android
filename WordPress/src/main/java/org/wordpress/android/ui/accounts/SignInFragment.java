@@ -210,7 +210,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return rootView;
     }
 
-    private void toggleSignInMode(){
+    protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
             showDotComSignInForm();
             mSelfHosted = false;
