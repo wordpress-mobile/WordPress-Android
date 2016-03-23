@@ -10,7 +10,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInFragment;
 
-public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInActivityFragment.OnEmailCheckListener {
+public class NewSignInActivity extends AppCompatActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInFragment.OnEmailCheckListener {
     public String mEmail = "";
 
     @Override
@@ -21,7 +21,7 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        NewSignInActivityFragment fragment = new NewSignInActivityFragment();
+        NewSignInFragment fragment = new NewSignInFragment();
         fragmentTransaction.add(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
