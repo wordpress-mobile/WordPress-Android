@@ -75,7 +75,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
                 // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
                 countDownAfterOtherAsyncTasks(countDownLatch);
             }
-        }).execute(false);
+        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 
@@ -98,7 +98,7 @@ public class ApiHelperTest extends InstrumentationTestCase {
                 // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
                 countDownAfterOtherAsyncTasks(countDownLatch);
             }
-        }).execute(false);
+        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 
