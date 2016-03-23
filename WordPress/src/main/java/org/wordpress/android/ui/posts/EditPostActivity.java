@@ -606,20 +606,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (mEditorFragment.hasFailedMediaUploads()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.editor_toast_failed_uploads)
-                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Clear failed uploads
-                            mEditorFragment.removeAllFailedMediaUploads();
-                        }
-                    }).setNegativeButton(android.R.string.cancel, null);
-            builder.create().show();
-            return true;
-        }
-
         if (itemId == R.id.menu_save_post) {
             return savePost();
         } else if (itemId == R.id.menu_preview_post) {
@@ -636,6 +622,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean savePost() {
+        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
+        if (mEditorFragment.hasFailedMediaUploads()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.editor_toast_failed_uploads)
+                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Clear failed uploads
+                            mEditorFragment.removeAllFailedMediaUploads();
+                        }
+                    }).setNegativeButton(android.R.string.cancel, null);
+            builder.create().show();
+            return true;
+        }
+
         // If the post is new and there are no changes, don't publish
         updatePostObject(false);
         if (!mPost.isPublishable()) {
