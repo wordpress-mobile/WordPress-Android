@@ -945,34 +945,39 @@ ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
     }
 };
 
-/**
- *  @brief      Sends a callback with a list of failed images
- */
-ZSSEditor.getFailedMedia = function() {
+ZSSEditor.getFailedMediaIdArray = function() {
     var html = ZSSEditor.getField("zss_field_content").getHTML();
     var tmp = document.createElement( "div" );
     var tmpDom = $( tmp ).html( html );
     var matches = tmpDom.find("img.failed");
 
-    var functionArgument = "function=getFailedMedia";
     var mediaIdArray = [];
 
     for (var i = 0; i < matches.size(); i++) {
-        var mediaId;
+        var mediaId = null;
         if (matches[i].hasAttribute("data-wpid")) {
             mediaId = matches[i].getAttribute("data-wpid");
         } else if (matches[i].hasAttribute("data-video_wpid")) {
             mediaId = matches[i].getAttribute("data-video_wpid");
         }
-
-        // Track pre-existing failed media nodes for manual deletion events
-        ZSSEditor.trackNodeForMutation(this.getMediaContainerNodeWithIdentifier(mediaId));
-
-        if (mediaId.length > 0) {
+        if (mediaId !== null) {
             mediaIdArray.push(mediaId);
         }
     }
+    return mediaIdArray;
+};
 
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedMedia = function() {
+    var mediaIdArray = ZSSEditor.getFailedMediaIdArray();
+    for (var i = 0; i < mediaIdArray.length; i++) {
+        // Track pre-existing failed media nodes for manual deletion events
+        ZSSEditor.trackNodeForMutation(this.getMediaContainerNodeWithIdentifier(mediaIdArray[i]));
+    }
+
+    var functionArgument = "function=getFailedMedia";
     var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
     ZSSEditor.callback('callback-response-string', joinedArguments);
 };
@@ -1260,6 +1265,14 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
         imageContainerNode.remove();
     }
 };
+
+ZSSEditor.removeAllFailedMediaUploads = function() {
+    console.log("Remove all failed media");
+    var failedMediaArray = ZSSEditor.getFailedMediaIdArray();
+    for (var i = 0; i < failedMediaArray.length; i++) {
+        ZSSEditor.removeImage(failedMediaArray[i]);
+    }
+}
 
 /**
  *  @brief Inserts a video tag using the videoURL as source and posterURL as the
