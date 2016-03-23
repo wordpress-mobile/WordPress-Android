@@ -958,11 +958,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     button.setChecked(false);
                 }
 
+                boolean editorHasFocus = false;
+
                 // Add any media files that were placed in a queue due to the DOM not having loaded yet
                 if (mWaitingMediaFiles.size() > 0) {
                     // Image insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (Map.Entry<String, MediaFile> entry : mWaitingMediaFiles.entrySet()) {
                         appendMediaFile(entry.getValue(), entry.getKey(), null);
@@ -975,12 +978,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     // Gallery insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (MediaGallery mediaGallery : mWaitingGalleries) {
                         appendGallery(mediaGallery);
                     }
 
                     mWaitingGalleries.clear();
+                }
+
+                if (!editorHasFocus) {
+                    mWebView.execJavaScriptFromString("ZSSEditor.focusFirstEditableField();");
                 }
 
                 ProfilingUtils.split("EditorFragment.onDomLoaded completed");
