@@ -17,6 +17,12 @@ public class AuthenticatorRequestTest extends InstrumentationTestCase {
         mAuthenticatorRequest = new AuthenticatorRequest(null, null, restClient, null);
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        FactoryUtils.clearFactories();
+        super.tearDown();
+    }
+
     public void testExtractSiteIdFromUrl1() {
         String url = "";
         assertEquals(null, mAuthenticatorRequest.extractSiteIdFromUrl(url));
