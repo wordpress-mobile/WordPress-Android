@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.widgets.WPTextView;
 
 public class WPComMagicLinkFragment extends Fragment {
@@ -49,7 +51,6 @@ public class WPComMagicLinkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wpcom_magic_link, container, false);
         mMagicLinkButton = (WPTextView) view.findViewById(R.id.magic_button);
-        mPasswordSection = (RelativeLayout) view.findViewById(R.id.nux_password_layout);
         mMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,11 +58,11 @@ public class WPComMagicLinkFragment extends Fragment {
             }
         });
 
-        TextView forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
+        TextView forgotPassword = (TextView) view.findViewById(R.id.password_layout);
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                togglePasswordField();
+                mListener.onSelfHostedRequested();
             }
         });
 
@@ -82,14 +83,6 @@ public class WPComMagicLinkFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void togglePasswordField() {
-        if (mPasswordSection.getVisibility() == View.GONE) {
-            mPasswordSection.setVisibility(View.VISIBLE);
-        } else {
-            mPasswordSection.setVisibility(View.GONE);
-        }
     }
 
     private void sendMagicLinkRequest() {
