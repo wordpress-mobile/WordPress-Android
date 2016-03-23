@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -46,6 +47,15 @@ public class ApiHelperTest extends InstrumentationTestCase {
         FactoryUtils.clearFactories();
     }
 
+    private void countDownAfterOtherAsyncTasks(final CountDownLatch countDownLatch) {
+        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                countDownLatch.countDown();
+            }
+        });
+    }
+
     // This test failed before #773 was fixed
     public void testRefreshBlogContent() throws InterruptedException {
         XMLRPCFactoryTest.setPrefixAllInstances("malformed-software-version");
@@ -55,13 +65,15 @@ public class ApiHelperTest extends InstrumentationTestCase {
             @Override
             public void onSuccess() {
                 assertTrue(true);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 assertTrue(false);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
         }).execute(false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
@@ -76,13 +88,15 @@ public class ApiHelperTest extends InstrumentationTestCase {
             @Override
             public void onSuccess() {
                 assertTrue(false);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 assertTrue(true);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
         }).execute(false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
