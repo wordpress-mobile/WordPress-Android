@@ -27,6 +27,7 @@ public class NewSignInFragment extends SignInFragment {
     private void hideIrrelevantViews() {
         mUrlButtonLayout.setVisibility(View.GONE);
         mPasswordLayout.setVisibility(View.GONE);
+        mForgotPassword.setVisibility(View.GONE);
     }
 
     @Override
