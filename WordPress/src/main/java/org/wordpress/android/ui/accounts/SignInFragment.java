@@ -80,41 +80,41 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
 
-    private EditText mUsernameEditText;
-    private EditText mPasswordEditText;
-    private EditText mUrlEditText;
-    private EditText mTwoStepEditText;
+    protected EditText mUsernameEditText;
+    protected EditText mPasswordEditText;
+    protected EditText mUrlEditText;
+    protected EditText mTwoStepEditText;
 
-    private WPTextView mSignInButton;
-    private WPTextView mCreateAccountButton;
-    private WPTextView mAddSelfHostedButton;
-    private WPTextView mProgressTextSignIn;
-    private WPTextView mForgotPassword;
-    private WPTextView mJetpackAuthLabel;
+    protected WPTextView mSignInButton;
+    protected WPTextView mCreateAccountButton;
+    protected WPTextView mAddSelfHostedButton;
+    protected WPTextView mProgressTextSignIn;
+    protected WPTextView mForgotPassword;
+    protected WPTextView mJetpackAuthLabel;
 
-    private LinearLayout mBottomButtonsLayout;
-    private RelativeLayout mUsernameLayout;
-    private RelativeLayout mPasswordLayout;
-    private RelativeLayout mProgressBarSignIn;
-    private RelativeLayout mUrlButtonLayout;
-    private RelativeLayout mTwoStepLayout;
-    private LinearLayout mTwoStepFooter;
+    protected LinearLayout mBottomButtonsLayout;
+    protected RelativeLayout mUsernameLayout;
+    protected RelativeLayout mPasswordLayout;
+    protected RelativeLayout mProgressBarSignIn;
+    protected RelativeLayout mUrlButtonLayout;
+    protected RelativeLayout mTwoStepLayout;
+    protected LinearLayout mTwoStepFooter;
 
-    private ImageView mInfoButton;
-    private ImageView mInfoButtonSecondary;
+    protected ImageView mInfoButton;
+    protected ImageView mInfoButtonSecondary;
 
-    private final EmailChecker mEmailChecker;
+    protected final EmailChecker mEmailChecker;
 
-    private boolean mSelfHosted;
-    private boolean mEmailAutoCorrected;
-    private boolean mShouldSendTwoStepSMS;
-    private int mErroneousLogInCount;
-    private String mUsername;
-    private String mPassword;
-    private String mTwoStepCode;
-    private String mHttpUsername;
-    private String mHttpPassword;
-    private Blog mJetpackBlog;
+    protected boolean mSelfHosted;
+    protected boolean mEmailAutoCorrected;
+    protected boolean mShouldSendTwoStepSMS;
+    protected int mErroneousLogInCount;
+    protected String mUsername;
+    protected String mPassword;
+    protected String mTwoStepCode;
+    protected String mHttpUsername;
+    protected String mHttpPassword;
+    protected Blog mJetpackBlog;
 
     public SignInFragment() {
         mEmailChecker = new EmailChecker();
