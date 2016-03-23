@@ -624,7 +624,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return true;
     }
 
-    private void signIn() {
+    protected void signIn() {
         if (!isUserDataValid()) {
             return;
         }
