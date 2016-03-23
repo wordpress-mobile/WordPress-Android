@@ -380,6 +380,18 @@ ZSSEditor.restoreRange = function(){
     }
 };
 
+ZSSEditor.resetSelectionOnField = function(fieldId) {
+    var query = "div#" + fieldId;
+    var field = document.querySelector(query);
+    var range = document.createRange();
+    range.setStart(field, 0);
+    range.setEnd(field, 0);
+
+    var selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+};
+
 ZSSEditor.getSelectedText = function() {
 	var selection = window.getSelection();
 
