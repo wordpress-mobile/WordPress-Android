@@ -38,7 +38,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
@@ -56,9 +55,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
-
-import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -535,7 +531,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
     private void handleBlogRemoved() {
         if (!AccountHelper.isSignedIn()) {
-            ActivityLauncher.showSignInForResult(this);
+            ActivityLauncher.showSignInForResult(this, true);
         } else {
             Blog blog = WordPress.getCurrentBlog();
             MySiteFragment mySiteFragment = getMySiteFragment();
