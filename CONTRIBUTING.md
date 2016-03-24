@@ -24,7 +24,7 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 
 [build-instructions]: https://github.com/wordpress-mobile/WordPress-Android#build-instructions
 [pr]: https://github.com/wordpress-mobile/WordPress-Android/compare/
-[style]: https://github.com/wordpress-mobile/WordPress-Android/CODESTYLE.md
+[style]: https://github.com/wordpress-mobile/WordPress-Android/blob/develop/CODESTYLE.md
 
 # Versioning
 
@@ -57,12 +57,40 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 [git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
 
+# Subtree'd library projects
+
+A number of library dependencies are managed as separate open source projects and are git-subtree'd into the WordPress Android app source tree. Use the following command to updated (pull latest) from their respective repos:
+
+        $ git subtree pull --squash --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
+
+and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics` respectively.
+
+Similarly, issue a `subtree push` to push changes committed to the main app repo, upstream to the library repo:
+
+        $ git subtree push --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
+
+Here are the libraries currently maintained and subtree'd:
+
+* Analytics
+* Editor
+* Networking
+* Stores
+* Utils
+
 # Drawable Resources
 
 The Android build tools now allow drawable resources to be provided exclusively in vector format, PNG's are automatically generated at build time if necessary.
 
 From the [release notes](http://tools.android.com/tech-docs/new-build-system):
 `PNGs are generated for every vector drawable found in a resource directory that does not specify an API version (or specifies a version lower than 21).`
+
+# Subtree'd projects
+
+The [WordPress-HealthCheck-Common][healthcheck] project is used in the tests and loaded from `assets` on tests run. Use the following command to pull in newer commits from the external project:
+
+        $ git subtree pull --prefix=WordPress/src/androidTest/assets/health-check/ https://github.com/wordpress-mobile/WordPress-HealthCheck-Common.git develop
+
+[healthcheck]: https://github.com/wordpress-mobile/WordPress-HealthCheck-Common
 
 # Contribute to translations
 

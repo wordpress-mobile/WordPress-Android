@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.main;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -21,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -32,8 +36,10 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -51,6 +57,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.List;
+import java.util.Map;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -62,6 +71,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private int  mAppBarElevation;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -126,6 +136,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             }
         });
 
+        mAppBarElevation = getResources().getDimensionPixelSize(R.dimen.appbar_elevation);
+
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -133,10 +145,21 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 AppPrefs.setMainTabIndex(position);
 
                 switch (position) {
+                    case WPMainTabAdapter.TAB_MY_SITE:
+                        setTabLayoutElevation(mAppBarElevation);
+                        break;
+                    case WPMainTabAdapter.TAB_READER:
+                        setTabLayoutElevation(0);
+                    break;
+                    case WPMainTabAdapter.TAB_ME:
+                        setTabLayoutElevation(mAppBarElevation);
+                    break;
                     case WPMainTabAdapter.TAB_NOTIFS:
+                        setTabLayoutElevation(mAppBarElevation);
                         new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         break;
                 }
+
                 trackLastVisibleTab(position, true);
             }
 
@@ -173,6 +196,29 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             } else {
                 ActivityLauncher.showSignInForResult(this, false);
             }
+        }
+    }
+
+    private void setTabLayoutElevation(float newElevation){
+        if (mTabLayout == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float oldElevation = mTabLayout.getElevation();
+            if (oldElevation != newElevation) {
+                ObjectAnimator.ofFloat(mTabLayout, "elevation", oldElevation, newElevation)
+                        .setDuration(1000L)
+                        .start();
+            }
+        }
+    }
+
+    private void showVisualEditorPromoDialogIfNeeded() {
+        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
+            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
+                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
+                    R.string.new_editor_promo_button_label);
+            newFragment.show(getFragmentManager(), "visual-editor-promo");
+            AppPrefs.setVisualEditorPromoRequired(false);
         }
     }
 
@@ -271,6 +317,9 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
+        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
+            showVisualEditorPromoDialogIfNeeded();
+        }
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
@@ -302,9 +351,9 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mViewPager == null) return;
+        if (isFinishing() || mTabLayout == null) return;
 
-        mViewPager.setCurrentItem(WPMainTabAdapter.TAB_READER);
+        mTabLayout.setSelectedTabPosition(WPMainTabAdapter.TAB_READER);
     }
 
     /*
@@ -386,19 +435,11 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 break;
             case RequestCodes.BLOG_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    // user removed the current (self-hosted) blog from blog settings
-                    if (!AccountHelper.isSignedIn()) {
-                        ActivityLauncher.showSignInForResult(this, true);
-                    } else {
-                        MySiteFragment mySiteFragment = getMySiteFragment();
-                        if (mySiteFragment != null) {
-                            mySiteFragment.setBlog(WordPress.getCurrentBlog());
-                        }
-                    }
+                    handleBlogRemoved();
                 }
                 break;
-            case RequestCodes.ACCOUNT_SETTINGS:
-                if (resultCode == SettingsFragment.LANGUAGE_CHANGED) {
+            case RequestCodes.APP_SETTINGS:
+                if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
                     resetFragments();
                 }
                 break;
@@ -489,6 +530,23 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             AniUtils.animateBottomBar(mConnectionBar, false);
         } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, true);
+        }
+    }
+
+    private void handleBlogRemoved() {
+        if (!AccountHelper.isSignedIn()) {
+            ActivityLauncher.showSignInForResult(this);
+        } else {
+            Blog blog = WordPress.getCurrentBlog();
+            MySiteFragment mySiteFragment = getMySiteFragment();
+            if (mySiteFragment != null) {
+                mySiteFragment.setBlog(blog);
+            }
+
+            if (blog != null) {
+                int blogId = blog.getLocalTableBlogId();
+                ActivityLauncher.showSitePickerForResult(this, blogId);
+            }
         }
     }
 

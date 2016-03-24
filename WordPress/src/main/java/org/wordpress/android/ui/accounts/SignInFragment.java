@@ -88,6 +88,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
+    private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -135,6 +136,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
@@ -163,17 +172,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
-                    mUrlButtonLayout.setVisibility(View.GONE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
-                    mSelfHosted = false;
-                } else {
-                    mUrlButtonLayout.setVisibility(View.VISIBLE);
-                    mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
-                    mSelfHosted = true;
-                }
+                toggleSignInMode();
             }
         });
+
+        if (mSelfHosted) {
+            showSelfHostedSignInForm();
+        }
 
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
@@ -219,6 +224,26 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initSmartLockForPasswords();
 
         return rootView;
+    }
+
+    private void toggleSignInMode(){
+        if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
+            showDotComSignInForm();
+            mSelfHosted = false;
+        } else {
+            showSelfHostedSignInForm();
+            mSelfHosted = true;
+        }
+    }
+
+    private void showDotComSignInForm(){
+        mUrlButtonLayout.setVisibility(View.GONE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+    }
+
+    private void showSelfHostedSignInForm(){
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
 
     @Override
@@ -936,7 +961,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             endProgress();
             showTwoStepCodeError(messageId);
             return;
-        } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
+        } else if (messageId == org.wordpress.android.R.string.invalid_site_url_message) {
             showUrlError(messageId);
             endProgress();
             return;
@@ -981,5 +1006,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 refreshBlogContent(currentBlog);
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_SELF_HOSTED, mSelfHosted);
     }
 }

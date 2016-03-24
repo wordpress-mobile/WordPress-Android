@@ -10,4 +10,5 @@
     </issue>
 
     <issue id="HardcodedText" severity="error" />
+    <issue id="InconsistentArrays" severity="warning" />
 </lint>

@@ -62,8 +62,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class XMLRPCClient implements XMLRPCClientInterface {
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
-    public static final int DEFAULT_SOCKET_TIMEOUT = 60000;
+    public static final int DEFAULT_CONNECTION_TIMEOUT_MS = 30000;
+    public static final int DEFAULT_SOCKET_TIMEOUT_MS = 60000;
 
     public interface OnBytesUploadedListener {
         public void onBytesUploaded(long uploadedBytes);
@@ -157,8 +157,8 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             }
         }
 
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT_MS);
+        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT_MS);
 
         // Setup HTTP Basic Auth if necessary
         if (usernamePasswordCredentials != null) {
@@ -255,6 +255,13 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return id;
     }
 
+    /**
+     * Cancel the current call
+     */
+    public void cancel() {
+        mPostMethod.abort();
+    }
+
     @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
             throws XMLRPCException, IOException, XmlPullParserException, NumberFormatException {
@@ -312,9 +319,18 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
             // deserialize fault result
             Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
-            String faultString = (String) map.get(TAG_FAULT_STRING);
-            int faultCode = (Integer) map.get(TAG_FAULT_CODE);
             consumeHttpEntity(entity);
+            //Check that required tags are in the response
+            if (!map.containsKey(TAG_FAULT_STRING) || !map.containsKey(TAG_FAULT_CODE)) {
+                throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> and/or <faultString> missing!");
+            }
+            String faultString = String.valueOf(map.get(TAG_FAULT_STRING));
+            int faultCode;
+            try {
+                faultCode = (int) map.get(TAG_FAULT_CODE);
+            } catch (NumberFormatException | ClassCastException e) {
+                throw new XMLRPCException("Bad XMLRPC Fault response received - <faultCode> value is not a valid integer");
+            }
             throw new XMLRPCFault(faultString, faultCode);
         } else {
             consumeHttpEntity(entity);

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
@@ -32,7 +33,9 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
@@ -196,8 +199,17 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public FilterCriteria[] onLoadFilterCriteriaOptions() {
-                return commentStatuses;
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
+                ArrayList<FilterCriteria> criterias = new ArrayList();
+                for (CommentStatus criteria : commentStatuses) {
+                    criterias.add(criteria);
+                }
+                return criterias;
+            }
+
+            @Override
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+                //noop
             }
 
             @Override
@@ -222,10 +234,22 @@ public class CommentsListFragment extends Fragment {
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
 
                 if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
-                    if (mFilteredCommentsView.getCurrentFilter() == null) {
+                    FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
+                    if (filter == null || CommentStatus.UNKNOWN.equals(filter)) {
                         return getString(R.string.comments_empty_list);
                     } else {
-                        return getString(R.string.comments_empty_list_filtered, mCommentStatusFilter.getLabel().toLowerCase());
+                        switch (mCommentStatusFilter) {
+                            case APPROVED:
+                                return getString(R.string.comments_empty_list_filtered_approved);
+                            case UNAPPROVED:
+                                return getString(R.string.comments_empty_list_filtered_pending);
+                            case SPAM:
+                                return getString(R.string.comments_empty_list_filtered_spam);
+                            case TRASH:
+                                return getString(R.string.comments_empty_list_filtered_trashed);
+                            default:
+                                return getString(R.string.comments_empty_list);
+                        }
                     }
 
                 } else {
@@ -248,7 +272,20 @@ public class CommentsListFragment extends Fragment {
                 }
 
             }
+
+            @Override
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
+                //noop
+            }
         });
+
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredCommentsView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredCommentsView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
 
         return view;
     }
@@ -335,38 +372,61 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void confirmDeleteComments() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.dlg_confirm_trash_comments);
-        builder.setTitle(R.string.trash);
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                deleteSelectedComments();
-            }
-        });
-        builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                    getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.delete));
+            int resid = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
+            dialogBuilder.setMessage(getResources().getText(resid));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            deleteSelectedComments(true);
+                        }
+                    });
+            dialogBuilder.setNegativeButton(
+                    getResources().getText(R.string.no),
+                    null);
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+
+        } else {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.dlg_confirm_trash_comments);
+            builder.setTitle(R.string.trash);
+            builder.setCancelable(true);
+            builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    deleteSelectedComments(false);
+                }
+            });
+            builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
-    private void deleteSelectedComments() {
+    private void deleteSelectedComments(boolean deletePermanently) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
+        final int dlgId = deletePermanently ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
+
         final CommentList selectedComments = getAdapter().getSelectedComments();
-        getActivity().showDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
+        getActivity().showDialog(dlgId);
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 if (!isAdded()) return;
 
                 finishActionMode();
-                dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
+                dismissDialog(dlgId);
                 if (deletedComments.size() > 0) {
                     getAdapter().clearSelectedComments();
                     getAdapter().deleteComments(deletedComments);
@@ -376,8 +436,12 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
+        CommentStatus newStatus = CommentStatus.TRASH;
+        if (deletePermanently){
+            newStatus = CommentStatus.DELETE;
+        }
         CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(), selectedComments, CommentStatus.TRASH, listener);
+                WordPress.getCurrentLocalTableBlogId(), selectedComments, newStatus, listener);
     }
 
     void loadComments() {
@@ -385,6 +449,15 @@ public class CommentsListFragment extends Fragment {
         // and the change will already be in SQLite so simply reload the comment adapter
         // to show the change
         getAdapter().loadComments(mCommentStatusFilter);
+    }
+
+    void updateEmptyView(EmptyViewMessageType emptyViewMessageType){
+        //this is called from CommentsActivity in the case the last moment for a given type has been changed from that
+        //status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
+        //does the handling itself, so we only check for null here.
+        if (mFilteredCommentsView != null){
+            mFilteredCommentsView.updateEmptyView(emptyViewMessageType);
+        }
     }
 
     /*
@@ -465,7 +538,7 @@ public class CommentsListFragment extends Fragment {
                 return null;
             }
 
-            Blog blog = WordPress.getCurrentBlog();
+            final Blog blog = WordPress.getCurrentBlog();
             if (blog == null) {
                 mErrorType = ErrorType.INVALID_CURRENT_BLOG;
                 return null;
@@ -492,7 +565,15 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                return ApiHelper.refreshComments(blog, params);
+                CommentList comments = ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                    @Override
+                    public void onDataReadyToSave(List list) {
+                        int localBlogId = blog.getLocalTableBlogId();
+                        CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
+                        CommentTable.saveComments(localBlogId, (CommentList)list);
+                    }
+                });
+                return comments;
             } catch (XMLRPCFault xmlrpcFault) {
                 mErrorType = ErrorType.UNKNOWN_ERROR;
                 if (xmlrpcFault.getFaultCode() == 401) {
@@ -611,11 +692,19 @@ public class CommentsListFragment extends Fragment {
             boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
             boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
             boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
+            boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam);
+            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam || hasTrash);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
             setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
             setItemEnabled(menu, R.id.menu_trash, hasSelection);
+
+            final MenuItem trashItem = menu.findItem(R.id.menu_trash);
+            if (trashItem != null){
+                if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
+                    trashItem.setTitle(R.string.mnu_comment_delete_permanently);
+                }
+            }
 
             return true;
         }

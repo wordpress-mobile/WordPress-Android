@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/plan_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:gravity="center"
+            android:text="This feature is a work-in-progress"
+            android:textColor="@color/alert_red"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"/>
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/image_plan_icon"
+            android:layout_width="@dimen/plan_icon_size"
+            android:layout_height="@dimen/plan_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            tools:background="@drawable/penandink"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/blue_wordpress"
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="text_product_name"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="italic"
+            tools:text="text_tagline"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:background="@color/divider_grey"/>
+
+    </LinearLayout>
+</ScrollView>

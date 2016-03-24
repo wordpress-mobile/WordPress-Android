@@ -33,7 +33,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-
+        url = url.toLowerCase();
         return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif");
     }
 
@@ -41,7 +41,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-
+        url = url.toLowerCase();
         return url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf");
     }
 
@@ -49,7 +49,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-
+        url = url.toLowerCase();
         return url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx") ||
                 url.endsWith(".key");
     }
@@ -58,7 +58,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-
+        url = url.toLowerCase();
         return url.endsWith(".xls") || url.endsWith(".xlsx");
     }
 
@@ -66,6 +66,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
+        url = url.toLowerCase();
         return url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") ||
                 url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") ||
                 url.endsWith(".3g2") || url.contains("video");
@@ -75,6 +76,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
+        url = url.toLowerCase();
         return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav") || url.endsWith(".wma") ||
                 url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }

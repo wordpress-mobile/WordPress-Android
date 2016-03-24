@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/repo' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -30,19 +30,27 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "5.1-rc-2"
-        versionCode 239
+        versionName "alpha-4"
+        versionCode 248
         minSdkVersion 14
         targetSdkVersion 23
 
-        buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
+        buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
 
     productFlavors {
-        vanilla {}
+        vanilla {} // used for release and beta
 
-        zbetagroup {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+        zalpha { // alpha version - enable experimental features
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
+            applicationId "org.wordpress.android"
+        }
+
+        wasabi { // "hot" version, can be installed along release, alpha or beta versions
+            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
+            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
         }
     }
@@ -79,15 +87,17 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-aar:4.2.0-support'
+    compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.2'
+    compile 'com.automattic:rest:1.0.3'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:+'
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
+
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central

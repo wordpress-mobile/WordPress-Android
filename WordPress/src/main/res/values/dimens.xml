@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="settings_padding">16dp</dimen>
-    <dimen name="format_bar_height">40dp</dimen>
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
@@ -14,8 +13,8 @@
     <dimen name="fab_margin_tablet">24dp</dimen>
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
-    <dimen name="appbar_elevation">8dp</dimen>
-    <dimen name="filter_subbar_elevation">4dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="filter_subbar_elevation">@dimen/appbar_elevation</dimen>
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
@@ -68,7 +67,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
-    <dimen name="margin_filter_spinner">68dp</dimen>
+    <dimen name="margin_filter_spinner">64dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -133,6 +132,10 @@
     <dimen name="nux_secondary_button_height">36dp</dimen>
 
     <dimen name="nux_width">600dp</dimen>
+
+    <!-- editor -->
+    <dimen name="post_settings_featured_image_height_min">150dp</dimen>
+    <dimen name="post_settings_featured_image_height_max">300dp</dimen>
 
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
@@ -229,6 +232,9 @@
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
+    <dimen name="start_over_padding_top">40dp</dimen>
+    <dimen name="start_over_margin">20dp</dimen>
+    <dimen name="start_over_width">300dp</dimen>
 
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>
@@ -245,5 +251,21 @@
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
+    <dimen name="start_over_text_margin">25dp</dimen>
+    <dimen name="start_over_url_margin">22dp</dimen>
+    <dimen name="start_over_preference_margin_large">15dp</dimen>
+    <dimen name="start_over_preference_margin_medium">6dp</dimen>
+    <dimen name="start_over_preference_margin_small">4dp</dimen>
+    <dimen name="start_over_preference_padding_left">30dp</dimen>
+    <dimen name="start_over_icon_padding">2dp</dimen>
+    <dimen name="start_over_text_margin_left">37dp</dimen>
+    <dimen name="start_over_icon_size">24dp</dimen>
+    <dimen name="start_over_icon_margin_right">13dp</dimen>
+    <dimen name="start_over_title_margin">19dp</dimen>
+    <dimen name="start_over_summary_margin">53dp</dimen>
 
+    <!-- plans -->
+    <dimen name="plan_indicator_size">12dp</dimen>
+    <dimen name="plan_indicator_margin">6dp</dimen>
+    <dimen name="plan_icon_size">79dp</dimen>
 </resources>
