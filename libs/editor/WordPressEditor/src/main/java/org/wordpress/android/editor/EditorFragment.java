@@ -934,6 +934,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.post(new Runnable() {
             public void run() {
+                if (!isAdded()) {
+                    return;
+                }
+
                 mDomHasLoaded = true;
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
