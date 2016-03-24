@@ -251,18 +251,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSelfHosted = true;
     }
 
-    public void setNewLoginView(boolean isWPCom) {
-        mForgotPassword.setVisibility(View.GONE);
-        mAddSelfHostedButton.setVisibility(View.GONE);
-        mCreateAccountButton.setVisibility(View.GONE);
-        if (isWPCom) {
-            mUrlButtonLayout.setVisibility(View.GONE);
-        } else {
-            mUrlButtonLayout.setVisibility(View.VISIBLE);
-        }
-        mSelfHosted = !isWPCom;
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
