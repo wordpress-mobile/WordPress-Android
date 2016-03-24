@@ -331,7 +331,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        signInDotComUser(credential.getId(), credential.getPassword());
+        mUsernameEditText.setText(credential.getId());
+        mPasswordEditText.setText(credential.getPassword());
     }
 
     @Override
