@@ -18,7 +18,7 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.login.NewSignInActivity;
+import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -240,7 +240,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, NewSignInActivity.class);
+        Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -270,7 +270,7 @@ public class ActivityLauncher {
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
-        Intent intent = new Intent(activity, NewSignInActivity.class);
+        Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
         intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }

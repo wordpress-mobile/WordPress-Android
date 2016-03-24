@@ -17,7 +17,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewSignInFragment extends SignInFragment {
+public class MagicLinkSignInFragment extends SignInFragment {
     public interface OnMagicLinkRequestListener {
         void onMagicLinkRequestSuccess();
     }
@@ -25,7 +25,7 @@ public class NewSignInFragment extends SignInFragment {
     private OnMagicLinkRequestListener mListener;
     private boolean mIsMagicLink;
 
-    public NewSignInFragment() {
+    public MagicLinkSignInFragment() {
         super();
         mIsMagicLink = true;
     }

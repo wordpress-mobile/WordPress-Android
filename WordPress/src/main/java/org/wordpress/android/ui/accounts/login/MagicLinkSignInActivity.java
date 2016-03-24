@@ -7,12 +7,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInFragment;
 
-public class NewSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, NewSignInFragment.OnMagicLinkRequestListener {
+public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener {
     private String mEmail = "";
 
     @Override
     public SignInFragment getSignInFragment() {
-        return new NewSignInFragment();
+        return new MagicLinkSignInFragment();
     }
 
     @Override
@@ -24,9 +24,9 @@ public class NewSignInActivity extends SignInActivity implements WPComMagicLinkF
     public void onEnterPasswordRequested() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        NewSignInFragment newSignInFragment = new NewSignInFragment();
-        newSignInFragment.setIsMagicLink(false);
-        fragmentTransaction.replace(R.id.fragment_container, newSignInFragment);
+        MagicLinkSignInFragment magicLinkSignInFragment = new MagicLinkSignInFragment();
+        magicLinkSignInFragment.setIsMagicLink(false);
+        fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
         fragmentTransaction.addToBackStack("sign_in");
         fragmentTransaction.commit();
     }
