@@ -336,9 +336,8 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public RestRequest newPostRequest(final String path, Map<String, String> params, Listener listener,
-                     ErrorListener errorListener) {
-        return mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params, listener, errorListener);
+    public String pathToUrl(final String path) {
+        return mRestClient.getAbsoluteURL(path);
     }
 
     /**

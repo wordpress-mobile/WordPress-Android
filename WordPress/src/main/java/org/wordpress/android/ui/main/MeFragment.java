@@ -32,16 +32,15 @@ import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.networking.MultipartRequest;
+import org.wordpress.android.networking.MultipartRequestBuilder;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -53,10 +52,8 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
@@ -415,7 +412,7 @@ public class MeFragment extends Fragment {
     }
 
     private void uploadGravatar(String filePath) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
@@ -455,63 +452,22 @@ public class MeFragment extends Fragment {
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        final RestRequest request = WordPress.getGravatarRestClientUtilsV1().newPostRequest("upload-image", null,
-                listener, errorListener);
-
-        MultipartRequest multipartRequest = new MultipartRequest(request, listener, errorListener);
-        multipartRequest.addPart("filedata", file);
-        multipartRequest.addPart("account", AccountHelper.getDefaultAccount().getEmail());
-
-        WordPress.getGravatarRestClientUtilsV1().post(multipartRequest, null, errorListener);
-    }
-
-    public class MultipartRequest extends RestRequest {
-        private MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-
-        public MultipartRequest(RestRequest restRequest, Listener listener, ErrorListener errorListener)
-        {
-            super(restRequest.getMethod(), restRequest.getUrl(), null, listener, errorListener);
-
-            entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            entityBuilder.setBoundary("-------------" + System.currentTimeMillis());
-
-            setUserAgent(WordPress.getUserAgent());
+        RestClientUtils gravatarRestClientUtils = WordPress.getGravatarRestClientUtilsV1();
+        MultipartRequest multipartRequest;
+        try {
+            multipartRequest = new MultipartRequestBuilder()
+                    .setResponseListener(listener)
+                    .setResponseErrorListener(errorListener)
+                    .addPart("filedata", file)
+                    .addPart("account", AccountHelper.getDefaultAccount().getEmail())
+                    .build(gravatarRestClientUtils.pathToUrl("upload-image"));
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.API, "Cannot make the Gravatar upload request!", e);
+            return;
         }
 
-        public void addPart(String partName, File file) {
-            entityBuilder.addPart(partName, new FileBody(file));
-        }
-
-        public void addPart(String partName, String text) {
-            try
-            {
-                entityBuilder.addPart(partName, new StringBody(text));
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                VolleyLog.e("UnsupportedEncodingException");
-            }
-        }
-
-        @Override
-        public String getBodyContentType()
-        {
-            return entityBuilder.build().getContentType().getValue();
-        }
-
-        @Override
-        public byte[] getBody() throws AuthFailureError
-        {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try
-            {
-                entityBuilder.build().writeTo(bos);
-            }
-            catch (IOException e)
-            {
-                VolleyLog.e("IOException writing to ByteArrayOutputStream");
-            }
-            return bos.toByteArray();
+        if (multipartRequest != null) {
+            WordPress.getGravatarRestClientUtilsV1().post(multipartRequest, null, errorListener);
         }
     }
 

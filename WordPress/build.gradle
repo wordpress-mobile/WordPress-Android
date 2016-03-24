@@ -65,12 +65,6 @@ android {
             ext.enableCrashlytics = false
         }
     }
-
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-    }
 }
 
 dependencies {
@@ -94,11 +88,6 @@ dependencies {
     compile 'com.automattic:rest:1.0.2'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
-
-    compile('org.apache.httpcomponents:httpmime:4.3.6') {
-        exclude module: "httpclient"
-    }
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
 
     compile 'com.yalantis:ucrop:1.2.4'
 
