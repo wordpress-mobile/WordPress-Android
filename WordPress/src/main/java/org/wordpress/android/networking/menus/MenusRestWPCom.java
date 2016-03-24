@@ -7,15 +7,14 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.MenuLocationTable;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
-import org.wordpress.android.util.AppLog;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +28,10 @@ public class MenusRestWPCom {
     public interface IMenusDelegate {
         Context getContext();
         long getSiteId();
-        void onMenuReceived(int statusCode, long menuId);
-        void onMenusReceived(int statusCode, List<Long> menuIds);
-        void onMenuCreated(int statusCode, long menuId);
-        void onMenuDeleted(int statusCode, long menuId, boolean deleted);
+        void onMenuReceived(int statusCode, MenuModel menu);
+        void onMenusReceived(int statusCode, List<MenuModel> menus, List<MenuLocationModel> locations, List<MenuItemModel> items);
+        void onMenuCreated(int statusCode, MenuModel menu);
+        void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted);
         void onMenuUpdated(int statusCode, MenuModel menu);
     }
 
@@ -40,6 +39,12 @@ public class MenusRestWPCom {
     private static final String MENUS_REST_PATH = "/sites/%s/menus";
     private static final String CREATE_MENU_REST_PATH = "/sites/%s/menus/new";
     private static final String DELETE_MENU_REST_PATH = "/sites/%s/menus/%s/delete";
+
+    //
+    // JSON keys for fetchAllMenus response object
+    //
+    public static final String ALL_MENUS_MENUS_KEY = "menus";
+    public static final String ALL_MENUS_LOCATIONS_KEY = "locations";
 
     private static final String DELETED_KEY = "deleted";
 
@@ -52,112 +57,92 @@ public class MenusRestWPCom {
         mDelegate = delegate;
     }
 
-    public void fetchMenu(long menuId) {
+    public boolean fetchMenu(long menuId) {
         String siteId = String.valueOf(mDelegate.getSiteId());
         String path = String.format(MENU_REST_PATH, siteId, String.valueOf(menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                handleGetMenuResponse(response);
+                mDelegate.onMenuReceived(HttpURLConnection.HTTP_OK, menuFromJson(response));
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
+                mDelegate.onMenuReceived(statusCodeFromVolleyError(error), null);
             }
         });
+        return true;
     }
 
-    public void fetchAllMenus() {
+    public boolean fetchAllMenus() {
         String path = String.format(MENUS_REST_PATH, String.valueOf(mDelegate.getSiteId()));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                handleAllMenusResponse(response);
+                JSONArray locationsJson = response.optJSONArray(ALL_MENUS_LOCATIONS_KEY);
+                JSONArray menusJson = response.optJSONArray(ALL_MENUS_MENUS_KEY);
+                List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson);
+                List<MenuItemModel> items = new ArrayList<>();
+                List<MenuModel> menus = new ArrayList<>();
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
+                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null, null, null);
             }
         });
+        return true;
     }
 
-    public void createMenu(String menuName) {
-        if (TextUtils.isEmpty(menuName)) return;
+    public boolean createMenu(final MenuModel menu) {
+        if (menu == null || TextUtils.isEmpty(menu.name)) return false;
         String path = String.format(CREATE_MENU_REST_PATH, String.valueOf(mDelegate.getSiteId()));
         Map<String, String> params = new HashMap<>();
-        params.put(MENU_NAME_KEY, menuName);
+        params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                handleCreateMenuResponse(response);
+                menu.menuId = response.optLong(MENU_ID_KEY);
+                mDelegate.onMenuCreated(HttpURLConnection.HTTP_OK, menu);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
+                mDelegate.onMenuCreated(statusCodeFromVolleyError(error), menu);
             }
         });
+        return true;
     }
 
-    public void updateMenu(MenuModel menu) {
-        if (menu == null) return;
+    public boolean updateMenu(final MenuModel menu) {
+        if (menu == null) return false;
         String siteId = String.valueOf(mDelegate.getSiteId());
         String path = String.format(MENU_REST_PATH, siteId, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
+                mDelegate.onMenuUpdated(HttpURLConnection.HTTP_OK, menuFromJson(response));
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
+                mDelegate.onMenuUpdated(statusCodeFromVolleyError(error), menu);
             }
         });
+        return true;
     }
 
-    public void deleteMenu(final long menuId) {
+    public boolean deleteMenu(final MenuModel menu) {
+        if (menu == null) return false;
         String siteId = String.valueOf(mDelegate.getSiteId());
-        String path = String.format(DELETE_MENU_REST_PATH, siteId, String.valueOf(menuId));
+        String path = String.format(DELETE_MENU_REST_PATH, siteId, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 boolean deleted = response.optBoolean(DELETED_KEY, false);
-                mDelegate.onMenuDeleted(HttpURLConnection.HTTP_OK, menuId, deleted);
+                mDelegate.onMenuDeleted(HttpURLConnection.HTTP_OK, menu, deleted);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuDeleted(statusCodeFromVolleyError(error), menuId, false);
+                mDelegate.onMenuDeleted(statusCodeFromVolleyError(error), menu, false);
             }
         });
-    }
-
-    private void handleCreateMenuResponse(JSONObject response) {
-        if (response == null) return;
-
-        long menuId = response.optLong(MENU_ID_KEY);
-        if (menuId > 0) {
-        }
-    }
-
-    private void handleDeleteMenuResponse(JSONObject response) {
-    }
-
-    private void handleGetMenuResponse(JSONObject response) {
-    }
-
-    private void handleAllMenusResponse(JSONObject response) {
-        if (mDelegate.getContext() == null || response == null) return;
-
-        try {
-            // Get locations from response and update database
-            if (response.has(ALL_MENUS_LOCATIONS_KEY)) {
-                JSONArray locationsArray = response.getJSONArray(ALL_MENUS_LOCATIONS_KEY);
-                List<MenuLocationModel> allLocations = menuLocationsFromJson(locationsArray);
-
-                if (allLocations != null && allLocations.size() > 0) {
-                    MenuLocationTable.deleteAllLocations();
-                    for (MenuLocationModel location : allLocations) {
-                        MenuLocationTable.saveMenuLocation(location);
-                    }
-                }
-            }
-        } catch (JSONException exception) {
-            AppLog.e(AppLog.T.API, "Error reading All Menus JSON response: " + exception);
-        }
+        return true;
     }
 }

@@ -58,12 +58,6 @@ public class MenusDataModeler {
     public static final String ITEM_XFN_KEY = "xfn";// TODO: needed?
     public static final String ITEM_CHILDREN_KEY = "items";
 
-    //
-    // JSON keys for
-    //
-    public static final String ALL_MENUS_MENUS_KEY = "menus";
-    public static final String ALL_MENUS_LOCATIONS_KEY = "locations";
-
     /**
      * To be considered a valid Menu a {@link JSONObject} must:
      * <ul>
@@ -86,17 +80,13 @@ public class MenusDataModeler {
     public static MenuModel menuFromJson(JSONObject json) {
         if (!isValidMenuJson(json)) return null;
 
-        try {
-            MenuModel menu = new MenuModel();
-            menu.menuId = json.getLong(MENU_ID_KEY);
-            menu.name = json.getString(MENU_NAME_KEY);
-            menu.details = json.getString(MENU_DESCRIPTION_KEY);
-            return menu;
-        } catch (JSONException exception) {
-            AppLog.e(AppLog.T.API, "Error parsing Menu JSON: " + exception);
-        }
-
-        return null;
+        MenuModel menu = new MenuModel();
+        menu.menuId = json.optLong(MENU_ID_KEY);
+        menu.name = json.optString(MENU_NAME_KEY);
+        menu.details = json.optString(MENU_DESCRIPTION_KEY);
+        menu.menuItems = menuItemsFromJson(json.optJSONArray(MENU_ITEMS_KEY));
+        menu.locations = menuLocationsFromJson(json.optJSONArray(MENU_LOCATIONS_KEY));
+        return menu;
     }
 
     public static JSONObject menuToJson(MenuModel menu) {
@@ -206,35 +196,39 @@ public class MenusDataModeler {
     public static MenuItemModel menuItemFromJson(JSONObject json) {
         if (!isValidMenuItemJson(json)) return null;
 
-        try {
-            MenuItemModel item = new MenuItemModel();
-            item.itemId = json.getLong(ITEM_ID_KEY);
-            item.contentId = json.getLong(ITEM_CONTENT_ID_KEY);
-            item.type = json.getString(ITEM_TYPE_KEY);
-            item.typeFamily = json.getString(ITEM_TYPE_FAMILY_KEY);
-            item.typeLabel = json.getString(ITEM_TYPE_LABEL_KEY);
-            item.url = json.getString(ITEM_URL_KEY);
-            item.name = json.getString(ITEM_NAME_KEY);
-            item.linkTarget = json.getString(ITEM_LINK_TARGET_KEY);
-            item.linkTitle = json.getString(ITEM_LINK_TITLE_KEY);
-            item.details = json.getString(ITEM_DESCRIPTION_KEY);
+        MenuItemModel item = new MenuItemModel();
+        item.itemId = json.optLong(ITEM_ID_KEY);
+        item.contentId = json.optLong(ITEM_CONTENT_ID_KEY);
+        item.type = json.optString(ITEM_TYPE_KEY);
+        item.typeFamily = json.optString(ITEM_TYPE_FAMILY_KEY);
+        item.typeLabel = json.optString(ITEM_TYPE_LABEL_KEY);
+        item.url = json.optString(ITEM_URL_KEY);
+        item.name = json.optString(ITEM_NAME_KEY);
+        item.linkTarget = json.optString(ITEM_LINK_TARGET_KEY);
+        item.linkTitle = json.optString(ITEM_LINK_TITLE_KEY);
+        item.details = json.optString(ITEM_DESCRIPTION_KEY);
 
-            if (json.has(ITEM_CHILDREN_KEY)) {
-                item.children = new ArrayList<>();
-                JSONArray children = json.getJSONArray(ITEM_CHILDREN_KEY);
-                for (int i = 0; i < children.length(); ++i) {
-                    MenuItemModel child = menuItemFromJson(children.getJSONObject(i));
-                    if (child == null) continue;
-                    item.children.add(child.itemId);
-                }
+        if (json.has(ITEM_CHILDREN_KEY)) {
+            item.children = new ArrayList<>();
+            JSONArray children = json.optJSONArray(ITEM_CHILDREN_KEY);
+            for (int i = 0; i < children.length(); ++i) {
+                MenuItemModel child = menuItemFromJson(children.optJSONObject(i));
+                if (child == null) continue;
+                item.children.add(child.itemId);
             }
-
-            return item;
-        } catch (JSONException exception) {
-            AppLog.e(AppLog.T.API, "Error parsing Menu Item JSON: " + exception);
         }
 
-        return null;
+        return item;
+    }
+
+    public static List<MenuItemModel> menuItemsFromJson(JSONArray json) {
+        if (json == null) return null;
+
+        List<MenuItemModel> items = new ArrayList<>();
+        for (int i = 0; i < json.length(); ++i) {
+            items.add(menuItemFromJson(json.optJSONObject(i)));
+        }
+        return items;
     }
 
     public static JSONObject menuItemToJson(MenuItemModel item, IMenuModelRequest requester) {
