@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.util.EditTextUtils;
 
@@ -44,10 +45,15 @@ public class NewSignInFragment extends SignInFragment {
         return view;
     }
 
+    public void setIsMagicLink(boolean isMagicLink) {
+        mIsMagicLink = isMagicLink;
+    }
+
     private void hideIrrelevantViews() {
         mUrlButtonLayout.setVisibility(View.GONE);
         mPasswordLayout.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.GONE);
+        mSignInButton.setText(getString(R.string.button_next));
     }
 
     @Override
@@ -66,8 +72,7 @@ public class NewSignInFragment extends SignInFragment {
 
     @Override
     protected void signIn() {
-        if (mIsMagicLink && isUsernameEmail()) {
-            // request magic link
+        if (mIsMagicLink) {
             boolean isValidWPComEmail = true;
             if (isValidWPComEmail) { // OK RESPONSE
                 mListener.onMagicLinkRequestSuccess();
@@ -75,9 +80,6 @@ public class NewSignInFragment extends SignInFragment {
                 mPasswordLayout.setVisibility(View.VISIBLE);
                 mForgotPassword.setVisibility(View.VISIBLE);
             }
-        } else if (mPasswordLayout.getVisibility() == View.GONE) {
-            mPasswordLayout.setVisibility(View.VISIBLE);
-            mForgotPassword.setVisibility(View.VISIBLE);
         } else {
             super.signIn();
         }
