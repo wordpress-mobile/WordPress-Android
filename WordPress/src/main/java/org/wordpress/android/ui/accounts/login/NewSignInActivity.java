@@ -22,7 +22,13 @@ public class NewSignInActivity extends SignInActivity implements WPComMagicLinkF
 
     @Override
     public void onEnterPasswordRequested() {
-
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        NewSignInFragment newSignInFragment = new NewSignInFragment();
+        newSignInFragment.setIsMagicLink(false);
+        fragmentTransaction.replace(R.id.fragment_container, newSignInFragment);
+        fragmentTransaction.addToBackStack("sign_in");
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class WPComMagicLinkFragment extends Fragment {
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onEnterPasswordRequested(true);
+                mListener.onEnterPasswordRequested();
             }
         });
 

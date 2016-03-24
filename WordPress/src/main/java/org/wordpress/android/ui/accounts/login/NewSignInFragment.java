@@ -1,15 +1,18 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +43,11 @@ public class NewSignInFragment extends SignInFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        hideIrrelevantViews();
+        if (mIsMagicLink) {
+            hideForMagicLink();
+        } else {
+            hideForNonMagicLink();
+        }
 
         return view;
     }
@@ -49,11 +56,20 @@ public class NewSignInFragment extends SignInFragment {
         mIsMagicLink = isMagicLink;
     }
 
-    private void hideIrrelevantViews() {
+    private void hideForMagicLink() {
         mUrlButtonLayout.setVisibility(View.GONE);
         mPasswordLayout.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.GONE);
         mSignInButton.setText(getString(R.string.button_next));
+    }
+
+    private void hideForNonMagicLink() {
+        mUrlButtonLayout.setVisibility(View.GONE);
+        mCreateAccountButton.setVisibility(View.GONE);
+        mAddSelfHostedButton.setVisibility(View.GONE);
+        mPasswordEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
     @Override
