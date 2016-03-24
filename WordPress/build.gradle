@@ -71,7 +71,9 @@ android {
 }
 
 dependencies {
-    compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
     // Provided by maven central
     compile ('org.wordpress:mediapicker:1.2.4') {
