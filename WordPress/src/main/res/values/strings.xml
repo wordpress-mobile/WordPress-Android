@@ -5,6 +5,9 @@
 
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
+    <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
@@ -1139,7 +1142,9 @@
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
+        your post in this state. Would you like to remove all failed media?</string>
+    <string name="editor_remove_failed_uploads">Remove failed uploads</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
