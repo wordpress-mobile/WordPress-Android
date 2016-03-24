@@ -39,15 +39,8 @@ public class NewSignInActivity extends AppCompatActivity implements WPComMagicLi
     }
 
     @Override
-    public void onSelfHostedRequested(boolean isWPCom) {
-        Intent intent = new Intent(this, SignInActivity.class);
+    public void onEnterPasswordRequested() {
 
-        if (isWPCom) {
-            intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN_WP_COM);
-        } else {
-            intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.NEW_LOGIN_SELF_HOSTED);
-        }
-        startActivity(intent);
     }
 
     @Override

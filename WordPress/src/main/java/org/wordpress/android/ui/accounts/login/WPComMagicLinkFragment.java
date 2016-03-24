@@ -18,7 +18,7 @@ import org.wordpress.android.widgets.WPTextView;
 public class WPComMagicLinkFragment extends Fragment {
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
-        void onSelfHostedRequested(boolean isWPCom);
+        void onEnterPasswordRequested();
     }
 
     private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
@@ -62,7 +62,7 @@ public class WPComMagicLinkFragment extends Fragment {
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onSelfHostedRequested(true);
+                mListener.onEnterPasswordRequested(true);
             }
         });
 
