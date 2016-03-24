@@ -48,7 +48,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     startActivityForResult(intent, INTENT_WELCOME);
                 }
             } else if (uri.equals("login")) {
-                attemptLogin(uri);
+                attemptLoginWithMagicLink(uri);
             } else {
                 finish();
             }
@@ -77,8 +77,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         finish();
     }
 
-    private void attemptLogin(Uri uri) {
-        
+    private void attemptLoginWithMagicLink(Uri uri) {
+        // handle magic link url
     }
 
     @Override
