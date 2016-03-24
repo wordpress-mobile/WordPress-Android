@@ -85,6 +85,11 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public void removeAllFailedMediaUploads() {
+
+        }
+
+        @Override
         public void setTitlePlaceholder(CharSequence text) {
 
         }
