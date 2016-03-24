@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -23,21 +24,26 @@ public class SignInActivity extends Activity {
     public static final String ARG_JETPACK_MESSAGE_AUTH = "ARG_JETPACK_MESSAGE_AUTH";
     public static final String ARG_IS_AUTH_ERROR = "ARG_IS_AUTH_ERROR";
 
-    private SignInFragment mSignInFragment;
+    protected SignInFragment mSignInFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
+
+        mSignInFragment = getSignInFragment();
         FragmentManager fragmentManager = getFragmentManager();
-        mSignInFragment = (SignInFragment) fragmentManager.findFragmentById(R.id.sign_in_fragment);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
+        fragmentTransaction.commit();
+
         actionMode(getIntent().getExtras());
 
         ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
 
-    private void actionMode(Bundle extras) {
+    protected void actionMode(Bundle extras) {
         int actionMode = SIGN_IN_REQUEST;
         if (extras != null) {
             actionMode = extras.getInt(START_FRAGMENT_KEY, -1);
@@ -65,8 +71,6 @@ public class SignInActivity extends Activity {
             default:
                 break;
         }
-
-
     }
 
     @Override
@@ -82,5 +86,9 @@ public class SignInActivity extends Activity {
                 mSignInFragment.signInDotComUser(username, password);
             }
         }
+    }
+
+    public SignInFragment getSignInFragment() {
+        return new SignInFragment();
     }
 }
