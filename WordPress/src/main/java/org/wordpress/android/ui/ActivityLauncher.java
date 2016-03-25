@@ -7,6 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.mixpanel.android.mpmetrics.Tweak;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -48,7 +51,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-
+    private static Tweak<Boolean> showMagicLinkLogin = MixpanelAPI.booleanTweak("Show Magic Link Login", false);
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
@@ -240,8 +243,13 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        if (showMagicLinkLogin.get()) {
+            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        } else {
+            Intent intent = new Intent(activity, SignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        }
     }
 
     public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
