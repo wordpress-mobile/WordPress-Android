@@ -220,12 +220,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private void showDotComSignInForm(){
+    protected void showDotComSignInForm(){
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
     }
 
-    private void showSelfHostedSignInForm(){
+    protected void showSelfHostedSignInForm(){
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
