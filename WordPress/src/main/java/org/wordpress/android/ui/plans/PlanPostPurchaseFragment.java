@@ -74,8 +74,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 titleResId = R.string.plans_post_purchase_title_intro;
                 textResId = R.string.plans_post_purchase_text_intro;
                 buttonResId = 0;
-                // TODO: this is a placeholder until we have the image asset
-                imageResId = R.drawable.penandink;
+                imageResId = R.drawable.plans_business_active;
                 break;
             case PAGE_NUMBER_CUSTOMIZE:
                 titleResId = R.string.plans_post_purchase_title_customize;
