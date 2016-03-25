@@ -2,6 +2,8 @@ package org.wordpress.android.networking.menus;
 
 import android.text.TextUtils;
 
+import com.helpshift.support.util.ListUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,14 +19,6 @@ import java.util.List;
  * Converts Menus related objects between JSON and local database models.
  */
 public class MenusDataModeler {
-    /**
-     * Since Menus database models only store child ID's and JSON objects require all the model
-     * data there needs to be a way to get item models when converting to JSON objects.
-     */
-    public interface IMenuModelRequest {
-        MenuItemModel requestItem(long id);
-    }
-
     //
     // Menu JSON keys
     //
@@ -95,6 +89,13 @@ public class MenusDataModeler {
         try {
             JSONObject json = new JSONObject();
             json.put(MENU_ID_KEY, menu.menuId);
+            if (!ListUtils.isEmpty(menu.menuItems)) {
+                JSONArray itemArray = new JSONArray();
+                for (MenuItemModel item : menu.menuItems) {
+                    itemArray.put(menuItemToJson(item));
+                }
+                json.put(MENU_ITEMS_KEY, itemArray);
+            }
             return json;
         } catch (JSONException exception) {
             AppLog.e(AppLog.T.API, "Error serializing MenuModel to JSON: " + exception);
@@ -214,7 +215,7 @@ public class MenusDataModeler {
             for (int i = 0; i < children.length(); ++i) {
                 MenuItemModel child = menuItemFromJson(children.optJSONObject(i));
                 if (child == null) continue;
-                item.children.add(child.itemId);
+                item.children.add(child);
             }
         }
 
@@ -231,7 +232,7 @@ public class MenusDataModeler {
         return items;
     }
 
-    public static JSONObject menuItemToJson(MenuItemModel item, IMenuModelRequest requester) {
+    public static JSONObject menuItemToJson(MenuItemModel item) {
         if (!isValidMenuItem(item)) return null;
 
         try {
@@ -248,12 +249,12 @@ public class MenusDataModeler {
             json.put(ITEM_DESCRIPTION_KEY, item.details);
 
             // Add child Menu Items
-            if (item.hasChildren() && requester != null) {
+            if (item.hasChildren()) {
                 JSONArray childArray = new JSONArray();
                 for (int i = 0; i < item.children.size(); ++i) {
-                    MenuItemModel childItem = requester.requestItem(item.children.get(i));
+                    MenuItemModel childItem = item.children.get(i);
                     if (isValidMenuItem(childItem)) {
-                        childArray.put(i, menuItemToJson(childItem, requester));
+                        childArray.put(i, menuItemToJson(childItem));
                     }
                 }
                 json.put(ITEM_CHILDREN_KEY, childArray);

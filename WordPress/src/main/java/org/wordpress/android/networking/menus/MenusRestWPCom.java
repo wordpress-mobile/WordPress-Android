@@ -7,10 +7,9 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MenuItemModel;
-import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 
 import java.net.HttpURLConnection;
@@ -29,7 +28,7 @@ public class MenusRestWPCom {
         Context getContext();
         long getSiteId();
         void onMenuReceived(int statusCode, MenuModel menu);
-        void onMenusReceived(int statusCode, List<MenuModel> menus, List<MenuLocationModel> locations, List<MenuItemModel> items);
+        void onMenusReceived(int statusCode, List<MenuModel> menus);
         void onMenuCreated(int statusCode, MenuModel menu);
         void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted);
         void onMenuUpdated(int statusCode, MenuModel menu);
@@ -78,15 +77,19 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                JSONArray locationsJson = response.optJSONArray(ALL_MENUS_LOCATIONS_KEY);
                 JSONArray menusJson = response.optJSONArray(ALL_MENUS_MENUS_KEY);
-                List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson);
-                List<MenuItemModel> items = new ArrayList<>();
                 List<MenuModel> menus = new ArrayList<>();
+                try {
+                    for (int i = 0; i < menusJson.length(); ++i) {
+                        menus.add(menuFromJson(menusJson.getJSONObject(i)));
+                    }
+                } catch (JSONException exception) {
+                }
+                mDelegate.onMenusReceived(HttpURLConnection.HTTP_OK, menus);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null, null, null);
+                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
             }
         });
         return true;
