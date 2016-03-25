@@ -68,26 +68,31 @@ public class PlanPostPurchaseFragment extends Fragment {
         int titleResId;
         int textResId;
         int buttonResId;
+        int imageResId;
         switch (mPageNumber) {
             case PAGE_NUMBER_INTRO:
                 titleResId = R.string.plans_post_purchase_title_intro;
                 textResId = R.string.plans_post_purchase_text_intro;
                 buttonResId = 0;
+                imageResId = 0;
                 break;
             case PAGE_NUMBER_CUSTOMIZE:
                 titleResId = R.string.plans_post_purchase_title_customize;
                 textResId = R.string.plans_post_purchase_text_customize;
                 buttonResId = R.string.plans_post_purchase_button_customize;
+                imageResId = R.drawable.plans_customize;
                 break;
             case PAGE_NUMBER_VIDEO:
                 titleResId = R.string.plans_post_purchase_title_video;
                 textResId = R.string.plans_post_purchase_text_video;
                 buttonResId = R.string.plans_post_purchase_button_video;
+                imageResId = R.drawable.plans_video_upload;
                 break;
             case PAGE_NUMBER_THEMES:
                 titleResId = R.string.plans_post_purchase_title_themes;
                 textResId = R.string.plans_post_purchase_text_themes;
                 buttonResId = R.string.plans_post_purchase_button_themes;
+                imageResId = R.drawable.plans_premium_themes;
                 break;
             default:
                 AppLog.w(AppLog.T.PLANS, "invalid plans post-purchase page");
@@ -109,8 +114,13 @@ public class PlanPostPurchaseFragment extends Fragment {
             button.setVisibility(View.GONE);
         }
 
-        // TODO: image is a placeholder until we have assets
-        image.setImageResource(R.drawable.penandink);
+        if (imageResId != 0) {
+            image.setImageResource(imageResId);
+            image.setVisibility(View.VISIBLE);
+        } else {
+            image.setVisibility(View.GONE);
+        }
+        //image.setImageResource(R.drawable.penandink);
 
         return rootView;
     }
