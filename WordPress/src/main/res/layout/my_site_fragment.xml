@@ -162,30 +162,36 @@
             </LinearLayout>
 
             <!--Blog Posts-->
-            <RelativeLayout
-                android:id="@+id/row_blog_posts"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <View
                     android:id="@+id/postsGlowBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="1"
-                    android:background="@drawable/pressed_background_wordpress"
+                    android:background="@color/translucent_grey_lighten_20"
                     android:visibility="invisible" />
 
-                <ImageView
-                    android:id="@+id/my_site_blog_posts_icon"
-                    style="@style/MySiteListRowIcon"
-                    android:src="@drawable/my_site_icon_posts" />
+                <LinearLayout
+                    android:id="@+id/row_blog_posts"
+                    style="@style/MySiteListRowLayout">
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_blog_posts_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_blog_posts_icon"
-                    android:text="@string/my_site_btn_blog_posts" />
+                    <ImageView
+                        android:id="@+id/my_site_blog_posts_icon"
+                        style="@style/MySiteListRowIcon"
+                        android:contentDescription="@string/my_site_btn_blog_posts"
+                        android:src="@drawable/my_site_icon_posts" />
 
-            </RelativeLayout>
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_blog_posts_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:text="@string/my_site_btn_blog_posts" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
             <!--Media-->
             <RelativeLayout
