@@ -25,7 +25,6 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSignInFragment magicLinkSignInFragment = new MagicLinkSignInFragment();
-        magicLinkSignInFragment.setIsMagicLink(false);
         fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
         fragmentTransaction.addToBackStack("sign_in");
         fragmentTransaction.commit();
