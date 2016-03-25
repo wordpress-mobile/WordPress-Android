@@ -42,6 +42,7 @@ public class MenusRestWPCom {
     //
     // JSON keys for fetchAllMenus response object
     //
+    public static final String MENU_KEY = "menu";
     public static final String ALL_MENUS_MENUS_KEY = "menus";
     public static final String ALL_MENUS_LOCATIONS_KEY = "locations";
 
@@ -62,7 +63,8 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                mDelegate.onMenuReceived(HttpURLConnection.HTTP_OK, menuFromJson(response));
+                JSONObject menuObject = response.optJSONObject(MENU_KEY);
+                mDelegate.onMenuReceived(HttpURLConnection.HTTP_OK, menuFromJson(menuObject));
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
