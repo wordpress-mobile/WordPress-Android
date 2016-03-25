@@ -13,23 +13,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/margin_extra_large"
-        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
         tools:src="@drawable/plans_customize" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:gravity="center_horizontal"
             android:textColor="@color/grey_light"
@@ -40,13 +41,11 @@
             android:id="@+id/text_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:gravity="center_horizontal"
             android:textColor="@color/grey_light"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textSize="@dimen/text_sz_large"
             tools:text="text_description" />
 
         <org.wordpress.android.widgets.WPButton
@@ -54,8 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
             android:textColor="@color/blue_wordpress"
             tools:text="Button" />
     </LinearLayout>

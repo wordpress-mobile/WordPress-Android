@@ -74,7 +74,8 @@ public class PlanPostPurchaseFragment extends Fragment {
                 titleResId = R.string.plans_post_purchase_title_intro;
                 textResId = R.string.plans_post_purchase_text_intro;
                 buttonResId = 0;
-                imageResId = 0;
+                // TODO: this is a placeholder until we have the image asset
+                imageResId = R.drawable.penandink;
                 break;
             case PAGE_NUMBER_CUSTOMIZE:
                 titleResId = R.string.plans_post_purchase_title_customize;
@@ -101,6 +102,8 @@ public class PlanPostPurchaseFragment extends Fragment {
 
         txtTitle.setText(titleResId);
         txtDescription.setText(textResId);
+        image.setImageResource(imageResId);
+
         if (buttonResId != 0) {
             button.setVisibility(View.VISIBLE);
             button.setText(buttonResId);
@@ -113,14 +116,6 @@ public class PlanPostPurchaseFragment extends Fragment {
         } else {
             button.setVisibility(View.GONE);
         }
-
-        if (imageResId != 0) {
-            image.setImageResource(imageResId);
-            image.setVisibility(View.VISIBLE);
-        } else {
-            image.setVisibility(View.GONE);
-        }
-        //image.setImageResource(R.drawable.penandink);
 
         return rootView;
     }
