@@ -120,6 +120,9 @@ public class MagicLinkSignInFragment extends SignInFragment {
     private void showPasswordField() {
         mPasswordLayout.setVisibility(View.VISIBLE);
         mForgotPassword.setVisibility(View.VISIBLE);
+        if (!mSelfHosted) {
+            mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        }
     }
 
     private boolean isUsernameEmail() {
