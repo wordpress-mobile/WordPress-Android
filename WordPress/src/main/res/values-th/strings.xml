@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="remove">ลบออก</string>
+	<string name="search">ค้นหา</string>
+	<string name="add_category">เพิ่มหมวดหมู่</string>
+	<string name="disabled">ปิดการใช้งาน</string>
 	<string name="site_settings_image_original_size">ขนาดต้นฉบับ</string>
+	<string name="about_me_hint">คำอธิบายสั้น ๆ เกี่ยวกับคุณ....</string>
 	<string name="about_me">เกี่ยวกับฉัน</string>
 	<string name="public_display_name">ชื่อที่ใช้แสดงในสาธารณะ</string>
 	<string name="my_profile">ประวัติของฉัน</string>
 	<string name="first_name">ชื่อ</string>
 	<string name="last_name">นามสกุล</string>
 	<string name="site_privacy_public_desc">อนุญาตให้เซิร์ชเอ็นจิ้นเก็บหน้าเว็บนี้</string>
+	<string name="site_settings_close_after_dialog_title">ปิดการแสดงความเห็น</string>
 	<string name="site_settings_list_editor_input_hint">ใส่คำหรือวลี</string>
 	<string name="site_settings_list_editor_no_items_text">ไม่มีรายการ</string>
+	<string name="site_settings_rp_preview1_site">ใน "มือถือ"</string>
+	<string name="site_settings_rp_show_images_title">แสดงรูปภาพ</string>
+	<string name="site_settings_rp_show_header_title">แสดงส่วนหัว</string>
+	<string name="site_settings_whitelist_hint">ผู้เขียนความเห็นต้องมีความเห็นก่อนหน้าที่ได้รับอนุมัติแล้ว</string>
+	<string name="site_settings_user_account_required_hint">ผู้ใช้ต้องลงทะเบียนและเข้าสู่ระบบเพื่อจะเขียนความเห็น</string>
+	<string name="site_settings_identity_required_hint">ผู้เขียนความเห็นต้องใส่ชื่อและอีเมล</string>
+	<string name="site_settings_manual_approval_hint">ความเห็นต้องถูกอนุมัติด้วยมือ</string>
+	<string name="site_settings_sort_by_hint">กำหนดลำดับความเห็นที่จะแสดง</string>
+	<string name="site_settings_close_after_hint">ไม่อนุญาตให้แสดงความเห็นหลังจากเวลาที่ระบุ</string>
+	<string name="site_settings_receive_pingbacks_hint">อนุญาตการเตือนลิงก์จากบล็อกอื่น ๆ</string>
+	<string name="site_settings_allow_comments_hint">อนุญาตให้ผู้อ่านเขียนความเห็นได้</string>
+	<string name="site_settings_discussion_hint">ดูและเปลี่ยนการตั้งค่าการสนทนาเว็บของคุณ</string>
+	<string name="site_settings_more_hint">ดูการตั้งค่าการสนทนาทั้งหมดที่มีอยู่</string>
+	<string name="site_settings_related_posts_hint">แสดงหรือซ่อนเรื่องในตัวอ่าน</string>
+	<string name="site_settings_upload_and_link_image_hint">เปิดการใช้งานอัปโหลดรูปภาพแบบเต็มขนาดเสมอ</string>
+	<string name="site_settings_image_width_hint">เปลี่ยนขนาดรูปภาพในเรื่องมาที่ขนาดความกว้างนี้</string>
+	<string name="site_settings_format_hint">ตั้งค่ารูปแบบเรื่องใหม่</string>
+	<string name="site_settings_category_hint">ตั้งค่าหมวดหมู่เรื่องใหม่</string>
 	<string name="site_settings_password_hint">เปลี่ยนรหัสผ่านของคุณ</string>
 	<string name="site_settings_username_hint">บัญชีผู้ใช้ปัจจุบัน</string>
+	<string name="site_settings_privacy_hint">กำหนดว่าใครสามารถเห็นเว็บของคุณได้</string>
+	<string name="site_settings_whitelist_known_summary">ความเห็นจากผู้ใช้ที่รู้จัก</string>
 	<string name="site_settings_whitelist_all_summary">ความเห็นจากผู้ใช้ทั้งหมด</string>
 	<string name="site_settings_threading_summary">%d ระดับ</string>
 	<string name="site_settings_privacy_private_summary">ส่วนตัว</string>
@@ -22,16 +48,19 @@
 	<string name="site_settings_multiple_links_title">ลิงก์ในความเห็น</string>
 	<string name="site_settings_whitelist_title">อนุมัติอัตโนมัติ</string>
 	<string name="site_settings_sort_by_title">เรียงตาม</string>
+	<string name="site_settings_account_required_title">ผู้ใช้ต้องเข้าสู่ระบบ</string>
 	<string name="site_settings_identity_required_title">ต้องประกอบด้วยชื่อและอีเมล</string>
 	<string name="site_settings_receive_pingbacks_title">รับ Pingbacks</string>
 	<string name="site_settings_send_pingbacks_title">ส่ง Pingbacks</string>
 	<string name="site_settings_allow_comments_title">อนุมัติความเห็น</string>
 	<string name="site_settings_default_format_title">รูปแบบค่าเริ่มต้น</string>
 	<string name="site_settings_default_category_title">หมวดหมู่ค่าเริ่มต้น</string>
+	<string name="site_settings_location_title">เปิดใช้งานบอกที่อยู่</string>
 	<string name="site_settings_address_title">ที่อยู่</string>
 	<string name="site_settings_title_title">หัวข้อเว็บ</string>
 	<string name="site_settings_tagline_title">คำอธิบาย</string>
 	<string name="site_settings_this_device_header">อุปกรณ์นี้</string>
+	<string name="site_settings_discussion_new_posts_header">ค่าเริ่มต้นสำหรับเรื่องใหม่</string>
 	<string name="site_settings_account_header">บัญชี</string>
 	<string name="site_settings_writing_header">การเขียน</string>
 	<string name="newest_first">ใหม่สุดก่อน</string>
@@ -722,7 +751,6 @@
 	<string name="media_gallery_image_order_reverse">ย้อนกลับ</string>
 	<string name="media_gallery_type">ประเภท</string>
 	<string name="media_gallery_type_squares">เรียงแบบสี่เหลี่ยม</string>
-	<string name="menu_search">ค้นหา</string>
 	<string name="passcode_manage">จัดการ PIN lock</string>
 	<string name="passcode_enter_passcode">ใส่ PIN ของคุณ</string>
 	<string name="passcode_enter_old_passcode">ใส่ PIN เ่ก่าของคุณ</string>
@@ -769,7 +797,6 @@
 	<string name="blogusername">บล็อกชื่อผู้ใช้</string>
 	<string name="upload_scaled_image">อัปโหลดและลิงก์ไปยังภาพที่ปรับขนาด</string>
 	<string name="scaled_image">ปรับขนาดความกว้างรูปภาพแล้ว</string>
-	<string name="remove_location">ลบออก</string>
 	<string name="scheduled">กำหนดตารางเวลาแล้ว</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">โพสท์จากเวิร์ดเพรสสำหรับแอนดรอยด์</string>
@@ -867,21 +894,12 @@
 		<item>ชนิดเรื่องสถานะ</item>
 		<item>ชนิดเรื่องวีดีโอ</item>
 	</string-array>
+	<string-array name="site_settings_auto_approve_details">
+		<item>ต้องการการอนุมัติด้วยมือทุกครั้งสำหรับความเห็นของทุกคน</item>
+	</string-array>
 	<string-array name="site_settings_auto_approve_entries">
 		<item>ไม่มีความเห็น</item>
 		<item>ผู้ใช้ทั้งหมด</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>ไม่มี</item>
-		<item>สองระดับ</item>
-		<item>สามระดับ</item>
-		<item>สี่ระดับ</item>
-		<item>ห้าระดับ</item>
-		<item>หกระดับ</item>
-		<item>เจ็ดระดับ</item>
-		<item>แปดระดับ</item>
-		<item>เก้าระดับ</item>
-		<item>สิบระดับ</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>ฟรี</item>

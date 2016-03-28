@@ -632,7 +632,6 @@
 	<string name="share_action">Споделяне</string>
 	<string name="stats">Статистика</string>
 	<string name="stats_view_tags_and_categories">Етикети и категории</string>
-	<string name="menu_search">Търсене</string>
 	<string name="passcode_manage">Управление на заключването чрез ПИН</string>
 	<string name="passcode_enter_passcode">Въведете ПИН</string>
 	<string name="passcode_enter_old_passcode">Въведете стария ПИН</string>
@@ -673,7 +672,6 @@
 	<string name="ok">ОК</string>
 	<string name="upload_scaled_image">Качване и свързване с оразмерено изображение</string>
 	<string name="scaled_image">Оразмеряване ширината на изображението</string>
-	<string name="remove_location">Премахване</string>
 	<string name="scheduled">Планирана</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Публикувано чрез WordPress за Android</string>

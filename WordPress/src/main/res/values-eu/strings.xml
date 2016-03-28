@@ -346,7 +346,6 @@
 	<string name="post_excerpt">Laburpena</string>
 	<string name="stats_view_clicks">Klikak</string>
 	<string name="stats_view_referrers">Erreferentziak</string>
-	<string name="menu_search">Bilatu</string>
 	<string name="passcode_enter_old_passcode">Sartu PIN zaharra</string>
 	<string name="passcode_re_enter_passcode">Sartu PINa berriz</string>
 	<string name="passcode_change_passcode">Aldatu PINa</string>
@@ -412,7 +411,6 @@
 	<string name="ok">Ados</string>
 	<string name="upload_scaled_image">Igo eta estekatu eskalatutako irudiari</string>
 	<string name="scaled_image">Irudiaren zabalera eskalan</string>
-	<string name="remove_location">Kendu</string>
 	<string name="scheduled">Programatuta</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress Android-erako erabiliz argitaratua</string>

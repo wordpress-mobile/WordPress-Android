@@ -69,6 +69,7 @@ public class MeFragment extends Fragment {
     private TextView mUsernameTextView;
     private TextView mLoginLogoutTextView;
     private View mMyProfileView;
+    private View mAccountSettingsView;
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
@@ -99,6 +100,7 @@ public class MeFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
         mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
+        mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
@@ -124,10 +126,17 @@ public class MeFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
+        mAccountSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewAccountSettings(getActivity());
+            }
+        });
+
+        rootView.findViewById(R.id.row_app_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewAppSettings(getActivity());
             }
         });
 
@@ -248,6 +257,7 @@ public class MeFragment extends Fragment {
             mAvatarFrame.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mMyProfileView.setVisibility(View.GONE);
+            mAccountSettingsView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
             mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);

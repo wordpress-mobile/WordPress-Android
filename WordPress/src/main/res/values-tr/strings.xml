@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">Hesap ayarlarınız kaydedilemedi</string>
+	<string name="error_post_my_profile">Profiliniz kaydedilemedi</string>
+	<string name="error_fetch_account_settings">Hesap ayarlarınız alınamadı</string>
+	<string name="error_fetch_my_profile">Profiliniz alınamadı</string>
+	<string name="stats_widget_promo_ok_btn_label">Tamam, anladım</string>
+	<string name="stats_widget_promo_desc">İstatistiklerinize tek tıkla erişmek için widget’ı ana ekranınıza ekleyin.</string>
+	<string name="stats_widget_promo_title">Ana Ekran İstatistik Widget’ı</string>
+	<string name="site_settings_unknown_language_code_error">Dil kodu tanınmadı</string>
+	<string name="site_settings_threading_dialog_description">Yorumların zincirler halinde kademelenmesine izin ver</string>
+	<string name="site_settings_threading_dialog_header">Zincirdeki maksimum yorum sayısı:</string>
+	<string name="add_category">Kategori ekle</string>
+	<string name="remove">Kaldır</string>
+	<string name="search">Ara</string>
+	<string name="disabled">Devre dışı</string>
 	<string name="site_settings_image_original_size">Orijinal Boyut</string>
 	<string name="about_me_hint">Hakkınızda birkaç kelime…</string>
 	<string name="public_display_name_hint">Ayarlanmazsa, görünen ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
@@ -771,7 +785,6 @@
 	<string name="stats_totals_views">Görüntülemeler</string>
 	<string name="stats_totals_clicks">Tıklamalar</string>
 	<string name="stats_totals_plays">Çalınanlar</string>
-	<string name="menu_search">Ara</string>
 	<string name="passcode_manage">PIN kilidini yönet</string>
 	<string name="passcode_change_passcode">PIN değiştir</string>
 	<string name="passcode_set">PIN ayarla</string>
@@ -832,7 +845,6 @@
 	<string name="blogusername">blogkullanıcıadı</string>
 	<string name="scaled_image">Oranlanmış görsel genişliği</string>
 	<string name="upload_scaled_image">Boyutlandırılmış görseli yükle ve bağlantı ver</string>
-	<string name="remove_location">Çıkart</string>
 	<string name="scheduled">Zamanlandı</string>
 	<string name="link_enter_url">Adres</string>
 	<string name="posted_from">Android için WordPress ile gönderilmiştir</string>
@@ -944,18 +956,6 @@
 		<item>Hiçbir yorum</item>
 		<item>Bilinen kullanıcıların yorumları</item>
 		<item>Tüm kullanıcılar</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Hiçbiri</item>
-		<item>İki seviye</item>
-		<item>Üç seviye</item>
-		<item>Dört seviye</item>
-		<item>Beş seviye</item>
-		<item>Altı seviye</item>
-		<item>Yedi seviye</item>
-		<item>Sekiz seviye</item>
-		<item>Dokuz seviye</item>
-		<item>On seviye</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>Ücretsiz</item>

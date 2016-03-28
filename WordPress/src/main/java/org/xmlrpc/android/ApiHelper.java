@@ -6,12 +6,12 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Xml;
 import android.webkit.URLUtil;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
+import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
@@ -35,14 +35,11 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,8 +48,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -990,32 +985,12 @@ public class ApiHelper {
     }
 
     /**
-     * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
-     *
-     * @param urlString URL of the blog to get the XML-RPC endpoint for.
-     * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
-     */
-    public static String getXMLRPCUrl(String urlString) throws SSLHandshakeException {
-        Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
-                Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-        String html = getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = xmlrpcLink.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
-        }
-        return null; // never found the rsd tag
-    }
-
-    /**
      * Synchronous method to fetch the String content at the specified HTTP URL.
      *
      * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError, TimeoutException {
         return getResponse(stringUrl, 0);
     }
 
@@ -1036,13 +1011,13 @@ public class ApiHelper {
         return null;
     }
 
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError, TimeoutException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
-        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
         WordPress.requestQueue.add(request);
         try {
-            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
@@ -1069,97 +1044,14 @@ public class ApiHelper {
                     AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
                     return getResponse(newURL, numberOfRedirects + 1);
                 }
+            } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
+                AppLog.e(T.API, e);
+                throw (com.android.volley.TimeoutError) e.getCause();
             } else {
                 AppLog.e(T.API, e);
             }
-
-        } catch (TimeoutException e) {
-            AppLog.e(T.API, e);
         }
         return null;
-    }
-
-    /**
-     * Regex pattern for matching the RSD link found in most WordPress sites.
-     */
-    private static final Pattern rsdLink = Pattern.compile(
-            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
-            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-    /**
-     * Returns RSD URL based on regex match
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHrefRegEx(String urlString)
-            throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = rsdLink.matcher(html);
-            if (matcher.find()) {
-                String href = matcher.group(1);
-                return href;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns RSD URL based on html tag search
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHref(String urlString)
-            throws SSLHandshakeException {
-        // get the html code
-        String data = ApiHelper.getResponse(urlString);
-
-        // parse the html and get the attribute for xmlrpc endpoint
-        if (data != null) {
-            StringReader stringReader = new StringReader(data);
-            XmlPullParser parser = Xml.newPullParser();
-            try {
-                // auto-detect the encoding from the stream
-                parser.setInput(stringReader);
-                int eventType = parser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String name = null;
-                    String rel = "";
-                    String type = "";
-                    String href = "";
-                    switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("type"))
-                                    type = attrValue;
-                                else if (attrName.equals("href"))
-                                    href = attrValue;
-                            }
-
-                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                return href;
-                            }
-                            // currentMessage.setLink(parser.nextText());
-                        }
-                        break;
-                    }
-                    eventType = parser.next();
-                }
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
-                return null;
-            } catch (IOException e) {
-                AppLog.e(T.API, e);
-                return null;
-            }
-        }
-        return null; // never found the rsd tag
     }
 
     /*

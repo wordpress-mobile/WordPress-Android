@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_account_settings">アカウント設定を保存できませんでした</string>
+	<string name="error_post_my_profile">プロフィールを保存できませんでした</string>
+	<string name="error_fetch_account_settings">アカウント設定を読み込めませんでした</string>
+	<string name="error_fetch_my_profile">プロフィールを読み込めませんでした</string>
+	<string name="stats_widget_promo_ok_btn_label">了解</string>
+	<string name="stats_widget_promo_desc">ワンクリックで統計情報にアクセスするには、ホーム画面にウィジェットを追加してください。</string>
+	<string name="stats_widget_promo_title">ホーム画面統計情報ウィジェット</string>
+	<string name="site_settings_unknown_language_code_error">言語コードを認識できません</string>
+	<string name="site_settings_threading_dialog_description">コメントスレッドでの入れ子化を許可する。</string>
+	<string name="site_settings_threading_dialog_header">入れ子数の上限</string>
+	<string name="remove">削除</string>
+	<string name="search">検索</string>
+	<string name="add_category">カテゴリーを追加</string>
+	<string name="disabled">無効</string>
 	<string name="site_settings_image_original_size">元のサイズ</string>
 	<string name="about_me_hint">簡単な自己紹介</string>
 	<string name="about_me">自己紹介</string>
@@ -769,7 +783,6 @@
 	<string name="stats_totals_views">表示</string>
 	<string name="stats_totals_clicks">クリック数</string>
 	<string name="stats_totals_plays">再生回数</string>
-	<string name="menu_search">検索</string>
 	<string name="media_add_popup_capture_photo">写真を撮影</string>
 	<string name="media_add_popup_capture_video">動画を撮影</string>
 	<string name="media_edit_success">更新しました</string>
@@ -832,7 +845,6 @@
 	<string name="ok">OK</string>
 	<string name="scaled_image">変更後の画像幅</string>
 	<string name="upload_scaled_image">アップロードしてサイズを変更した画像にリンク</string>
-	<string name="remove_location">削除</string>
 	<string name="scheduled">予約済み</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress for Android から投稿</string>
@@ -944,18 +956,6 @@
 		<item>コメントはありません</item>
 		<item>既知のユーザーのコメント</item>
 		<item>すべてのユーザー</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>なし</item>
-		<item>2階層</item>
-		<item>3階層</item>
-		<item>4階層</item>
-		<item>5階層</item>
-		<item>6階層</item>
-		<item>7階層</item>
-		<item>8階層</item>
-		<item>9階層</item>
-		<item>10階層</item>
 	</string-array>
 	<string-array name="themes_filter_array">
 		<item>無料</item>

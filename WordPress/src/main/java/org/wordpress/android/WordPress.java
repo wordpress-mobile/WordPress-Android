@@ -79,6 +79,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -95,6 +96,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
+    private static RestClientUtils mRestClientUtilsVersion1_3;
 
     private static RestClientUtils mGravatarRestClientUtilsVersion1;
 
@@ -226,6 +228,7 @@ public class WordPress extends Application {
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+            AppPrefs.setVisualEditorPromoRequired(false);
         }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
@@ -338,6 +341,14 @@ public class WordPress extends Application {
         return mRestClientUtilsVersion1_2;
     }
 
+    public static RestClientUtils getRestClientUtilsV1_3() {
+        if (mRestClientUtilsVersion1_3 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+        }
+        return mRestClientUtilsVersion1_3;
+    }
+
     public static RestClientUtils getGravatarRestClientUtilsV1() {
         if (mGravatarRestClientUtilsVersion1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
@@ -401,8 +412,9 @@ public class WordPress extends Application {
      * Get the currently active blog.
      * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
-     * time the application was used. If we're not able to determine the last active blog, just
-     * select the first one.
+     * time the application was used. If we're not able to determine the last active blog, try to
+     * select the first visible blog. If there are no more visible blogs, try to select the first
+     * hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
@@ -591,17 +603,21 @@ public class WordPress extends Application {
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
                 } else {
                     mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
                 }
-            } catch (AndroidRuntimeException e) {
+            } catch (AndroidRuntimeException |  NullPointerException e) {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
+
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
+
         }
         return mDefaultUserAgent;
     }
@@ -653,14 +669,26 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-            if (accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
+            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            if (blogId == 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
+
+            setCurrentBlogAndSetVisible(blogId);
+            wpDB.updateLastBlogId(blogId);
         }
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static Map<String, String> getRestLocaleParams() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
     /**
