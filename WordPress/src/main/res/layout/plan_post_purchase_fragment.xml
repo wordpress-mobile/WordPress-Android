@@ -13,9 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:layout_heightPercent="50%"
+        app:layout_heightPercent="40%"
+        app:layout_marginTopPercent="10%"
         app:layout_widthPercent="75%"
-        tools:src="@drawable/plans_customize" />
+        tools:src="@drawable/plans_business_active" />
 
     <LinearLayout
         android:id="@+id/layout_container"
@@ -25,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_heightPercent="50%"
+        app:layout_marginTopPercent="10%"
         app:layout_widthPercent="75%">
 
         <org.wordpress.android.widgets.WPTextView
