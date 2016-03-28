@@ -75,4 +75,9 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="MenusSpinner">
+        <attr name="spinnerTitle" format="string" />
+        <attr name="spinnerIcon" format="reference" />
+    </declare-styleable>
+
 </resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_medium">
+
+    <org.wordpress.android.ui.menus.MenusSpinner
+        android:id="@+id/menu_locations_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        app:spinnerTitle="@string/location_menu_spinner_title"
+        app:spinnerIcon="@drawable/gridicon_layout" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="@string/uses" />
+
+    <org.wordpress.android.ui.menus.MenusSpinner
+        android:id="@+id/selected_menu_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:spinnerTitle="@string/menus_spinner_title"
+        app:spinnerIcon="@drawable/gridicon_menus" />
+
+</LinearLayout>
