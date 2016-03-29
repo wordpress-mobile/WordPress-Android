@@ -1,6 +1,6 @@
 language: android
 jdk: oraclejdk7
-sudo: false
+sudo: required
 
 notifications:
   # Slack notification on failure (secured token).
@@ -22,6 +22,7 @@ android:
 
 env:
   global:
+    - MALLOC_ARENA_MAX=2
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
