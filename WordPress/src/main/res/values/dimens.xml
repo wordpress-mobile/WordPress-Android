@@ -232,6 +232,9 @@
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
+    <dimen name="start_over_padding_top">40dp</dimen>
+    <dimen name="start_over_margin">20dp</dimen>
+    <dimen name="start_over_width">300dp</dimen>
 
     <!--empty lists-->
     <dimen name="empty_list_button_top_margin">32dp</dimen>
@@ -248,6 +251,18 @@
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
+    <dimen name="start_over_text_margin">25dp</dimen>
+    <dimen name="start_over_url_margin">22dp</dimen>
+    <dimen name="start_over_preference_margin_large">15dp</dimen>
+    <dimen name="start_over_preference_margin_medium">6dp</dimen>
+    <dimen name="start_over_preference_margin_small">4dp</dimen>
+    <dimen name="start_over_preference_padding_left">30dp</dimen>
+    <dimen name="start_over_icon_padding">2dp</dimen>
+    <dimen name="start_over_text_margin_left">37dp</dimen>
+    <dimen name="start_over_icon_size">24dp</dimen>
+    <dimen name="start_over_icon_margin_right">13dp</dimen>
+    <dimen name="start_over_title_margin">19dp</dimen>
+    <dimen name="start_over_summary_margin">53dp</dimen>
 
     <!-- plans -->
     <dimen name="plan_indicator_size">12dp</dimen>

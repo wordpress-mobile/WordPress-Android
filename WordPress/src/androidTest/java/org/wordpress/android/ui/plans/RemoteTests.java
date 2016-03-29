@@ -14,7 +14,6 @@ import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.networking.RestClientFactory;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -23,8 +22,6 @@ import java.util.List;
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
     private RestClientCustomizableMock mRestClientV1_2;
 
-    private RestClientCustomizableMock mRestClientV1_3;
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -32,7 +29,6 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         // Set the version of the REST client to v1.2
         RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
         mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_2);
-        mRestClientV1_3 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_3);
     }
 
     private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
@@ -59,7 +55,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         abstract void parseResponse(JSONObject response) throws JSONException;
     }
 
-    public void testGlobalPlans() throws Exception {
+    public void testSitePlans() throws Exception {
         PlansRestRequestAbstractListener listener = new PlansRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
@@ -71,86 +67,37 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                     plans.add(currentPlan);
                 }
 
-                assertEquals(6, plans.size());
+                assertEquals(3, plans.size());
 
                 Plan currentPlan = plans.get(0);
-                assertEquals(currentPlan.getDescription(), "Jetpack (free) speeds up your site's images, secures it, and enables traffic and customization tools.");
-                assertEquals(currentPlan.getProductID(), 2002L);
-                assertEquals(currentPlan.getProductName(), "Free");
+                assertEquals(currentPlan.getDescription(), "Get a free blog and be on your way to publishing your first post in less than five minutes.");
+                assertEquals(currentPlan.getProductID(), 1L);
+                assertEquals(currentPlan.getProductName(), "WordPress.com Free");
                 assertEquals(currentPlan.getBillPeriod(), -1);
                 assertEquals(currentPlan.getRawPrice(), 0);
                 assertEquals(currentPlan.getCost(), 0);
                 assertEquals(currentPlan.isAvailable(), true);
 
+                currentPlan = plans.get(1);
+                assertEquals(currentPlan.isFreeTrial(), false);
+                assertEquals(currentPlan.getBundleSubscriptionID(), "5683566");
+                assertEquals(currentPlan.getExpiry(), "2017-03-07");
+                assertEquals(currentPlan.getUserFacingExpiry(), "2017-03-04");
+                assertEquals(currentPlan.getSubscribedDate(), "2016-03-07 08:56:13");
 
-                currentPlan = plans.get(5);
+                currentPlan = plans.get(2);
                 assertEquals(currentPlan.getDescription(), "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.");
                 assertEquals(currentPlan.getProductID(), 1008L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Business");
                 assertEquals(currentPlan.getBillPeriod(), 365);
-                assertEquals(currentPlan.getRawPrice(), 299);
-                assertEquals(currentPlan.getCost(), 299);
+                assertEquals(currentPlan.getRawPrice(), 199);
+                assertEquals(currentPlan.getCost(), 199);
                 assertEquals(currentPlan.isAvailable(), true);
             }
         };
 
-        mRestClientV1_3.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.3/plans",
-                null,
-                listener,
-                errListener
-        );
-    }
 
-    public void testSiteAvailablePlans() throws Exception {
-        PlansRestRequestAbstractListener listener = new PlansRestRequestAbstractListener() {
-            @Override
-            void parseResponse(JSONObject response) throws JSONException {
-                List<SitePlan> plans = new ArrayList<>();
-                JSONArray planIDs = response.names();
-                if (planIDs != null) {
-                    for (int i=0; i < planIDs.length(); i ++) {
-                        String currentKey = planIDs.getString(i);
-                        JSONObject currentPlanJSON = response.getJSONObject(currentKey);
-                        SitePlan currentPlan = new SitePlan(Long.valueOf(currentKey), currentPlanJSON, 123456);
-                        plans.add(currentPlan);
-                    }
-                }
-
-                assertEquals(3, plans.size());
-
-                SitePlan currentSitePlan = plans.get(0);
-                assertEquals(0, currentSitePlan.getRawDiscount());
-                assertEquals(0, currentSitePlan.getRawPrice());
-                assertEquals("$0", currentSitePlan.getFormattedPrice());
-                assertEquals("$0", currentSitePlan.getFormattedDiscount());
-                assertEquals("free_plan", currentSitePlan.getProductSlug());
-                assertEquals("WordPress.com Free", currentSitePlan.getProductName());
-                assertTrue(currentSitePlan.isCurrentPlan());
-                assertFalse(currentSitePlan.canStartTrial());
-
-                currentSitePlan = plans.get(1);
-                assertEquals(0, currentSitePlan.getRawDiscount());
-                assertEquals(99, currentSitePlan.getRawPrice());
-                assertEquals("$99", currentSitePlan.getFormattedPrice());
-                assertEquals("$0", currentSitePlan.getFormattedDiscount());
-                assertEquals("value_bundle", currentSitePlan.getProductSlug());
-                assertEquals("WordPress.com Premium", currentSitePlan.getProductName());
-                assertFalse(currentSitePlan.isCurrentPlan());
-                assertTrue(currentSitePlan.canStartTrial());
-
-                currentSitePlan = plans.get(2);
-                assertEquals(0, currentSitePlan.getRawDiscount());
-                assertEquals(299, currentSitePlan.getRawPrice());
-                assertEquals("$299", currentSitePlan.getFormattedPrice());
-                assertEquals("$0", currentSitePlan.getFormattedDiscount());
-                assertEquals("business-bundle", currentSitePlan.getProductSlug());
-                assertEquals("WordPress.com Business", currentSitePlan.getProductName());
-                assertFalse(currentSitePlan.isCurrentPlan());
-                assertTrue(currentSitePlan.canStartTrial());
-            }
-        };
-
-        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1/sites/123456/plans",
+        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/sites/123456/plans",
                 null,
                 listener,
                 errListener

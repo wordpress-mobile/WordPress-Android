@@ -32,6 +32,7 @@ public class JsCallbackReceiver {
     private static final String CALLBACK_VIDEO_REPLACED = "callback-video-replaced";
     private static final String CALLBACK_IMAGE_TAP = "callback-image-tap";
     private static final String CALLBACK_LINK_TAP = "callback-link-tap";
+    private static final String CALLBACK_MEDIA_REMOVED = "callback-media-removed";
 
     private static final String CALLBACK_VIDEOPRESS_INFO_REQUEST = "callback-videopress-info-request";
 
@@ -178,6 +179,13 @@ public class JsCallbackReceiver {
                 }
 
                 mListener.onLinkTapped(url, title);
+                break;
+            case CALLBACK_MEDIA_REMOVED:
+                AppLog.d(AppLog.T.EDITOR, "Media removed, " + params);
+                // Extract the media id from the callback string (stripping the 'id=' part of the callback string)
+                if (params.length() > 3) {
+                    mListener.onMediaRemoved(params.substring(3));
+                }
                 break;
             case CALLBACK_VIDEOPRESS_INFO_REQUEST:
                 // Extract the VideoPress id from the callback string (stripping the 'id=' part of the callback string)

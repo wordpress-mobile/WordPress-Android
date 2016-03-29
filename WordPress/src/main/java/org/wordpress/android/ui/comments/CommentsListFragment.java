@@ -238,7 +238,18 @@ public class CommentsListFragment extends Fragment {
                     if (filter == null || CommentStatus.UNKNOWN.equals(filter)) {
                         return getString(R.string.comments_empty_list);
                     } else {
-                        return getString(R.string.comments_empty_list_filtered, mCommentStatusFilter.getLabel().toLowerCase());
+                        switch (mCommentStatusFilter) {
+                            case APPROVED:
+                                return getString(R.string.comments_empty_list_filtered_approved);
+                            case UNAPPROVED:
+                                return getString(R.string.comments_empty_list_filtered_pending);
+                            case SPAM:
+                                return getString(R.string.comments_empty_list_filtered_spam);
+                            case TRASH:
+                                return getString(R.string.comments_empty_list_filtered_trashed);
+                            default:
+                                return getString(R.string.comments_empty_list);
+                        }
                     }
 
                 } else {
