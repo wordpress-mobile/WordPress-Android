@@ -2,6 +2,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0-beta7'
@@ -13,6 +14,7 @@ repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "http://dl.bintray.com/wordpress-mobile/maven" }
 }
 
 apply plugin: 'com.android.application'
@@ -104,7 +106,7 @@ dependencies {
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.1.0'
-    compile 'org.wordpress:emailchecker:0.3'
+    compile 'org.wordpress:emailchecker2:1.0.0'
 
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'
