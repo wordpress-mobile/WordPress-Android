@@ -49,8 +49,8 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
-    private static final long ALERT_ANIM_DURATION_MS = 1000l;
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000L;
+    private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;

@@ -1,7 +1,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/repo' }
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0-beta7'
@@ -12,7 +12,7 @@ buildscript {
 repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
-    maven { url 'https://maven.fabric.io/repo' }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 apply plugin: 'com.android.application'
@@ -71,7 +71,9 @@ android {
 }
 
 dependencies {
-    compile 'com.crashlytics.sdk.android:crashlytics:2.2.2'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
     // Provided by maven central
     compile ('org.wordpress:mediapicker:1.2.4') {
