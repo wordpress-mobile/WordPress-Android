@@ -36,6 +36,8 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     static final int PAGE_NUMBER_VIDEO      = 2;
     static final int PAGE_NUMBER_THEMES     = 3; // business only
 
+    static final String ARG_IS_BUSINESS_PLAN = "is_business_plan";
+
     private ViewPager mViewPager;
     private PageAdapter mPageAdapter;
     private TextView mTxtSkip;
@@ -43,12 +45,19 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     private ViewGroup mIndicatorContainerView;
 
     private int mPrevPageNumber = 0;
+    private boolean mIsBusinessPlan;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.plan_post_purchase_activity);
+
+        if (savedInstanceState != null) {
+            mIsBusinessPlan = savedInstanceState.getBoolean(ARG_IS_BUSINESS_PLAN, false);
+        } else {
+            mIsBusinessPlan = getIntent().getBooleanExtra(ARG_IS_BUSINESS_PLAN, false);
+        }
 
         mTxtSkip = (TextView) findViewById(R.id.text_skip);
         mTxtNext = (TextView) findViewById(R.id.text_next);
@@ -83,18 +92,23 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         });
 
         int numPages = getNumPages();
-        getIndicator(PAGE_NUMBER_THEMES).setVisibility(numPages > 3 ? View.VISIBLE : View.GONE);
         for (int i = 0; i < numPages; i++) {
             getIndicator(i).setOnClickListener(mIndicatorClickListener);
         }
+        getIndicator(PAGE_NUMBER_THEMES).setVisibility(numPages > 3 ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_IS_BUSINESS_PLAN, mIsBusinessPlan);
     }
 
     /*
-     * TODO: return 3 when user has purchased premium (last pages is themes, which should only
-     * appear when user has purchased business plan)
-     */
+         * last pages is themes, which should only appear when user has purchased business plan
+         */
     private int getNumPages() {
-        return 4;
+        return mIsBusinessPlan ? 4 : 3;
     }
 
     private PageAdapter getPageAdapter() {
