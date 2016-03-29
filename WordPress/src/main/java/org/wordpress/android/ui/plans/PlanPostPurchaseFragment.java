@@ -23,11 +23,6 @@ public class PlanPostPurchaseFragment extends Fragment {
     private static final String ARG_PAGE_NUMBER = "page_number";
     private int mPageNumber;
 
-    private static final int PAGE_NUMBER_INTRO = 0;
-    private static final int PAGE_NUMBER_CUSTOMIZE = 1;
-    private static final int PAGE_NUMBER_VIDEO = 2;
-    private static final int PAGE_NUMBER_THEMES = 3;
-
     static PlanPostPurchaseFragment newInstance(int pageNumber) {
         PlanPostPurchaseFragment fragment = new PlanPostPurchaseFragment();
         Bundle args = new Bundle();
@@ -70,25 +65,25 @@ public class PlanPostPurchaseFragment extends Fragment {
         int buttonResId;
         int imageResId;
         switch (mPageNumber) {
-            case PAGE_NUMBER_INTRO:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_INTRO:
                 titleResId = R.string.plans_post_purchase_title_intro;
                 textResId = R.string.plans_post_purchase_text_intro;
                 buttonResId = 0;
                 imageResId = R.drawable.plans_business_active;
                 break;
-            case PAGE_NUMBER_CUSTOMIZE:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
                 titleResId = R.string.plans_post_purchase_title_customize;
                 textResId = R.string.plans_post_purchase_text_customize;
                 buttonResId = R.string.plans_post_purchase_button_customize;
                 imageResId = R.drawable.plans_customize;
                 break;
-            case PAGE_NUMBER_VIDEO:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
                 titleResId = R.string.plans_post_purchase_title_video;
                 textResId = R.string.plans_post_purchase_text_video;
                 buttonResId = R.string.plans_post_purchase_button_video;
                 imageResId = R.drawable.plans_video_upload;
                 break;
-            case PAGE_NUMBER_THEMES:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
                 titleResId = R.string.plans_post_purchase_title_themes;
                 textResId = R.string.plans_post_purchase_text_themes;
                 buttonResId = R.string.plans_post_purchase_button_themes;
@@ -121,15 +116,15 @@ public class PlanPostPurchaseFragment extends Fragment {
 
     private void handleButtonClick() {
         switch (mPageNumber) {
-            case PAGE_NUMBER_CUSTOMIZE:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
                 String blogId = WordPress.getCurrentRemoteBlogId();
                 String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
                 ThemeWebActivity.openTheme(getActivity(), themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW, true);
                 break;
-            case PAGE_NUMBER_THEMES:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
                 break;
-            case PAGE_NUMBER_VIDEO:
+            case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
                 ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.currentBlog, false);
                 break;
         }
