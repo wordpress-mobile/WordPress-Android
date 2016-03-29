@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -50,6 +51,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import de.greenrobot.event.EventBus;
 
 public class ApiHelper {
 
@@ -261,6 +264,7 @@ public class ApiHelper {
                 }
                 if (mBlog.bsetAdmin(isAdmin)) {
                     WordPress.wpDB.saveBlog(mBlog);
+                    EventBus.getDefault().post(new CoreEvents.BlogListChanged());
                 }
             }
         }
