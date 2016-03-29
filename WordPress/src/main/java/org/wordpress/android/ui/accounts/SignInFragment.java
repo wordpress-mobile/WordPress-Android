@@ -59,7 +59,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
+import org.wordpress.emailchecker2.EmailCheckerKt;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.EnumSet;
@@ -103,8 +103,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private ImageView mInfoButton;
     private ImageView mInfoButtonSecondary;
 
-    private final EmailChecker mEmailChecker;
-
     private boolean mSelfHosted;
     private boolean mEmailAutoCorrected;
     private boolean mShouldSendTwoStepSMS;
@@ -115,10 +113,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String mHttpUsername;
     private String mHttpPassword;
     private Blog mJetpackBlog;
-
-    public SignInFragment() {
-        mEmailChecker = new EmailChecker();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -318,7 +312,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         // It looks like an email address, then try to correct it
-        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        String suggest = EmailCheckerKt.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mUsernameEditText.setText(suggest);
