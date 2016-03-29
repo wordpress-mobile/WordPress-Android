@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -206,7 +208,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         setContentView(R.layout.new_edit_post_activity);
 
         // Check whether to show the visual editor
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
@@ -574,7 +576,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     // Menu actions
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
@@ -604,34 +606,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        // Disable ActionBar buttons while there are failed media uploads in the post/page
-        if (mEditorFragment.hasFailedMediaUploads()) {
-            ToastUtils.showToast(this, R.string.editor_toast_failed_uploads, Duration.SHORT);
-            return false;
-        }
-
         if (itemId == R.id.menu_save_post) {
-            // If the post is new and there are no changes, don't publish
-            updatePostObject(false);
-            if (!mPost.isPublishable()) {
-                ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
-                return false;
-            }
-
-            savePostToDb();
-            trackSavePostAnalytics();
-
-            if (!NetworkUtils.isNetworkAvailable(this)) {
-                ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
-                return false;
-            }
-
-            PostUploadService.addPostToUpload(mPost);
-            PostUploadService.setLegacyMode(!mShowNewEditor);
-            startService(new Intent(this, PostUploadService.class));
-            setResult(RESULT_OK);
-            finish();
-            return true;
+            return savePost();
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == R.id.menu_post_settings) {
@@ -643,6 +619,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
         return false;
+    }
+
+    private boolean savePost() {
+        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
+        if (mEditorFragment.hasFailedMediaUploads()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.editor_toast_failed_uploads)
+                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Clear failed uploads
+                            mEditorFragment.removeAllFailedMediaUploads();
+                        }
+                    }).setNegativeButton(android.R.string.cancel, null);
+            builder.create().show();
+            return true;
+        }
+
+        // If the post is new and there are no changes, don't publish
+        updatePostObject(false);
+        if (!mPost.isPublishable()) {
+            ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
+            return false;
+        }
+
+        savePostToDb();
+        trackSavePostAnalytics();
+
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
+            return false;
+        }
+
+        PostUploadService.addPostToUpload(mPost);
+        PostUploadService.setLegacyMode(!mShowNewEditor);
+        startService(new Intent(this, PostUploadService.class));
+        setResult(RESULT_OK);
+        finish();
+        return true;
     }
 
     @Override

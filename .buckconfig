@@ -14,5 +14,5 @@
 [maven_repositories]
   central = https://repo1.maven.org/maven2
   wordpress = http://wordpress-mobile.github.io/WordPress-Android
-  fabric = https://maven.fabric.io/repo
+  fabric = https://maven.fabric.io/public
   m2 = ~/.m2/repository

@@ -9,11 +9,12 @@ import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Plan {
+public class Plan implements Serializable {
     private long mProductID;
     private String mProductName;
     private final Hashtable<String, Integer> mPrices = new Hashtable<>();
@@ -44,6 +45,21 @@ public class Plan {
     private ArrayList<Integer> mBundleProductIds;
     private final ArrayList<PlanFeaturesHighlightSection> mFeaturesHighlightSections =  new ArrayList<>();
 
+    // used to link with an actual product on the Store (ie: Used to load the price from the Store).
+    private String mAndroidSKU;
+
+    // Info attached to the current site/user
+    private int mRawDiscount;
+    private String mFormattedDiscount;
+    private boolean mIsCurrentPlan;
+    private boolean mCanStartTrial;
+    private String mExpiry;
+    private boolean mFreeTrial;
+    private String mUserFacingExpiry;
+    private String mSubscribedDate;
+    private String mBundleSubscriptionID;
+
+
     public Plan(JSONObject planJSONObject) throws JSONException {
         mProductID = planJSONObject.getLong("product_id");
         mProductName = planJSONObject.getString("product_name");
@@ -72,6 +88,7 @@ public class Plan {
         mFormattedPrice = planJSONObject.getString("formatted_price");
         mRawPrice = planJSONObject.getInt("raw_price");
         mIconUrl = planJSONObject.optString("icon");
+        mAndroidSKU = planJSONObject.optString("android_sku");
 
         // Optionals
         mWidth = planJSONObject.optInt("width");
@@ -101,6 +118,17 @@ public class Plan {
                 );
             }
         }
+
+        // Specific info liked with the current site
+        mRawDiscount = planJSONObject.optInt("raw_discount", 0);
+        mFormattedDiscount = planJSONObject.optString("formatted_discount");
+        mCanStartTrial = JSONUtils.getBool(planJSONObject, "can_start_trial");
+        mIsCurrentPlan = JSONUtils.getBool(planJSONObject, "current_plan");
+        mExpiry = planJSONObject.optString("expiry");
+        mUserFacingExpiry = planJSONObject.optString("user_facing_expiry");
+        mSubscribedDate = planJSONObject.optString("subscribed_date");
+        mFreeTrial = JSONUtils.getBool(planJSONObject, "free_trial");
+        mBundleSubscriptionID = planJSONObject.optString("bundle_subscription_id");
     }
 
 
@@ -216,5 +244,46 @@ public class Plan {
     }
     public boolean hasIconUrl() {
         return !TextUtils.isEmpty(mIconUrl);
+    }
+
+    public int getRawDiscount() {
+        return mRawDiscount;
+    }
+
+    public String getFormattedDiscount() {
+        return StringUtils.notNullStr(mFormattedDiscount);
+    }
+
+
+    public boolean isCurrentPlan() {
+        return mIsCurrentPlan;
+    }
+
+    public boolean canStartTrial() {
+        return mCanStartTrial;
+    }
+
+    public String getSubscribedDate() {
+        return StringUtils.notNullStr(mSubscribedDate);
+    }
+
+    public String getUserFacingExpiry() {
+        return StringUtils.notNullStr(mUserFacingExpiry);
+    }
+
+    public boolean isFreeTrial() {
+        return mFreeTrial;
+    }
+
+    public String getExpiry() {
+        return StringUtils.notNullStr(mExpiry);
+    }
+
+    public String getAndroidSKU() {
+        return StringUtils.notNullStr(mAndroidSKU);
+    }
+
+    public String getBundleSubscriptionID() {
+        return StringUtils.notNullStr(mBundleSubscriptionID);
     }
 }

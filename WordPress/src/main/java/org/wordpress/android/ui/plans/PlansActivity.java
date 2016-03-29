@@ -2,14 +2,11 @@ package org.wordpress.android.ui.plans;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +24,8 @@ import android.widget.Toast;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.models.SitePlan;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -38,9 +35,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -49,16 +43,12 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
-    private static final String SAVED_VIEWPAGER_POS = "SAVED_VIEWPAGER_POS";
-
-    private static final int NO_PREV_POS_SELECTED_VIEWPAGER = -1;
 
     private int mLocalBlogID = -1;
-    private SitePlan[] mAvailablePlans;
-    private int mViewpagerPosSelected = NO_PREV_POS_SELECTED_VIEWPAGER;
+    private Plan[] mAvailablePlans;
 
     private WPViewPager mViewPager;
-    private PlansPageAdapter mPageAdapter;
+    private PlansPagerAdapter mPageAdapter;
     private TabLayout mTabLayout;
 
     private IabHelper mIabHelper;
@@ -72,10 +62,9 @@ public class PlansActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
-            if (serializable instanceof SitePlan[]) {
-                mAvailablePlans = (SitePlan[]) serializable;
+            if (serializable instanceof Plan[]) {
+                mAvailablePlans = (Plan[]) serializable;
             }
-            mViewpagerPosSelected = savedInstanceState.getInt(SAVED_VIEWPAGER_POS, NO_PREV_POS_SELECTED_VIEWPAGER);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
@@ -117,6 +106,14 @@ public class PlansActivity extends AppCompatActivity {
         if (AppPrefs.isInAppBillingAvailable()) {
             startInAppBillingHelper();
         }
+
+        // Download plans if not already available
+        if (mAvailablePlans == null) {
+            showProgress();
+            PlanUpdateService.startService(this, mLocalBlogID);
+        } else {
+            setupPlansUI();
+        }
     }
 
     @Override
@@ -126,35 +123,35 @@ public class PlansActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void updatePurchaseUI(int position) {
-        Fragment fragment = getPageAdapter().getItem(position);
-        if (!(fragment instanceof PlanFragment)) {
-            return;
-        }
-
-        SitePlan sitePlan = ((PlanFragment) fragment).getSitePlan();
-        Plan globalPlan = PlansUtils.getGlobalPlan(sitePlan.getProductID());
-        if (globalPlan == null) {
-            AppLog.w(AppLog.T.PLANS, "unable to match global plan " + sitePlan.getProductID());
-            finish();
-            return;
-        }
-
+        Plan plan = getPageAdapter().getPlan(position);
         boolean showPurchaseButton;
-        if (sitePlan.isCurrentPlan()) {
+        if (plan.isCurrentPlan()) {
             showPurchaseButton = false;
         } else {
             // don't show the purchase button unless the plan at this position is "greater" than
             // the current plan for this site
             long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
-            showPurchaseButton = (PlansUtils.compareProducts(sitePlan.getProductID(), currentPlanProductId) == PlansUtils.GREATER_PRODUCT);
+            showPurchaseButton = plan.isAvailable() && plan.getProductID() > currentPlanProductId;
         }
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
-            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(globalPlan));
+            txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(plan));
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -182,7 +179,6 @@ public class PlansActivity extends AppCompatActivity {
 
         hideProgress();
 
-        mViewPager.setOffscreenPageLimit(mAvailablePlans.length - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -190,18 +186,6 @@ public class PlansActivity extends AppCompatActivity {
         int selectedColor = getResources().getColor(R.color.white);
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
-
-        // Move the viewpager on the blog plan if no prev position is available
-        if (mViewpagerPosSelected == NO_PREV_POS_SELECTED_VIEWPAGER) {
-            for (SitePlan currentSitePlan : mAvailablePlans) {
-                if (currentSitePlan.isCurrentPlan()) {
-                    mViewpagerPosSelected = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
-                }
-            }
-        }
-        if (getPageAdapter().isValidPosition(mViewpagerPosSelected)) {
-            mViewPager.setCurrentItem(mViewpagerPosSelected);
-        }
 
         if (mViewPager.getVisibility() != View.VISIBLE) {
             // use a circular reveal on API 21+
@@ -249,91 +233,34 @@ public class PlansActivity extends AppCompatActivity {
         progress.setVisibility(View.VISIBLE);
     }
 
-    private class PlansPageAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments;
-
-        PlansPageAdapter(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            mFragments = fragments;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (mFragments != null && isValidPosition(position)) {
-                return ((PlanFragment)mFragments.get(position)).getTitle();
-            }
-            return super.getPageTitle(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        public boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
-        }
-
-        public int getPositionOfPlan(long planID) {
-            for (int i = 0; i < getCount(); i++) {
-                PlanFragment fragment = (PlanFragment) getItem(i);
-                if (fragment.getSitePlan().getProductID() == planID) {
-                    return  i;
-                }
-            }
-            return -1;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-        // Download plans if not already available
-        if (mAvailablePlans == null) {
-            showProgress();
-            PlanUpdateService.startService(this, mLocalBlogID);
-        } else {
-            setupPlansUI();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
-        if (mViewPager != null) {
-            outState.putInt(SAVED_VIEWPAGER_POS, mViewPager.getCurrentItem());
-            // trick to restore the correct pos of the view pager without using a listener when the activity is not restarted.
-            mViewpagerPosSelected = mViewPager.getCurrentItem();
-        }
         super.onSaveInstanceState(outState);
     }
 
-    private PlansPageAdapter getPageAdapter() {
+    private PlansPagerAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            List<Fragment> fragments = new ArrayList<>();
-            if (mAvailablePlans != null) {
-                for (SitePlan plan : mAvailablePlans) {
-                    fragments.add(PlanFragment.newInstance(plan));
-                }
-            }
-
-            FragmentManager fm = getFragmentManager();
-            mPageAdapter = new PlansPageAdapter(fm, fragments);
+            mPageAdapter = new PlansPagerAdapter(getFragmentManager(), mAvailablePlans);
         }
         return mPageAdapter;
+    }
+
+    /*
+     * move the ViewPager to the plan for the current blog
+     */
+    private void selectCurrentPlan() {
+        int position = -1;
+        for (Plan currentSitePlan : mAvailablePlans) {
+            if (currentSitePlan.isCurrentPlan()) {
+                position = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
+                break;
+            }
+        }
+        if (getPageAdapter().isValidPosition(position)) {
+            mViewPager.setCurrentItem(position);
+        }
     }
 
     /*
@@ -347,19 +274,12 @@ public class PlansActivity extends AppCompatActivity {
             return;
         }
 
-        List<SitePlan> plans = event.getPlans();
-        mAvailablePlans = new SitePlan[plans.size()];
+        List<Plan> plans = event.getPlans();
+        mAvailablePlans = new Plan[plans.size()];
         plans.toArray(mAvailablePlans);
 
-        // make sure plans are correctly sorted
-        Arrays.sort(mAvailablePlans, new Comparator<SitePlan>() {
-            @Override
-            public int compare(SitePlan lhs, SitePlan rhs) {
-                return PlansUtils.compareProducts(lhs.getProductID(), rhs.getProductID());
-            }
-        });
-
         setupPlansUI();
+        selectCurrentPlan();
     }
 
     /*
@@ -413,7 +333,7 @@ public class PlansActivity extends AppCompatActivity {
             });
         } catch (NullPointerException e) {
             // will happen when play store isn't available on device
-            AppLog.e(AppLog.T.PLANS, e);
+            //AppLog.e(AppLog.T.PLANS, e);
             AppLog.w(AppLog.T.PLANS, "Unable to start IAB helper");
         }
     }
@@ -425,7 +345,7 @@ public class PlansActivity extends AppCompatActivity {
             } catch (IllegalArgumentException e) {
                 // this can happen if the IAB helper was created but failed to bind to its service
                 // when started, which will occur on emulators
-                AppLog.e(AppLog.T.PLANS, e);
+                AppLog.w(AppLog.T.PLANS, "Unable to dispose IAB helper");
             }
             mIabHelper = null;
         }
