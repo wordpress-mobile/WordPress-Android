@@ -129,9 +129,7 @@ public class PlanPostPurchaseFragment extends Fragment {
     private void handleButtonClick() {
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
-                String blogId = WordPress.getCurrentRemoteBlogId();
-                String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
-                ThemeWebActivity.openTheme(getActivity(), themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW, true);
+                ThemeWebActivity.openCurrentTheme(getActivity(), ThemeWebActivity.ThemeWebActivityType.PREVIEW);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());

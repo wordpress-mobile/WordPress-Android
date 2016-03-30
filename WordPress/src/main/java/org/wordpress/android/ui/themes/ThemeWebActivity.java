@@ -41,6 +41,15 @@ public class ThemeWebActivity extends WPWebViewActivity {
         openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
 
+    /*
+     * opens the current theme for the current blog
+     */
+    public static void openCurrentTheme(Activity activity, ThemeWebActivityType type) {
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
+        openTheme(activity, themeId, type, true);
+    }
+
     private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
