@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
@@ -22,13 +23,10 @@ import java.util.concurrent.TimeUnit;
 public class ApiHelperTest extends InstrumentationTestCase {
     protected Context mTargetContext;
 
-    public ApiHelperTest() {
-        super();
-        FactoryUtils.initWithTestFactories();
-    }
-
     @Override
     protected void setUp() {
+        FactoryUtils.initWithTestFactories();
+
         // Clean application state
         mTargetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
         TestUtils.clearApplicationState(mTargetContext);
@@ -46,6 +44,16 @@ public class ApiHelperTest extends InstrumentationTestCase {
 
     @Override
     protected void tearDown() {
+        FactoryUtils.clearFactories();
+    }
+
+    private void countDownAfterOtherAsyncTasks(final CountDownLatch countDownLatch) {
+        AsyncTask.SERIAL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                countDownLatch.countDown();
+            }
+        });
     }
 
     // This test failed before #773 was fixed
@@ -57,15 +65,17 @@ public class ApiHelperTest extends InstrumentationTestCase {
             @Override
             public void onSuccess() {
                 assertTrue(true);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 assertTrue(false);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
-        }).execute(false);
+        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 
@@ -78,15 +88,17 @@ public class ApiHelperTest extends InstrumentationTestCase {
             @Override
             public void onSuccess() {
                 assertTrue(false);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 assertTrue(true);
-                countDownLatch.countDown();
+                // countDown() after the serially invoked (nested) AsyncTask in RefreshBlogContentTask.
+                countDownAfterOtherAsyncTasks(countDownLatch);
             }
-        }).execute(false);
+        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, false);
         countDownLatch.await(5000, TimeUnit.SECONDS);
     }
 

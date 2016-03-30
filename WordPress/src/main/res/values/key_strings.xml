@@ -8,7 +8,8 @@
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
 
     <!-- Preference keys -->
-    <string name="pref_key_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
+    <string name="pref_key_app_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
     <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
@@ -65,7 +66,10 @@
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
+    <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
+    <string name="pref_key_site_delete_site_screen" translatable="false">wp_pref_site_delete_site_screen</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
+    <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
     <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
     <string name="pref_key_username" translatable="false">wp_pref_key_username</string>

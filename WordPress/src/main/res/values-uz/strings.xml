@@ -99,7 +99,6 @@
 	<string name="media_add_popup_capture_video">Videoga oling</string>
 	<string name="stats_view_referrers">Referrerlar</string>
 	<string name="stats_entry_referrers">Referrer</string>
-	<string name="menu_search">Izlash</string>
 	<string name="passcode_manage">PIN kod moslamalari</string>
 	<string name="passcode_enter_passcode">PIN kod kiriting</string>
 	<string name="passcode_enter_old_passcode">Eski PIN kodni kiriting</string>
@@ -146,7 +145,6 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Rasm yuklab, hajmi moslashtirilgan (kichiklashtirilgan) nusxasiga havola berish</string>
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
-	<string name="remove_location">O‘chir</string>
 	<string name="scheduled">Jadvalga kiritildi</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress Android orqali chop etildi</string>
