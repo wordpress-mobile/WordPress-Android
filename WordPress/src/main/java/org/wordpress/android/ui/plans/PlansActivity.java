@@ -304,7 +304,9 @@ public class PlansActivity extends AppCompatActivity {
     private void startPurchaseProcess() {
         // TODO: this should start the Google Play purchase process, for now it shows the
         // post-purchase on-boarding
+        boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
         Intent intent = new Intent(this, PlanPostPurchaseActivity.class);
+        intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
         startActivity(intent);
         finish();
     }
