@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,10 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +70,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
-
-    protected static final int BUTTON_ID_LOG_HTML = 555;
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -407,8 +404,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         if (mDebugModeEnabled) {
             enableWebDebugging(true);
-            // Enable the HTML logging button
-            setHasOptionsMenu(true);
         }
     }
 
@@ -455,7 +450,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mContentHtml = mSourceViewContent.getText().toString();
                 updateVisualEditorFields();
 
-                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                // Update the list of failed media uploads
+                mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
+
+                // Reset selection to avoid buggy cursor behavior
+                mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
             }
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
@@ -485,6 +484,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             Bundle dialogBundle = new Bundle();
 
+            // Pass potential URL from user clipboard
+            String clipboardUri = Utils.getUrlFromClipboard(getActivity());
+            if (clipboardUri != null) {
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, clipboardUri);
+            }
+
             // Pass selected text to dialog
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 // HTML mode
@@ -492,14 +497,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mSelectionEnd = mSourceViewContent.getSelectionEnd();
 
                 String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
-                dialogBundle.putString("linkText", selectedText);
+                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, selectedText);
             } else {
                 // Visual mode
                 mGetSelectedTextCountDownLatch = new CountDownLatch(1);
                 mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
                 try {
                     if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
-                        dialogBundle.putString("linkText", mJavaScriptResult);
+                        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
                     }
                 } catch (InterruptedException e) {
                     AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
@@ -507,7 +512,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
 
             linkDialogFragment.setArguments(dialogBundle);
-            linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+            linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
         } else {
             if (v instanceof ToggleButton) {
                 onFormattingButtonClicked((ToggleButton) v);
@@ -561,12 +566,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 return;
             }
 
-            String linkUrl = extras.getString("linkURL");
-            String linkText = extras.getString("linkText");
+            String linkUrl = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_URL);
+            String linkText = extras.getString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT);
 
             if (linkText == null || linkText.equals("")) {
                 linkText = linkUrl;
             }
+
+            if (TextUtils.isEmpty(Uri.parse(linkUrl).getScheme())) linkUrl = "http://" + linkUrl;
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 Editable content = mSourceViewContent.getText();
@@ -630,38 +637,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @SuppressLint("NewApi")
     private void enableWebDebugging(boolean enable) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AppLog.i(T.EDITOR, "Enabling web debugging");
             WebView.setWebContentsDebuggingEnabled(enable);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, BUTTON_ID_LOG_HTML, 0, "Log HTML")
-                .setIcon(R.drawable.ic_log_html)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == BUTTON_ID_LOG_HTML) {
-            if (mDebugModeEnabled) {
-                // Log the raw html
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.execJavaScriptFromString("console.log(document.body.innerHTML);");
-                    }
-                });
-            } else {
-                AppLog.d(T.EDITOR, "Could not execute JavaScript - debug mode not enabled");
-            }
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        mWebView.setDebugModeEnabled(mDebugModeEnabled);
     }
 
     @Override
@@ -842,6 +822,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void removeAllFailedMediaUploads() {
+        mWebView.execJavaScriptFromString("ZSSEditor.removeAllFailedMediaUploads();");
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
@@ -949,6 +934,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.post(new Runnable() {
             public void run() {
+                if (!isAdded()) {
+                    return;
+                }
+
                 mDomHasLoaded = true;
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
@@ -979,11 +968,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     button.setChecked(false);
                 }
 
+                boolean editorHasFocus = false;
+
                 // Add any media files that were placed in a queue due to the DOM not having loaded yet
                 if (mWaitingMediaFiles.size() > 0) {
                     // Image insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (Map.Entry<String, MediaFile> entry : mWaitingMediaFiles.entrySet()) {
                         appendMediaFile(entry.getValue(), entry.getKey(), null);
@@ -996,6 +988,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     // Gallery insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (MediaGallery mediaGallery : mWaitingGalleries) {
                         appendGallery(mediaGallery);
@@ -1003,6 +996,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                     mWaitingGalleries.clear();
                 }
+
+                if (!editorHasFocus) {
+                    mWebView.execJavaScriptFromString("ZSSEditor.focusFirstEditableField();");
+                }
+
+                // Show the keyboard
+                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .showSoftInput(mWebView, InputMethodManager.SHOW_IMPLICIT);
 
                 ProfilingUtils.split("EditorFragment.onDomLoaded completed");
                 ProfilingUtils.dump();
@@ -1174,11 +1175,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         Bundle dialogBundle = new Bundle();
 
-        dialogBundle.putString("linkURL", url);
-        dialogBundle.putString("linkText", title);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, url);
+        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, title);
 
         linkDialogFragment.setArguments(dialogBundle);
         linkDialogFragment.show(getFragmentManager(), "LinkDialogFragment");
+    }
+
+    @Override
+    public void onMediaRemoved(String mediaId) {
+        mUploadingMedia.remove(mediaId);
+        mFailedMediaIds.remove(mediaId);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
     }
 
     @Override

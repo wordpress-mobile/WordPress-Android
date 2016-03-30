@@ -70,9 +70,8 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (blog.isDotcomFlag()) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+                actionBar.setHomeButtonEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setCustomView(R.layout.preferences_actionbar);
             }
 
             FragmentManager fragmentManager = getFragmentManager();
