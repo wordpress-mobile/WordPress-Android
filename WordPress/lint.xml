@@ -11,4 +11,6 @@
 
     <issue id="HardcodedText" severity="error" />
     <issue id="InconsistentArrays" severity="warning" />
+
+    <issue id="IconDuplicates" severity="error" />
 </lint>
