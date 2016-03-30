@@ -13,6 +13,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
@@ -36,8 +37,12 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(currentTheme, type, currentTheme.isPremium());
+        if (currentTheme == null) {
+            ToastUtils.showToast(activity, R.string.could_not_load_theme);
+            return;
+        }
 
+        String url = getUrl(currentTheme, type, currentTheme.isPremium());
         openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
     }
 
