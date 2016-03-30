@@ -10,14 +10,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 public class PeopleManagementActivity extends AppCompatActivity {
+
+    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -39,6 +47,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
                 ActivityLauncher.viewPersonDetails(context, person);
             }
         });
+
+        refreshUsersList();
     }
 
     @Override
@@ -54,5 +64,12 @@ public class PeopleManagementActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshUsersList() {
+        Blog blog = WordPress.getBlog(mBlogLocalId);
+        if (blog != null) {
+            PeopleUtils.fetchUsers(blog.getDotComBlogId(), null);
+        }
     }
 }

@@ -10,11 +10,11 @@ import org.wordpress.android.util.AppLog.T;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(long siteId, final PeopleUtils.Callback callback) {
+    public static void fetchUsers(String siteId, final PeopleUtils.Callback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                if (jsonObject != null) {
+                if (jsonObject != null && callback != null) {
                     callback.onSuccess(jsonObject);
                 }
             }
@@ -24,7 +24,9 @@ public class PeopleUtils {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
-                callback.onError(volleyError);
+                if (callback != null) {
+                    callback.onError(volleyError);
+                }
             }
         };
 
