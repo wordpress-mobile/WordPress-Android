@@ -10,6 +10,8 @@ import com.google.android.gms.auth.api.credentials.Credential;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
@@ -64,7 +66,7 @@ public class SignInActivity extends FragmentActivity {
                 break;
         }
         if (extras == null || !extras.containsKey(EXTRA_DISABLE_AUTO_SIGNIN)) {
-            mSignInFragment.smartLockAutoSignIn();
+            mSignInFragment.smartLockAutoFill();
         }
     }
 
@@ -76,6 +78,7 @@ public class SignInActivity extends FragmentActivity {
             mSignInFragment.askForSslTrust();
         } else if (requestCode == SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
+                AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
                 AppLog.d(T.NUX, "Credentials saved");
             } else {
                 AppLog.d(T.NUX, "Credentials save cancelled");
