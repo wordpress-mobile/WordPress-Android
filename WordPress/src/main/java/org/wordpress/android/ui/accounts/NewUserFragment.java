@@ -32,7 +32,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker2.EmailCheckerKt;
+import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 import java.util.regex.Matcher;
@@ -318,7 +318,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         final String email = EditTextUtils.getText(mEmailTextField).trim();
-        String suggest = EmailCheckerKt.suggestDomainCorrection(email);
+        String suggest = EmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mEmailTextField.setText(suggest);
