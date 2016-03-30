@@ -2,6 +2,8 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.percent.PercentLayoutHelper;
+import android.support.percent.PercentRelativeLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * single page within the post-purchase activity's ViewPager
@@ -59,6 +62,15 @@ public class PlanPostPurchaseFragment extends Fragment {
         TextView txtTitle = (TextView) rootView.findViewById(R.id.text_title);
         TextView txtDescription = (TextView) rootView.findViewById(R.id.text_description);
         Button button = (Button) rootView.findViewById(R.id.button);
+
+        // reduce size of image in landscape
+        if (DisplayUtils.isLandscape(getActivity())) {
+            PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) image.getLayoutParams();
+            PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
+            if (info != null) {
+                info.heightPercent = 0.20f;
+            }
+        }
 
         int titleResId;
         int textResId;
