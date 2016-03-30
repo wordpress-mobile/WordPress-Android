@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.wordpress.rest.RestRequest;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -32,15 +28,11 @@ import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.networking.MultipartRequest;
-import org.wordpress.android.networking.MultipartRequestBuilder;
-import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -53,7 +45,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
@@ -356,8 +347,7 @@ public class MeFragment extends Fragment {
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             // It is a regular local media file
-            String path = getRealPathFromURI(mediaUri);
-            uploadGravatar(path);
+            startGravatarUpload(getRealPathFromURI(mediaUri));
         }
     }
 
@@ -414,71 +404,46 @@ public class MeFragment extends Fragment {
 
             if (newUri != null) {
                 String path = getRealPathFromURI(newUri);
-                uploadGravatar(path);
-            }
-            else
+                startGravatarUpload(path);
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private void uploadGravatar(String filePath) {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (jsonObject != null) {
-                    loadAvatar(AccountHelper.getDefaultAccount(), true, new WPNetworkImageView.ImageLoadListener() {
-                        @Override
-                        public void onLoaded() {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-                    });
-
-                    try {
-                        AppLog.d(AppLog.T.API, jsonObject.toString(2));
-                    } catch (JSONException e) {
-                        AppLog.e(AppLog.T.API, e);
-                    }
-                }
-            }
-        };
-
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.API, volleyError);
-                AppLog.d(AppLog.T.API, "reponse: " + new String(volleyError.networkResponse.data));
-            }
-        };
-
+    private void startGravatarUpload(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
+//            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
             return;
         }
 
         mProgressBar.setVisibility(View.VISIBLE);
 
-        RestClientUtils gravatarRestClientUtils = WordPress.getGravatarRestClientUtilsV1();
-        MultipartRequest multipartRequest;
-        try {
-            multipartRequest = new MultipartRequestBuilder()
-                    .setResponseListener(listener)
-                    .setResponseErrorListener(errorListener)
-                    .addPart("filedata", file)
-                    .addPart("account", AccountHelper.getDefaultAccount().getEmail())
-                    .build(gravatarRestClientUtils.pathToUrl("upload-image"));
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.API, "Cannot make the Gravatar upload request!", e);
-            return;
-        }
+        GravatarApi.uploadGravatar(file, new GravatarApi.GravatarUploadListener() {
+            @Override
+            public void onSuccess() {
+                loadAvatar(AccountHelper.getDefaultAccount(), true, new WPNetworkImageView.ImageLoadListener() {
+                    @Override
+                    public void onLoaded() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
 
-        if (multipartRequest != null) {
-            WordPress.getGravatarRestClientUtilsV1().post(multipartRequest, null, errorListener);
-        }
+                    @Override
+                    public void onError() {
+                        mProgressBar.setVisibility(View.GONE);
+//                        Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast
+//                                .LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onError() {
+                mProgressBar.setVisibility(View.GONE);
+//                Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
