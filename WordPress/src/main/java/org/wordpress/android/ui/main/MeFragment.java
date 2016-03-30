@@ -109,7 +109,7 @@ public class MeFragment extends Fragment {
                 if (AccountHelper.isSignedInWordPressDotCom()) {
                     signOutWordPressComWithConfirmation();
                 } else {
-                    ActivityLauncher.showSignInForResult(getActivity(), false);
+                    ActivityLauncher.showSignInForResult(getActivity());
                 }
             }
         });

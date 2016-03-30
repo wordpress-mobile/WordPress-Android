@@ -238,11 +238,8 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_BLOG);
     }
 
-    public static void showSignInForResult(Activity activity, boolean disableAutoSignIn) {
+    public static void showSignInForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
-        if (disableAutoSignIn) {
-            intent.putExtra(SignInActivity.EXTRA_DISABLE_AUTO_SIGNIN, true);
-        }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

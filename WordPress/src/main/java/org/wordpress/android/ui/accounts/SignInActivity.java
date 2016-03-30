@@ -29,7 +29,6 @@ public class SignInActivity extends FragmentActivity {
     public static final String EXTRA_JETPACK_SITE_AUTH = "EXTRA_JETPACK_SITE_AUTH";
     public static final String EXTRA_JETPACK_MESSAGE_AUTH = "EXTRA_JETPACK_MESSAGE_AUTH";
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
-    public static final String EXTRA_DISABLE_AUTO_SIGNIN = "EXTRA_DISABLE_AUTO_SIGNIN";
 
     private SignInFragment mSignInFragment;
 
@@ -65,9 +64,7 @@ public class SignInActivity extends FragmentActivity {
             default:
                 break;
         }
-        if (extras == null || !extras.containsKey(EXTRA_DISABLE_AUTO_SIGNIN)) {
-            mSignInFragment.smartLockAutoFill();
-        }
+        mSignInFragment.smartLockAutoFill();
     }
 
     @Override
