@@ -263,11 +263,9 @@
 	<string name="hs__invalid_email_error">Keçərli bir e-poçt ünvanı daxil edin</string>
 	<string name="add_location">Mövqe əlavə edin</string>
 	<string name="current_location">Hazırkı mövqe</string>
-	<string name="your_signature">İmzanız:</string>
 	<string name="search_location">Axtarış</string>
 	<string name="edit_location">Redaktə et</string>
 	<string name="search_current_location">Yerləşdir</string>
-	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Statistikaları göndər</string>
 	<string name="preference_send_usage_stats_summary">Android üçün WordPress-i inkişaf etdirməyimizə yardımçı olmaq üçün bizə avtomatik olaraq istifadə statistikalarını göndərin. </string>
 	<string name="update_verb">Yenilə</string>
@@ -308,12 +306,9 @@
 	<string name="cat_name_required">Kateqoriya adı vacibdir</string>
 	<string name="category_automatically_renamed">Kateqoriya adı %1$s yararsızdır. Ad %2$s olaraq dəyişdirildi</string>
 	<string name="no_account">WordPress hesabı tapılmadı, bir hesab əlavə edib təkrar yoxlayın</string>
-	<string name="auto_sharing_preference_reset">Avtomatik-paylaşma parametrlərinin sıfırlanması</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Əvvəlki seçilmiş bloq görünmür</string>
 	<string name="sdcard_message">Media yükləmək üçün taxılmış SD kart gərəklidir</string>
 	<string name="stats_empty_comments">Hələlik şərh yoxdur</string>
 	<string name="stats_bar_graph_empty">Baxılacaq statistika yoxdur</string>
-	<string name="invalid_url_message">Daxil etdiyiniz bloq URL keçərli olduğunu yoxlayın</string>
 	<string name="reply_failed">Caavab yazma baş tutmadı</string>
 	<string name="notifications_empty_list">Bildirş yoxdur</string>
 	<string name="error_delete_post">%s silinərkən xəta ilə qarşılaşıldı</string>
@@ -475,9 +470,6 @@
 	<string name="reader_likes_multi">%,d şəxs bunu bəyənir</string>
 	<string name="reader_likes_you_and_multi">Siz və bir digər şəxs %,d bunu bəyənir</string>
 	<string name="reader_toast_err_get_comment">Bu şərhi qəbul etmək mümkün deyil</string>
-	<string name="reset_auto_share_preference">Avto-paylaşma parametrlərini sıfırla</string>
-	<string name="always_use_these_settings_to_share">Hər zaman bu qurulumlardan istifadə edin</string>
-	<string name="share_preference_title">WordPress ilə paylaş</string>
 	<string name="download">Media endirilir</string>
 	<string name="cant_share_no_visible_blog">Görünən bir bloqunuz olmadan WordPress ilə paylaşa bilməzsiniz</string>
 	<string name="select_time">Saat seç</string>
@@ -577,8 +569,6 @@
 	<string name="stats_totals_views">Baxışlar</string>
 	<string name="stats_totals_clicks">Tıklamalar</string>
 	<string name="stats_totals_plays">İfalar</string>
-	<string name="media_no_video_title">VideoPress əlçatmazdır</string>
-	<string name="media_no_video_message">Video yükləmək üçün, VideoPress yenilənmələrini əldə edin!</string>
 	<string name="media_edit_title_text">Başlıq</string>
 	<string name="passcode_re_enter_passcode">PIN kodunu təkrar daxil et</string>
 	<string name="passcode_enter_passcode">PIN kodunu daxil et</string>
@@ -594,8 +584,6 @@
 	<string name="loading">Yüklənir...</string>
 	<string name="httpuser">HTTP istifadəçi adı</string>
 	<string name="httppassword">HTTP parolu</string>
-	<string name="add_tagline">Yeni yazılara bir imza əlavə et</string>
-	<string name="post_signature">Yazı imzası</string>
 	<string name="error_media_upload">Media faylının yüklənməsi zamanı xəta baş verdi.</string>
 	<string name="content_description_add_media">Media əlavə et</string>
 	<string name="post_content">Mühtəviyyat (mətn və media əlavə etmək üçün toxunun)</string>
@@ -620,11 +608,9 @@
 	<string name="scaled_image">Mütənasib təsvirin genişliyi</string>
 	<string name="scheduled">Ertələndi</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Android üçün WordPress ilə göndərilmişdir</string>
 	<string name="version">Versiya</string>
 	<string name="app_title">Android üçün WordPress</string>
 	<string name="tos">Xidmət Şərtləri</string>
-	<string name="about">Haqqında</string>
 	<string name="image_alignment">Mövqeləndirmə</string>
 	<string name="refresh">Təzələ</string>
 	<string name="untitled">Başlıqsız</string>
@@ -667,31 +653,4 @@
 	<string name="category_refresh_error">Kateqoriya təzələnməsi əsnasında xəta baş verdi.</string>
 	<string name="on">tərəfndən</string>
 	<string name="notification_settings">Bildiriş Parametrləri</string>
-	<string-array name="alignment_array">
-		<item>Heç biri</item>
-		<item>Sol</item>
-		<item>Mərkəz</item>
-		<item>Sağ</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Dərc edildi</item>
-		<item>Qaralama</item>
-		<item>Planlandı</item>
-		<item>Zİbil qutusuna göndərildi</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Yan sütun</item>
-		<item>Audio</item>
-		<item>Çat</item>
-		<item>Qalereya</item>
-		<item>Təsvir</item>
-		<item>Bağlantı</item>
-		<item>Kvota</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Premium</item>
-	</string-array>
 </resources>
