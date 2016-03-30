@@ -17,17 +17,17 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonActivity extends AppCompatActivity {
     public static final String EXTRA_PERSON_ID = "EXTRA_PERSON_ID";
-    public static final String EXTRA_BLOG_ID = "EXTRA_BLOG_ID";
+    public static final String EXTRA_SITE_ID = "EXTRA_SITE_ID";
 
     private long mPersonId;
-    private long mBlogId;
+    private String mSiteId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mPersonId = getIntent().getExtras().getLong(EXTRA_PERSON_ID);
-        mBlogId = getIntent().getExtras().getLong(EXTRA_BLOG_ID);
+        mSiteId = getIntent().getExtras().getString(EXTRA_SITE_ID);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -63,7 +63,7 @@ public class PersonActivity extends AppCompatActivity {
         TextView txtRole = (TextView) findViewById(R.id.person_role);
         TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
-        Person person = PeopleTable.getPerson(mPersonId, mBlogId);
+        Person person = PeopleTable.getPerson(mPersonId, mSiteId);
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);

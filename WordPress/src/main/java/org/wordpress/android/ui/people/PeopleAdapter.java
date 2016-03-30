@@ -27,10 +27,10 @@ public class PeopleAdapter extends BaseAdapter {
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
         mPersonList = new ArrayList<>();
-        mPersonList.add(new Person(1, 1, "beaulebens", "Beau", "Lebens", "Beau", "http://lorempixum.com/76/76", Role.ADMIN));
-        mPersonList.add(new Person(2, 1, "ebinnion", "Eric", "Binnion", "Eric", "http://lorempixum.com/76/76", Role.AUTHOR));
-        mPersonList.add(new Person(3, 1, "javialvarez", "Javi", "Alvarez", "Javi", "http://lorempixum.com/76/76", Role.CONTRIBUTOR));
-        mPersonList.add(new Person(4, 1, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR));
+        mPersonList.add(new Person(1, "1", "beaulebens", "Beau", "Lebens", "Beau", "http://lorempixum.com/76/76", Role.ADMIN));
+        mPersonList.add(new Person(2, "1", "ebinnion", "Eric", "Binnion", "Eric", "http://lorempixum.com/76/76", Role.AUTHOR));
+        mPersonList.add(new Person(3, "1", "javialvarez", "Javi", "Alvarez", "Javi", "http://lorempixum.com/76/76", Role.CONTRIBUTOR));
+        mPersonList.add(new Person(4, "1", "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR));
     }
 
     @Override
