@@ -70,6 +70,23 @@ public class PeopleTable {
         }
     }
 
+    public static List<Person> getPeople(String siteID) {
+        List<Person> comments = new ArrayList<>();
+        String[] args = { siteID };
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE site_id=?", args);
+
+        try {
+            while (c.moveToNext()) {
+                Person comment = getPersonFromCursor(c, siteID);
+                comments.add(comment);
+            }
+
+            return comments;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     /**
      * retrieve a single person
      * @param personId - id of a person in a particular site
