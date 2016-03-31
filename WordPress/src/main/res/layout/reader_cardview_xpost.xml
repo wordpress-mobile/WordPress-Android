@@ -10,7 +10,8 @@
     android:stateListAnimator="@anim/pressed_card"
     card_view:cardBackgroundColor="@color/grey_lighten_30"
     card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="0dp">
+    card_view:cardElevation="0dp"
+    tools:targetApi="LOLLIPOP">
 
     <LinearLayout
         android:id="@+id/layout_container"
