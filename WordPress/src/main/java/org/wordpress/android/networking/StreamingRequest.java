@@ -13,17 +13,15 @@ import okio.Source;
 public class StreamingRequest extends RequestBody {
     public static final int CHUNK_SIZE = 2048;
 
-    private final MediaType mMediaType;
     private final File mFile;
 
-    public StreamingRequest(MediaType mediaType, File file) {
-        mMediaType = mediaType;
+    public StreamingRequest(File file) {
         mFile = file;
     }
 
     @Override
     public MediaType contentType() {
-        return mMediaType;
+        return MediaType.parse("multipart/form-data");
     }
 
     @Override

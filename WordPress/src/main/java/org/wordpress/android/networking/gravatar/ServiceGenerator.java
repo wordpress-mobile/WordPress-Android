@@ -24,7 +24,7 @@ public class ServiceGenerator {
                     .baseUrl(API_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create());
 
-    public static <S> S createService(Class<S> serviceClass, final String token, final String tokenType) {
+    public static <S> S createService(Class<S> serviceClass, final String token) {
         if (token != null) {
             httpClient.addInterceptor(new Interceptor() {
                 @Override
@@ -33,7 +33,7 @@ public class ServiceGenerator {
 
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Accept", "application/json")
-                            .header("Authorization", tokenType + " " + token)
+                            .header("Authorization", "Bearer " + token)
                             .method(original.method(), original.body());
 
                     Request request = requestBuilder.build();

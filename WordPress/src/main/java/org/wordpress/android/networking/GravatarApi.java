@@ -7,9 +7,7 @@ import org.wordpress.android.networking.gravatar.ServiceGenerator;
 
 import java.io.File;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,18 +21,16 @@ public class GravatarApi {
 
     public static Call<GravatarUploadResponse> prepareGravatarUpload(GravatarClient gravatarClient, String email,
             File file) {
-        final MediaType MultiPartFormData = MediaType.parse("multipart/form-data");
-
-        RequestBody account = RequestBody.create(MultiPartFormData, email);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("filedata", file.getName(), new StreamingRequest
-                (MultiPartFormData, file));
-
-        return gravatarClient.uploadImage(account, body);
+        return gravatarClient.uploadImage(new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("account", email)
+                .addFormDataPart("filedata", file.getName(), new StreamingRequest(file))
+                .build());
     }
 
     public static void uploadGravatar(final File file, final GravatarUploadListener gravatarUploadListener) {
         GravatarClient client = ServiceGenerator.createService(GravatarClient.class, AccountHelper.getDefaultAccount
-                ().getAccessToken(), "Bearer");
+                ().getAccessToken());
 
         prepareGravatarUpload(client, AccountHelper.getDefaultAccount().getEmail(), file)
                 .enqueue(new Callback<GravatarUploadResponse>() {
