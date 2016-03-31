@@ -6,7 +6,6 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
