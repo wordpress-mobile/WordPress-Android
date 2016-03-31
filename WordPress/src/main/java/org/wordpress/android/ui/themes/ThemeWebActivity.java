@@ -58,13 +58,13 @@ public class ThemeWebActivity extends WPWebViewActivity {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
         if (themeId.isEmpty()) {
-            requestCurrentTheme(activity, blogId);
+            requestAndOpenCurrentTheme(activity, blogId);
         } else {
             openTheme(activity, themeId, type, true);
         }
     }
 
-    private static void requestCurrentTheme(final Activity activity, final String blogId) {
+    private static void requestAndOpenCurrentTheme(final Activity activity, final String blogId) {
         WordPress.getRestClientUtilsV1_1().getCurrentTheme(blogId, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
