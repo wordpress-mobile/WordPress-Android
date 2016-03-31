@@ -90,8 +90,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-//    compile 'com.automattic:rest:1.0.3'
-    compile project(':libs:rest:WordPressComRest')
+    compile 'com.automattic:rest:1.0.3'
 
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
