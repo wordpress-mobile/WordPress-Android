@@ -21,9 +21,9 @@ public class PeopleAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private List<Person> mPeopleList;
     private int mAvatarSz;
-    private int mSiteID;
+    private long mSiteID;
 
-    public PeopleAdapter(Context context, int siteID) {
+    public PeopleAdapter(Context context, long siteID) {
         mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);

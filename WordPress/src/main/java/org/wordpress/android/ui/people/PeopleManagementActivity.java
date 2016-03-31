@@ -22,6 +22,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 public class PeopleManagementActivity extends AppCompatActivity {
 
     private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
+    private Blog mBlog;
     private PeopleAdapter mPeopleAdapter;
 
     @Override
@@ -29,6 +30,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+        mBlog = WordPress.getBlog(mBlogLocalId);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -39,20 +41,23 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
         setTitle(R.string.people);
 
-        ListView listView = (ListView)findViewById(android.R.id.list);
-        mPeopleAdapter = new PeopleAdapter(this, mBlogLocalId);
-        listView.setAdapter(mPeopleAdapter);
+        if (mBlog != null) {
+            ListView listView = (ListView)findViewById(android.R.id.list);
+            // People are saved with their dotcom blog id
+            mPeopleAdapter = new PeopleAdapter(this, Long.parseLong(mBlog.getDotComBlogId()));
+            listView.setAdapter(mPeopleAdapter);
 
-        final Activity context = this;
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Person person = (Person) parent.getItemAtPosition(position);
-                ActivityLauncher.viewPersonDetails(context, person);
-            }
-        });
+            final Activity context = this;
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Person person = (Person) parent.getItemAtPosition(position);
+                    ActivityLauncher.viewPersonDetails(context, person);
+                }
+            });
 
-        refreshUsersList();
+            refreshUsersList();
+        }
     }
 
     @Override
@@ -71,19 +76,16 @@ public class PeopleManagementActivity extends AppCompatActivity {
     }
 
     private void refreshUsersList() {
-        Blog blog = WordPress.getBlog(mBlogLocalId);
-        if (blog != null) {
-            PeopleUtils.fetchUsers(blog.getDotComBlogId(), new PeopleUtils.Callback() {
-                @Override
-                public void onSuccess() {
-                    mPeopleAdapter.notifyDataSetChanged();
-                }
+        PeopleUtils.fetchUsers(mBlog.getDotComBlogId(), new PeopleUtils.Callback() {
+            @Override
+            public void onSuccess() {
+                mPeopleAdapter.notifyDataSetChanged();
+            }
 
-                @Override
-                public void onError(VolleyError error) {
+            @Override
+            public void onError(VolleyError error) {
 
-                }
-            });
-        }
+            }
+        });
     }
 }
