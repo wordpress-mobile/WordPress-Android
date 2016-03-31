@@ -289,13 +289,11 @@
 	<string name="contact_us">Контактирајте нас</string>
 	<string name="add_location">Додајте локацију</string>
 	<string name="current_location">Тренутна локација</string>
-	<string name="your_signature">Ваш потпис:</string>
 	<string name="search_current_location">Лоцирај</string>
 	<string name="edit_location">Уреди</string>
 	<string name="search_location">Претрага</string>
 	<string name="preference_send_usage_stats_summary">Аутоматски пошаљи статистике ради унапређења Вордпреса за Андроид</string>
 	<string name="preference_send_usage_stats">Пошаљи статистике</string>
-	<string name="preference_privacy">Приватност</string>
 	<string name="update_verb">Ажурирај</string>
 	<string name="schedule_verb">Заказати</string>
 	<string name="reader_empty_recommended_blogs">Нема препоручених блогова</string>
@@ -320,7 +318,6 @@
 	<string name="help">Помоћ</string>
 	<string name="ssl_certificate_ask_trust">Уколико се уобичајено на ово веб место повезујете без проблема, ова грешка може да значи да неко други покушава да се представи као ваше веб место и у том случају не би требало да наставите. Желите ли ипак да верујете овој потврди?</string>
 	<string name="mnu_comment_unspam">Није непожељен коментар</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Претходно изабрани блог није више видљив</string>
 	<string name="error_refresh_posts">Чланци тренутно не могу бити освежени</string>
 	<string name="username_only_lowercase_letters_and_numbers">Корисничко име може да садржи само мала слова енглеске латинице (a-z) и бројеве</string>
 	<string name="sdcard_message">Уграђена SD картица је неопходна за отпремање медија</string>
@@ -373,11 +370,9 @@
 	<string name="out_of_memory">Уређај нема доступне меморије</string>
 	<string name="notifications_empty_list">Нема обавештења</string>
 	<string name="reply_failed">Одговарање неуспешно</string>
-	<string name="invalid_url_message">Проверите да ли је унети URL исправан</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
 	<string name="stats_empty_comments">Нема коментара</string>
 	<string name="no_site_error">Није могуће повезати се на Вордпрес веб место</string>
-	<string name="auto_sharing_preference_reset">Подешавања за аутоматско дељење су ресетована</string>
 	<string name="no_account">Није пронађен Вордпрес налог. Додајте налог и покушајте поново</string>
 	<string name="category_automatically_renamed">Име категорије %1$s није исправно. Преименована је у %2$s.</string>
 	<string name="cat_name_required">Име категорије је неопходно</string>
@@ -497,10 +492,7 @@
 	<string name="reader_empty_posts_in_tag_updating">Добављам чланке...</string>
 	<string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
 	<string name="reader_likes_multi">%,d људи се ово свиђа</string>
-	<string name="always_use_these_settings_to_share">Увек користи ова подешавања</string>
-	<string name="reset_auto_share_preference">Врати подразумевана подешавања аутоматског дељења</string>
 	<string name="cant_share_no_visible_blog">Не можете делити на Вордпрес без видљивог блога</string>
-	<string name="share_preference_title">Дељење на Вордпрес</string>
 	<string name="download">Преузимање медија</string>
 	<string name="video">Видео снимак</string>
 	<string name="reader_label_reply">Одговор</string>
@@ -554,7 +546,6 @@
 	<string name="media_add_popup_capture_photo">Фотографиши</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>
-	<string name="media_no_video_message">Купите Видеопрес надоградњу да бисте отпремили видео снимак!</string>
 	<string name="post_excerpt">Исечак</string>
 	<string name="themes_features_label">Особине</string>
 	<string name="media_add_popup_capture_video">Сними видео снимак</string>
@@ -602,7 +593,6 @@
 	<string name="media_edit_caption_text">Натпис</string>
 	<string name="media_edit_description_text">Опис</string>
 	<string name="media_edit_title_text">Наслов</string>
-	<string name="media_no_video_title">Видеопрес није доступан</string>
 	<string name="media_gallery_type_circles">Кругови</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
 	<string name="media_gallery_image_order_reverse">Обрнутим редоследом</string>
@@ -618,8 +608,6 @@
 	<string name="new_notifications">%d нових обавештења</string>
 	<string name="note_reply_successful">Успешно одговорено</string>
 	<string name="loading">Учитавање...</string>
-	<string name="add_tagline">Додај потпис у нове чланке</string>
-	<string name="post_signature">Потпис у чланку</string>
 	<string name="httppassword">HTTP лозинка</string>
 	<string name="httpuser">HTTP корисничко име</string>
 	<string name="error_media_upload">Дошло је до грешке током отпремања медија</string>
@@ -646,11 +634,9 @@
 	<string name="upload_scaled_image">Отпреми и повежи са сразмерном сликом</string>
 	<string name="scheduled">Заказано</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Објављено са Вордпреса за Андроид</string>
 	<string name="tos">Услови сервиса</string>
 	<string name="version">Издање</string>
 	<string name="app_title">Вордпрес за Андроид</string>
-	<string name="about">О</string>
 	<string name="image_alignment">Поравнање</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без имена</string>
@@ -694,50 +680,4 @@
 	<string name="error">Грешка</string>
 	<string name="cancel">Откажи</string>
 	<string name="notification_settings">Подешавања обавештења</string>
-	<string-array name="alignment_array">
-		<item>Нема</item>
-		<item>Лево</item>
-		<item>На средини</item>
-		<item>Десно</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Коментари на мом веб месту</item>
-		<item>Свиђања на мојим коментарима</item>
-		<item>Свиђања на мојим чланцима</item>
-		<item>Праћења веб места</item>
-		<item>Достигнућа веб места</item>
-		<item>Спомињања корисничког имена</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Одговори на моје коментаре</item>
-		<item>Свиђања на мојим коментарима</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Предлози</item>
-		<item>Истраживање</item>
-		<item>Заједница</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Савети за добављање што више од WordPress.com.</item>
-		<item>Прилика за учествовање у WordPress.com истраживањима и анкетама.</item>
-		<item>Подаци о WordPress.com курсевима и догађајима (на мрежи и уживо).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Објављено</item>
-		<item>Нацрти</item>
-		<item>Заказано</item>
-		<item>На отпаду</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Са стране</item>
-		<item>Звучни запис</item>
-		<item>Ћаскање</item>
-		<item>Галерија</item>
-		<item>Слика</item>
-		<item>Веза</item>
-		<item>Цитат</item>
-		<item>Уобичајен</item>
-		<item>Стање</item>
-		<item>Видео снимак</item>
-	</string-array>
 </resources>

@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Не удалось сохранить настройки учетной записи.</string>
+	<string name="post_format_status">Статус</string>
+	<string name="post_format_video">Видео</string>
+	<string name="align_none">Нет</string>
+	<string name="align_left">Слева</string>
+	<string name="align_center">По центру</string>
+	<string name="align_right">Справа</string>
+	<string name="theme_free">Бесплатно</string>
+	<string name="theme_all">Все</string>
+	<string name="theme_premium">Премиум</string>
+	<string name="post_format_chat">Чат</string>
+	<string name="post_format_gallery">Галерея</string>
+	<string name="post_format_image">Изображение</string>
+	<string name="post_format_link">Ссылка</string>
+	<string name="post_format_quote">Цитата</string>
+	<string name="post_format_standard">Стандартный</string>
+	<string name="notif_events">Информация об учебных курсах и мероприятиях WordPress.com (очных и онлайн).</string>
+	<string name="post_format_aside">Заметка</string>
+	<string name="post_format_audio">Аудио</string>
+	<string name="notif_surveys">Возможности участия в исследованиях и опросах WordPress.com.</string>
+	<string name="notif_tips">Советы по эффективному использованию WordPress.com.</string>
+	<string name="notif_community">Сообщество</string>
+	<string name="replies_to_my_comments">Ответы на мои комментарии</string>
+	<string name="notif_suggestions">Предложения</string>
+	<string name="notif_research">Исследования</string>
+	<string name="site_achievements">Достижения сайта</string>
+	<string name="username_mentions">Упоминания имени пользователя</string>
+	<string name="likes_on_my_posts">Отметки «Нравится» к моим записям</string>
+	<string name="site_follows">Читатели сайта</string>
+	<string name="likes_on_my_comments">Отметки «Нравится» к моим комментариям</string>
+	<string name="comments_on_my_site">Комментарии на моём сайте</string>
+	<string name="site_settings_list_editor_summary_other">Всего элементов: %d</string>
+	<string name="site_settings_list_editor_summary_one">1 элемент</string>
+	<string name="approve_auto_if_previously_approved">Комментарии известных пользователей</string>
+	<string name="approve_auto">Все пользователи</string>
+	<string name="approve_manual">Нет комментариев</string>
+	<string name="site_settings_paging_summary_other">Количество комментариев на страницу: %d</string>
+	<string name="site_settings_paging_summary_one">1 комментарий на страницу</string>
+	<string name="site_settings_multiple_links_summary_other">Требуется проверка, если количество ссылок превышает %d</string>
+	<string name="site_settings_multiple_links_summary_one">Требуется проверка при наличии более 1 ссылки</string>
+	<string name="site_settings_multiple_links_summary_zero">Требуется проверка при наличии более 0 ссылок</string>
+	<string name="detail_approve_auto">Автоматически одобрять все комментарии.</string>
+	<string name="detail_approve_auto_if_previously_approved">Автоматически одобрять комментарии пользователя, оставившего ранее одобренные комментарии</string>
+	<string name="detail_approve_manual">Включить обязательный этап одобрения для всех комментариев.</string>
+	<string name="filter_trashed_posts">Удален</string>
+	<string name="days_quantity_one">1 день</string>
+	<string name="days_quantity_other">%d дн.</string>
+	<string name="filter_published_posts">Опубликовано</string>
+	<string name="filter_draft_posts">Черновики</string>
+	<string name="filter_scheduled_posts">Запланированные</string>
+	<string name="pending_email_change_snackbar">Нажмите на ссылку в электронном письме, отправленном на %1$s, чтобы подтвердить новый адрес</string>
+	<string name="primary_site">Основной сайт</string>
+	<string name="web_address">Интернет-адрес</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Не удалось загрузить медиафайлы. Повторите попытку или удалите файлы из очереди.</string>
+	<string name="editor_toast_uploading_please_wait">В данный момент выполняется загрузка медиафайлов. Дождитесь окончания загрузки.</string>
+	<string name="error_refresh_comments_showing_older">Не удалось обновить ленту комментариев — отображены старые комментарии</string>
+	<string name="editor_post_settings_set_featured_image">Настроить избранное изображение</string>
+	<string name="editor_post_settings_featured_image">Избранное изображение</string>
+	<string name="new_editor_promo_desc">Приложение WordPress для Android теперь имеет новое визуальное оформление\n редактор. Попробуйте с его помощью создать новую запись.</string>
+	<string name="new_editor_promo_title">Новый редактор</string>
+	<string name="new_editor_promo_button_label">Спасибо!</string>
+	<string name="visual_editor_enabled">Визуальный редактор включен</string>
+	<string name="editor_content_placeholder">Поделитесь своей историей здесь…</string>
+	<string name="editor_page_title_placeholder">Заголовок страницы</string>
+	<string name="editor_post_title_placeholder">Заголовок записи</string>
+	<string name="email_address">Адрес электронной почты</string>
+	<string name="preference_show_visual_editor">Показать визуальный редактор</string>
+	<string name="dlg_sure_to_delete_comments">Удалить эти комментарии без возможности восстановления?</string>
+	<string name="preference_editor">Редактор</string>
+	<string name="dlg_sure_to_delete_comment">Удалить этот комментарий без возможности восстановления?</string>
+	<string name="mnu_comment_delete_permanently">Удалить</string>
+	<string name="comment_deleted_permanently">Комментарий удалён</string>
+	<string name="mnu_comment_untrash">Восстановить</string>
+	<string name="comments_empty_list_filtered">Нет %s комментариев</string>
+	<string name="could_not_load_page">Не удалось загрузить страницу</string>
+	<string name="comment_status_all">Все</string>
+	<string name="interface_language">Язык интерфейса</string>
+	<string name="off">Выкл.</string>
+	<string name="about_the_app">О приложении</string>
 	<string name="error_post_my_profile">Не удалось сохранить профиль.</string>
 	<string name="error_fetch_account_settings">Не удалось загрузить настройки учетной записи.</string>
 	<string name="error_fetch_my_profile">Не удалось загрузить профиль.</string>
@@ -487,11 +565,9 @@
 	<string name="hs__invalid_email_error">Введите корректный адрес e-mail</string>
 	<string name="add_location">Добавить местоположение</string>
 	<string name="current_location">Текущее местоположение</string>
-	<string name="your_signature">Ваша подпись:</string>
 	<string name="search_location">Поиск</string>
 	<string name="edit_location">Изменить</string>
 	<string name="search_current_location">Найти</string>
-	<string name="preference_privacy">Приватность</string>
 	<string name="preference_send_usage_stats">Отправить статистику</string>
 	<string name="preference_send_usage_stats_summary">Автоматически отправлять статистику использования для улучшения WordPress для Android</string>
 	<string name="update_verb">Обновить</string>
@@ -529,7 +605,6 @@
 	<string name="out_of_memory">Устройству не хватает памяти</string>
 	<string name="gallery_error">Медиа-файл не может быть восстановлен</string>
 	<string name="no_account">Не найдено аккаунта WordPress. Добавьте аккаунт и попробуйте снова</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Ранее выбранный блог изменил статус видимости</string>
 	<string name="error_refresh_posts">Пост не может быть обновлен в данный момент</string>
 	<string name="error_refresh_pages">Страница не может быть обновлена в данный момент</string>
 	<string name="error_refresh_notifications">Уведомление не могут быть обновлены в данный момент</string>
@@ -544,11 +619,9 @@
 	<string name="email_invalid">Введите правильный email адрес</string>
 	<string name="could_not_remove_account">Невозможно удалить сайт</string>
 	<string name="theme_fetch_failed">Ошибка выбора темы.</string>
-	<string name="auto_sharing_preference_reset">Сброс настроек общего доступа</string>
 	<string name="notifications_empty_list">Нет уведомлений</string>
 	<string name="error_delete_post">Произошла ошибка при удалении %s</string>
 	<string name="stats_bar_graph_empty">Статистика недоступна</string>
-	<string name="invalid_url_message">Проверьте правильность введённой ссылки на блог</string>
 	<string name="error_upload">Произошла ошибка при загрузке %s</string>
 	<string name="invalid_email_message">Ваш адрес email не подходит</string>
 	<string name="invalid_password_message">Пароль должен содержать не меньше 4 знаков</string>
@@ -686,6 +759,7 @@
 	<string name="notifications_empty_all">Уведомлений пока нет.</string>
 	<string name="reader_toast_err_add_tag">Не удается добавить эту метку</string>
 	<string name="reader_toast_err_remove_tag">Не удается удалить эту метку</string>
+	<string name="invalid_site_url_message">Убедитесь, что введен допустимый URL-адрес сайта</string>
 	<string name="deleting_page">Удаление страницы</string>
 	<string name="deleting_post">Удаление записи</string>
 	<string name="share_url_post">Поделиться записью</string>
@@ -698,14 +772,11 @@
 	<string name="video">Видео</string>
 	<string name="reader_likes_you_and_multi">Вам и %,d другим понравилось это.</string>
 	<string name="comment_spammed">Комментарий помечен как спам.</string>
-	<string name="always_use_these_settings_to_share">Всегда использовать эти настройки</string>
 	<string name="reader_label_reply">Ответ</string>
 	<string name="reader_likes_multi">Понравилось %,d людям</string>
 	<string name="reader_toast_err_get_comment">Не удается загрузить этот комментарий</string>
 	<string name="download">Загрузить медиа</string>
-	<string name="share_preference_title">Поделиться на WordPress </string>
 	<string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
-	<string name="reset_auto_share_preference">Сбросить настройки авто-sharing</string>
 	<string name="select_time">Выберите время</string>
 	<string name="pick_photo">Выберите фото</string>
 	<string name="pick_video">Выберите видео</string>
@@ -805,8 +876,6 @@
 	<string name="post_excerpt">Отрывок</string>
 	<string name="media_edit_description_hint">Введите описание</string>
 	<string name="all">Всё</string>
-	<string name="media_no_video_title">VideoPress недоступен</string>
-	<string name="media_no_video_message">Получить обновление VideoPress для загрузки видео!</string>
 	<string name="media_edit_title_text">Название</string>
 	<string name="media_edit_caption_text">Заголовок</string>
 	<string name="media_edit_title_hint">Введите название</string>
@@ -819,10 +888,8 @@
 	<string name="new_notifications">Новые уведомления: %d</string>
 	<string name="follows">Подписки</string>
 	<string name="loading">Загрузка…</string>
-	<string name="add_tagline">Добавлять подпись к новым записям</string>
 	<string name="httpuser">Имя для HTTP-авторизации</string>
 	<string name="httppassword">Пароль для HTTP-авторизации</string>
-	<string name="post_signature">Подпись для записей</string>
 	<string name="error_media_upload">Произошла ошибка при загрузке медиафайла</string>
 	<string name="publish_date">Опубликовано</string>
 	<string name="content_description_add_media">Добавить медиа</string>
@@ -847,11 +914,9 @@
 	<string name="scaled_image">Ширина уменьшенного изображения</string>
 	<string name="scheduled">Запланировано</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Опубликовано из WordPress для Android</string>
 	<string name="version">Версия</string>
 	<string name="tos">Условия сервиса</string>
 	<string name="app_title">WordPress для Android</string>
-	<string name="about">О программе</string>
 	<string name="max_thumbnail_px_width">Ширина изображения по умолчанию</string>
 	<string name="image_alignment">Выравнивание</string>
 	<string name="refresh">Обновить</string>
@@ -896,70 +961,4 @@
 	<string name="preview">Предварительный просмотр</string>
 	<string name="reply">Ответ</string>
 	<string name="category_refresh_error">Ошибка обновления категорий</string>
-	<string-array name="alignment_array">
-		<item>Нет</item>
-		<item>Слева</item>
-		<item>По центру</item>
-		<item>Справа</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Комментарии на моём сайте</item>
-		<item>Оценки моих комментариев</item>
-		<item>Оценки моих записей</item>
-		<item>Подписки на сайт</item>
-		<item>Достижения сайта</item>
-		<item>Упоминания имени пользователя</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Ответы на мои комментарии</item>
-		<item>Оценки моих комментариев</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Предложения</item>
-		<item>Опросы</item>
-		<item>Сообщество</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Советы для эффективной работы с WordPress.com.</item>
-		<item>Возможности участия в исследованиях и опросах WordPress.com.</item>
-		<item>Информация о курсах и событиях на WordPress.com (онлайн и офлайн).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Опубликованные</item>
-		<item>Черновики</item>
-		<item>Запланированные</item>
-		<item>Удалённые</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Заметка</item>
-		<item>Аудио</item>
-		<item>Чат</item>
-		<item>Галерея</item>
-		<item>Изображение</item>
-		<item>Ссылка</item>
-		<item>Цитата</item>
-		<item>Стандартный</item>
-		<item>Статус</item>
-		<item>Видео</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Ваш сайт доступен всем и может индексироваться поисковыми системами.</item>
-		<item>Ваш сайт доступен всем посетителям, но для него выбран параметр «Попросить поисковые системы не индексировать сайт».</item>
-		<item>Ваш сайт доступен только вам и выбранным вами пользователям.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Включить обязательный этап одобрения для всех комментариев.</item>
-		<item>Автоматически одобрять комментарии пользователей, у которых есть ранее одобренные комментарии.</item>
-		<item>Автоматически одобрять все комментарии.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Нет комментариев</item>
-		<item>Комментарии известных пользователей</item>
-		<item>Все пользователи</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Бесплатно</item>
-		<item>Все</item>
-		<item>Премиум</item>
-	</string-array>
 </resources>

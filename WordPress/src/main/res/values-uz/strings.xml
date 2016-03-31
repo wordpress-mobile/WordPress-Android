@@ -15,9 +15,6 @@
 	<string name="download">Media saqlanmoqda</string>
 	<string name="comment_spammed">Mulohaza spam sifatida belgilandi</string>
 	<string name="cant_share_no_visible_blog">Ochiq blogsiz WordPress bilan bo‘lisha olmaysiz</string>
-	<string name="share_preference_title">WordPress bilan bo‘lishish</string>
-	<string name="reset_auto_share_preference">Avto-bo‘lishish moslamalarini qayta tiklash</string>
-	<string name="always_use_these_settings_to_share">Har doim ushbu moslamalardan foydalanish</string>
 	<string name="select_time">Vaqt tanlang</string>
 	<string name="reader_likes_you_and_one">Siz va yana bir kishi buni yoqtiradi</string>
 	<string name="select_date">Sana tanlang</string>
@@ -62,8 +59,6 @@
 	<string name="media_gallery_type">Tur</string>
 	<string name="media_gallery_type_squares">Kvadrat</string>
 	<string name="media_gallery_type_tiled">Bir qator</string>
-	<string name="media_no_video_title">VideoPress mavjud emas</string>
-	<string name="media_no_video_message">Video yuklash uchun VideoPress ni apgreyd qil</string>
 	<string name="media_edit_title_text">Sarlavha</string>
 	<string name="media_edit_caption_text">Titr</string>
 	<string name="media_edit_description_text">Izoh</string>
@@ -120,8 +115,6 @@
 	<string name="sign_in">Kirish</string>
 	<string name="loading">Yuklanmoqda...</string>
 	<string name="httppassword">HTTP parol</string>
-	<string name="post_signature">Imzo</string>
-	<string name="add_tagline">Yangi postlarga imzo qo\'shish</string>
 	<string name="httpuser">HTTP foydalanuvchi nomi</string>
 	<string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
 	<string name="publish_date">Chop etish</string>
@@ -147,11 +140,9 @@
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
 	<string name="scheduled">Jadvalga kiritildi</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">WordPress Android orqali chop etildi</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">Haqida</string>
 	<string name="image_alignment">Tekislash</string>
 	<string name="refresh">Yangila</string>
 	<string name="untitled">Nomsiz</string>
@@ -192,22 +183,4 @@
 	<string name="error">Xato</string>
 	<string name="save">Saqla</string>
 	<string name="on">da</string>
-	<string-array name="alignment_array">
-		<item>Hech bir</item>
-		<item>Chap</item>
-		<item>O‘rta</item>
-		<item>O‘ng</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Yonma-yon</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galereya</item>
-		<item>Rasm</item>
-		<item>Havola</item>
-		<item>Iqtibos</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
 </resources>
