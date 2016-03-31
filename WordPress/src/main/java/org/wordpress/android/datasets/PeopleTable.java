@@ -71,17 +71,17 @@ public class PeopleTable {
     }
 
     public static List<Person> getPeople(long siteID) {
-        List<Person> comments = new ArrayList<>();
+        List<Person> people = new ArrayList<>();
         String[] args = { Long.toString(siteID) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE site_id=?", args);
 
         try {
             while (c.moveToNext()) {
                 Person comment = getPersonFromCursor(c, siteID);
-                comments.add(comment);
+                people.add(comment);
             }
 
-            return comments;
+            return people;
         } finally {
             SqlUtils.closeCursor(c);
         }
