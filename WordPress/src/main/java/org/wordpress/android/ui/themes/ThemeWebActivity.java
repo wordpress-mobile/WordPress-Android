@@ -7,6 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -52,7 +57,36 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static void openCurrentTheme(Activity activity, ThemeWebActivityType type) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
-        openTheme(activity, themeId, type, true);
+        if (themeId.isEmpty()) {
+            requestCurrentTheme(activity, blogId);
+        } else {
+            openTheme(activity, themeId, type, true);
+        }
+    }
+
+    private static void requestCurrentTheme(final Activity activity, final String blogId) {
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(blogId, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Theme currentTheme = Theme.fromJSONV1_1(response);
+                    if (currentTheme != null) {
+                        currentTheme.setIsCurrent(true);
+                        currentTheme.save();
+                        WordPress.wpDB.setCurrentTheme(blogId, currentTheme.getId());
+                        openTheme(activity, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
+                    }
+                } catch (JSONException e) {
+                    ToastUtils.showToast(activity, R.string.could_not_load_theme);
+                    AppLog.e(AppLog.T.THEMES, e);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(AppLog.T.THEMES, error);
+            }
+        });
     }
 
     private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
