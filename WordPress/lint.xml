@@ -11,4 +11,5 @@
 
     <issue id="HardcodedText" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
+    <issue id="StringFormatCount" severity="error" />
 </lint>

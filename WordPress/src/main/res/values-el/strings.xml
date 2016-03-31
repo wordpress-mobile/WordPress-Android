@@ -286,7 +286,6 @@
 	<string name="stats_entry_search_terms">Όρος αναζήτησης</string>
 	<string name="stats_view_authors">Συγγραφείς</string>
 	<string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
-	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι Email</string>
 	<string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
 	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
 	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
@@ -294,6 +293,7 @@
 	<string name="posts_fetching">Λήψη άρθρων...</string>
 	<string name="media_fetching">Λήψη πολυμέσων...</string>
 	<string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι WordPress.com</string>
+	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι Email</string>
 	<string name="stats_months_and_years">Μήνες και Χρόνια</string>
 	<string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
 	<string name="post_uploading">Μεταφόρτωση</string>
