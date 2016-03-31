@@ -10,6 +10,7 @@ import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleTable {
@@ -78,22 +79,24 @@ public class PeopleTable {
     public static Person getPerson(long personId, String siteID) {
         String[] args = { Long.toString(personId), siteID };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND site_id=?", args);
-
         try {
-            if (!c.moveToFirst()) {
+            if (!c.moveToFirst())
                 return null;
-            }
-
-            String username = c.getString(c.getColumnIndex("user_name"));
-            String firstName = c.getString(c.getColumnIndex("first_name"));
-            String lastName = c.getString(c.getColumnIndex("last_name"));
-            String displayName = c.getString(c.getColumnIndex("display_name"));
-            String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
-            Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
-
-            return new Person(personId, siteID, username, firstName, lastName, displayName, avatarUrl, role);
+            return getPersonFromCursor(c, siteID);
         } finally {
             SqlUtils.closeCursor(c);
         }
+    }
+
+    private static Person getPersonFromCursor(Cursor c, String siteID) {
+        long personId = c.getInt(c.getColumnIndex("person_id"));
+        String username = c.getString(c.getColumnIndex("user_name"));
+        String firstName = c.getString(c.getColumnIndex("first_name"));
+        String lastName = c.getString(c.getColumnIndex("last_name"));
+        String displayName = c.getString(c.getColumnIndex("display_name"));
+        String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
+        Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
+
+        return new Person(personId, siteID, username, firstName, lastName, displayName, avatarUrl, role);
     }
 }
