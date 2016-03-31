@@ -66,7 +66,7 @@ public class GravatarApi {
         MediaType MultiPartFormData = MediaType.parse("multipart/form-data");
 
         RequestBody account = RequestBody.create(MultiPartFormData, AccountHelper.getDefaultAccount().getEmail());
-        MultipartBody.Part body = MultipartBody.Part.createFormData("filedata", file.getName(), RequestBody.create
+        MultipartBody.Part body = MultipartBody.Part.createFormData("filedata", file.getName(), new StreamingRequest
                 (MultiPartFormData, file));
         client.uploadImage(account, body).enqueue(new Callback<GravatarUploadResponse>() {
             @Override
