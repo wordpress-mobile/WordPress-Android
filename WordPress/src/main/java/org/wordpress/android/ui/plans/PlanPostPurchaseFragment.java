@@ -2,8 +2,6 @@ package org.wordpress.android.ui.plans;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.percent.PercentLayoutHelper;
-import android.support.percent.PercentRelativeLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,43 +61,39 @@ public class PlanPostPurchaseFragment extends Fragment {
         TextView txtDescription = (TextView) rootView.findViewById(R.id.text_description);
         Button button = (Button) rootView.findViewById(R.id.button);
 
-        // reduce size of image in landscape
-        if (DisplayUtils.isLandscape(getActivity())) {
-            PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) image.getLayoutParams();
-            PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
-            if (info != null) {
-                info.heightPercent = 0.20f;
-            }
-        }
-
         int titleResId;
         int textResId;
         int buttonResId;
         int imageResId;
+        boolean adjustImageForLandscape;
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_INTRO:
                 titleResId = R.string.plans_post_purchase_title_intro;
                 textResId = R.string.plans_post_purchase_text_intro;
                 buttonResId = 0;
                 imageResId = R.drawable.plans_business_active;
+                adjustImageForLandscape = false;
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
                 titleResId = R.string.plans_post_purchase_title_customize;
                 textResId = R.string.plans_post_purchase_text_customize;
                 buttonResId = R.string.plans_post_purchase_button_customize;
                 imageResId = R.drawable.plans_customize;
+                adjustImageForLandscape = true;
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
                 titleResId = R.string.plans_post_purchase_title_video;
                 textResId = R.string.plans_post_purchase_text_video;
                 buttonResId = R.string.plans_post_purchase_button_video;
                 imageResId = R.drawable.plans_video_upload;
+                adjustImageForLandscape = false;
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
                 titleResId = R.string.plans_post_purchase_title_themes;
                 textResId = R.string.plans_post_purchase_text_themes;
                 buttonResId = R.string.plans_post_purchase_button_themes;
                 imageResId = R.drawable.plans_premium_themes;
+                adjustImageForLandscape = true;
                 break;
             default:
                 AppLog.w(AppLog.T.PLANS, "invalid plans post-purchase page");
@@ -121,6 +115,11 @@ public class PlanPostPurchaseFragment extends Fragment {
             });
         } else {
             button.setVisibility(View.GONE);
+        }
+
+        // hide image in landscape if it would take up too much horizontal space
+        if (adjustImageForLandscape && DisplayUtils.isLandscape(getActivity())) {
+            image.setVisibility(View.GONE);
         }
 
         return rootView;

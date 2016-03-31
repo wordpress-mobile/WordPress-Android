@@ -13,20 +13,20 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        app:layout_marginBottomPercent="10%"
-        app:layout_marginTopPercent="25%"
+        android:layout_centerVertical="true"
+        app:layout_marginLeftPercent="10%"
         tools:src="@drawable/plans_video_upload" />
 
     <LinearLayout
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image"
-        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/image"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_widthPercent="75%">
+        app:layout_marginLeftPercent="10%"
+        app:layout_marginRightPercent="10%">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
