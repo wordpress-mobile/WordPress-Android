@@ -80,8 +80,8 @@ public class ProfileInputDialogFragment extends DialogFragment {
                         if (getActivity() instanceof Callback) {
                             ((Callback) getActivity()).onSuccessfulInput(editText.getText().toString(), callbackId);
                         } else {
-                            String error = getActivity() + "is not an instance of ProfileInputDialogFragment Callback";
-                            AppLog.e(AppLog.T.UTILS, error);
+                            AppLog.e(AppLog.T.UTILS, getActivity().getClass().getName()
+                                    + " doesn't implement ProfileInputDialogFragment.Callback");
                         }
                     }
                 })

@@ -150,10 +150,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
             @Override
             public void onClick(View v) {
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
-                        textView.getText().toString(),
-                        hint,
-                        isMultiline,
-                        textView.getId());
+                        textView.getText().toString(), hint, isMultiline, textView.getId());
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
@@ -180,8 +177,8 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     @Override
-    public void onSuccessfulInput(String input, int textViewId) {
-        WPTextView textView = (WPTextView) findViewById(textViewId);
+    public void onSuccessfulInput(String input, int callbackId) {
+        WPTextView textView = (WPTextView) findViewById(callbackId);
         updateLabel(textView, input);
         updateMyProfileForLabel(textView);
     }
