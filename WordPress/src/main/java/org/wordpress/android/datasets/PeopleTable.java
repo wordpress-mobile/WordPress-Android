@@ -70,9 +70,9 @@ public class PeopleTable {
         }
     }
 
-    public static List<Person> getPeople(String siteID) {
+    public static List<Person> getPeople(long siteID) {
         List<Person> comments = new ArrayList<>();
-        String[] args = { siteID };
+        String[] args = { Long.toString(siteID) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE site_id=?", args);
 
         try {
@@ -93,8 +93,8 @@ public class PeopleTable {
      * @param siteID - site the person belongs to
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId, String siteID) {
-        String[] args = { Long.toString(personId), siteID };
+    public static Person getPerson(long personId, long siteID) {
+        String[] args = { Long.toString(personId), Long.toString(siteID) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND site_id=?", args);
         try {
             if (!c.moveToFirst())
@@ -105,7 +105,7 @@ public class PeopleTable {
         }
     }
 
-    private static Person getPersonFromCursor(Cursor c, String siteID) {
+    private static Person getPersonFromCursor(Cursor c, long siteID) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));

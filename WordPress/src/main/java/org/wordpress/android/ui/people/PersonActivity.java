@@ -20,14 +20,14 @@ public class PersonActivity extends AppCompatActivity {
     public static final String EXTRA_SITE_ID = "EXTRA_SITE_ID";
 
     private long mPersonId;
-    private String mSiteId;
+    private long mSiteId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mPersonId = getIntent().getExtras().getLong(EXTRA_PERSON_ID);
-        mSiteId = getIntent().getExtras().getString(EXTRA_SITE_ID);
+        mSiteId = getIntent().getExtras().getLong(EXTRA_SITE_ID);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

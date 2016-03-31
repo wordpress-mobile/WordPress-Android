@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class Person {
     private long personID;
-    private String siteID;
+    private long siteID;
 
     private String username;
     private String firstName;
@@ -14,7 +14,7 @@ public class Person {
     private Role role;
 
     public Person(long personID,
-                  String siteID,
+                  long siteID,
                   String username,
                   String firstName,
                   String lastName,
@@ -44,14 +44,14 @@ public class Person {
         String avatarUrl = json.optString("avatar_URL");
         Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
 
-        return new Person(personID, siteID, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personID, Long.parseLong(siteID), username, firstName, lastName, displayName, avatarUrl, role);
     }
 
     public long getPersonId() {
         return personID;
     }
 
-    public String getSiteID() {
+    public long getSiteID() {
         return siteID;
     }
 

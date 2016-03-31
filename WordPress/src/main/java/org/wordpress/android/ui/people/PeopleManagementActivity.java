@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.android.volley.VolleyError;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -20,6 +22,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 public class PeopleManagementActivity extends AppCompatActivity {
 
     private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
+    private PeopleAdapter mPeopleAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
         setTitle(R.string.people);
 
         ListView listView = (ListView)findViewById(android.R.id.list);
-        listView.setAdapter(new PeopleAdapter(this));
+        mPeopleAdapter = new PeopleAdapter(this, mBlogLocalId);
+        listView.setAdapter(mPeopleAdapter);
 
         final Activity context = this;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -69,7 +73,17 @@ public class PeopleManagementActivity extends AppCompatActivity {
     private void refreshUsersList() {
         Blog blog = WordPress.getBlog(mBlogLocalId);
         if (blog != null) {
-            PeopleUtils.fetchUsers(blog.getDotComBlogId(), null);
+            PeopleUtils.fetchUsers(blog.getDotComBlogId(), new PeopleUtils.Callback() {
+                @Override
+                public void onSuccess() {
+                    mPeopleAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onError(VolleyError error) {
+
+                }
+            });
         }
     }
 }

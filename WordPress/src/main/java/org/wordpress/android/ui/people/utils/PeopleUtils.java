@@ -17,14 +17,14 @@ import java.util.List;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(final String siteId, final PeopleUtils.Callback callback) {
+    public static void fetchUsers(final String siteID, final PeopleUtils.Callback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, siteId);
+                        List<Person> people = peopleListFromJSON(jsonArray, siteID);
                         PeopleTable.savePeople(people);
 
                         if (callback != null) {
@@ -48,7 +48,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format("sites/%s/users", siteId);
+        String path = String.format("sites/%s/users", siteID);
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 

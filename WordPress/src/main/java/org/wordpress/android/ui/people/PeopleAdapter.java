@@ -8,45 +8,50 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private List<Person> mPersonList;
+    private List<Person> mPeopleList;
     private int mAvatarSz;
+    private int mSiteID;
 
-    public PeopleAdapter(Context context) {
+    public PeopleAdapter(Context context, int siteID) {
         mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
-        mPersonList = new ArrayList<>();
-        mPersonList.add(new Person(1, "1", "beaulebens", "Beau", "Lebens", "Beau", "http://lorempixum.com/76/76", Role.ADMIN));
-        mPersonList.add(new Person(2, "1", "ebinnion", "Eric", "Binnion", "Eric", "http://lorempixum.com/76/76", Role.AUTHOR));
-        mPersonList.add(new Person(3, "1", "javialvarez", "Javi", "Alvarez", "Javi", "http://lorempixum.com/76/76", Role.CONTRIBUTOR));
-        mPersonList.add(new Person(4, "1", "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR));
+        mSiteID = siteID;
+        mPeopleList = PeopleTable.getPeople(mSiteID);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        mPeopleList = PeopleTable.getPeople(mSiteID);
+
+        super.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        if (mPersonList == null) {
+        if (mPeopleList == null) {
             return 0;
         }
-        return mPersonList.size();
+        return mPeopleList.size();
     }
 
     @Override
     public Person getItem(int position) {
-        if (mPersonList == null) {
+        if (mPeopleList == null) {
             return null;
         }
-        return mPersonList.get(position);
+        return mPeopleList.get(position);
     }
 
     @Override
