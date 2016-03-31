@@ -81,7 +81,7 @@ public class PeopleAdapter extends BaseAdapter {
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtDisplayName.setText(person.getDisplayName());
-            holder.txtUsername.setText(person.getUsername());
+            holder.txtUsername.setText(String.format("@%s", person.getUsername()));
             holder.txtRole.setText(Role.getLabel(mContext, person.getRole()));
             holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
         }
