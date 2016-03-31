@@ -32,7 +32,7 @@ public class PeopleUtils {
                         }
                     }
                     catch (JSONException e) {
-                        AppLog.e(T.API, e);
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
                     }
                 }
             }
