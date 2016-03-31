@@ -6,12 +6,21 @@ import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.networking.gravatar.GravatarClient;
+import org.wordpress.android.networking.gravatar.ServiceGenerator;
+import org.wordpress.android.networking.gravatar.GravatarUploadResponse;
 import org.wordpress.android.util.AppLog;
 
 import java.io.File;
 import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GravatarApi {
 
@@ -51,20 +60,26 @@ public class GravatarApi {
     }
 
     public static void uploadGravatar(File file, final GravatarUploadListener gravatarUploadListener) {
-        RestRequest gravatarUploadRequest;
-        try {
-            gravatarUploadRequest = prepareGravatarUpload(WordPress.getGravatarRestClientUtilsV1()
-                    .getRestClient(), file, gravatarUploadListener);
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.API, "Cannot make the Gravatar upload request!", e);
-            gravatarUploadListener.onError();
-            return;
-        }
+        GravatarClient client = ServiceGenerator.createService(GravatarClient.class, AccountHelper.getDefaultAccount
+                ().getAccessToken(), "Bearer");
 
-        WordPress.getGravatarRestClientUtilsV1().post(gravatarUploadRequest, null, new RestRequest.ErrorListener() {
+        MediaType MultiPartFormData = MediaType.parse("multipart/form-data");
+
+        RequestBody account = RequestBody.create(MultiPartFormData, AccountHelper.getDefaultAccount().getEmail());
+        MultipartBody.Part body = MultipartBody.Part.createFormData("filedata", file.getName(), RequestBody.create
+                (MultiPartFormData, file));
+        client.uploadImage(account, body).enqueue(new Callback<GravatarUploadResponse>() {
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.API, volleyError);
+            public void onResponse(Call<GravatarUploadResponse> call, Response<GravatarUploadResponse> response) {
+                if (response.isSuccessful()) {
+                    gravatarUploadListener.onSuccess();
+                } else {
+                    gravatarUploadListener.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GravatarUploadResponse> call, Throwable t) {
                 gravatarUploadListener.onError();
             }
         });
