@@ -63,8 +63,9 @@ public class PlanPostPurchaseFragment extends Fragment {
         TextView txtDescription = (TextView) rootView.findViewById(R.id.text_description);
         Button button = (Button) rootView.findViewById(R.id.button);
 
-        // reduce top margin of image in landscape so content doesn't extend beyond the screen
-        if (DisplayUtils.isLandscape(getActivity())) {
+        // reduce top margin of image on landscape phones so content doesn't
+        // extend beyond the screen
+        if (DisplayUtils.isLandscape(getActivity()) && !DisplayUtils.isXLarge(getActivity())) {
             PercentRelativeLayout.LayoutParams layoutParams = (PercentRelativeLayout.LayoutParams) image.getLayoutParams();
             PercentLayoutHelper.PercentLayoutInfo percentLayoutInfo = layoutParams.getPercentLayoutInfo();
             percentLayoutInfo.topMarginPercent = 10 * 0.01f; // 10%
