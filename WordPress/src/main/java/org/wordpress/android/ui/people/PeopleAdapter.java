@@ -21,19 +21,19 @@ public class PeopleAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private List<Person> mPeopleList;
     private int mAvatarSz;
-    private long mSiteID;
+    private int mLocalBlogId;
 
-    public PeopleAdapter(Context context, long siteID) {
+    public PeopleAdapter(Context context, int localBlogId) {
         mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
-        mSiteID = siteID;
-        mPeopleList = PeopleTable.getPeople(mSiteID);
+        mLocalBlogId = localBlogId;
+        mPeopleList = PeopleTable.getPeople(mLocalBlogId);
     }
 
     @Override
     public void notifyDataSetChanged() {
-        mPeopleList = PeopleTable.getPeople(mSiteID);
+        mPeopleList = PeopleTable.getPeople(mLocalBlogId);
 
         super.notifyDataSetChanged();
     }

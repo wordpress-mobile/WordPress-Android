@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class Person {
     private long personID;
-    private long siteID;
+    private int localTableBlogId;
 
     private String username;
     private String firstName;
@@ -14,7 +14,7 @@ public class Person {
     private Role role;
 
     public Person(long personID,
-                  long siteID,
+                  int localTableBlogId,
                   String username,
                   String firstName,
                   String lastName,
@@ -22,7 +22,7 @@ public class Person {
                   String avatarUrl,
                   Role role) {
         this.personID = personID;
-        this.siteID = siteID;
+        this.localTableBlogId = localTableBlogId;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,7 +31,7 @@ public class Person {
         this.role = role;
     }
 
-    public static Person fromJSON(JSONObject json, String siteID) {
+    public static Person fromJSON(JSONObject json, int localTableBlogId) {
         if (json == null) {
             return null;
         }
@@ -44,15 +44,15 @@ public class Person {
         String avatarUrl = json.optString("avatar_URL");
         Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
 
-        return new Person(personID, Long.parseLong(siteID), username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
     }
 
     public long getPersonId() {
         return personID;
     }
 
-    public long getSiteID() {
-        return siteID;
+    public long getLocalTableBlogId() {
+        return localTableBlogId;
     }
 
     public String getUsername() {

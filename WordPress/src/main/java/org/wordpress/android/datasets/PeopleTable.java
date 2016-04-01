@@ -26,14 +26,14 @@ public class PeopleTable {
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
-                + "site_id                 INTEGER DEFAULT 0,"
+                + "local_blog_id           INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
                 + "last_name               TEXT,"
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
                 + "role                    TEXT,"
-                + "PRIMARY KEY (person_id, site_id)"
+                + "PRIMARY KEY (person_id, local_blog_id)"
                 + ");");
     }
 
@@ -54,7 +54,7 @@ public class PeopleTable {
     public static void save(Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonId());
-        values.put("site_id", person.getSiteID());
+        values.put("local_blog_id", person.getLocalTableBlogId());
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
         values.put("last_name", person.getLastName());
@@ -70,14 +70,14 @@ public class PeopleTable {
         }
     }
 
-    public static List<Person> getPeople(long siteID) {
+    public static List<Person> getPeople(int localTableBlogId) {
         List<Person> people = new ArrayList<>();
-        String[] args = { Long.toString(siteID) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE site_id=?", args);
+        String[] args = { Integer.toString(localTableBlogId) };
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?", args);
 
         try {
             while (c.moveToNext()) {
-                Person comment = getPersonFromCursor(c, siteID);
+                Person comment = getPersonFromCursor(c, localTableBlogId);
                 people.add(comment);
             }
 
@@ -90,22 +90,22 @@ public class PeopleTable {
     /**
      * retrieve a single person
      * @param personId - id of a person in a particular site
-     * @param siteID - site the person belongs to
+     * @param localTableBlogId - the local blog id the user belongs to
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId, long siteID) {
-        String[] args = { Long.toString(personId), Long.toString(siteID) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND site_id=?", args);
+    public static Person getPerson(long personId, int localTableBlogId) {
+        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId) };
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND local_blog_id=?", args);
         try {
             if (!c.moveToFirst())
                 return null;
-            return getPersonFromCursor(c, siteID);
+            return getPersonFromCursor(c, localTableBlogId);
         } finally {
             SqlUtils.closeCursor(c);
         }
     }
 
-    private static Person getPersonFromCursor(Cursor c, long siteID) {
+    private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));
@@ -114,6 +114,6 @@ public class PeopleTable {
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
         Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
 
-        return new Person(personId, siteID, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
     }
 }

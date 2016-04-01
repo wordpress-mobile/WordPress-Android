@@ -17,14 +17,14 @@ import java.util.List;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(final String siteID, final PeopleUtils.Callback callback) {
+    public static void fetchUsers(String siteID, final int localTableBlogId, final PeopleUtils.Callback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, siteID);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId);
                         PeopleTable.savePeople(people);
 
                         if (callback != null) {
@@ -52,7 +52,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static List<Person> peopleListFromJSON(JSONArray jsonArray, String siteID) {
+    public static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId) {
         if (jsonArray == null) {
             return null;
         }
@@ -60,7 +60,7 @@ public class PeopleUtils {
         ArrayList<Person> peopleList = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Person person = Person.fromJSON(jsonArray.optJSONObject(i), siteID);
+            Person person = Person.fromJSON(jsonArray.optJSONObject(i), localTableBlogId);
             peopleList.add(person);
         }
 

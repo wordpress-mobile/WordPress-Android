@@ -286,7 +286,7 @@ public class ActivityLauncher {
     public static void viewPersonDetails(Context context, Person person) {
         Intent intent = new Intent(context, PersonActivity.class);
         intent.putExtra(PersonActivity.EXTRA_PERSON_ID, person.getPersonId());
-        intent.putExtra(PersonActivity.EXTRA_SITE_ID, person.getSiteID());
+        intent.putExtra(PersonActivity.EXTRA_LOCAL_BLOG_ID, person.getLocalTableBlogId());
         slideInFromRight(context, intent);
     }
 

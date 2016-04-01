@@ -21,7 +21,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 public class PeopleManagementActivity extends AppCompatActivity {
 
-    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
+    private int mLocalBlogId = BlogUtils.BLOG_ID_INVALID;
     private Blog mBlog;
     private PeopleAdapter mPeopleAdapter;
 
@@ -29,8 +29,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-        mBlog = WordPress.getBlog(mBlogLocalId);
+        mLocalBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+        mBlog = WordPress.getBlog(mLocalBlogId);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -44,7 +44,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
         if (mBlog != null) {
             ListView listView = (ListView)findViewById(android.R.id.list);
             // People are saved with their dotcom blog id
-            mPeopleAdapter = new PeopleAdapter(this, Long.parseLong(mBlog.getDotComBlogId()));
+            mPeopleAdapter = new PeopleAdapter(this, mLocalBlogId);
             listView.setAdapter(mPeopleAdapter);
 
             final Activity context = this;
@@ -76,7 +76,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
     }
 
     private void refreshUsersList() {
-        PeopleUtils.fetchUsers(mBlog.getDotComBlogId(), new PeopleUtils.Callback() {
+        PeopleUtils.fetchUsers(mBlog.getDotComBlogId(), mLocalBlogId, new PeopleUtils.Callback() {
             @Override
             public void onSuccess() {
                 mPeopleAdapter.notifyDataSetChanged();
