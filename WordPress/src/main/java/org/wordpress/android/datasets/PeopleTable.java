@@ -77,8 +77,8 @@ public class PeopleTable {
 
         try {
             while (c.moveToNext()) {
-                Person comment = getPersonFromCursor(c, localTableBlogId);
-                people.add(comment);
+                Person person = getPersonFromCursor(c, localTableBlogId);
+                people.add(person);
             }
 
             return people;
