@@ -43,7 +43,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
         if (mBlog != null) {
             ListView listView = (ListView)findViewById(android.R.id.list);
-            // People are saved with their dotcom blog id
+            // People are saved with the local blog id that they are belong to
             mPeopleAdapter = new PeopleAdapter(this, mLocalBlogId);
             listView.setAdapter(mPeopleAdapter);
 
