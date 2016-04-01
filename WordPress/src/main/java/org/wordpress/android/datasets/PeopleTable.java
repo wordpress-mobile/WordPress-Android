@@ -42,7 +42,7 @@ public class PeopleTable {
     }
 
     public static void reset(SQLiteDatabase db) {
-        AppLog.i(AppLog.T.COMMENTS, "resetting people table");
+        AppLog.i(AppLog.T.PEOPLE, "resetting people table");
         dropTables(db);
         createTables(db);
     }
