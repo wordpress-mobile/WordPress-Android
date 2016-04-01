@@ -1124,6 +1124,9 @@ ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier,
         imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
     }
     imageNode.attr('src', image.src);
+    // Set extra attributes and classes used by WordPress
+    imageNode.attr({'width': image.width, 'height': image.height});
+    imageNode.addClass("alignnone size-full");
     ZSSEditor.markImageUploadDone(imageNodeIdentifier);
     var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
     ZSSEditor.callback("callback-input", joinedArguments);
