@@ -193,13 +193,22 @@ ZSSEditor.getField = function(fieldId) {
 
 ZSSEditor.getFocusedField = function() {
     var currentField = $(this.closerParentNodeWithName('div'));
-    var currentFieldId = currentField.attr('id');
+    var currentFieldId;
 
-    while (currentField
-           && (!currentFieldId || this.editableFields[currentFieldId] == null)) {
-        currentField = this.closerParentNodeStartingAtNode('div', currentField);
+    if (currentField) {
         currentFieldId = currentField.attr('id');
+    }
 
+    while (currentField && (!currentFieldId || this.editableFields[currentFieldId] == null)) {
+        currentField = this.closerParentNodeStartingAtNode('div', currentField);
+        if (currentField) {
+            currentFieldId = currentField.attr('id');
+        }
+    }
+
+    if (!currentFieldId) {
+        ZSSEditor.resetSelectionOnField('zss_field_content');
+        currentFieldId = 'zss_field_content';
     }
 
     return this.editableFields[currentFieldId];
@@ -357,6 +366,9 @@ ZSSEditor.stylesCallback = function(stylesArray) {
 
 ZSSEditor.backupRange = function(){
 	var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return;
+    }
     var range = selection.getRangeAt(0);
 
     ZSSEditor.currentSelection =
@@ -411,7 +423,6 @@ ZSSEditor.getCaretArguments = function() {
 };
 
 ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments = function() {
-
     var joinedArguments = ZSSEditor.getJoinedCaretArguments();
     var idArgument = "id=" + ZSSEditor.getFocusedField().getNodeId();
 
@@ -430,6 +441,9 @@ ZSSEditor.getJoinedCaretArguments = function() {
 
 ZSSEditor.getCaretYPosition = function() {
     var selection = window.getSelection();
+    if (selection.rangeCount == 0)  {
+        return 0;
+    }
     var range = selection.getRangeAt(0);
     var span = document.createElement("span");
     // Ensure span has dimensions and position by
@@ -543,7 +557,7 @@ ZSSEditor.setStrikeThrough = function() {
 	var mustHandleWebKitIssue = (isDisablingStrikeThrough
 								 && ZSSEditor.isCommandEnabled(commandName));
 
-	if (mustHandleWebKitIssue) {
+	if (mustHandleWebKitIssue && window.getSelection().rangeCount > 0) {
 		var troublesomeNodeNames = ['del'];
 
 		var selection = window.getSelection();
@@ -2736,6 +2750,9 @@ ZSSEditor.closerParentNode = function() {
 
     var parentNode = null;
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0).cloneRange();
 
     var currentNode = range.commonAncestorContainer;
@@ -2758,7 +2775,7 @@ ZSSEditor.closerParentNodeStartingAtNode = function(nodeName, startingNode) {
     nodeName = nodeName.toLowerCase();
 
     var parentNode = null;
-    var currentNode = startingNode,parentElement;
+    var currentNode = startingNode.parentElement;
 
     while (currentNode) {
 
@@ -2766,7 +2783,7 @@ ZSSEditor.closerParentNodeStartingAtNode = function(nodeName, startingNode) {
             break;
         }
 
-        if (currentNode.nodeName.toLowerCase() == nodeName
+        if (currentNode.nodeName && currentNode.nodeName.toLowerCase() == nodeName
             && currentNode.nodeType == document.ELEMENT_NODE) {
             parentNode = currentNode;
 
@@ -2785,6 +2802,9 @@ ZSSEditor.closerParentNodeWithName = function(nodeName) {
 
     var parentNode = null;
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0).cloneRange();
 
     var referenceNode = range.commonAncestorContainer;
@@ -2826,6 +2846,9 @@ ZSSEditor.parentTags = function() {
 
     var parentTags = [];
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0);
 
     var currentNode = range.commonAncestorContainer;
@@ -2943,21 +2966,29 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
     } else if (this.isMultiline()) {
         this.wrapCaretInParagraphIfNecessary();
 
-        // If enter was pressed to end a UL or OL, let's double check and handle it accordingly if so
         if (wasEnterPressed) {
-            sel = window.getSelection();
-            node = $(sel.anchorNode);
-            children = $(sel.anchorNode.childNodes);
+            var sel = window.getSelection();
+            if (sel.rangeCount < 1) {
+                return null;
+            }
+            var node = $(sel.anchorNode);
+            var children = $(sel.anchorNode.childNodes);
+            var parentNode = rangy.getSelection().anchorNode.parentNode;
 
+            // If enter was pressed to end a UL or OL, let's double check and handle it accordingly if so
             if (sel.isCollapsed && node.is(NodeName.LI) && (!children.length ||
                     (children.length == 1 && children.first().is(NodeName.BR)))) {
                 e.preventDefault();
-                var parentNode = rangy.getSelection().anchorNode.parentNode;
                 if (parentNode && parentNode.nodeName === NodeName.OL) {
                     ZSSEditor.setOrderedList();
                 } else if (parentNode && parentNode.nodeName === NodeName.UL) {
                     ZSSEditor.setUnorderedList();
                 }
+            // Exit blockquote when the user presses Enter inside a blockquote on a new line
+            // (main use case is to allow double Enter to exit blockquote)
+            } else if (sel.isCollapsed && sel.baseOffset == 0 && parentNode && parentNode.nodeName == 'BLOCKQUOTE') {
+                e.preventDefault();
+                ZSSEditor.setBlockquote();
             }
         }
     }
@@ -3217,7 +3248,7 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
     if (parentNodeShouldBeParagraph) {
         var selection = window.getSelection();
 
-        if (selection) {
+        if (selection && selection.rangeCount > 0) {
             var range = selection.getRangeAt(0);
 
             if (range.startContainer == range.endContainer) {
