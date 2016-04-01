@@ -61,7 +61,9 @@ public class PeopleUtils {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             Person person = Person.fromJSON(jsonArray.optJSONObject(i), localTableBlogId);
-            peopleList.add(person);
+            if (person != null) {
+                peopleList.add(person);
+            }
         }
 
         return peopleList;
