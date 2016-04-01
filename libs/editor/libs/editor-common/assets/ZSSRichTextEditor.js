@@ -1014,8 +1014,11 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
-    var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
-
+    var html = '<img src="' + url + '" class="wp-image-' + remoteId + ' alignnone size-full';
+    if (alt) {
+        html += '" alt="' + alt
+    }
+    html += '"/>'
     this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
@@ -1124,6 +1127,9 @@ ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier,
         imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
     }
     imageNode.attr('src', image.src);
+    // Set extra attributes and classes used by WordPress
+    imageNode.attr({'width': image.width, 'height': image.height});
+    imageNode.addClass("alignnone size-full");
     ZSSEditor.markImageUploadDone(imageNodeIdentifier);
     var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
     ZSSEditor.callback("callback-input", joinedArguments);
