@@ -278,6 +278,14 @@ public class RestClientUtils {
     }
 
     /**
+     * Is available
+     */
+    public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
+        String path = String.format("is-available/email?q=%s", email);
+        get(path, listener, errorListener);
+    }
+
+    /**
      * Make GET request
      */
     public Request<JSONObject> get(String path, Listener listener, ErrorListener errorListener) {
