@@ -12,7 +12,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.util.EditTextUtils;
 
@@ -97,12 +102,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
             super.signIn();
         } else {
             if (isUsernameEmail()) {
-                boolean isValidWPComEmail = false;
-                if (isValidWPComEmail) { // OK RESPONSE
-                    mListener.onMagicLinkRequestSuccess();
-                } else { // ERROR RESPONSE
-                    showPasswordFieldAndFocus();
-                }
+                requestWPComEmailCheck();
             } else {
                 showPasswordFieldAndFocus();
             }
@@ -125,9 +125,23 @@ public class MagicLinkSignInFragment extends SignInFragment {
         }
     }
 
+    private void requestWPComEmailCheck() {
+        WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                showPasswordFieldAndFocus();
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mListener.onMagicLinkRequestSuccess();
+                showPasswordFieldAndFocus();
+            }
+        });
+    }
+
     private boolean isUsernameEmail() {
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
-
         Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(mUsername);
 
