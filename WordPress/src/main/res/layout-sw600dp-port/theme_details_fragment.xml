@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -16,7 +17,8 @@
             android:layout_marginTop="20dp"
             android:fontFamily="sans-serif-light"
             android:textColor="@color/theme_details_name"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            tools:targetApi="JELLY_BEAN"/>
 
         <LinearLayout
             android:id="@+id/theme_details_fragment_attributes_container"
@@ -38,7 +40,8 @@
                 android:paddingRight="16dp"
                 android:text="@string/theme_current_theme"
                 android:textColor="@color/blue_wordpress"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="JELLY_BEAN" />
 
             <TextView
                 android:id="@+id/theme_details_fragment_premium_theme_text"
@@ -49,7 +52,8 @@
                 android:fontFamily="sans-serif-light"
                 android:text="@string/theme_premium_theme"
                 android:textColor="@color/theme_details_premium"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="JELLY_BEAN" />
         </LinearLayout>
 
         <org.wordpress.android.ui.FadeInNetworkImageView
@@ -82,7 +86,8 @@
                 android:fontFamily="sans-serif-light"
                 android:padding="10dp"
                 android:text="@string/themes_live_preview"
-                android:textColor="@color/theme_details_button" />
+                android:textColor="@color/theme_details_button"
+                tools:targetApi="JELLY_BEAN" />
 
             <FrameLayout
                 android:id="@+id/theme_details_fragment_activate_button_container"
@@ -98,7 +103,8 @@
                     android:fontFamily="sans-serif-light"
                     android:padding="10dp"
                     android:text="@string/theme_activate_button"
-                    android:textColor="@color/theme_details_button" />
+                    android:textColor="@color/theme_details_button"
+                    tools:targetApi="JELLY_BEAN" />
 
                 <LinearLayout
                     android:id="@+id/theme_details_fragment_activating_progress"
@@ -123,7 +129,8 @@
                         android:fontFamily="sans-serif-light"
                         android:text="@string/theme_activating_button"
                         android:textColor="@color/theme_details_button"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        tools:targetApi="JELLY_BEAN" />
                 </LinearLayout>
             </FrameLayout>
 
@@ -136,7 +143,8 @@
                 android:padding="10dp"
                 android:text="@string/view_site"
                 android:textColor="@color/theme_details_button"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:targetApi="JELLY_BEAN" />
         </LinearLayout>
 
         <View
@@ -167,7 +175,8 @@
             android:fontFamily="sans-serif-light"
             android:textColor="@color/grey_dark"
             android:textSize="16sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            tools:targetApi="JELLY_BEAN" />
 
         <TextView
             android:id="@+id/theme_details_fragment_features_label"

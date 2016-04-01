@@ -7,12 +7,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
@@ -36,9 +42,51 @@ public class ThemeWebActivity extends WPWebViewActivity {
     public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
-        String url = getUrl(currentTheme, type, currentTheme.isPremium());
+        if (currentTheme == null) {
+            ToastUtils.showToast(activity, R.string.could_not_load_theme);
+            return;
+        }
 
+        String url = getUrl(currentTheme, type, currentTheme.isPremium());
         openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
+    }
+
+    /*
+     * opens the current theme for the current blog
+     */
+    public static void openCurrentTheme(Activity activity, ThemeWebActivityType type) {
+        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
+        if (themeId.isEmpty()) {
+            requestAndOpenCurrentTheme(activity, blogId);
+        } else {
+            openTheme(activity, themeId, type, true);
+        }
+    }
+
+    private static void requestAndOpenCurrentTheme(final Activity activity, final String blogId) {
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(blogId, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Theme currentTheme = Theme.fromJSONV1_1(response);
+                    if (currentTheme != null) {
+                        currentTheme.setIsCurrent(true);
+                        currentTheme.save();
+                        WordPress.wpDB.setCurrentTheme(blogId, currentTheme.getId());
+                        openTheme(activity, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
+                    }
+                } catch (JSONException e) {
+                    ToastUtils.showToast(activity, R.string.could_not_load_theme);
+                    AppLog.e(AppLog.T.THEMES, e);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(AppLog.T.THEMES, error);
+            }
+        });
     }
 
     private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog, Boolean isCurrentTheme) {
