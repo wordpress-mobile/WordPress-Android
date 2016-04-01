@@ -51,7 +51,7 @@ public class Person {
         return personID;
     }
 
-    public long getLocalTableBlogId() {
+    public int getLocalTableBlogId() {
         return localTableBlogId;
     }
 
