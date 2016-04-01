@@ -1014,8 +1014,11 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
-    var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
-
+    var html = '<img src="' + url + '" class="wp-image-' + remoteId + ' alignnone size-full';
+    if (alt) {
+        html += '" alt="' + alt
+    }
+    html += '"/>'
     this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
