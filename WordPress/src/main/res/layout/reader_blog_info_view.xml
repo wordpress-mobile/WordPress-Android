@@ -17,7 +17,8 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large">
+        android:paddingTop="@dimen/margin_large"
+        tools:targetApi="LOLLIPOP">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"

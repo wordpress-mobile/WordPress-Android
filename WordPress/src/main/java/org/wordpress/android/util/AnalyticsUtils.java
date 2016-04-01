@@ -10,7 +10,6 @@ import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.stats.StatsUtils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,6 +4,7 @@
     replacement for android.R.layout.simple_spinner_item
 -->
 <org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/text1"
     style="?android:attr/spinnerItemStyle"
     android:textColor="@color/grey_dark"
@@ -11,4 +12,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
-    android:textAlignment="inherit" />
+    android:textAlignment="inherit"
+    tools:targetApi="JELLY_BEAN_MR1"/>
