@@ -60,7 +60,7 @@ public class PeopleAdapter extends BaseAdapter {
         if (person == null) {
             return 0;
         }
-        return person.getPersonId();
+        return person.getPersonID();
     }
 
     @Override

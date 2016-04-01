@@ -47,7 +47,7 @@ public class Person {
         return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
     }
 
-    public long getPersonId() {
+    public long getPersonID() {
         return personID;
     }
 

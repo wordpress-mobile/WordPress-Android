@@ -53,7 +53,7 @@ public class PeopleTable {
 
     public static void save(Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
-        values.put("person_id", person.getPersonId());
+        values.put("person_id", person.getPersonID());
         values.put("local_blog_id", person.getLocalTableBlogId());
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
