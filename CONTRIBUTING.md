@@ -57,9 +57,37 @@ Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` after a ne
 
 [git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
 
+# Subtree'd library projects
+
+A number of library dependencies are managed as separate open source projects and are git-subtree'd into the WordPress Android app source tree. Use the following command to updated (pull latest) from their respective repos:
+
+        $ git subtree pull --squash --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
+
+and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics` respectively.
+
+Similarly, issue a `subtree push` to push changes committed to the main app repo, upstream to the library repo:
+
+        $ git subtree push --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
+
+Here are the libraries currently maintained and subtree'd:
+
+* Analytics
+* Editor
+* Networking
+* Stores
+* Utils
+
 # Drawable Resources
 
 The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
+
+# Subtree'd projects
+
+The [WordPress-HealthCheck-Common][healthcheck] project is used in the tests and loaded from `assets` on tests run. Use the following command to pull in newer commits from the external project:
+
+        $ git subtree pull --prefix=WordPress/src/androidTest/assets/health-check/ https://github.com/wordpress-mobile/WordPress-HealthCheck-Common.git develop
+
+[healthcheck]: https://github.com/wordpress-mobile/WordPress-HealthCheck-Common
 
 # Contribute to translations
 

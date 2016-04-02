@@ -5,7 +5,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;

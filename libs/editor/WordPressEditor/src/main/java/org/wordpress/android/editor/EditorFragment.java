@@ -453,7 +453,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
 
-                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                // Reset selection to avoid buggy cursor behavior
+                mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
             }
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
@@ -821,6 +822,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void removeAllFailedMediaUploads() {
+        mWebView.execJavaScriptFromString("ZSSEditor.removeAllFailedMediaUploads();");
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return null;
     }
@@ -928,6 +934,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.post(new Runnable() {
             public void run() {
+                if (!isAdded()) {
+                    return;
+                }
+
                 mDomHasLoaded = true;
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setMultiline('true');");
@@ -958,11 +968,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     button.setChecked(false);
                 }
 
+                boolean editorHasFocus = false;
+
                 // Add any media files that were placed in a queue due to the DOM not having loaded yet
                 if (mWaitingMediaFiles.size() > 0) {
                     // Image insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (Map.Entry<String, MediaFile> entry : mWaitingMediaFiles.entrySet()) {
                         appendMediaFile(entry.getValue(), entry.getKey(), null);
@@ -975,6 +988,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     // Gallery insertion will only work if the content field is in focus
                     // (for a new post, no field is in focus until user action)
                     mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+                    editorHasFocus = true;
 
                     for (MediaGallery mediaGallery : mWaitingGalleries) {
                         appendGallery(mediaGallery);
@@ -982,6 +996,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                     mWaitingGalleries.clear();
                 }
+
+                if (!editorHasFocus) {
+                    mWebView.execJavaScriptFromString("ZSSEditor.focusFirstEditableField();");
+                }
+
+                // Show the keyboard
+                ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .showSoftInput(mWebView, InputMethodManager.SHOW_IMPLICIT);
 
                 ProfilingUtils.split("EditorFragment.onDomLoaded completed");
                 ProfilingUtils.dump();

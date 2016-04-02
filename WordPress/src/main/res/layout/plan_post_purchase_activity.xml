@@ -52,20 +52,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/image_indicator_0"
-                android:layout_width="@dimen/plan_indicator_size"
-                android:layout_height="@dimen/plan_indicator_size"
-                android:layout_marginLeft="@dimen/plan_indicator_margin"
-                android:layout_marginRight="@dimen/plan_indicator_margin"
-                android:background="@drawable/indicator_circle_selected"/>
-
-            <ImageView
                 android:id="@+id/image_indicator_1"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
                 android:layout_marginLeft="@dimen/plan_indicator_margin"
                 android:layout_marginRight="@dimen/plan_indicator_margin"
-                android:background="@drawable/indicator_circle_unselected"/>
+                android:background="@drawable/indicator_circle_selected"/>
 
             <ImageView
                 android:id="@+id/image_indicator_2"
@@ -77,6 +69,14 @@
 
             <ImageView
                 android:id="@+id/image_indicator_3"
+                android:layout_width="@dimen/plan_indicator_size"
+                android:layout_height="@dimen/plan_indicator_size"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
+                android:background="@drawable/indicator_circle_unselected"/>
+
+            <ImageView
+                android:id="@+id/image_indicator_4"
                 android:layout_width="@dimen/plan_indicator_size"
                 android:layout_height="@dimen/plan_indicator_size"
                 android:layout_marginLeft="@dimen/plan_indicator_margin"
