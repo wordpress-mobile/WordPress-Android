@@ -1,14 +1,15 @@
 package org.wordpress.android.ui.prefs;
 
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import org.wordpress.android.R;
 
@@ -17,17 +18,37 @@ import java.util.regex.Pattern;
 
 public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
     private ValidationType mValidationType = ValidationType.NONE;
+    private EditText mEditText;
 
     public EditTextPreferenceWithValidation(Context context) {
         super(context);
+        setDialogLayoutResource(R.layout.edit_text_preference_with_validation_dialog);
     }
 
     public EditTextPreferenceWithValidation(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setDialogLayoutResource(R.layout.edit_text_preference_with_validation_dialog);
     }
 
     public EditTextPreferenceWithValidation(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setDialogLayoutResource(R.layout.edit_text_preference_with_validation_dialog);
+    }
+
+    @Override
+    protected void onBindDialogView(View view) {
+        super.onBindDialogView(view);
+
+        mEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
+        mEditText.setInputType(super.getEditText().getInputType());
+    }
+
+    @Override
+    public EditText getEditText() {
+        if (mEditText != null) {
+            return mEditText;
+        }
+        return super.getEditText();
     }
 
     @Override
