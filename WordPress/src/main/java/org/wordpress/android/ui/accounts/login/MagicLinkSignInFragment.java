@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -134,8 +135,19 @@ public class MagicLinkSignInFragment extends SignInFragment {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mListener.onMagicLinkRequestSuccess();
-                showPasswordFieldAndFocus();
+                String string = error.getMessage();
+                try {
+                    JSONObject jsonResponse = new JSONObject(string);
+                    String errorReason = jsonResponse.getString("error");
+                    if (errorReason != null && errorReason.equals("taken")) {
+                        mListener.onMagicLinkRequestSuccess();
+                    } else {
+                        showPasswordFieldAndFocus();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    showPasswordFieldAndFocus();
+                }
             }
         });
     }
