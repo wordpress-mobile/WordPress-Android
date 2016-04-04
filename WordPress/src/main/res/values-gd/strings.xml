@@ -224,13 +224,11 @@
 	<string name="contact_us">Cuir fios thugainn</string>
 	<string name="current_location">An t-ionad làithreach</string>
 	<string name="add_location">Cuir ionad ris</string>
-	<string name="your_signature">An t-earr-sgrìobhadh agad:</string>
 	<string name="search_current_location">Lorg</string>
 	<string name="edit_location">Deasaich</string>
 	<string name="search_location">Lorg</string>
 	<string name="preference_send_usage_stats_summary">Cuir stats cleachdaidh thugainn ach an urrainn dhuinn WordPress airson Android a leasachadh</string>
 	<string name="preference_send_usage_stats">Cuir na stats</string>
-	<string name="preference_privacy">Prìobhaideachd</string>
 	<string name="schedule_verb">Cuir air an sgeideal</string>
 	<string name="update_verb">Ùraich</string>
 	<string name="reader_toast_err_already_follow_blog">Tha thu a’ leantainn a’ bhloga seo mu thràth</string>
@@ -292,13 +290,10 @@
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_pages">Cha b’ urrainn dhuinn na duilleagan ath-nuadhachadh aig an àm seo</string>
 	<string name="error_refresh_notifications">Cha b’ urrainn dhuinn na brathan ath-nuadhachadh aig an àm seo</string>
-	<string name="invalid_url_message">Dèan cinnteach gu bheil URL a’ bhloga seo dligheach</string>
 	<string name="reply_failed">Dh’fhàillig an fhreagairt</string>
 	<string name="stats_empty_comments">Chan eil beachd ann fhathast</string>
 	<string name="stats_bar_graph_empty">Chan eil stats ri fhaighinn</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Chan eil am bloga a thagh thu roimhe ri fhaicinn tuilleadh</string>
 	<string name="sdcard_message">Feumaidh tu cairt SD a chaidh a mhunntachadh mus urrainn dhut meadhanan a luchdadh suas</string>
-	<string name="auto_sharing_preference_reset">Chaidh roghainnean a’ cho-roinnidh fhèin-obrachail ath-shuidheachadh</string>
 	<string name="category_automatically_renamed">Chan e ainm dligheach airson roinn-seòrsa a tha ann an %1$s. Chaidh %2$s a chur air an àite sin.</string>
 	<string name="no_account">Cha deach cunntas WordPress a lorg, cuir cunntas ris is feuch ris a-rithist</string>
 	<string name="cat_name_required">Tha feum air raon ainm na roinn-seòrsa</string>
@@ -435,9 +430,6 @@
 	<string name="download">A\' luchdadh a-nuas a\' mheadhain</string>
 	<string name="comment_spammed">Chaidh comharra spama a chur ris a\' bheachd</string>
 	<string name="cant_share_no_visible_blog">Chan urrainn dhut co-roinneadh gu WordPress as aonais bloga a tha ri fhaicinn</string>
-	<string name="share_preference_title">Co-roinn gu WordPress</string>
-	<string name="reset_auto_share_preference">Ath-shuidhich roghainnean a\' cho-roinnidh fhèin-obrachail</string>
-	<string name="always_use_these_settings_to_share">Cleachd na roghainnean seo an-còmhnaidh</string>
 	<string name="select_time">Tagh àm</string>
 	<string name="reader_likes_you_and_one">Thuirt thusa agus aonan eile gur toigh leibh seo</string>
 	<string name="select_date">Tagh ceann-là</string>
@@ -495,8 +487,6 @@
 	<string name="media_gallery_type_tiled">Mar leacan</string>
 	<string name="media_gallery_type_circles">Cearcallan</string>
 	<string name="media_gallery_type_slideshow">Taisbeanadh-shleamhnagan</string>
-	<string name="media_no_video_title">Chan eil VideoPress ri làimh</string>
-	<string name="media_no_video_message">Faigh àrdachadh VideoPress gus video a luchdadh suas!</string>
 	<string name="media_edit_title_text">Tiotal</string>
 	<string name="media_edit_caption_text">Caipsean</string>
 	<string name="media_edit_description_text">Tuairisgeul</string>
@@ -548,8 +538,6 @@
 	<string name="new_notifications">%d brath(an) ùra</string>
 	<string name="more_notifications">agus %d a bharrachd.</string>
 	<string name="loading">\'Ga luchdadh…</string>
-	<string name="post_signature">Postaich an t-earr-sgrìobhadh</string>
-	<string name="add_tagline">Cuir earr-sgrìobhaidh ri puist ùra</string>
 	<string name="httpuser">Ainm-cleachdaiche HTTP</string>
 	<string name="httppassword">Facal-faire HTTP</string>
 	<string name="error_media_upload">Thachair mearachd fhad \'s a bha sinn a\' luchdadh suas meadhan</string>
@@ -576,11 +564,9 @@
 	<string name="scaled_image">Leud an deilbh sgèilichte</string>
 	<string name="scheduled">Air an sgeideal</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Air a phostadh o WordPress airson Android</string>
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
-	<string name="about">Mu dheidhinn</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
@@ -623,22 +609,4 @@
 	<string name="yes">Tha</string>
 	<string name="no">Chan eil</string>
 	<string name="category_refresh_error">Mearachd le ath-nuadhachadh na roinn-seòrsa</string>
-	<string-array name="alignment_array">
-		<item>Chan eil gin</item>
-		<item>Clì</item>
-		<item>Meadhan</item>
-		<item>Deas</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Aside</item>
-		<item>Fuaim</item>
-		<item>Cabadaich</item>
-		<item>Gailearaidh</item>
-		<item>Dealbh</item>
-		<item>Ceangal</item>
-		<item>Luaidh</item>
-		<item>Stannardach</item>
-		<item>Staid</item>
-		<item>Video</item>
-	</string-array>
 </resources>

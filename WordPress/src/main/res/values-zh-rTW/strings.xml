@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">無法儲存你的帳號設定</string>
+	<string name="post_format_status">狀態</string>
+	<string name="post_format_video">影片</string>
+	<string name="align_none">無</string>
+	<string name="align_left">靠左</string>
+	<string name="align_center">置中</string>
+	<string name="align_right">靠右</string>
+	<string name="theme_free">免費</string>
+	<string name="theme_all">全部</string>
+	<string name="theme_premium">進階版</string>
+	<string name="post_format_chat">聊天</string>
+	<string name="post_format_gallery">圖庫</string>
+	<string name="post_format_image">圖片</string>
+	<string name="post_format_link">連結</string>
+	<string name="post_format_quote">引文</string>
+	<string name="post_format_standard">標準版</string>
+	<string name="notif_events">WordPress.com 課程與活動相關資訊 (線上和專人洽詢)。</string>
+	<string name="post_format_aside">旁白</string>
+	<string name="post_format_audio">音訊</string>
+	<string name="notif_surveys">參與 WordPress.com 研究與調查的機會。</string>
+	<string name="notif_tips">讓 WordPress.com 發揮最大功效的秘訣。</string>
+	<string name="notif_community">社群</string>
+	<string name="replies_to_my_comments">留言的回覆</string>
+	<string name="notif_suggestions">建議</string>
+	<string name="notif_research">研究</string>
+	<string name="site_achievements">網站成就</string>
+	<string name="username_mentions">使用者名稱標記</string>
+	<string name="likes_on_my_posts">文章按讚數</string>
+	<string name="site_follows">網站關注數</string>
+	<string name="likes_on_my_comments">留言按讚數</string>
+	<string name="comments_on_my_site">網站留言</string>
+	<string name="site_settings_list_editor_summary_other">%d 個項目</string>
+	<string name="site_settings_list_editor_summary_one">1 個項目</string>
+	<string name="approve_auto_if_previously_approved">已知使用者的留言</string>
+	<string name="approve_auto">所有使用者</string>
+	<string name="approve_manual">無留言</string>
+	<string name="site_settings_paging_summary_other">每頁 %d 則留言</string>
+	<string name="site_settings_paging_summary_one">每頁 1 則留言</string>
+	<string name="site_settings_multiple_links_summary_other">需要審核超過 %d 個連結</string>
+	<string name="site_settings_multiple_links_summary_one">需要審核超過 1 個連結</string>
+	<string name="site_settings_multiple_links_summary_zero">需要審核超過 0 個連結</string>
+	<string name="detail_approve_auto">自動核准所有人的留言。</string>
+	<string name="detail_approve_auto_if_previously_approved">如果使用者有已審核的留言，則自動核准</string>
+	<string name="detail_approve_manual">需要人工審核所有人的留言。</string>
+	<string name="filter_trashed_posts">已移至垃圾桶</string>
+	<string name="days_quantity_one">1 天</string>
+	<string name="days_quantity_other">%d 天</string>
+	<string name="filter_published_posts">已發表</string>
+	<string name="filter_draft_posts">草稿</string>
+	<string name="filter_scheduled_posts">已排程</string>
+	<string name="pending_email_change_snackbar">按一下電子郵件 (收件者：%1$s) 中的驗證連結以確認您的新地址</string>
+	<string name="primary_site">主要網站</string>
+	<string name="web_address">網站位址</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">部分媒體上傳失敗。請重新上傳或刪除這些媒體。</string>
+	<string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
+	<string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
+	<string name="editor_post_settings_set_featured_image">設定特色圖片</string>
+	<string name="editor_post_settings_featured_image">特色圖片</string>
+	<string name="new_editor_promo_desc">Android 版 WordPress 應用程式現已包含美觀的全新視覺化\n編輯器。建立新的文章，即可試用編輯器。</string>
+	<string name="new_editor_promo_title">全新編輯器</string>
+	<string name="new_editor_promo_button_label">太棒了，謝謝！</string>
+	<string name="visual_editor_enabled">視覺化編輯器已啟用</string>
+	<string name="editor_content_placeholder">在此分享你的故事...</string>
+	<string name="editor_page_title_placeholder">頁面標題</string>
+	<string name="editor_post_title_placeholder">文章標題</string>
+	<string name="email_address">電子郵件地址</string>
+	<string name="preference_show_visual_editor">顯示視覺化編輯器</string>
+	<string name="dlg_sure_to_delete_comments">永久刪除這些留言？</string>
+	<string name="preference_editor">編輯者</string>
+	<string name="dlg_sure_to_delete_comment">永久刪除此回應？</string>
+	<string name="mnu_comment_delete_permanently">刪除</string>
+	<string name="comment_deleted_permanently">留言已刪除</string>
+	<string name="mnu_comment_untrash">還原</string>
+	<string name="comments_empty_list_filtered">無%s留言</string>
+	<string name="could_not_load_page">無法載入頁面</string>
+	<string name="comment_status_all">全部</string>
+	<string name="interface_language">介面語言</string>
+	<string name="off">關閉</string>
+	<string name="about_the_app">關於此應用程式</string>
 	<string name="error_post_my_profile">無法儲存你的個人檔案</string>
 	<string name="error_fetch_account_settings">無法擷取你的帳號設定</string>
 	<string name="error_fetch_my_profile">無法擷取你的個人檔案</string>
@@ -487,11 +565,9 @@
 	<string name="hs__invalid_email_error">輸入有效的電子郵件地址</string>
 	<string name="add_location">新增位置</string>
 	<string name="current_location">目前的位置</string>
-	<string name="your_signature">你的簽名：</string>
 	<string name="search_location">搜尋</string>
 	<string name="edit_location">編輯</string>
 	<string name="search_current_location">尋找</string>
-	<string name="preference_privacy">隱私</string>
 	<string name="preference_send_usage_stats">傳送統計資料</string>
 	<string name="preference_send_usage_stats_summary">自動傳送使用統計資料，協助我們改善 Android 版 WordPress</string>
 	<string name="update_verb">更新</string>
@@ -535,12 +611,9 @@
 	<string name="cat_name_required">類別名稱欄位為必填</string>
 	<string name="category_automatically_renamed">類別名稱 %1$s 無效。已將它重新命名為 %2$s。</string>
 	<string name="no_account">未找到 WordPress 帳號，請新增帳號然後重試一次</string>
-	<string name="auto_sharing_preference_reset">自動分享設定已重設</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">之前選取的網誌已不再顯示</string>
 	<string name="sdcard_message">需要掛接 SD 卡以上傳媒體</string>
 	<string name="stats_empty_comments">尚無回應</string>
 	<string name="stats_bar_graph_empty">沒有可用的統計</string>
-	<string name="invalid_url_message">檢查輸入的網誌網址是否有效</string>
 	<string name="reply_failed">回覆失敗</string>
 	<string name="notifications_empty_list">沒有通知</string>
 	<string name="error_delete_post">刪除 %s 時發生錯誤</string>
@@ -686,6 +759,7 @@
 	<string name="blog_name_invalid">無效的網站位址</string>
 	<string name="blog_title_invalid">無效的網站標題</string>
 	<string name="notifications_empty_all">尚未有任何通知。</string>
+	<string name="invalid_site_url_message">檢查輸入的網站 URL 是否有效</string>
 	<string name="deleting_page">正在刪除頁面</string>
 	<string name="deleting_post">正在刪除文章</string>
 	<string name="share_url_post">分享文章</string>
@@ -702,9 +776,6 @@
 	<string name="video">影片</string>
 	<string name="download">正在下載媒體</string>
 	<string name="cant_share_no_visible_blog">你無法在沒有可見網誌的情形下分享至 WordPress</string>
-	<string name="share_preference_title">分享至 WordPress</string>
-	<string name="reset_auto_share_preference">重設自動分享設定</string>
-	<string name="always_use_these_settings_to_share">一律使用這些設定</string>
 	<string name="comment_spammed">已將留言標記為垃圾</string>
 	<string name="select_time">選取時間</string>
 	<string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
@@ -760,7 +831,6 @@
 	<string name="media_add_popup_capture_video">錄影</string>
 	<string name="media_gallery_type_slideshow">幻燈片</string>
 	<string name="media_gallery_image_order_random">隨機</string>
-	<string name="media_no_video_title">VideoPress 不能用</string>
 	<string name="media_edit_description_text">說明</string>
 	<string name="media_edit_title_hint">在這裡輸入標題</string>
 	<string name="theme_set_success">成功設定佈景主題</string>
@@ -779,7 +849,6 @@
 	<string name="media_edit_failure">更新失敗</string>
 	<string name="themes_details_label">細節</string>
 	<string name="stats_view_tags_and_categories">標籤與分類</string>
-	<string name="media_no_video_message">取得 VideoPress 升級以上傳影片！</string>
 	<string name="themes_features_label">功能</string>
 	<string name="theme_activate_button">啟用</string>
 	<string name="theme_activating_button">啟用中</string>
@@ -819,8 +888,6 @@
 	<string name="more_notifications">還有 %d 個。</string>
 	<string name="follows">關注者</string>
 	<string name="loading">載入中...</string>
-	<string name="post_signature">文章簽名</string>
-	<string name="add_tagline">為新文章新增一個簽名</string>
 	<string name="httppassword">HTTP 密碼</string>
 	<string name="httpuser">HTTP 使用者帳號</string>
 	<string name="error_media_upload">上傳媒體時發生錯誤</string>
@@ -847,11 +914,9 @@
 	<string name="scaled_image">圖片縮放寬度</string>
 	<string name="scheduled">定時</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">發自 WordPress for Android</string>
 	<string name="version">版本</string>
 	<string name="tos">服務條款</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">關於</string>
 	<string name="max_thumbnail_px_width">預設圖片寬度</string>
 	<string name="image_alignment">對齊</string>
 	<string name="refresh">更新</string>
@@ -896,70 +961,4 @@
 	<string name="no">否</string>
 	<string name="preview">預覽</string>
 	<string name="notification_settings">通知設定</string>
-	<string-array name="alignment_array">
-		<item>無</item>
-		<item>靠左</item>
-		<item>置中</item>
-		<item>靠右</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>網站留言</item>
-		<item>按讚的留言</item>
-		<item>按讚的文章</item>
-		<item>網站關注</item>
-		<item>網站成就</item>
-		<item>使用者名稱標記</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>留言的回覆</item>
-		<item>按讚的留言</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>建議</item>
-		<item>研究</item>
-		<item>社群</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>讓 WordPress.com 發揮最大功效的秘訣。</item>
-		<item>參與 WordPress.com 研究與調查的機會。</item>
-		<item>WordPress.com 課程與活動相關資訊 (線上和專人洽詢)。</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>已發表</item>
-		<item>草稿</item>
-		<item>已排程</item>
-		<item>已移至垃圾桶</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>註記</item>
-		<item>音訊</item>
-		<item>聊天</item>
-		<item>藝廊</item>
-		<item>圖像</item>
-		<item>連結</item>
-		<item>引用</item>
-		<item>標準</item>
-		<item>狀態</item>
-		<item>影片</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>所有人都能看見你的網站，且搜尋引擎可能會將網站加入索引</item>
-		<item>所有人都能看見你的網站，但網站會要求搜尋引擎不要加入索引</item>
-		<item>只有你和經核准的使用者可看見你的網站</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>需要人工審核所有人的留言。</item>
-		<item>如果使用者有已審核的留言，則自動核准。</item>
-		<item>自動核准所有人的留言。</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>無留言</item>
-		<item>已知使用者的留言</item>
-		<item>所有使用者</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>免費</item>
-		<item>所有</item>
-		<item>進階</item>
-	</string-array>
 </resources>
