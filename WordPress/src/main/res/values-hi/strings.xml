@@ -133,11 +133,9 @@
 	<string name="contact_us">हमसे संपर्क करें</string>
 	<string name="add_location">स्थान जोड़ें</string>
 	<string name="current_location">वर्तमान स्थान</string>
-	<string name="your_signature">आपका हस्ताक्षर:</string>
 	<string name="search_location">खोज</string>
 	<string name="edit_location">संपादित करें</string>
 	<string name="search_current_location">स्थान निर्धारण करे</string>
-	<string name="preference_privacy">गोपनीयता</string>
 	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
 	<string name="preference_send_usage_stats_summary">स्वचालित रूप से उपयोग के आंकड़े भेज कर हमें एंड्रॉयड के लिए वर्डप्रेस को बेहतर बनाने में मदद करे\n\n</string>
 	<string name="update_verb">अपडेट करे</string>
@@ -226,8 +224,6 @@
 	<string name="category_automatically_renamed">श्रेणी नाम %1$s मान्य नहीं है.यह %2$s में बदल दिया गया है.</string>
 	<string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
 	<string name="no_account">कोई वर्डप्रेस खाता नहीं है,एक खाता जोड़े और फिर से प्रयास करे</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">पहले चयनित ब्लॉग अब नहीं दिख रहा है</string>
-	<string name="auto_sharing_preference_reset">स्वत: साझा सेटिंग रीसेट करें</string>
 	<string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
 	<string name="add_comment">टिप्पणी जोड़ें</string>
 	<string name="add_new_category">नई श्रेणी जोड़ें</string>
@@ -345,11 +341,8 @@
 	<string name="reader_label_reply">जवाब दें</string>
 	<string name="reader_toast_err_get_comment">इस टिप्पणी को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_multi">%,d लोगों ने पसंद किया</string>
-	<string name="always_use_these_settings_to_share">हमेशा इन सेटिंग्स का उपयोग करे</string>
 	<string name="reader_likes_you_and_multi">आपने और %,d लोगो ने इसे पसंद किया है</string>
-	<string name="share_preference_title">वर्डप्रेस पर साझा करे</string>
 	<string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
-	<string name="reset_auto_share_preference">स्वत: साझा सेटिंग रीसेट करें</string>
 	<string name="comment_spammed">टिप्पणी स्पैम के रूप में चिह्नित </string>
 	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
@@ -425,7 +418,6 @@
 	<string name="media_gallery_image_order_reverse">उल्टा</string>
 	<string name="stats_totals_views">देखें गये</string>
 	<string name="passcode_change_passcode">पिन बदलें</string>
-	<string name="media_no_video_title">विडियोप्रेस उपलब्ध नहीं</string>
 	<string name="theme_auth_error_title">थीम को प्राप्त करने में असफल</string>
 	<string name="stats">आँकड़े</string>
 	<string name="theme_set_success">थीम सफलतापूर्वक सेट किया गया!</string>
@@ -445,7 +437,6 @@
 	<string name="post_excerpt">अंश</string>
 	<string name="media_add_popup_capture_photo">छवि कैप्चर करे</string>
 	<string name="media_add_popup_capture_video">विडियो कैप्चर करे</string>
-	<string name="media_no_video_message">विडियो अपलोड करने के लिए VideoPress को अपग्रेड करे</string>
 	<string name="passcode_turn_off">पिन को ऑफ करे</string>
 	<string name="passcode_turn_on">पिन को ऑन करे</string>
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
@@ -461,8 +452,6 @@
 	<string name="loading">लोड किया जा रहा...</string>
 	<string name="httppassword">एचटीटीपी कूटशब्द</string>
 	<string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
-	<string name="post_signature">पोस्ट हस्ताक्षर</string>
-	<string name="add_tagline">नये पोस्टो पर हस्ताक्षर जोड़ें</string>
 	<string name="error_media_upload">मीडिया अपलोड करने के दौरान एक त्रुटि हुई</string>
 	<string name="content_description_add_media">मीडिया जोड़ें</string>
 	<string name="publish_date">प्रकाशित करे</string>
@@ -487,11 +476,9 @@
 	<string name="scaled_image">बढाये गए छवि की चौड़ाई</string>
 	<string name="scheduled">	नियत किया गया</string>
 	<string name="link_enter_url">यूआरएल</string>
-	<string name="posted_from">एंड्राइड के लिए वर्डप्रेस से प्रकाशित किया गया</string>
 	<string name="version">संस्करण</string>
 	<string name="tos">सेवा की शर्तें</string>
 	<string name="app_title">एंड्राइड के लिए वर्डप्रेस</string>
-	<string name="about">के बारे में</string>
 	<string name="max_thumbnail_px_width">मूलभूत छवि की चौड़ाई</string>
 	<string name="image_alignment">संरेखण</string>
 	<string name="refresh">रिफ्रेश</string>
@@ -535,46 +522,4 @@
 	<string name="save">सहेजें</string>
 	<string name="yes">हां</string>
 	<string name="category_refresh_error">श्रेणी रिफ्रेश त्रुटि</string>
-	<string-array name="alignment_array">
-		<item>कुछ भी नहीं</item>
-		<item>बाएं</item>
-		<item>मध्य</item>
-		<item>दाहिना</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>मेरी साइट पर टिप्पणियाँ </item>
-		<item>साइट की उपलब्धयां</item>
-		<item>उपयोगकर्ता के नाम का उल्लेख</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>मेरी टिप्पणी के उत्तर</item>
-		<item>मेरी टिप्पणियों को पसंद किया</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>सुझाव</item>
-		<item>अनुसंधान</item>
-		<item>समुदाय</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>WordPress.com के अनुसंधान और सर्वे में भाग लेने का मौका।</item>
-		<item>पाठ्यक्रम और घटनाओं (ऑनलाइन और व्यक्तिगत रूप से ) के बारे में Wordpress.com पर जानिये</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>प्रकाशित</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>एसाइड</item>
-		<item>ऑडियो</item>
-		<item>चैट</item>
-		<item>गैलरी</item>
-		<item>छवि</item>
-		<item>कड़ी</item>
-		<item>उद्धरण</item>
-		<item>सामान्य</item>
-		<item>स्थति</item>
-		<item>विडियो</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>सभी</item>
-	</string-array>
 </resources>

@@ -155,11 +155,9 @@
 	<string name="hs__invalid_email_error">Skriv inn en gyldig epost-adresse</string>
 	<string name="add_location">Legg til bosted</string>
 	<string name="current_location">Nåværende bosted</string>
-	<string name="your_signature">Din signatur:</string>
 	<string name="search_location">Søk</string>
 	<string name="edit_location">Rediger</string>
 	<string name="search_current_location">Finn</string>
-	<string name="preference_privacy">Synlighet</string>
 	<string name="preference_send_usage_stats">Send statistikk</string>
 	<string name="preference_send_usage_stats_summary">Send automatisk brukerdata til å forbedre WordPress for Android</string>
 	<string name="update_verb">Oppdater</string>
@@ -236,7 +234,6 @@
 	<string name="reader_likes_multi">%,d personer liker dette</string>
 	<string name="reader_toast_err_get_comment">Kunne ikke hente denne kommentaren</string>
 	<string name="video">Video</string>
-	<string name="share_preference_title">Del med WordPress</string>
 	<string name="pick_photo">Velg bilde</string>
 	<string name="select_date">Velg dato</string>
 	<string name="reader_likes_you_and_one">Du og en annen har likt dette</string>
@@ -272,7 +269,6 @@
 	<string name="media_gallery_type">Type</string>
 	<string name="media_gallery_image_order_random">Tilfeldig</string>
 	<string name="media_gallery_image_order_reverse">Omvendt</string>
-	<string name="media_no_video_title">VideoPress utilgjengelig</string>
 	<string name="media_edit_title_text">Tittel</string>
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_edit_success">Oppdatert</string>
@@ -306,7 +302,6 @@
 	<string name="media_gallery_type_squares">Kvadratisk</string>
 	<string name="media_gallery_type_tiled">Flislagt</string>
 	<string name="media_gallery_type_slideshow">Lysbildevisning</string>
-	<string name="media_no_video_message">Oppgrader til VideoPress for å laste opp video!</string>
 	<string name="media_edit_description_hint">Skriv en beskrivelse her</string>
 	<string name="themes_features_label">Funksjoner</string>
 	<string name="stats_view_visitors_and_views">Besøk og visninger</string>
@@ -332,8 +327,6 @@
 	<string name="new_notifications">%d nye varsler</string>
 	<string name="more_notifications">og %d flere.</string>
 	<string name="loading">Laster...</string>
-	<string name="post_signature">Signatur innlegg</string>
-	<string name="add_tagline">Legg til en signatur i nye innlegg</string>
 	<string name="httpuser">HTTP brukernavn</string>
 	<string name="httppassword">HTTP passord</string>
 	<string name="error_media_upload">Det oppsto en feil under opplasting av media.</string>
@@ -360,11 +353,9 @@
 	<string name="scaled_image">Bildebredde</string>
 	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Publisert med WordPress for Android</string>
 	<string name="version">Versjon</string>
 	<string name="tos">Lisens</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">Om</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Oppdater</string>
 	<string name="untitled">Uten tittel</string>
@@ -408,26 +399,4 @@
 	<string name="no">Nei</string>
 	<string name="error">Feil</string>
 	<string name="category_refresh_error">Feil ved innlasting av kategorier på nytt</string>
-	<string-array name="alignment_array">
-		<item>Ingen</item>
-		<item>Venstre</item>
-		<item>Senter</item>
-		<item>Høyre</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Publisert</item>
-		<item>Kladder</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Tilside</item>
-		<item>Lyd</item>
-		<item>Prat</item>
-		<item>Galleri</item>
-		<item>Bilde</item>
-		<item>Lenke</item>
-		<item>Sitat</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
 </resources>
