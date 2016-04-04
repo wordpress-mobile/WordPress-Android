@@ -105,8 +105,8 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     }
 
     /*
-         * last pages is themes, which should only appear when user has purchased business plan
-         */
+     * last pages is themes, which should only appear when user has purchased business plan
+     */
     private int getNumPages() {
         return mIsBusinessPlan ? 4 : 3;
     }
