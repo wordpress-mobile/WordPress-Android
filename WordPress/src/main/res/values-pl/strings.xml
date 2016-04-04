@@ -180,13 +180,11 @@
 	<string name="hs__conversation_detail_error">Opisz problem, który zaobserwowano</string>
 	<string name="add_location">Dodaj lokalizację</string>
 	<string name="current_location">Obecna lokalizacja</string>
-	<string name="your_signature">Twój podpis:</string>
 	<string name="search_location">Szukaj</string>
 	<string name="edit_location">Edytuj</string>
 	<string name="search_current_location">Zlokalizuj</string>
 	<string name="preference_send_usage_stats_summary">Automatycznie wysyłaj statystyki użytkowania, by pomóc nam ulepszać WordPressa dla Androida</string>
 	<string name="preference_send_usage_stats">Wysyłaj statystyki</string>
-	<string name="preference_privacy">Prywatność</string>
 	<string name="update_verb">Zaktualizuj</string>
 	<string name="schedule_verb">Zaplanuj</string>
 	<string name="reader_title_subs">Tagi i blogi</string>
@@ -219,7 +217,6 @@
 	<string name="theme_set_failed">Nie udało się włączyć motywu</string>
 	<string name="stats_empty_comments">Brak komentarzy</string>
 	<string name="stats_bar_graph_empty">Statystyki nie są dostępne</string>
-	<string name="invalid_url_message">Sprawdź czy wprowadzony URL bloga jest poprawny</string>
 	<string name="notifications_empty_list">Brak powiadomień</string>
 	<string name="error_delete_post">Wystąpił błąd podczas usuwania %s</string>
 	<string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
@@ -241,7 +238,6 @@
 	<string name="blog_name_required">Wpisz adres strony</string>
 	<string name="no_network_message">Brak dostępnej sieci</string>
 	<string name="no_site_error">Nie można nawiązać połączenia ze stroną WordPressa</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Poprzednio wybrany blog nie jest już widoczny</string>
 	<string name="blog_not_found">Wystąpił błąd podczas dostępu do tego bloga</string>
 	<string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_notifications">Powiadomienia nie mogły zostać odświeżone w tej chwili</string>
@@ -261,7 +257,6 @@
 	<string name="error_refresh_stats">Statystyki chwilowo nie mogły zostać wyświetlone</string>
 	<string name="blog_name_exists">Witryna o takiej nazwie już istnieje</string>
 	<string name="nux_cannot_log_in">Nie możemy zalogować cię na twoje konto</string>
-	<string name="auto_sharing_preference_reset">Ustawienia automatycznego udostępniania zostały przywrócone do domyślnych</string>
 	<string name="error_downloading_image">Błąd pobierania obrazka</string>
 	<string name="error_load_comment">Nie można było wczytać komentarza</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Adres witryny musi być krótszy niż 64 znaki</string>
@@ -386,9 +381,6 @@
 	<string name="download">Pobieranie mediów</string>
 	<string name="comment_spammed">Komentarz został oznaczony jako spam</string>
 	<string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego bloga</string>
-	<string name="share_preference_title">Udostępnij do WordPressa</string>
-	<string name="reset_auto_share_preference">Zresetuj ustawienia autoudostępniania</string>
-	<string name="always_use_these_settings_to_share">Zawsze używaj tych ustawień</string>
 	<string name="reader_likes_you_and_multi">Ty i %,d innych lubią to</string>
 	<string name="reader_likes_multi">%,d osób lubi to</string>
 	<string name="select_time">Wybierz czas</string>
@@ -474,7 +466,6 @@
 	<string name="passcode_re_enter_passcode">Powtórz swój PIN</string>
 	<string name="passcode_change_passcode">Zmień PIN</string>
 	<string name="passcode_set">Ustaw PIN</string>
-	<string name="media_no_video_message">Zainstaluj VideoPress, aby móc wysyłać pliki wideo!</string>
 	<string name="theme_set_success">Pomyślnie ustawiono motyw!</string>
 	<string name="theme_auth_error_title">Nie udało się pobrać motywów.</string>
 	<string name="images">Obrazy</string>
@@ -482,7 +473,6 @@
 	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>
 	<string name="media_gallery_image_order_reverse">Odwrócona</string>
 	<string name="media_gallery_type_circles">Kręgi</string>
-	<string name="media_no_video_title">Funkcja VideoPress jest niedostępna</string>
 	<string name="media_edit_caption_text">Podpis</string>
 	<string name="theme_activating_button">Aktywowanie</string>
 	<string name="theme_activate_button">Aktywuj</string>
@@ -501,10 +491,8 @@
 	<string name="more_notifications">i %d więcej.</string>
 	<string name="sign_in">Zaloguj się</string>
 	<string name="loading">Ładowanie...</string>
-	<string name="add_tagline">Dodaj podpis do nowych wpisów</string>
 	<string name="httpuser">Nazwa użytkownika protokołu HTTP</string>
 	<string name="httppassword">Hasło protokołu HTTP</string>
-	<string name="post_signature">Podpis</string>
 	<string name="error_media_upload">Napotkano błąd podczas wysyłania multimediów.</string>
 	<string name="publish_date">Opublikuj</string>
 	<string name="post_content">Treść (dotknij, aby dodać tekst i multimedia)</string>
@@ -529,11 +517,9 @@
 	<string name="upload_scaled_image">Załaduj i wprowadź adres do przeskalowanego obrazu</string>
 	<string name="scheduled">Zaplanowane</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Opublikowano przez WordPress dla Androida</string>
 	<string name="version">Wersja</string>
 	<string name="app_title">WordPress dla Androida</string>
 	<string name="tos">Warunki korzystania</string>
-	<string name="about">O nas</string>
 	<string name="image_alignment">Wyrównanie</string>
 	<string name="refresh">Odśwież</string>
 	<string name="untitled">Bez tytułu</string>
@@ -576,22 +562,4 @@
 	<string name="error">Błąd</string>
 	<string name="reply">Odpisz</string>
 	<string name="preview">Podgląd</string>
-	<string-array name="alignment_array">
-		<item>Brak</item>
-		<item>Do lewej</item>
-		<item>Wyśrodkuj</item>
-		<item>Do prawej</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Z boku</item>
-		<item>Audio</item>
-		<item>Czat</item>
-		<item>Galeria</item>
-		<item>Obraz</item>
-		<item>Odnośnik</item>
-		<item>Cytuj</item>
-		<item>Standardowe</item>
-		<item>Status</item>
-		<item>Wideo</item>
-	</string-array>
 </resources>

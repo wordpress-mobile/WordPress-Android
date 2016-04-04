@@ -35,12 +35,10 @@
 	<string name="hs__conversation_header">Támogató chat</string>
 	<string name="add_location">Hely hozzáadás</string>
 	<string name="current_location">Jelenlegi hely</string>
-	<string name="your_signature">Aláírás:</string>
 	<string name="edit_location">Szerkeszt</string>
 	<string name="search_location">Keresés</string>
 	<string name="search_current_location">Hely meghatározás</string>
 	<string name="preference_send_usage_stats">Statisztika küldés</string>
-	<string name="preference_privacy">Adatvédelem</string>
 	<string name="update_verb">Frissítést</string>
 	<string name="schedule_verb">Időzítés</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
@@ -99,7 +97,6 @@
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
 	<string name="dlg_trashing_comments">Lomtárba küldés</string>
 	<string name="pending_review">Áttekintésre várakozik</string>
-	<string name="always_use_these_settings_to_share">Mindig ezeket a beálitásokat használja</string>
 	<string name="download">Média letöltés folyamatban</string>
 	<string name="media_add_new_media_gallery">Galéria létrehozása</string>
 	<string name="reader_btn_follow">Követés</string>
@@ -130,7 +127,6 @@
 	<string name="media_gallery_type_squares">Négyzetek</string>
 	<string name="theme_activate_button">Bekapcsolás</string>
 	<string name="media_gallery_type_circles">Körök</string>
-	<string name="media_no_video_title">VideoPress nem érhető el</string>
 	<string name="media_edit_caption_hint">A feliratot itt lehet megadni</string>
 	<string name="media_edit_description_hint">A leírást itt lehet megadni</string>
 	<string name="media_edit_failure">A feltöltés nem sikerült</string>
@@ -158,7 +154,6 @@
 	<string name="media_gallery_type_slideshow">Diavetítés</string>
 	<string name="media_gallery_type_tiled">Mozaik</string>
 	<string name="unattached">Független</string>
-	<string name="media_no_video_message">Fizessünk elő VideoPressre a videó feltöltéséhez!</string>
 	<string name="media_edit_title_text">Cím</string>
 	<string name="images">Kép</string>
 	<string name="theme_auth_error_title">Nem sikerült a sablonok betöltése</string>
@@ -171,8 +166,6 @@
 	<string name="new_notifications">%d új értesítés</string>
 	<string name="more_notifications">és %d további.</string>
 	<string name="loading">Betöltés</string>
-	<string name="add_tagline">Aláírás hozzáadása a bejegyzéshez</string>
-	<string name="post_signature">Bejegyzés aláírás</string>
 	<string name="httpuser">HTTP felhasználónév</string>
 	<string name="httppassword">HTTP jelszó</string>
 	<string name="error_media_upload">Hiba történt a média feltöltése közben</string>
@@ -199,11 +192,9 @@
 	<string name="scaled_image">Átméretezett kép szélessége</string>
 	<string name="scheduled">Időzítve</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
 	<string name="tos">Szolgáltatási feltételek</string>
 	<string name="version">verzió</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">Névjegy</string>
 	<string name="image_alignment">Kép igazítás</string>
 	<string name="refresh">Frissítés</string>
 	<string name="untitled">Cím nélküli</string>
@@ -246,22 +237,4 @@
 	<string name="yes">Igen</string>
 	<string name="no">Nem</string>
 	<string name="preview">Előnézet</string>
-	<string-array name="alignment_array">
-		<item>Nincs</item>
-		<item>Bal</item>
-		<item>Közép</item>
-		<item>Jobb</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Széljegyzet</item>
-		<item>Audió</item>
-		<item>Chat</item>
-		<item>Galéria</item>
-		<item>Kép</item>
-		<item>Hivatkozás</item>
-		<item>Idézet</item>
-		<item>Általános</item>
-		<item>Állapot</item>
-		<item>Videó</item>
-	</string-array>
 </resources>
