@@ -439,11 +439,9 @@
 	<string name="hs__invalid_email_error">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
 	<string name="add_location">เพิ่มสถานที่</string>
 	<string name="current_location">สถานที่ปัจจุบัน</string>
-	<string name="your_signature">ลายเซ็นของคุณ:</string>
 	<string name="search_location">ค้นหา</string>
 	<string name="edit_location">แก้ไข</string>
 	<string name="search_current_location">ค้นหาสถานที่</string>
-	<string name="preference_privacy">ส่วนตัว</string>
 	<string name="preference_send_usage_stats">ส่งสถิติ</string>
 	<string name="preference_send_usage_stats_summary">ส่งข้อมูลการใช้งานอัตโนมัติเพื่อช่วยเราในการปรับปรุงเวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="update_verb">อัปเดต</string>
@@ -508,7 +506,6 @@
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
 	<string name="stats_empty_comments">ยังไม่มีความเห็น</string>
 	<string name="stats_bar_graph_empty">สถิติยังไม่พร้อมให้ดู</string>
-	<string name="invalid_url_message">ตรวจสอบ URL บล็อกที่ใส่มาว่าใช้งานได้หรือไม่</string>
 	<string name="reply_failed">การตอบกลับล้มเหลว</string>
 	<string name="notifications_empty_list">ไม่มีการเตือน</string>
 	<string name="gallery_error">ไม่สามารถรับไฟล์สื่อ</string>
@@ -524,8 +521,6 @@
 	<string name="error_downloading_image">การดาวน์โหลดรูปภาพผิดพลาด</string>
 	<string name="no_network_message">ไม่มีเครือข่ายที่ใช้งานได้ตอนนี้</string>
 	<string name="theme_fetch_failed">ล้มเหลวในการดึง themes</string>
-	<string name="auto_sharing_preference_reset">ล้างค่าการตั้งค่าการแบ่งปันอัตโนมัติ</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">บล็อกที่เลือกล่าสุดไม่สามารถมองเห็นได้อีกแล้ว</string>
 	<string name="sdcard_message">ต้องมี SD card เพื่อใช้ในการอัปโหลดไฟล์สื่อ</string>
 	<string name="error_refresh_posts">ไม่สามารถโหลดใหม่เรื่องในตอนนี้</string>
 	<string name="error_refresh_pages">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
@@ -648,10 +643,7 @@
 	<string name="error_refresh_media">บางสิ่งผิดปกติในระหว่างโหลดใหม่คลังไฟล์สื่อ  โปรดลองใหม่ภายหลัง</string>
 	<string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง...</string>
 	<string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
-	<string name="share_preference_title">แบ่งปันไปยังเวิร์ดเพรส</string>
 	<string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
-	<string name="reset_auto_share_preference">ล้างค่าการตั้งค่าการแบ่งปันอัตโนมัติ</string>
-	<string name="always_use_these_settings_to_share">ใช้การตั้งค่าเหล่านี้เสมอ</string>
 	<string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
 	<string name="reader_likes_you_and_multi">คุณและ %,d คนชอบสิ่งนี้</string>
 	<string name="reader_toast_err_get_comment">ไม่สามารถดึงข้อมูลความเห็นนี้</string>
@@ -743,8 +735,6 @@
 	<string name="media_gallery_type_tiled">เรียงแบบกระเบื้อง</string>
 	<string name="media_gallery_type_circles">เรียงแบบวงกลม</string>
 	<string name="media_gallery_type_slideshow">สไลด์โชว์</string>
-	<string name="media_no_video_title">VideoPress ยังใช้งานไม่ได้</string>
-	<string name="media_no_video_message">อัปเกรด VideoPress เพื่ออัปโหลดวีดีโอ</string>
 	<string name="media_add_popup_capture_photo">จับภาพรูปภาพ</string>
 	<string name="media_add_popup_capture_video">จับภาพวีดีโอ</string>
 	<string name="media_gallery_image_order_random">สุ่ม</string>
@@ -771,8 +761,6 @@
 	<string name="more_notifications">และ %d เพิ่มเติม</string>
 	<string name="follows">ติดตาม</string>
 	<string name="loading">กำลังโหลดข้อมูล...</string>
-	<string name="post_signature">ลายเซ็นเรื่อง</string>
-	<string name="add_tagline">ใส่ลายเซ็นลงไปเรื่องใหม่</string>
 	<string name="httpuser">ชื่อผู้ใช้ HTTP</string>
 	<string name="httppassword">รหัสผ่าน HTTP</string>
 	<string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
@@ -799,11 +787,9 @@
 	<string name="scaled_image">ปรับขนาดความกว้างรูปภาพแล้ว</string>
 	<string name="scheduled">กำหนดตารางเวลาแล้ว</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">โพสท์จากเวิร์ดเพรสสำหรับแอนดรอยด์</string>
 	<string name="version">รุ่น</string>
 	<string name="tos">เงื่อนไขบริการ</string>
 	<string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>
-	<string name="about">เกี่ยวกับ</string>
 	<string name="max_thumbnail_px_width">ความกว้างรูปค่าเริ่มต้น</string>
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
@@ -848,62 +834,4 @@
 	<string name="category_refresh_error">โหลดหมวดหมู่อีกครั้งผิดพลาด</string>
 	<string name="preview">ดูก่อน</string>
 	<string name="notification_settings">การตั้งค่าการเตือน</string>
-	<string-array name="alignment_array">
-		<item>ไม่มีการจัดเรียง</item>
-		<item>จัดชิดซ้าย</item>
-		<item>ตรงกลาง</item>
-		<item>จัดชิดขวา</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>ความเห็นบนเว็บของฉัน</item>
-		<item>ไลค์บนความเห็นของฉัน</item>
-		<item>ไลค์บนเรื่องของฉัน</item>
-		<item>การติดตามเว็บ</item>
-		<item>ผลสำเร็จของเว็บ</item>
-		<item>การอ้างถึงชื่อผู้ใช้</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>ข้อความตอบกลับไปที่ความเห็นของฉัน</item>
-		<item>ไลค์บนความเห็นของฉัน</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>คำแนะนำ</item>
-		<item>การวิจัย</item>
-		<item>ชุมชน</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>ข้อแนะนำสำหรับการใช้งานที่ได้ประโยชน์สูงสุดจาก WordPress.com</item>
-		<item>โอกาสในการมีส่วนร่วมในการวิจัยและสำรวจของ WordPress.com</item>
-		<item>รายละเอียดเกี่ยวกับหลักสูตรและเหตุการณ์บน WordPress.com (ออนไลน์ &amp; เจอตัวจริง)</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>เผยแพร่แล้ว</item>
-		<item>ฉบับร่าง</item>
-		<item>ตั้งตารางเวลาแล้ว</item>
-		<item>เป็นขยะแล้ว</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>ชนิดเรื่องสั้นไม่มีหัวข้อ</item>
-		<item>ชนิดเรื่องไฟล์เสียง</item>
-		<item>ชนิดเรื่องบทสนทนา</item>
-		<item>ชนิดเรื่องคลังรูป</item>
-		<item>ชนิดเรื่องรูปภาพ</item>
-		<item>ชนิดเรื่องลิงก์</item>
-		<item>ชนิดเรื่องคำคม</item>
-		<item>ชนิดเรื่องมาตรฐาน</item>
-		<item>ชนิดเรื่องสถานะ</item>
-		<item>ชนิดเรื่องวีดีโอ</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>ต้องการการอนุมัติด้วยมือทุกครั้งสำหรับความเห็นของทุกคน</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>ไม่มีความเห็น</item>
-		<item>ผู้ใช้ทั้งหมด</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>ฟรี</item>
-		<item>ทั้งหมด</item>
-		<item>พรีเมี่ยม</item>
-	</string-array>
 </resources>

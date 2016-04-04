@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">アカウント設定を保存できませんでした</string>
+	<string name="post_format_status">ステータス</string>
+	<string name="post_format_video">動画</string>
+	<string name="align_none">なし</string>
+	<string name="align_left">左</string>
+	<string name="align_center">中央</string>
+	<string name="align_right">右</string>
+	<string name="theme_free">無料</string>
+	<string name="theme_all">すべて</string>
+	<string name="theme_premium">プレミアム</string>
+	<string name="post_format_chat">チャット</string>
+	<string name="post_format_gallery">ギャラリー</string>
+	<string name="post_format_image">画像</string>
+	<string name="post_format_link">リンク</string>
+	<string name="post_format_quote">引用</string>
+	<string name="post_format_standard">標準</string>
+	<string name="notif_events">WordPress.com のコースやイベント (オンライン・オフライン) の情報。</string>
+	<string name="post_format_aside">アサイド</string>
+	<string name="post_format_audio">音声ファイル</string>
+	<string name="notif_surveys">WordPress.com の研究・調査に参加する機会。</string>
+	<string name="notif_tips">WordPress.com を最大限に活用するためのヒント。</string>
+	<string name="notif_community">コミュニティ</string>
+	<string name="replies_to_my_comments">自分のコメントへの返信</string>
+	<string name="notif_suggestions">提案</string>
+	<string name="notif_research">リサーチ</string>
+	<string name="site_achievements">サイトの達成記録</string>
+	<string name="username_mentions">ユーザー名メンション</string>
+	<string name="likes_on_my_posts">自分の投稿への「いいね」</string>
+	<string name="site_follows">サイトでフォロー</string>
+	<string name="likes_on_my_comments">自分のコメントへの「いいね」</string>
+	<string name="comments_on_my_site">サイト上のコメント</string>
+	<string name="site_settings_list_editor_summary_other">%d項目</string>
+	<string name="site_settings_list_editor_summary_one">1項目</string>
+	<string name="approve_auto_if_previously_approved">既知のユーザーのコメント</string>
+	<string name="approve_auto">すべてのユーザー</string>
+	<string name="approve_manual">コメントなし</string>
+	<string name="site_settings_paging_summary_other">%d件のコメント (1ページあたり)</string>
+	<string name="site_settings_paging_summary_one">1件のコメント (1ページあたり)</string>
+	<string name="site_settings_multiple_links_summary_other">%dリンク以上の承認が必要です</string>
+	<string name="site_settings_multiple_links_summary_one">2リンク以上の承認が必要です</string>
+	<string name="site_settings_multiple_links_summary_zero">1リンク以上の承認が必要です</string>
+	<string name="detail_approve_auto">すべてのコメントを自動的に承認します。</string>
+	<string name="detail_approve_auto_if_previously_approved">ユーザーのコメントが以前に承認されている場合、自動的に承認します</string>
+	<string name="detail_approve_manual">すべてのコメントで手動の承認が必要です。</string>
+	<string name="filter_trashed_posts">ゴミ箱に移動</string>
+	<string name="days_quantity_one">1日</string>
+	<string name="days_quantity_other">%d日</string>
+	<string name="filter_published_posts">公開済み</string>
+	<string name="filter_draft_posts">下書き</string>
+	<string name="filter_scheduled_posts">予約済み</string>
+	<string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
+	<string name="primary_site">基本のサイト</string>
+	<string name="web_address">ウェブアドレス</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">一部のメディアのアップロードに失敗しました。もう一度お試しいただくか、該当するファイルを削除してください。</string>
+	<string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
+	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
+	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
+	<string name="editor_post_settings_featured_image">アイキャッチ画像</string>
+	<string name="new_editor_promo_desc">Android 用の WordPress アプリに、美しいビジュアルエディターが\n新たに追加されました。新しい投稿を作って、その機能をお試しください。</string>
+	<string name="new_editor_promo_title">刷新されたエディター</string>
+	<string name="new_editor_promo_button_label">ありがとうございます。</string>
+	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
+	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
+	<string name="editor_page_title_placeholder">ページタイトル</string>
+	<string name="editor_post_title_placeholder">投稿タイトル</string>
+	<string name="email_address">メールアドレス</string>
+	<string name="preference_show_visual_editor">ビジュアルエディターを表示</string>
+	<string name="dlg_sure_to_delete_comments">これらのコメントを完全に削除しますか ?</string>
+	<string name="preference_editor">編集者</string>
+	<string name="dlg_sure_to_delete_comment">このコメントを完全に削除しますか ?</string>
+	<string name="mnu_comment_delete_permanently">削除</string>
+	<string name="comment_deleted_permanently">コメントを削除しました</string>
+	<string name="mnu_comment_untrash">復元</string>
+	<string name="comments_empty_list_filtered">%s のコメントはありません</string>
+	<string name="could_not_load_page">ページを読み込めません</string>
+	<string name="comment_status_all">すべて</string>
+	<string name="interface_language">管理画面の言語</string>
+	<string name="off">オフ</string>
+	<string name="about_the_app">このアプリについて</string>
 	<string name="error_post_my_profile">プロフィールを保存できませんでした</string>
 	<string name="error_fetch_account_settings">アカウント設定を読み込めませんでした</string>
 	<string name="error_fetch_my_profile">プロフィールを読み込めませんでした</string>
@@ -487,11 +565,9 @@
 	<string name="hs__invalid_email_error">正しいメールアドレスを入力してください</string>
 	<string name="add_location">位置情報を追加</string>
 	<string name="current_location">現在の位置</string>
-	<string name="your_signature">署名:</string>
 	<string name="search_location">検索</string>
 	<string name="edit_location">編集</string>
 	<string name="search_current_location">位置情報取得</string>
-	<string name="preference_privacy">プライバシー</string>
 	<string name="preference_send_usage_stats">統計情報を送信</string>
 	<string name="preference_send_usage_stats_summary">WordPress for Android を改善するため、利用統計情報を自動的に送信する</string>
 	<string name="update_verb">更新</string>
@@ -530,7 +606,6 @@
 	<string name="theme_set_failed">テーマの設定に失敗しました</string>
 	<string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
 	<string name="adding_cat_success">カテゴリーを追加しました</string>
-	<string name="auto_sharing_preference_reset">自動共有設定リセット</string>
 	<string name="blog_name_cant_be_used">そのサイトアドレスは使えません</string>
 	<string name="blog_name_contains_invalid_characters">サイトアドレスに \'_\' (アンダースコア記号) を含めることはできません</string>
 	<string name="blog_name_must_be_at_least_four_characters">サイトアドレスは4文字以上にしてください。</string>
@@ -551,7 +626,6 @@
 	<string name="error_refresh_notifications">通知を再読み込みできませんでした</string>
 	<string name="invalid_email_message">無効なメールアドレスです</string>
 	<string name="invalid_password_message">パスワードは4文字以上にしてください</string>
-	<string name="invalid_url_message">入力したブログ URL が正しいか確認してください</string>
 	<string name="invalid_username_too_long">ユーザー名は半角で61文字以下にしてください。</string>
 	<string name="invalid_username_too_short">ユーザー名は4文字以上にしてください</string>
 	<string name="no_account">WordPress アカウントが見つかりません。アカウントを追加して、もう一度お試しください。</string>
@@ -574,7 +648,6 @@
 	<string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
 	<string name="wait_until_upload_completes">アップロードが完了するまでお待ちください</string>
 	<string name="username_must_include_letters">ユーザー名には必ず英小文字 (a-z) を1つ以上含めてください</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">以前選択したブログは現在非表示になっています</string>
 	<string name="error_refresh_posts">投稿を再読み込みできませんでした</string>
 	<string name="error_refresh_pages">ページを再読み込みできませんでした</string>
 	<string name="error_refresh_comments">コメントを再読み込みできませんでした</string>
@@ -686,6 +759,7 @@
 	<string name="blog_removed_successfully">サイトを削除しました</string>
 	<string name="remove_account">サイトを削除</string>
 	<string name="notifications_empty_all">通知はまだありません。</string>
+	<string name="invalid_site_url_message">入力したサイト URL が正しいか確認してください</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
@@ -699,11 +773,8 @@
 	<string name="download">メディアをダウンロード中</string>
 	<string name="reader_label_reply">返信</string>
 	<string name="video">動画</string>
-	<string name="share_preference_title">WordPress で共有</string>
 	<string name="reader_toast_err_get_comment">このコメントを読み込めません</string>
 	<string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
-	<string name="reset_auto_share_preference">自動共有設定をリセット</string>
-	<string name="always_use_these_settings_to_share">常にこの設定を使用</string>
 	<string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」をしています。</string>
 	<string name="reader_likes_multi">%,d 人が「いいね」しています。</string>
 	<string name="pick_photo">画像を選択</string>
@@ -803,13 +874,11 @@
 	<string name="passcode_manage">PIN 番号ロック管理</string>
 	<string name="stats_view_tags_and_categories">タグとカテゴリー</string>
 	<string name="stats_view_visitors_and_views">訪問者数・表示回数</string>
-	<string name="media_no_video_title">VideoPress が利用できません</string>
 	<string name="post_excerpt">抜粋</string>
 	<string name="theme_activating_button">有効化中</string>
 	<string name="theme_set_success">テーマの設定を完了しました。</string>
 	<string name="share_action_title">追加先</string>
 	<string name="theme_auth_error_title">テーマ情報の取得に失敗しました</string>
-	<string name="media_no_video_message">動画をアップロードするには VideoPress アップグレードを追加してください。</string>
 	<string name="custom_date">カスタム日付</string>
 	<string name="upload">アップロード</string>
 	<string name="sign_in">ログイン</string>
@@ -819,8 +888,6 @@
 	<string name="more_notifications">あと%d件。</string>
 	<string name="new_notifications">%d件の新しい通知</string>
 	<string name="loading">読込中…</string>
-	<string name="post_signature">投稿の署名</string>
-	<string name="add_tagline">新規投稿に署名を追加</string>
 	<string name="httpuser">HTTP ユーザー名</string>
 	<string name="httppassword">HTTP パスワード</string>
 	<string name="error_media_upload">メディアをアップロードする際にエラーが発生しました</string>
@@ -847,11 +914,9 @@
 	<string name="upload_scaled_image">アップロードしてサイズを変更した画像にリンク</string>
 	<string name="scheduled">予約済み</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">WordPress for Android から投稿</string>
 	<string name="version">バージョン</string>
 	<string name="tos">利用規約</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">紹介</string>
 	<string name="max_thumbnail_px_width">標準の画像幅</string>
 	<string name="image_alignment">配置</string>
 	<string name="refresh">再読み込み</string>
@@ -896,70 +961,4 @@
 	<string name="error">エラー</string>
 	<string name="category_refresh_error">カテゴリーの再読み込みエラー</string>
 	<string name="notification_settings">通知設定</string>
-	<string-array name="alignment_array">
-		<item>なし</item>
-		<item>左</item>
-		<item>中央</item>
-		<item>右</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>サイト上のコメント</item>
-		<item>自分のコメントへの「いいね」</item>
-		<item>自分の投稿への「いいね」</item>
-		<item>サイトでフォロー</item>
-		<item>サイトの達成記録</item>
-		<item>ユーザー名への言及</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>自分のコメントへの返信</item>
-		<item>自分のコメントへの「いいね」</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>提案</item>
-		<item>リサーチ</item>
-		<item>コミュニティ</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>WordPress.com を最大限に活用するためのヒント。</item>
-		<item>WordPress.com の研究・調査に参加する機会。</item>
-		<item>WordPress.com のコースやイベント (オンライン・オフライン) の情報。</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>公開済み</item>
-		<item>下書き</item>
-		<item>予約済み</item>
-		<item>ゴミ箱移動済み</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>アサイド</item>
-		<item>音声</item>
-		<item>チャット</item>
-		<item>ギャラリー</item>
-		<item>画像</item>
-		<item>リンク</item>
-		<item>引用</item>
-		<item>標準</item>
-		<item>ステータス</item>
-		<item>動画</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>誰でもサイトを表示可能にし、検索エンジンによるインデックスを許可する</item>
-		<item>誰でもサイトを表示可能にし、検索エンジンによるインデックスは回避する</item>
-		<item>自身と承認したユーザーのみがサイトを表示可能</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>すべてのコメントで、手動の承認が必要です。</item>
-		<item>ユーザーのコメントが以前に承認されている場合、自動的に承認します。</item>
-		<item>すべてのコメントを自動的に承認します。</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>コメントはありません</item>
-		<item>既知のユーザーのコメント</item>
-		<item>すべてのユーザー</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>無料</item>
-		<item>すべて</item>
-		<item>プレミアム</item>
-	</string-array>
 </resources>

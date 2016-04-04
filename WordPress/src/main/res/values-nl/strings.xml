@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Opslaan van je accountinstellingen mislukt</string>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">Geen</string>
+	<string name="align_left">Links</string>
+	<string name="align_center">Midden</string>
+	<string name="align_right">Rechts</string>
+	<string name="theme_free">Gratis</string>
+	<string name="theme_all">Alle</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Chat</string>
+	<string name="post_format_gallery">Galerij</string>
+	<string name="post_format_image">Afbeelding</string>
+	<string name="post_format_link">Link</string>
+	<string name="post_format_quote">Citeren</string>
+	<string name="post_format_standard">Standaard</string>
+	<string name="notif_events">Informatie over cursussen en evenementen van WordPress.com (online en op locatie).</string>
+	<string name="post_format_aside">Aside</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="notif_surveys">Mogelijkheden om deel te nemen aan onderzoeken en enquêtes van WordPress.com.</string>
+	<string name="notif_tips">Tips om WordPress.com optimaal te benutten.</string>
+	<string name="notif_community">Community</string>
+	<string name="replies_to_my_comments">Antwoorden op mijn reacties</string>
+	<string name="notif_suggestions">Suggesties</string>
+	<string name="notif_research">Onderzoek</string>
+	<string name="site_achievements">Prestaties voor de site</string>
+	<string name="username_mentions">Vermeldingen van gebruikersnaam</string>
+	<string name="likes_on_my_posts">Likes voor mijn berichten</string>
+	<string name="site_follows">Volgers van site</string>
+	<string name="likes_on_my_comments">Likes voor mijn reacties</string>
+	<string name="comments_on_my_site">Reacties op mijn site</string>
+	<string name="site_settings_list_editor_summary_other">%d items</string>
+	<string name="site_settings_list_editor_summary_one">1 item</string>
+	<string name="approve_auto_if_previously_approved">Reacties van bekende gebruikers</string>
+	<string name="approve_auto">Alle gebruikers</string>
+	<string name="approve_manual">Geen reacties</string>
+	<string name="site_settings_paging_summary_other">%d reacties per pagina</string>
+	<string name="site_settings_paging_summary_one">1 reactie per pagina</string>
+	<string name="site_settings_multiple_links_summary_other">Vereis goedkeuring voor meer dan %d links</string>
+	<string name="site_settings_multiple_links_summary_one">Vereis goedkeuring voor meer dan 1 link</string>
+	<string name="site_settings_multiple_links_summary_zero">Vereis goedkeuring voor meer dan 0 links</string>
+	<string name="detail_approve_auto">Keur de reacties van iedereen automatisch goed.</string>
+	<string name="detail_approve_auto_if_previously_approved">Keur de reactie automatisch goed indien de gebruiker eerder een goedgekeurde reactie heeft geplaatst</string>
+	<string name="detail_approve_manual">Vereist handmatige goedkeuring voor de reacties van iedereen.</string>
+	<string name="filter_trashed_posts">Verwijderd</string>
+	<string name="days_quantity_one">1 dag</string>
+	<string name="days_quantity_other">%d dagen</string>
+	<string name="filter_published_posts">Gepubliceerd</string>
+	<string name="filter_draft_posts">Concepten</string>
+	<string name="filter_scheduled_posts">Gepland</string>
+	<string name="pending_email_change_snackbar">Klik op de link in de verificatiemail die verzonden is naar %1$s om je nieuwe adres te bevestigen</string>
+	<string name="primary_site">Primaire site</string>
+	<string name="web_address">Webadres</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Probeer het opnieuw of verwijder ze.</string>
+	<string name="editor_toast_uploading_please_wait">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
+	<string name="error_refresh_comments_showing_older">Reacties konden momenteel niet worden vernieuwd - oudere reacties worden weergegeven</string>
+	<string name="editor_post_settings_set_featured_image">Stel aanbevolen afbeelding in</string>
+	<string name="editor_post_settings_featured_image">Aanbevolen afbeelding</string>
+	<string name="new_editor_promo_desc">De WordPress-app voor Android bevat een prachtige nieuwe visual\n editor. Probeer hem uit door een nieuw bericht te maken.</string>
+	<string name="new_editor_promo_title">Volledig nieuwe editor</string>
+	<string name="new_editor_promo_button_label">Geweldig, bedankt!</string>
+	<string name="visual_editor_enabled">Visual Editor ingeschakeld</string>
+	<string name="editor_content_placeholder">Deel hier je verhaal...</string>
+	<string name="editor_page_title_placeholder">Paginatitel</string>
+	<string name="editor_post_title_placeholder">Berichttitel</string>
+	<string name="email_address">E-mailadres</string>
+	<string name="preference_show_visual_editor">Visual Editor weergeven</string>
+	<string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>
+	<string name="mnu_comment_delete_permanently">Verwijderen</string>
+	<string name="comment_deleted_permanently">Reactie verwijderd</string>
+	<string name="mnu_comment_untrash">Herstellen</string>
+	<string name="comments_empty_list_filtered">Geen %s reacties</string>
+	<string name="could_not_load_page">Kan pagina niet laden</string>
+	<string name="comment_status_all">Alle</string>
+	<string name="interface_language">Interface-taal</string>
+	<string name="off">Uit</string>
+	<string name="about_the_app">Over de app</string>
 	<string name="error_post_my_profile">Opslaan van je profiel mislukt</string>
 	<string name="error_fetch_account_settings">Ophalen van je accountinstellingen mislukt</string>
 	<string name="error_fetch_my_profile">Ophalen van je profiel mislukt</string>
@@ -487,11 +565,9 @@
 	<string name="hs__invalid_email_error">Voer een geldig e-mailadres in</string>
 	<string name="add_location">Locatie toevoegen</string>
 	<string name="current_location">Huidige Locatie</string>
-	<string name="your_signature">Je handtekening</string>
 	<string name="search_location">Zoeken</string>
 	<string name="edit_location">Bewerken</string>
 	<string name="search_current_location">Locatie bepalen</string>
-	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Verstuur statistieken</string>
 	<string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
 	<string name="update_verb">Bijwerken</string>
@@ -527,8 +603,6 @@
 	<string name="cat_name_required">Het veld Categorienaam is verplicht</string>
 	<string name="category_automatically_renamed">Categorienaam %1$s is ongeldig. De categorie is hernoemd naar %2$s.</string>
 	<string name="no_account">Geen WordPress-account gevonden. Voeg een account toe en probeer het opnieuw</string>
-	<string name="auto_sharing_preference_reset">Instellingen automatisch delen opnieuw instellen</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Eerder geselecteerd blog is niet meer zichtbaar</string>
 	<string name="sdcard_message">Er moet een SD-kaart zijn gekoppeld om media te uploaden</string>
 	<string name="stats_empty_comments">Er zijn nog geen reacties</string>
 	<string name="error_load_comment">Kan de reactie niet laden</string>
@@ -550,7 +624,6 @@
 	<string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
 	<string name="wait_until_upload_completes">Wacht tot de upload is voltooid</string>
 	<string name="stats_bar_graph_empty">Geen statistieken beschikbaar</string>
-	<string name="invalid_url_message">Controleer of de ingevoerde blog-URL geldig is</string>
 	<string name="reply_failed">Reactie mislukt</string>
 	<string name="notifications_empty_list">Geen notificaties</string>
 	<string name="error_delete_post">Er heeft zich een fout voorgedaan bij het verwijderen van %s</string>
@@ -686,6 +759,7 @@
 	<string name="blog_name_invalid">Ongeldig site-adres</string>
 	<string name="blog_title_invalid">Ongeldige sitetitel</string>
 	<string name="notifications_empty_all">Nog geen meldingen.</string>
+	<string name="invalid_site_url_message">Controleer of de ingevoerde site-URL geldig is</string>
 	<string name="share_url_page">Deel pagina</string>
 	<string name="share_url_post">Deel bericht</string>
 	<string name="deleting_page">Verwijderen van pagina</string>
@@ -703,9 +777,6 @@
 	<string name="download">Downloaden van media</string>
 	<string name="comment_spammed">Reactie als spam gemarkeerd</string>
 	<string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
-	<string name="share_preference_title">Deel naar WordPress</string>
-	<string name="reset_auto_share_preference">Reset auto-sharing instellingen</string>
-	<string name="always_use_these_settings_to_share">Gebruik deze instellingen altijd</string>
 	<string name="pick_photo">Selecteer foto</string>
 	<string name="account_two_step_auth_enabled">Voor deze account is authenticatie in twee stappen actief. Bekijk je beveiligingsinstellingen op WordPress.com en genereer een applicatie-specifiek wachtwoord.</string>
 	<string name="pick_video">Selecteer video</string>
@@ -758,7 +829,6 @@
 	<string name="unattached">Niet gekoppeld</string>
 	<string name="custom_date">Aan te passen datum</string>
 	<string name="media_gallery_type_slideshow">Diavoorstelling</string>
-	<string name="media_no_video_title">VideoPress niet beschikbaar</string>
 	<string name="media_edit_title_text">Titel</string>
 	<string name="media_edit_caption_text">Onderschrift</string>
 	<string name="theme_activating_button">Activeren</string>
@@ -797,7 +867,6 @@
 	<string name="passcode_re_enter_passcode">Voer je PIN opnieuw in</string>
 	<string name="passcode_change_passcode">Verander PIN</string>
 	<string name="passcode_set">PIN ingesteld</string>
-	<string name="media_no_video_message">Haal nu VideoPress op om video te uploaden</string>
 	<string name="media_edit_description_text">Beschrijving</string>
 	<string name="media_edit_title_hint">Voer hier een titel in</string>
 	<string name="media_edit_caption_hint">Voer hier een onderschrift in</string>
@@ -821,8 +890,6 @@
 	<string name="loading">Laden...</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>
 	<string name="httppassword">HTTP wachtwoord</string>
-	<string name="post_signature">Bericht handtekening</string>
-	<string name="add_tagline">Voeg een handtekening toe aan nieuwe berichten</string>
 	<string name="error_media_upload">Er is een fout opgetreden tijdens het uploaden van media</string>
 	<string name="publish_date">Publiceer</string>
 	<string name="content_description_add_media">Media toevoegen</string>
@@ -847,11 +914,9 @@
 	<string name="scaled_image">Breedte geschaalde afbeelding</string>
 	<string name="scheduled">Gepland</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Geplaatst met WordPress voor Android</string>
 	<string name="version">Versie</string>
 	<string name="tos">Eindgebruikersovereenkomst</string>
 	<string name="app_title">WordPress voor Android</string>
-	<string name="about">Over</string>
 	<string name="max_thumbnail_px_width">Standaardbreedte van afbeelding</string>
 	<string name="image_alignment">Uitlijning </string>
 	<string name="refresh">Vernieuw</string>
@@ -896,70 +961,4 @@
 	<string name="category_refresh_error">Categorie vernieuwen fout</string>
 	<string name="preview">Voorbeeld</string>
 	<string name="notification_settings">Meldingsinstellingen</string>
-	<string-array name="alignment_array">
-		<item>Geen</item>
-		<item>Links</item>
-		<item>Midden</item>
-		<item>Rechts</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Reacties op mijn site</item>
-		<item>Likes voor mijn reacties</item>
-		<item>Likes voor mijn berichten</item>
-		<item>Volgers van site</item>
-		<item>Prestaties voor de site</item>
-		<item>Vermeldingen van gebruikersnaam</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Antwoorden op mijn reacties</item>
-		<item>Likes voor mijn reacties</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Suggesties</item>
-		<item>Onderzoek</item>
-		<item>Community</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tips om WordPress.com optimaal te benutten.</item>
-		<item>Mogelijkheden om deel te nemen aan onderzoeken en enquêtes van WordPress.com.</item>
-		<item>Informatie over cursussen en evenementen van WordPress.com (online en op locatie).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Gepuliceerd</item>
-		<item>Concept</item>
-		<item>Ingepland</item>
-		<item>Weggegooid</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Aside</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galerij</item>
-		<item>Afbeelding</item>
-		<item>Link</item>
-		<item>Quote</item>
-		<item>Standaard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Je site kan door iedereen worden bekeken en kan worden geïndexeerd door zoekmachines</item>
-		<item>Je site kan door iedereen worden bekeken, maar wordt niet geïndexeerd door zoekmachines</item>
-		<item>Je site is alleen zichtbaar voor jou en gebruikers die je goedkeurt</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Vereist handmatige goedkeuring voor de reacties van iedereen.</item>
-		<item>Keur de reactie automatisch goed indien de gebruiker eerder een goedgekeurde reactie heeft geplaatst.</item>
-		<item>Keur de reacties van iedereen automatisch goed.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Geen reacties</item>
-		<item>Reacties van bekende gebruikers</item>
-		<item>Alle gebruikers</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Gratis</item>
-		<item>Alles</item>
-		<item>Premium</item>
-	</string-array>
 </resources>
