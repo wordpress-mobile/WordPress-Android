@@ -103,8 +103,9 @@ public class PeopleTable {
         String[] args = { Long.toString(personId), Integer.toString(localTableBlogId) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND local_blog_id=?", args);
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
+            }
             return getPersonFromCursor(c, localTableBlogId);
         } finally {
             SqlUtils.closeCursor(c);
