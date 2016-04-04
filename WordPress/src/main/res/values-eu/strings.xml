@@ -73,10 +73,8 @@
 	<string name="reader_label_like">Gustukoa</string>
 	<string name="select_a_blog">Aukeratu WordPress gune bat</string>
 	<string name="contact_us">Kontaktatu gurekin</string>
-	<string name="your_signature">Zure sinadura:</string>
 	<string name="edit_location">Editatu</string>
 	<string name="search_location">Bilatu</string>
-	<string name="preference_privacy">Pribatutasuna</string>
 	<string name="preference_send_usage_stats">Bidali estatistikak</string>
 	<string name="preference_send_usage_stats_summary">Bidali erabilera estatistikak automatikoki WordPress Android-erako hobetzen laguntzeko</string>
 	<string name="update_verb">Eguneratu</string>
@@ -118,9 +116,6 @@
 	<string name="wait_until_upload_completes">Itxaron karga osatu bitartean</string>
 	<string name="blog_not_found">Blog honetara sartzean errore bat gertatu da</string>
 	<string name="nux_cannot_log_in">Ezin zaitugu sartu</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Aurretik hautatutako bloga ez dago eskuragarri dagoeneko</string>
-	<string name="invalid_url_message">Ziurtatu sartutako blogaren URLa zuzena dela</string>
-	<string name="auto_sharing_preference_reset">Hobespenen berrezartzea auto-partekatzen</string>
 	<string name="reply_failed">Erantzunak huts egin du</string>
 	<string name="error_refresh_comments">Iruzkinak ezin izan dira une honetan freskatu</string>
 	<string name="error_refresh_stats">Estatistikak ezin izan dira une honetan freskatu </string>
@@ -269,9 +264,6 @@
 	<string name="comment_spammed">Iruzkina spam bezala markatuta</string>
 	<string name="download">Media deskargatzen</string>
 	<string name="reader_likes_multi">%,d pertsonak hau gustuko dute</string>
-	<string name="share_preference_title">Partekatu WordPress-en</string>
-	<string name="reset_auto_share_preference">Automatikoki partekatzeko hobespenak berrezarri</string>
-	<string name="always_use_these_settings_to_share">Erabili beti hobespen hauek</string>
 	<string name="reader_toast_err_get_comment">Ezin izan da iruzkin hau eskuratu</string>
 	<string name="reader_likes_you_and_multi">Zuk eta %,d pertsonak hau gustuko duzue</string>
 	<string name="select_time">Aukeratu ordua</string>
@@ -335,7 +327,6 @@
 	<string name="all">Denak</string>
 	<string name="unattached">Txertatu gabe</string>
 	<string name="media_add_popup_capture_video">Bideoa grabatu</string>
-	<string name="media_no_video_title">VideoPress ez dago eskuragarri</string>
 	<string name="stats_timeframe_today">Gaur</string>
 	<string name="stats_timeframe_yesterday">Atzo</string>
 	<string name="theme_activate_button">Gaitu</string>
@@ -355,7 +346,6 @@
 	<string name="media_gallery_type_tiled">Mosaikoa</string>
 	<string name="media_gallery_type_circles">Zirkuluak</string>
 	<string name="media_gallery_image_order_reverse">Alderantzikatu</string>
-	<string name="media_no_video_message">Bideoak igotzeko VideoPress erosi behar duzu</string>
 	<string name="stats_view_visitors_and_views">Bisitariak eta ikuspegiak</string>
 	<string name="stats_totals_clicks">Klikak</string>
 	<string name="themes_features_label">Ezaugarriak</string>
@@ -386,8 +376,6 @@
 	<string name="note_reply_successful">Erantzuna argitaratuta.</string>
 	<string name="loading">Kargatzen...</string>
 	<string name="httppassword">HTTP pasahitza</string>
-	<string name="post_signature">Bidalketaren sinadura</string>
-	<string name="add_tagline">Gehitu sinadura bidalketa berrietan</string>
 	<string name="httpuser">HTTP erabiltzaile-izena</string>
 	<string name="error_media_upload">Errore bat gertatu da mediak kargatzean</string>
 	<string name="publish_date">Argitaratu</string>
@@ -413,11 +401,9 @@
 	<string name="scaled_image">Irudiaren zabalera eskalan</string>
 	<string name="scheduled">Programatuta</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">WordPress Android-erako erabiliz argitaratua</string>
 	<string name="version">Bertsioa</string>
 	<string name="tos">Zerbitzu-baldintzak</string>
 	<string name="app_title">WordPress Android-erako</string>
-	<string name="about">Honi buruz</string>
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>
@@ -460,26 +446,4 @@
 	<string name="preview">Aurrebista</string>
 	<string name="category_refresh_error">Kategoria eguneraketa errorea</string>
 	<string name="on">en</string>
-	<string-array name="alignment_array">
-		<item>Bat ere ez</item>
-		<item>Ezkerrean</item>
-		<item>Erdian</item>
-		<item>Eskuinean</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Argitaratua</item>
-		<item>Zirriborroak</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Albokoa</item>
-		<item>Audioa</item>
-		<item>Txata</item>
-		<item>Galeria</item>
-		<item>Irudia</item>
-		<item>Esteka</item>
-		<item>Aipua</item>
-		<item>Estandarra</item>
-		<item>Egoera</item>
-		<item>Bideoa</item>
-	</string-array>
 </resources>
