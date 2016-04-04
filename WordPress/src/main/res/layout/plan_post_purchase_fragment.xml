@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true"
         app:layout_marginBottomPercent="10%"
         app:layout_marginTopPercent="25%"
-        tools:src="@drawable/plans_video_upload" />
+        tools:src="@drawable/plans_business_active" />
 
     <LinearLayout
         android:id="@+id/layout_content"
