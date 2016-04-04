@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
     private ValidationType mValidationType = ValidationType.NONE;
     private EditText mEditText;
+    private String mHint;
 
     public EditTextPreferenceWithValidation(Context context) {
         super(context);
@@ -41,6 +43,14 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
         mEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
         mEditText.setInputType(super.getEditText().getInputType());
+        WPTextView hintTextView = (WPTextView) view.findViewById(R.id.dialog_hint);
+        if (mHint != null) {
+            hintTextView.setVisibility(View.VISIBLE);
+            hintTextView.setText(mHint);
+        }
+        else {
+            hintTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -111,6 +121,10 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
     public void setValidationType(ValidationType validationType) {
         mValidationType = validationType;
+    }
+
+    public void setHint(String hint) {
+        mHint = hint;
     }
 
     public enum ValidationType {
