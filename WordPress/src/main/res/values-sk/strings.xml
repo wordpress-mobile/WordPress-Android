@@ -362,13 +362,11 @@
 	<string name="contact_us">Kontaktujte nás</string>
 	<string name="add_location">Pridať lokalitu</string>
 	<string name="current_location">Aktuálna pozícia</string>
-	<string name="your_signature">Váš podpis</string>
 	<string name="search_current_location">Vyhľadať aktuálnu lokalitu</string>
 	<string name="search_location">Hľadať</string>
 	<string name="edit_location">Upraviť</string>
 	<string name="preference_send_usage_stats_summary">Automaticky odosielať štatistiky užívania pre zlepšenie WordPress pre Android</string>
 	<string name="preference_send_usage_stats">Poslať štatistiky</string>
-	<string name="preference_privacy">Súkromie</string>
 	<string name="schedule_verb">Rozvrh</string>
 	<string name="update_verb">Aktualizovať</string>
 	<string name="reader_toast_err_unfollow_blog">Nie je možné sledovať tento blog</string>
@@ -397,7 +395,6 @@
 	<string name="blog_name_reserved_but_may_be_available">Stránka je momentálne rezervovaná, no možno sa o pár dní uvoľní</string>
 	<string name="gallery_error">Súbor nebolo možné načítať</string>
 	<string name="blog_name_cant_be_used">Nemôžete použiť túto adresu stránky</string>
-	<string name="auto_sharing_preference_reset">Resetovať nastavenie automatického zdieľania</string>
 	<string name="username_reserved_but_may_be_available">Toto používateľské meno je momentálne rezervované, no o niekoľko dní môže byť voľné</string>
 	<string name="username_or_password_incorrect">Používateľské meno alebo heslo nie je správne</string>
 	<string name="blog_name_contains_invalid_characters">Adresa stránky nemôže obsahovať znak “_”</string>
@@ -406,7 +403,6 @@
 	<string name="nux_cannot_log_in">Prihlásenie nie je možné</string>
 	<string name="error_delete_post">Počas mazania %s nastala chyba</string>
 	<string name="blog_name_reserved">Táto adresa je obsadená</string>
-	<string name="invalid_url_message">Overte si, či vložená URL adresa je správna</string>
 	<string name="out_of_memory">Nedostatok voľného miesta v pamäti</string>
 	<string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
 	<string name="error_refresh_notifications">Notifikácie nebolo možné znova načítať</string>
@@ -450,7 +446,6 @@
 	<string name="username_must_include_letters">Používatelské meno musí obsahovať min. 1 písmeno (a-z)</string>
 	<string name="email_invalid">Vložte platnú emailovú adresu</string>
 	<string name="stats_empty_comments">Bez komentárov</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Vybraný blog už nie je viditeľný</string>
 	<string name="stats_bar_graph_empty">Štatistiky nie sú dostupné</string>
 	<string name="sdcard_message">Pre nahratie súboru je potrebné vložiť SD kartu</string>
 	<string name="no_account">Účet WordPress nenájdený, vytvorte nový účet</string>
@@ -570,17 +565,14 @@
 	<string name="creating_your_account">Váš účet sa vytvára</string>
 	<string name="error_refresh_media">Počas načítania knižnice súborov sa vyskytla chyba, zopakujte to neskôr.</string>
 	<string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
-	<string name="reset_auto_share_preference">Obnoviť nastavenia automatického zdieľania</string>
 	<string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>
 	<string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
 	<string name="download">Sťahujú sa súbory</string>
-	<string name="always_use_these_settings_to_share">Vždy použiť tieto nastavenia</string>
 	<string name="comment_spammed">Komentáre označené ako spam</string>
 	<string name="reader_toast_err_get_comment">Nedá sa nahrať tento komentár</string>
 	<string name="reader_label_reply">Odpovedať</string>
 	<string name="video">Video</string>
 	<string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
-	<string name="share_preference_title">Zdieľať na WordPress</string>
 	<string name="account_two_step_auth_enabled">Tento účet má povolenú dvojkrokové overovanie. Pre vytvorenie hesla pre aplikácie si otvorte bezpečnostné nastavenia na WordPress.com.</string>
 	<string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
 	<string name="reader_toast_err_get_post">Nie je možné načítať príspevok</string>
@@ -631,12 +623,10 @@
 	<string name="media_gallery_type_squares">Štvorce</string>
 	<string name="media_gallery_type_tiled">Dlaždice</string>
 	<string name="media_gallery_type_slideshow">Prezent8cia</string>
-	<string name="media_no_video_message">K nahratiu videa aktualizujte VideoPress!</string>
 	<string name="media_gallery_image_order_reverse">Opačné poradie</string>
 	<string name="stats_view_visitors_and_views">Návštevníci a zobrazenia</string>
 	<string name="stats_view_clicks">Kliknutia</string>
 	<string name="media_gallery_type_circles">Kruhy</string>
-	<string name="media_no_video_title">VideoPress nedostupný</string>
 	<string name="post_excerpt">Zhrnutie</string>
 	<string name="media_add_popup_capture_video">Natočiť video</string>
 	<string name="media_gallery_type">Typ</string>
@@ -694,10 +684,8 @@
 	<string name="note_reply_successful">Odpoveď zverejnená</string>
 	<string name="follows">Sledovania</string>
 	<string name="loading">Načítava sa...</string>
-	<string name="post_signature">Pridať podpis</string>
 	<string name="httpuser">HTTP používateľské meno</string>
 	<string name="httppassword">HTTP heslo</string>
-	<string name="add_tagline">Pridať podpis do nových príspevkov</string>
 	<string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>
 	<string name="content_description_add_media">Pridať súbor</string>
 	<string name="post_content">Obsah (kliknutím pridajte text a súbor)</string>
@@ -722,11 +710,9 @@
 	<string name="scaled_image">Šírka zmenšeného obrázku</string>
 	<string name="scheduled">Načasované</string>
 	<string name="link_enter_url">URL adresa</string>
-	<string name="posted_from">Odoslané z WordPress pre Android</string>
 	<string name="version">Verzia</string>
 	<string name="app_title">WordPress pre Android</string>
 	<string name="tos">Zmluvné podmienky</string>
-	<string name="about">O aplikácii</string>
 	<string name="image_alignment">Zarovnanie</string>
 	<string name="refresh">Obnoviť</string>
 	<string name="untitled">Bez názvu</string>
@@ -770,55 +756,4 @@
 	<string name="no">Nie</string>
 	<string name="error">Chyba</string>
 	<string name="category_refresh_error">Chyba aktualizací kategorií</string>
-	<string-array name="alignment_array">
-		<item>Žiadny</item>
-		<item>Vľavo</item>
-		<item>Do stredu</item>
-		<item>Vpravo</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Komentáre na mojej webovej stránke</item>
-		<item>Počet lajkov na moje komentáre</item>
-		<item>Počet lajkov na moje príspevky</item>
-		<item>Odbery webovej stránky</item>
-		<item>Výsledky webovej stránky</item>
-		<item>Zmienky používateľa</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Odpovede na moje komentáre</item>
-		<item>Počet lajkov na mojich komentároch</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Návrhy</item>
-		<item>Výskum</item>
-		<item>Komunita</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tipy ako získať čo najviac z WordPress.com.</item>
-		<item>Príležitosti zúčastniť sa výskumu a prieskumov WordPress.com.</item>
-		<item>Informácie o kurzoch a udalostiach WordPress.com (online a osobne).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Zverejnené</item>
-		<item>Koncepty</item>
-		<item>Naplánované</item>
-		<item>Odstránené</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Poznámka na okraj</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galéria</item>
-		<item>Obrázok</item>
-		<item>Odkaz</item>
-		<item>Citát</item>
-		<item>Štandard</item>
-		<item>Stav</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Zadarmo</item>
-		<item>Všetky</item>
-		<item>Premium</item>
-	</string-array>
 </resources>
