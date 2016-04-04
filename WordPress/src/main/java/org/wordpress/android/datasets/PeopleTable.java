@@ -65,8 +65,14 @@ public class PeopleTable {
     }
 
     public static void savePeople(List<Person> peopleList) {
-        for (Person person : peopleList) {
-            PeopleTable.save(person);
+        getWritableDb().beginTransaction();
+        try {
+            for (Person person : peopleList) {
+                PeopleTable.save(person);
+            }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
         }
     }
 
