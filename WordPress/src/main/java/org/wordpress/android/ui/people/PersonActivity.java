@@ -19,15 +19,12 @@ public class PersonActivity extends AppCompatActivity {
     public static final String EXTRA_PERSON_ID = "EXTRA_PERSON_ID";
     public static final String EXTRA_LOCAL_BLOG_ID = "EXTRA_LOCAL_BLOG_ID";
 
-    private long mPersonId;
-    private int mLocalBlogId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPersonId = getIntent().getExtras().getLong(EXTRA_PERSON_ID);
-        mLocalBlogId = getIntent().getExtras().getInt(EXTRA_LOCAL_BLOG_ID);
+        long personId = getIntent().getExtras().getLong(EXTRA_PERSON_ID);
+        int localBlogId = getIntent().getExtras().getInt(EXTRA_LOCAL_BLOG_ID);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -38,7 +35,7 @@ public class PersonActivity extends AppCompatActivity {
 
         setTitle(R.string.edit_user);
 
-        refreshUserDetails();
+        refreshUserDetails(personId, localBlogId);
     }
 
     @Override
@@ -56,14 +53,14 @@ public class PersonActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUserDetails() {
+    private void refreshUserDetails(long personId, int localBlogId) {
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.person_avatar);
         TextView txtDisplayName = (TextView) findViewById(R.id.person_display_name);
         TextView txtUsername = (TextView) findViewById(R.id.person_username);
         TextView txtRole = (TextView) findViewById(R.id.person_role);
         TextView txtRemove = (TextView) findViewById(R.id.person_remove);
 
-        Person person = PeopleTable.getPerson(mPersonId, mLocalBlogId);
+        Person person = PeopleTable.getPerson(personId, localBlogId);
 
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
