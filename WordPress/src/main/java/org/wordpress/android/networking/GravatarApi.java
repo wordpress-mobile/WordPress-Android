@@ -1,7 +1,6 @@
 package org.wordpress.android.networking;
 
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.networking.gravatar.ServiceGenerator;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +10,9 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Interceptor;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -21,6 +22,34 @@ public class GravatarApi {
     public interface GravatarUploadListener {
         void onSuccess();
         void onError();
+    }
+
+    private static OkHttpClient createClient(final String restEndpointUrl) {
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+
+        //// uncomment the following line to add logcat logging
+        //httpClientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+
+        // add oAuth token usage
+        httpClientBuilder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                String siteId = AuthenticatorRequest.extractSiteIdFromUrl(restEndpointUrl, original.url()
+                        .toString());
+                String token = OAuthAuthenticator.getAccessToken(siteId);
+
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("Authorization", "Bearer " + token)
+                        .method(original.method(), original.body());
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
+
+        return httpClientBuilder.build();
     }
 
     public static Request prepareGravatarUpload(String email, File file) {
@@ -37,7 +66,7 @@ public class GravatarApi {
     public static void uploadGravatar(final File file, final GravatarUploadListener gravatarUploadListener) {
         Request request = prepareGravatarUpload(AccountHelper.getDefaultAccount().getEmail(), file);
 
-        ServiceGenerator.createClient(AccountHelper.getDefaultAccount().getAccessToken()).newCall(request).enqueue(
+        createClient(API_BASE_URL).newCall(request).enqueue(
                 new Callback() {
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
