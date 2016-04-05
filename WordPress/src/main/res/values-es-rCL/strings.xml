@@ -293,11 +293,9 @@
 	<string name="hs__invalid_email_error">Escribe una dirección de correo electrónico válida</string>
 	<string name="add_location">Añadir localización</string>
 	<string name="current_location">Localización actual</string>
-	<string name="your_signature">Tu firma:</string>
 	<string name="search_location">Búsqueda</string>
 	<string name="edit_location">Editar</string>
 	<string name="search_current_location">Localizar</string>
-	<string name="preference_privacy">Privacidad</string>
 	<string name="preference_send_usage_stats">Enviar estadísticas</string>
 	<string name="preference_send_usage_stats_summary">Enviar automáticamente estadísticas de uso para ayudarnos a mejorar WordPress para Android</string>
 	<string name="update_verb">Actualizar</string>
@@ -337,12 +335,9 @@
 	<string name="adding_cat_success">Categoría agregada correctamente.</string>
 	<string name="cat_name_required">El campo nombre de categoría es necesario</string>
 	<string name="category_automatically_renamed">El nombre de categoría %1$s no es válido. Fue renombrado a %2$s.</string>
-	<string name="auto_sharing_preference_reset">Restablecer la configuración para compartir de forma automática</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">El blog seleccionado anteriormente ya no está visible</string>
 	<string name="sdcard_message">Se necesita una tarjeta SD montada para subir medios</string>
 	<string name="stats_empty_comments">Aún sin comentarios</string>
 	<string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
-	<string name="invalid_url_message">Comprueba que la URL del blog que has puesto es válida</string>
 	<string name="reply_failed">Respuesta fallida</string>
 	<string name="notifications_empty_list">Sin notificaciones</string>
 	<string name="error_delete_post">Ocurrió un error al eliminar el %s</string>
@@ -507,9 +502,6 @@
 	<string name="video">Vídeo</string>
 	<string name="download">Descargando elemento multimedia</string>
 	<string name="comment_spammed">Comentado marcado como spam</string>
-	<string name="share_preference_title">Compartir en WordPress</string>
-	<string name="reset_auto_share_preference">Reiniciar los ajustes de compartir automaticamente</string>
-	<string name="always_use_these_settings_to_share">Utiliza siempre estos ajustes</string>
 	<string name="cant_share_no_visible_blog">No puedes compartir en WordPress sin un blog visible</string>
 	<string name="reader_empty_followed_blogs_description">No te preocupes, ¡solo tienes que pulsar el icono para empezar a explorar!</string>
 	<string name="select_date">Elegir fecha</string>
@@ -567,7 +559,6 @@
 	<string name="media_gallery_type_tiled">Mosaico</string>
 	<string name="media_gallery_type_circles">Círculos</string>
 	<string name="media_gallery_type_slideshow">Pase de diapositivas </string>
-	<string name="media_no_video_title">VideoPress no disponible</string>
 	<string name="media_edit_title_text">Título</string>
 	<string name="media_edit_caption_text">Leyenda</string>
 	<string name="media_edit_description_text">Descripción</string>
@@ -613,7 +604,6 @@
 	<string name="custom_date">Fecha Personalizada</string>
 	<string name="media_add_popup_capture_photo">Tomar Foto</string>
 	<string name="media_add_popup_capture_video">Capturar Vídeo</string>
-	<string name="media_no_video_message">¡Actualiza VideoPress para subir videos!</string>
 	<string name="stats_view_visitors_and_views">Visitantes y Visualizaciones</string>
 	<string name="passcode_enter_old_passcode">Introduce tu PIN anterior</string>
 	<string name="upload">Subir</string>
@@ -623,8 +613,6 @@
 	<string name="new_notifications">%d nuevas notificaciones</string>
 	<string name="more_notifications">y %d más.</string>
 	<string name="loading">Cargando...</string>
-	<string name="post_signature">Firma de la entrada</string>
-	<string name="add_tagline">Añadir firma a las nuevas entradas</string>
 	<string name="httpuser">Usuario HTTP</string>
 	<string name="httppassword">Contraseña HTTP</string>
 	<string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
@@ -651,11 +639,9 @@
 	<string name="scaled_image">Ancho de la imagen en escala</string>
 	<string name="scheduled">Programado</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Publicado desde WordPress para Android</string>
 	<string name="version">Versión</string>
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos de Servicio</string>
-	<string name="about">Acerca de</string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -699,50 +685,4 @@
 	<string name="notification_settings">Ajustes de avisos</string>
 	<string name="yes">Sí</string>
 	<string name="no">No</string>
-	<string-array name="alignment_array">
-		<item>Ninguno</item>
-		<item>Izquierda</item>
-		<item>Centro</item>
-		<item>Derecha</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Comentarios en mi sitio</item>
-		<item>"Me gusta" en mis comentarios</item>
-		<item>"Me gusta" en mis entradas</item>
-		<item>Seguidores del sitio</item>
-		<item>Logros del sitio</item>
-		<item>Menciones del usuario</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Respuestas a mis comentarios</item>
-		<item>"Me gusta" en mis comentarios</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Sugerencias</item>
-		<item>Investigación</item>
-		<item>Comunidad</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Consejos para sacar el máximo provecho de WordPress.com</item>
-		<item>Oportunidades para participar en investigaciones y encuestas de WordPress.com.</item>
-		<item>Información sobre cursos y eventos de WordPress.com (online y presenciales).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Publicados</item>
-		<item>Borradores</item>
-		<item>Programados</item>
-		<item>En la papelera</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Minientrada</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galería</item>
-		<item>Imagen</item>
-		<item>Enlace</item>
-		<item>Cita</item>
-		<item>Estándar</item>
-		<item>Estado</item>
-		<item>Vídeo</item>
-	</string-array>
 </resources>

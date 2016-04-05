@@ -210,6 +210,8 @@ public class JSONUtils {
             return false;
         if (value.equalsIgnoreCase("false"))
             return false;
+        if (value.equalsIgnoreCase("no"))
+            return false;
         return true;
     }
 

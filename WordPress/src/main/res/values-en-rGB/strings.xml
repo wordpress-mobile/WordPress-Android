@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">Couldn\'t save your account settings</string>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">None</string>
+	<string name="align_left">Left</string>
+	<string name="align_center">Centre</string>
+	<string name="align_right">Right</string>
+	<string name="theme_free">Free</string>
+	<string name="theme_all">All</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Chat</string>
+	<string name="post_format_gallery">Gallery</string>
+	<string name="post_format_image">Image</string>
+	<string name="post_format_link">Link</string>
+	<string name="post_format_quote">Quote</string>
+	<string name="post_format_standard">Standard</string>
+	<string name="notif_events">Information on WordPress.com courses and events (online &amp; in-person).</string>
+	<string name="post_format_aside">Aside</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="notif_surveys">Opportunities to participate in WordPress.com research &amp; surveys.</string>
+	<string name="notif_tips">Tips for getting the most out of WordPress.com.</string>
+	<string name="notif_community">Community</string>
+	<string name="replies_to_my_comments">Replies to my comments</string>
+	<string name="notif_suggestions">Suggestions</string>
+	<string name="notif_research">Research</string>
+	<string name="site_achievements">Site achievements</string>
+	<string name="username_mentions">Username mentions</string>
+	<string name="likes_on_my_posts">Likes on my posts</string>
+	<string name="site_follows">Site follows</string>
+	<string name="likes_on_my_comments">Likes on my comments</string>
+	<string name="comments_on_my_site">Comments on my site</string>
+	<string name="site_settings_list_editor_summary_other">%d items</string>
+	<string name="site_settings_list_editor_summary_one">1 item</string>
+	<string name="approve_auto_if_previously_approved">Known users\' comments</string>
+	<string name="approve_auto">All users</string>
+	<string name="approve_manual">No comments</string>
+	<string name="site_settings_paging_summary_other">%d comments per page</string>
+	<string name="site_settings_paging_summary_one">1 comment per page</string>
+	<string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
+	<string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
+	<string name="site_settings_multiple_links_summary_zero">Require approval for more than 0 links</string>
+	<string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
+	<string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
+	<string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
+	<string name="filter_trashed_posts">Binned</string>
+	<string name="days_quantity_one">1 day</string>
+	<string name="days_quantity_other">%d days</string>
+	<string name="filter_published_posts">Published</string>
+	<string name="filter_draft_posts">Drafts</string>
+	<string name="filter_scheduled_posts">Scheduled</string>
+	<string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+	<string name="primary_site">Primary site</string>
+	<string name="web_address">Web Address</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
+	<string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
+	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
+	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+	<string name="editor_post_settings_featured_image">Featured Image</string>
+	<string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual\n    editor. Try it out by creating a new post.</string>
+	<string name="new_editor_promo_title">Brand new editor</string>
+	<string name="new_editor_promo_button_label">Great, thanks!</string>
+	<string name="visual_editor_enabled">Visual Editor enabled</string>
+	<string name="editor_content_placeholder">Share your story here…</string>
+	<string name="editor_page_title_placeholder">Page Title</string>
+	<string name="editor_post_title_placeholder">Post Title</string>
+	<string name="email_address">Email address</string>
+	<string name="preference_show_visual_editor">Show visual editor</string>
+	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+	<string name="mnu_comment_delete_permanently">Delete</string>
+	<string name="comment_deleted_permanently">Comment deleted</string>
+	<string name="mnu_comment_untrash">Restore</string>
+	<string name="comments_empty_list_filtered">No %s comments</string>
+	<string name="could_not_load_page">Could not load page</string>
+	<string name="comment_status_all">All</string>
+	<string name="interface_language">Interface Language</string>
+	<string name="off">Off</string>
+	<string name="about_the_app">About the app</string>
+	<string name="error_post_account_settings">Couldn\'t save your account settings</string>
 	<string name="error_post_my_profile">Couldn\'t save your profile</string>
 	<string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
 	<string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
@@ -15,6 +94,9 @@
 	<string name="remove">Remove</string>
 	<string name="search">Search</string>
 	<string name="site_settings_image_original_size">Original Size</string>
+	<string name="privacy_private">Your site is visible only to you and users you approve</string>
+	<string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
+	<string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
 	<string name="about_me_hint">A few words about you…</string>
 	<string name="about_me">About me</string>
 	<string name="public_display_name_hint">Display name will default to your username if it is not set</string>
@@ -487,11 +569,9 @@
 	<string name="contact_us">Contact us</string>
 	<string name="current_location">Current location</string>
 	<string name="add_location">Add location</string>
-	<string name="your_signature">Your signature:</string>
 	<string name="search_location">Search</string>
 	<string name="edit_location">Edit</string>
 	<string name="search_current_location">Locate</string>
-	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Send statistics</string>
 	<string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 	<string name="update_verb">Update</string>
@@ -533,12 +613,9 @@
 	<string name="cat_name_required">The category name field is required</string>
 	<string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 	<string name="no_account">No WordPress account found, add an account and try again</string>
-	<string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
-	<string name="invalid_url_message">Check that the blog URL entered is valid</string>
 	<string name="reply_failed">Reply failed</string>
 	<string name="notifications_empty_list">No notifications</string>
 	<string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -583,6 +660,7 @@
 	<string name="nux_cannot_log_in">We can\'t log you in</string>
 	<string name="out_of_memory">Device out of memory</string>
 	<string name="could_not_remove_account">Couldn\'t remove site</string>
+	<string name="invalid_url_message">Check that the URL entered is valid</string>
 	<string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
 	<string name="select_categories">Select categories</string>
 	<string name="account_details">Account details</string>
@@ -686,6 +764,7 @@
 	<string name="http_authorization_required">Authorisation required</string>
 	<string name="mnu_comment_trash">Bin</string>
 	<string name="comment_status_trash">Binned</string>
+	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 	<string name="deleting_page">Deleting page</string>
 	<string name="deleting_post">Deleting post</string>
 	<string name="share_url_post">Share post</string>
@@ -702,9 +781,6 @@
 	<string name="video">Video</string>
 	<string name="download">Downloading media</string>
 	<string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
-	<string name="share_preference_title">Share to WordPress</string>
-	<string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-	<string name="always_use_these_settings_to_share">Always use these settings</string>
 	<string name="comment_spammed">Comment marked as spam</string>
 	<string name="select_time">Select time</string>
 	<string name="reader_likes_you_and_one">You and one other like this</string>
@@ -772,8 +848,6 @@
 	<string name="media_gallery_type_tiled">Tiled</string>
 	<string name="media_gallery_type_circles">Circles</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
-	<string name="media_no_video_title">VideoPress unavailable</string>
-	<string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="stats_view_referrers">Referrers</string>
 	<string name="stats_timeframe_today">Today</string>
@@ -819,8 +893,6 @@
 	<string name="more_notifications">and %d more.</string>
 	<string name="follows">Follows</string>
 	<string name="loading">Loading…</string>
-	<string name="post_signature">Post signature</string>
-	<string name="add_tagline">Add a signature to new posts</string>
 	<string name="httpuser">HTTP username</string>
 	<string name="httppassword">HTTP password</string>
 	<string name="error_media_upload">An error occurred while uploading media</string>
@@ -847,11 +919,9 @@
 	<string name="scaled_image">Scaled image width</string>
 	<string name="scheduled">Scheduled</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Posted from WordPress for Android</string>
 	<string name="version">Version</string>
 	<string name="tos">Terms of Service</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">About</string>
 	<string name="max_thumbnail_px_width">Default Image Width</string>
 	<string name="image_alignment">Alignment</string>
 	<string name="refresh">Refresh</string>
@@ -873,6 +943,7 @@
 	<string name="title">Title</string>
 	<string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
 	<string name="categories">Categories</string>
+	<string name="dlg_deleting_comments">Deleting comments</string>
 	<string name="notification_blink">Blink notification light</string>
 	<string name="notification_sound">Play notification sound</string>
 	<string name="notification_vibrate">Vibrate</string>
@@ -896,70 +967,4 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="notification_settings">Notification Settings</string>
-	<string-array name="alignment_array">
-		<item>None</item>
-		<item>Left</item>
-		<item>Center</item>
-		<item>Right</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Comments on my site</item>
-		<item>Likes on my comments</item>
-		<item>Likes on my posts</item>
-		<item>Site follows</item>
-		<item>Site achievements</item>
-		<item>Username mentions</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Replies to my comments</item>
-		<item>Likes on my comments</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Suggestions</item>
-		<item>Research</item>
-		<item>Community</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tips for getting the most out of WordPress.com.</item>
-		<item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
-		<item>Information on WordPress.com courses and events (online &amp; in-person).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Published</item>
-		<item>Drafts</item>
-		<item>Scheduled</item>
-		<item>Binned</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Aside</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Gallery</item>
-		<item>Image</item>
-		<item>Link</item>
-		<item>Quote</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Your site is visible to everyone and may be indexed by search engines</item>
-		<item>Your site is visible to everyone but asks search engines not to index it</item>
-		<item>Your site is visible only to you and users you approve</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Require manual approval for everyone\'s comments.</item>
-		<item>Automatically approve if the user has a previously approved comment.</item>
-		<item>Automatically approve everyone\'s comments.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>No comments</item>
-		<item>Known users\' comments</item>
-		<item>All users</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Free</item>
-		<item>All</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

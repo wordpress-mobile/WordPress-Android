@@ -5,8 +5,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.widget.MultiAutoCompleteTextView;
 
-import org.wordpress.android.models.Suggestion;
-
 public class SuggestionTokenizer implements MultiAutoCompleteTextView.Tokenizer {
 
     @Override

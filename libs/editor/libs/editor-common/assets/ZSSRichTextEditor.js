@@ -69,6 +69,13 @@ ZSSEditor.defaultParagraphSeparator = 'p';
 // mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
 ZSSEditor.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
+// We use a MutationObserver to catch user deletions of uploading or failed media
+// This is only officially supported on API>18; when the WebView doesn't recognize the MutationObserver,
+// we fall back to the deprecated DOMNodeRemoved event
+ZSSEditor.mutationObserver;
+
+ZSSEditor.defaultMutationObserverConfig = { attributes: false, childList: true, characterData: false };
+
 /**
  * The initializer function that must be called onLoad
  */
@@ -110,6 +117,15 @@ ZSSEditor.init = function() {
 			}
 		}
 	}, false);
+
+    // Attempt to instantiate a MutationObserver. This should fail for API<19, unless the OEM of the device has
+    // modified the WebView. If it fails, the editor will fall back to DOMNodeRemoved events.
+    try {
+        ZSSEditor.mutationObserver = new MutationObserver(function(mutations) {
+            ZSSEditor.onMutationObserved(mutations);} );
+    } catch(e) {
+        // no op
+    }
 
 }; //end
 
@@ -177,13 +193,22 @@ ZSSEditor.getField = function(fieldId) {
 
 ZSSEditor.getFocusedField = function() {
     var currentField = $(this.closerParentNodeWithName('div'));
-    var currentFieldId = currentField.attr('id');
+    var currentFieldId;
 
-    while (currentField
-           && (!currentFieldId || this.editableFields[currentFieldId] == null)) {
-        currentField = this.closerParentNodeStartingAtNode('div', currentField);
+    if (currentField) {
         currentFieldId = currentField.attr('id');
+    }
 
+    while (currentField && (!currentFieldId || this.editableFields[currentFieldId] == null)) {
+        currentField = this.closerParentNodeStartingAtNode('div', currentField);
+        if (currentField) {
+            currentFieldId = currentField.attr('id');
+        }
+    }
+
+    if (!currentFieldId) {
+        ZSSEditor.resetSelectionOnField('zss_field_content');
+        currentFieldId = 'zss_field_content';
     }
 
     return this.editableFields[currentFieldId];
@@ -193,7 +218,70 @@ ZSSEditor.execFunctionForResult = function(methodName) {
     var functionArgument = "function=" + methodName;
     var resultArgument = "result=" + window["ZSSEditor"][methodName].apply();
     ZSSEditor.callback('callback-response-string', functionArgument +  defaultCallbackSeparator + resultArgument);
-}
+};
+
+// MARK: - Mutation observing
+
+/**
+ *  @brief      Register a node to be tracked for modifications
+ */
+ZSSEditor.trackNodeForMutation = function(target) {
+    if (ZSSEditor.mutationObserver != undefined) {
+        ZSSEditor.mutationObserver.observe(target[0], ZSSEditor.defaultMutationObserverConfig);
+    } else {
+        // The WebView doesn't support MutationObservers - fall back to DOMNodeRemoved events
+        target.bind("DOMNodeRemoved", function(event) { ZSSEditor.onDomNodeRemoved(event); });
+    }
+};
+
+/**
+ *  @brief      Called when the MutationObserver registers a mutation to a node it's listening to
+ */
+ZSSEditor.onMutationObserved = function(mutations) {
+    mutations.forEach(function(mutation) {
+        for (var i = 0; i < mutation.removedNodes.length; i++) {
+            var removedNode = mutation.removedNodes[i];
+            if (ZSSEditor.isMediaContainerNode(removedNode)) {
+                // An uploading or failed container node was deleted manually - notify native
+                var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-wpid")) {
+                // An uploading or failed image was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeImage(mediaIdentifier);
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (removedNode.attributes.getNamedItem("data-video_wpid")) {
+                // An uploading or failed video was deleted manually - remove its container and send the callback
+                var mediaIdentifier = removedNode.attributes.getNamedItem("data-video_wpid").value;
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+                ZSSEditor.removeVideo(mediaIdentifier);
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
+                ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            }
+        }
+    });
+};
+
+/**
+ *  @brief      Called when a DOMNodeRemoved event is triggered for an element we're tracking
+ *              (only used when MutationObserver is unsupported by the WebView)
+ */
+ZSSEditor.onDomNodeRemoved = function(event) {
+    if (event.target.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target);
+    } else if (event.target.parentNode.id.length > 0) {
+        var mediaId = ZSSEditor.extractMediaIdentifier(event.target.parentNode);
+    } else {
+        return;
+    }
+    ZSSEditor.sendMediaRemovedCallback(mediaId);
+};
 
 // MARK: - Logging
 
@@ -278,6 +366,9 @@ ZSSEditor.stylesCallback = function(stylesArray) {
 
 ZSSEditor.backupRange = function(){
 	var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return;
+    }
     var range = selection.getRangeAt(0);
 
     ZSSEditor.currentSelection =
@@ -301,6 +392,18 @@ ZSSEditor.restoreRange = function(){
     }
 };
 
+ZSSEditor.resetSelectionOnField = function(fieldId) {
+    var query = "div#" + fieldId;
+    var field = document.querySelector(query);
+    var range = document.createRange();
+    range.setStart(field, 0);
+    range.setEnd(field, 0);
+
+    var selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+};
+
 ZSSEditor.getSelectedText = function() {
 	var selection = window.getSelection();
 
@@ -320,7 +423,6 @@ ZSSEditor.getCaretArguments = function() {
 };
 
 ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments = function() {
-
     var joinedArguments = ZSSEditor.getJoinedCaretArguments();
     var idArgument = "id=" + ZSSEditor.getFocusedField().getNodeId();
 
@@ -339,6 +441,9 @@ ZSSEditor.getJoinedCaretArguments = function() {
 
 ZSSEditor.getCaretYPosition = function() {
     var selection = window.getSelection();
+    if (selection.rangeCount == 0)  {
+        return 0;
+    }
     var range = selection.getRangeAt(0);
     var span = document.createElement("span");
     // Ensure span has dimensions and position by
@@ -452,7 +557,7 @@ ZSSEditor.setStrikeThrough = function() {
 	var mustHandleWebKitIssue = (isDisablingStrikeThrough
 								 && ZSSEditor.isCommandEnabled(commandName));
 
-	if (mustHandleWebKitIssue) {
+	if (mustHandleWebKitIssue && window.getSelection().rangeCount > 0) {
 		var troublesomeNodeNames = ['del'];
 
 		var selection = window.getSelection();
@@ -817,6 +922,96 @@ ZSSEditor.turnBlockquoteOnForNode = function(node) {
     }
 };
 
+// MARK: - Generic media
+
+ZSSEditor.isMediaContainerNode = function(node) {
+    if (node.id === undefined) {
+        return false;
+    }
+    return (node.id.search("img_container_") == 0) || (node.id.search("video_container_") == 0);
+};
+
+ZSSEditor.extractMediaIdentifier = function(node) {
+    if (node.id.search("img_container_") == 0) {
+        return node.id.replace("img_container_", "");
+    } else if (node.id.search("video_container_") == 0) {
+        return node.id.replace("video_container_", "");
+    }
+    return "";
+};
+
+ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
+    var imageContainerNode = ZSSEditor.getImageContainerNodeWithIdentifier(mediaNodeIdentifier);
+    if (imageContainerNode.length > 0) {
+        return imageContainerNode;
+    } else {
+        return ZSSEditor.getVideoContainerNodeWithIdentifier(mediaNodeIdentifier);
+    }
+};
+
+ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
+    var arguments = ['id=' + encodeURIComponent(mediaNodeIdentifier)];
+    var joinedArguments = arguments.join(defaultCallbackSeparator);
+    this.callback("callback-media-removed", joinedArguments);
+};
+
+/**
+ *  @brief      Marks all in-progress images as failed to upload
+ */
+ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.uploading");
+
+    for(var i = 0; i < matches.size(); i++) {
+        if (matches[i].hasAttribute('data-wpid')) {
+            var mediaId = matches[i].getAttribute('data-wpid');
+            ZSSEditor.markImageUploadFailed(mediaId, message);
+        } else if (matches[i].hasAttribute('data-video_wpid')) {
+            var videoId = matches[i].getAttribute('data-video_wpid');
+            ZSSEditor.markVideoUploadFailed(videoId, message);
+        }
+    }
+};
+
+ZSSEditor.getFailedMediaIdArray = function() {
+    var html = ZSSEditor.getField("zss_field_content").getHTML();
+    var tmp = document.createElement( "div" );
+    var tmpDom = $( tmp ).html( html );
+    var matches = tmpDom.find("img.failed");
+
+    var mediaIdArray = [];
+
+    for (var i = 0; i < matches.size(); i++) {
+        var mediaId = null;
+        if (matches[i].hasAttribute("data-wpid")) {
+            mediaId = matches[i].getAttribute("data-wpid");
+        } else if (matches[i].hasAttribute("data-video_wpid")) {
+            mediaId = matches[i].getAttribute("data-video_wpid");
+        }
+        if (mediaId !== null) {
+            mediaIdArray.push(mediaId);
+        }
+    }
+    return mediaIdArray;
+};
+
+/**
+ *  @brief      Sends a callback with a list of failed images
+ */
+ZSSEditor.getFailedMedia = function() {
+    var mediaIdArray = ZSSEditor.getFailedMediaIdArray();
+    for (var i = 0; i < mediaIdArray.length; i++) {
+        // Track pre-existing failed media nodes for manual deletion events
+        ZSSEditor.trackNodeForMutation(this.getMediaContainerNodeWithIdentifier(mediaIdArray[i]));
+    }
+
+    var functionArgument = "function=getFailedMedia";
+    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
+    ZSSEditor.callback('callback-response-string', joinedArguments);
+};
+
 // MARK: - Images
 
 ZSSEditor.updateImage = function(url, alt) {
@@ -833,8 +1028,11 @@ ZSSEditor.updateImage = function(url, alt) {
 };
 
 ZSSEditor.insertImage = function(url, remoteId, alt) {
-    var html = '<img src="' + url + '" alt="' + alt + '" class="wp-image-' + remoteId + '" />';
-
+    var html = '<img src="' + url + '" class="wp-image-' + remoteId + ' alignnone size-full';
+    if (alt) {
+        html += '" alt="' + alt
+    }
+    html += '"/>'
     this.insertHTML(this.wrapInParagraphTags(html));
     this.sendEnabledStyles();
 };
@@ -873,6 +1071,9 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
+    ZSSEditor.trackNodeForMutation(this.getImageContainerNodeWithIdentifier(imageNodeIdentifier));
+
     this.sendEnabledStyles();
 };
 
@@ -919,28 +1120,56 @@ ZSSEditor.replaceLocalImageWithRemoteImage = function(imageNodeIdentifier, remot
     var image = new Image;
 
     image.onload = function () {
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
-
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId)
+        image.classList.add("image-loaded");
+        console.log("Image Loaded!");
     }
 
     image.onerror = function () {
-        // Even on an error, we swap the image for the time being.  This is because private
-        // blogs are currently failing to download images due to access privilege issues.
-        //
-        imageNode.attr('src', image.src);
-        imageNode.addClass("wp-image-" + remoteImageId);
-        ZSSEditor.markImageUploadDone(imageNodeIdentifier);
-        var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
-        ZSSEditor.callback("callback-input", joinedArguments);
-
+        // Add a remoteUrl attribute, remoteUrl and src must be swapped before publishing.
+        image.setAttribute('remoteurl', image.src);
+        // Try to reload the image on error.
+        ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, 1);
     }
 
     image.src = remoteImageUrl;
 };
+
+ZSSEditor.finishLocalImageSwap = function(image, imageNode, imageNodeIdentifier, remoteImageId) {
+    imageNode.addClass("wp-image-" + remoteImageId);
+    if (image.getAttribute("remoteurl")) {
+        imageNode.attr('remoteurl', image.getAttribute("remoteurl"));
+    }
+    imageNode.attr('src', image.src);
+    // Set extra attributes and classes used by WordPress
+    imageNode.attr({'width': image.width, 'height': image.height});
+    imageNode.addClass("alignnone size-full");
+    ZSSEditor.markImageUploadDone(imageNodeIdentifier);
+    var joinedArguments = ZSSEditor.getJoinedFocusedFieldIdAndCaretArguments();
+    ZSSEditor.callback("callback-input", joinedArguments);
+    image.onerror = null;
+}
+
+ZSSEditor.reloadImage = function(image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (image.classList.contains("image-loaded")) {
+        return;
+    }
+    image.onerror = ZSSEditor.tryToReload(image, imageNode, imageNodeIdentifier, remoteImageId, nCall + 1);
+    // Force reloading by updating image src
+    image.src = image.getAttribute("remoteurl") + "?retry=" + nCall;
+    console.log("Reloading image:" + nCall + " - " + image.src);
+}
+
+ZSSEditor.tryToReload = function (image, imageNode, imageNodeIdentifier, remoteImageId, nCall) {
+    if (nCall > 8) { // 7 tries: 22500 ms total
+        ZSSEditor.finishLocalImageSwap(image, imageNode, imageNodeIdentifier, remoteImageId);
+        return;
+    }
+    image.onerror = null;
+    console.log("Image not loaded");
+    // reload the image with a variable delay: 500ms, 1000ms, 1500ms, 2000ms, etc.
+    setTimeout(ZSSEditor.reloadImage, nCall * 500, image, imageNode, imageNodeIdentifier, remoteImageId, nCall);
+}
 
 /**
  *  @brief      Update the progress indicator for the image identified with the value in progress.
@@ -989,12 +1218,15 @@ ZSSEditor.markImageUploadDone = function(imageNodeIdentifier) {
 
     // Remove all extra formatting nodes for progress
     if (imageNode.parent().attr("id") == this.getImageContainerIdentifier(imageNodeIdentifier)) {
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageNode.parent().attr("id", "");
         imageNode.parent().replaceWith(imageNode);
     }
     // Wrap link around image
-    var linkTag = '<a href="' + imageNode.attr("src") + '"></a>';
-    imageNode.wrap(linkTag);
-
+    var link = $('<a>', { href: imageNode.attr("src") } );
+    imageNode.wrap(link);
+    // We invoke the sendImageReplacedCallback with a delay to avoid for
+    // it to be ignored by the webview because of the previous callback being done.
     var thisObj = this;
     setTimeout(function() { thisObj.sendImageReplacedCallback(imageNodeIdentifier);}, 500);
 };
@@ -1077,55 +1309,6 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
 };
 
 /**
- *  @brief      Marks all in-progress images as failed to upload
- */
-ZSSEditor.markAllUploadingMediaAsFailed = function(message) {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.uploading");
-
-    for(var i = 0; i < matches.size(); i++) {
-        if (matches[i].hasAttribute('data-wpid')) {
-            var mediaId = matches[i].getAttribute('data-wpid');
-            ZSSEditor.markImageUploadFailed(mediaId, message);
-        } else if (matches[i].hasAttribute('data-video_wpid')) {
-            var videoId = matches[i].getAttribute('data-video_wpid');
-            ZSSEditor.markVideoUploadFailed(videoId, message);
-        }
-    }
-};
-
-/**
- *  @brief      Sends a callback with a list of failed images
- */
-ZSSEditor.getFailedMedia = function() {
-    var html = ZSSEditor.getField("zss_field_content").getHTML();
-    var tmp = document.createElement( "div" );
-    var tmpDom = $( tmp ).html( html );
-    var matches = tmpDom.find("img.failed");
-
-    var functionArgument = "function=getFailedMedia";
-    var mediaIdArray = [];
-
-    for (var i = 0; i < matches.size(); i++) {
-        var mediaId;
-        if (matches[i].hasAttribute("data-wpid")) {
-            mediaId = matches[i].getAttribute("data-wpid");
-        } else if (matches[i].hasAttribute("data-video_wpid")) {
-            mediaId = matches[i].getAttribute("data-video_wpid");
-        }
-
-        if (mediaId.length > 0) {
-            mediaIdArray.push(mediaId);
-        }
-    }
-
-    var joinedArguments = functionArgument + defaultCallbackSeparator + "ids=" + mediaIdArray.toString();
-    ZSSEditor.callback('callback-response-string', joinedArguments);
-};
-
-/**
  *  @brief      Remove the image from the DOM.
  *
  *  @param      imageNodeIdentifier     This is a unique ID provided by the caller.
@@ -1133,6 +1316,8 @@ ZSSEditor.getFailedMedia = function() {
 ZSSEditor.removeImage = function(imageNodeIdentifier) {
     var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
     if (imageNode.length != 0){
+        // Reset id before removal to avoid triggering the manual media removal callback
+        imageNode.attr("id","");
         imageNode.remove();
     }
 
@@ -1142,6 +1327,14 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
         imageContainerNode.remove();
     }
 };
+
+ZSSEditor.removeAllFailedMediaUploads = function() {
+    console.log("Remove all failed media");
+    var failedMediaArray = ZSSEditor.getFailedMediaIdArray();
+    for (var i = 0; i < failedMediaArray.length; i++) {
+        ZSSEditor.removeImage(failedMediaArray[i]);
+    }
+}
 
 /**
  *  @brief Inserts a video tag using the videoURL as source and posterURL as the
@@ -1208,6 +1401,9 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var html = videoContainerStart + progressElement + image + videoContainerEnd;
 
     this.insertHTML(this.wrapInParagraphTags(html));
+
+    ZSSEditor.trackNodeForMutation(this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier));
+
     this.sendEnabledStyles();
 };
 
@@ -1406,7 +1602,7 @@ ZSSEditor.removeVideo = function(videoNodeIdentifier) {
     // if Video is inside options container we need to remove the container
     var videoContainerNode = this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier);
     if (videoContainerNode.length != 0){
-        //reset id before removal to avoid detection of user removal
+        // Reset id before removal to avoid triggering the manual media removal callback
         videoContainerNode.attr("id","");
         videoContainerNode.remove();
     }
@@ -1625,6 +1821,28 @@ ZSSEditor.removeImageSelectionFormattingFromHTML = function( html ) {
 
     for ( var i = 0; i < matches.length; i++ ) {
         ZSSEditor.removeImageSelectionFormatting( matches[i] );
+    }
+
+    return tmpDom.html();
+}
+
+ZSSEditor.removeImageRemoteUrl = function(html) {
+    var tmp = document.createElement("div");
+    var tmpDom = $(tmp).html(html);
+
+    var matches = tmpDom.find("img");
+    if (matches.length == 0) {
+        return html;
+    }
+
+    for (var i = 0; i < matches.length; i++) {
+        if (matches[i].getAttribute('remoteurl')) {
+            if (matches[i].parentNode && matches[i].parentNode.href === matches[i].src) {
+                matches[i].parentNode.href = matches[i].getAttribute('remoteurl')
+            }
+            matches[i].src = matches[i].getAttribute('remoteurl');
+            matches[i].removeAttribute('remoteurl');
+        }
     }
 
     return tmpDom.html();
@@ -2014,6 +2232,7 @@ ZSSEditor.removeCaptionFormattingCallback = function( match, content ) {
 }
 
 // MARK: - Galleries
+
 ZSSEditor.insertGallery = function( imageIds, type, columns ) {
     var shortcode;
     if (type) {
@@ -2070,6 +2289,7 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
  */
 ZSSEditor.removeVisualFormatting = function( html ) {
     var str = html;
+    str = ZSSEditor.removeImageRemoteUrl( str );
     str = ZSSEditor.removeImageSelectionFormattingFromHTML( str );
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
@@ -2530,6 +2750,9 @@ ZSSEditor.closerParentNode = function() {
 
     var parentNode = null;
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0).cloneRange();
 
     var currentNode = range.commonAncestorContainer;
@@ -2552,7 +2775,7 @@ ZSSEditor.closerParentNodeStartingAtNode = function(nodeName, startingNode) {
     nodeName = nodeName.toLowerCase();
 
     var parentNode = null;
-    var currentNode = startingNode,parentElement;
+    var currentNode = startingNode.parentElement;
 
     while (currentNode) {
 
@@ -2560,7 +2783,7 @@ ZSSEditor.closerParentNodeStartingAtNode = function(nodeName, startingNode) {
             break;
         }
 
-        if (currentNode.nodeName.toLowerCase() == nodeName
+        if (currentNode.nodeName && currentNode.nodeName.toLowerCase() == nodeName
             && currentNode.nodeType == document.ELEMENT_NODE) {
             parentNode = currentNode;
 
@@ -2579,6 +2802,9 @@ ZSSEditor.closerParentNodeWithName = function(nodeName) {
 
     var parentNode = null;
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0).cloneRange();
 
     var referenceNode = range.commonAncestorContainer;
@@ -2620,6 +2846,9 @@ ZSSEditor.parentTags = function() {
 
     var parentTags = [];
     var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
     var range = selection.getRangeAt(0);
 
     var currentNode = range.commonAncestorContainer;
@@ -2639,6 +2868,20 @@ ZSSEditor.parentTags = function() {
     return parentTags;
 };
 
+// MARK: - Range handling
+
+ZSSEditor.getParentRangeOfFocusedNode = function() {
+    var selection = window.getSelection();
+    if (selection.focusNode == null) {
+        return null;
+    }
+    return selection.getRangeAt(selection.focusNode.parentNode);
+};
+
+ZSSEditor.setRange = function(range) {
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+};
 // MARK: - ZSSField Constructor
 
 function ZSSField(wrappedObject) {
@@ -2723,21 +2966,29 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
     } else if (this.isMultiline()) {
         this.wrapCaretInParagraphIfNecessary();
 
-        // If enter was pressed to end a UL or OL, let's double check and handle it accordingly if so
         if (wasEnterPressed) {
-            sel = window.getSelection();
-            node = $(sel.anchorNode);
-            children = $(sel.anchorNode.childNodes);
+            var sel = window.getSelection();
+            if (sel.rangeCount < 1) {
+                return null;
+            }
+            var node = $(sel.anchorNode);
+            var children = $(sel.anchorNode.childNodes);
+            var parentNode = rangy.getSelection().anchorNode.parentNode;
 
+            // If enter was pressed to end a UL or OL, let's double check and handle it accordingly if so
             if (sel.isCollapsed && node.is(NodeName.LI) && (!children.length ||
                     (children.length == 1 && children.first().is(NodeName.BR)))) {
                 e.preventDefault();
-                var parentNode = rangy.getSelection().anchorNode.parentNode;
                 if (parentNode && parentNode.nodeName === NodeName.OL) {
                     ZSSEditor.setOrderedList();
                 } else if (parentNode && parentNode.nodeName === NodeName.UL) {
                     ZSSEditor.setUnorderedList();
                 }
+            // Exit blockquote when the user presses Enter inside a blockquote on a new line
+            // (main use case is to allow double Enter to exit blockquote)
+            } else if (sel.isCollapsed && sel.baseOffset == 0 && parentNode && parentNode.nodeName == 'BLOCKQUOTE') {
+                e.preventDefault();
+                ZSSEditor.setBlockquote();
             }
         }
     }
@@ -2997,7 +3248,7 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
     if (parentNodeShouldBeParagraph) {
         var selection = window.getSelection();
 
-        if (selection) {
+        if (selection && selection.rangeCount > 0) {
             var range = selection.getRangeAt(0);
 
             if (range.startContainer == range.endContainer) {

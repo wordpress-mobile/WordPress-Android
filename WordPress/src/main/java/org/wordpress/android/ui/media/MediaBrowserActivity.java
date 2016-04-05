@@ -32,7 +32,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.FeatureSet;
@@ -48,7 +47,6 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
@@ -216,28 +214,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
 
-                // Support video only if you are self-hosted or are a dot-com blog with the video
-                // press upgrade
-                boolean selfHosted = !WordPress.getCurrentBlog().isDotcomFlag();
-                boolean isVideoEnabled = selfHosted
-                        || (mFeatureSet != null && mFeatureSet.isVideopressEnabled());
-
                 if (position == 0) {
                     mMediaAddFragment.launchCamera();
                 } else if (position == 1) {
-                    if (isVideoEnabled) {
-                        mMediaAddFragment.launchVideoCamera();
-                    } else {
-                        showVideoPressUpgradeDialog();
-                    }
+                    mMediaAddFragment.launchVideoCamera();
                 } else if (position == 2) {
                     mMediaAddFragment.launchPictureLibrary();
                 } else if (position == 3) {
-                    if (isVideoEnabled) {
-                        mMediaAddFragment.launchVideoLibrary();
-                    } else {
-                        showVideoPressUpgradeDialog();
-                    }
+                    mMediaAddFragment.launchVideoLibrary();
                 }
 
                 mAddMediaPopup.dismiss();
@@ -248,17 +232,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mAddMediaPopup = new PopupWindow(layoutView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
-    }
-
-    private void showVideoPressUpgradeDialog() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        String title = getString(R.string.media_no_video_title);
-        String message = getString(R.string.media_no_video_message);
-        String infoTitle = getString(R.string.learn_more);
-        String infoURL = Constants.videoPressURL;
-        WPAlertDialogFragment alert = WPAlertDialogFragment.newUrlInfoDialog(title, message, infoTitle, infoURL);
-        ft.add(alert, "alert");
-        ft.commitAllowingStateLoss();
     }
 
     @Override

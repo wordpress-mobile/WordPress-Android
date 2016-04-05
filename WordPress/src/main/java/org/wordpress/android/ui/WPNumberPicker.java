@@ -58,6 +58,7 @@ public class WPNumberPicker extends NumberPicker {
         updateIntitialOffset();
         setVerticalFadingEdgeEnabled(false);
         setHorizontalFadingEdgeEnabled(false);
+        WPPrefUtils.layoutAsNumberPickerSelected(mInputView);
         mInputView.setVisibility(View.INVISIBLE);
     }
 
@@ -66,8 +67,6 @@ public class WPNumberPicker extends NumberPicker {
         if (value < getMinValue()) value = getMinValue();
         if (value > getMaxValue()) value = getMaxValue();
         super.setValue(value);
-        EditText view = (EditText) getChildAt(0);
-        WPPrefUtils.layoutAsNumberPickerSelected(view);
     }
 
     @Override
