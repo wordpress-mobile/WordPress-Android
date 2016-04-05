@@ -9,8 +9,17 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.BuildConfig;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.widgets.WPTextView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WPComMagicLinkFragment extends Fragment {
     public interface OnMagicLinkFragmentInteraction {
@@ -83,12 +92,23 @@ public class WPComMagicLinkFragment extends Fragment {
     }
 
     private void sendMagicLinkRequest() {
-        // send magic link
-        boolean ok = true;
-        if (ok) {
-            if (mListener != null) {
-                mListener.onMagicLinkSent();
+        Map<String, String> params = new HashMap<>();
+        params.put("email", mEmail);
+        params.put("client_id", BuildConfig.OAUTH_APP_ID);
+        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
+
+        WordPress.getRestClientUtilsV1_1().sendLoginEmail(params, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (mListener != null) {
+                    mListener.onMagicLinkSent();
+                }
             }
-        }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String yup = "yup";
+            }
+        });
     }
 }
