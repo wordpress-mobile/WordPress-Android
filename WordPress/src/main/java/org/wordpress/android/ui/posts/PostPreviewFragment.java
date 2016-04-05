@@ -12,7 +12,6 @@ import android.webkit.WebView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -88,7 +87,7 @@ public class PostPreviewFragment extends Fragment {
 
                         if (htmlContent != null) {
                             mWebView.loadDataWithBaseURL(
-                                    null,
+                                    "file:///android_asset/",
                                     htmlContent,
                                     "text/html",
                                     "utf-8",
@@ -122,27 +121,13 @@ public class PostPreviewFragment extends Fragment {
             postContent = postContent.replace("src=\"null\"", "").replace("android-uri=", "src=");
         }
 
-        String textColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_dark);
-        String linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-
-        int contentMargin = getResources().getDimensionPixelSize(R.dimen.content_margin);
-        String marginStr = Integer.toString(contentMargin) + "px";
-
         return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-                + "<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>"
-                + "<style type='text/css'>"
-                + "  html { margin-left: " + marginStr + "; margin-right: " + marginStr + "; }"
-                + "  body { font-family: Merriweather, serif; font-weight: 400; padding: 0px; margin: 0px; width: 100%; color: " + textColorStr + "; }"
-                + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
-                + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
-                + "  h1 { font-size: 1.2em; font-family: Merriweather, serif; font-weight: 700; }"
-                + "  img { max-width: 100%; height: auto; }"
-                + "  a { text-decoration: none; color: " + linkColorStr + "; }"
-                + "</style></head><body>"
+                + "<link rel='stylesheet' href='editor.css'>"
+                + "<link rel='stylesheet' href='editor-android.css'>"
+                + "</head><body>"
                 + "<h1>" + title + "</h1>"
                 + StringUtils.addPTags(postContent)
                 + "</body></html>";
     }
-
 }

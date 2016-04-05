@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-
 /**
  * TextView that uses noticon icon font
  */

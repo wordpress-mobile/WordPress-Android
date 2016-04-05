@@ -1402,10 +1402,22 @@
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plan_purchase_now">Purchase Now</string>
 
+    <!-- Plans business post-purchase -->
+    <string name="plans_post_purchase_title_intro">It\'s all yours, way to go!</string>
+    <string name="plans_post_purchase_text_intro">Your site is doing somersaults in excitement! Now explore your site\'s new features and choose where you\'d like to begin.</string>
+    <string name="plans_post_purchase_title_customize">Customize Fonts &amp; Colors</string>
+    <string name="plans_post_purchase_text_customize">You now have access to custom fonts, custom colors, and custom CSS editing capabilities.</string>
+    <string name="plans_post_purchase_button_customize">Customize my Site</string>
+    <string name="plans_post_purchase_title_video">Bring posts to life with video</string>
+    <string name="plans_post_purchase_text_video">You can upload and host videos on your site with VideoPress and your expanded media storage.</string>
+    <string name="plans_post_purchase_button_video">Start new post</string>
+    <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
+    <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
+    <string name="plans_post_purchase_button_themes">Browse Themes</string>
+
     <!-- gravatar -->
     <string name="error_cropping_image">Error cropping the image</string>
     <string name="error_locating_image">Error locating the cropped image</string>
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
-
 </resources>

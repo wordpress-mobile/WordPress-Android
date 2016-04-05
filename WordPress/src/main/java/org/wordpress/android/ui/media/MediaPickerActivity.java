@@ -86,7 +86,7 @@ public class MediaPickerActivity extends AppCompatActivity
 
     private static final String CAPTURE_PATH_KEY = "capture-path";
 
-    private static final long   TAB_ANIMATION_DURATION_MS = 250l;
+    private static final long   TAB_ANIMATION_DURATION_MS = 250L;
 
     private MediaPickerAdapter     mMediaPickerAdapter;
     private ArrayList<MediaSource>[] mMediaSources;

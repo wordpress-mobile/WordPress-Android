@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="error_post_my_account_settings">הגדרות החשבון לא נשמרו</string>
+	<string name="post_format_video">וידאו</string>
+	<string name="align_left">שמאל</string>
+	<string name="align_center">מרכז</string>
+	<string name="align_right">ימין</string>
+	<string name="theme_free">חינם</string>
+	<string name="theme_premium">פרימיום</string>
+	<string name="align_none">ללא</string>
+	<string name="post_format_status">מצב</string>
+	<string name="theme_all">הכול</string>
+	<string name="post_format_chat">צ\'אט</string>
+	<string name="post_format_image">תמונה</string>
+	<string name="post_format_link">קישור</string>
+	<string name="post_format_quote">ציטוט</string>
+	<string name="post_format_gallery">גלריה</string>
+	<string name="post_format_standard">פוסט רגיל</string>
+	<string name="post_format_audio">אודיו</string>
+	<string name="notif_events">מידע על קורסים ואירועים ב-WordPress.com (ברשת ופרונטלי).</string>
+	<string name="post_format_aside">קצרצר</string>
+	<string name="notif_surveys">הזדמנויות להשתתף במחקרים וסקרים של WordPress.com.</string>
+	<string name="notif_tips">טיפים כדי להפיק את המרב מ-WordPress.com.</string>
+	<string name="notif_community">קהילה</string>
+	<string name="notif_suggestions">הצעות</string>
+	<string name="replies_to_my_comments">מענה לתגובות שלי</string>
+	<string name="notif_research">מחקר</string>
+	<string name="site_achievements">הישגי אתר</string>
+	<string name="username_mentions">אזכורים של שם משתמש</string>
+	<string name="likes_on_my_posts">לייקים בפוסטים שלי</string>
+	<string name="site_follows">עוקבים אחרי האתר</string>
+	<string name="likes_on_my_comments">לייקים בתגובות שלי</string>
+	<string name="comments_on_my_site">תגובות באתר שלי</string>
+	<string name="site_settings_list_editor_summary_other">%d פריטים</string>
+	<string name="site_settings_list_editor_summary_one">פריט אחד</string>
+	<string name="approve_auto">כל המשתמשים</string>
+	<string name="approve_auto_if_previously_approved">תגובות של משתמשים מוכרים</string>
+	<string name="approve_manual">אין תגובות</string>
+	<string name="site_settings_paging_summary_other">%d תגובות לעמוד</string>
+	<string name="site_settings_paging_summary_one">תגובה אחת לעמוד</string>
+	<string name="site_settings_multiple_links_summary_other">נדרש אישור עבור יותר מ-%d קישורים</string>
+	<string name="site_settings_multiple_links_summary_one">נדרש אישור עבור יותר מקישור אחד</string>
+	<string name="site_settings_multiple_links_summary_zero">נדרש אישור עבור יותר מ-0 קישורים</string>
+	<string name="detail_approve_auto">אישור אוטומטי של תגובות מכולם.</string>
+	<string name="detail_approve_auto_if_previously_approved">אישור אוטומטי אם תגובה קודמת של המשתמש אושרה</string>
+	<string name="detail_approve_manual">אישור ידני דרוש לתגובות מכולם.</string>
+	<string name="days_quantity_one">יום אחד</string>
+	<string name="days_quantity_other">%d ימים</string>
+	<string name="filter_trashed_posts">הועבר לפח</string>
+	<string name="filter_published_posts">פורסם</string>
+	<string name="filter_draft_posts">טיוטות</string>
+	<string name="filter_scheduled_posts">מתוזמן לפרסום</string>
+	<string name="primary_site">אתר ראשי</string>
+	<string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
+	<string name="web_address">כתובת URL</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. יש לנסות שוב או למחוק אותן.</string>
+	<string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
+	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
+	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
+	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
+	<string name="new_editor_promo_desc">אפליקציית WordPress עבור Android כוללת כעת עורך ויזואלי חדש\n ויפהפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
+	<string name="new_editor_promo_title">עורך חדש ומחודש</string>
+	<string name="new_editor_promo_button_label">נהדר, תודה!</string>
+	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
+	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
+	<string name="editor_page_title_placeholder">כותרת עמוד</string>
+	<string name="editor_post_title_placeholder">כותרת הפוסט</string>
+	<string name="email_address">כתובת אימייל</string>
+	<string name="preference_show_visual_editor">הצגת עורך ויזואלי</string>
+	<string name="preference_editor">עורך</string>
+	<string name="dlg_sure_to_delete_comments">האם למחוק תגובות אלה לצמיתות?</string>
+	<string name="dlg_sure_to_delete_comment">האם למחוק תגובה זו לצמיתות?</string>
+	<string name="mnu_comment_delete_permanently">מחיקה</string>
+	<string name="comment_deleted_permanently">התגובה נמחקה</string>
+	<string name="mnu_comment_untrash">שחזור</string>
+	<string name="comments_empty_list_filtered">אין תגובות בסטטוס %s</string>
+	<string name="could_not_load_page">לא ניתן היה לטעון את העמוד</string>
+	<string name="comment_status_all">הכול</string>
+	<string name="interface_language">שפת ממשק</string>
+	<string name="off">כיבוי</string>
+	<string name="about_the_app">מידע על האפליקציה</string>
+	<string name="error_post_account_settings">לא ניתן לשמור הגדרות החשבון</string>
 	<string name="error_post_my_profile">הפרופיל לא נשמר</string>
 	<string name="error_fetch_account_settings">לא ניתן לאחזר את הגדרות החשבון שלך</string>
 	<string name="error_fetch_my_profile">לא ניתן לאחזר את הפרופיל שלך</string>
@@ -15,6 +94,9 @@
 	<string name="remove">להסיר</string>
 	<string name="disabled">לא מופעל</string>
 	<string name="site_settings_image_original_size">גודל מקורי</string>
+	<string name="privacy_private">האתר גלוי רק לך ולמשתמשים שאישרת</string>
+	<string name="privacy_public_not_indexed">האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</string>
+	<string name="privacy_public">האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</string>
 	<string name="about_me_hint">תיאור אישי בכמה מילים…</string>
 	<string name="public_display_name_hint">אם לא יוגדר אחרת, שם המשתמש שלך ישמש כשם תצוגה בברירת מחדל</string>
 	<string name="about_me">מי אני</string>
@@ -487,11 +569,9 @@
 	<string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
 	<string name="add_location">הוספת מיקום</string>
 	<string name="current_location">מיקום נוכחי</string>
-	<string name="your_signature">החתימה שלך:</string>
 	<string name="search_location">חיפוש</string>
 	<string name="edit_location">עריכה</string>
 	<string name="search_current_location">אתר</string>
-	<string name="preference_privacy">פרטיות</string>
 	<string name="preference_send_usage_stats">שליחת סטטיסטיקות</string>
 	<string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
 	<string name="update_verb">עדכן</string>
@@ -518,7 +598,6 @@
 	<string name="help_center">מרכז עזרה</string>
 	<string name="ssl_certificate_error">אישור SSL לא תקף</string>
 	<string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
-	<string name="invalid_url_message">ודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
 	<string name="could_not_remove_account">לא ניתן היה להסיר את האתר</string>
 	<string name="out_of_memory">זיכרון המכשיר מלא</string>
@@ -536,7 +615,6 @@
 	<string name="cat_name_required">שם הקטגוריה הוא שדה חובה</string>
 	<string name="category_automatically_renamed">שם הקטגוריה %1$s אינו תקף. הוא שונה ל-%2$s.</string>
 	<string name="no_account">לא נמצא חשבון ב-WordPress, הוסף חשבון ונסה שנית</string>
-	<string name="auto_sharing_preference_reset">איפוס הגדרות שיתוף אוטומטי</string>
 	<string name="sdcard_message">יש לטעון כרטיס SD כדי להעלות קבצים</string>
 	<string name="stats_empty_comments">עדיין אין תגובות</string>
 	<string name="stats_bar_graph_empty">הנתונים הסטטיסטיים לא זמינים</string>
@@ -582,7 +660,7 @@
 	<string name="blog_name_reserved_but_may_be_available">אתר זה שמור כעת אך עשוי להיות זמין בעוד כמה ימים</string>
 	<string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
 	<string name="nux_cannot_log_in">איננו יכולים לחבר אותך</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">האתר שנבחר כבר אינו גלוי</string>
+	<string name="invalid_url_message">ודא שכתובת האתר שהוזנה תקפה</string>
 	<string name="wordpress_blog">אתר ב-WordPress</string>
 	<string name="blog_removed_successfully">האתר הוסר בהצלחה</string>
 	<string name="add_account_blog_url">כתובת האתר</string>
@@ -686,6 +764,7 @@
 	<string name="blog_name_invalid">כתובת אתר לא תקפה</string>
 	<string name="blog_title_invalid">כותרת אתר לא תקפה</string>
 	<string name="notifications_empty_all">אין התראות... עדיין.</string>
+	<string name="invalid_site_url_message">יש לוודא שכתובת ה-URL של האתר שהוזנה תקפה</string>
 	<string name="share_url_post">שתף פוסט</string>
 	<string name="share_url_page">שתף עמוד</string>
 	<string name="share_link">קישור לשיתוף</string>
@@ -702,9 +781,6 @@
 	<string name="reader_label_reply">תשובה</string>
 	<string name="video">וידאו</string>
 	<string name="download">מוריד מדיה</string>
-	<string name="share_preference_title">שתף ב-WordPress</string>
-	<string name="reset_auto_share_preference">אפס הגדרות לשיתוף אוטומטי</string>
-	<string name="always_use_these_settings_to_share">השתמש תמיד בהגדרות אלה</string>
 	<string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
 	<string name="select_time">בחר שעה</string>
 	<string name="reader_likes_you_and_one">אתה ועוד אחד אוהבים את זה</string>
@@ -766,8 +842,6 @@
 	<string name="media_gallery_type_tiled">אריחים</string>
 	<string name="media_gallery_type_circles">עיגולים</string>
 	<string name="media_gallery_type_slideshow">מצגת</string>
-	<string name="media_no_video_title">VideoPress לא זמין</string>
-	<string name="media_no_video_message">שדרג ל-VideoPress כדי להעלות וידאו!</string>
 	<string name="media_edit_title_text">כותרת</string>
 	<string name="media_edit_caption_text">כיתוב</string>
 	<string name="media_edit_description_text">תיאור</string>
@@ -819,8 +893,6 @@
 	<string name="more_notifications">הוסף %d נוספים.</string>
 	<string name="follows">עוקבים</string>
 	<string name="loading">טוען...</string>
-	<string name="post_signature">חתימה</string>
-	<string name="add_tagline">הוסף חתימה לפוסטים חדשים</string>
 	<string name="httpuser">שם משתמש</string>
 	<string name="httppassword">סיסמה</string>
 	<string name="error_media_upload">ארעה שגיאה במהלך העלאת הקובץ.</string>
@@ -847,11 +919,9 @@
 	<string name="upload_scaled_image">העלאה וקישור לתמונה</string>
 	<string name="scheduled">תוזמן</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">פורסם דרך וורדפרס עבור אנדרואיד</string>
 	<string name="version">גרסה</string>
 	<string name="tos">תנאי שימוש</string>
 	<string name="app_title">וורדפרס עבור אנדרואיד</string>
-	<string name="about">אודות</string>
 	<string name="max_thumbnail_px_width">ברירת מחדל לרוחב תמונה</string>
 	<string name="image_alignment">יישור</string>
 	<string name="refresh">רענון</string>
@@ -873,6 +943,7 @@
 	<string name="categories">קטגוריות</string>
 	<string name="tags_separate_with_commas">תגים (יש להפריד בפסיקים)</string>
 	<string name="title">כותרת</string>
+	<string name="dlg_deleting_comments">מוחק תגובות</string>
 	<string name="notification_vibrate">רטט</string>
 	<string name="notification_sound">שמע צליל התראה</string>
 	<string name="notification_blink">האר נורית הודעה</string>
@@ -896,70 +967,4 @@
 	<string name="reply">תגובה</string>
 	<string name="preview">תצוגה מקדימה</string>
 	<string name="notification_settings">הגדרות התראות</string>
-	<string-array name="alignment_array">
-		<item>ללא</item>
-		<item>שמאל</item>
-		<item>מרכז</item>
-		<item>ימין</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>תגובות באתר שלי</item>
-		<item>לייקים בתגובות שלי</item>
-		<item>לייקים בפוסטים שלי</item>
-		<item>עוקבי אתר</item>
-		<item>הישגי אתר</item>
-		<item>איזכורי משתמש</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>מענה לתגובות שלי</item>
-		<item>לייקים לתגובות שלי</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>הצעות</item>
-		<item>חיפוש חוזר</item>
-		<item>קהילה</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>טיפים כדי להפיק את המיטב מוורדפרס.קום.</item>
-		<item>הזדמנות להשתתף במחקר &amp; סקר של וורדפרס.קום.</item>
-		<item>מידע על קורסים ואירועים בוורדפרס.קום (ברשת &amp; פרונטלי).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>פורסם</item>
-		<item>טיוטות</item>
-		<item>מתוזמן לפרסום</item>
-		<item>הועבר לפח</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>הערה</item>
-		<item>אודיו</item>
-		<item>צ\'אט</item>
-		<item>גלריה</item>
-		<item>תמונה</item>
-		<item>קישור</item>
-		<item>ציטוט</item>
-		<item>רגיל</item>
-		<item>סטטוס</item>
-		<item>וידאו</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>האתר שלך גלוי לכולם ומנועי חיפוש יכולים לצרף אותו לאינדקס</item>
-		<item>האתר שלך גלוי לכולם אבל שולח בקשה למנועי חיפוש לא לצרף אותו לאינדקס</item>
-		<item>האתר גלוי רק לך ולמשתמשים שאישרת</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>אישור ידני דרוש לתגובות מכולם.</item>
-		<item>אישור אוטומטי אם תגובה קודמת של המשתמש אושרה.</item>
-		<item>אישור אוטומטי של תגובות מכולם.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>אין תגובות</item>
-		<item>תגובות של משתמשים מוכרים</item>
-		<item>כל המשתמשים</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>חינם</item>
-		<item>הכל</item>
-		<item>פרימיום</item>
-	</string-array>
 </resources>
