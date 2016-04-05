@@ -24,16 +24,14 @@ import java.util.List;
 
 public class PeopleManagementActivity extends AppCompatActivity {
 
-    private int mLocalBlogId = BlogUtils.BLOG_ID_INVALID;
-    private Blog mBlog;
     private PeopleAdapter mPeopleAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLocalBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-        mBlog = WordPress.getBlog(mLocalBlogId);
+        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+        Blog blog = WordPress.getBlog(localBlogId);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -44,9 +42,9 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
         setTitle(R.string.people);
 
-        if (mBlog != null) {
+        if (blog != null) {
             ListView listView = (ListView)findViewById(android.R.id.list);
-            List<Person> peopleList = PeopleTable.getPeople(mLocalBlogId);
+            List<Person> peopleList = PeopleTable.getPeople(localBlogId);
             mPeopleAdapter = new PeopleAdapter(this, peopleList);
             listView.setAdapter(mPeopleAdapter);
 
@@ -59,7 +57,7 @@ public class PeopleManagementActivity extends AppCompatActivity {
                 }
             });
 
-            refreshUsersList();
+            refreshUsersList(blog.getDotComBlogId(), localBlogId);
         }
     }
 
@@ -78,11 +76,11 @@ public class PeopleManagementActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUsersList() {
-        PeopleUtils.fetchUsers(mBlog.getDotComBlogId(), mLocalBlogId, new PeopleUtils.Callback() {
+    private void refreshUsersList(String dotComBlogId, final int localBlogId) {
+        PeopleUtils.fetchUsers(dotComBlogId, localBlogId, new PeopleUtils.Callback() {
             @Override
             public void onSuccess() {
-                List<Person> peopleList = PeopleTable.getPeople(mLocalBlogId);
+                List<Person> peopleList = PeopleTable.getPeople(localBlogId);
                 mPeopleAdapter.setPeopleList(peopleList);
                 mPeopleAdapter.notifyDataSetChanged();
             }
