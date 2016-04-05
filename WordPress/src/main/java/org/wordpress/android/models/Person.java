@@ -42,6 +42,7 @@ public class Person {
         String lastName = json.optString("last_name");
         String displayName = json.optString("nice_name");
         String avatarUrl = json.optString("avatar_URL");
+        // We don't support multiple roles, so the first role is picked just as it's in Calypso
         Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
 
         return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
