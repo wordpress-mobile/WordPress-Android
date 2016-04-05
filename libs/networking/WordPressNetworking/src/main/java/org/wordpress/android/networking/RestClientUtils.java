@@ -68,16 +68,6 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
-    public RestClientUtils(RestClient restClient, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
-        // load an existing access token from prefs if we have one
-        mAuthenticator = authenticator;
-        mRestClient = restClient;
-        if (onAuthFailedListener != null) {
-            mRestClient.setOnAuthFailedListener(onAuthFailedListener);
-        }
-        mRestClient.setUserAgent(sUserAgent);
-    }
-
     public Authenticator getAuthenticator() {
         return mAuthenticator;
     }
@@ -354,10 +344,6 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public String pathToUrl(final String path) {
-        return mRestClient.getAbsoluteURL(path);
-    }
-
     /**
      * Make POST request with params
      */
@@ -365,16 +351,6 @@ public class RestClientUtils {
                      ErrorListener errorListener) {
         final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
                 listener, errorListener);
-        if (retryPolicy == null) {
-            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                    REST_BACKOFF_MULT); //Do not retry on failure
-        }
-        request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
-        authCheck.send();
-    }
-
-    public void post(RestRequest request, RetryPolicy retryPolicy, ErrorListener errorListener) {
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
                     REST_BACKOFF_MULT); //Do not retry on failure

@@ -132,7 +132,6 @@ configurations.all {
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
     exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
-    exclude group: 'com.android.volley', module: 'volley'
 }
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
