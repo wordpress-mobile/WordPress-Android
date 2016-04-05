@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
@@ -33,6 +35,7 @@ public class Person {
         this.role = role;
     }
 
+    @Nullable
     public static Person fromJSON(JSONObject json, int localTableBlogId) {
         if (json == null) {
             return null;
