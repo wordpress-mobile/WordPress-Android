@@ -52,7 +52,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId) {
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId) {
         if (jsonArray == null) {
             return null;
         }
