@@ -130,15 +130,8 @@ public class MagicLinkSignInFragment extends SignInFragment {
         WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                showPasswordFieldAndFocus();
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String string = error.getMessage();
                 try {
-                    JSONObject jsonResponse = new JSONObject(string);
-                    String errorReason = jsonResponse.getString("error");
+                    String errorReason = response.getString("error");
                     if (errorReason != null && errorReason.equals("taken")) {
                         mListener.onMagicLinkRequestSuccess();
                     } else {
@@ -148,6 +141,11 @@ public class MagicLinkSignInFragment extends SignInFragment {
                     e.printStackTrace();
                     showPasswordFieldAndFocus();
                 }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                showPasswordFieldAndFocus();
             }
         });
     }
