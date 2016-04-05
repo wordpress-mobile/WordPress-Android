@@ -80,8 +80,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
     private void refreshUsersList(String dotComBlogId, final int localBlogId) {
         PeopleUtils.fetchUsers(dotComBlogId, localBlogId, new PeopleUtils.Callback() {
             @Override
-            public void onSuccess() {
-                List<Person> peopleList = PeopleTable.getPeople(localBlogId);
+            public void onSuccess(List<Person> peopleList) {
+                PeopleTable.savePeople(peopleList);
                 mPeopleAdapter.setPeopleList(peopleList);
                 mPeopleAdapter.notifyDataSetChanged();
             }

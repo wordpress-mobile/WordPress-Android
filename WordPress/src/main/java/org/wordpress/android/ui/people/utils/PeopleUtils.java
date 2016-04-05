@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -21,21 +20,16 @@ public class PeopleUtils {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                if (jsonObject != null) {
+                if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
                         List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId);
-                        PeopleTable.savePeople(people);
+                        callback.onSuccess(people);
 
-                        if (callback != null) {
-                            callback.onSuccess();
-                        }
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
-                        if (callback != null) {
-                            callback.onJSONException(e);
-                        }
+                        callback.onJSONException(e);
                     }
                 }
             }
@@ -73,7 +67,7 @@ public class PeopleUtils {
     }
 
     public interface Callback {
-        void onSuccess();
+        void onSuccess(List<Person> peopleList);
 
         void onError(VolleyError error);
 
