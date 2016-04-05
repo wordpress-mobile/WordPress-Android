@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.util.GravatarUtils;
@@ -21,21 +20,16 @@ public class PeopleAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private List<Person> mPeopleList;
     private int mAvatarSz;
-    private int mLocalBlogId;
 
-    public PeopleAdapter(Context context, int localBlogId) {
+    public PeopleAdapter(Context context, List<Person> peopleList) {
         mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
-        mLocalBlogId = localBlogId;
-        mPeopleList = PeopleTable.getPeople(mLocalBlogId);
+        mPeopleList = peopleList;
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        mPeopleList = PeopleTable.getPeople(mLocalBlogId);
-
-        super.notifyDataSetChanged();
+    public void setPeopleList(List<Person> peopleList) {
+        mPeopleList = peopleList;
     }
 
     @Override

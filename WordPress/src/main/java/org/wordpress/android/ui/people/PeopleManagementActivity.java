@@ -13,11 +13,14 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+
+import java.util.List;
 
 public class PeopleManagementActivity extends AppCompatActivity {
 
@@ -43,8 +46,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
         if (mBlog != null) {
             ListView listView = (ListView)findViewById(android.R.id.list);
-            // People are saved with the local blog id that they are belong to
-            mPeopleAdapter = new PeopleAdapter(this, mLocalBlogId);
+            List<Person> peopleList = PeopleTable.getPeople(mLocalBlogId);
+            mPeopleAdapter = new PeopleAdapter(this, peopleList);
             listView.setAdapter(mPeopleAdapter);
 
             final Activity context = this;
@@ -79,6 +82,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
         PeopleUtils.fetchUsers(mBlog.getDotComBlogId(), mLocalBlogId, new PeopleUtils.Callback() {
             @Override
             public void onSuccess() {
+                List<Person> peopleList = PeopleTable.getPeople(mLocalBlogId);
+                mPeopleAdapter.setPeopleList(peopleList);
                 mPeopleAdapter.notifyDataSetChanged();
             }
 
