@@ -1,6 +1,8 @@
 package org.wordpress.android.models;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 
 public class Person {
     private long personID;
@@ -36,16 +38,25 @@ public class Person {
             return null;
         }
 
-        long personID = Long.parseLong(json.optString("ID"));
-        String username = json.optString("login");
-        String firstName = json.optString("first_name");
-        String lastName = json.optString("last_name");
-        String displayName = json.optString("nice_name");
-        String avatarUrl = json.optString("avatar_URL");
-        // We don't support multiple roles, so the first role is picked just as it's in Calypso
-        Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
+        // Response parameters can be found in https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            String username = json.optString("login");
+            String firstName = json.optString("first_name");
+            String lastName = json.optString("last_name");
+            String displayName = json.optString("nice_name");
+            String avatarUrl = json.optString("avatar_URL");
+            // We don't support multiple roles, so the first role is picked just as it's in Calypso
+            Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
 
-        return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+            return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.PEOPLE, "JSON exception occurred while parsing the user json: " + e);
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
     }
 
     public long getPersonID() {
