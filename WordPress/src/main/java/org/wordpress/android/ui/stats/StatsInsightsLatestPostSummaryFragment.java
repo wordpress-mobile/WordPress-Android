@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +133,10 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         ).toLowerCase();
 
         String postTitle = StringEscapeUtils.unescapeHtml(mInsightsLatestPostModel.getPostTitle());
+        if (TextUtils.isEmpty(postTitle)) {
+            postTitle = getString(R.string.stats_insights_latest_post_no_title);
+        }
+
         final String trendLabelFormatted = String.format(
                 trendLabel, sinceLabel, postTitle);
 
