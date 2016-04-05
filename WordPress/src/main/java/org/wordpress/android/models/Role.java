@@ -45,9 +45,11 @@ public enum Role {
                 return KEY_AUTHOR;
             case CONTRIBUTOR:
                 return KEY_CONTRIBUTOR;
-            default:
+            case UNSUPPORTED:
                 return "unsupported";
         }
+        // this is just a fallback for when we don't know the role returned by the server
+        return "unsupported";
     }
 
     // This method is be used to determine the role of the user from network request & db
