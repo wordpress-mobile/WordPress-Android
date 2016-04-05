@@ -315,6 +315,8 @@ public class MeFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     fetchMedia(UCrop.getOutput(data));
                 } else if (resultCode == UCrop.RESULT_ERROR) {
+                    Toast.makeText(getActivity(), getString(R.string.error_cropping_image), Toast.LENGTH_SHORT).show();
+
                     final Throwable cropError = UCrop.getError(data);
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", cropError);
                 }
@@ -414,7 +416,7 @@ public class MeFragment extends Fragment {
     private void startGravatarUpload(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
-//            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -432,8 +434,8 @@ public class MeFragment extends Fragment {
                     @Override
                     public void onError() {
                         mProgressBar.setVisibility(View.GONE);
-//                        Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast
-//                                .LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast
+                                .LENGTH_SHORT).show();
                     }
                 });
             }
@@ -441,7 +443,7 @@ public class MeFragment extends Fragment {
             @Override
             public void onError() {
                 mProgressBar.setVisibility(View.GONE);
-//                Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
             }
         });
     }
