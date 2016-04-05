@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.android.volley.VolleyError;
 
+import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -87,7 +88,12 @@ public class PeopleManagementActivity extends AppCompatActivity {
 
             @Override
             public void onError(VolleyError error) {
+                //TODO: show some kind of error to the user
+            }
 
+            @Override
+            public void onJSONException(JSONException exception) {
+                //TODO: show some kind of error to the user
             }
         });
     }

@@ -33,6 +33,9 @@ public class PeopleUtils {
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
+                        if (callback != null) {
+                            callback.onJSONException(e);
+                        }
                     }
                 }
             }
@@ -73,5 +76,7 @@ public class PeopleUtils {
         void onSuccess();
 
         void onError(VolleyError error);
+
+        void onJSONException(JSONException e);
     }
 }
