@@ -13,37 +13,22 @@ import java.util.List;
 
 import static org.wordpress.android.util.SqlUtils.*;
 
-/**
- */
 public class MenuItemTable {
     //
     // Menu Item database table column names
     //
-    /** SQL type - INTEGER (PRIMARY KEY) */
     public static final String ID_COLUMN = "itemId";
-    /** SQL type - INTEGER */
     public static final String MENU_ID_COLUMN = "itemMenu";
-    /** SQL type - INTEGER */
     public static final String PARENT_ID_COLUMN = "itemParent";
-    /** SQL type - INTEGER */
     public static final String CONTENT_ID_COLUMN = "itemContentId";
-    /** SQL type - TEXT */
     public static final String URL_COLUMN = "itemUrl";
-    /** SQL type - TEXT */
     public static final String NAME_COLUMN = "itemName";
-    /** SQL type - TEXT */
     public static final String DETAILS_COLUMN = "itemDetails";
-    /** SQL type - TEXT */
     public static final String LINK_TARGET_COLUMN = "itemLinkTarget";
-    /** SQL type - TEXT */
     public static final String LINK_TITLE_COLUMN = "itemLinkTitle";
-    /** SQL type - TEXT */
     public static final String TYPE_COLUMN = "itemType";
-    /** SQL type - TEXT */
     public static final String TYPE_FAMILY_COLUMN = "itemTypeFamily";
-    /** SQL type - TEXT */
     public static final String TYPE_LABEL_COLUMN = "itemTypeLabel";
-    /** SQL type - TEXT */
     public static final String CHILDREN_COLUMN = "itemChildren";
 
     //
@@ -115,8 +100,6 @@ public class MenuItemTable {
         return items;
     }
 
-    /**
-     */
     public static MenuItemModel deserializeFromDatabase(Cursor cursor) {
         if (cursor == null || cursor.isBeforeFirst() || cursor.isAfterLast()) return null;
 
@@ -145,8 +128,6 @@ public class MenuItemTable {
         return item;
     }
 
-    /**
-     */
     public static ContentValues serializeToDatabase(MenuItemModel item) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, item.itemId);

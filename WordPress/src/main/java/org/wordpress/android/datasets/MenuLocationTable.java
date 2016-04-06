@@ -20,27 +20,20 @@ public class MenuLocationTable {
     //
     // Menu Location database table column names
     //
-    /** SQL type - INTEGER */
     public static final String SITE_ID_COLUMN = "siteId";
-    /** SQL type - TEXT */
     public static final String NAME_COLUMN = "locationName";
-    /** SQL type - TEXT */
     public static final String DETAILS_COLUMN = "locationDetails";
-    /** SQL type - TEXT */
     public static final String DEFAULT_STATE_COLUMN = "locationDefaultState";
-    /** SQL constraint - PRIMARY KEY */
     public static final String PRIMARY_KEY_COLUMN = "pkLocation";
 
     //
     // Convenience SQL strings
     //
-    /** Name of the table where Menu Locations are stored */
     public static final String MENU_LOCATIONS_TABLE_NAME = "menu_locations";
 
     /** SQL PRIMARY KEY constraint */
     public static final String PRIMARY_KEY = "CONSTRAINT " + PRIMARY_KEY_COLUMN + " PRIMARY KEY";
 
-    /** SQL query to create the Menu Locations table */
     public static final String CREATE_MENU_LOCATION_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " + MENU_LOCATIONS_TABLE_NAME + " (" +
                     SITE_ID_COLUMN + " INTEGER NOT NULL," +
@@ -63,8 +56,6 @@ public class MenuLocationTable {
     public static final String SELECT_SITE_LOCATIONS_SQL =
             "SELECT * FROM " + MENU_LOCATIONS_TABLE_NAME + "WHERE " + SITE_ID_COLUMN + "=?;";
 
-    /**
-     */
     public static boolean saveMenuLocation(MenuLocationModel location) {
         if (location == null || location.siteId < 0) return false;
 
@@ -158,10 +149,6 @@ public class MenuLocationTable {
         return siteLocations;
     }
 
-    /**
-     * Sets the state of this instance to match the state described by the row at the current
-     * position of the given {@link Cursor}.
-     */
     public static MenuLocationModel deserializeFromDatabase(Cursor cursor) {
         if (cursor == null || cursor.isBeforeFirst() || cursor.isAfterLast()) return null;
 
@@ -173,10 +160,6 @@ public class MenuLocationTable {
         return location;
     }
 
-    /**
-     * Creates a {@link ContentValues} object to store in a local database. Passing a {@link Cursor}
-     * with these values to {@link #deserializeFromDatabase(Cursor)} will recreate this state.
-     */
     public static ContentValues serializeToDatabase(MenuLocationModel location) {
         ContentValues values = new ContentValues();
         values.put(SITE_ID_COLUMN, location.siteId);

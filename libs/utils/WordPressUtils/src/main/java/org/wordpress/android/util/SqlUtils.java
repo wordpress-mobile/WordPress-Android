@@ -142,12 +142,7 @@ public class SqlUtils {
         return text.substring(0, MAX_TEXT_LEN);
     }
 
-    /**
-     * Convenience method for getting a formatted SQL WHERE clause.
-     *
-     * @return
-     *  formatted as "WHERE {@code column}=?"
-     */
+    /** @return formatted as "WHERE {@code column}=?" */
     public static String where(String column) {
         return "WHERE " + column + "=?";
     }
@@ -166,36 +161,24 @@ public class SqlUtils {
         return exists;
     }
 
-    /**
-     * @return
-     *  the integer value for the given column, -1 if the column name is not valid
-     */
+    /** @return the integer value for the given column, -1 if the column name is not valid */
     public static int getIntFromCursor(@NonNull Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getInt(columnIndex) : -1;
     }
-    /**
-     * @return
-     *  the long value for the given column, -1 if the column name is not valid
-     */
+    /** @return the long value for the given column, -1 if the column name is not valid */
     public static long getLongFromCursor(@NonNull Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getLong(columnIndex) : -1;
     }
 
-    /**
-     * @return
-     *  the String value for the given column, "" if the column name is not valid
-     */
+    /** @return the String value for the given column, "" if the column name is not valid */
     public static String getStringFromCursor(@NonNull Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 ? cursor.getString(columnIndex) : "";
     }
 
-    /**
-     * @return
-     *  the boolean value for the given column, false if the column name is not valid
-     */
+    /** @return the boolean value for the given column, false if the column name is not valid */
     public static boolean getBooleanFromCursor(@NonNull Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 && cursor.getInt(columnIndex) != 0;

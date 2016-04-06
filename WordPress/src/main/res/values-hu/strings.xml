@@ -123,7 +123,6 @@
 	<string name="stats_timeframe_yesterday">Tegnap</string>
 	<string name="stats_view_clicks">Kattintások</string>
 	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
-	<string name="menu_search">Keresés</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_entry_authors">Szerző</string>
 	<string name="themes_details_label">Részletek</string>
@@ -198,7 +197,6 @@
 	<string name="blogusername">honlap-felhasználó</string>
 	<string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
 	<string name="scaled_image">Átméretezett kép szélessége</string>
-	<string name="remove_location">Eltávolítás</string>
 	<string name="scheduled">Időzítve</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>

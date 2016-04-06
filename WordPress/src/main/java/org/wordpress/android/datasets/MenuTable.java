@@ -16,30 +16,23 @@ import java.util.List;
 
 import static org.wordpress.android.util.SqlUtils.*;
 
-/**
- */
 public class MenuTable {
     //
     // Menu database table column names
     //
-    /** SQL type - INTEGER (PRIMARY KEY) */
     public static final String ID_COLUMN = "menuId";
-    /** SQL type - TEXT */
     public static final String NAME_COLUMN = "menuName";
-    /** SQL type - TEXT */
     public static final String DETAILS_COLUMN = "menuDetails";
-    /** SQL type - TEXT */
     public static final String LOCATIONS_COLUMN = "menuLocations";
-    /** SQL type - TEXT */
     public static final String ITEMS_COLUMN = "menuItems";
 
     //
     // Convenience Strings for SQL database table creation.
     //
-    public static final String MENUS_TABLE_NAME = "menus";
+    public static final String MENU_TABLE_NAME = "menus";
     public static final String CREATE_MENU_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
-                    MENUS_TABLE_NAME + " (" +
+                    MENU_TABLE_NAME + " (" +
                     ID_COLUMN + " INTEGER PRIMARY KEY, " +
                     NAME_COLUMN + " TEXT, " +
                     DETAILS_COLUMN + " TEXT, " +
@@ -49,9 +42,6 @@ public class MenuTable {
 
     public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
 
-    /**
-     * Sets values from a local database {@link Cursor}.
-     */
     public static MenuModel deserializeFromDatabase(Cursor cursor) {
         if (cursor == null || cursor.isBeforeFirst() || cursor.isAfterLast()) return null;
 
@@ -64,9 +54,6 @@ public class MenuTable {
         return menu;
     }
 
-    /**
-     * Creates a {@link ContentValues} object to store this object in a local database.
-     */
     public static ContentValues serializeToDatabase(MenuModel menu) {
         ContentValues values = new ContentValues();
         values.put(ID_COLUMN, menu.menuId);
@@ -119,10 +106,9 @@ public class MenuTable {
      */
     public static boolean saveMenu(SQLiteDatabase db, MenuModel menu) {
         if (menu == null) return false;
-
         ContentValues values = serializeToDatabase(menu);
         return db.insertWithOnConflict(
-                MENUS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+                MENU_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }
     /**
      * Attempts to load a {@link MenuModel} from a database.

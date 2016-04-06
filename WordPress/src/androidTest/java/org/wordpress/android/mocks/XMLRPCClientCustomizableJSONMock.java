@@ -12,7 +12,6 @@ import org.xmlrpc.android.XMLRPCException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 
 public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMockAbstract {
