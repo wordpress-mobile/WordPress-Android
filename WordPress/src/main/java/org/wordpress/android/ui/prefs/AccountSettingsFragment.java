@@ -55,6 +55,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
         mWebAddressPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
+        mWebAddressPreference.setDialogMessage(R.string.web_address_dialog_hint);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
