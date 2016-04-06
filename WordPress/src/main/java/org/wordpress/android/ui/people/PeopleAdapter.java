@@ -13,40 +13,39 @@ import org.wordpress.android.models.Role;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private List<Person> mPersonList;
+    private List<Person> mPeopleList;
     private int mAvatarSz;
 
-    public PeopleAdapter(Context context) {
+    public PeopleAdapter(Context context, List<Person> peopleList) {
         mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
-        mPersonList = new ArrayList<>();
-        mPersonList.add(new Person(1, "beaulebens", "Beau", "Lebens", "Beau", "http://lorempixum.com/76/76", Role.ADMIN));
-        mPersonList.add(new Person(2, "ebinnion", "Eric", "Binnion", "Eric", "http://lorempixum.com/76/76", Role.AUTHOR));
-        mPersonList.add(new Person(3, "javialvarez", "Javi", "Alvarez", "Javi", "http://lorempixum.com/76/76", Role.CONTRIBUTOR));
-        mPersonList.add(new Person(4, "oguzkocer", "Oguz", "Kocer", "Oguz", "http://lorempixum.com/76/76", Role.EDITOR));
+        mPeopleList = peopleList;
+    }
+
+    public void setPeopleList(List<Person> peopleList) {
+        mPeopleList = peopleList;
     }
 
     @Override
     public int getCount() {
-        if (mPersonList == null) {
+        if (mPeopleList == null) {
             return 0;
         }
-        return mPersonList.size();
+        return mPeopleList.size();
     }
 
     @Override
     public Person getItem(int position) {
-        if (mPersonList == null) {
+        if (mPeopleList == null) {
             return null;
         }
-        return mPersonList.get(position);
+        return mPeopleList.get(position);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class PeopleAdapter extends BaseAdapter {
         if (person == null) {
             return 0;
         }
-        return person.personID;
+        return person.getPersonID();
     }
 
     @Override
@@ -73,11 +72,11 @@ public class PeopleAdapter extends BaseAdapter {
         Person person = getItem(position);
 
         if (person != null) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getImageUrl(), mAvatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtDisplayName.setText(person.getDisplayName());
-            holder.txtUsername.setText(person.getUsername());
-            holder.txtRole.setText(Role.toString(mContext, person.getRole()));
+            holder.txtUsername.setText(String.format("@%s", person.getUsername()));
+            holder.txtRole.setText(Role.getLabel(mContext, person.getRole()));
             holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
         }
 
