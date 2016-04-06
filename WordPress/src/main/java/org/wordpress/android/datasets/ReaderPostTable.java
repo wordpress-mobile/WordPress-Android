@@ -545,7 +545,7 @@ public class ReaderPostTable {
             }
 
 
-            // if blog/feed is no longer followed, remove its posts tagged with "Blogs I Follow" in
+            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites" in
             // tbl_post_tags
             if (!isFollowed) {
                 if (blogId != 0) {
@@ -683,7 +683,7 @@ public class ReaderPostTable {
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
             // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
-            // longer followed if this is "Blogs I Follow"
+            // longer followed if this is "Followed Sites"
             if (tag.isPostsILike()) {
                 sql += " AND tbl_posts.is_liked != 0";
             } else if (tag.isFollowedSites()) {
