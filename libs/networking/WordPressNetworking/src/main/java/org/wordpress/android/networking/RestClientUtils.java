@@ -278,7 +278,7 @@ public class RestClientUtils {
     }
 
     public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        post("send-login-email/", params, null, listener, errorListener);
+        post("auth/send-login-email", params, null, listener, errorListener);
     }
 
     /**
