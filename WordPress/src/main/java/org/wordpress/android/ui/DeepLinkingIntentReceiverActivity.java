@@ -47,7 +47,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, SignInActivity.class);
                     startActivityForResult(intent, INTENT_WELCOME);
                 }
-            } else if (uri.equals("login")) {
+            } else if (uri.equals("magic-login")) {
                 attemptLoginWithMagicLink(uri);
             } else {
                 finish();
