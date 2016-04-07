@@ -972,9 +972,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // Set title and content placeholder text
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setPlaceholderText('" +
-                        mTitlePlaceholder + "');");
+                        Utils.escapeQuotes(mTitlePlaceholder) + "');");
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setPlaceholderText('" +
-                        mContentPlaceholder + "');");
+                        Utils.escapeQuotes(mContentPlaceholder) + "');");
 
                 // Load title and content into ZSSEditor
                 updateVisualEditorFields();
@@ -982,7 +982,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // If there are images that are still in progress (because the editor exited before they completed),
                 // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
                 mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed('"
-                        + getString(R.string.tap_to_try_again) + "');");
+                        + Utils.escapeQuotes(getString(R.string.tap_to_try_again)) + "');");
 
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
