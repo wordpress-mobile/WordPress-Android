@@ -338,10 +338,6 @@
             android:name="org.wordpress.android.ui.people.PeopleManagementActivity"
             android:theme="@style/CalypsoTheme"/>
 
-        <activity
-            android:name="org.wordpress.android.ui.people.PersonActivity"
-            android:theme="@style/CalypsoTheme"/>
-
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
