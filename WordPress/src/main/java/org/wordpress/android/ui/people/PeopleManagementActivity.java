@@ -2,11 +2,23 @@ package org.wordpress.android.ui.people;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.BlogUtils;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
+
+import java.util.List;
 
 public class PeopleManagementActivity extends AppCompatActivity {
 
@@ -15,7 +27,18 @@ public class PeopleManagementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+        Blog blog = WordPress.getBlog(localBlogId);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         setContentView(R.layout.people_management_activity);
+
+        setTitle(R.string.people);
 
         FragmentManager fragmentManager = getFragmentManager();
         if (mPeopleListFragment == null) {
@@ -24,6 +47,10 @@ public class PeopleManagementActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .add(android.R.id.content, mPeopleListFragment)
                     .commit();
+        }
+
+        if (blog != null) {
+            refreshUsersList(blog.getDotComBlogId(), localBlogId);
         }
     }
 
@@ -40,5 +67,25 @@ public class PeopleManagementActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshUsersList(String dotComBlogId, final int localBlogId) {
+        PeopleUtils.fetchUsers(dotComBlogId, localBlogId, new PeopleUtils.Callback() {
+            @Override
+            public void onSuccess(List<Person> peopleList) {
+                PeopleTable.savePeople(peopleList);
+                mPeopleListFragment.setPeopleList(peopleList);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                //TODO: show some kind of error to the user
+            }
+
+            @Override
+            public void onJSONException(JSONException exception) {
+                //TODO: show some kind of error to the user
+            }
+        });
     }
 }
