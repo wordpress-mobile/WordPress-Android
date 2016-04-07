@@ -46,7 +46,7 @@ public class PersonDetailFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
-            mRoleTextView.setText(Role.getLabel(this, person.getRole()));
+            mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
             mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
 
             mRemoveTextView.setOnClickListener(new View.OnClickListener() {
