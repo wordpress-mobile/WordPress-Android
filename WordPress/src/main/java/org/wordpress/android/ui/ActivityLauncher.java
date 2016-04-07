@@ -278,7 +278,7 @@ public class ActivityLauncher {
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
-        Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
+        Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
