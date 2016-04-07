@@ -369,6 +369,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case LOGIN_INSERTED_INVALID_URL:
                 eventName = "login_inserted_invalid_url";
                 break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                eventName = "login_autofill_credentials_filled";
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                eventName = "login_autofill_credentials_updated";
+                break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";
                 break;

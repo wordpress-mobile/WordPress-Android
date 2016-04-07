@@ -26,7 +26,9 @@ const NodeName = {
     LI: "LI",
     CODE: "CODE",
     SPAN: "SPAN",
-    BR: "BR"
+    BR: "BR",
+    DIV: "DIV",
+    BODY: "BODY"
 };
 
 // The editor object
@@ -63,7 +65,7 @@ ZSSEditor.editableFields = {};
 ZSSEditor.lastTappedNode = null;
 
 // The default paragraph separator
-ZSSEditor.defaultParagraphSeparator = 'p';
+ZSSEditor.defaultParagraphSeparator = 'div';
 
 // Video format tags supported by the [video] shortcode: https://codex.wordpress.org/Video_Shortcode
 // mp4, m4v and webm prioritized since they're supported by the stock player as of Android API 23
@@ -92,7 +94,6 @@ ZSSEditor.init = function() {
     }
 
     document.execCommand('insertBrOnReturn', false, false);
-    document.execCommand('defaultParagraphSeparator', false, this.defaultParagraphSeparator);
 
     var editor = $('div.field').each(function() {
         var editableField = new ZSSField($(this));
@@ -172,7 +173,7 @@ ZSSEditor.formatNewLine = function(e) {
             this.formatNewLineInsideBlockquote(e);
         } else if (!ZSSEditor.isCommandEnabled('insertOrderedList')
                    && !ZSSEditor.isCommandEnabled('insertUnorderedList')) {
-            document.execCommand('formatBlock', false, 'p');
+            document.execCommand('formatBlock', false, 'div');
         }
     } else {
         e.preventDefault();
@@ -192,18 +193,11 @@ ZSSEditor.getField = function(fieldId) {
 };
 
 ZSSEditor.getFocusedField = function() {
-    var currentField = $(this.closerParentNodeWithName('div'));
+    var currentField = $(this.findParentContenteditableDiv());
     var currentFieldId;
 
     if (currentField) {
         currentFieldId = currentField.attr('id');
-    }
-
-    while (currentField && (!currentFieldId || this.editableFields[currentFieldId] == null)) {
-        currentField = this.closerParentNodeStartingAtNode('div', currentField);
-        if (currentField) {
-            currentFieldId = currentField.attr('id');
-        }
     }
 
     if (!currentFieldId) {
@@ -480,7 +474,7 @@ ZSSEditor.getYCaretInfo = function() {
     //
     if (needsToWorkAroundNewlineBug) {
         var closerParentNode = ZSSEditor.closerParentNode();
-        var closerDiv = ZSSEditor.closerParentNodeWithName('div');
+        var closerDiv = ZSSEditor.findParentContenteditableDiv();
 
         var fontSize = $(closerParentNode).css('font-size');
         var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
@@ -654,7 +648,7 @@ ZSSEditor.setHeading = function(heading) {
 };
 
 ZSSEditor.setParagraph = function() {
-	var formatTag = "p";
+	var formatTag = "div";
 	var formatBlock = document.queryCommandValue('formatBlock');
 
 	if (formatBlock.length > 0 && formatBlock.toLowerCase() == formatTag) {
@@ -2295,7 +2289,7 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
     str = ZSSEditor.replaceVideosForShortcode( str );
     return str;
-}
+};
 
 ZSSEditor.insertHTML = function(html) {
 	document.execCommand('insertHTML', false, html);
@@ -2624,7 +2618,9 @@ ZSSEditor.getAncestorElementForSettingBlockquote = function(range) {
                || parentElement.nodeName == NodeName.OL
                || parentElement.nodeName == NodeName.LI
                || parentElement.nodeName == NodeName.CODE
-               || parentElement.nodeName == NodeName.SPAN)) {
+               || parentElement.nodeName == NodeName.SPAN
+               // Include nested divs, but ignore the parent contenteditable field div
+               || (parentElement.nodeName == NodeName.DIV && parentElement.parentElement.nodeName != NodeName.BODY))) {
         parentElement = parentElement.parentNode;
     }
 
@@ -2745,6 +2741,23 @@ ZSSEditor.hasPreviousSiblingWithName = function(node, siblingNodeName) {
 
 
 // MARK: - Parent nodes & tags
+
+ZSSEditor.findParentContenteditableDiv = function() {
+    var parentNode = null;
+    var selection = window.getSelection();
+    if (selection.rangeCount < 1) {
+        return null;
+    }
+    var range = selection.getRangeAt(0).cloneRange();
+
+    var referenceNode = this.closerParentNodeWithNameRelativeToNode('div', range.commonAncestorContainer);
+
+    while (referenceNode.parentNode.nodeName != NodeName.BODY) {
+        referenceNode = this.closerParentNodeWithNameRelativeToNode('div', referenceNode.parentNode);
+    }
+
+    return referenceNode;
+};
 
 ZSSEditor.closerParentNode = function() {
 
@@ -3252,7 +3265,7 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
             var range = selection.getRangeAt(0);
 
             if (range.startContainer == range.endContainer) {
-                var paragraph = document.createElement("p");
+                var paragraph = document.createElement("div");
                 var textNode = document.createTextNode("&#x200b;");
 
                 paragraph.appendChild(textNode);
@@ -3291,7 +3304,11 @@ ZSSField.prototype.isEmpty = function() {
 };
 
 ZSSField.prototype.getHTML = function() {
-    var html = wp.saveText(this.wrappedObject.html());
+    var html = this.wrappedObject.html();
+    if (ZSSEditor.defaultParagraphSeparator == 'div') {
+        html = html.replace(/(<div)/igm, '<p').replace(/<\/div>/igm, '</p>');
+    }
+    html = wp.saveText(html);
     html = ZSSEditor.removeVisualFormatting( html );
     return html;
 };
@@ -3318,6 +3335,12 @@ ZSSField.prototype.setHTML = function(html) {
     ZSSEditor.currentEditingImage = null;
     var mutatedHTML = wp.loadText(html);
     mutatedHTML = ZSSEditor.applyVisualFormatting(mutatedHTML);
+
+    if (ZSSEditor.defaultParagraphSeparator == 'div') {
+        // Replace the paragraph tags we get from wpload with divs
+        mutatedHTML = mutatedHTML.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
+    }
+
     this.wrappedObject.html(mutatedHTML);
 };
 

@@ -786,6 +786,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
                 break;
+            case LOGIN_INSERTED_INVALID_URL:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Inserted Invalid URL");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Filled");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Updated");
+                break;
             case PUSH_AUTHENTICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Authentication - Approved");
