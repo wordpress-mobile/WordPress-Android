@@ -2,16 +2,32 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.SignInFragment;
 
 public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener {
     private String mEmail = "";
 
     @Override
-    public SignInFragment getSignInFragment() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+            if (uri.getHost().equals("magic-login")) {
+                attemptLoginWithMagicLink(uri.getQueryParameter("token"));
+            }
+        }
+    }
+
+    @Override
+    public MagicLinkSignInFragment getSignInFragment() {
         return new MagicLinkSignInFragment();
     }
 
@@ -38,5 +54,9 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         fragmentTransaction.replace(R.id.fragment_container, wpComMagicLinkFragment);
         fragmentTransaction.addToBackStack("sign_in");
         fragmentTransaction.commit();
+    }
+
+    private void attemptLoginWithMagicLink(String token) {
+        getSignInFragment().signInAndFetchBlogListWPCom(token);
     }
 }
