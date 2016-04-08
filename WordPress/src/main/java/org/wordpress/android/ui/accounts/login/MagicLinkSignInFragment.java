@@ -162,32 +162,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     public void signInAndFetchBlogListWPCom(String token) {
-        LoginWPCom login = new LoginWPCom(token, mJetpackBlog);
-        login.execute(new LoginAbstract.Callback() {
-            @Override
-            public void onSuccess() {
-                mShouldSendTwoStepSMS = false;
 
-                // Finish this activity if we've authenticated to a Jetpack site
-                if (isJetpackAuth() && getActivity() != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                    return;
-                }
-
-                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
-                fetchBlogListWPCom.execute(mFetchBlogListCallback);
-            }
-
-            @Override
-            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
-                mShouldSendTwoStepSMS = false;
-                // Delete credentials only if login failed with an incorrect username/password error
-                if (errorMessageId == R.string.username_or_password_incorrect) {
-                    deleteCredentialsInSmartLock();
-                }
-            }
-        });
     }
 }
