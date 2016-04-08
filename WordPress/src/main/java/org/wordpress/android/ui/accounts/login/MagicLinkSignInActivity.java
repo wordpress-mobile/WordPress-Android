@@ -33,7 +33,12 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public void onMagicLinkSent() {
-
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MagicLinkSentFragment magicLinkSentFragment = new MagicLinkSentFragment();
+        fragmentTransaction.replace(R.id.fragment_container, magicLinkSentFragment);
+        fragmentTransaction.addToBackStack("sign_in");
+        fragmentTransaction.commit();
     }
 
     @Override
