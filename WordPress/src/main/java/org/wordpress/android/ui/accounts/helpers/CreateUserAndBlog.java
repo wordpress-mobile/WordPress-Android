@@ -165,7 +165,7 @@ public class CreateUserAndBlog {
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
                 mErrorListener.onErrorResponse(new VolleyError("Sign in failed."));
             }
-        });
+        }, false);
 
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
     }

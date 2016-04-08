@@ -19,10 +19,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.EditTextUtils;
 
 import java.util.regex.Matcher;
@@ -162,6 +165,15 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     public void signInAndFetchBlogListWPCom(String token) {
+        Account account = AccountHelper.getDefaultAccount();
+        account.setAccessToken(token);
+        account.setUserName(mUsername);
+        account.save();
+        account.fetchAccountDetails();
 
+        SimperiumUtils.configureSimperium(WordPress.getContext(), token);
+
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 }
