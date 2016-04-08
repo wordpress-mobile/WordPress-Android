@@ -24,7 +24,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -248,7 +248,7 @@ public class WordPress extends Application {
     public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        if (checkPlayServices(activity)) {
+        if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
@@ -377,21 +377,22 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    public boolean checkPlayServices(Activity activity) {
-        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance().
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
             // Success: return true
             case ConnectionResult.SUCCESS:
                 return true;
             // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+                googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
             default:
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:
             case ConnectionResult.SERVICE_INVALID:
                 AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                        + GooglePlayServicesUtil.getErrorString(connectionResult));
+                        + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
     }
