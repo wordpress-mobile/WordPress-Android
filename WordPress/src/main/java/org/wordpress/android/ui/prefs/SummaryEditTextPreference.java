@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -136,9 +135,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
         if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
         if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
-
-        TextView message = (TextView) mDialog.findViewById(android.R.id.message);
-        message.setTextColor(ContextCompat.getColor(context, R.color.orange_fire));
     }
 
     @Override
@@ -158,6 +154,14 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         }
         WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
+
+        TextView message = (TextView) view.findViewById(android.R.id.message);
+        WPPrefUtils.layoutAsDialogMessage(message);
+
+        // Dialog message has some extra bottom margin we don't want
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) message.getLayoutParams();
+        layoutParams.setMargins(0, 0 , 0, 0);
+        message.setLayoutParams(layoutParams);
     }
 
     @Override
