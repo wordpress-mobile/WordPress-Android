@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -378,7 +379,7 @@ public class WordPress extends Application {
     }
 
     public boolean isGooglePlayServicesAvailable(Activity activity) {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance().
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
             // Success: return true
@@ -386,7 +387,10 @@ public class WordPress extends Application {
                 return true;
             // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
             default:
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:
