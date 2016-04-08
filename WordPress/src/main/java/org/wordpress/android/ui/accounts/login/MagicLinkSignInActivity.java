@@ -47,7 +47,9 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     }
 
     @Override
-    public void onMagicLinkRequestSuccess() {
+    public void onMagicLinkRequestSuccess(String email) {
+        mEmail = email;
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(mEmail);

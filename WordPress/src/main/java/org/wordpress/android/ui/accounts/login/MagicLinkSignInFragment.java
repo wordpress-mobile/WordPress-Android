@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 
 public class MagicLinkSignInFragment extends SignInFragment {
     public interface OnMagicLinkRequestListener {
-        void onMagicLinkRequestSuccess();
+        void onMagicLinkRequestSuccess(String email);
     }
 
     private OnMagicLinkRequestListener mListener;
@@ -136,7 +136,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
                 try {
                     String errorReason = response.getString("error");
                     if (errorReason != null && errorReason.equals("taken")) {
-                        mListener.onMagicLinkRequestSuccess();
+                        mListener.onMagicLinkRequestSuccess(mUsername);
                     } else {
                         showPasswordFieldAndFocus();
                     }
