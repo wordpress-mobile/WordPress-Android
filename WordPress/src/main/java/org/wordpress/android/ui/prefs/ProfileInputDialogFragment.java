@@ -50,6 +50,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
 
         final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
         final WPEditText editText = (WPEditText) promptView.findViewById(R.id.my_profile_dialog_input);
+        final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
 
         Bundle args = getArguments();
         String title = args.getString(TITLE_TAG);
@@ -60,7 +61,9 @@ public class ProfileInputDialogFragment extends DialogFragment {
 
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
-            alertDialogBuilder.setMessage(hint);
+            hintView.setText(hint);
+        } else {
+            hintView.setVisibility(View.GONE);
         }
 
         if (!isMultiline) {
