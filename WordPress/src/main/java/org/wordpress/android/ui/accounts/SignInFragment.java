@@ -119,6 +119,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     private final EmailChecker mEmailChecker;
 
+    protected boolean mIsMagicLink;
     protected boolean mSelfHosted;
     private boolean mEmailAutoCorrected;
     private boolean mShouldSendTwoStepSMS;
@@ -298,7 +299,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void initSmartLockForPasswords() {
-        if (!isGooglePlayServicesAvailable()) {
+        if (!isGooglePlayServicesAvailable() || mIsMagicLink) {
             return;
         }
         mCredentialsClient = new GoogleApiClient.Builder(getActivity())
@@ -309,7 +310,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     public void smartLockAutoFill() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || mIsMagicLink) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
