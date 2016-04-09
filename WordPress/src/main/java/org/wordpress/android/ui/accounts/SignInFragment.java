@@ -534,8 +534,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     protected final Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
-
-
+            if (!isAdded()) {
+                return;
+            }
             if (userBlogList != null) {
                 if (isWPComLogin()) {
                     BlogUtils.addBlogs(userBlogList, mUsername);
