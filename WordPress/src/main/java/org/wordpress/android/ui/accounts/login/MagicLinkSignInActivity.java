@@ -7,28 +7,20 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 
 public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener {
     private String mEmail = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-
-        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            if (uri.getHost().equals("magic-login")) {
-                attemptLoginWithMagicLink(uri.getQueryParameter("token"));
-            }
-        }
-    }
-
-    @Override
     public MagicLinkSignInFragment getSignInFragment() {
-        return new MagicLinkSignInFragment();
+        if (mSignInFragment != null && mSignInFragment instanceof MagicLinkSignInFragment) {
+            return (MagicLinkSignInFragment) mSignInFragment;
+        } else {
+            return new MagicLinkSignInFragment();
+        }
     }
 
     @Override
@@ -37,7 +29,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSentFragment magicLinkSentFragment = new MagicLinkSentFragment();
         fragmentTransaction.replace(R.id.fragment_container, magicLinkSentFragment);
-        fragmentTransaction.addToBackStack("sign_in");
+        fragmentTransaction.addToBackStack("magic_link_2");
         fragmentTransaction.commit();
     }
 
@@ -45,25 +37,23 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     public void onEnterPasswordRequested() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        MagicLinkSignInFragment magicLinkSignInFragment = new MagicLinkSignInFragment();
+        MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
         fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
-        fragmentTransaction.addToBackStack("sign_in");
+        fragmentTransaction.addToBackStack("magic_link_3");
         fragmentTransaction.commit();
     }
 
     @Override
     public void onMagicLinkRequestSuccess(String email) {
-        mEmail = email;
+        Account account = AccountHelper.getDefaultAccount();
+        account.setUserName(email);
+        account.save();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(mEmail);
+        WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
         fragmentTransaction.replace(R.id.fragment_container, wpComMagicLinkFragment);
-        fragmentTransaction.addToBackStack("sign_in");
+        fragmentTransaction.addToBackStack("magic_link_1");
         fragmentTransaction.commit();
-    }
-
-    private void attemptLoginWithMagicLink(String token) {
-        getSignInFragment().signInAndFetchBlogListWPCom(token);
     }
 }

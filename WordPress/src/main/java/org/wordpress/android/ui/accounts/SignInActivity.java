@@ -43,6 +43,7 @@ public class SignInActivity extends FragmentActivity {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
+        fragmentTransaction.addToBackStack("magic_link_0");
         fragmentTransaction.commit();
 
         actionMode(getIntent().getExtras());
