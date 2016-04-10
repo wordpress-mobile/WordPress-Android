@@ -714,7 +714,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                     deleteCredentialsInSmartLock();
                 }
             }
-        }, false);
+        });
     }
 
     private void signInAndFetchBlogListWPOrg() {
