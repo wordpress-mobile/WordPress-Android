@@ -35,20 +35,16 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         Uri uri = getIntent().getData();
 
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            if (uri.equals("viewpost")) {
-                mBlogId = uri.getQueryParameter("blogId");
-                mPostId = uri.getQueryParameter("postId");
+            mBlogId = uri.getQueryParameter("blogId");
+            mPostId = uri.getQueryParameter("postId");
 
-                // if user is logged in, show the post right away - otherwise show welcome activity
-                // and then show the post once the user has logged in
-                if (AccountHelper.isSignedInWordPressDotCom()) {
-                    showPost();
-                } else {
-                    Intent intent = new Intent(this, SignInActivity.class);
-                    startActivityForResult(intent, INTENT_WELCOME);
-                }
+            // if user is logged in, show the post right away - otherwise show welcome activity
+            // and then show the post once the user has logged in
+            if (AccountHelper.isSignedInWordPressDotCom()) {
+                showPost();
             } else {
-                finish();
+                Intent intent = new Intent(this, SignInActivity.class);
+                startActivityForResult(intent, INTENT_WELCOME);
             }
         }
     }
