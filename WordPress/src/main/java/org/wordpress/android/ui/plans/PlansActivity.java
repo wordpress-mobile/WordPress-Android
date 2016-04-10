@@ -21,13 +21,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
+import org.wordpress.android.ui.plans.util.IabException;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
+import org.wordpress.android.ui.plans.util.Inventory;
+import org.wordpress.android.ui.plans.util.Purchase;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -35,6 +42,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -43,6 +51,7 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
+    private static final int PURCHASE_PLAN_REQUEST = 0;
 
     private int mLocalBlogID = -1;
     private Plan[] mAvailablePlans;
@@ -136,7 +145,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void updatePurchaseUI(int position) {
-        Plan plan = getPageAdapter().getPlan(position);
+        final Plan plan = getPageAdapter().getPlan(position);
         boolean showPurchaseButton;
         if (plan.isCurrentPlan()) {
             showPurchaseButton = false;
@@ -155,7 +164,7 @@ public class PlansActivity extends AppCompatActivity {
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startPurchaseProcess();
+                    startPurchaseProcess(plan);
                 }
             });
         } else {
@@ -170,7 +179,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void setupPlansUI() {
-        if (mAvailablePlans == null || mAvailablePlans.length == 0)  {
+        if (mAvailablePlans == null || mAvailablePlans.length == 0) {
             // This should never be called with empty plans.
             Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
@@ -301,14 +310,69 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startPurchaseProcess() {
-        // TODO: this should start the Google Play purchase process, for now it shows the
-        // post-purchase on-boarding
+    private void listPurchaseForTesting () {
+        ArrayList<String> skuList = new ArrayList<String> ();
+        skuList.add("test_plan_premium_001");
+        skuList.add("danilo_test_plan_premium_sub_001");
+        try {
+            Inventory inventory = mIabHelper.queryInventory(true, skuList, skuList);
+            for (String sku: skuList) {
+                if ( inventory.hasPurchase(sku) ) {
+                    Purchase pur = inventory.getPurchase(sku);
+                    AppLog.d(AppLog.T.PLANS, "Original purchase JSON " + pur.getOriginalJson());
+                }
+            }
+        } catch (IabException e) {
+            AppLog.e(AppLog.T.PLANS, "Unable to load IAP details", e);
+        }
+    }
+
+    private void startPurchaseProcess(Plan plan) {
+        //listPurchaseForTesting();
+
+        // TODO:  remove when updated the rest api
         boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
-        Intent intent = new Intent(this, PlanPostPurchaseActivity.class);
-        intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
-        startActivity(intent);
-        finish();
+        String sku = isBusinessPlan ? "sub_test_plan_business_001" : "sub_test_plan_premium_001";
+
+        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        JSONObject extraData = new JSONObject();
+        try {
+            extraData.put("blog_id", currentBlog.getDotComBlogId());
+            extraData.put("user_id", AccountHelper.getDefaultAccount().getUserId());
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.PLANS, "Can't add extra info to purchase data!", e);
+        }
+
+        mIabHelper.launchSubscriptionPurchaseFlow(this, sku, PURCHASE_PLAN_REQUEST,
+                new IabHelper.OnIabPurchaseFinishedListener() {
+                    public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                        if (result != null) {
+                            AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
+                            if (result.isSuccess()) {
+                                if (info != null) {
+                                    AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
+                                    AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
+                                    boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
+                                    Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
+                                    intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
+                                    intent.putExtra(PlanPostPurchaseActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+                                    intent.putExtra(PlanPostPurchaseActivity.ARG_PURCHASE_SKU, info.getSku());
+                                    startActivity(intent);
+                                }
+                            } else {
+                                // not a success. It seems that the buy activity already shows an error.
+                                // or at least, it shows an error if you try to purchase a subscription you already own.
+                            }
+                        }
+                    }
+                },
+        extraData.toString());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        boolean handled = mIabHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     /*
@@ -319,8 +383,7 @@ public class PlansActivity extends AppCompatActivity {
     private void startInAppBillingHelper() {
         mIabHelper = new IabHelper(this, BuildConfig.APP_LICENSE_KEY);
         if (BuildConfig.DEBUG) {
-            String tag = AppLog.TAG + "-" + AppLog.T.PLANS.toString();
-            mIabHelper.enableDebugLogging(true, tag);
+            mIabHelper.enableDebugLogging(true);
         }
         try {
             mIabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {

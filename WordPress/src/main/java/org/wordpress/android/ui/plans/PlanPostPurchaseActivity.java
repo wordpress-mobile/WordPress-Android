@@ -37,6 +37,8 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     static final int PAGE_NUMBER_THEMES     = 3; // business only
 
     static final String ARG_IS_BUSINESS_PLAN = "is_business_plan";
+    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
+    public static final String ARG_PURCHASE_SKU = "ARG_PURCHASE_SKU";
 
     private ViewPager mViewPager;
     private PageAdapter mPageAdapter;
