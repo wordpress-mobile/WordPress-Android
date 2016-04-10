@@ -25,18 +25,12 @@ public class LoginWPCom extends LoginAbstract {
     private String mTwoStepCode;
     private boolean mShouldSendTwoStepSMS;
     private Blog mJetpackBlog;
-    private String mOneTimeToken;
 
     public LoginWPCom(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS, Blog blog) {
         super(username, password);
         mTwoStepCode = twoStepCode;
         mShouldSendTwoStepSMS = shouldSendTwoStepSMS;
         mJetpackBlog = blog;
-    }
-
-    public LoginWPCom(String oneTimeToken) {
-        super("", "");
-        mOneTimeToken = oneTimeToken;
     }
 
     public static int restLoginErrorToMsgId(JSONObject errorObject) {
@@ -72,41 +66,6 @@ public class LoginWPCom extends LoginAbstract {
         Request oauthRequest;
         oauthRequest = oauth.makeRequest(username, password, mTwoStepCode, mShouldSendTwoStepSMS, listener, errorListener);
         return oauthRequest;
-    }
-
-    private Request makeOAuthRequest(final String oneTimeToken, final Listener listener,
-                                     final ErrorListener errorListener) {
-        Oauth oauth = new Oauth(org.wordpress.android.BuildConfig.OAUTH_APP_ID,
-                org.wordpress.android.BuildConfig.OAUTH_APP_SECRET,
-                org.wordpress.android.BuildConfig.OAUTH_REDIRECT_URI);
-        Request oauthRequest;
-
-        oauthRequest = oauth.makeRequest(oneTimeToken, listener, errorListener);
-        return oauthRequest;
-    }
-
-    protected void loginWithOneTimeToken() {
-        WordPress.requestQueue.add(makeOAuthRequest(mOneTimeToken, new Listener() {
-            @Override
-            public void onResponse(Oauth.Token response) {
-                Account account = AccountHelper.getDefaultAccount();
-                account.setAccessToken(response.toString());
-                account.setUserName(mUsername);
-                account.save();
-                account.fetchAccountDetails();
-
-                SimperiumUtils.configureSimperium(WordPress.getContext(), response.toString());
-
-                mCallback.onSuccess();
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                JSONObject errorObject = VolleyUtils.volleyErrorToJSON(error);
-                int errorMsgId = restLoginErrorToMsgId(errorObject);
-                mCallback.onError(errorMsgId, errorMsgId == R.string.account_two_step_auth_enabled, false, false);
-            }
-        }));
     }
 
     protected void login() {

@@ -15,20 +15,15 @@ public abstract class LoginAbstract {
         mPassword = password;
     }
 
-    public void execute(Callback callback, final boolean isOneTimeToken) {
+    public void execute(Callback callback) {
         mCallback = callback;
         new Thread() {
             @Override
             public void run() {
-                if (isOneTimeToken) {
-                    loginWithOneTimeToken();
-                } else {
-                    login();
-                }
+                login();
             }
         }.start();
     }
 
     protected abstract void login();
-    protected abstract void loginWithOneTimeToken();
 }
