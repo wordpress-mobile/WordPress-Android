@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
@@ -25,7 +24,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
             if (uri.getHost().contains("magic-login")) {
                 getSignInFragment().setToken(uri.getQueryParameter("token"));
 
-                FragmentManager fragmentManager = getFragmentManager();
+                FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
                 fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
@@ -48,7 +47,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public void onMagicLinkSent() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSentFragment magicLinkSentFragment = new MagicLinkSentFragment();
         fragmentTransaction.replace(R.id.fragment_container, magicLinkSentFragment);
@@ -58,7 +57,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public void onEnterPasswordRequested() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
         fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
@@ -72,7 +71,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         account.setUserName(email);
         account.save();
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
         fragmentTransaction.replace(R.id.fragment_container, wpComMagicLinkFragment);

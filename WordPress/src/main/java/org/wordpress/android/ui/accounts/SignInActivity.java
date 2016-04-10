@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -40,7 +40,7 @@ public class SignInActivity extends FragmentActivity {
         setContentView(R.layout.welcome_activity);
 
         mSignInFragment = getSignInFragment();
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
         fragmentTransaction.addToBackStack("magic_link_0");
