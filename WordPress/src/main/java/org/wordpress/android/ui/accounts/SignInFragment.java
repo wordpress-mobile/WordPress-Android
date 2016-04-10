@@ -275,9 +275,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         moveBottomButtons();
     }
 
+    protected boolean isSmartLockAvailable() {
+        return (isAdded() && isGooglePlayServicesAvailable()) || mCredentialsClient != null;
+    }
+
     private boolean isGooglePlayServicesAvailable() {
-        return isAdded() && (GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS);
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -299,7 +302,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void initSmartLockForPasswords() {
-        if (!isGooglePlayServicesAvailable() || mIsMagicLink) {
+        if (!isSmartLockAvailable()) {
             return;
         }
         mCredentialsClient = new GoogleApiClient.Builder(getActivity())
@@ -310,7 +313,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     public void smartLockAutoFill() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || mIsMagicLink) {
+        if (!isSmartLockAvailable()) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
@@ -517,7 +520,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     }
 
-    private void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
         if (!isAdded()) {
             return;
         }
@@ -651,7 +654,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void saveCrendentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (!isSmartLockAvailable()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
@@ -672,7 +675,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void deleteCredentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (isSmartLockAvailable()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
