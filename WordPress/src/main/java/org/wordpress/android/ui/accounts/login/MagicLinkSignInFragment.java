@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -25,9 +27,12 @@ import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.EditTextUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +42,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     private OnMagicLinkRequestListener mListener;
+    private String mToken = "";
 
     public MagicLinkSignInFragment() {
         super();
@@ -72,6 +78,19 @@ public class MagicLinkSignInFragment extends SignInFragment {
         return view;
     }
 
+    public void setToken(String token) {
+        mToken = token;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!mToken.isEmpty()) {
+            attemptLoginWithMagicLink();
+        }
+    }
+
     private boolean didPressNextKey(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
     }
@@ -83,7 +102,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
         mSignInButton.setText(getString(R.string.button_next));
     }
 
-    protected void showSelfHostedSignInForm(){
+    protected void showSelfHostedSignInForm() {
         super.showSelfHostedSignInForm();
         showPasswordField();
     }
@@ -164,16 +183,37 @@ public class MagicLinkSignInFragment extends SignInFragment {
         return matcher.find() && mUsername.length() <= 100;
     }
 
-    public void signInAndFetchBlogListWPCom(String token) {
+    public void attemptLoginWithMagicLink() {
         Account account = AccountHelper.getDefaultAccount();
-        account.setAccessToken(token);
+        account.setAccessToken(mToken);
         account.setUserName(mUsername);
         account.save();
         account.fetchAccountDetails();
 
-        SimperiumUtils.configureSimperium(WordPress.getContext(), token);
+        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
 
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
-        fetchBlogListWPCom.execute(mFetchBlogListCallback);
+        configureAccountAfterSuccessfulSignIn();
+    }
+
+    @Override
+    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (userBlogList != null) {
+                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected boolean isSmartLockAvailable() {
+        return isEnterPasswordMode();
     }
 }

@@ -15,6 +15,29 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     private String mEmail = "";
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+            if (uri.getHost().contains("magic-login")) {
+                getSignInFragment().setToken(uri.getQueryParameter("token"));
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
+                fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
+                fragmentTransaction.addToBackStack("magic_link_9");
+                fragmentTransaction.commit();
+            } else {
+                // handle error
+            }
+        }
+    }
+
+    @Override
     public MagicLinkSignInFragment getSignInFragment() {
         if (mSignInFragment != null && mSignInFragment instanceof MagicLinkSignInFragment) {
             return (MagicLinkSignInFragment) mSignInFragment;

@@ -691,18 +691,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
-                mShouldSendTwoStepSMS = false;
-                saveCrendentialsInSmartLock();
-
-                // Finish this activity if we've authenticated to a Jetpack site
-                if (isJetpackAuth() && getActivity() != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                    return;
-                }
-
-                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
-                fetchBlogListWPCom.execute(mFetchBlogListCallback);
+                configureAccountAfterSuccessfulSignIn();
             }
 
             @Override
@@ -715,6 +704,21 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 }
             }
         });
+    }
+
+    protected void configureAccountAfterSuccessfulSignIn() {
+        mShouldSendTwoStepSMS = false;
+        saveCrendentialsInSmartLock();
+
+        // Finish this activity if we've authenticated to a Jetpack site
+        if (isJetpackAuth() && getActivity() != null) {
+            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().finish();
+            return;
+        }
+
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 
     private void signInAndFetchBlogListWPOrg() {

@@ -250,17 +250,6 @@
                     android:host="viewpost"
                     android:scheme="wordpress" />
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="magic-login"
-                    android:scheme="wordpress" >
-                </data>
-            </intent-filter>
-
         </activity>
 
         <!-- Reader Activities -->
@@ -476,6 +465,17 @@
             android:name=".ui.accounts.login.MagicLinkSignInActivity"
             android:label="@string/title_activity_new_sign_in"
             android:windowSoftInputMode="stateAlwaysHidden">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="magic-login"
+                    android:scheme="wordpress" >
+                </data>
+            </intent-filter>
+
         </activity>
     </application>
 
