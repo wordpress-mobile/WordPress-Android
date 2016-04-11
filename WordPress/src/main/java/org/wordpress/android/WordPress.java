@@ -49,6 +49,8 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.plans.PlansUtils;
+import org.wordpress.android.ui.plans.UpdateIAPTask;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -101,6 +103,7 @@ public class WordPress extends Application {
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_IAP_UPDATE = 5 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -129,6 +132,20 @@ public class WordPress extends Application {
         protected boolean run() {
             if (AccountHelper.isSignedInWordPressDotCom()) {
                 new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+            return true;
+        }
+    };
+
+    /**
+     *  Update IAPs. This need to be called to remove upgrades on wpcom side, those upgrades the user has already cancelled on mobile side
+     *  (from the Google Store).
+     *
+     */
+    public static RateLimitedTask sUpdateWordPressComIAP = new RateLimitedTask(SECONDS_BETWEEN_IAP_UPDATE) {
+        protected boolean run() {
+            if (AccountHelper.isSignedInWordPressDotCom()) {
+                new UpdateIAPTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
             return true;
         }
@@ -803,6 +820,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
+            sUpdateWordPressComIAP.forceRun(); // TODO: changes to run if not limited
         }
 
         @Override

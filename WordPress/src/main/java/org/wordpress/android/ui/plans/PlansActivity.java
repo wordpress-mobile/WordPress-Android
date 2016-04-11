@@ -310,25 +310,7 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void listPurchaseForTesting () {
-        ArrayList<String> skuList = new ArrayList<String> ();
-        skuList.add("test_plan_premium_001");
-        skuList.add("danilo_test_plan_premium_sub_001");
-        try {
-            Inventory inventory = mIabHelper.queryInventory(true, skuList, skuList);
-            for (String sku: skuList) {
-                if ( inventory.hasPurchase(sku) ) {
-                    Purchase pur = inventory.getPurchase(sku);
-                    AppLog.d(AppLog.T.PLANS, "Original purchase JSON " + pur.getOriginalJson());
-                }
-            }
-        } catch (IabException e) {
-            AppLog.e(AppLog.T.PLANS, "Unable to load IAP details", e);
-        }
-    }
-
     private void startPurchaseProcess(Plan plan) {
-        //listPurchaseForTesting();
 
         // TODO:  remove when updated the rest api
         boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
@@ -341,6 +323,7 @@ public class PlansActivity extends AppCompatActivity {
             extraData.put("user_id", AccountHelper.getDefaultAccount().getUserId());
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PLANS, "Can't add extra info to purchase data!", e);
+            return;
         }
 
         mIabHelper.launchSubscriptionPurchaseFlow(this, sku, PURCHASE_PLAN_REQUEST,
@@ -350,18 +333,18 @@ public class PlansActivity extends AppCompatActivity {
                             AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
                             if (result.isSuccess()) {
                                 if (info != null) {
+                                    WordPress.sUpdateWordPressComIAP.forceRun(); // refresh purchase on wpcom
                                     AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
                                     AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
                                     boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
                                     Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
                                     intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
-                                    intent.putExtra(PlanPostPurchaseActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
-                                    intent.putExtra(PlanPostPurchaseActivity.ARG_PURCHASE_SKU, info.getSku());
                                     startActivity(intent);
                                 }
                             } else {
-                                // not a success. It seems that the buy activity already shows an error.
-                                // or at least, it shows an error if you try to purchase a subscription you already own.
+                                AppLog.e(AppLog.T.PLANS, "Purchase failure " + result.getMessage());
+                                // Not a success. It seems that the buy activity already shows an error.
+                                // Or at least, it shows an error if you try to purchase a subscription you already own.
                             }
                         }
                     }
