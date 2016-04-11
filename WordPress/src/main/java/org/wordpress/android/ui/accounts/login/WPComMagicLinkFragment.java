@@ -30,7 +30,6 @@ public class WPComMagicLinkFragment extends Fragment {
     private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
 
     private WPTextView mMagicLinkButton;
-    private RelativeLayout mPasswordSection;
     private String mEmail;
     private OnMagicLinkFragmentInteraction mListener;
 
