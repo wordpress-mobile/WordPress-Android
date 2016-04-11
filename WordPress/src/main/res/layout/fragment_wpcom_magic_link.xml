@@ -44,6 +44,15 @@
             android:orientation="vertical"
             app:maxWidth="@dimen/nux_width">
 
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                style="@style/WordPress.NUXFlatButton"
+                android:textSize="20sp"
+                android:padding="12dp"
+                android:gravity="center"
+                android:text="@string/get_a_link_sent_to_your_email_to_sign_in_instantly" />
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
