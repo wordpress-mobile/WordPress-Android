@@ -16,6 +16,15 @@ video::-webkit-media-controls-fullscreen-button {
     display: none;
 }
 
+/* Duplicates paragraph tag formatting for div tags, which are needed on Android API 19+ due to autocorrect issues:
+https://bugs.chromium.org/p/chromium/issues/detail?id=599890
+*/
+div:not(.field):not(#separatorDiv) {
+    line-height: 24px;
+    margin-top: 0px;
+    margin-bottom: 24px;
+}
+
 /* --- API<19 workarounds --- */
 
 /* Used only on older APIs (API<19), which don't support CSS filter effects (specifically, blur). */

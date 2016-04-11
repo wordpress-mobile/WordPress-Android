@@ -17,12 +17,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private static final String TAG_NAME_LIKED = "Posts I Like";
     private static final String TAG_NAME_DISCOVER = "Discover";
     private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
-
-    // as of 15-Sept-2015 this is still "Blogs I Follow" but it will soon be renamed
-    // to "Followed Sites"
-    // TODO: remove TAG_NAME_FOLLOWED_SITES_OLD once backend has been updated
     public static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
-    public static final String TAG_NAME_FOLLOWED_SITES_OLD = "Blogs I Follow";
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
