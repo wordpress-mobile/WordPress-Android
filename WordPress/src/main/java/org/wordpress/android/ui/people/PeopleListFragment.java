@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,20 @@ import java.util.List;
 public class PeopleListFragment extends Fragment {
 
     private ListView mListView;
+    private OnPersonSelectedListener mListener;
 
     public static PeopleListFragment newInstance() {
         return new PeopleListFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnPersonSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnPersonSelectedListener");
+        }
     }
 
     @Override
@@ -31,8 +43,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Person person = (Person) parent.getItemAtPosition(position);
-                PeopleManagementActivity activity = (PeopleManagementActivity) getActivity();
-                activity.viewPersonDetails(person);
+                mListener.onPersonSelected(person);
             }
         });
 
@@ -50,5 +61,10 @@ public class PeopleListFragment extends Fragment {
             peopleAdapter.setPeopleList(peopleList);
             peopleAdapter.notifyDataSetChanged();
         }
+    }
+
+    // Container Activity must implement this interface
+    public interface OnPersonSelectedListener {
+        void onPersonSelected(Person person);
     }
 }

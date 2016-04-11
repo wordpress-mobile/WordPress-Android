@@ -20,7 +20,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 import java.util.List;
 
-public class PeopleManagementActivity extends AppCompatActivity {
+public class PeopleManagementActivity extends AppCompatActivity implements PeopleListFragment.OnPersonSelectedListener {
 
     private PeopleListFragment mPeopleListFragment;
 
@@ -98,7 +98,8 @@ public class PeopleManagementActivity extends AppCompatActivity {
         });
     }
 
-    public void viewPersonDetails(Person person) {
+    @Override
+    public void onPersonSelected(Person person) {
         PersonDetailFragment fragment = PersonDetailFragment.newInstance();
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment)
