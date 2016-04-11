@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -407,55 +408,82 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
+    public void checkForFailedUploadAndSwitchToHtmlMode(final ToggleButton toggleButton) {
+        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
+        if (hasFailedMediaUploads()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.editor_failed_uploads_switch_html)
+                    .setPositiveButton(R.string.editor_remove_failed_uploads, new OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Clear failed uploads and switch to HTML mode
+                            removeAllFailedMediaUploads();
+                            toggleHtmlMode(toggleButton);
+                        }
+                    }).setNegativeButton(android.R.string.cancel, new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    toggleButton.setChecked(false);
+                }
+            });
+            builder.create().show();
+        } else {
+            toggleHtmlMode(toggleButton);
+        }
+    }
+
+    private void toggleHtmlMode(final ToggleButton toggleButton) {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+
+        // Don't switch to HTML mode if currently uploading media
+        if (!mUploadingMedia.isEmpty()) {
+            toggleButton.setChecked(false);
+
+            if (isAdded()) {
+                ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
+            }
+            return;
+        }
+
+        clearFormatBarButtons();
+        updateFormatBarEnabledState(true);
+
+        if (toggleButton.isChecked()) {
+            mSourceViewTitle.setText(getTitle());
+
+            SpannableString spannableContent = new SpannableString(getContent());
+            HtmlStyleUtils.styleHtmlForDisplay(spannableContent);
+            mSourceViewContent.setText(spannableContent);
+
+            mWebView.setVisibility(View.GONE);
+            mSourceView.setVisibility(View.VISIBLE);
+
+            mSourceViewContent.requestFocus();
+            mSourceViewContent.setSelection(0);
+
+            InputMethodManager imm = ((InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE));
+            imm.showSoftInput(mSourceViewContent, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            mWebView.setVisibility(View.VISIBLE);
+            mSourceView.setVisibility(View.GONE);
+
+            mTitle = mSourceViewTitle.getText().toString();
+            mContentHtml = mSourceViewContent.getText().toString();
+            updateVisualEditorFields();
+
+            // Update the list of failed media uploads
+            mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
+
+            // Reset selection to avoid buggy cursor behavior
+            mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
+        }
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.format_bar_button_html) {
-            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
-
-            // Don't switch to HTML mode if currently uploading media
-            if (!mUploadingMedia.isEmpty()) {
-                ((ToggleButton) v).setChecked(false);
-
-                if (isAdded()) {
-                    ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
-                }
-                return;
-            }
-
-            clearFormatBarButtons();
-            updateFormatBarEnabledState(true);
-
-            if (((ToggleButton) v).isChecked()) {
-                mSourceViewTitle.setText(getTitle());
-
-                SpannableString spannableContent = new SpannableString(getContent());
-                HtmlStyleUtils.styleHtmlForDisplay(spannableContent);
-                mSourceViewContent.setText(spannableContent);
-
-                mWebView.setVisibility(View.GONE);
-                mSourceView.setVisibility(View.VISIBLE);
-
-                mSourceViewContent.requestFocus();
-                mSourceViewContent.setSelection(0);
-
-                InputMethodManager imm = ((InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE));
-                imm.showSoftInput(mSourceViewContent, InputMethodManager.SHOW_IMPLICIT);
-            } else {
-                mWebView.setVisibility(View.VISIBLE);
-                mSourceView.setVisibility(View.GONE);
-
-                mTitle = mSourceViewTitle.getText().toString();
-                mContentHtml = mSourceViewContent.getText().toString();
-                updateVisualEditorFields();
-
-                // Update the list of failed media uploads
-                mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
-
-                // Reset selection to avoid buggy cursor behavior
-                mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
-            }
+            checkForFailedUploadAndSwitchToHtmlMode((ToggleButton) v);
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
@@ -501,7 +529,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             } else {
                 // Visual mode
                 mGetSelectedTextCountDownLatch = new CountDownLatch(1);
-                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
+                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedTextToLinkify');");
                 try {
                     if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
                         dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
@@ -944,9 +972,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 // Set title and content placeholder text
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').setPlaceholderText('" +
-                        mTitlePlaceholder + "');");
+                        Utils.escapeQuotes(mTitlePlaceholder) + "');");
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setPlaceholderText('" +
-                        mContentPlaceholder + "');");
+                        Utils.escapeQuotes(mContentPlaceholder) + "');");
 
                 // Load title and content into ZSSEditor
                 updateVisualEditorFields();
@@ -954,7 +982,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // If there are images that are still in progress (because the editor exited before they completed),
                 // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
                 mWebView.execJavaScriptFromString("ZSSEditor.markAllUploadingMediaAsFailed('"
-                        + getString(R.string.tap_to_try_again) + "');");
+                        + Utils.escapeQuotes(getString(R.string.tap_to_try_again)) + "');");
 
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
@@ -1223,7 +1251,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
                 break;
-            case "getSelectedText":
+            case "getSelectedTextToLinkify":
                 mJavaScriptResult = inputArgs.get("result");
                 mGetSelectedTextCountDownLatch.countDown();
                 break;
