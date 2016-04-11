@@ -40,10 +40,9 @@ public class SignInActivity extends FragmentActivity {
         setContentView(R.layout.welcome_activity);
 
         mSignInFragment = getSignInFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
-        fragmentTransaction.addToBackStack("magic_link_0");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         actionMode(getIntent().getExtras());
