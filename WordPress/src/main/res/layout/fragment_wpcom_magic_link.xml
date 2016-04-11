@@ -46,7 +46,7 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/nux_main_button_height"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp">
@@ -54,10 +54,11 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/magic_button"
                     style="@style/WordPress.NUXPrimaryButton"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:padding="12dp"
                     android:clickable="true"
                     android:gravity="center"
-                    android:text="Send Magic Link" />
+                    android:text="@string/send_link" />
 
                 <RelativeLayout
                     android:id="@+id/nux_sign_in_progress_bar"
