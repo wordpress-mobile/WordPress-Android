@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *  Synch IAPs on the wpcom backend. This need to be called to add/remove upgrades on wpcom side.
+ *
+ */
 public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
     private static final int GET_IAP_BINDER_TIMEOUT = 30000;
     private static final String IAP_ENDPOINT = "/iap/refresh";

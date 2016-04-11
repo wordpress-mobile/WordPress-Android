@@ -49,7 +49,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.plans.UpdateIAPTask;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -138,11 +137,11 @@ public class WordPress extends Application {
     };
 
     /**
-     *  Update IAPs. This need to be called to remove upgrades on wpcom side, those upgrades the user has already cancelled on mobile side
-     *  (from the Google Store).
+     *  Synch IAPs with wpcom backend. This need to be called to add/remove upgrades on wpcom side.
+     *  Those upgrades the user has already bought/cancelled on mobile side (from the Google Store).
      *
      */
-    public static RateLimitedTask sUpdateWordPressComIAP = new RateLimitedTask(SECONDS_BETWEEN_IAP_UPDATE) {
+    public static RateLimitedTask sUpdateIAPsWordPressCom = new RateLimitedTask(SECONDS_BETWEEN_IAP_UPDATE) {
         protected boolean run() {
             if (AccountHelper.isSignedInWordPressDotCom()) {
                 new UpdateIAPTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -820,7 +819,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
-            sUpdateWordPressComIAP.forceRun(); // TODO: changes to run if not limited
+            sUpdateIAPsWordPressCom.forceRun(); // TODO: changes to run if not limited
         }
 
         @Override

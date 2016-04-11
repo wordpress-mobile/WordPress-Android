@@ -30,10 +30,8 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
-import org.wordpress.android.ui.plans.util.IabException;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
-import org.wordpress.android.ui.plans.util.Inventory;
 import org.wordpress.android.ui.plans.util.Purchase;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
@@ -42,7 +40,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -333,7 +330,7 @@ public class PlansActivity extends AppCompatActivity {
                             AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
                             if (result.isSuccess()) {
                                 if (info != null) {
-                                    WordPress.sUpdateWordPressComIAP.forceRun(); // refresh purchase on wpcom
+                                    WordPress.sUpdateIAPsWordPressCom.forceRun(); // refresh purchase on wpcom
                                     AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
                                     AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
                                     boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
