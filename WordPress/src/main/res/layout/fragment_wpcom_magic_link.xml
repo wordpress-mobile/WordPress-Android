@@ -82,50 +82,6 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true" />
                 </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/nux_password_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:visibility="gone"
-                    android:clickable="true">
-
-                    <org.wordpress.android.widgets.WPEditText
-                        android:id="@+id/nux_password"
-                        style="@style/WordPress.NUXEditText"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="38dp"
-                        android:hint="@string/password"
-                        android:maxLength="@integer/max_length_password"
-                        android:inputType="textPassword" />
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="false"
-                        android:layout_alignParentStart="false"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/dashicon_lock"
-                        android:tint="@color/grey_darken_10" />
-
-                    <ImageView
-                        android:id="@+id/password_visibility"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="false"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentStart="false"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/dashicon_eye_closed"
-                        android:tint="@color/nux_eye_icon_color_closed" />
-                </RelativeLayout>
             </RelativeLayout>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
