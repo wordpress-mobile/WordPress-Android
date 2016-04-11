@@ -88,4 +88,13 @@ public class PeopleManagementActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void viewPersonDetails(Person person) {
+        PersonDetailFragment fragment = PersonDetailFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment)
+                .addToBackStack(null)
+                .commit();
+        fragment.setPerson(person);
+    }
 }

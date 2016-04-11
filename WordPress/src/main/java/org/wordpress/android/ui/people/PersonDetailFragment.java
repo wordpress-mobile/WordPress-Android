@@ -39,7 +39,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public void setPerson(Person person) {
-        if (person != null) {
+        if (isAdded() && person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 

@@ -30,8 +30,9 @@ public class PeopleListFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Person person = (Person) parent.getItemAtPosition(position);
-                //TODO: show details for person
+                Person person = (Person) parent.getItemAtPosition(position);
+                PeopleManagementActivity activity = (PeopleManagementActivity) getActivity();
+                activity.viewPersonDetails(person);
             }
         });
 
