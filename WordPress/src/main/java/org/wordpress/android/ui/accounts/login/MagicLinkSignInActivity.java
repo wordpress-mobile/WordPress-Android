@@ -20,30 +20,10 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     protected void onResume() {
         super.onResume();
 
-        String action = getIntent().getAction();
-        Uri uri = getIntent().getData();
-
-        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            if (uri.getHost().contains("magic-login")) {
-                getSignInFragment().setToken(uri.getQueryParameter("token"));
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
-                fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-                mProgressDialog = ProgressDialog.show(this, "", "Logging in", true, true, new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                getSignInFragment().setToken("");
-                            }
-                        });
-            } else {
-                // handle error
-            }
-        }
+        handleMagicLoginIntent();
     }
+
+
 
     @Override
     protected void onPause() {
@@ -84,6 +64,36 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
         WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
         slideInFragment(wpComMagicLinkFragment);
+    }
+
+    private void handleMagicLoginIntent() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
+            if (uri.getHost().contains("magic-login")) {
+                attemptLoginWithToken(uri);
+            } else {
+                // handle error
+            }
+        }
+    }
+
+    private void attemptLoginWithToken(Uri uri) {
+        getSignInFragment().setToken(uri.getQueryParameter("token"));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
+        fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        mProgressDialog = ProgressDialog.show(this, "", "Logging in", true, true, new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                getSignInFragment().setToken("");
+            }
+        });
     }
 
     private void saveEmailToAccount(String email) {
