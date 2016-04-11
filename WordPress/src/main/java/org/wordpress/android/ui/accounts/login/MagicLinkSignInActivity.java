@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,8 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 
 public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener {
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -22,16 +26,34 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             if (uri.getHost().contains("magic-login")) {
                 getSignInFragment().setToken(uri.getQueryParameter("token"));
-
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
                 fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
+
+                mProgressDialog = ProgressDialog.show(this, "", "Logging in", true, true, new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                getSignInFragment().setToken("");
+                            }
+                        });
             } else {
                 // handle error
             }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cancelProgressDialog();
+    }
+
+    private void cancelProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.cancel();
         }
     }
 
