@@ -8,7 +8,6 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -119,43 +118,10 @@ uploadArchives {
 }
 
 //
-// Testing and code coverage
+// Testing
 //
 
 android.testOptions.unitTests.all {
     include '**/*Test.class'
     exclude '**/ApplicationTest.class'
-}
-
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
-
-// Use these to define which classes to include and exclude from code coverage analysis
-def coverageSourceDirs = [ 'src/main/java' ]
-def coverageExclusions = [ '**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*',
-                           '**/Legacy**.class',
-                           '**/legacy/**/*.class' ]
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: coverageExclusions
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebug.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
 }

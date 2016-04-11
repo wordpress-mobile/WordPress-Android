@@ -529,7 +529,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             } else {
                 // Visual mode
                 mGetSelectedTextCountDownLatch = new CountDownLatch(1);
-                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedText');");
+                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedTextToLinkify');");
                 try {
                     if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
                         dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
@@ -1251,7 +1251,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
                 break;
-            case "getSelectedText":
+            case "getSelectedTextToLinkify":
                 mJavaScriptResult = inputArgs.get("result");
                 mGetSelectedTextCountDownLatch.countDown();
                 break;
