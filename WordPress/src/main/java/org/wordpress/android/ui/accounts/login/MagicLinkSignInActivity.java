@@ -47,35 +47,35 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public void onMagicLinkSent() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSentFragment magicLinkSentFragment = new MagicLinkSentFragment();
-        fragmentTransaction.replace(R.id.fragment_container, magicLinkSentFragment);
-        fragmentTransaction.addToBackStack("magic_link_2");
-        fragmentTransaction.commit();
+        slideInFragment(magicLinkSentFragment);
     }
 
     @Override
     public void onEnterPasswordRequested() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
-        fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
-        fragmentTransaction.addToBackStack("magic_link_3");
-        fragmentTransaction.commit();
+        slideInFragment(magicLinkSignInFragment);
     }
 
     @Override
     public void onMagicLinkRequestSuccess(String email) {
+        saveEmailToAccount(email);
+
+        WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
+        slideInFragment(wpComMagicLinkFragment);
+    }
+
+    private void saveEmailToAccount(String email) {
         Account account = AccountHelper.getDefaultAccount();
         account.setUserName(email);
         account.save();
+    }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
-        fragmentTransaction.replace(R.id.fragment_container, wpComMagicLinkFragment);
-        fragmentTransaction.addToBackStack("magic_link_1");
+    private void slideInFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.hs__slide_in_from_right, R.anim.hs__slide_out_to_left);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
