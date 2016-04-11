@@ -40,6 +40,8 @@ public class PeopleListFragment extends Fragment {
     }
 
     public void setPeopleList(List<Person> peopleList) {
+        if (!isAdded()) return;
+
         PeopleAdapter peopleAdapter = (PeopleAdapter) mListView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
