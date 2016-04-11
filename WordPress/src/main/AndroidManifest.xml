@@ -463,7 +463,7 @@
         <activity
             android:theme="@style/Calypso.NoActionBar"
             android:name=".ui.accounts.login.MagicLinkSignInActivity"
-            android:label="@string/title_activity_new_sign_in"
+            android:label="@string/sign_in"
             android:windowSoftInputMode="stateAlwaysHidden">
 
             <intent-filter>
