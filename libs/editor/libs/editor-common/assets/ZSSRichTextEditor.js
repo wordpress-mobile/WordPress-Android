@@ -400,8 +400,51 @@ ZSSEditor.resetSelectionOnField = function(fieldId) {
 
 ZSSEditor.getSelectedText = function() {
 	var selection = window.getSelection();
-
 	return selection.toString();
+};
+
+ZSSEditor.canExpandBackward = function(range) {
+  var caretRange = range.cloneRange();
+  if (range.startOffset == 0) {
+  	return false;
+  }
+  caretRange.setStart(range.startContainer, range.startOffset - 1);
+  caretRange.setEnd(range.startContainer, range.startOffset);
+  if (!caretRange.toString().match(/\w/)) {
+  	return false;
+  }
+  return true;
+};
+
+ZSSEditor.canExpandForward = function(range) {
+  var caretRange = range.cloneRange();
+  if (range.endOffset == range.endContainer.length)  {
+  	return false;
+  }
+  caretRange.setStart(range.endContainer, range.endOffset);
+  caretRange.setEnd(range.endContainer, range.endOffset + 1);
+  if (!caretRange.toString().match(/\w/)) {
+  	return false;
+  }
+  return true;
+};
+
+ZSSEditor.getSelectedTextToLinkify = function() {
+  var selection = window.getSelection();
+  var element = ZSSEditor.getField("zss_field_content");
+  // If there is no text selected, try to expand it to the word under the cursor
+  if (selection.rangeCount == 1) {
+    var range = selection.getRangeAt(0);
+    while (ZSSEditor.canExpandBackward(range)) {
+      range.setStart(range.startContainer, range.startOffset - 1);
+    }
+    while (ZSSEditor.canExpandForward(range)) {
+      range.setEnd(range.endContainer, range.endOffset + 1);
+    }
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  return selection.toString();
 };
 
 ZSSEditor.getCaretArguments = function() {
@@ -740,12 +783,12 @@ ZSSEditor.setBackgroundColor = function(color) {
 };
 
 /**
- *  @brief      Wraps given HTML in paragraph tags and appends a new line
+ *  @brief      Wraps given HTML in paragraph tags, appends a new line, and inserts it into the field
  *  @details    This method makes sure that passed HTML is wrapped in a separate paragraph.
  *              It also appends a new opening paragraph tag and a space. This step is necessary to keep any spans or
  *              divs in the HTML from being read by the WebView as a style and applied to all future paragraphs.
  */
-ZSSEditor.wrapInParagraphTags = function(html) {
+ZSSEditor.insertHTMLWrappedInParagraphTags = function(html) {
     var space = '<br>';
     var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
     var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
@@ -753,15 +796,30 @@ ZSSEditor.wrapInParagraphTags = function(html) {
     if (this.getFocusedField().getHTML().length == 0) {
         html = paragraphOpenTag + html;
     }
-    html = html + paragraphCloseTag + paragraphOpenTag + space;
 
-    return html;
+    // Without this line, API<19 WebView will reset the caret to the start of the document, inserting the new line
+    // there instead of under the newly added media item
+    if (nativeState.androidApiLevel < 19) {
+        html = html + '&#x200b;';
+    }
+
+    // Due to the way the WebView handles divs, we need to add a new paragraph in a separate insertion - otherwise,
+    // the new paragraph will be nested within the existing paragraph.
+    this.insertHTML(html);
+
+    this.insertHTML(paragraphOpenTag + space + paragraphCloseTag);
 };
 
 // Needs addClass method
 
 ZSSEditor.insertLink = function(url, title) {
-    this.insertHTML('<a href="' + url + '">' + title + "</a>");
+    var html = '<a href="' + url + '">' + title + "</a>";
+
+    if (this.getFocusedField().getHTML().length == 0) {
+        html = '<' + this.defaultParagraphSeparator + '>' + html;
+    }
+
+    this.insertHTML(html);
 };
 
 ZSSEditor.updateLink = function(url, title) {
@@ -1024,10 +1082,12 @@ ZSSEditor.updateImage = function(url, alt) {
 ZSSEditor.insertImage = function(url, remoteId, alt) {
     var html = '<img src="' + url + '" class="wp-image-' + remoteId + ' alignnone size-full';
     if (alt) {
-        html += '" alt="' + alt
+        html += '" alt="' + alt;
     }
-    html += '"/>'
-    this.insertHTML(this.wrapInParagraphTags(html));
+    html += '"/>';
+
+    this.insertHTMLWrappedInParagraphTags(html);
+
     this.sendEnabledStyles();
 };
 
@@ -1064,7 +1124,7 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
     var image = '<img data-wpid="' + imageNodeIdentifier + '" src="' + localImageUrl + '" alt="" />';
     var html = imgContainerStart + progressElement + image + imgContainerEnd;
 
-    this.insertHTML(this.wrapInParagraphTags(html));
+    this.insertHTMLWrappedInParagraphTags(html);
 
     ZSSEditor.trackNodeForMutation(this.getImageContainerNodeWithIdentifier(imageNodeIdentifier));
 
@@ -1352,7 +1412,8 @@ ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
 
     html += '></video>';
 
-    this.insertHTML(this.wrapInParagraphTags(html));
+    this.insertHTMLWrappedInParagraphTags(html);
+
     this.sendEnabledStyles();
 };
 
@@ -1394,7 +1455,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
     var html = videoContainerStart + progressElement + image + videoContainerEnd;
 
-    this.insertHTML(this.wrapInParagraphTags(html));
+    this.insertHTMLWrappedInParagraphTags(html);
 
     ZSSEditor.trackNodeForMutation(this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier));
 
@@ -2235,13 +2296,13 @@ ZSSEditor.insertGallery = function( imageIds, type, columns ) {
         shortcode = '[gallery columns="' + columns + '" ids="' + imageIds + '"]';
     }
 
-    this.insertHTML(this.wrapInParagraphTags(shortcode));
+    this.insertHTMLWrappedInParagraphTags(shortcode);
 }
 
 ZSSEditor.insertLocalGallery = function( placeholderId ) {
     var container = '<span id="' + placeholderId + '" class="gallery_container">['
                     + nativeState.localizedStringUploadingGallery + ']</span>';
-    this.insertHTML(this.wrapInParagraphTags(container));
+    this.insertHTMLWrappedInParagraphTags(container);
 }
 
 ZSSEditor.replacePlaceholderGallery = function( placeholderId, imageIds, type, columns ) {

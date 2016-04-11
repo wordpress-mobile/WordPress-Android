@@ -254,7 +254,9 @@ public class ReaderPostActions {
     }
 
     public static void bumpPageViewForPost(long blogId, long postId) {
-        ReaderPost post = ReaderPostTable.getPost(blogId, postId, true);
+        bumpPageViewForPost(ReaderPostTable.getPost(blogId, postId, true));
+    }
+    public static void bumpPageViewForPost(ReaderPost post) {
         if (post == null) {
             return;
         }
