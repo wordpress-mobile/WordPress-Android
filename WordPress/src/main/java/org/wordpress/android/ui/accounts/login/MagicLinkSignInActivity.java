@@ -19,11 +19,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     @Override
     protected void onResume() {
         super.onResume();
-
         handleMagicLoginIntent();
     }
-
-
 
     @Override
     protected void onPause() {
@@ -104,7 +101,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     private void slideInFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.hs__slide_in_from_right, R.anim.hs__slide_out_to_left);
+        fragmentTransaction.setCustomAnimations(R.anim.hs__slide_in_from_right, R.anim.hs__slide_out_to_left, R.anim.hs__slide_in_from_left, R.anim.hs__slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
