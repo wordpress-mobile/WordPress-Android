@@ -19,7 +19,10 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     @Override
     protected void onResume() {
         super.onResume();
-        handleMagicLoginIntent();
+
+        if (hasMagicLinkLoginIntent()) {
+            attemptLoginWithToken(getIntent().getData());
+        }
     }
 
     @Override
@@ -63,13 +66,17 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         slideInFragment(wpComMagicLinkFragment);
     }
 
-    private void handleMagicLoginIntent() {
+    private void cancelProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.cancel();
+        }
+    }
+
+    private boolean hasMagicLinkLoginIntent() {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        if (Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains("magic-login")) {
-            attemptLoginWithToken(uri);
-        }
+        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains("magic-login");
     }
 
     private void attemptLoginWithToken(Uri uri) {
