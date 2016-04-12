@@ -992,6 +992,24 @@ ZSSEditor.extractMediaIdentifier = function(node) {
     return "";
 };
 
+ZSSEditor.getMediaNodeWithIdentifier = function(mediaNodeIdentifier) {
+    var imageNode = ZSSEditor.getImageNodeWithIdentifier(mediaNodeIdentifier);
+    if (imageNode.length > 0) {
+        return imageNode;
+    } else {
+        return ZSSEditor.getVideoNodeWithIdentifier(mediaNodeIdentifier);
+    }
+};
+
+ZSSEditor.getMediaProgressNodeWithIdentifier = function(mediaNodeIdentifier) {
+    var imageProgressNode = ZSSEditor.getImageProgressNodeWithIdentifier(mediaNodeIdentifier);
+    if (imageProgressNode.length > 0) {
+        return imageProgressNode;
+    } else {
+        return ZSSEditor.getVideoProgressNodeWithIdentifier(mediaNodeIdentifier);
+    }
+};
+
 ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
     var imageContainerNode = ZSSEditor.getImageContainerNodeWithIdentifier(mediaNodeIdentifier);
     if (imageContainerNode.length > 0) {
@@ -999,6 +1017,61 @@ ZSSEditor.getMediaContainerNodeWithIdentifier = function(mediaNodeIdentifier) {
     } else {
         return ZSSEditor.getVideoContainerNodeWithIdentifier(mediaNodeIdentifier);
     }
+};
+
+/**
+ *  @brief      Update the progress indicator for the media item identified with the value in progress.
+ *
+ *  @param      mediaNodeIdentifier This is a unique ID provided by the caller.
+ *  @param      progress    A value between 0 and 1 indicating the progress on the media upload.
+ */
+ZSSEditor.setProgressOnMedia = function(mediaNodeIdentifier, progress) {
+    var mediaNode = this.getMediaNodeWithIdentifier(mediaNodeIdentifier);
+    var mediaProgressNode = this.getMediaProgressNodeWithIdentifier(mediaNodeIdentifier);
+
+    // Don't allow the progress bar to move backward
+    if (mediaNode.length == 0 || mediaProgressNode.length == 0 || mediaProgressNode.attr("value") > progress) {
+        return;
+    }
+
+    if (progress == 0) {
+        mediaNode.addClass("uploading");
+    }
+
+    // Revert to non-compatibility image container once image upload has begun. This centers the overlays on the image
+    // (instead of the screen), while still circumventing the small container bug the compat class was added to fix
+    if (progress > 0) {
+        this.getMediaContainerNodeWithIdentifier(mediaNodeIdentifier).removeClass("compat");
+    }
+
+    // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+    // From a UX perspective, it's better to just keep the progress bars at 90% until the upload is really complete
+    // and the progress bar is removed entirely
+    if (progress > 0.9) {
+        return;
+    }
+
+    mediaProgressNode.attr("value", progress);
+};
+
+ZSSEditor.setupOptimisticProgressUpdate = function(mediaNodeIdentifier, nCall) {
+    setTimeout(ZSSEditor.sendOptimisticProgressUpdate, nCall * 100, mediaNodeIdentifier, nCall);
+};
+
+ZSSEditor.sendOptimisticProgressUpdate = function(mediaNodeIdentifier, nCall) {
+    if (nCall > 15) {
+        return;
+    }
+
+    var mediaNode = ZSSEditor.getMediaNodeWithIdentifier(mediaNodeIdentifier);
+
+    // Don't send progress updates to failed media
+    if (mediaNode.length != 0 && mediaNode[0].classList.contains("failed")) {
+        return;
+    }
+
+    ZSSEditor.setProgressOnMedia(mediaNodeIdentifier, nCall / 100);
+    ZSSEditor.setupOptimisticProgressUpdate(mediaNodeIdentifier, nCall + 1);
 };
 
 ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
@@ -1128,6 +1201,12 @@ ZSSEditor.insertLocalImage = function(imageNodeIdentifier, localImageUrl) {
 
     ZSSEditor.trackNodeForMutation(this.getImageContainerNodeWithIdentifier(imageNodeIdentifier));
 
+    this.setProgressOnMedia(imageNodeIdentifier, 0);
+
+    if (nativeState.androidApiLevel > 18) {
+        setTimeout(ZSSEditor.setupOptimisticProgressUpdate, 300, imageNodeIdentifier, 1);
+    }
+
     this.sendEnabledStyles();
 };
 
@@ -1226,34 +1305,6 @@ ZSSEditor.tryToReload = function (image, imageNode, imageNodeIdentifier, remoteI
 }
 
 /**
- *  @brief      Update the progress indicator for the image identified with the value in progress.
- *
- *  @param      imageNodeIdentifier This is a unique ID provided by the caller.
- *  @param      progress    A value between 0 and 1 indicating the progress on the image.
- */
-ZSSEditor.setProgressOnImage = function(imageNodeIdentifier, progress) {
-    var imageNode = this.getImageNodeWithIdentifier(imageNodeIdentifier);
-    if (imageNode.length == 0){
-        return;
-    }
-    if (progress < 1){
-        imageNode.addClass("uploading");
-    }
-
-    // Revert to non-compatibility image container once image upload has begun. This centers the overlays on the image
-    // (instead of the screen), while still circumventing the small container bug the compat class was added to fix
-    if (progress > 0) {
-        this.getImageContainerNodeWithIdentifier(imageNodeIdentifier).removeClass("compat");
-    }
-
-    var imageProgressNode = this.getImageProgressNodeWithIdentifier(imageNodeIdentifier);
-    if (imageProgressNode.length == 0){
-          return;
-    }
-    imageProgressNode.attr("value",progress);
-};
-
-/**
  *  @brief      Notifies that the image upload as finished
  *
  *  @param      imageNodeIdentifier     The unique image ID for the uploaded image
@@ -1330,6 +1381,7 @@ ZSSEditor.markImageUploadFailed = function(imageNodeIdentifier, message) {
     var imageProgressNode = this.getImageProgressNodeWithIdentifier(imageNodeIdentifier);
     if (imageProgressNode.length != 0){
         imageProgressNode.addClass('failed');
+        imageProgressNode.attr("value", 0);
     }
 
     // Delete the compatibility overlay if present
@@ -1360,6 +1412,12 @@ ZSSEditor.unmarkImageUploadFailed = function(imageNodeIdentifier) {
 
     // Display the compatibility overlay again if present
     imageContainerNode.find("span.upload-overlay").removeClass("failed");
+
+    this.setProgressOnMedia(imageNodeIdentifier, 0);
+
+    if (nativeState.androidApiLevel > 18) {
+        setTimeout(ZSSEditor.setupOptimisticProgressUpdate, 300, imageNodeIdentifier, 1);
+    }
 };
 
 /**
@@ -1459,6 +1517,12 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
 
     ZSSEditor.trackNodeForMutation(this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier));
 
+    this.setProgressOnMedia(videoNodeIdentifier, 0);
+
+    if (nativeState.androidApiLevel > 18) {
+        setTimeout(ZSSEditor.setupOptimisticProgressUpdate, 300, videoNodeIdentifier, 1);
+    }
+
     this.sendEnabledStyles();
 };
 
@@ -1524,35 +1588,6 @@ ZSSEditor.replaceLocalVideoWithRemoteVideo = function(videoNodeIdentifier, remot
 };
 
 /**
- *  @brief      Update the progress indicator for the Video identified with the value in progress.
- *
- *  @param      VideoNodeIdentifier This is a unique ID provided by the caller.
- *  @param      progress    A value between 0 and 1 indicating the progress on the Video.
- */
-ZSSEditor.setProgressOnVideo = function(videoNodeIdentifier, progress) {
-    var videoNode = this.getVideoNodeWithIdentifier(videoNodeIdentifier);
-    if (videoNode.length == 0){
-        return;
-    }
-    if (progress < 1){
-        videoNode.addClass("uploading");
-    }
-
-    // Revert to non-compatibility video container once video upload has begun. This centers the overlays on the
-    // placeholder image (instead of the screen), while still circumventing the small container bug the compat class
-    // was added to fix
-    if (progress > 0) {
-        this.getVideoContainerNodeWithIdentifier(videoNodeIdentifier).removeClass("compat");
-    }
-
-    var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
-    if (videoProgressNode.length == 0){
-        return;
-    }
-    videoProgressNode.attr("value",progress);
-};
-
-/**
  *  @brief      Callbacks to native that the video upload as finished and the local url was replaced by the remote url
  *
  *  @param      videoNodeIdentifier    the unique video ID for the uploaded Video
@@ -1611,6 +1646,7 @@ ZSSEditor.markVideoUploadFailed = function(videoNodeIdentifier, message) {
     var videoProgressNode = this.getVideoProgressNodeWithIdentifier(videoNodeIdentifier);
     if (videoProgressNode.length != 0){
         videoProgressNode.addClass('failed');
+        videoProgressNode.attr("value", 0);
     }
 
     // Delete the compatibility overlay if present
@@ -1641,6 +1677,12 @@ ZSSEditor.unmarkVideoUploadFailed = function(videoNodeIdentifier) {
 
     // Display the compatibility overlay again if present
     videoContainerNode.find("span.upload-overlay").removeClass("failed");
+
+    this.setProgressOnMedia(videoNodeIdentifier, 0);
+
+    if (nativeState.androidApiLevel > 18) {
+        setTimeout(ZSSEditor.setupOptimisticProgressUpdate, 300, videoNodeIdentifier, 1);
+    }
 };
 
 /**
