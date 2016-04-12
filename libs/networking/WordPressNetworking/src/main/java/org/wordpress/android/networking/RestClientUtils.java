@@ -221,6 +221,11 @@ public class RestClientUtils {
         getThemes("free", siteId, limit, offset, listener, errorListener);
     }
 
+    public void getPurchasedThemes(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes/purchased", siteId);
+        get(path, listener, errorListener);
+    }
+
     /**
      * Get all a site's themes
      */

@@ -104,6 +104,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
         fetchThemesIfNoneAvailable();
+        fetchPurchasedThemes();
     }
 
     @Override
@@ -297,6 +298,23 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
                 && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
             fetchThemes();
+            mThemeBrowserFragment.setRefreshing(true);
+        }
+    }
+
+    private void fetchPurchasedThemes() {
+        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null) {
+            WordPress.getRestClientUtilsV1_2().getPurchasedThemes(getBlogId(), new Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    new FetchThemesTask().execute(response);
+                }
+            }, new ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    AppLog.d(T.THEMES, error.getMessage());
+                }
+            });
             mThemeBrowserFragment.setRefreshing(true);
         }
     }
