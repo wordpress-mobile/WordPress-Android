@@ -41,6 +41,12 @@ public class PeopleListFragment extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
@@ -50,8 +56,10 @@ public class PeopleListFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Person person = (Person) parent.getItemAtPosition(position);
-                mListener.onPersonSelected(person);
+                if (mListener != null) {
+                    Person person = (Person) parent.getItemAtPosition(position);
+                    mListener.onPersonSelected(person);
+                }
             }
         });
 
