@@ -21,16 +21,12 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 import java.util.List;
 
 public class PeopleManagementActivity extends AppCompatActivity implements PeopleListFragment.OnPersonSelectedListener {
-
-    private PeopleListFragment mPeopleListFragment;
-    private PersonDetailFragment mPersonDetailFragment;
+    private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
+    private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-        Blog blog = WordPress.getBlog(localBlogId);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -38,15 +34,20 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.people_management_activity);
-
         setTitle(R.string.people);
 
+        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
+        Blog blog = WordPress.getBlog(localBlogId);
+
         FragmentManager fragmentManager = getFragmentManager();
-        if (mPeopleListFragment == null) {
-            mPeopleListFragment = PeopleListFragment.newInstance(localBlogId);
+        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager.findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (peopleListFragment == null && personDetailFragment == null) {
+            peopleListFragment = PeopleListFragment.newInstance(localBlogId);
 
             fragmentManager.beginTransaction()
-                    .add(android.R.id.content, mPeopleListFragment)
+                    .add(android.R.id.content, peopleListFragment)
                     .commit();
         }
 
@@ -84,11 +85,16 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
-                if (mPeopleListFragment != null) {
-                    mPeopleListFragment.refreshPeopleList();
+
+                FragmentManager fragmentManager = getFragmentManager();
+                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager.findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+                if (peopleListFragment != null) {
+                    peopleListFragment.refreshPeopleList();
                 }
-                if (mPersonDetailFragment != null) {
-                    mPersonDetailFragment.refreshPersonDetails();
+                if (personDetailFragment != null) {
+                    personDetailFragment.refreshPersonDetails();
                 }
             }
 
@@ -106,16 +112,19 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
 
     @Override
     public void onPersonSelected(Person person) {
+        FragmentManager fragmentManager = getFragmentManager();
+        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
-        if (mPersonDetailFragment == null) {
-            mPersonDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
+        if (personDetailFragment == null) {
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
         } else {
-            mPersonDetailFragment.setPersonDetails(personID, localTableBlogID);
+            personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
-        if (!mPersonDetailFragment.isAdded()) {
+        if (!personDetailFragment.isAdded()) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, mPersonDetailFragment)
+                    .replace(android.R.id.content, personDetailFragment)
                     .addToBackStack(null)
                     .commit();
         }
