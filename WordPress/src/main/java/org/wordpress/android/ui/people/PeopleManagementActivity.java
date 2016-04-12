@@ -43,7 +43,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
 
         FragmentManager fragmentManager = getFragmentManager();
         if (mPeopleListFragment == null) {
-            mPeopleListFragment = PeopleListFragment.newInstance();
+            mPeopleListFragment = PeopleListFragment.newInstance(localBlogId);
 
             fragmentManager.beginTransaction()
                     .add(android.R.id.content, mPeopleListFragment)
@@ -84,7 +84,9 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
-                mPeopleListFragment.setPeopleList(peopleList);
+                if (mPeopleListFragment != null) {
+                    mPeopleListFragment.refreshPeopleList();
+                }
                 if (mPersonDetailFragment != null) {
                     mPersonDetailFragment.refreshPersonDetails();
                 }

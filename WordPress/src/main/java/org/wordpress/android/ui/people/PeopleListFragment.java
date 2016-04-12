@@ -10,17 +10,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 
 import java.util.List;
 
 public class PeopleListFragment extends Fragment {
+    private static String ARG_LOCAL_TABLE_BLOG_ID = "LOCAL_TABLE_BLOG_ID";
 
+    private int mLocalTableBlogID;
     private ListView mListView;
     private OnPersonSelectedListener mListener;
 
-    public static PeopleListFragment newInstance() {
-        return new PeopleListFragment();
+    public static PeopleListFragment newInstance(int localTableBlogID) {
+        PeopleListFragment peopleListFragment = new PeopleListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        peopleListFragment.setArguments(bundle);
+        return peopleListFragment;
     }
 
     @Override
@@ -37,6 +44,7 @@ public class PeopleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
+        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
         mListView = (ListView) rootView.findViewById(android.R.id.list);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,8 +58,17 @@ public class PeopleListFragment extends Fragment {
         return rootView;
     }
 
-    public void setPeopleList(List<Person> peopleList) {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        refreshPeopleList();
+    }
+
+    public void refreshPeopleList() {
         if (!isAdded()) return;
+
+        List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
 
         PeopleAdapter peopleAdapter = (PeopleAdapter) mListView.getAdapter();
         if (peopleAdapter == null) {
