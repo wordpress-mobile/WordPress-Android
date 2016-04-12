@@ -273,7 +273,7 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = JSONUtils.getString(jsonThisTag, "name");
+                mostPopularTag = JSONUtils.getStringDecoded(jsonThisTag, "name");
                 popularCount = postCount;
             }
         }
