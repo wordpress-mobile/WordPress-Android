@@ -103,6 +103,10 @@ public class SignInActivity extends FragmentActivity {
     }
 
     public SignInFragment getSignInFragment() {
-        return new SignInFragment();
+        if (mSignInFragment == null) {
+            return new SignInFragment();
+        } else {
+            return mSignInFragment;
+        }
     }
 }

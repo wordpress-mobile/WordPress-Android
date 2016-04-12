@@ -36,10 +36,10 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public MagicLinkSignInFragment getSignInFragment() {
-        if (mSignInFragment != null && mSignInFragment instanceof MagicLinkSignInFragment) {
-            return (MagicLinkSignInFragment) mSignInFragment;
-        } else {
+        if (mSignInFragment == null) {
             return new MagicLinkSignInFragment();
+        } else {
+            return (MagicLinkSignInFragment) mSignInFragment;
         }
     }
 
