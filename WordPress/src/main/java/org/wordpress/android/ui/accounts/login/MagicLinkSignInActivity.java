@@ -51,8 +51,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     @Override
     public void onEnterPasswordRequested() {
-        MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
-        slideInFragment(magicLinkSignInFragment);
+        getSignInFragment().setShouldShowPassword(true);
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override

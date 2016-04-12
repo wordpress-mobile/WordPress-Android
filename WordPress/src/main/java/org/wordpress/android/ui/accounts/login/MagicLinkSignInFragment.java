@@ -43,6 +43,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
     private OnMagicLinkRequestListener mListener;
     private String mToken = "";
+    private boolean mShouldShowPassword;
 
     public MagicLinkSignInFragment() {
         super();
@@ -89,6 +90,13 @@ public class MagicLinkSignInFragment extends SignInFragment {
         if (!mToken.isEmpty()) {
             attemptLoginWithMagicLink();
         }
+        if (mShouldShowPassword) {
+            showPasswordFieldAndFocus();
+        }
+    }
+
+    public void setShouldShowPassword(boolean shouldShowPassword) {
+        mShouldShowPassword = shouldShowPassword;
     }
 
     private boolean didPressNextKey(int actionId, KeyEvent event) {
