@@ -23,6 +23,7 @@ import java.util.List;
 public class PeopleManagementActivity extends AppCompatActivity implements PeopleListFragment.OnPersonSelectedListener {
 
     private PeopleListFragment mPeopleListFragment;
+    private PersonDetailFragment mPersonDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,9 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
                 mPeopleListFragment.setPeopleList(peopleList);
+                if (mPersonDetailFragment != null) {
+                    mPersonDetailFragment.refreshPersonDetails();
+                }
             }
 
             @Override
@@ -100,10 +104,18 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
 
     @Override
     public void onPersonSelected(Person person) {
-        PersonDetailFragment fragment = PersonDetailFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId());
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, fragment)
-                .addToBackStack(null)
-                .commit();
+        long personID = person.getPersonID();
+        int localTableBlogID = person.getLocalTableBlogId();
+        if (mPersonDetailFragment == null) {
+            mPersonDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
+        } else {
+            mPersonDetailFragment.setPersonDetails(personID, localTableBlogID);
+        }
+        if (!mPersonDetailFragment.isAdded()) {
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, mPersonDetailFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

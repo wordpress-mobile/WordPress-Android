@@ -81,4 +81,9 @@ public class PersonDetailFragment extends Fragment {
             }
         }
     }
+
+    public void setPersonDetails(long personID, int localTableBlogID) {
+        mPersonID = personID;
+        mLocalTableBlogID = localTableBlogID;
+    }
 }
