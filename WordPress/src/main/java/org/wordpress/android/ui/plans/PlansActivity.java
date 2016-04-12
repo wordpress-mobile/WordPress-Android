@@ -308,11 +308,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void startPurchaseProcess(Plan plan) {
-
-        // TODO:  remove when updated the rest api
-        boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
-        String sku = isBusinessPlan ? "sub_test_plan_business_001" : "sub_test_plan_premium_001";
-
+        String sku = plan.getAndroidSKU();
         Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         JSONObject extraData = new JSONObject();
         try {
