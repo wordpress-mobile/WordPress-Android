@@ -1396,9 +1396,6 @@
     <string name="export_your_content">Export your content</string>
     <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Plans -->
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
