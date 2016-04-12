@@ -729,6 +729,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (isAskingToLike) {
             AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
+            // Consider a like to be enough to push a page view - solves a long-standing question
+            // from folks who ask 'why do I have more likes than page views?'.
+            ReaderPostActions.bumpPageViewForPost(post);
         } else {
             AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mCurrentBlogId != 0 ? mCurrentBlogId : null);
         }

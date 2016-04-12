@@ -194,6 +194,14 @@ public class WPPrefUtils {
         setTextViewAttributes(view, size, R.color.grey_dark, getNormalTypeface(view.getContext()));
     }
 
+    /**
+     * Styles a {@link TextView} to display text in a dialog message.
+     */
+    public static void layoutAsDialogMessage(TextView view) {
+        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
+        setTextViewAttributes(view, size, R.color.grey_darken_10, getNormalTypeface(view.getContext()));
+    }
+
     public static void setTextViewAttributes(TextView textView, int size, int colorRes, Typeface typeface) {
         textView.setTypeface(typeface);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
