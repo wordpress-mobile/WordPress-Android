@@ -335,7 +335,7 @@ public class PlansActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             } else {
-                                AppLog.e(AppLog.T.PLANS, "Purchase failure " + result.getMessage());
+                                AppLog.e(AppLog.T.PLANS, "Purchase failure: " + result.getMessage());
                                 // Not a success. It seems that the buy activity already shows an error.
                                 // Or at least, it shows an error if you try to purchase a subscription you already own.
                             }
