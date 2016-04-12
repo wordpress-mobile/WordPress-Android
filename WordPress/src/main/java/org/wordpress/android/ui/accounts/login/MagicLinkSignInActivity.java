@@ -67,12 +67,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            if (uri.getHost().contains("magic-login")) {
-                attemptLoginWithToken(uri);
-            } else {
-                // handle error
-            }
+        if (Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains("magic-login")) {
+            attemptLoginWithToken(uri);
         }
     }
 
