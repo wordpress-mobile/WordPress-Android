@@ -31,12 +31,6 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         cancelProgressDialog();
     }
 
-    private void cancelProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.cancel();
-        }
-    }
-
     @Override
     public MagicLinkSignInFragment getSignInFragment() {
         if (mSignInFragment == null) {
