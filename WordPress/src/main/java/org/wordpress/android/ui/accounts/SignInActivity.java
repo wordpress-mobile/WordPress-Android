@@ -42,7 +42,6 @@ public class SignInActivity extends FragmentActivity {
         mSignInFragment = getSignInFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         actionMode(getIntent().getExtras());
