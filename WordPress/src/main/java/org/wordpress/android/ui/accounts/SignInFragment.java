@@ -228,6 +228,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
+            mCredentialsClient.stopAutoManage(getActivity());
+            mCredentialsClient.disconnect();
+        }
+    }
+
     protected void toggleSignInMode(){
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
             showDotComSignInForm();
@@ -305,9 +315,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         if (!isSmartLockAvailable()) {
             return;
         }
+
         mCredentialsClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
-                .enableAutoManage((SignInActivity) getActivity(), this)
+                .enableAutoManage(getActivity(), this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
     }
