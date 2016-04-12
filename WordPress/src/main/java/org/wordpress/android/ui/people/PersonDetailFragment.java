@@ -60,25 +60,25 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public void refreshPersonDetails() {
-        if (isAdded()) {
-            Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
-            if (person != null) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-                String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
+        if (!isAdded()) return;
 
-                mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                mDisplayNameTextView.setText(person.getDisplayName());
-                mUsernameTextView.setText(person.getUsername());
-                mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
-                mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
+        Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+        if (person != null) {
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
-                mRemoveTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO: remove user
-                    }
-                });
-            }
+            mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            mDisplayNameTextView.setText(person.getDisplayName());
+            mUsernameTextView.setText(person.getUsername());
+            mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
+            mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
+
+            mRemoveTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: remove user
+                }
+            });
         }
     }
 
