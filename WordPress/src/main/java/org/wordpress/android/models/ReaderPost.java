@@ -235,8 +235,8 @@ public class ReaderPost {
     private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
         if (jsonAuthor == null) return;
 
-        post.authorName = JSONUtils.getString(jsonAuthor, "name");
-        post.authorFirstName = JSONUtils.getString(jsonAuthor, "first_name");
+        post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+        post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
         post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
 
