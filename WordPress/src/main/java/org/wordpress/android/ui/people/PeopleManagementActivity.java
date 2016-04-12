@@ -39,14 +39,10 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
         int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
         Blog blog = WordPress.getBlog(localBlogId);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager.findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        if (savedInstanceState == null) {
+            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(localBlogId);
 
-        if (peopleListFragment == null && personDetailFragment == null) {
-            peopleListFragment = PeopleListFragment.newInstance(localBlogId);
-
-            fragmentManager.beginTransaction()
+            getFragmentManager().beginTransaction()
                     .add(android.R.id.content, peopleListFragment)
                     .commit();
         }
