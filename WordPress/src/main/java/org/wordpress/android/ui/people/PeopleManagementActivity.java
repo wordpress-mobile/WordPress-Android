@@ -43,7 +43,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(localBlogId);
 
             getFragmentManager().beginTransaction()
-                    .add(android.R.id.content, peopleListFragment)
+                    .add(android.R.id.content, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         }
 
@@ -120,7 +120,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
         }
         if (!personDetailFragment.isAdded()) {
             getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, personDetailFragment)
+                    .replace(android.R.id.content, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT)
                     .addToBackStack(null)
                     .commit();
         }
