@@ -100,11 +100,10 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
 
     @Override
     public void onPersonSelected(Person person) {
-        PersonDetailFragment fragment = PersonDetailFragment.newInstance();
+        PersonDetailFragment fragment = PersonDetailFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId());
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment)
                 .addToBackStack(null)
                 .commit();
-        fragment.setPerson(person);
     }
 }
