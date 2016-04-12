@@ -75,12 +75,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
 
     private void attemptLoginWithToken(Uri uri) {
         getSignInFragment().setToken(uri.getQueryParameter("token"));
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
-        fragmentTransaction.replace(R.id.fragment_container, magicLinkSignInFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        slideInFragment(magicLinkSignInFragment, false);
 
         mProgressDialog = ProgressDialog.show(this, "", "Logging in", true, true, new DialogInterface.OnCancelListener() {
             @Override
@@ -97,10 +93,16 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     }
 
     private void slideInFragment(Fragment fragment) {
+        slideInFragment(fragment, true);
+    }
+
+    private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.hs__slide_in_from_right, R.anim.hs__slide_out_to_left, R.anim.hs__slide_in_from_left, R.anim.hs__slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
+        if (shouldAddToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commit();
     }
 }
