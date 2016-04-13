@@ -1061,14 +1061,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private class HandleMediaSelectionTask extends AsyncTask<Intent, Void, Void> {
-        @Override
-        protected Void doInBackground(Intent... params) {
-            handleMediaSelectionResult(params[0]);
-            return null;
-        }
-    }
-
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         if (WordPress.getCurrentBlog() != null) {
@@ -1498,7 +1490,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
-
         return true;
     }
 
@@ -1511,8 +1502,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
-                        new HandleMediaSelectionTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                data);
+                        handleMediaSelectionResult(data);
                     } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
                         handleGalleryResult(data);
                     }
