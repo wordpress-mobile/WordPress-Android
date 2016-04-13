@@ -2,7 +2,6 @@
 <objectAnimator
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_shortAnimTime"
-    android:interpolator="@android:anim/decelerate_interpolator"
     android:propertyName="x"
     android:valueFrom="1280"
     android:valueTo="0"
