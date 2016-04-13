@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInFragment;
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.EditTextUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -201,6 +203,15 @@ public class MagicLinkSignInFragment extends SignInFragment {
         SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
 
         configureAccountAfterSuccessfulSignIn();
+    }
+
+    @Override
+    protected void track(AnalyticsTracker.Stat stat, Map<String, Boolean> properties) {
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.put("magic-link", true);
+        AnalyticsTracker.track(stat, properties);
     }
 
     @Override

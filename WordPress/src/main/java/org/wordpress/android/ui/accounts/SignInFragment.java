@@ -80,6 +80,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -358,7 +359,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
         mUsernameEditText.setText(credential.getId());
         mPasswordEditText.setText(credential.getPassword());
     }
@@ -525,10 +526,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         AnalyticsUtils.refreshMetadata();
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
+        track(Stat.SIGNED_IN, properties);
         if (!isWPComLogin()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
+            track(Stat.ADDED_SELF_HOSTED_SITE, null);
         }
+    }
+
+    protected void track(Stat stat, Map<String, Boolean> properties) {
+        AnalyticsTracker.track(stat, properties);
     }
 
     protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
@@ -621,7 +626,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 }
             });
 
-            AnalyticsTracker.track(Stat.LOGIN_FAILED);
+            track(Stat.LOGIN_FAILED, null);
         }
     };
 
