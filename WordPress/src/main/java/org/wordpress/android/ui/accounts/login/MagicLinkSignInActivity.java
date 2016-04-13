@@ -13,7 +13,7 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 
-public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener {
+public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestListener, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -49,6 +49,12 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     @Override
     public void onEnterPasswordRequested() {
         getSignInFragment().setShouldShowPassword(true);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStackImmediate();
+        }
+
         getSupportFragmentManager().popBackStack();
     }
 

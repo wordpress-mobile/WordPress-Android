@@ -35,4 +35,26 @@
 
     </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
+    <org.wordpress.android.widgets.WPLinearLayoutSizeBound
+        android:id="@+id/nux_bottom_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        app:maxWidth="@dimen/nux_width">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/password_layout"
+            style="@style/WordPress.NUXFlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/nux_main_button_height"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:text="@string/enter_your_password_instead" />
+
+    </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
+
 </LinearLayout>
