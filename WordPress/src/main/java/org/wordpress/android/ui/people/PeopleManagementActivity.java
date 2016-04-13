@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -119,10 +120,11 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
         if (!personDetailFragment.isAdded()) {
-            getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT)
-                    .addToBackStack(null)
-                    .commit();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_from_right, R.animator.fragment_slide_out_to_left);
+            fragmentTransaction.replace(android.R.id.content, personDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
     }
 }
