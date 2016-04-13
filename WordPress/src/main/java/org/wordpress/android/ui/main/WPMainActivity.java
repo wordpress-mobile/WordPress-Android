@@ -188,6 +188,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
+                    checkMagicLinkSignIn();
                 }
             } else {
                 ActivityLauncher.showSignInForResult(this);
@@ -312,6 +313,14 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
         ProfilingUtils.stop();
     }
 
+    private void checkMagicLinkSignIn() {
+        if (getIntent() !=  null) {
+            if (getIntent().getBooleanExtra("magic-link", false)) {
+                startWithNewAccount();
+            }
+        }
+    }
+
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
             showVisualEditorPromoDialogIfNeeded();
@@ -404,8 +413,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    startService(new Intent(this, GCMRegistrationIntentService.class));
-                    resetFragments();
+                    startWithNewAccount();
                 } else if (!AccountHelper.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
@@ -440,6 +448,11 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
                 break;
         }
+    }
+
+    private void startWithNewAccount() {
+        startService(new Intent(this, GCMRegistrationIntentService.class));
+        resetFragments();
     }
 
     /*

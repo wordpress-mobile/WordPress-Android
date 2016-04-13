@@ -225,6 +225,8 @@ public class MagicLinkSignInFragment extends SignInFragment {
                 if (userBlogList != null) {
                     Intent intent = new Intent(getActivity(), WPMainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("magic-link", true);
+
                     getActivity().startActivity(intent);
                 }
             }
