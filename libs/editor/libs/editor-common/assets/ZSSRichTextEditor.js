@@ -3409,7 +3409,7 @@ ZSSField.prototype.isEmpty = function() {
 ZSSField.prototype.getHTML = function() {
     var html = this.wrappedObject.html();
     if (ZSSEditor.defaultParagraphSeparator == 'div') {
-        html = html.replace(/(<div)/igm, '<p').replace(/<\/div>/igm, '</p>');
+        html = html.replace(/(<div(?=[>\s]))/igm, '<p').replace(/<\/div>/igm, '</p>');
     }
     html = wp.saveText(html);
     html = ZSSEditor.removeVisualFormatting( html );
@@ -3441,7 +3441,7 @@ ZSSField.prototype.setHTML = function(html) {
 
     if (ZSSEditor.defaultParagraphSeparator == 'div') {
         // Replace the paragraph tags we get from wpload with divs
-        mutatedHTML = mutatedHTML.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
+        mutatedHTML = mutatedHTML.replace(/(<p(?=[>\s]))/igm, '<div').replace(/<\/p>/igm, '</div>');
     }
 
     this.wrappedObject.html(mutatedHTML);
