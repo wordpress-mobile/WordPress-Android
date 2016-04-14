@@ -200,15 +200,19 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     public void attemptLoginWithMagicLink() {
+        saveUsernameAndTokenToAccount();
+
+        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
+
+        configureAccountAfterSuccessfulSignIn();
+    }
+
+    private void saveUsernameAndTokenToAccount() {
         Account account = AccountHelper.getDefaultAccount();
         account.setAccessToken(mToken);
         account.setUserName(mUsername);
         account.save();
         account.fetchAccountDetails();
-
-        SimperiumUtils.configureSimperium(WordPress.getContext(), mToken);
-
-        configureAccountAfterSuccessfulSignIn();
     }
 
     @Override
