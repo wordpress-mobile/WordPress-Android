@@ -39,11 +39,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MagicLinkSignInFragment extends SignInFragment {
-    public interface OnMagicLinkRequestListener {
+    public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
     }
 
-    private OnMagicLinkRequestListener mListener;
+    private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
     private boolean mShouldShowPassword;
 
@@ -54,10 +54,10 @@ public class MagicLinkSignInFragment extends SignInFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnMagicLinkRequestListener) {
-            mListener = (OnMagicLinkRequestListener) context;
+        if (context instanceof OnMagicLinkRequestInteraction) {
+            mListener = (OnMagicLinkRequestInteraction) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestListener");
+            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
         }
     }
 
