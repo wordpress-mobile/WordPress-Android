@@ -793,12 +793,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
                                 "');");
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + id + ", " + 0 + ");");
                         mUploadingMedia.put(id, MediaType.VIDEO);
                     } else {
                         mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + safeMediaUrl +
                                 "');");
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + id + ", " + 0 + ");");
                         mUploadingMedia.put(id, MediaType.IMAGE);
                     }
                 }
@@ -901,13 +899,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 @Override
                 public void run() {
                     String progressString = String.format(Locale.US, "%.1f", progress);
-                    if (mediaType.equals(MediaType.IMAGE)) {
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", " +
-                                progressString + ");");
-                    } else if (mediaType.equals(MediaType.VIDEO)) {
-                        mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", " +
-                                progressString + ");");
-                    }
+                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
+                            progressString + ");");
                 }
             });
         }
@@ -1124,14 +1117,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                             case IMAGE:
                                 mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
                                         + ");");
-                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnImage(" + mediaId + ", "
-                                        + 0 + ");");
                                 break;
                             case VIDEO:
                                 mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
                                         + ");");
-                                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnVideo(" + mediaId + ", "
-                                        + 0 + ");");
                         }
                         mFailedMediaIds.remove(mediaId);
                         mUploadingMedia.put(mediaId, mediaType);
