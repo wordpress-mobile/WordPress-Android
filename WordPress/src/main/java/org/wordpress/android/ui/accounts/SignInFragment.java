@@ -49,8 +49,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -69,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -571,6 +570,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
                         finishCurrentActivity(userBlogList);
+                        String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
+                        Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
+                        saveCrendentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
                     }
                 }, null);
             } else {
@@ -653,11 +655,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
-    private void saveCrendentialsInSmartLock() {
+    private void saveCrendentialsInSmartLock(String username, String password, String displayName, Uri profilePicture) {
         if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
-        Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
+        Credential credential = new Credential.Builder(username).setPassword(password)
+                .setName(displayName).setProfilePictureUri(profilePicture).build();
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -695,8 +698,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             @Override
             public void onSuccess() {
                 mShouldSendTwoStepSMS = false;
-                saveCrendentialsInSmartLock();
-
                 // Finish this activity if we've authenticated to a Jetpack site
                 if (isJetpackAuth() && getActivity() != null) {
                     getActivity().setResult(Activity.RESULT_OK);
