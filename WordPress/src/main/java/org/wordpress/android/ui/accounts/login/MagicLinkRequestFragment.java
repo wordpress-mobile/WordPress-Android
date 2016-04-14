@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -23,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MagicLinkRequestFragment extends Fragment {
-
     public static final String EMAIL_KEY = "email";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";
@@ -36,9 +37,10 @@ public class MagicLinkRequestFragment extends Fragment {
 
     private static final String ARG_EMAIL_ADDRESS = "arg_email_address";
 
-    private WPTextView mMagicLinkButton;
     private String mEmail;
     private OnMagicLinkFragmentInteraction mListener;
+    private ProgressDialog mProgressDialog;
+    private TextView mRequestEmailView;
 
     public MagicLinkRequestFragment() {
     }
@@ -62,16 +64,16 @@ public class MagicLinkRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wpcom_magic_link, container, false);
-        mMagicLinkButton = (WPTextView) view.findViewById(R.id.magic_button);
-        mMagicLinkButton.setOnClickListener(new View.OnClickListener() {
+        WPTextView magicLinkButton = (WPTextView) view.findViewById(R.id.magic_button);
+        magicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMagicLinkRequest();
             }
         });
 
-        TextView requestPasswordView = (TextView) view.findViewById(R.id.password_layout);
-        requestPasswordView.setOnClickListener(new View.OnClickListener() {
+        mRequestEmailView = (TextView) view.findViewById(R.id.password_layout);
+        mRequestEmailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onEnterPasswordRequested();
@@ -98,6 +100,7 @@ public class MagicLinkRequestFragment extends Fragment {
     }
 
     private void sendMagicLinkRequest() {
+
         Map<String, String> params = new HashMap<>();
         params.put(EMAIL_KEY, mEmail);
         params.put(CLIENT_ID_KEY, BuildConfig.OAUTH_APP_ID);
@@ -121,6 +124,16 @@ public class MagicLinkRequestFragment extends Fragment {
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
                 }
+            }
+        });
+    }
+
+    private void disableRequestEmailButtonAndShowProgressDialog() {
+        mRequestEmailView.setClickable(false);
+        mProgressDialog = ProgressDialog.show(getActivity(), "", "Requesting log-in email", true, true, new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mRequestEmailView.setClickable(true);
             }
         });
     }
