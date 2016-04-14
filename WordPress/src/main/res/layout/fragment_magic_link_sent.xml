@@ -33,6 +33,37 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/open_email_button"
+                style="@style/WordPress.NUXPrimaryButton"
+                android:layout_width="wrap_content"
+                android:padding="12dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="@string/open_mail" />
+
+            <RelativeLayout
+                android:id="@+id/nux_sign_in_progress_bar"
+                style="@style/WordPress.NUXPrimaryButton"
+                android:layout_width="match_parent"
+                android:enabled="false"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
     </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
     <org.wordpress.android.widgets.WPLinearLayoutSizeBound
