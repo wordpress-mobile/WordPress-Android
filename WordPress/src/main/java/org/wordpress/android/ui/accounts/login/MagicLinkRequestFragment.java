@@ -100,6 +100,7 @@ public class MagicLinkRequestFragment extends Fragment {
     }
 
     private void sendMagicLinkRequest() {
+        disableRequestEmailButtonAndShowProgressDialog();
 
         Map<String, String> params = new HashMap<>();
         params.put(EMAIL_KEY, mEmail);
