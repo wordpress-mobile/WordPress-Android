@@ -240,6 +240,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
     @Override
     protected boolean isSmartLockAvailable() {
-        return isAdded() && isEnterPasswordMode();
+        return false;
     }
 }
