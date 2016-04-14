@@ -172,7 +172,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
             public void onResponse(JSONObject response) {
                 try {
                     String errorReason = response.getString(REASON_ERROR);
-                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
+                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
                         mListener.onMagicLinkRequestSuccess(mUsername);
                     } else {
                         showPasswordFieldAndFocus();

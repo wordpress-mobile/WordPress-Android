@@ -38,7 +38,9 @@ public class MagicLinkSentFragment extends Fragment {
         enterPasswordView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onEnterPasswordRequested();
+                if (mListener != null) {
+                    mListener.onEnterPasswordRequested();
+                }
             }
         });
 
