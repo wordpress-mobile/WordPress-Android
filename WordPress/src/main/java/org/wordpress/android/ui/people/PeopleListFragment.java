@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.people;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PeopleTable;
@@ -16,11 +16,10 @@ import org.wordpress.android.models.Person;
 
 import java.util.List;
 
-public class PeopleListFragment extends Fragment {
+public class PeopleListFragment extends ListFragment implements OnItemClickListener {
     private static String ARG_LOCAL_TABLE_BLOG_ID = "LOCAL_TABLE_BLOG_ID";
 
     private int mLocalTableBlogID;
-    private ListView mListView;
     private OnPersonSelectedListener mListener;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
@@ -61,22 +60,15 @@ public class PeopleListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
+        return inflater.inflate(R.layout.people_list_fragment, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        mListView = (ListView) rootView.findViewById(android.R.id.list);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mListener != null) {
-                    Person person = (Person) parent.getItemAtPosition(position);
-                    mListener.onPersonSelected(person);
-                }
-            }
-        });
-
-        return rootView;
+        getListView().setOnItemClickListener(this);
     }
 
     @Override
@@ -91,13 +83,21 @@ public class PeopleListFragment extends Fragment {
 
         List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
 
-        PeopleAdapter peopleAdapter = (PeopleAdapter) mListView.getAdapter();
+        PeopleAdapter peopleAdapter = (PeopleAdapter) getListAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
-            mListView.setAdapter(peopleAdapter);
+            setListAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
             peopleAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mListener != null) {
+            Person person = (Person) parent.getItemAtPosition(position);
+            mListener.onPersonSelected(person);
         }
     }
 
