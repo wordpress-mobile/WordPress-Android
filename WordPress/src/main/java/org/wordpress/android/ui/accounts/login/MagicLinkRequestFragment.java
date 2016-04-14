@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -23,7 +22,7 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WPComMagicLinkFragment extends Fragment {
+public class MagicLinkRequestFragment extends Fragment {
 
     public static final String EMAIL_KEY = "email";
     public static final String CLIENT_ID_KEY = "client_id";
@@ -41,11 +40,11 @@ public class WPComMagicLinkFragment extends Fragment {
     private String mEmail;
     private OnMagicLinkFragmentInteraction mListener;
 
-    public WPComMagicLinkFragment() {
+    public MagicLinkRequestFragment() {
     }
 
-    public static WPComMagicLinkFragment newInstance(String email) {
-        WPComMagicLinkFragment fragment = new WPComMagicLinkFragment();
+    public static MagicLinkRequestFragment newInstance(String email) {
+        MagicLinkRequestFragment fragment = new MagicLinkRequestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         fragment.setArguments(args);

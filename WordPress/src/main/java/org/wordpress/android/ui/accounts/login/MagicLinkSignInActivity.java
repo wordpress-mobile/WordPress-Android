@@ -13,9 +13,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.util.AnalyticsUtils;
 
-public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+public class MagicLinkSignInActivity extends SignInActivity implements MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
     private ProgressDialog mProgressDialog;
@@ -63,8 +62,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
     public void onMagicLinkRequestSuccess(String email) {
         saveEmailToAccount(email);
 
-        WPComMagicLinkFragment wpComMagicLinkFragment = WPComMagicLinkFragment.newInstance(email);
-        slideInFragment(wpComMagicLinkFragment);
+        MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
+        slideInFragment(magicLinkRequestFragment);
     }
 
     private void cancelProgressDialog() {
