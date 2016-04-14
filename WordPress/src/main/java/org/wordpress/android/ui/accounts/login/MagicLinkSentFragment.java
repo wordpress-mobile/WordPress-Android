@@ -49,12 +49,16 @@ public class MagicLinkSentFragment extends Fragment {
         openEmailView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-                getActivity().startActivity(intent);
+                openEmailClient();
             }
         });
 
         return view;
+    }
+
+    private void openEmailClient() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+        getActivity().startActivity(intent);
     }
 }
