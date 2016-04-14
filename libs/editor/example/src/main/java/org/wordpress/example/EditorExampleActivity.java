@@ -34,6 +34,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
 
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final int ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE = 1112;
+    public static final int ADD_MEDIA_SLOW_NETWORK_REQUEST_CODE = 1113;
 
     public static final String MEDIA_REMOTE_ID_SAMPLE = "123";
 
@@ -41,6 +42,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     private static final int SELECT_IMAGE_FAIL_MENU_POSITION = 1;
     private static final int SELECT_VIDEO_MENU_POSITION = 2;
     private static final int SELECT_VIDEO_FAIL_MENU_POSITION = 3;
+    private static final int SELECT_IMAGE_SLOW_MENU_POSITION = 4;
 
     private EditorFragmentAbstract mEditorFragment;
 
@@ -85,6 +87,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         menu.add(0, SELECT_IMAGE_FAIL_MENU_POSITION, 0, getString(R.string.select_image_fail));
         menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getString(R.string.select_video));
         menu.add(0, SELECT_VIDEO_FAIL_MENU_POSITION, 0, getString(R.string.select_video_fail));
+        menu.add(0, SELECT_IMAGE_SLOW_MENU_POSITION, 0, getString(R.string.select_image_slow_network));
     }
 
     @Override
@@ -120,6 +123,13 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
 
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
+            case SELECT_IMAGE_SLOW_MENU_POSITION:
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent = Intent.createChooser(intent, getString(R.string.select_image_slow_network));
+
+                startActivityForResult(intent, ADD_MEDIA_SLOW_NETWORK_REQUEST_CODE);
+                return true;
             default:
                 return false;
         }
@@ -133,27 +143,35 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
             return;
         }
 
-        Uri imageUri = data.getData();
+        Uri mediaUri = data.getData();
 
         MediaFile mediaFile = new MediaFile();
         String mediaId = String.valueOf(System.currentTimeMillis());
         mediaFile.setMediaId(mediaId);
-        mediaFile.setVideo(imageUri.toString().contains("video"));
+        mediaFile.setVideo(mediaUri.toString().contains("video"));
 
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
-                mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
+                mEditorFragment.appendMediaFile(mediaFile, mediaUri.toString(), null);
 
                 if (mEditorFragment instanceof EditorMediaUploadListener) {
-                    simulateFileUpload(mediaId, imageUri.toString());
+                    simulateFileUpload(mediaId, mediaUri.toString());
                 }
                 break;
             case ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE:
-                mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
+                mEditorFragment.appendMediaFile(mediaFile, mediaUri.toString(), null);
 
                 if (mEditorFragment instanceof EditorMediaUploadListener) {
-                    simulateFileUploadFail(mediaId, imageUri.toString());
+                    simulateFileUploadFail(mediaId, mediaUri.toString());
                 }
+                break;
+            case ADD_MEDIA_SLOW_NETWORK_REQUEST_CODE:
+                mEditorFragment.appendMediaFile(mediaFile, mediaUri.toString(), null);
+
+                if (mEditorFragment instanceof EditorMediaUploadListener) {
+                    simulateSlowFileUpload(mediaId, mediaUri.toString());
+                }
+                break;
         }
     }
 
@@ -272,6 +290,39 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                             getString(R.string.tap_to_try_again));
 
                     mFailedUploads.put(mediaId, mediaUrl);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+    }
+
+    private void simulateSlowFileUpload(final String mediaId, final String mediaUrl) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(5000);
+                    float count = (float) 0.1;
+                    while (count < 1.1) {
+                        sleep(2000);
+
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+
+                        count += 0.1;
+                    }
+
+                    MediaFile mediaFile = new MediaFile();
+                    mediaFile.setMediaId(MEDIA_REMOTE_ID_SAMPLE);
+                    mediaFile.setFileURL(mediaUrl);
+
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+
+                    if (mFailedUploads.containsKey(mediaId)) {
+                        mFailedUploads.remove(mediaId);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
