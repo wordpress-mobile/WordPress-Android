@@ -4,5 +4,5 @@
     android:duration="@android:integer/config_shortAnimTime"
     android:propertyName="xFraction"
     android:valueFrom="0"
-    android:valueTo="-1.0"
+    android:valueTo="1.0"
     android:valueType="floatType"/>
