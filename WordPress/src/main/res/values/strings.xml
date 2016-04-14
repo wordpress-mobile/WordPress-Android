@@ -914,6 +914,8 @@
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
     editor. Try it out by creating a new post.</string>
+    <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
+        automatically disabled.</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
