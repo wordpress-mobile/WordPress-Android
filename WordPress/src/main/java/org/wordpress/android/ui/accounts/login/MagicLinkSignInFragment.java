@@ -87,10 +87,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
         return view;
     }
 
-    public void setToken(String token) {
-        mToken = token;
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -103,24 +99,12 @@ public class MagicLinkSignInFragment extends SignInFragment {
         }
     }
 
+    public void setToken(String token) {
+        mToken = token;
+    }
+
     public void setShouldShowPassword(boolean shouldShowPassword) {
         mShouldShowPassword = shouldShowPassword;
-    }
-
-    private boolean didPressNextKey(int actionId, KeyEvent event) {
-        return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
-    }
-
-    private void configureMagicLinkUI() {
-        showDotComSignInForm();
-        mPasswordLayout.setVisibility(View.GONE);
-        mForgotPassword.setVisibility(View.GONE);
-        mSignInButton.setText(getString(R.string.button_next));
-    }
-
-    protected void showSelfHostedSignInForm() {
-        super.showSelfHostedSignInForm();
-        showPasswordField();
     }
 
     @Override
@@ -132,10 +116,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
             showSelfHostedSignInForm();
             mSelfHosted = true;
         }
-    }
-
-    private boolean isEnterPasswordMode() {
-        return mPasswordLayout.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -150,6 +130,62 @@ public class MagicLinkSignInFragment extends SignInFragment {
             }
         }
     }
+
+    @Override
+    protected void track(AnalyticsTracker.Stat stat, Map<String, Boolean> properties) {
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+        properties.put(MAGIC_LINK_PROPERTY, true);
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    @Override
+    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (userBlogList != null) {
+                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(MagicLinkSignInActivity.MAGIC_LOGIN, true);
+
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected boolean isSmartLockAvailable() {
+        return false;
+    }
+
+    @Override
+    protected void showSelfHostedSignInForm() {
+        super.showSelfHostedSignInForm();
+        showPasswordField();
+    }
+
+    private boolean isEnterPasswordMode() {
+        return mPasswordLayout.getVisibility() == View.VISIBLE;
+    }
+
+    private boolean didPressNextKey(int actionId, KeyEvent event) {
+        return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
+    }
+
+    private void configureMagicLinkUI() {
+        showDotComSignInForm();
+        mPasswordLayout.setVisibility(View.GONE);
+        mForgotPassword.setVisibility(View.GONE);
+        mSignInButton.setText(getString(R.string.button_next));
+    }
+
+
 
     private void showPasswordFieldAndFocus() {
         showPasswordField();
@@ -213,38 +249,5 @@ public class MagicLinkSignInFragment extends SignInFragment {
         account.setUserName(mUsername);
         account.save();
         account.fetchAccountDetails();
-    }
-
-    @Override
-    protected void track(AnalyticsTracker.Stat stat, Map<String, Boolean> properties) {
-        if (properties == null) {
-            properties = new HashMap<>();
-        }
-        properties.put(MAGIC_LINK_PROPERTY, true);
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    @Override
-    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
-        if (!isAdded()) {
-            return;
-        }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (userBlogList != null) {
-                    Intent intent = new Intent(getActivity(), WPMainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(MagicLinkSignInActivity.MAGIC_LOGIN, true);
-
-                    getActivity().startActivity(intent);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected boolean isSmartLockAvailable() {
-        return false;
     }
 }

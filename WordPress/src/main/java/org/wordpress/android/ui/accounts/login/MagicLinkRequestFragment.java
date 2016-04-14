@@ -42,15 +42,15 @@ public class MagicLinkRequestFragment extends Fragment {
     private ProgressDialog mProgressDialog;
     private TextView mRequestEmailView;
 
-    public MagicLinkRequestFragment() {
-    }
-
     public static MagicLinkRequestFragment newInstance(String email) {
         MagicLinkRequestFragment fragment = new MagicLinkRequestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public MagicLinkRequestFragment() {
     }
 
     @Override

@@ -230,11 +230,25 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         disconnectCredentialsClient();
     }
 
-    private void disconnectCredentialsClient() {
-        if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
-            mCredentialsClient.stopAutoManage(getActivity());
-            mCredentialsClient.disconnect();
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Ensure two-step form is shown if needed
+        if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
+            setTwoStepAuthVisibility(true);
         }
+    }
+
+    /**
+     * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
+     * edit box
+     */
+    public void forceSelfHostedMode() {
+        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mAddSelfHostedButton.setVisibility(View.GONE);
+        mCreateAccountButton.setVisibility(View.GONE);
+        mSelfHosted = true;
     }
 
     protected void toggleSignInMode(){
@@ -257,35 +271,34 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Ensure two-step form is shown if needed
-        if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
-            setTwoStepAuthVisibility(true);
-        }
-    }
-
-    /**
-     * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
-     * edit box
-     */
-    public void forceSelfHostedMode() {
-        mUrlButtonLayout.setVisibility(View.VISIBLE);
-        mAddSelfHostedButton.setVisibility(View.GONE);
-        mCreateAccountButton.setVisibility(View.GONE);
-        mSelfHosted = true;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        moveBottomButtons();
-    }
-
     protected boolean isSmartLockAvailable() {
         return (isAdded() && isGooglePlayServicesAvailable()) || mCredentialsClient != null;
+    }
+
+    protected void track(Stat stat, Map<String, Boolean> properties) {
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (userBlogList != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
+            }
+        });
+    }
+
+    private void disconnectCredentialsClient() {
+        if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
+            mCredentialsClient.stopAutoManage(getActivity());
+            mCredentialsClient.disconnect();
+        }
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -360,6 +373,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
         mUsernameEditText.setText(credential.getId());
         mPasswordEditText.setText(credential.getPassword());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        moveBottomButtons();
     }
 
     @Override
@@ -528,25 +547,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         if (!isWPComLogin()) {
             track(Stat.ADDED_SELF_HOSTED_SITE, null);
         }
-    }
-
-    protected void track(Stat stat, Map<String, Boolean> properties) {
-        AnalyticsTracker.track(stat, properties);
-    }
-
-    protected void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
-        if (!isAdded()) {
-            return;
-        }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (userBlogList != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                }
-            }
-        });
     }
 
     protected final Callback mFetchBlogListCallback = new Callback() {

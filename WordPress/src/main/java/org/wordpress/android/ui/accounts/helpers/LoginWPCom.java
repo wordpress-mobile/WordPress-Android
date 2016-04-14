@@ -86,7 +86,7 @@ public class LoginWPCom extends LoginAbstract {
         }));
     }
 
-    protected void configureAccountOnSuccess(Oauth.Token token) {
+    private void configureAccountOnSuccess(Oauth.Token token) {
         if (mJetpackBlog != null) {
             // Store token in blog object for Jetpack sites
             mJetpackBlog.setApi_key(token.toString());
