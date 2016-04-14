@@ -63,7 +63,7 @@ public class MagicLinkRequestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_wpcom_magic_link, container, false);
+        View view = inflater.inflate(R.layout.magic_link_request_fragment, container, false);
         WPTextView magicLinkButton = (WPTextView) view.findViewById(R.id.magic_button);
         magicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -33,7 +33,7 @@ public class MagicLinkSentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_magic_link_sent, container, false);
+        View view = inflater.inflate(R.layout.magic_link_sent_fragment, container, false);
 
         TextView enterPasswordView = (TextView) view.findViewById(R.id.password_layout);
         enterPasswordView.setOnClickListener(new View.OnClickListener() {
