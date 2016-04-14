@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:clickable="true"
                 android:gravity="center"
-                android:text="Check your email"
+                android:text="@string/check_your_email"
                 android:layout_height="wrap_content" />
 
         </RelativeLayout>

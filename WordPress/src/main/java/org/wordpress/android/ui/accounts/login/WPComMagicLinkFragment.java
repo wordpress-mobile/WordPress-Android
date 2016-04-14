@@ -24,6 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WPComMagicLinkFragment extends Fragment {
+
+    public static final String EMAIL_KEY = "email";
+    public static final String CLIENT_ID_KEY = "client_id";
+    public static final String CLIENT_SECRET_KEY = "client_secret";
+    public static final String ERROR_KEY = "error";
+
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
         void onEnterPasswordRequested();
@@ -65,8 +71,8 @@ public class WPComMagicLinkFragment extends Fragment {
             }
         });
 
-        TextView forgotPassword = (TextView) view.findViewById(R.id.password_layout);
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
+        TextView requestPasswordView = (TextView) view.findViewById(R.id.password_layout);
+        requestPasswordView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onEnterPasswordRequested();
@@ -94,9 +100,9 @@ public class WPComMagicLinkFragment extends Fragment {
 
     private void sendMagicLinkRequest() {
         Map<String, String> params = new HashMap<>();
-        params.put("email", mEmail);
-        params.put("client_id", BuildConfig.OAUTH_APP_ID);
-        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
+        params.put(EMAIL_KEY, mEmail);
+        params.put(CLIENT_ID_KEY, BuildConfig.OAUTH_APP_ID);
+        params.put(CLIENT_SECRET_KEY, BuildConfig.OAUTH_APP_SECRET);
 
         WordPress.getRestClientUtilsV1_1().sendLoginEmail(params, new RestRequest.Listener() {
             @Override
@@ -110,9 +116,9 @@ public class WPComMagicLinkFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 HashMap<String, String> errorProperties = new HashMap<>();
-                errorProperties.put("error", error.getMessage());
+                errorProperties.put(ERROR_KEY, error.getMessage());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
-                Snackbar.make(getView(), "Currently unavailable. Please enter your password", Snackbar.LENGTH_SHORT);
+                Snackbar.make(getView(), R.string.magic_link_unavailable_error_message, Snackbar.LENGTH_SHORT);
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
                 }

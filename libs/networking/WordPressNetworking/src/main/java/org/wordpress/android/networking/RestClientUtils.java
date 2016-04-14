@@ -280,10 +280,7 @@ public class RestClientUtils {
     public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         post("auth/send-login-email", params, null, listener, errorListener);
     }
-
-    /**
-     * Is available
-     */
+    
     public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
         String path = String.format("is-available/email?q=%s", email);
         get(path, listener, errorListener);

@@ -51,7 +51,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-    private static Tweak<Boolean> showMagicLinkLogin = MixpanelAPI.booleanTweak("Show Magic Link Login", false);
+    public static final String SHOW_MAGIC_LINK_LOGIN = "Show Magic Link Login";
+    private static Tweak<Boolean> showMagicLinkLogin = MixpanelAPI.booleanTweak(SHOW_MAGIC_LINK_LOGIN, false);
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {

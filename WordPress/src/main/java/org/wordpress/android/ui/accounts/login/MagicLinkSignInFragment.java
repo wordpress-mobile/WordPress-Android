@@ -39,6 +39,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MagicLinkSignInFragment extends SignInFragment {
+
+    public static final String REASON_ERROR = "error";
+    public static final String REASON_ERROR_TAKEN = "taken";
+    public static final int MAX_EMAIL_LENGTH = 100;
+
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
     }
@@ -166,8 +171,8 @@ public class MagicLinkSignInFragment extends SignInFragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    String errorReason = response.getString("error");
-                    if (errorReason != null && errorReason.equals("taken")) {
+                    String errorReason = response.getString(REASON_ERROR);
+                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
                         mListener.onMagicLinkRequestSuccess(mUsername);
                     } else {
                         showPasswordFieldAndFocus();
@@ -190,7 +195,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
         Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(mUsername);
 
-        return matcher.find() && mUsername.length() <= 100;
+        return matcher.find() && mUsername.length() <= MAX_EMAIL_LENGTH;
     }
 
     public void attemptLoginWithMagicLink() {
@@ -210,7 +215,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
         if (properties == null) {
             properties = new HashMap<>();
         }
-        properties.put("magic-link", true);
+        properties.put(MagicLinkSignInActivity.MAGIC_LOGIN, true);
         AnalyticsTracker.track(stat, properties);
     }
 
@@ -225,7 +230,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
                 if (userBlogList != null) {
                     Intent intent = new Intent(getActivity(), WPMainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("magic-link", true);
+                    intent.putExtra(MagicLinkSignInActivity.MAGIC_LOGIN, true);
 
                     getActivity().startActivity(intent);
                 }

@@ -80,7 +80,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,7 +88,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
-    private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
@@ -100,13 +98,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     protected EditText mUrlEditText;
     protected EditText mTwoStepEditText;
 
-    protected WPTextView mSignInButton;
-    protected WPTextView mCreateAccountButton;
-    protected WPTextView mAddSelfHostedButton;
-    protected WPTextView mProgressTextSignIn;
-    protected WPTextView mForgotPassword;
-    protected WPTextView mJetpackAuthLabel;
-
     protected LinearLayout mBottomButtonsLayout;
     protected RelativeLayout mUsernameLayout;
     protected RelativeLayout mPasswordLayout;
@@ -115,24 +106,28 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     protected RelativeLayout mTwoStepLayout;
     protected LinearLayout mTwoStepFooter;
 
+    protected boolean mSelfHosted;
+    protected boolean mEmailAutoCorrected;
+    protected boolean mShouldSendTwoStepSMS;
+    protected int mErroneousLogInCount;
+    protected String mUsername;
+    protected String mPassword;
+    protected String mTwoStepCode;
+    protected String mHttpUsername;
+    protected String mHttpPassword;
+    protected Blog mJetpackBlog;
+
+    protected WPTextView mSignInButton;
+    protected WPTextView mCreateAccountButton;
+    protected WPTextView mAddSelfHostedButton;
+    protected WPTextView mProgressTextSignIn;
+    protected WPTextView mForgotPassword;
+    protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
 
-    private final EmailChecker mEmailChecker;
-
-    protected boolean mIsMagicLink;
-    protected boolean mSelfHosted;
-    private boolean mEmailAutoCorrected;
-    private boolean mShouldSendTwoStepSMS;
-    private int mErroneousLogInCount;
-    protected String mUsername;
-    private String mPassword;
-    private String mTwoStepCode;
-    private String mHttpUsername;
-    private String mHttpPassword;
-    private Blog mJetpackBlog;
-
-    private GoogleApiClient mCredentialsClient;
+    protected final EmailChecker mEmailChecker;
+    protected GoogleApiClient mCredentialsClient;
 
     public SignInFragment() {
         mEmailChecker = new EmailChecker();
@@ -232,7 +227,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        disconnectCredentialsClient();
+    }
 
+    private void disconnectCredentialsClient() {
         if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
             mCredentialsClient.stopAutoManage(getActivity());
             mCredentialsClient.disconnect();

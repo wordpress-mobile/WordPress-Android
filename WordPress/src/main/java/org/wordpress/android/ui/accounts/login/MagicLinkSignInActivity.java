@@ -16,6 +16,8 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 
 public class MagicLinkSignInActivity extends SignInActivity implements WPComMagicLinkFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+    public static final String MAGIC_LOGIN = "magic-login";
+    public static final String TOKEN_PARAMETER = "token";
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -54,12 +56,7 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
         getSignInFragment().setShouldShowPassword(true);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStackImmediate();
-        }
-
-        getSupportFragmentManager().popBackStack();
+        popBackStackToSignInFragment();
     }
 
     @Override
@@ -80,15 +77,15 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains("magic-login");
+        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains(MAGIC_LOGIN);
     }
 
     private void attemptLoginWithToken(Uri uri) {
-        getSignInFragment().setToken(uri.getQueryParameter("token"));
+        getSignInFragment().setToken(uri.getQueryParameter(TOKEN_PARAMETER));
         MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
         slideInFragment(magicLinkSignInFragment, false);
 
-        mProgressDialog = ProgressDialog.show(this, "", "Logging in", true, true, new DialogInterface.OnCancelListener() {
+        mProgressDialog = ProgressDialog.show(this, "", getString(R.string.logging_in), true, true, new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 getSignInFragment().setToken("");
@@ -100,6 +97,15 @@ public class MagicLinkSignInActivity extends SignInActivity implements WPComMagi
         Account account = AccountHelper.getDefaultAccount();
         account.setUserName(email);
         account.save();
+    }
+
+    private void popBackStackToSignInFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStackImmediate();
+        }
+
+        getSupportFragmentManager().popBackStack();
     }
 
     private void slideInFragment(Fragment fragment) {
