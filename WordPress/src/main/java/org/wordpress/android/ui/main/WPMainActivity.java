@@ -316,6 +316,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
             if (getIntent().getBooleanExtra("magic-link", false)) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }
         }

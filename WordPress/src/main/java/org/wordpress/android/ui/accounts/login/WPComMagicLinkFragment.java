@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -100,13 +102,20 @@ public class WPComMagicLinkFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 if (mListener != null) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
                     mListener.onMagicLinkSent();
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String yup = "yup";
+                HashMap<String, String> errorProperties = new HashMap<>();
+                errorProperties.put("error", error.getMessage());
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
+                Snackbar.make(getView(), "Currently unavailable. Please enter your password", Snackbar.LENGTH_SHORT);
+                if (mListener != null) {
+                    mListener.onEnterPasswordRequested();
+                }
             }
         });
     }
