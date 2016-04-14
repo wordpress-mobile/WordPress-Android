@@ -111,6 +111,7 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 if (mListener != null) {
+                    mProgressDialog.cancel();
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
                     mListener.onMagicLinkSent();
                 }
