@@ -43,6 +43,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     public static final String REASON_ERROR = "error";
     public static final String REASON_ERROR_TAKEN = "taken";
     public static final int MAX_EMAIL_LENGTH = 100;
+    public static final String MAGIC_LINK_PROPERTY = "magic_link";
 
     public interface OnMagicLinkRequestInteraction {
         void onMagicLinkRequestSuccess(String email);
@@ -215,7 +216,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
         if (properties == null) {
             properties = new HashMap<>();
         }
-        properties.put(MagicLinkSignInActivity.MAGIC_LOGIN, true);
+        properties.put(MAGIC_LINK_PROPERTY, true);
         AnalyticsTracker.track(stat, properties);
     }
 
