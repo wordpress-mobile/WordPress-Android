@@ -2,15 +2,15 @@ package org.wordpress.android.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
-public class SlidingFrameLayout extends FrameLayout {
+public class SlidingRelativeLayout extends RelativeLayout {
 
-    public SlidingFrameLayout(Context context) {
+    public SlidingRelativeLayout(Context context) {
         super(context);
     }
 
-    public SlidingFrameLayout(Context context, AttributeSet attrs) {
+    public SlidingRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
