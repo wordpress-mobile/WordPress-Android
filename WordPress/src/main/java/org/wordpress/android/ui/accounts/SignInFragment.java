@@ -49,6 +49,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -356,6 +358,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     @Override
     public void onConnected(Bundle bundle) {
         AppLog.d(T.NUX, "Google API client connected");
+        smartLockAutoFill();
     }
 
     @Override
@@ -651,7 +654,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void saveCrendentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
@@ -672,7 +675,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void deleteCredentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
