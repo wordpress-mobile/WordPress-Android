@@ -1289,7 +1289,6 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
-    <string name="me_btn_account_settings">Account Settings</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
@@ -1386,7 +1385,7 @@
     <string name="checking_purchases">Checking purchases</string>
 
     <!--Account Settings-->
-    <string name="account_settings">@string/me_btn_account_settings</string>
+    <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
