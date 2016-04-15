@@ -26,7 +26,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ActionBar actionBar = getSupportActionBar();
