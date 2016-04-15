@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 
 public class SlidingRelativeLayout extends RelativeLayout {
 
-    private float xFraction = 0;
+    private float mXFraction = 0;
 
     public SlidingRelativeLayout(Context context) {
         super(context);
@@ -17,23 +17,23 @@ public class SlidingRelativeLayout extends RelativeLayout {
         super(context, attrs);
     }
 
-    private ViewTreeObserver.OnPreDrawListener preDrawListener = null;
+    private ViewTreeObserver.OnPreDrawListener mPreDrawListener = null;
 
     // This implementation fixes the first frame not being translated: http://trickyandroid.com/fragments-translate-animation/
     public void setXFraction(float fraction) {
-        this.xFraction = fraction;
+        mXFraction = fraction;
 
         if (getWidth() == 0) {
-            if (preDrawListener == null) {
-                preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+            if (mPreDrawListener == null) {
+                mPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
-                        getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
-                        setXFraction(xFraction);
+                        getViewTreeObserver().removeOnPreDrawListener(mPreDrawListener);
+                        setXFraction(mXFraction);
                         return true;
                     }
                 };
-                getViewTreeObserver().addOnPreDrawListener(preDrawListener);
+                getViewTreeObserver().addOnPreDrawListener(mPreDrawListener);
             }
             return;
         }
@@ -43,6 +43,6 @@ public class SlidingRelativeLayout extends RelativeLayout {
     }
 
     public float getXFraction() {
-        return this.xFraction;
+        return mXFraction;
     }
 }
