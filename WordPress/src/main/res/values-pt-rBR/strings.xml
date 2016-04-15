@@ -1,10 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Vídeo</string>
+	<string name="align_none">Nenhum</string>
+	<string name="align_left">À esquerda</string>
+	<string name="align_center">Centralizar</string>
+	<string name="align_right">À direita</string>
+	<string name="theme_free">Gratuito</string>
+	<string name="theme_all">Tudo</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Chat</string>
+	<string name="post_format_gallery">Galeria</string>
+	<string name="post_format_image">Imagem</string>
+	<string name="post_format_link">Link</string>
+	<string name="post_format_quote">Citação</string>
+	<string name="post_format_standard">Padrão</string>
+	<string name="notif_events">Informações sobre cursos e eventos (online e presenciais) do WordPress.com.</string>
+	<string name="post_format_aside">Notas</string>
+	<string name="post_format_audio">Áudio</string>
+	<string name="notif_surveys">Oportunidades para participar das pesquisas e enquetes do WordPress.com.</string>
+	<string name="notif_tips">Dicas para aproveitar o máximo do WordPress.com</string>
+	<string name="notif_community">Comunidade</string>
+	<string name="replies_to_my_comments">Respostas aos meus comentários</string>
+	<string name="notif_suggestions">Sugestões</string>
+	<string name="notif_research">Pesquisa</string>
+	<string name="site_achievements">Conquistas do site</string>
+	<string name="username_mentions">Menções ao nome de usuário</string>
+	<string name="likes_on_my_posts">Curtidas nos meus posts</string>
+	<string name="site_follows">Seguidores do site</string>
+	<string name="likes_on_my_comments">Curtidas nos meus comentários</string>
+	<string name="comments_on_my_site">Comentários no meu site</string>
+	<string name="site_settings_list_editor_summary_other">%d itens</string>
+	<string name="site_settings_list_editor_summary_one">1 item</string>
+	<string name="approve_auto_if_previously_approved">Comentários de usuários conhecidos</string>
+	<string name="approve_auto">Todos os usuários</string>
+	<string name="approve_manual">Sem comentários</string>
+	<string name="site_settings_paging_summary_other">%d comentários por página</string>
+	<string name="site_settings_paging_summary_one">1 comentário por página</string>
+	<string name="site_settings_multiple_links_summary_other">Exige aprovação para mais de %d links</string>
+	<string name="site_settings_multiple_links_summary_one">Exige aprovação para mais de 1 link</string>
+	<string name="site_settings_multiple_links_summary_zero">Exige aprovação para mais de 0 links</string>
+	<string name="detail_approve_auto">Aprovar automaticamente todos os comentários.</string>
+	<string name="detail_approve_auto_if_previously_approved">Aprovar automaticamente se o usuário tiver um comentário aprovado anteriormente.</string>
+	<string name="detail_approve_manual">Exigir aprovação manual para todos os comentários.</string>
+	<string name="filter_trashed_posts">Na lixeira</string>
+	<string name="days_quantity_one">1 dia</string>
+	<string name="days_quantity_other">%d dias</string>
+	<string name="filter_published_posts">Publicado</string>
+	<string name="filter_draft_posts">Rascunhos</string>
+	<string name="filter_scheduled_posts">Agendado</string>
+	<string name="pending_email_change_snackbar">Clique no link de verificação no email enviado para %1$s para confirmar seu novo endereço</string>
+	<string name="primary_site">Site principal</string>
+	<string name="web_address">Endereço da web</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Falha ao fazer upload de algumas mídias. Tente fazer o upload novamente ou exclua as mídias.</string>
+	<string name="editor_toast_uploading_please_wait">Você está fazendo upload de mídia no momento. Aguarde até que o processo seja concluído.</string>
+	<string name="error_refresh_comments_showing_older">Não foi possível atualizar os comentários no momento. Comentários mais antigos estão sendo exibidos</string>
+	<string name="editor_post_settings_set_featured_image">Configurar imagem destacada</string>
+	<string name="editor_post_settings_featured_image">Imagem destacada</string>
+	<string name="new_editor_promo_desc">O aplicativo do WordPress para Android agora inclui um belo visual repaginado.\n editor. Experimente criando um novo post.</string>
+	<string name="new_editor_promo_title">Novo editor</string>
+	<string name="new_editor_promo_button_label">Ótimo, obrigado!</string>
+	<string name="visual_editor_enabled">Editor visual ativado</string>
+	<string name="editor_content_placeholder">Compartilhe sua história aqui...</string>
+	<string name="editor_page_title_placeholder">Título da página</string>
+	<string name="editor_post_title_placeholder">Título do post</string>
+	<string name="email_address">Endereço de email</string>
+	<string name="preference_show_visual_editor">Exibir editor visual</string>
+	<string name="dlg_sure_to_delete_comments">Excluir estes comentários permanentemente?</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comment">Excluir este comentário permanentemente?</string>
+	<string name="mnu_comment_delete_permanently">Excluir</string>
+	<string name="comment_deleted_permanently">Comentário excluído</string>
+	<string name="mnu_comment_untrash">Restaurar</string>
+	<string name="comments_empty_list_filtered">Sem comentários %s</string>
+	<string name="could_not_load_page">Não foi possível carregar a página</string>
+	<string name="comment_status_all">Tudo</string>
+	<string name="interface_language">Idioma da interface</string>
+	<string name="off">Desativado</string>
+	<string name="about_the_app">Sobre o aplicativo</string>
+	<string name="error_post_my_profile">Não foi possível salvar seu perfil</string>
+	<string name="error_fetch_account_settings">Não foi possível recuperar as configurações da sua conta</string>
+	<string name="error_fetch_my_profile">Não foi possível recuperar seu perfil</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, entendido</string>
+	<string name="stats_widget_promo_desc">Adicione o widget à sua tela inicial para acessar as Estatísticas com apenas um clique.</string>
+	<string name="stats_widget_promo_title">Widget de Estatísticas para tela inicial</string>
+	<string name="site_settings_unknown_language_code_error">Código de idioma não reconhecido</string>
+	<string name="site_settings_threading_dialog_description">Permitir que os comentários sejam agrupados em tópicos.</string>
+	<string name="site_settings_threading_dialog_header">Agrupar até</string>
+	<string name="remove">Remover</string>
+	<string name="search">Buscar</string>
+	<string name="add_category">Adicionar categoria</string>
+	<string name="disabled">Desativado</string>
+	<string name="site_settings_image_original_size">Tamanho original</string>
+	<string name="about_me_hint">Algumas palavras sobre você...</string>
 	<string name="about_me">Sobre mim</string>
+	<string name="public_display_name_hint">O nome de exibição será o seu nome de usuário se não for configurado</string>
+	<string name="public_display_name">Nome para exibição pública</string>
 	<string name="first_name">Nome</string>
 	<string name="last_name">Sobrenome</string>
 	<string name="my_profile">Meu perfil</string>
+	<string name="site_privacy_public_desc">Permitir que mecanismos de busca indexem este site</string>
+	<string name="site_privacy_hidden_desc">Evitar que mecanismos de busca indexem este site</string>
+	<string name="site_privacy_private_desc">Quero que meu site fique privado, visível apenas para os usuários que eu escolher</string>
+	<string name="cd_related_post_preview_image">Imagem de visualização do post relacionado</string>
 	<string name="error_post_remote_site_settings">Não foi possível salvar as informações do site</string>
+	<string name="error_fetch_remote_site_settings">Não foi possível recuperar as informações do site</string>
+	<string name="error_media_upload_connection">Ocorreu um erro de conexão durante o envio de mídia</string>
+	<string name="site_settings_disconnected_toast">Sem conexão, edição desabilitada.</string>
+	<string name="site_settings_unsupported_version_error">Versão do WordPress não suportada</string>
+	<string name="site_settings_multiple_links_dialog_description">Exigir aprovação para comentários que incluem mais do que este número de links.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Fechar automaticamente</string>
+	<string name="site_settings_close_after_dialog_description">Encerrar automaticamente comentários nos artigos.</string>
+	<string name="site_settings_paging_dialog_description">Dividir tópicos de comentários em várias páginas.</string>
+	<string name="site_settings_paging_dialog_header">Comentários por página</string>
+	<string name="site_settings_close_after_dialog_title">Encerrar comentários</string>
+	<string name="site_settings_blacklist_description">Quando um comentário tiver uma destas palavras em seu conteúdo, nome, URL, email ou IP, ele será marcado como spam. Você pode inserir partes de palavras, então "press" corresponderá a "WordPress".</string>
+	<string name="site_settings_hold_for_moderation_description">Quando um comentário contiver qualquer uma destas palavras em seu conteúdo, nome, URL, endereço de email ou IP, o mesmo será retido na fila de moderação. Você pode inserir partes de palavras, então "press" corresponderá a "WordPress".</string>
+	<string name="site_settings_list_editor_input_hint">Insira uma palavra ou frase</string>
+	<string name="site_settings_list_editor_no_items_text">Nenhum item</string>
+	<string name="site_settings_learn_more_caption">É possível substituir essas configurações para posts individuais.</string>
+	<string name="site_settings_rp_preview3_site">em "Upgrade"</string>
+	<string name="site_settings_rp_preview3_title">Foco da atualização: VideoPress para casamentos</string>
+	<string name="site_settings_rp_preview2_site">em "Aplicativos"</string>
+	<string name="site_settings_rp_preview2_title">O aplicativo WordPress para Android foi melhorado</string>
+	<string name="site_settings_rp_preview1_site">em "Mobile"</string>
+	<string name="site_settings_rp_preview1_title">Grande atualização para iPhone/iPad disponível</string>
+	<string name="site_settings_rp_show_images_title">Mostrar imagens</string>
+	<string name="site_settings_rp_show_header_title">Mostrar cabeçalho</string>
+	<string name="site_settings_rp_switch_summary">Posts Relacionados exibe conteúdo relevante do seu site abaixo dos seus posts.</string>
+	<string name="site_settings_rp_switch_title">Mostrar posts relacionados</string>
+	<string name="site_settings_delete_site_hint">Remove os dados do seu site do aplicativo</string>
+	<string name="site_settings_blacklist_hint">Comentários que corresponderem a um filtro serão marcados como spam</string>
+	<string name="site_settings_moderation_hold_hint">Comentários que corresponderem a um filtro serão colocados em uma fila de moderação</string>
+	<string name="site_settings_multiple_links_hint">Ignora o limite de links de usuários conhecidos</string>
+	<string name="site_settings_whitelist_hint">O autor do comentário tem que ter um comentário aprovado anteriormente</string>
+	<string name="site_settings_user_account_required_hint">Usuários devem estar registrados e logados para comentar</string>
+	<string name="site_settings_identity_required_hint">O autor do comentário tem que preencher o nome e email</string>
+	<string name="site_settings_manual_approval_hint">Os comentários devem ser aprovados manualmente</string>
+	<string name="site_settings_paging_hint">Exibir comentários em grupos de tamanho especificado</string>
+	<string name="site_settings_threading_hint">Permitir comentários agrupados em uma certa profundidade</string>
+	<string name="site_settings_sort_by_hint">Determina a ordem de exibição dos comentários</string>
+	<string name="site_settings_close_after_hint">Desabilitar comentários após um tempo específico</string>
+	<string name="site_settings_receive_pingbacks_hint">Permitir notificações de link de outros blogs</string>
+	<string name="site_settings_send_pingbacks_hint">Tentar notificar blogs com links a partir do artigo</string>
+	<string name="site_settings_allow_comments_hint">Permitir que leitores publiquem comentários</string>
+	<string name="site_settings_discussion_hint">Exibir e alterar as configurações de discussão dos sites</string>
+	<string name="site_settings_more_hint">Exibir todas as configurações de Discussão disponíveis</string>
+	<string name="site_settings_related_posts_hint">Mostrar ou ocultar posts relacionados no leitor</string>
+	<string name="site_settings_upload_and_link_image_hint">Permitir que imagens sejam sempre enviadas no tamanho máximo</string>
+	<string name="site_settings_image_width_hint">Redimensiona as imagens nos posts para esta largura</string>
+	<string name="site_settings_format_hint">Define o formato do novo post</string>
+	<string name="site_settings_category_hint">Define a categoria do novo post</string>
+	<string name="site_settings_location_hint">Adicionar automaticamente os dados de localização aos posts</string>
+	<string name="site_settings_password_hint">Alterar sua senha</string>
+	<string name="site_settings_username_hint">Conta de usuário atual</string>
+	<string name="site_settings_language_hint">Idioma em que este blog é normalmente escrito</string>
+	<string name="site_settings_privacy_hint">Controle quem pode ver seu site</string>
+	<string name="site_settings_address_hint">No momento, você não pode alterar o endereço</string>
+	<string name="site_settings_tagline_hint">Uma breve descrição ou uma frase de efeito para descrever o seu blog</string>
+	<string name="site_settings_title_hint">Em poucas palavras, explique sobre o que é este site</string>
+	<string name="site_settings_whitelist_known_summary">Comentários de usuários conhecidos</string>
+	<string name="site_settings_whitelist_all_summary">Comentários de todos os usuários</string>
+	<string name="site_settings_threading_summary">%d níveis</string>
+	<string name="site_settings_privacy_private_summary">Privado</string>
+	<string name="site_settings_privacy_hidden_summary">Oculto</string>
+	<string name="site_settings_privacy_public_summary">Público</string>
+	<string name="site_settings_delete_site_title">Excluir site</string>
+	<string name="site_settings_blacklist_title">Lista negra</string>
+	<string name="site_settings_moderation_hold_title">Aguardar moderação</string>
+	<string name="site_settings_multiple_links_title">Links nos comentários</string>
+	<string name="site_settings_whitelist_title">Aprovar automaticamente</string>
+	<string name="site_settings_threading_title">Threading</string>
+	<string name="site_settings_paging_title">Paginação</string>
+	<string name="site_settings_sort_by_title">Ordenar por</string>
+	<string name="site_settings_account_required_title">Os usuários devem estar conectados</string>
+	<string name="site_settings_identity_required_title">É necessário incluir nome e email</string>
+	<string name="site_settings_receive_pingbacks_title">Receber Pingbacks</string>
+	<string name="site_settings_send_pingbacks_title">Enviar Pingbacks</string>
+	<string name="site_settings_allow_comments_title">Habilitar comentários</string>
+	<string name="site_settings_default_format_title">Formato padrão</string>
+	<string name="site_settings_default_category_title">Categoria padrão</string>
+	<string name="site_settings_location_title">Habilitar localização</string>
+	<string name="site_settings_address_title">Endereço</string>
+	<string name="site_settings_title_title">Título do site</string>
+	<string name="site_settings_tagline_title">Tagline</string>
+	<string name="site_settings_this_device_header">Este dispositivo</string>
+	<string name="site_settings_discussion_new_posts_header">Padrões para novos posts</string>
+	<string name="site_settings_writing_header">Escrevendo</string>
+	<string name="site_settings_account_header">Conta</string>
+	<string name="site_settings_general_header">Geral</string>
+	<string name="newest_first">Mais novos primeiro</string>
+	<string name="related_posts">Posts relacionados</string>
+	<string name="comments">Comentários</string>
+	<string name="discussion">Discussão</string>
+	<string name="privacy">Privacidade</string>
+	<string name="close_after">Encerrar após</string>
+	<string name="oldest_first">Mais antigos primeiro</string>
+	<string name="media_error_no_permission_upload">Você não tem permissão para enviar mídia para o site</string>
+	<string name="never">Nunca</string>
+	<string name="unknown">Desconhecido</string>
 	<string name="reader_err_get_post_not_found">Este post não existe mais</string>
 	<string name="reader_err_get_post_not_authorized">Você não possui autorização para ver este post</string>
 	<string name="reader_err_get_post_generic">Falha ao carregar esse post</string>
@@ -223,6 +418,8 @@
 	<string name="tab_title_site_videos">Vídeos do site</string>
 	<string name="tab_title_site_images">Imagens do site</string>
 	<string name="media_picker_title">Selecionar mídia</string>
+	<string name="media_details_label_file_type">Tipo de arquivo</string>
+	<string name="media_details_label_file_name">Nome do arquivo</string>
 	<string name="error_notification_open">Não foi possível abrir a notificação</string>
 	<string name="publisher">Editor:</string>
 	<string name="reader_empty_posts_request_failed">Não foi possível recuperar os posts</string>
@@ -368,11 +565,9 @@
 	<string name="hs__invalid_email_error">Digite um email válido</string>
 	<string name="add_location">Adicionar localização</string>
 	<string name="current_location">Localização atual</string>
-	<string name="your_signature">Sua assinatura:</string>
 	<string name="search_location">Pesquisa</string>
 	<string name="search_current_location">Localizar</string>
 	<string name="edit_location">   Editar</string>
-	<string name="preference_privacy">Privacidade</string>
 	<string name="preference_send_usage_stats">Enviar estatísticas</string>
 	<string name="preference_send_usage_stats_summary">Envie estatísticas de uso automaticamente para nos ajudar a melhorar o WordPress para Android</string>
 	<string name="update_verb">Atualizar</string>
@@ -412,7 +607,6 @@
 	<string name="adding_cat_failed">Problema ao adicionar categoria</string>
 	<string name="could_not_remove_account">Não foi possível remover o site</string>
 	<string name="stats_bar_graph_empty">Nenhuma estatística disponível</string>
-	<string name="invalid_url_message">Verifique se a URL do blog inserida é válida</string>
 	<string name="error_generic">Ocorreu um erro</string>
 	<string name="error_edit_comment">Ocorreu um erro ao editar o comentário</string>
 	<string name="error_load_comment">Não foi possível carregar o comentário</string>
@@ -422,8 +616,6 @@
 	<string name="cat_name_required">O campo de nome da categoria é obrigatório</string>
 	<string name="category_automatically_renamed">O nome da categoria %1$s não é válido. Ela foi renomeada para %2$s.</string>
 	<string name="no_account">Não foi encontrada uma conta WordPress, adicione uma conta e tente novamente</string>
-	<string name="auto_sharing_preference_reset">Configurações de autocompartilhamento redefinidas</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">O blog selecionado previamente não é mais visível</string>
 	<string name="theme_fetch_failed">Falha ao buscar temas</string>
 	<string name="theme_set_failed">Falha ao definir tema</string>
 	<string name="sdcard_message">Um cartão SD montado é necessário para fazer upload de mídia</string>
@@ -567,6 +759,7 @@
 	<string name="blog_name_must_include_letters">O endereço do site deve ter pelo menos uma letra (a-z)</string>
 	<string name="blog_title_invalid">Título do site inválido</string>
 	<string name="notifications_empty_all">Nenhuma notificação... ainda.</string>
+	<string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
 	<string name="deleting_page">Excluindo página</string>
 	<string name="deleting_post">Excluindo post</string>
 	<string name="share_url_post">Compartilhar post</string>
@@ -584,9 +777,6 @@
 	<string name="download">Fazendo download de mídia</string>
 	<string name="comment_spammed">Comentário marcado como spam</string>
 	<string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
-	<string name="share_preference_title">Compartilhar no WordPress</string>
-	<string name="reset_auto_share_preference">Redefinir configurações de auto-compartilhamento</string>
-	<string name="always_use_these_settings_to_share">Sempre usar essa configuração</string>
 	<string name="select_time">Selecione o tempo</string>
 	<string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
 	<string name="select_date">Selecione a data</string>
@@ -676,7 +866,6 @@
 	<string name="theme_activating_button">Ativando</string>
 	<string name="themes_features_label">Recursos</string>
 	<string name="media_gallery_type_tiled">Mosaico</string>
-	<string name="media_no_video_title">Videopress não esta disponivel</string>
 	<string name="passcode_enter_passcode">Entre seu PIN</string>
 	<string name="passcode_enter_old_passcode">Entre seu PIN antigo</string>
 	<string name="passcode_re_enter_passcode">Entre seu PIN novamente</string>
@@ -684,14 +873,12 @@
 	<string name="passcode_set">Definir PIN</string>
 	<string name="custom_date">Data personalizada</string>
 	<string name="media_gallery_image_order_random">Aleatório</string>
-	<string name="menu_search">Busca</string>
 	<string name="theme_auth_error_title">Falhou ao obter temas</string>
 	<string name="theme_set_success">Tema configurado com sucesso!</string>
 	<string name="passcode_turn_off">Desligar o bloqueio do código PIN</string>
 	<string name="passcode_turn_on">Ligar o bloqueio do código PIN</string>
 	<string name="passcode_preference_title">Código PIN</string>
 	<string name="passcode_manage">Gerenciar seu código PIN.</string>
-	<string name="media_no_video_message">Obtenha o VideoPress atualizado para fazer upload de vídeos!</string>
 	<string name="stats_view_visitors_and_views">Visitantes e Visualizações</string>
 	<string name="upload">Enviar</string>
 	<string name="notifications">Notificações</string>
@@ -703,8 +890,6 @@
 	<string name="loading">Carregando...</string>
 	<string name="httpuser">Usuário HTTP</string>
 	<string name="httppassword">Senha HTTP</string>
-	<string name="post_signature">Assinatura</string>
-	<string name="add_tagline">Adicionar uma assinatura a novos posts</string>
 	<string name="error_media_upload">Ocorreu um erro durante o envio de mídia</string>
 	<string name="post_content">Conteúdo (Toque para adicionar texto e mídia)</string>
 	<string name="publish_date">Publicar</string>
@@ -727,14 +912,12 @@
 	<string name="blogusername">usrenamedoblog</string>
 	<string name="scaled_image">Largura da imagem</string>
 	<string name="upload_scaled_image">Enviar e link para a imagem redimensionada</string>
-	<string name="remove_location">Remover</string>
 	<string name="scheduled">Agendado</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Publicado do WordPress para Android</string>
 	<string name="version">Versão</string>
 	<string name="tos">Termos de Serviço</string>
 	<string name="app_title">WordPress para Android</string>
-	<string name="about">Sobre</string>
+	<string name="max_thumbnail_px_width">Largura padrão de imagem</string>
 	<string name="image_alignment">Alinhamento</string>
 	<string name="refresh">Atualizar</string>
 	<string name="untitled">Sem Título</string>
@@ -778,59 +961,4 @@
 	<string name="reply">Responder</string>
 	<string name="preview">Pré-visualizar</string>
 	<string name="notification_settings">Configurações de notificações</string>
-	<string-array name="alignment_array">
-		<item>Nenhum</item>
-		<item>Esquerda</item>
-		<item>Centralizado</item>
-		<item>Direita</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Comentários no meu site</item>
-		<item>Curtidas nos meus comentários</item>
-		<item>Curtidas nos meus posts</item>
-		<item>Seguidores do site</item>
-		<item>Conquistas do site</item>
-		<item>Menções ao nome de usuário</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Respostas aos meus comentários</item>
-		<item>Curtidas nos meus comentários</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Sugestões</item>
-		<item>Pesquisa</item>
-		<item>Comunidade</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Dicas para aproveitar ao máximo o WordPress.com.</item>
-		<item>Oportunidades para participar das pesquisas e enquetes do WordPress.com.</item>
-		<item>Informações sobre cursos e eventos (online e presenciais) do WordPress.com.</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Publicado</item>
-		<item>Rascunhos</item>
-		<item>Agendado</item>
-		<item>Na lixeira</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Nota</item>
-		<item>Áudio</item>
-		<item>Chat</item>
-		<item>Galeria</item>
-		<item>Imagem</item>
-		<item>Link</item>
-		<item>Citação</item>
-		<item>Padrão</item>
-		<item>Status</item>
-		<item>Vídeo</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Seu site está visível para todos e pode ser indexado por mecanismos de busca</item>
-		<item>Seu site está visível para todos mas solicita aos mecanismos de busca para não indexá-lo</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Gratuito</item>
-		<item>Todos</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

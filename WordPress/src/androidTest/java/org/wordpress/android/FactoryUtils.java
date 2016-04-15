@@ -14,6 +14,15 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.lang.reflect.Field;
 
 public class FactoryUtils {
+    public static void clearFactories() {
+        // clear factories
+        forceFactoryInjection(XMLRPCFactory.class, null);
+        forceFactoryInjection(RestClientFactory.class, null);
+        forceFactoryInjection(OAuthAuthenticatorFactory.class, null);
+        forceFactoryInjection(SystemServiceFactory.class, null);
+        AppLog.v(T.TESTS, "Null factories set");
+    }
+
     public static void initWithTestFactories() {
         // create test factories
         forceFactoryInjection(XMLRPCFactory.class, new XMLRPCFactoryTest());

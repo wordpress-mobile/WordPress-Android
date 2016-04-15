@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_post_my_profile">Nid oedd modd cadw eich proffil</string>
+	<string name="error_fetch_account_settings">Methu adfer gosodiadau eich cyfrif</string>
+	<string name="error_fetch_my_profile">Methu adfer eich proffil</string>
+	<string name="stats_widget_promo_ok_btn_label">Iawn, rwy\'n ei ddeall</string>
+	<string name="stats_widget_promo_desc">Ychwanegwch y teclyn i\'ch sgrin cartref er mwyn cael mynediad at eich Ystadegau mewn un clic.</string>
+	<string name="stats_widget_promo_title">Teclyn Ystadegau\'r Sgrin Cartref</string>
+	<string name="site_settings_unknown_language_code_error">Heb adnabd y cod iaith</string>
+	<string name="site_settings_threading_dialog_description">Caniatáu sylwadau i\'w nythu mewn edafedd.</string>
+	<string name="site_settings_threading_dialog_header">Edafedd hyd at</string>
+	<string name="remove">Tynnu</string>
+	<string name="search">Chwilio</string>
+	<string name="add_category">Ychwanegu categori</string>
+	<string name="disabled">Analluogwyd</string>
 	<string name="site_settings_image_original_size">Maint Gwreiddiol</string>
 	<string name="about_me_hint">Ychydig o eiriau amdanoch chi…</string>
 	<string name="public_display_name_hint">Bydd yr enw dangos yn defnyddio eich enw defnyddiwr os yw wedi ei osod</string>
@@ -473,11 +486,9 @@
 	<string name="hs__conversation_header">Cefnogaeth drwy sgwrs</string>
 	<string name="add_location">Ychwanegwch leoliad</string>
 	<string name="current_location">Lleoliad cyfredol</string>
-	<string name="your_signature">Eich llofnod:</string>
 	<string name="search_location">Chwilio</string>
 	<string name="edit_location">Golygu</string>
 	<string name="search_current_location">Lleoli</string>
-	<string name="preference_privacy">Preifatrwydd</string>
 	<string name="preference_send_usage_stats">Anfon ystadegau</string>
 	<string name="preference_send_usage_stats_summary">Anfonwch ystadegau defnydd i\'n cynorthwyo i wella WordPress Android</string>
 	<string name="update_verb">Diweddaru</string>
@@ -548,10 +559,7 @@
 	<string name="sdcard_message">Mae angen cerdyn SD gosodedig i lwytho cyfryngau</string>
 	<string name="stats_empty_comments">Dim sylwadau eto</string>
 	<string name="stats_bar_graph_empty">Dim ystadegau gael</string>
-	<string name="invalid_url_message">Gwiriwch fod URL y blog yn ddilys</string>
 	<string name="reply_failed">Methodd yr ateb</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Nid yw\'r blog a ddewiswyd yn flaenorol yn weladwy</string>
-	<string name="auto_sharing_preference_reset">Ailosod gosodiadau awto-rannu</string>
 	<string name="cat_name_required">Mae angen maes enw categori</string>
 	<string name="category_automatically_renamed">Nid yw enw categori %1$s yn ddilys. Mae wedi ei ail-enwi i%2$s.</string>
 	<string name="no_account">Heb ganfod cyfrif WordPress, ychwanegwch cyfrif a cheisiwch eto</string>
@@ -681,9 +689,6 @@
 	<string name="creating_your_account">Creu eich cyfrif</string>
 	<string name="error_refresh_media">Aeth rhywbeth o\'i le wrth adnewyddu\'r llyfrgell cyfryngau. Rhowch gynnig arall arni\'n nes ymlaen.</string>
 	<string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
-	<string name="always_use_these_settings_to_share">Defnyddiwch y gosodiadau hyn bob tro</string>
-	<string name="reset_auto_share_preference">Ailosod gosodiadau auto-rannu</string>
-	<string name="share_preference_title">Rhannu i WordPress</string>
 	<string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
 	<string name="reader_toast_err_get_comment">Methu adfer y sylw hwn</string>
 	<string name="reader_label_reply">Ateb</string>
@@ -747,7 +752,6 @@
 	<string name="passcode_enter_passcode">Rhowch eich PIN</string>
 	<string name="passcode_enter_old_passcode">Rhowch eich hen PIN</string>
 	<string name="passcode_manage">Rheoli clo PIN</string>
-	<string name="menu_search">Chwilio</string>
 	<string name="stats_totals_plays">Chwarae</string>
 	<string name="stats_totals_clicks">Cliciau</string>
 	<string name="stats_totals_views">Golwg</string>
@@ -782,9 +786,7 @@
 	<string name="media_edit_title_text">Teitl</string>
 	<string name="media_edit_caption_text">Egluryn</string>
 	<string name="media_edit_description_text">Disgrifiad</string>
-	<string name="media_no_video_message">Estynnwch VideoPress er mwyn llwytho fideo!</string>
 	<string name="media_gallery_type_slideshow">Sioe sleidiau</string>
-	<string name="media_no_video_title">Nid yw VideoPress ar gael</string>
 	<string name="media_gallery_type_circles">Cylchoedd</string>
 	<string name="media_gallery_type_tiled">Teils</string>
 	<string name="media_gallery_type_squares">Sgwariau</string>
@@ -808,8 +810,6 @@
 	<string name="loading">Llwytho…</string>
 	<string name="httppassword">Cyfrinair HTTP</string>
 	<string name="httpuser">Enw defnyddiwr HTTP</string>
-	<string name="post_signature">Llofnod cofnod</string>
-	<string name="add_tagline">Ychwanegu llofnod i gofnodion newydd</string>
 	<string name="error_media_upload">Digwyddodd gwall wrth lwytho\'r cyfrwng</string>
 	<string name="publish_date">Cyhoeddi</string>
 	<string name="content_description_add_media">Ychwanegu cyfrwng</string>
@@ -832,14 +832,11 @@
 	<string name="ok">Iawn</string>
 	<string name="scaled_image">Lled y ddelwedd graddedig</string>
 	<string name="upload_scaled_image">Llwytho a chysylltu â delwedd graddedig</string>
-	<string name="remove_location">Tynnu</string>
 	<string name="scheduled">Amserlennwyd</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Cofnod o WordPress ar gyfer Android</string>
 	<string name="version">Fersiwn</string>
 	<string name="tos">Amodau Gwasanaeth</string>
 	<string name="app_title">WordPress ar gyfer Android</string>
-	<string name="about">Ynghylch</string>
 	<string name="max_thumbnail_px_width">Lled Rhagosodedig y Ddelwedd</string>
 	<string name="image_alignment">Alinio</string>
 	<string name="refresh">Adnewyddu</string>
@@ -884,82 +881,4 @@
 	<string name="cancel">Diddymu</string>
 	<string name="error">Gwall</string>
 	<string name="notification_settings">Gosodiadau Hysbysiadau</string>
-	<string-array name="alignment_array">
-		<item>Dim</item>
-		<item>Chwith</item>
-		<item>Canol</item>
-		<item>De</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Sylwadau ar fy ngwefan</item>
-		<item>Hoffi fy sylwadau</item>
-		<item>Hoffi fy nghofnodion</item>
-		<item>Gwefan yn dilyn</item>
-		<item>Cyraeddiadau\'r wefan</item>
-		<item>Crybwylliad enw defnyddiwr</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Atebion i fy sylwadau</item>
-		<item>Hoffi fy sylwadau</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Awgrymiadau</item>
-		<item>Ymchwil</item>
-		<item>Cymuned</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Cyngor ar sut i gael y gorau o WordPress.com.</item>
-		<item>Cyfleoedd i gymryd rhan mewn ymchwil ac arolygon WordPress.com.</item>
-		<item>Gwybodaeth am gyrsiau a digwyddiadau WordPress.com (ar-lein ac mewn person).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Cyhoeddwyd</item>
-		<item>Drafftiau</item>
-		<item>Amserlenwyd</item>
-		<item>Sbwriel</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Neilleb</item>
-		<item>Sain</item>
-		<item>Sgwrs</item>
-		<item>Oriel</item>
-		<item>Delwedd</item>
-		<item>Dolen</item>
-		<item>Dyfynnu</item>
-		<item>Safonol</item>
-		<item>Statws</item>
-		<item>Fideo</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Mae eich gwefan yn weladwy i bawb, ac o bosib wedi ei fynegeio gan beiriannau chwilio</item>
-		<item>Mae eich gwefan yn weladwy i bawb, ond mae\'n gofyn i beiriannau chwilio i beidio mynegeio eich gwefan</item>
-		<item>Mae eich gwefan yn weladwy i chi yn unig a defnyddwyr rydych wedi eu cymeradwyo</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Bydd angen cymeradwyaeth â llaw ar gyfer sylwadau pawb.</item>
-		<item>Cymeradwyo\'n awtomatig os yw\'r defnyddiwr eisoes wedi cael sylw wedi ei gymeradwyo.</item>
-		<item>Cymeradwyo\'n awtomatig sylwadau pawb.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Dim sylwadau</item>
-		<item>Sylwadau defnyddwyr hysbys</item>
-		<item>Pob defnyddiwr</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Dim</item>
-		<item>Dwy lefel</item>
-		<item>Tair lefel</item>
-		<item>Pedair lefel</item>
-		<item>Pum lefel</item>
-		<item>Chwe lefel</item>
-		<item>Saith lefel</item>
-		<item>Wyth lefel</item>
-		<item>Naw lefel</item>
-		<item>Deg lefel</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Am Ddim</item>
-		<item>Y Cyfan</item>
-		<item>Premiwm</item>
-	</string-array>
 </resources>

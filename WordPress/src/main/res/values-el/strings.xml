@@ -1,5 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Κατάσταση</string>
+	<string name="post_format_video">Βίντεο</string>
+	<string name="align_none">Καμία</string>
+	<string name="align_left">Αριστερά</string>
+	<string name="align_center">Κέντρο</string>
+	<string name="align_right">Δεξιά</string>
+	<string name="theme_free">Δωρεάν</string>
+	<string name="theme_all">Όλα</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Συζήτηση</string>
+	<string name="post_format_gallery">Βιβλιοθήκη πολυμέσων</string>
+	<string name="post_format_image">Εικόνα</string>
+	<string name="post_format_link">Σύνδεσμος</string>
+	<string name="post_format_quote">Παράθεση</string>
+	<string name="post_format_standard">Κανονικό</string>
+	<string name="notif_events">Πληροφορίες για μαθήματα και εκδηλώσεις του WordPress.com (διαδικτυακά και φυσικά).</string>
+	<string name="post_format_audio">Ήχος</string>
+	<string name="notif_surveys">Ευκαιρίες συμμετοχής σε έρευνες και δημοσκοπήσεις του WordPress.com.</string>
+	<string name="notif_tips">Συμβουλές για να αξιοποιήσετε στο μέγιστο το WordPress.com.</string>
+	<string name="notif_community">Κοινότητα</string>
+	<string name="replies_to_my_comments">Απαντήσεις στα σχόλιά μου</string>
+	<string name="notif_suggestions">Προτάσεις</string>
+	<string name="notif_research">Έρευνα</string>
+	<string name="site_achievements">Επιτεύγματα του ιστότοπου</string>
+	<string name="username_mentions">Αναφορές του ονόματος χρήστη</string>
+	<string name="likes_on_my_posts">"Μου αρέσει" στα άρθρα μου</string>
+	<string name="site_follows">Ακόλουθοι ιστότοπου</string>
+	<string name="likes_on_my_comments">"Μου αρέσει" στα σχόλιά μου</string>
+	<string name="comments_on_my_site">Σχόλια στον ιστότοπό μου</string>
+	<string name="site_settings_list_editor_summary_other">%d αντικείμενα</string>
+	<string name="site_settings_list_editor_summary_one">1 αντικείμενο</string>
+	<string name="approve_auto_if_previously_approved">Σχόλια γνωστών χρηστών</string>
+	<string name="approve_auto">Όλοι οι χρήστες</string>
+	<string name="approve_manual">Δεν υπάρχουν σχόλια</string>
+	<string name="site_settings_paging_summary_other">%d σχόλια ανά σελίδα</string>
+	<string name="site_settings_paging_summary_one">1 σχόλιο ανά σελίδα</string>
+	<string name="site_settings_multiple_links_summary_other">Απαιτείται έγκριση για περισσότερους από %d συνδέσμους</string>
+	<string name="site_settings_multiple_links_summary_one">Απαιτείται έγκριση για περισσότερους από 1 σύνδεσμο</string>
+	<string name="site_settings_multiple_links_summary_zero">Απαιτείται έγκριση για περισσότερους από 0 συνδέσμους</string>
+	<string name="detail_approve_auto">Αυτόματη έγκριση όλων των σχολίων</string>
+	<string name="detail_approve_auto_if_previously_approved">Αυτόματη έγκριση αν ο χρήστης έχει προηγούμενο εγκεκριμένο σχόλιο</string>
+	<string name="detail_approve_manual">Απαιτείται χειροκίνητη έγκριση για όλα τα σχόλια.</string>
+	<string name="filter_trashed_posts">Διαγραμμένα</string>
+	<string name="days_quantity_one">1 ημέρα</string>
+	<string name="days_quantity_other">%d ημέρες</string>
+	<string name="filter_published_posts">Δημοσιευμένα</string>
+	<string name="filter_draft_posts">Προσχέδια</string>
+	<string name="filter_scheduled_posts">Προγραμματισμένα</string>
+	<string name="pending_email_change_snackbar">Κάντε κλικ στο σύνδεσμο επιβεβαίωσης στο μήνυμα e-mail που στάλθηκε στο %1$s για να επιβεβαιώσετε τη νέα σας διεύθυνση.</string>
+	<string name="primary_site">Κύριος ιστότοπος</string>
+	<string name="web_address">Διεύθυνση Ιστότοπου</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Κάποιες μεραφορτώσεις πολυμέσων απέτυχαν. Παρακαλώ δοκιμάστε πάλι ή διαγράψτε τις.</string>
+	<string name="editor_toast_uploading_please_wait">Αυτή τη στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
+	<string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
+	<string name="editor_post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
+	<string name="editor_post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
+	<string name="new_editor_promo_desc">Η εφαρμογή του WordPress για Android περιλαμβάνει τώρα έναν όμορφο νέο\nεπεξεργαστή. Δοκιμάστε τον δημιουργώντας ένα νέο άρθρο.</string>
+	<string name="new_editor_promo_title">Ολοκαίνουριος επεξεργαστής κειμένου</string>
+	<string name="new_editor_promo_button_label">Σπουδαία, ευχαριστούμε!</string>
+	<string name="visual_editor_enabled">Ο οπτικοποιημένος επεξεργαστής ενεργοποιήθηκε</string>
+	<string name="editor_content_placeholder">Μοιραστείτε την ιστορία σας εδώ...</string>
+	<string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
+	<string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
+	<string name="email_address">Διεύθυνση email</string>
+	<string name="preference_show_visual_editor">Προβολή οπτικοποιημένου επεξεργαστή</string>
+	<string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
+	<string name="preference_editor">Επεξεργαστής</string>
+	<string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>
+	<string name="mnu_comment_delete_permanently">Διαγραφή</string>
+	<string name="comment_deleted_permanently">Το σχόλιο διαγράφηκε</string>
+	<string name="mnu_comment_untrash">Αποκατάσταση</string>
 	<string name="selected_theme">Επιλεγμένο Θέμα</string>
 	<string name="could_not_load_theme">Αποτυχία φόρτωσης θέματος</string>
 	<string name="theme_activation_error">Κάτι πήγε στραβά. Δεν ενεργοποιήθηκε το θέμα</string>
@@ -214,7 +286,6 @@
 	<string name="stats_entry_search_terms">Όρος αναζήτησης</string>
 	<string name="stats_view_authors">Συγγραφείς</string>
 	<string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
-	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$ς Ακόλουθοι Email</string>
 	<string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
 	<string name="stats_empty_search_terms_desc">Μάθετε περισσότερα για την κίνηση στην αναζήτηση σας εξετάζοντας τους όρους αναζήτησης που χρησιμοποίησαν οι χρήστες για να βρούν το site σας.</string>
 	<string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
@@ -222,6 +293,7 @@
 	<string name="posts_fetching">Λήψη άρθρων...</string>
 	<string name="media_fetching">Λήψη πολυμέσων...</string>
 	<string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι WordPress.com</string>
+	<string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι Email</string>
 	<string name="stats_months_and_years">Μήνες και Χρόνια</string>
 	<string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
 	<string name="post_uploading">Μεταφόρτωση</string>
@@ -350,11 +422,9 @@
 	<string name="hs__conversation_header">Συζήτηση υποστήριξης</string>
 	<string name="add_location">Προσθέστε περιοχή</string>
 	<string name="current_location">Τωρινή τοποθεσία</string>
-	<string name="your_signature">Η υπογραφή σας:</string>
 	<string name="search_location">Αναζήτηση</string>
 	<string name="edit_location">Επεξεργασία</string>
 	<string name="search_current_location">Εντοπισμός</string>
-	<string name="preference_privacy">Ιδιωτικότητα </string>
 	<string name="preference_send_usage_stats">Αποστολή στατιστικών</string>
 	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
 	<string name="update_verb">Ενημέρωση</string>
@@ -414,11 +484,8 @@
 	<string name="cat_name_required">Απαιτείται το πεδίο ονόματος κατηγορίας</string>
 	<string name="category_automatically_renamed">Το όνομα κατηγορίας %1$s δεν είναι έγκυρο. Έχει μετονομαστεί σε %2$s.</string>
 	<string name="no_account">Δεν βρέθηκε λογαριασμός WordPress, προσθέστε λογαριασμό  και δοκιμάστε ξανά</string>
-	<string name="auto_sharing_preference_reset">Επαναφορά ρυθμίσεων αυτόματου διαμοιρασμού</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Το ιστολόγιο που επιλέχθηκε προηγουμένως δεν είναι πλέον ορατό</string>
 	<string name="sdcard_message">Απαιτείται προσαρτημένη κάρτα SD για τη μεταφόρτωση πολυμέσων</string>
 	<string name="stats_bar_graph_empty">Δε υπάρχουν διαθέσιμα στατιστικά</string>
-	<string name="invalid_url_message">Ελέγξτε αν το URL του ιστολογίου που δώσατε είναι έγκυρο</string>
 	<string name="reply_failed">Αποτυχία απάντησης</string>
 	<string name="notifications_empty_list">Δεν υπάρχουν ειδοποιήσεις</string>
 	<string name="error_delete_post">Προέκυψε σφάλμα κατά τη διαγραφή του %s</string>
@@ -566,9 +633,6 @@
 	<string name="download">Γίνεται μεταφορά πολυμέσων</string>
 	<string name="comment_spammed">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
 	<string name="cant_share_no_visible_blog">Δε μπορείτε να μοιραστείτε στο WordPress χωρίς ένα ορατό ιστολόγιο</string>
-	<string name="share_preference_title">Μοιραστείτε στο WordPress</string>
-	<string name="reset_auto_share_preference">Επαναφορά ρυθμίσεων αυτόματου μοιρασμού</string>
-	<string name="always_use_these_settings_to_share">Να γίνεται πάντοτε χρήση αυτών των ρυθμίσεων</string>
 	<string name="reader_likes_you_and_one">Αυτό αρέσει σε εσάς και ακόμη ένα χρήστη</string>
 	<string name="select_date">Επιλέξτε ημερομηνία</string>
 	<string name="select_time">Επιλέξτε ώρα</string>
@@ -646,8 +710,6 @@
 	<string name="stats_timeframe_yesterday">Χθες</string>
 	<string name="theme_set_success">Το θέμα ορίστηκε επιτυχώς</string>
 	<string name="theme_activating_button">Γίνεται ενεργοποιήση</string>
-	<string name="media_no_video_title">Το VideoPress δεν είναι διαθέσιμο</string>
-	<string name="media_no_video_message">Αναβαθμίστε το VideoPress για να φορτώσετε video!</string>
 	<string name="media_edit_caption_hint">Προσθέστε μια λεζάντα εδώ</string>
 	<string name="theme_auth_error_title">Δε στάθηκε δυνατό να ανακτηθούν τα θέματα.</string>
 	<string name="post_excerpt">Σύνοψη</string>
@@ -665,7 +727,6 @@
 	<string name="stats_totals_views">Εμφανίσεις</string>
 	<string name="stats_totals_clicks">Κλικ</string>
 	<string name="stats_totals_plays">Αναπαραγωγές</string>
-	<string name="menu_search">Αναζήτηση</string>
 	<string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
 	<string name="passcode_enter_passcode">Πληκτρολογήστε το PIN σας</string>
 	<string name="passcode_enter_old_passcode">Πληκτρολογήστε το παλιό σας PIN</string>
@@ -683,8 +744,6 @@
 	<string name="more_notifications">και %d ακόμη.</string>
 	<string name="follows">Ακόλουθοι</string>
 	<string name="loading">Φορτώνει...</string>
-	<string name="post_signature">Υπογραφή άρθρου</string>
-	<string name="add_tagline">Προσθήκη υπογραφής στα νέα άρθρα</string>
 	<string name="httpuser">Όνομα χρήστη HTTP</string>
 	<string name="httppassword">Κωδικός χρήστη HTTP</string>
 	<string name="error_media_upload">Ένα σφάλμα συνέβη κατά το ανέβασμα των πολυμέσων</string>
@@ -709,14 +768,11 @@
 	<string name="ok">ΟΚ</string>
 	<string name="upload_scaled_image">Φορτώστε και συνδέστε με την εικόνα στις νέες της διαστάσεις</string>
 	<string name="scaled_image">Νέο πλάτος εικόνας</string>
-	<string name="remove_location">Διαγραφή</string>
 	<string name="scheduled">Προγραμματισμένο</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Αναρτήθηκε από το WordPress για το Android</string>
 	<string name="version">Έκδοση</string>
 	<string name="tos">Όροι Χρήσης</string>
 	<string name="app_title">WordPress για Android</string>
-	<string name="about">Σχετικά</string>
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
@@ -760,55 +816,4 @@
 	<string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>
 	<string name="on">ενεργό</string>
 	<string name="notification_settings">Ρυθμίσεις Ειδοποιήσεων</string>
-	<string-array name="alignment_array">
-		<item>Κανένα</item>
-		<item>Αριστερά</item>
-		<item>Κέντρο</item>
-		<item>Δεξιά</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Σχόλια στον ιστότοπό μου</item>
-		<item>"Like" στα σχόλιά μου</item>
-		<item>"Like" στα άρθρα μου</item>
-		<item>Ακολουθούν τον ιστότοπο</item>
-		<item>Επιτεύγματα ιστοτόπου</item>
-		<item>Αναφορές ονόματος χρήστη</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Απαντήσεις στα σχόλιά μου</item>
-		<item>"Like" στα σχόλιά μου</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Προτάσεις</item>
-		<item>Έρευνα</item>
-		<item>Κοινότητα</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Συμβουλές για να πάρετε το μέγιστο από το WordPress.com.</item>
-		<item>Ευκαιρίες για συμμετοχή στις έρευνες και δημοσκοπήσεις του WordPress.com.</item>
-		<item>Πληροφορίες για εκπαίδευση και εκδηλώσεις του WordPress.com (διαδικτυακά και ζωντανά).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Δημοσιευμένα</item>
-		<item>Προσχέδια</item>
-		<item>Προγραμματισμένα</item>
-		<item>Διαγραμμένα</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Πλαϊνό</item>
-		<item>Ήχητικό</item>
-		<item>Συνομιλία</item>
-		<item>Γκαλερί</item>
-		<item>Εικόνα</item>
-		<item>Σύνδεσμος</item>
-		<item>Παράθεση</item>
-		<item>Κλασσικό</item>
-		<item>Κατάσταση</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Δωρεάν</item>
-		<item>Όλα</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

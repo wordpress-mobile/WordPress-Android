@@ -3,18 +3,20 @@ package org.xmlrpc.android;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Xml;
 import android.webkit.URLUtil;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.RedirectError;
+import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
@@ -30,16 +32,15 @@ import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,10 +49,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import de.greenrobot.event.EventBus;
 
 public class ApiHelper {
 
@@ -116,13 +117,13 @@ public class ApiHelper {
         protected ErrorType mErrorType = ErrorType.NO_ERROR;
         protected Throwable mThrowable;
 
-        protected void setError(ErrorType errorType, String errorMessage) {
+        protected void setError(@NonNull ErrorType errorType, String errorMessage) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             AppLog.e(T.API, mErrorType.name() + " - " + mErrorMessage);
         }
 
-        protected void setError(ErrorType errorType, String errorMessage, Throwable throwable) {
+        protected void setError(@NonNull ErrorType errorType, String errorMessage, Throwable throwable) {
             mErrorMessage = errorMessage;
             mErrorType = errorType;
             mThrowable = throwable;
@@ -136,6 +137,10 @@ public class ApiHelper {
 
     public interface GenericCallback extends GenericErrorCallback {
         public void onSuccess();
+    }
+
+    public interface DatabasePersistCallback {
+        void onDataReadyToSave(List list);
     }
 
     public static class GetPostFormatsTask extends HelperAsyncTask<Blog, Void, Object> {
@@ -259,6 +264,7 @@ public class ApiHelper {
                 }
                 if (mBlog.bsetAdmin(isAdmin)) {
                     WordPress.wpDB.saveBlog(mBlog);
+                    EventBus.getDefault().post(new CoreEvents.BlogListChanged());
                 }
             }
         }
@@ -334,7 +340,14 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mBlog, commentParams);
+                ApiHelper.refreshComments(mBlog, commentParams, new DatabasePersistCallback() {
+                    @Override
+                    public void onDataReadyToSave(List list) {
+                        int localBlogId = mBlog.getLocalTableBlogId();
+                        CommentTable.deleteCommentsForBlog(localBlogId);
+                        CommentTable.saveComments(localBlogId, (CommentList)list);
+                    }
+                });
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -406,7 +419,7 @@ public class ApiHelper {
         return numDeleted;
     }
 
-    public static CommentList refreshComments(Blog blog, Object[] commentParams)
+    public static CommentList refreshComments(Blog blog, Object[] commentParams, DatabasePersistCallback dbCallback)
             throws XMLRPCException, IOException, XmlPullParserException {
         if (blog == null) {
             return null;
@@ -454,8 +467,9 @@ public class ApiHelper {
             comments.add(comment);
         }
 
-        int localBlogId = blog.getLocalTableBlogId();
-        CommentTable.saveComments(localBlogId, comments);
+        if (dbCallback != null){
+            dbCallback.onDataReadyToSave(comments);
+        }
 
         return comments;
     }
@@ -727,9 +741,10 @@ public class ApiHelper {
         }
     }
 
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, String> {
+    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
-            public void onSuccess(String id);
+            void onSuccess(String remoteId, String remoteUrl, String secondaryId);
+            void onProgressUpdate(float progress);
         }
         private Callback mCallback;
         private Context mContext;
@@ -743,7 +758,7 @@ public class ApiHelper {
         }
 
         @Override
-        protected String doInBackground(List<?>... params) {
+        protected Map<?, ?> doInBackground(List<?>... params) {
             List<?> arguments = params[0];
             WordPress.currentBlog = (Blog) arguments.get(0);
             Blog blog = WordPress.currentBlog;
@@ -753,7 +768,7 @@ public class ApiHelper {
                 return null;
             }
 
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Map<String, Object> data = new HashMap<String, Object>();
@@ -769,31 +784,61 @@ public class ApiHelper {
                     data
             };
 
+            final File tempFile = getTempFile(mContext);
+
+            if (client instanceof XMLRPCClient) {
+                ((XMLRPCClient) client).setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
+                    @Override
+                    public void onBytesUploaded(long uploadedBytes) {
+                        if (isCancelled()) {
+                            // Stop the upload if the task has been cancelled
+                            ((XMLRPCClient) client).cancel();
+                        }
+
+                        if (tempFile == null || tempFile.length() == 0) {
+                            return;
+                        }
+
+                        float fractionUploaded = uploadedBytes / (float) tempFile.length();
+                        mCallback.onProgressUpdate(fractionUploaded);
+                    }
+                });
+            }
+
             if (mContext == null) {
                 return null;
             }
 
             Map<?, ?> resultMap;
             try {
-                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, getTempFile(mContext));
+                resultMap = (HashMap<?, ?>) client.call(Method.UPLOAD_FILE, apiParams, tempFile);
             } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
+                setError(ErrorType.INVALID_RESULT, null, cce);
+                return null;
+            } catch (XMLRPCFault e) {
+                if (e.getFaultCode() == 401) {
+                    setError(ErrorType.NETWORK_XMLRPC,
+                            mContext.getString(R.string.media_error_no_permission_upload), e);
+                } else {
+                    // getFaultString() returns the error message from the server without the "[Code 403]" part.
+                    setError(ErrorType.NETWORK_XMLRPC, e.getFaultString(), e);
+                }
                 return null;
             } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
+                setError(ErrorType.NETWORK_XMLRPC, null, e);
                 return null;
             }
 
             if (resultMap != null && resultMap.containsKey("id")) {
-                return (String) resultMap.get("id");
+                return resultMap;
             } else {
-                setError(ErrorType.INVALID_RESULT, "Invalid result");
+                setError(ErrorType.INVALID_RESULT, null);
             }
 
             return null;
@@ -811,10 +856,13 @@ public class ApiHelper {
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Map<?, ?> result) {
             if (mCallback != null) {
                 if (result != null) {
-                    mCallback.onSuccess(result);
+                    String remoteId = (String) result.get("id");
+                    String remoteUrl = (String) result.get("url");
+                    String videoPressId = (String) result.get("videopress_shortcode");
+                    mCallback.onSuccess(remoteId, remoteUrl, videoPressId);
                 } else {
                     mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
                 }
@@ -941,32 +989,12 @@ public class ApiHelper {
     }
 
     /**
-     * Discover the XML-RPC endpoint for the WordPress API associated with the specified blog URL.
-     *
-     * @param urlString URL of the blog to get the XML-RPC endpoint for.
-     * @return XML-RPC endpoint for the specified blog, or null if unable to discover endpoint.
-     */
-    public static String getXMLRPCUrl(String urlString) throws SSLHandshakeException {
-        Pattern xmlrpcLink = Pattern.compile("<api\\s*?name=\"WordPress\".*?apiLink=\"(.*?)\"",
-                Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-        String html = getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = xmlrpcLink.matcher(html);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
-        }
-        return null; // never found the rsd tag
-    }
-
-    /**
      * Synchronous method to fetch the String content at the specified HTTP URL.
      *
      * @param stringUrl URL to fetch contents for.
      * @return content of the resource, or null if URL was invalid or resource could not be retrieved.
      */
-    public static String getResponse(final String stringUrl) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl) throws SSLHandshakeException, TimeoutError, TimeoutException {
         return getResponse(stringUrl, 0);
     }
 
@@ -987,13 +1015,13 @@ public class ApiHelper {
         return null;
     }
 
-    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException {
+    public static String getResponse(final String stringUrl, int numberOfRedirects) throws SSLHandshakeException, TimeoutError, TimeoutException {
         RequestFuture<String> future = RequestFuture.newFuture();
         StringRequest request = new StringRequest(stringUrl, future, future);
-        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, 0, 1));
+        request.setRetryPolicy(new DefaultRetryPolicy(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, 0, 1));
         WordPress.requestQueue.add(request);
         try {
-            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT, TimeUnit.SECONDS);
+            return future.get(XMLRPCClient.DEFAULT_SOCKET_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             AppLog.e(T.API, e);
         } catch (ExecutionException e) {
@@ -1020,97 +1048,14 @@ public class ApiHelper {
                     AppLog.i(T.API, "Follow redirect from " + stringUrl + " to " + newURL);
                     return getResponse(newURL, numberOfRedirects + 1);
                 }
+            } else if (e.getCause() != null && e.getCause() instanceof com.android.volley.TimeoutError) {
+                AppLog.e(T.API, e);
+                throw (com.android.volley.TimeoutError) e.getCause();
             } else {
                 AppLog.e(T.API, e);
             }
-
-        } catch (TimeoutException e) {
-            AppLog.e(T.API, e);
         }
         return null;
-    }
-
-    /**
-     * Regex pattern for matching the RSD link found in most WordPress sites.
-     */
-    private static final Pattern rsdLink = Pattern.compile(
-            "<link\\s*?rel=\"EditURI\"\\s*?type=\"application/rsd\\+xml\"\\s*?title=\"RSD\"\\s*?href=\"(.*?)\"",
-            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-    /**
-     * Returns RSD URL based on regex match
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHrefRegEx(String urlString)
-            throws SSLHandshakeException {
-        String html = ApiHelper.getResponse(urlString);
-        if (html != null) {
-            Matcher matcher = rsdLink.matcher(html);
-            if (matcher.find()) {
-                String href = matcher.group(1);
-                return href;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns RSD URL based on html tag search
-     * @param urlString
-     * @return String RSD url
-     */
-    public static String getRSDMetaTagHref(String urlString)
-            throws SSLHandshakeException {
-        // get the html code
-        String data = ApiHelper.getResponse(urlString);
-
-        // parse the html and get the attribute for xmlrpc endpoint
-        if (data != null) {
-            StringReader stringReader = new StringReader(data);
-            XmlPullParser parser = Xml.newPullParser();
-            try {
-                // auto-detect the encoding from the stream
-                parser.setInput(stringReader);
-                int eventType = parser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    String name = null;
-                    String rel = "";
-                    String type = "";
-                    String href = "";
-                    switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        name = parser.getName();
-                        if (name.equalsIgnoreCase("link")) {
-                            for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                String attrName = parser.getAttributeName(i);
-                                String attrValue = parser.getAttributeValue(i);
-                                if (attrName.equals("rel")) {
-                                    rel = attrValue;
-                                } else if (attrName.equals("type"))
-                                    type = attrValue;
-                                else if (attrName.equals("href"))
-                                    href = attrValue;
-                            }
-
-                            if (rel.equals("EditURI") && type.equals("application/rsd+xml")) {
-                                return href;
-                            }
-                            // currentMessage.setLink(parser.nextText());
-                        }
-                        break;
-                    }
-                    eventType = parser.next();
-                }
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, e);
-                return null;
-            } catch (IOException e) {
-                AppLog.e(T.API, e);
-                return null;
-            }
-        }
-        return null; // never found the rsd tag
     }
 
     /*

@@ -11,10 +11,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AccountModel;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.DialogUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -22,7 +22,9 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
+
+    private final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
     private WPTextView mLastName;
@@ -32,8 +34,6 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        AccountHelper.getDefaultAccount().fetchAccountSettings();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -90,7 +90,17 @@ public class MyProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            AccountHelper.getDefaultAccount().fetchAccountSettings();
+        }
     }
 
     @Override
@@ -139,35 +149,25 @@ public class MyProfileActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.showMyProfileDialog(MyProfileActivity.this,
-                        dialogTitle,
-                        textView.getText().toString(),
-                        hint,
-                        isMultiline,
-                        new DialogUtils.Callback() {
-                            @Override
-                            public void onSuccessfulInput(String input) {
-                                updateLabel(textView, input);
-                                updateMyProfileForLabel(textView);
-                            }
-                        });
+                ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
+                        textView.getText().toString(), hint, isMultiline, textView.getId());
+                inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
     }
 
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
-        Account.RestParam param = null;
         if (textView == mFirstName) {
-            param = Account.RestParam.FIRST_NAME;
+            return AccountModel.RestParam.FIRST_NAME.getDescription();
         } else if (textView == mLastName) {
-            param = Account.RestParam.LAST_NAME;
+            return AccountModel.RestParam.LAST_NAME.getDescription();
         } else if (textView == mDisplayName) {
-            param = Account.RestParam.DISPLAY_NAME;
+            return AccountModel.RestParam.DISPLAY_NAME.getDescription();
         } else if (textView == mAboutMe) {
-            param = Account.RestParam.ABOUT_ME;
+            return AccountModel.RestParam.ABOUT_ME.getDescription();
         }
-        return Account.RestParam.toString(param);
+        return null;
     }
 
     public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
@@ -176,15 +176,10 @@ public class MyProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
-        if (!isFinishing()) {
-            ToastUtils.showToast(this, R.string.error_fetch_my_profile, ToastUtils.Duration.LONG);
-        }
-    }
-
-    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
-        if (!isFinishing()) {
-            ToastUtils.showToast(this, R.string.error_post_my_profile, ToastUtils.Duration.LONG);
-        }
+    @Override
+    public void onSuccessfulInput(String input, int callbackId) {
+        WPTextView textView = (WPTextView) findViewById(callbackId);
+        updateLabel(textView, input);
+        updateMyProfileForLabel(textView);
     }
 }

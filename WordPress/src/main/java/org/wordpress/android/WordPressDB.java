@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
@@ -32,6 +33,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPUrlUtils;
@@ -82,7 +84,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 40;
+    private static final int DATABASE_VERSION = 44;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -216,6 +218,12 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
+
+    // add plan_product_id to blog
+    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_product_id integer default 0;";
+
+    // add plan_product_name_short to blog
+    private static final String ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT = "alter table accounts add plan_product_name_short text default '';";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -389,6 +397,18 @@ public class WordPressDB {
             case 39:
                 AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
                 currentVersion++;
+            case 40:
+                AccountTable.migrationAddDateFields(db);
+                currentVersion++;
+            case 41:
+                AccountTable.migrationAddAccountSettingsFields(db);
+                currentVersion++;
+            case 42:
+                db.execSQL(ADD_BLOGS_PLAN_ID);
+                currentVersion++;
+            case 43:
+                db.execSQL(ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -490,6 +510,8 @@ public class WordPressDB {
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
         values.put("blogId", blog.getRemoteBlogId());
         values.put("dotcomFlag", blog.isDotcomFlag());
+        values.put("plan_product_id", blog.getPlanID());
+        values.put("plan_product_name_short", blog.getPlanShortName());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -581,12 +603,24 @@ public class WordPressDB {
         return getBlogsBy("isHidden = 0", null);
     }
 
+    public int getFirstVisibleBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
+    }
+
+    public int getFirstHiddenBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 1 LIMIT 1", null);
+    }
+
     public List<Map<String, Object>> getVisibleDotComBlogs() {
         return getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
     }
 
     public int getNumVisibleBlogs() {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE isHidden = 0", null);
+    }
+
+    public int getNumHiddenBlogs() {
+        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE isHidden = 1", null);
     }
 
     public int getNumDotComBlogs() {
@@ -683,6 +717,8 @@ public class WordPressDB {
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
+        values.put("plan_product_id", blog.getPlanID());
+        values.put("plan_product_name_short", blog.getPlanShortName());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -774,7 +810,8 @@ public class WordPressDB {
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
+                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
+                             "plan_product_id", "plan_product_name_short"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -830,6 +867,8 @@ public class WordPressDB {
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
+                blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
+                blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
             }
         }
         c.close();
@@ -923,6 +962,11 @@ public class WordPressDB {
         return remoteBlogID;
     }
 
+    public long getPlanIdForLocalTableBlogId(int localBlogId) {
+        return SqlUtils.longForQuery(db,
+                "SELECT plan_product_id FROM accounts WHERE id=?",
+                new String[]{Integer.toString(localBlogId)});
+    }
     /**
      * Set the ID of the most recently active blog. This value will persist between application
      * launches.
@@ -1579,6 +1623,21 @@ public class WordPressDB {
         return db.rawQuery("SELECT * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
+
+    /**
+     * Given a VideoPress id, returns the corresponding remote video URL stored in the DB
+     */
+    public String getMediaUrlByVideoPressId(String blogId, String videoId) {
+        if (TextUtils.isEmpty(blogId) || TextUtils.isEmpty(videoId)) {
+            return "";
+        }
+
+        String shortcode = ShortcodeUtils.getVideoPressShortcodeFromId(videoId);
+
+        String query = "SELECT " + COLUMN_NAME_FILE_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND videoPressShortcode=?";
+        return SqlUtils.stringForQuery(db, query, new String[]{blogId, shortcode});
+    }
+
     public String getMediaThumbnailUrl(int blogId, long mediaId) {
         String query = "SELECT " + COLUMN_NAME_THUMBNAIL_URL + " FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId=?";
         return SqlUtils.stringForQuery(db, query, new String[]{Integer.toString(blogId), Long.toString(mediaId)});
@@ -1695,7 +1754,7 @@ public class WordPressDB {
     }
 
     /** Update a media file to a new upload state **/
-    public void updateMediaUploadState(String blogId, String mediaId, String uploadState) {
+    public void updateMediaUploadState(String blogId, String mediaId, MediaUploadState uploadState) {
         if (blogId == null || blogId.equals("")) {
             return;
         }
@@ -1704,7 +1763,7 @@ public class WordPressDB {
         if (uploadState == null) {
             values.putNull("uploadState");
         } else {
-            values.put("uploadState", uploadState);
+            values.put("uploadState", uploadState.toString());
         }
 
         if (mediaId == null) {
@@ -1778,12 +1837,11 @@ public class WordPressDB {
         db.delete(MEDIA_TABLE, "blogId=? AND mediaId=?", new String[]{blogId, mediaId});
     }
 
-
     /** Mark media files for deletion without actually deleting them. **/
     public void setMediaFilesMarkedForDelete(String blogId, Set<String> ids) {
         // This is for queueing up files to delete on the server
         for (String id : ids) {
-            updateMediaUploadState(blogId, id, "delete");
+            updateMediaUploadState(blogId, id, MediaUploadState.DELETE);
         }
     }
 
@@ -1792,7 +1850,7 @@ public class WordPressDB {
         // This is for syncing our files to the server:
         // when we pull from the server, everything that is still 'deleted'
         // was not downloaded from the server and can be removed via deleteFilesMarkedForDeleted()
-        updateMediaUploadState(blogId, null, "deleted");
+        updateMediaUploadState(blogId, null, MediaUploadState.DELETED);
     }
 
     /** Delete files marked as deleted **/

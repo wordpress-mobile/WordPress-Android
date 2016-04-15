@@ -82,6 +82,16 @@ public class RestClientUtils {
     }
 
     /**
+     * get a list of recent comments
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
+     */
+    public void getComments(String siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/comments", siteId);
+        get(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Reply to a comment
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
@@ -247,6 +257,24 @@ public class RestClientUtils {
                                        Map<String, String> params) {
         String path = String.format("sites/%s/settings", siteId);
         post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * Delete a site
+     */
+    public void deleteSite(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/delete", siteId);
+        post(path, listener, errorListener);
+    }
+
+    public void getSitePurchases(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/purchases", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void exportContentAll(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/exports/start", siteId);
+        post(path, listener, errorListener);
     }
 
     /**

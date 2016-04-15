@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Videoklipp</string>
+	<string name="align_none">Ingen</string>
+	<string name="align_left">Vänster</string>
+	<string name="align_center">Mitten</string>
+	<string name="align_right">Höger</string>
+	<string name="theme_free">Free</string>
+	<string name="theme_all">Alla</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Chatt</string>
+	<string name="post_format_gallery">Galleri</string>
+	<string name="post_format_image">Bild</string>
+	<string name="post_format_link">Länk</string>
+	<string name="post_format_quote">Citat</string>
+	<string name="post_format_standard">Standard</string>
+	<string name="notif_events">Information om kurser och evenemang på WordPress.com (online och fysiska möten).</string>
+	<string name="post_format_aside">Notering</string>
+	<string name="post_format_audio">Ljud</string>
+	<string name="notif_surveys">Möjligheter att delta i WordPress.coms studier och undersökningar.</string>
+	<string name="notif_tips">Tips för att få ut så mycket som möjligt av WordPress.com.</string>
+	<string name="notif_community">Community</string>
+	<string name="replies_to_my_comments">Svar på mina kommentarer</string>
+	<string name="notif_suggestions">Förslag</string>
+	<string name="notif_research">Forskning</string>
+	<string name="site_achievements">Webbplats-troféer</string>
+	<string name="username_mentions">Omnämnande av användarnamn</string>
+	<string name="likes_on_my_posts">Gilla-markeringar för mina inlägg</string>
+	<string name="site_follows">Webbplatsföljare</string>
+	<string name="likes_on_my_comments">Gillar mina kommentarer</string>
+	<string name="comments_on_my_site">Kommentarer på min webbplats</string>
+	<string name="site_settings_list_editor_summary_other">%d poster</string>
+	<string name="site_settings_list_editor_summary_one">1 post</string>
+	<string name="approve_auto_if_previously_approved">Kända användares kommentarer</string>
+	<string name="approve_auto">Alla användare</string>
+	<string name="approve_manual">Inga kommentarer</string>
+	<string name="site_settings_paging_summary_other">%d kommentarer per sida</string>
+	<string name="site_settings_paging_summary_one">1 kommentar per sida</string>
+	<string name="site_settings_multiple_links_summary_other">Kräv godkännande för fler än %d länkar</string>
+	<string name="site_settings_multiple_links_summary_one">Kräv godkännande för fler än 1 länk</string>
+	<string name="site_settings_multiple_links_summary_zero">Kräv godkännande för fler än 0 länkar</string>
+	<string name="detail_approve_auto">Godkänn allas kommentarer automatiskt.</string>
+	<string name="detail_approve_auto_if_previously_approved">Godkänn automatiskt om användaren har en tidigare godkänd kommentar</string>
+	<string name="detail_approve_manual">Kräv manuellt godkännande för alla kommentarer.</string>
+	<string name="filter_trashed_posts">Borttagen</string>
+	<string name="days_quantity_one">1 dag</string>
+	<string name="days_quantity_other">%d dagar</string>
+	<string name="filter_published_posts">Publicerad</string>
+	<string name="filter_draft_posts">Utkast</string>
+	<string name="filter_scheduled_posts">Schemalagd</string>
+	<string name="pending_email_change_snackbar">Klicka på verifieringslänken i e-postmeddelandet som skickades till %1$s för att bekräfta din nya adress</string>
+	<string name="primary_site">Primär webbplats</string>
+	<string name="web_address">Webbadress</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Uppladdning av vissa mediefiler har misslyckats. Försök igen eller ta bort dem.</string>
+	<string name="editor_toast_uploading_please_wait">Mediefiler laddas upp för tillfället. Vänta tills de är färdiguppladdade.</string>
+	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
+	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
+	<string name="editor_post_settings_featured_image">Utvald bild</string>
+	<string name="new_editor_promo_desc">I WordPress-appen för Android ingår nu en ny, fantastisk, visuell\n redigerare. Prova gärna genom att skapa ett nytt inlägg.</string>
+	<string name="new_editor_promo_title">Helt ny redigerare</string>
+	<string name="new_editor_promo_button_label">Tack!</string>
+	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>
+	<string name="editor_content_placeholder">Berätta din historia här...</string>
+	<string name="editor_page_title_placeholder">Sidans rubrik</string>
+	<string name="editor_post_title_placeholder">Inläggets rubrik</string>
+	<string name="email_address">E-postadress</string>
+	<string name="preference_show_visual_editor">Visa visuell redigerare</string>
+	<string name="dlg_sure_to_delete_comments">Radera dessa kommentarer premanent?</string>
+	<string name="preference_editor">Redigerare</string>
+	<string name="dlg_sure_to_delete_comment">Radera denna kommentar premanent?</string>
+	<string name="mnu_comment_delete_permanently">Ta bort</string>
+	<string name="comment_deleted_permanently">Kommentar raderad</string>
+	<string name="mnu_comment_untrash">Återställ</string>
+	<string name="comments_empty_list_filtered">Inga %s kommentarer</string>
+	<string name="could_not_load_page">Kunde inte ladda sida</string>
+	<string name="comment_status_all">Alla</string>
+	<string name="interface_language">Gränssnittspråk</string>
+	<string name="off">Av</string>
+	<string name="about_the_app">Om appen</string>
+	<string name="error_post_my_profile">Kunde inte spara din profil</string>
+	<string name="error_fetch_account_settings">Kunde inte hämta dina kontoinställningar</string>
+	<string name="error_fetch_my_profile">Kunde inte hämta din profil</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, klart</string>
+	<string name="stats_widget_promo_desc">Lägg till denna widget på startskärmen för att med ett enda klick få tillgång till din statistik.</string>
+	<string name="stats_widget_promo_title">Startskärmens statuswidget</string>
+	<string name="site_settings_unknown_language_code_error">Språkkoden känns inte igen</string>
+	<string name="site_settings_threading_dialog_description">Tillåt att kommentarer staplas i trådar.</string>
+	<string name="site_settings_threading_dialog_header">Trådar upp till</string>
+	<string name="remove">Ta bort</string>
+	<string name="search">Sök</string>
+	<string name="add_category">Lägg till kategori</string>
+	<string name="disabled">Inaktiverad</string>
 	<string name="site_settings_image_original_size">Originalstorlek</string>
 	<string name="about_me_hint">Ett par ord om dig själv…</string>
 	<string name="public_display_name_hint">Om det inte anges något annat kommer visningsnamnet som standard att vara ditt användarnamn</string>
@@ -473,11 +565,9 @@
 	<string name="hs__invalid_email_error">Ange en giltig e-postadress</string>
 	<string name="add_location">Lägg till plats</string>
 	<string name="current_location">Nuvarande plats</string>
-	<string name="your_signature">Din signatur:</string>
 	<string name="search_location">Sök</string>
 	<string name="edit_location">Redigera</string>
 	<string name="search_current_location">Hitta</string>
-	<string name="preference_privacy">Integritet</string>
 	<string name="preference_send_usage_stats">Skicka statistik</string>
 	<string name="preference_send_usage_stats_summary">Skicka automatiskt användarstatistik för att hjälpa oss förbättra WordPress för Android</string>
 	<string name="update_verb">Uppdatera</string>
@@ -510,7 +600,6 @@
 	<string name="no_account">Inget WordPress-konto hittat, skapa ett konto och försök igen</string>
 	<string name="stats_empty_comments">Inga kommentarer ännu</string>
 	<string name="stats_bar_graph_empty">Ingen statistik tillgänglig</string>
-	<string name="invalid_url_message">Kontrollera att blogg URL:en är gilltig</string>
 	<string name="error_generic">Ett fel uppstod</string>
 	<string name="error_downloading_image">Fel vid nedladdning av bild</string>
 	<string name="error_load_comment">Kunde inte ladda kommentaren</string>
@@ -558,13 +647,11 @@
 	<string name="error_refresh_posts">Inläggen kunde inte uppdateras just nu</string>
 	<string name="error_refresh_stats">Statistiken kunde inte uppdateras just nu</string>
 	<string name="error_refresh_notifications">Notifieringar kunde inte uppdateras just nu</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Tidigare vald blogg är inte längre synlig</string>
 	<string name="could_not_remove_account">Det gick inte att ta bort webbplatsen</string>
 	<string name="gallery_error">Medieobjektet kunde inte hämtas</string>
 	<string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
 	<string name="theme_set_failed">Kunde inte ställa in tema</string>
 	<string name="theme_auth_error_message">Se till att du har behörighet att ställa in teman</string>
-	<string name="auto_sharing_preference_reset">Inställningar för automatisk delning återställda</string>
 	<string name="sdcard_message">Ett SD-kort är nödvändigt för att ladda upp media</string>
 	<string name="username_only_lowercase_letters_and_numbers">Användarnamn får bara innehålla små bokstäver (a-z) och siffror</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Webbplatsadressen kan bara innehålla små bokstäver (a-z) och siffror</string>
@@ -672,6 +759,7 @@
 	<string name="email_reserved">E-postadressen har redan använts. Kolla efter ett aktiveringsmail i din inbox. Om du inte aktiverar kan du försöka igen om några dagar.</string>
 	<string name="email_cant_be_used_to_signup">Du kan inte använda den e-postadressen för att registrera dig. Vi har problem med att de blockerar viss av våra e-post. Använd en annan e-postleverantör.</string>
 	<string name="notifications_empty_all">Inga notiser … ännu.</string>
+	<string name="invalid_site_url_message">Kontrollera att webbplatsens URL är giltig</string>
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="deleting_post">Tar bort inlägg</string>
 	<string name="share_url_post">Dela inlägg</string>
@@ -685,13 +773,10 @@
 	<string name="video">Video</string>
 	<string name="download">Laddar ner media</string>
 	<string name="comment_spammed">Kommentar markerad som skräppost</string>
-	<string name="share_preference_title">Dela till WordPress</string>
-	<string name="always_use_these_settings_to_share">Använd alltid dessa inställningar</string>
 	<string name="reader_likes_you_and_multi">Du och %,d andra gillar detta</string>
 	<string name="reader_likes_multi">%,d gillar detta</string>
 	<string name="reader_toast_err_get_comment">Kunde inte hämta denna kommentar</string>
 	<string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
-	<string name="reset_auto_share_preference">Återställ inställningar för automatisk delning</string>
 	<string name="select_time">Välj tid</string>
 	<string name="pick_photo">Välj bild</string>
 	<string name="pick_video">Välj video</string>
@@ -751,8 +836,6 @@
 	<string name="media_gallery_type_tiled">Mosaik</string>
 	<string name="media_gallery_type_circles">Cirklar</string>
 	<string name="media_gallery_type_slideshow">Bildspel</string>
-	<string name="media_no_video_title">VideoPress otillgängligt</string>
-	<string name="media_no_video_message">Skaffa VideoPress-uppgraderingen för att ladda upp video!</string>
 	<string name="media_edit_title_text">Rubrik</string>
 	<string name="media_edit_caption_text">Bildtext</string>
 	<string name="media_edit_description_text">Beskrivning</string>
@@ -788,7 +871,6 @@
 	<string name="stats_totals_views">Visningar</string>
 	<string name="stats_totals_clicks">Klick</string>
 	<string name="stats_totals_plays">Spelningar</string>
-	<string name="menu_search">Sök</string>
 	<string name="passcode_manage">Ändra PIN-kodlås</string>
 	<string name="passcode_enter_passcode">Skriv din PIN-kod</string>
 	<string name="passcode_enter_old_passcode">Skriv din gamla PIN-kod</string>
@@ -806,8 +888,6 @@
 	<string name="new_notifications">%d nya notifieringar</string>
 	<string name="follows">Följer</string>
 	<string name="loading">Laddar...</string>
-	<string name="post_signature">Inläggssignatur</string>
-	<string name="add_tagline">Lägg till en signatur till nya inlägg</string>
 	<string name="httpuser">HTTP-användarnamn</string>
 	<string name="httppassword">HTTP-lösenord</string>
 	<string name="error_media_upload">Ett fel uppstod vid uppladdning av media</string>
@@ -832,14 +912,11 @@
 	<string name="ok">OK</string>
 	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="upload_scaled_image">Ladda upp och länka till skalad bild</string>
-	<string name="remove_location">Ta bort</string>
 	<string name="scheduled">Tidsinställt</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Postat med WordPress för Android</string>
 	<string name="version">Version</string>
 	<string name="tos">Allmänna villkor</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">Om</string>
 	<string name="max_thumbnail_px_width">Förvald bildbredd</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Uppdatera</string>
@@ -884,82 +961,4 @@
 	<string name="preview">Förhandsgranska</string>
 	<string name="on">om</string>
 	<string name="notification_settings">Notisinställningar</string>
-	<string-array name="alignment_array">
-		<item>Ingen</item>
-		<item>Vänster</item>
-		<item>Centrera</item>
-		<item>Höger</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Kommentarer på min webbplats</item>
-		<item>Gilla-markeringar för mina kommentarer</item>
-		<item>Gilla-markeringar för mina inlägg</item>
-		<item>Webbplatsföljare</item>
-		<item>Webbplats-troféer</item>
-		<item>Omnämnande av användarnamn</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Svar på mina kommentarer</item>
-		<item>Gillar mina kommentarer</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Förslag</item>
-		<item>Forskning</item>
-		<item>Community</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tips för att få ut så mycket som möjligt av WordPress.com.</item>
-		<item>Möjligheter att delta i WordPress.coms studier och undersökningar.</item>
-		<item>Information om kurser och evenemang på WordPress.com (online och fysiska möten).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Publicerad</item>
-		<item>Utkast</item>
-		<item>Tidsinställd</item>
-		<item>Borttagen</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Notering</item>
-		<item>Ljud</item>
-		<item>Chat</item>
-		<item>Galleri</item>
-		<item>Bild</item>
-		<item>Länk</item>
-		<item>Citat</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Din webbplats är synlig för alla och kan indexeras av sökmotorer</item>
-		<item>Din webbplats är synlig för alla, men begär att sökmotorerna inte ska indexera den</item>
-		<item>Din webbplats är bara synlig för dig själv och användare som du godkänner</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Kräv manuellt godkännande för alla kommentarer.</item>
-		<item>Godkänn automatiskt om användaren har en tidigare godkänd kommentar.</item>
-		<item>Godkänn allas kommentarer automatiskt.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Inga kommentarer</item>
-		<item>Kända användares kommentarer</item>
-		<item>Alla användare</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Ingen</item>
-		<item>Två nivåer</item>
-		<item>Tre nivåer</item>
-		<item>Fyra nivåer</item>
-		<item>Fem nivåer</item>
-		<item>Sex nivåer</item>
-		<item>Sju nivåer</item>
-		<item>Åtta nivåer</item>
-		<item>Nio nivåer</item>
-		<item>Tio nivåer</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Gratis</item>
-		<item>Alla</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

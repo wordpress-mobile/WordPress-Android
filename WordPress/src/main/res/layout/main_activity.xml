@@ -13,7 +13,8 @@
         android:layout_height="@dimen/toolbar_height"
         android:background="@color/tab_background"
         android:elevation="@dimen/tabs_elevation"
-        app:tabIndicatorColor="@color/tab_indicator" />
+        app:tabIndicatorColor="@color/tab_indicator"
+        tools:targetApi="LOLLIPOP"/>
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager_main"

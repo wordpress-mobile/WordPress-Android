@@ -216,13 +216,11 @@
 	<string name="contact_us">Kontakt os</string>
 	<string name="current_location">Nuværende placering</string>
 	<string name="add_location">Tilføj placering</string>
-	<string name="your_signature">Din signatur:</string>
 	<string name="search_current_location">Lokaliser</string>
 	<string name="search_location">Søg</string>
 	<string name="edit_location">Rediger</string>
 	<string name="preference_send_usage_stats_summary">Send automatisk brugsstatistik for at hjælpe os med at forbedre WordPress til Android</string>
 	<string name="preference_send_usage_stats">Indsend statistikker</string>
-	<string name="preference_privacy">Privatliv</string>
 	<string name="schedule_verb">Planlæg</string>
 	<string name="update_verb">Opdater</string>
 	<string name="reader_label_followed_blog">Blog fulgt</string>
@@ -259,7 +257,6 @@
 	<string name="blog_name_reserved">Det websted er reserveret</string>
 	<string name="out_of_memory">Enheden er løbet tør for hukommelse</string>
 	<string name="no_network_message">Der er intet netværk tilgængeligt</string>
-	<string name="auto_sharing_preference_reset">Auto-deling indstillinger er nulstillet</string>
 	<string name="sdcard_message">Et SD-kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>
 	<string name="no_account">Ingen WordPress konto fundet. Tilføj en konto og prøv igen</string>
 	<string name="theme_set_failed">Det lykkedes ikke at indstille temaet på plads</string>
@@ -278,9 +275,7 @@
 	<string name="blog_name_not_allowed">Dette websted er ikke tilladt</string>
 	<string name="email_invalid">Indtast en gyldig e-mailadresse</string>
 	<string name="invalid_email_message">Din e-mailadresse er ikke gyldig</string>
-	<string name="invalid_url_message">Undersøg om bloggens URL er gyldig</string>
 	<string name="invalid_password_message">Adgangskoden skal være på mindst fire tegn</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Tidligere valgte blog er ikke længere synlig</string>
 	<string name="stats_bar_graph_empty">Ingen statistik er tilgængelig</string>
 	<string name="stats_empty_comments">Ingen kommentarer endnu</string>
 	<string name="reply_failed">Svar fejlede</string>
@@ -408,15 +403,12 @@
 	<string name="reader_empty_posts_in_tag_updating">Henter indlæg...</string>
 	<string name="reader_toast_err_get_comment">Kunne ikke hente denne kommentar</string>
 	<string name="reader_likes_multi">%,d personer synes godt om dette</string>
-	<string name="share_preference_title">Del på WordPress</string>
-	<string name="always_use_these_settings_to_share">Brug altid disse indstillinger</string>
 	<string name="video">Video</string>
 	<string name="download">Henter medie</string>
 	<string name="comment_spammed">Kommentar markeret som spam</string>
 	<string name="reader_label_reply">Besvar</string>
 	<string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
 	<string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
-	<string name="reset_auto_share_preference">Nulstil indstillinger for automatisk deling</string>
 	<string name="reader_toast_err_get_post">Kunne ikke hente dette indlæg</string>
 	<string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
 	<string name="validating_user_data">Validerer brugerdata</string>
@@ -458,7 +450,6 @@
 	<string name="nux_tutorial_get_started_title">Kom i gang!</string>
 	<string name="reader_likes_one">En person synes godt om dette</string>
 	<string name="stats_view_tags_and_categories">Tags &amp; kategorier</string>
-	<string name="media_no_video_title">VideoPress utilgængelig</string>
 	<string name="media_edit_caption_hint">Indtast en tekst her</string>
 	<string name="theme_auth_error_title">Kunne ikke hente temaer</string>
 	<string name="stats_entry_referrers">Henviser</string>
@@ -511,7 +502,6 @@
 	<string name="post_excerpt">Uddrag</string>
 	<string name="share_action_title">Tilføj til ...</string>
 	<string name="stats_totals_plays">Afspilninger</string>
-	<string name="menu_search">Søg</string>
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
@@ -522,8 +512,6 @@
 	<string name="new_notifications">%d nye notifikationer</string>
 	<string name="more_notifications">og %d mere.</string>
 	<string name="loading">Indlæser...</string>
-	<string name="add_tagline">Tilføj en signatur til nye indlæg</string>
-	<string name="post_signature">Indlægssignatur</string>
 	<string name="httppassword">HTTP-adgangskode</string>
 	<string name="httpuser">HTTP-brugernavn</string>
 	<string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
@@ -548,14 +536,11 @@
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Upload og link til skalerede billede</string>
 	<string name="scaled_image">Bredde på skalerede billede</string>
-	<string name="remove_location">Fjern</string>
 	<string name="scheduled">Planlagt</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Udgivet via WordPress til Android</string>
 	<string name="version">Version</string>
 	<string name="app_title">WordPress til Android</string>
 	<string name="tos">Brugskrav</string>
-	<string name="about">Om</string>
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>
@@ -598,21 +583,4 @@
 	<string name="category_refresh_error">Kategori opdateringsfejl</string>
 	<string name="on">på</string>
 	<string name="preview">Forhåndsvis</string>
-	<string-array name="alignment_array">
-		<item>Ingen</item>
-		<item>Venstre</item>
-		<item>Center</item>
-		<item>Højre</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Lyd</item>
-		<item>Chat</item>
-		<item>Galleri</item>
-		<item>Billede</item>
-		<item>Link</item>
-		<item>Citat</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
 </resources>

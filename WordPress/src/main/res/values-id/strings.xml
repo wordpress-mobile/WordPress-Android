@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">Tidak Ada</string>
+	<string name="align_left">Kiri</string>
+	<string name="align_center">Tengah</string>
+	<string name="align_right">Kanan</string>
+	<string name="theme_free">Gratis</string>
+	<string name="theme_all">Semua</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Obrolan</string>
+	<string name="post_format_gallery">Galeri</string>
+	<string name="post_format_image">Gambar</string>
+	<string name="post_format_link">Tautan</string>
+	<string name="post_format_quote">Kutipan</string>
+	<string name="post_format_standard">Standar</string>
+	<string name="notif_events">Informasi tentang kursus dan acara WordPress.com (online &amp; tatap muka).</string>
+	<string name="post_format_aside">Ke samping</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="notif_surveys">Kesempatan untuk berpartisipasi dalam riset &amp; survei WordPress.com.</string>
+	<string name="notif_tips">Kiat untuk mendapat maksimal dari WordPress.com.</string>
+	<string name="notif_community">Komunitas</string>
+	<string name="replies_to_my_comments">Balas komentar saya</string>
+	<string name="notif_suggestions">Saran</string>
+	<string name="notif_research">Riset</string>
+	<string name="site_achievements">Prestasi situs</string>
+	<string name="username_mentions">Penyebutan nama pengguna</string>
+	<string name="likes_on_my_posts">Suka pada pos saya</string>
+	<string name="site_follows">Pengikut Situs</string>
+	<string name="likes_on_my_comments">Suka pada komentar saya</string>
+	<string name="comments_on_my_site">Komentar di situs saya</string>
+	<string name="site_settings_list_editor_summary_other">%d items</string>
+	<string name="site_settings_list_editor_summary_one">1 item</string>
+	<string name="approve_auto_if_previously_approved">Komentar pengguna yang diketahui</string>
+	<string name="approve_auto">Semua pengguna</string>
+	<string name="approve_manual">Tak ada komentar</string>
+	<string name="site_settings_paging_summary_other">%d komentar per halaman</string>
+	<string name="site_settings_paging_summary_one">1 komentar per halaman</string>
+	<string name="site_settings_multiple_links_summary_other">Minta persetujuan untuk lebih dari %d tautan</string>
+	<string name="site_settings_multiple_links_summary_one">Minta persetujuan untuk lebih dari 1 tautan</string>
+	<string name="site_settings_multiple_links_summary_zero">Minta persetujuan untuk lebih dari 0 tautan</string>
+	<string name="detail_approve_auto">Otomatis setujui komentar semua orang.</string>
+	<string name="detail_approve_auto_if_previously_approved">Otomatis setujui jika pengguna memiliki komentar yang disetujui sebelumnya</string>
+	<string name="detail_approve_manual">Wajibkan persetujuan manual untuk komentar semua orang.</string>
+	<string name="filter_trashed_posts">Dibuang</string>
+	<string name="days_quantity_one">1 hari</string>
+	<string name="days_quantity_other">%d hari</string>
+	<string name="filter_published_posts">Diterbitkan</string>
+	<string name="filter_draft_posts">Draf</string>
+	<string name="filter_scheduled_posts">Terjadwal</string>
+	<string name="pending_email_change_snackbar">Klik tautan verifikasi di email yang dikirimkan ke %1$s untuk mengonfirmasi alamat baru Anda</string>
+	<string name="primary_site">Situs Utama</string>
+	<string name="web_address">Alamat Web</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Gagal mengunggah beberapa media. Harap coba lagi atau hapus.</string>
+	<string name="editor_toast_uploading_please_wait">Saat ini Anda sedang mengunggah media. Harap tunggu hingga selesai.</string>
+	<string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
+	<string name="editor_post_settings_set_featured_image">Atur Gambar Unggulan</string>
+	<string name="editor_post_settings_featured_image">Gambar Unggulan</string>
+	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android sekarang berisi visual baru yang cantik\n penyunting Cobalah dengan membuat pos baru.</string>
+	<string name="new_editor_promo_title">Penyunting baru</string>
+	<string name="new_editor_promo_button_label">Bagus, terima kasih!</string>
+	<string name="visual_editor_enabled">Editor Visual diaktifkan</string>
+	<string name="editor_content_placeholder">Editor Visual diaktifkan</string>
+	<string name="editor_page_title_placeholder">Judul Halaman</string>
+	<string name="editor_post_title_placeholder">Judul Kiriman</string>
+	<string name="email_address">Alamat email</string>
+	<string name="preference_show_visual_editor">Tampilkan editor visual</string>
+	<string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
+	<string name="preference_editor">Penyunting</string>
+	<string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>
+	<string name="mnu_comment_delete_permanently">Hapus</string>
+	<string name="comment_deleted_permanently">Komentar dihapus</string>
+	<string name="mnu_comment_untrash">Pulihkan</string>
+	<string name="comments_empty_list_filtered">Tidak ada %s komentar</string>
+	<string name="could_not_load_page">Tidak dapat memuat halaman</string>
+	<string name="comment_status_all">Semua</string>
+	<string name="interface_language">Bahasa Antarmuka</string>
+	<string name="off">Nonaktif</string>
+	<string name="about_the_app">Tentang aplikasi</string>
+	<string name="error_post_my_profile">Tidak dapat menyimpan profil Anda</string>
+	<string name="error_fetch_account_settings">Tidak dapat mengambil pengaturan akun Anda</string>
+	<string name="error_fetch_my_profile">Tidak dapat mengambil profil Anda</string>
+	<string name="stats_widget_promo_ok_btn_label">Baik, mengerti</string>
+	<string name="stats_widget_promo_desc">Tambahkan widget ke layar awal Anda untuk mengakses Statistik Anda dalam sekali klik.</string>
+	<string name="stats_widget_promo_title">Widget Statistik Layar Awal</string>
+	<string name="site_settings_unknown_language_code_error">Kode bahasa tidak dikenali</string>
+	<string name="site_settings_threading_dialog_description">Izinkan komentar ditumpuk dalam utas.</string>
+	<string name="site_settings_threading_dialog_header">Utas hingga</string>
+	<string name="remove">Buang</string>
+	<string name="search">Cari</string>
+	<string name="add_category">Tambahkan kategori</string>
+	<string name="disabled">Dinonaktifkan</string>
 	<string name="site_settings_image_original_size">Ukuran Asli</string>
 	<string name="about_me_hint">Beberapa kata tentang Anda...</string>
 	<string name="about_me">Tentang saya</string>
@@ -473,11 +565,9 @@
 	<string name="hs__invalid_email_error">Masukkan sebuah alamat email yang sah</string>
 	<string name="current_location">Lokasi saat ini</string>
 	<string name="add_location">Tambahkan lokasi</string>
-	<string name="your_signature">Tanda tangan Anda:</string>
 	<string name="search_location">Cari</string>
 	<string name="edit_location">Sunting</string>
 	<string name="search_current_location">Temukan</string>
-	<string name="preference_privacy">Privasi</string>
 	<string name="preference_send_usage_stats">Kirim statistik</string>
 	<string name="preference_send_usage_stats_summary">Secara otomatis mengirim statistik penggunaan untuk membantu kami meningkatkan WordPress untuk Android</string>
 	<string name="update_verb">Mutakhirkan</string>
@@ -520,12 +610,9 @@
 	<string name="cat_name_required">Nama kategori wajib diisi</string>
 	<string name="category_automatically_renamed">Nama kategori %1$s tidak sah. Sudah diubah menjadi %2$s.</string>
 	<string name="no_account">Akun WordPress tidak ditemukan, masukkan akun dan coba lagi</string>
-	<string name="auto_sharing_preference_reset">Atur ulang pengaturan berbagi-otomatis</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Blog yang dipilih sebelumnya tak lagi terlihat</string>
 	<string name="sdcard_message">Kartu SD tambahan diperlukan untuk mengunggah media</string>
 	<string name="stats_empty_comments">Belum ada tanggapan</string>
 	<string name="stats_bar_graph_empty">Belum ada statistik</string>
-	<string name="invalid_url_message">Pastikan URL blog yang dimasukkan itu benar</string>
 	<string name="reply_failed">Gagal mengirim balasan</string>
 	<string name="notifications_empty_list">Tak ada pemberitahuan</string>
 	<string name="error_delete_post">Terjadi galat saat menghapus %s</string>
@@ -672,6 +759,7 @@
 	<string name="blog_removed_successfully">Situs berhasil dihapus</string>
 	<string name="remove_account">Hapus situs</string>
 	<string name="notifications_empty_all">Belum ada pemberitahuan...sampai sekarang.</string>
+	<string name="invalid_site_url_message">Pastikan URL situs yang dimasukkan sudah valid</string>
 	<string name="deleting_page">Menghapus laman</string>
 	<string name="deleting_post">Menghapus pos</string>
 	<string name="share_url_post">Bagikan pos</string>
@@ -687,9 +775,6 @@
 	<string name="reader_label_reply">Balas</string>
 	<string name="video">Video</string>
 	<string name="download">Mengunduh media</string>
-	<string name="share_preference_title">Bagikan ke WordPress</string>
-	<string name="reset_auto_share_preference">Reset pengaturan berbagi otomatis</string>
-	<string name="always_use_these_settings_to_share">Selalu gunakan pengaturan ini</string>
 	<string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
 	<string name="comment_spammed">Komentar ditandai sebagai spam</string>
 	<string name="select_time">Pilih waktu</string>
@@ -744,8 +829,6 @@
 	<string name="unattached">Tidak terlampir</string>
 	<string name="media_add_popup_capture_photo">Ambil foto</string>
 	<string name="media_add_popup_capture_video">Rekam video</string>
-	<string name="media_no_video_title">VideoPress tak tersedia</string>
-	<string name="media_no_video_message">Dapatkan upgrade VideoPress untuk mengunggah video!</string>
 	<string name="media_edit_title_text">Judul</string>
 	<string name="media_edit_caption_text">Subjudul</string>
 	<string name="media_edit_description_text">Deskripsi</string>
@@ -788,7 +871,6 @@
 	<string name="stats_entry_tags_and_categories">Topik</string>
 	<string name="stats_entry_authors">Penulis</string>
 	<string name="stats_entry_referrers">Pengacu</string>
-	<string name="menu_search">Cari</string>
 	<string name="passcode_set">Pasang PIN</string>
 	<string name="passcode_preference_title">Kunci PIN</string>
 	<string name="passcode_turn_off">Matikan kunci PIN</string>
@@ -806,8 +888,6 @@
 	<string name="sign_in">Log masuk</string>
 	<string name="follows">Mengikuti</string>
 	<string name="loading">Memuat...</string>
-	<string name="post_signature">Kirim tandatangan</string>
-	<string name="add_tagline">Tambahkan sebuah tandatangan dalam tulisan baru</string>
 	<string name="httpuser">Nama pengguna HTTP</string>
 	<string name="httppassword">Kata sandi HTTP</string>
 	<string name="error_media_upload">Ada masalah ketika mengunggah media</string>
@@ -832,14 +912,11 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Unggah dan tautkan ke gambar terskala</string>
 	<string name="scaled_image">Lebar gambar terskala</string>
-	<string name="remove_location">Hapus</string>
 	<string name="scheduled">Dijadwalkan</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Ditulis dari WordPress untuk Android</string>
 	<string name="version">Versi</string>
 	<string name="app_title">WordPress untuk Android</string>
 	<string name="tos">Syarat Layanan</string>
-	<string name="about">Tentang</string>
 	<string name="max_thumbnail_px_width">Lebar Gambar Baku</string>
 	<string name="image_alignment">Penjajaran</string>
 	<string name="refresh">Segarkan</string>
@@ -884,82 +961,4 @@
 	<string name="error">Galat</string>
 	<string name="category_refresh_error">Gagal memuat ulang Kategori</string>
 	<string name="notification_settings">Pengaturan Pemberitahuan</string>
-	<string-array name="alignment_array">
-		<item>Tak ada</item>
-		<item>Kiri</item>
-		<item>Tengah</item>
-		<item>Kanan</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Komentar di situs saya</item>
-		<item>Suka pada komentar saya</item>
-		<item>Suka pada pos saya</item>
-		<item>Pengikut Situs</item>
-		<item>Prestasi situs</item>
-		<item>Penyebutan nama pengguna</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Balas komentar saya</item>
-		<item>Suka pada komentar saya</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Saran</item>
-		<item>Riset</item>
-		<item>Komunitas</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Kiat untuk mendapat maksimal dari WordPress.com.</item>
-		<item>Kesempatan untuk berpartisipasi dalam riset &amp; survei WordPress.com.</item>
-		<item>Informasi tentang kursus dan acara WordPress.com (online &amp; tatap muka).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Diterbitkan</item>
-		<item>Draf</item>
-		<item>Terjadwal</item>
-		<item>Dibuang</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Di samping</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galeri</item>
-		<item>Gambar</item>
-		<item>Taut</item>
-		<item>Kutip</item>
-		<item>Standar</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Situs Anda dapat terlihat oleh semua dan mesin pencari bisa mengindeksnya</item>
-		<item>Situs Anda dapat terlihat oleh semua orang tetapi mesin pencari tidak akan mengindeksnya</item>
-		<item>Situs Anda hanya terlihat oleh Anda dan pengguna yang sudah Anda setujui</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Diperlukan persetujuan manual untuk semua komentar.</item>
-		<item>Secara otomatis menyetujui jika pengguna sudah pernah disetujui komentarnya.</item>
-		<item>Secara otomatis menyetujui semua komentar</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Belum ada komentar</item>
-		<item>Komentar pengguna yang diketahui</item>
-		<item>Semua pengguna</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Tidak ada</item>
-		<item>Dua Level</item>
-		<item>Tiga Level</item>
-		<item>Empat Level</item>
-		<item>Lima Level</item>
-		<item>Enam Level</item>
-		<item>Tujuh Level</item>
-		<item>Delapan Level</item>
-		<item>Sembilan Level</item>
-		<item>Sepuluh Level</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Gratis</item>
-		<item>Semua</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

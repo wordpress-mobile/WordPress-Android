@@ -20,11 +20,15 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
@@ -37,25 +41,35 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
-    private static final long ALERT_ANIM_DURATION_MS = 1000l;
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000L;
+    private static final long ALERT_ANIM_DURATION_MS = 1000L;
+    public static final int HIDE_WP_ADMIN_YEAR = 2015;
+    public static final int HIDE_WP_ADMIN_MONTH = 9;
+    public static final int HIDE_WP_ADMIN_DAY = 7;
+    public static final String HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT";
 
     private WPNetworkImageView mBlavatarImageView;
     private WPTextView mBlogTitleTextView;
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
+    private LinearLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
+    private WPTextView mCurrentPlanNameTextView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -128,12 +142,15 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
+        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
+        mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +179,15 @@ public class MySiteFragment extends Fragment
                 ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
             }
         });
+
+        if (isPlansEnabled()) {
+            mPlanContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+                }
+            });
+        }
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +248,13 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
+    /*
+     * plans is a work-in-progress and is currently only exposed to alpha testers
+     */
+    private static boolean isPlansEnabled() {
+        return AppPrefs.isInAppBillingAvailable();
+    }
+
     private void showSitePicker() {
         if (isAdded()) {
             ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
@@ -236,6 +269,8 @@ public class MySiteFragment extends Fragment
             case RequestCodes.SITE_PICKER:
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
+                    //reset comments status filter
+                    AppPrefs.setCommentsStatusFilter(CommentStatus.UNKNOWN);
                     setBlog(WordPress.getCurrentBlog());
                 }
                 break;
@@ -308,6 +343,8 @@ public class MySiteFragment extends Fragment
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
+        toggleAdminVisibility();
+
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
@@ -331,6 +368,42 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
+
+        // Hide the Plan item if the Plans feature is not available.
+        if (isPlansEnabled()) {
+            String planShortName = blog.getPlanShortName();
+            if (!TextUtils.isEmpty(planShortName)) {
+                mCurrentPlanNameTextView.setText(planShortName);
+                mPlanContainer.setVisibility(View.VISIBLE);
+            } else {
+                mPlanContainer.setVisibility(View.GONE);
+            }
+        } else {
+            mPlanContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void toggleAdminVisibility() {
+        if (shouldHideWPAdmin()) {
+            mAdminView.setVisibility(View.GONE);
+        } else {
+            mAdminView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean shouldHideWPAdmin() {
+        Blog blog = WordPress.getCurrentBlog();
+
+        if (!blog.isDotcomFlag()) {
+            return false;
+        } else {
+            Account account = AccountHelper.getDefaultAccount();
+
+            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
+            calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
+
+            return account.getDateCreated().after(calendar.getTime());
+        }
     }
 
     @Override

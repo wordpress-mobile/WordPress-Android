@@ -70,8 +70,23 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public void setUrlForVideoPressId(String videoPressId, String url, String posterUrl) {
+
+        }
+
+        @Override
+        public boolean isUploadingMedia() {
+            return false;
+        }
+
+        @Override
         public boolean hasFailedMediaUploads() {
             return false;
+        }
+
+        @Override
+        public void removeAllFailedMediaUploads() {
+
         }
 
         @Override

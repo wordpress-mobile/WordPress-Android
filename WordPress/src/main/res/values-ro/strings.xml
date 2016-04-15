@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Stare</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">Niciuna</string>
+	<string name="align_left">Stânga</string>
+	<string name="align_center">Centru</string>
+	<string name="align_right">Dreapta</string>
+	<string name="theme_free">Gratis</string>
+	<string name="theme_all">Toate</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_gallery">Galerie</string>
+	<string name="post_format_image">Imagine</string>
+	<string name="post_format_link">Legătură</string>
+	<string name="post_format_quote">Citat</string>
+	<string name="post_format_standard">Standard</string>
+	<string name="post_format_chat">Discuție</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="post_format_aside">Notă</string>
+	<string name="notif_events">Informații despre cursurile și evenimente WordPress.com (online și în persoană).</string>
+	<string name="notif_surveys">Oportunități de a participa în cercetarea și sondaje WordPress.com.</string>
+	<string name="notif_tips">Sfaturi pentru a profita la maxim de WordPress.com.</string>
+	<string name="notif_community">Comunitate</string>
+	<string name="notif_research">Cercetare</string>
+	<string name="replies_to_my_comments">Răspunsuri la comentariile mele</string>
+	<string name="notif_suggestions">Sugestii</string>
+	<string name="site_achievements">Realizări sit</string>
+	<string name="username_mentions">Mențiuni nume utilizator</string>
+	<string name="likes_on_my_posts">Aprecieri pentru articolele mele</string>
+	<string name="site_follows">Urmăriri sit</string>
+	<string name="likes_on_my_comments">Aprecieri pentru comentariile mele</string>
+	<string name="comments_on_my_site">Comentarii pe situl meu</string>
+	<string name="site_settings_list_editor_summary_other">%d elemente</string>
+	<string name="site_settings_list_editor_summary_one">1 element</string>
+	<string name="approve_auto">Toți utilizatorii</string>
+	<string name="approve_auto_if_previously_approved">Comentariile utilizatorilor cunoscuți</string>
+	<string name="approve_manual">Niciun comentariu</string>
+	<string name="site_settings_paging_summary_other">%d comentarii per pagină</string>
+	<string name="site_settings_paging_summary_one">1 comentariu per pagină</string>
+	<string name="site_settings_multiple_links_summary_other">Necesită aprobare dacă are mai mult de %d legături</string>
+	<string name="site_settings_multiple_links_summary_one">Necesită aprobare dacă are mai mult de o legătură</string>
+	<string name="site_settings_multiple_links_summary_zero">Necesită aprobare dacă are mai mult de 0 legături</string>
+	<string name="detail_approve_auto">Aprobare automată a tuturor comentariilor.</string>
+	<string name="detail_approve_auto_if_previously_approved">Aprobare automată dacă utilizatorul are un comentariu aprobat anterior</string>
+	<string name="detail_approve_manual">Necesită aprobare manuală pentru comentariile oricui.</string>
+	<string name="days_quantity_one">1 zi</string>
+	<string name="days_quantity_other">%d zile</string>
+	<string name="filter_trashed_posts">Aruncat la gunoi</string>
+	<string name="filter_draft_posts">Ciorne</string>
+	<string name="filter_scheduled_posts">Programată</string>
+	<string name="filter_published_posts">Publicat</string>
+	<string name="pending_email_change_snackbar">Dă clic pe legătura de verificare din emailul trimis la %1$s pentru a confirma noua ta adresă</string>
+	<string name="primary_site">Sit primar</string>
+	<string name="web_address">Adresă web</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Unele actualizări media au eșuat. Te rog reînceacă-le sau șterge-le.</string>
+	<string name="editor_toast_uploading_please_wait">Acum încarci media. Te rog așteaptă până ce asta se termină.</string>
+	<string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
+	<string name="editor_post_settings_set_featured_image">Setează imaginea reprezentativă</string>
+	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
+	<string name="new_editor_promo_desc">aplicația WordPress pentru Android include acum un un nou și frumos \neditor vizual. Încearcă-l creând un nou articol.</string>
+	<string name="new_editor_promo_title">Editor nou nouț</string>
+	<string name="new_editor_promo_button_label">Super, mulțumesc!</string>
+	<string name="visual_editor_enabled">Editor vizual validat</string>
+	<string name="editor_content_placeholder">Partajează aici povestea ta...</string>
+	<string name="editor_page_title_placeholder">Titlu pagină</string>
+	<string name="editor_post_title_placeholder">Titlu articol</string>
+	<string name="email_address">Adresă email</string>
+	<string name="preference_show_visual_editor">Arată editorul vizual</string>
+	<string name="dlg_sure_to_delete_comments">Șterg permanent aceste comentarii?</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comment">Șterg permanent acest comentariu?</string>
+	<string name="mnu_comment_delete_permanently">Ștergere</string>
+	<string name="comment_deleted_permanently">Comentariu șters</string>
+	<string name="mnu_comment_untrash">Restaurare</string>
+	<string name="comments_empty_list_filtered">Nu %s cometarii</string>
+	<string name="could_not_load_page">Nu pot încărca pagina</string>
+	<string name="comment_status_all">Tot</string>
+	<string name="interface_language">Limba interfeței</string>
+	<string name="off">Oprit</string>
+	<string name="about_the_app">Despre aplicație</string>
+	<string name="error_post_account_settings">N-am putut salva setările tale de cont</string>
+	<string name="error_post_my_profile">N-am putut salva profilul tău</string>
+	<string name="error_fetch_account_settings">N-am putut aduce setările tale de cont</string>
+	<string name="error_fetch_my_profile">N-am putut aduce profilul tău</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, am înțețes</string>
+	<string name="stats_widget_promo_desc">Adaugă piesa ecranului tău de pornire pentru a accesa statisticile dintr-un clic.</string>
+	<string name="stats_widget_promo_title">Piesă de statistici pe ecranul de pornire</string>
+	<string name="site_settings_unknown_language_code_error">Cod de limbă nerecunoscut</string>
+	<string name="site_settings_threading_dialog_description">Permite imbricarea comentariilor în fire.</string>
+	<string name="site_settings_threading_dialog_header">Pe fire până la</string>
+	<string name="remove">Înlătură</string>
+	<string name="search">Caută</string>
+	<string name="add_category">Adaugă categorie</string>
+	<string name="disabled">Invalidat</string>
 	<string name="site_settings_image_original_size">Mărime originală</string>
+	<string name="privacy_private">Situl tău este vizibil doar pentru tine și pentru utilizatorii pe care i-ai aprobat</string>
+	<string name="privacy_public_not_indexed">Situl tău este vizibil pentru toată lumea, dar cere motoarelor de căutare să nu-l indexeze</string>
+	<string name="privacy_public">Situl tău este vizibil pentru toată lumea și poate fi indexat de motoarele de căutare</string>
 	<string name="about_me_hint">Câteva cuvinte despre tine...</string>
 	<string name="public_display_name_hint">Numele afișat va fi implicit numele utilizator dacă nu este setat</string>
 	<string name="about_me">Despre mine</string>
@@ -473,13 +569,11 @@
 	<string name="contact_us">Contactează-ne</string>
 	<string name="current_location">Locație curentă</string>
 	<string name="add_location">Adaugă locație</string>
-	<string name="your_signature">Semnătura ta:</string>
 	<string name="search_current_location">Localizează</string>
 	<string name="edit_location">Editare</string>
 	<string name="search_location">Caută</string>
 	<string name="preference_send_usage_stats_summary">Trimite automat statistici pentru a ajuta la îmbunătățirea aplicației WordPress pentru Android</string>
 	<string name="preference_send_usage_stats">Trimite statistici</string>
-	<string name="preference_privacy">Confidențialitate</string>
 	<string name="schedule_verb">Programare</string>
 	<string name="update_verb">Actualizează</string>
 	<string name="reader_empty_recommended_blogs">Niciun blog recomandat</string>
@@ -545,13 +639,10 @@
 	<string name="error_refresh_posts">Articolele n-au putut fi reîmprospătate în acest moment</string>
 	<string name="error_delete_post">A apărut o eroare în timpul ștergerii %s</string>
 	<string name="notifications_empty_list">Nicio notificare</string>
-	<string name="invalid_url_message">Verifică dacă URL-ul de blog introdus este valid</string>
 	<string name="reply_failed">Răspuns eșuat</string>
 	<string name="stats_bar_graph_empty">Nicio statistică disponibilă</string>
 	<string name="stats_empty_comments">Niciun comentariu deocamdată</string>
 	<string name="sdcard_message">Este necesar un card SD montat pentru a încărca media</string>
-	<string name="auto_sharing_preference_reset">Resetare setări de auto-partajare </string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Blogul selectat anterior nu mai este vizibil</string>
 	<string name="no_account">Niciun cont WordPress nu a fost găsit, adaugă unul și încearcă din nou</string>
 	<string name="cat_name_required">Câmpul cu numele categoriei este obligatoriu</string>
 	<string name="category_automatically_renamed">Numele categoriei %1$s nu e valid. A fost redenumită %2$s.</string>
@@ -569,6 +660,7 @@
 	<string name="theme_fetch_failed">Am eșuat în aducerea temelor</string>
 	<string name="no_network_message">Nu e nicio rețea disponibilă</string>
 	<string name="out_of_memory">Depășirea memoriei dispozitivului</string>
+	<string name="invalid_url_message">Verifică dacă URL-ul introdus este valid</string>
 	<string name="blog_removed_successfully">Sit înlăturat cu succes</string>
 	<string name="remove_account">Înlătură situl</string>
 	<string name="reader_toast_err_remove_tag">Nu pot șterge această etichetă</string>
@@ -672,6 +764,7 @@
 	<string name="select_categories">Selectează categoriile</string>
 	<string name="xmlrpc_error">Nu mă pot conecta. Introdu calea completă spre xmlrpc.php de pe situl tău și mai încearcă odată.</string>
 	<string name="notifications_empty_all">Nicio notificare... încă.</string>
+	<string name="invalid_site_url_message">Verifică dacă URL-ul de sit introdus e corect</string>
 	<string name="share_url_post">Partajare articol</string>
 	<string name="share_url_page">Partajare pagină</string>
 	<string name="share_link">Partajare legătură</string>
@@ -685,10 +778,7 @@
 	<string name="reader_likes_multi">%,d oameni la fel</string>
 	<string name="reader_label_reply">Răspunde</string>
 	<string name="reader_likes_you_and_multi">Tu și încă %,d alții la fel</string>
-	<string name="always_use_these_settings_to_share">Folosește întotdeauna aceste setări</string>
 	<string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
-	<string name="share_preference_title">Partajare pe WordPress</string>
-	<string name="reset_auto_share_preference">Resetare setări de auto-partajare</string>
 	<string name="reader_toast_err_get_comment">Nu pot să aduc acest comentariu</string>
 	<string name="download">Descarc media</string>
 	<string name="video">Video</string>
@@ -746,7 +836,6 @@
 	<string name="passcode_enter_passcode">Introdu PIN-ul tău</string>
 	<string name="passcode_enter_old_passcode">Introdu vechiul tău PIN</string>
 	<string name="passcode_re_enter_passcode">Re-introdu PIN-ul tău</string>
-	<string name="menu_search">Caută</string>
 	<string name="passcode_manage">Gestionează PIN-ul de blocare</string>
 	<string name="share_action">Partajare</string>
 	<string name="stats_totals_clicks">Clicuri</string>
@@ -781,9 +870,7 @@
 	<string name="media_edit_caption_text">Text asociat</string>
 	<string name="media_edit_description_text">Descriere</string>
 	<string name="media_edit_title_hint">Introdu aici titlul</string>
-	<string name="media_no_video_message">Fă actualizarea pentru VideoPress pentru a încărca un video!</string>
 	<string name="media_edit_title_text">Titlu</string>
-	<string name="media_no_video_title">VideoPress indisponibil</string>
 	<string name="media_gallery_type_tiled">Placat</string>
 	<string name="media_gallery_type_circles">Cercuri</string>
 	<string name="media_gallery_type_slideshow">Diaporama</string>
@@ -808,8 +895,6 @@
 	<string name="loading">Se încarcă...</string>
 	<string name="httpuser">nume utilizator HTTP</string>
 	<string name="httppassword">parolă HTTP</string>
-	<string name="post_signature">Semnătură articol</string>
-	<string name="add_tagline">Adaugă o semnătură noilor articole</string>
 	<string name="error_media_upload">A apărut o eroare la încărcarea media</string>
 	<string name="content_description_add_media">Adaugă media</string>
 	<string name="publish_date">Publicare</string>
@@ -832,14 +917,11 @@
 	<string name="blogusername">nume utilizator blog</string>
 	<string name="scaled_image">Lățime imagine scalată</string>
 	<string name="upload_scaled_image">Încarcă și leagă la imaginea scalată</string>
-	<string name="remove_location">Îndepărtează</string>
 	<string name="scheduled">Programat</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Publicat de pe WordPress pentru Android</string>
 	<string name="app_title">WordPress pentru Android</string>
 	<string name="version">Versiune</string>
 	<string name="tos">Termenii de funcționare a serviciului</string>
-	<string name="about">Despre</string>
 	<string name="max_thumbnail_px_width">Lățime imagine implicită</string>
 	<string name="image_alignment">Aliniere</string>
 	<string name="refresh">Reîmprospătare</string>
@@ -861,6 +943,7 @@
 	<string name="categories">Categorii</string>
 	<string name="title">Titlu</string>
 	<string name="tags_separate_with_commas">Etichete (separă etichetele cu virgule)</string>
+	<string name="dlg_deleting_comments">Ștergere comentarii</string>
 	<string name="notification_vibrate">Vibrare</string>
 	<string name="notification_blink">Clipește lumina de notificare</string>
 	<string name="notification_sound">Sunet de notificare</string>
@@ -884,82 +967,4 @@
 	<string name="add">Adaugă</string>
 	<string name="cancel">Anulare</string>
 	<string name="notification_settings">Setări notificare</string>
-	<string-array name="alignment_array">
-		<item>Nimic</item>
-		<item>Stânga</item>
-		<item>Centru</item>
-		<item>Dreapta</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Comentarii pe situl meu</item>
-		<item>Aprecieri la comentariile mele</item>
-		<item>Aprecieri la articolele mele</item>
-		<item>Urmăriri sit</item>
-		<item>Realizările sitului</item>
-		<item>Mențiuni nume utilizator</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Răspunsuri la comentariile mele</item>
-		<item>Aprecieri la comentariile mele</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Sugestii</item>
-		<item>Cercetare</item>
-		<item>Comunitate</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Sfaturi pentru a obține ce este mai bun din WordPress.com.</item>
-		<item>Oportunități de a participa în cercetări și sondaje WordPress.com.</item>
-		<item>Informații despre cursuri și evenimente WordPress.com (on-line &amp; în-persoană).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Publicat</item>
-		<item>Ciorne</item>
-		<item>Planificat</item>
-		<item>Aruncat la gunoi</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Notă</item>
-		<item>Audio</item>
-		<item>Conversație</item>
-		<item>Galerie</item>
-		<item>Imagine</item>
-		<item>Legătură</item>
-		<item>Citat</item>
-		<item>Standard</item>
-		<item>Stare</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Situl tău este vizibil oricui și poate fi indexat de motoarele de căutare</item>
-		<item>Situl tău este vizibil oricui dar cere motoarelor de căutare să nu-l indexeze</item>
-		<item>Situl tău este vizibil doar pentru utilizatorii pe care i-ai aprobat</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>E necesară aprobarea manuală pentru comentariile fiecăruia.</item>
-		<item>Aprobă automat dacă utilizatorul are un comentariu anterior aprobat.</item>
-		<item>Aprobă automat comentariile fiecăruia.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Fără comnetarii</item>
-		<item>Comentariile utilizatorilor cunoscuți</item>
-		<item>Toți utilizatorii</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Niciuna</item>
-		<item>Două nivele</item>
-		<item>Trei nivele</item>
-		<item>Patru nivele</item>
-		<item>Cinci nivele</item>
-		<item>Șase nivele</item>
-		<item>Șapte nivele</item>
-		<item>Opt nivele</item>
-		<item>Nouă nivele</item>
-		<item>Zece nivele</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Gratis</item>
-		<item>Toate</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

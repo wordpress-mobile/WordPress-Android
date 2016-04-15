@@ -17,7 +17,8 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large">
+        android:paddingTop="@dimen/margin_large"
+        tools:targetApi="LOLLIPOP">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"
@@ -74,7 +75,7 @@
             android:maxLines="3"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            app:fontFamily="merriweather"
+            app:wpFontFamily="merriweather"
             tools:text="text_description" />
 
     </FrameLayout>

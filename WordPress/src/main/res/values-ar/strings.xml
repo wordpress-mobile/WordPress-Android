@@ -1,5 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">الحالة</string>
+	<string name="post_format_video">الفيديو</string>
+	<string name="align_none">بلا</string>
+	<string name="align_left">يسار</string>
+	<string name="align_center">وسط</string>
+	<string name="align_right">يمين</string>
+	<string name="theme_free">مجانًا</string>
+	<string name="theme_all">الكل</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">محادثة</string>
+	<string name="post_format_gallery">معرض</string>
+	<string name="post_format_image">الصورة</string>
+	<string name="post_format_link">الرابط</string>
+	<string name="post_format_quote">اقتباس</string>
+	<string name="post_format_standard">قياسي</string>
+	<string name="notif_events">معلومات حول دورات وردبرس.كوم ومناسباته (على الإنترنت وشخصيًا).</string>
+	<string name="post_format_aside">ملاحظة</string>
+	<string name="post_format_audio">الصوت</string>
+	<string name="notif_surveys">فرص المشاركة في أبحاث وردبرس.كوم واستطلاعاته.</string>
+	<string name="notif_tips">نصائح للحصول على أكبر استفادة من وردبرس.كوم.</string>
+	<string name="notif_community">المجتمع</string>
+	<string name="replies_to_my_comments">الردود على تعليقاتي</string>
+	<string name="notif_suggestions">اقتراحات</string>
+	<string name="notif_research">الأبحاث</string>
+	<string name="site_achievements">إنجازات الموقع</string>
+	<string name="username_mentions">الإشارات إلى اسم المستخدم</string>
+	<string name="likes_on_my_posts">الإعجابات بمقالاتي</string>
+	<string name="site_follows">متابعات للموقع</string>
+	<string name="likes_on_my_comments">الإعجابات بتعليقاتي</string>
+	<string name="comments_on_my_site">التعليقات على موقعي</string>
+	<string name="site_settings_list_editor_summary_other">%d من العناصر</string>
+	<string name="site_settings_list_editor_summary_one">عنصر واحد</string>
+	<string name="approve_auto_if_previously_approved">تعليقات المستخدمين المعروفين</string>
+	<string name="approve_auto">كل المستخدمين</string>
+	<string name="approve_manual">لا توجد تعليقات</string>
+	<string name="site_settings_paging_summary_other">%d من التعليقات في الصفحة</string>
+	<string name="site_settings_paging_summary_one">تعليق واحد في الصفحة</string>
+	<string name="site_settings_multiple_links_summary_other">تلزم الموافقة على أكثر من %d من الروابط</string>
+	<string name="site_settings_multiple_links_summary_one">تلزم الموافقة على أكثر من رابط واحد</string>
+	<string name="site_settings_multiple_links_summary_zero">تلزم الموافقة على أكثر من 0 من الروابط</string>
+	<string name="detail_approve_auto">موافقة تلقائية على تعليقات الجميع.</string>
+	<string name="detail_approve_auto_if_previously_approved">موافقة تلقائية إذا كان لدى المستخدم تعليق تمت الموافقة عليه مسبقًا</string>
+	<string name="detail_approve_manual">تلزم موافقة يدوية على تعليقات الجميع.</string>
+	<string name="filter_trashed_posts">تم وضعها في سلة المهملات</string>
+	<string name="days_quantity_one">يوم واحد</string>
+	<string name="days_quantity_other">%d من الأيام</string>
+	<string name="filter_published_posts">تم النشر</string>
+	<string name="filter_draft_posts">المسودات</string>
+	<string name="filter_scheduled_posts">تمت الجدولة</string>
+	<string name="pending_email_change_snackbar">انقر فوق رابط التحقق في البريد الإلكتروني المرسل إلى %1$s للتأكيد على عنوانك الجديد</string>
+	<string name="primary_site">موقع أساسي</string>
+	<string name="web_address">عنوان الويب</string>
+	<string name="account_settings">‎@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">فشل بعض عمليات رفع الوسائط. يُرجى تجربتها مجددًا أو حذفها.</string>
+	<string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
+	<string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
+	<string name="editor_post_settings_set_featured_image">تعيين الصورة المميزة</string>
+	<string name="editor_post_settings_featured_image">الصورة المميزة</string>
+	<string name="new_editor_promo_desc">يتضمن الآن تطبيق وردبرس.كوم الخاص بنظام Android رؤية جديدة رائعة\n المحرر. جرِّبه من خلال إنشاء مقالة جديدة.</string>
+	<string name="new_editor_promo_title">محرر جديد تمامًا</string>
+	<string name="new_editor_promo_button_label">رائع، شكرًا!</string>
+	<string name="visual_editor_enabled">تم تمكين محرر مرئي</string>
+	<string name="editor_content_placeholder">شارك قصتك هنا…</string>
+	<string name="editor_page_title_placeholder">عنوان الصفحة</string>
+	<string name="editor_post_title_placeholder">عنوان المقالة</string>
+	<string name="email_address">عنوان البريد الإلكتروني</string>
+	<string name="preference_show_visual_editor">إظهار محرر مرئي</string>
+	<string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
+	<string name="preference_editor">المحرر</string>
+	<string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>
+	<string name="mnu_comment_delete_permanently">حذف</string>
+	<string name="comment_deleted_permanently">تم حذف تعليق</string>
+	<string name="mnu_comment_untrash">استعادة</string>
+	<string name="comments_empty_list_filtered">لا توجد %s من التعليقات</string>
+	<string name="could_not_load_page">يتعذر تحميل الصفحة</string>
+	<string name="comment_status_all">الكل</string>
+	<string name="interface_language">لغة الواجهة</string>
+	<string name="off">إيقاف تشغيل</string>
+	<string name="about_the_app">حول التطبيق</string>
+	<string name="error_post_my_profile">تعذر حفظ الملف الشخصي</string>
+	<string name="error_fetch_account_settings">Deine Kontoeinstellungen konnten nicht abgerufen werden.</string>
+	<string name="error_fetch_my_profile">Dein Profil konnte nicht abgerufen werden.</string>
+	<string name="stats_widget_promo_ok_btn_label">حسنًا، فهمت</string>
+	<string name="stats_widget_promo_desc">Füge das Widget zu deinem Startbildschirm hinzu, um auf deine Statistiken mit einem Klick zugreifen zu können.</string>
+	<string name="stats_widget_promo_title">Statistik-Widget für den Startbildschirm</string>
+	<string name="site_settings_unknown_language_code_error">Sprachcode nicht erkannt</string>
+	<string name="site_settings_threading_dialog_description">Zulassen, dass Kommentare in Threads verschachtelt werden.</string>
+	<string name="site_settings_threading_dialog_header">Verschachteln bis zu</string>
+	<string name="remove">إزالة</string>
+	<string name="search">بحث</string>
+	<string name="add_category">إضافة فئة</string>
+	<string name="disabled">معطّلة</string>
 	<string name="site_settings_image_original_size">الحجم الأصلي</string>
 	<string name="about_me_hint">كلمات قليلة عنك...</string>
 	<string name="public_display_name_hint">سيكون اسم العرض افتراضيًا لاسم المستخدم الخاص بك إذا لم يتم تعيينه</string>
@@ -473,12 +565,10 @@
 	<string name="hs__invalid_email_error">أدخل عنوان بريد إلكتروني صالحًا</string>
 	<string name="add_location">أضف مكان</string>
 	<string name="current_location">المكان الحالي</string>
-	<string name="your_signature">توقيعك:</string>
 	<string name="search_location">بحث</string>
 	<string name="search_current_location">حدد</string>
 	<string name="edit_location">تحرير</string>
 	<string name="preference_send_usage_stats">إرسال الإحصائيات</string>
-	<string name="preference_privacy">الخصوصية</string>
 	<string name="preference_send_usage_stats_summary">إرسال إحصائيات الاستخدام تلقائيًا لمساعدتنا في تطوير WordPress للإندرويد</string>
 	<string name="update_verb">تحديث</string>
 	<string name="schedule_verb">جدولة</string>
@@ -554,10 +644,7 @@
 	<string name="theme_set_failed">فشل في تعيين القالب</string>
 	<string name="theme_auth_error_message">تاكد من أن لديك صلاحيات لتعيين القوالب</string>
 	<string name="category_automatically_renamed">اسم التصنيف %1$s  ليس صالحًا . تم اعادة تسميته لـ %2$s.</string>
-	<string name="auto_sharing_preference_reset">إعادة تعيين إعدادات المشاركة التلقائية</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">المدونة المحددة سلفًا لم تعد مرئية</string>
 	<string name="sdcard_message">بطاقة ذاكرة SD  مطلوبة لرفع ملفات الوسائط</string>
-	<string name="invalid_url_message">تحقق من أن عنوان المدونة المدخل صالح</string>
 	<string name="error_delete_post">حدث خطأ أثناء حذف الـ  %s</string>
 	<string name="error_refresh_posts">المقالات لايمكن تحديثها في الوقت الحاضر</string>
 	<string name="error_refresh_pages">الصفحات لايمكن تحديثها في الوقت الحاضر</string>
@@ -672,6 +759,7 @@
 	<string name="comment_status_unapproved">معلق</string>
 	<string name="dlg_unapproving_comments">غير مصدق</string>
 	<string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
+	<string name="invalid_site_url_message">تحقق من أن عنوان URL الذي تم إدخاله في الموقع صحيح</string>
 	<string name="share_url_post">مشاركة المقالة</string>
 	<string name="deleting_page">يتم الان حذف الصفحة</string>
 	<string name="deleting_post">يتم الان حذف المقالة</string>
@@ -682,16 +770,13 @@
 	<string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات ...</string>
 	<string name="error_refresh_media">حدث شيء خطأ عندما كان يتم تحديث مكتبة الوسائط. أعد المحاولة في وقت لاحق.</string>
 	<string name="reader_label_reply">رد</string>
-	<string name="share_preference_title">المشاركة إلى ووردبريس</string>
 	<string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
 	<string name="comment_spammed">تم وضع علامة إزعاج على التعليق</string>
 	<string name="video">فيديو</string>
 	<string name="download">تحميل الوسائط</string>
-	<string name="reset_auto_share_preference">إعادة تعيين إعدادات المشاركة التلقائية</string>
 	<string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
 	<string name="reader_likes_multi">%,d أحبوا هذا</string>
 	<string name="reader_toast_err_get_comment">غير قادر على استعادة هذا التعليق</string>
-	<string name="always_use_these_settings_to_share">دائمًا استخدم هذه الإعدادات</string>
 	<string name="account_two_step_auth_enabled">هذا الحساب تبقى عليه اثنتان من خطوات المصادقة. قم بزيارة إعدادات الأمان على ووردبريس.كوم وإنشاء كلمة مرور خاصة بالتطبيقات.</string>
 	<string name="select_time">تحديد الوقت</string>
 	<string name="select_date">تحديد التاريخ</string>
@@ -763,7 +848,6 @@
 	<string name="media_edit_caption_hint">أدخل الكلمات التوضيحية هنا</string>
 	<string name="stats">الإحصائيات</string>
 	<string name="stats_entry_tags_and_categories">الموضوع</string>
-	<string name="menu_search">البحث</string>
 	<string name="passcode_re_enter_passcode">اعادة إدخال مفتاح الـ PIN</string>
 	<string name="passcode_change_passcode">تغيير مفتاح الـ PIN</string>
 	<string name="passcode_enter_old_passcode">أدخل مفتاح الـ PIN القديم</string>
@@ -782,12 +866,10 @@
 	<string name="stats_timeframe_months">الشهور</string>
 	<string name="stats_totals_views">الزيارات</string>
 	<string name="stats_entry_authors">الكاتب</string>
-	<string name="media_no_video_title">فيديوبريس غير متوفر</string>
 	<string name="theme_activating_button">جاري التفعيل</string>
 	<string name="media_edit_failure">فشل التحديث</string>
 	<string name="share_action_title">أضف إلى...</string>
 	<string name="stats_entry_referrers">الإحالات</string>
-	<string name="media_no_video_message">احصل على ترقية فيديوبريس لرفع الفيديو</string>
 	<string name="media_gallery_type_slideshow">عارض الشرائح</string>
 	<string name="share_action">المشاركة</string>
 	<string name="theme_set_success">نجح في جعل الثيم افتراضي</string>
@@ -808,8 +890,6 @@
 	<string name="loading">جاري التحميل...</string>
 	<string name="httppassword">كلمة مرور HTTP</string>
 	<string name="httpuser">اسم مستخدم HTTP</string>
-	<string name="post_signature">توقيع المقالة</string>
-	<string name="add_tagline">أضف توقيعا إلى المقالات الجديدة</string>
 	<string name="error_media_upload">حدث خطأ أثناء رفع ملفات الوسائط</string>
 	<string name="publish_date">نشر</string>
 	<string name="post_content">المحتوى (انقر لإضافة نص ووسائط)</string>
@@ -832,14 +912,11 @@
 	<string name="ok">موافق</string>
 	<string name="scaled_image">تحجيم عرض الصورة</string>
 	<string name="upload_scaled_image">الرفع والربط بالصورة المحجمة</string>
-	<string name="remove_location">إزالة</string>
 	<string name="scheduled">مجدول</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">نشر من تطبيق ووردبريس للأندرويد</string>
 	<string name="version">النسخة</string>
 	<string name="tos">بنود الخدمة</string>
 	<string name="app_title">ووردبريس للآندرويد</string>
-	<string name="about">حول</string>
 	<string name="max_thumbnail_px_width">عرض الصورة الافتراضي</string>
 	<string name="image_alignment">المحاذاة</string>
 	<string name="refresh">تجديد</string>
@@ -884,82 +961,4 @@
 	<string name="category_refresh_error">خطأ في تحديث القسم</string>
 	<string name="on">تشغيل</string>
 	<string name="notification_settings">إعدادات التنبيهات</string>
-	<string-array name="alignment_array">
-		<item>بدون</item>
-		<item>يسار</item>
-		<item>وسط</item>
-		<item>يمين</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>التعليقات على موقعي</item>
-		<item>الإعجابات بتعليقاتي</item>
-		<item>الإعجابات بمقالاتي</item>
-		<item>متابعات للموقع</item>
-		<item>إنجازات الموقع</item>
-		<item>الإشارات إلى اسم المستخدم</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>الردود على تعليقاتي</item>
-		<item>الإعجابات بتعليقاتي</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>اقتراحات</item>
-		<item>الأبحاث</item>
-		<item>المجتمع</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>نصائح للحصول على أكبر استفادة من وردبرس.كوم.</item>
-		<item>فرص المشاركة في أبحاث واستطلاعات وردبرس.كوم.</item>
-		<item>معلومات حول دورات ومناسبات وردبرس.كوم (عبر الإنترنت وشخصيًا).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>تم النشر</item>
-		<item>المسودات</item>
-		<item>تمت الجدولة</item>
-		<item>أُضيف إلى سلة المهملات</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>ملاحظة</item>
-		<item>صوت</item>
-		<item>محادثة</item>
-		<item>معرض</item>
-		<item>صورة</item>
-		<item>رابط</item>
-		<item>اقتباس</item>
-		<item>قياسي</item>
-		<item>حالة</item>
-		<item>فيديو</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>سيكون موقعك مرئيًا للجميع ويمكن فهرسته بواسطة محركات البحث</item>
-		<item>سيكون موقعك مرئيًا للجميع مع مطالبة محركات البحث بعدم فهرسته في الوقت نفسه</item>
-		<item>سيكون موقعك مرئيًا لك وللمستخدمين الذين توافق عليهم فقط</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>يتطلب موافقة يدوية لتعليقات الجميع.</item>
-		<item>موافقة تلقائية إذا كان لدى المستخدم تعليق تمت الموافقة عليه مسبقًا.</item>
-		<item>موافقة تلقائية على تعليقات الجميع.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>لا توجد تعليقات</item>
-		<item>تعليقات المستخدمين المعروفة</item>
-		<item>جميع المستخدمين</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>بلا</item>
-		<item>مستويان</item>
-		<item>المستويات الثلاثة</item>
-		<item>المستويات الأربعة</item>
-		<item>المستويات الخمسة</item>
-		<item>المستويات الستة</item>
-		<item>المستويات السبعة</item>
-		<item>المستويات الثمانية</item>
-		<item>المستويات التسعة</item>
-		<item>المستويات العشرة</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>مجاني</item>
-		<item>الكل</item>
-		<item>الإصدار المميز</item>
-	</string-array>
 </resources>

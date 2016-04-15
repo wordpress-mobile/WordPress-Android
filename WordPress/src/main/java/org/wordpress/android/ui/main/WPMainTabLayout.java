@@ -104,4 +104,18 @@ public class WPMainTabLayout extends TabLayout {
 
         animScale.start();
     }
+
+    private boolean isValidPosition(int position) {
+        return (position >=0 && position < getTabCount());
+    }
+
+    public void setSelectedTabPosition(int position) {
+        if (!isValidPosition(position) || getSelectedTabPosition() == position) {
+            return;
+        }
+        Tab tab = getTabAt(position);
+        if (tab != null) {
+            tab.select();
+        }
+    }
 }

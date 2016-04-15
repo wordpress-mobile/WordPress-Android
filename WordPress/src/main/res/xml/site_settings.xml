@@ -279,10 +279,43 @@
 
     </PreferenceCategory>
 
-    <Preference
-        android:id="@+id/pref_delete_site"
-        android:key="@string/pref_key_site_delete_site"
-        android:title="@string/site_settings_delete_site_title"
-        app:longClickHint="@string/site_settings_delete_site_hint" />
+    <PreferenceCategory
+        android:id="@+id/pref_advanced"
+        android:key="@string/pref_key_site_advanced"
+        android:title="@string/site_settings_advanced_header">
+
+        <PreferenceScreen
+            android:id="@+id/pref_start_screen"
+            android:key="@string/pref_key_site_start_over_screen"
+            android:title="@string/start_over"
+            app:longClickHint="@string/site_settings_start_over_hint">
+
+            <org.wordpress.android.ui.prefs.WPStartOverPreference
+                android:id="@+id/pref_start_over"
+                android:key="@string/pref_key_site_start_over"
+                android:icon="@drawable/gridicons_history"
+                android:title="@string/let_us_help"
+                android:summary="@string/start_over_text"
+                android:widgetLayout="@layout/start_over_preference_button"
+                android:layout="@layout/start_over_preference"
+                app:longClickHint="@string/site_settings_start_over_hint"
+                app:buttonText="@string/contact_support"
+                app:buttonTextAllCaps="true" />
+
+        </PreferenceScreen>
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_export_site"
+            android:key="@string/pref_key_site_export_site"
+            android:title="@string/site_settings_export_content_title"
+            app:longClickHint="@string/export_site_hint" />
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_delete_site"
+            android:key="@string/pref_key_site_delete_site"
+            android:title="@string/site_settings_delete_site_title"
+            app:longClickHint="@string/delete_site_hint" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

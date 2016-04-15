@@ -48,7 +48,7 @@
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold"
-                        app:fontVariation="light" />
+                        android:fontFamily="sans-serif-light" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_subtitle_label"
@@ -126,6 +126,30 @@
 
             </RelativeLayout>
 
+            <!--Plan-->
+            <RelativeLayout
+                android:id="@+id/row_plan"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_plan_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:src="@drawable/gridicons_clipboard" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_plan_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_plan_icon"
+                    android:text="@string/plan" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_current_plan_text_view"
+                    style="@style/MySiteListRowSecodaryTextView"
+                    android:layout_toRightOf="@id/my_site_plan_text_view"
+                    android:text="@string/plan" />
+
+            </RelativeLayout>
+
             <!--PUBLISH-->
             <LinearLayout style="@style/MySiteListHeaderLayout">
 
@@ -138,30 +162,36 @@
             </LinearLayout>
 
             <!--Blog Posts-->
-            <RelativeLayout
-                android:id="@+id/row_blog_posts"
-                style="@style/MySiteListRowLayout">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <View
                     android:id="@+id/postsGlowBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="1"
-                    android:background="@drawable/pressed_background_wordpress"
+                    android:background="@color/translucent_grey_lighten_20"
                     android:visibility="invisible" />
 
-                <ImageView
-                    android:id="@+id/my_site_blog_posts_icon"
-                    style="@style/MySiteListRowIcon"
-                    android:src="@drawable/my_site_icon_posts" />
+                <LinearLayout
+                    android:id="@+id/row_blog_posts"
+                    style="@style/MySiteListRowLayout">
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_blog_posts_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_blog_posts_icon"
-                    android:text="@string/my_site_btn_blog_posts" />
+                    <ImageView
+                        android:id="@+id/my_site_blog_posts_icon"
+                        style="@style/MySiteListRowIcon"
+                        android:contentDescription="@string/my_site_btn_blog_posts"
+                        android:src="@drawable/my_site_icon_posts" />
 
-            </RelativeLayout>
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_blog_posts_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:text="@string/my_site_btn_blog_posts" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
             <!--Media-->
             <RelativeLayout
@@ -279,35 +309,47 @@
 
             </RelativeLayout>
 
-            <!--Admin-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout
+                android:id="@+id/admin_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MySiteListHeaderTextView"
-                    android:text="@string/my_site_header_admin" />
+                <!--Admin-->
+                <LinearLayout style="@style/MySiteListHeaderLayout">
 
-                <View style="@style/MySiteListSectionDividerView" />
+                    <org.wordpress.android.widgets.WPTextView
+                        style="@style/MySiteListHeaderTextView"
+                        android:text="@string/my_site_header_admin" />
 
+                    <View style="@style/MySiteListSectionDividerView" />
+
+                </LinearLayout>
+
+                <!--View Admin-->
+                <RelativeLayout
+                    android:id="@+id/row_admin"
+                    style="@style/MySiteListRowLayout">
+
+                    <ImageView
+                        android:id="@+id/my_site_view_admin_icon"
+                        style="@style/MySiteListRowIcon"
+                        android:src="@drawable/my_site_icon_view_admin" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_view_admin_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:layout_toRightOf="@id/my_site_view_admin_icon"
+                        android:text="@string/my_site_btn_view_admin" />
+
+                </RelativeLayout>
             </LinearLayout>
 
-            <!--View Admin-->
-            <RelativeLayout
-                android:id="@+id/row_admin"
-                style="@style/MySiteListRowLayout"
-                android:layout_marginBottom="@dimen/margin_extra_large">
 
-                <ImageView
-                    android:id="@+id/my_site_view_admin_icon"
-                    style="@style/MySiteListRowIcon"
-                    android:src="@drawable/my_site_icon_view_admin" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_view_admin_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_view_admin_icon"
-                    android:text="@string/my_site_btn_view_admin" />
-
-            </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_extra_large" />
 
         </LinearLayout>
 
@@ -340,7 +382,7 @@
             android:text="@string/my_site_no_sites_view_title"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_double_extra_large"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"

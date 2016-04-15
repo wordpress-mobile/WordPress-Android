@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="post_format_status">Durum</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">Hiçbiri</string>
+	<string name="align_left">Sol</string>
+	<string name="align_center">Orta</string>
+	<string name="align_right">Sağ</string>
+	<string name="theme_free">Ücretsiz</string>
+	<string name="theme_all">Tümü</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Sohbet</string>
+	<string name="post_format_gallery">Galeri</string>
+	<string name="post_format_image">Görsel</string>
+	<string name="post_format_link">Bağlantı</string>
+	<string name="post_format_quote">Alıntı</string>
+	<string name="post_format_standard">Standart</string>
+	<string name="notif_events">WordPress.com kursları ve etkinlikleri hakkında bilgi (çevrimiçi ve bire bir).</string>
+	<string name="post_format_aside">Yan sütun</string>
+	<string name="post_format_audio">Ses</string>
+	<string name="notif_surveys">WordPress.com araştırma ve anketlerine katkıda bulunma olanakları.</string>
+	<string name="notif_tips">WordPress.com\'dan en fazlasını almak için ipuçları.</string>
+	<string name="notif_community">Topluluk</string>
+	<string name="replies_to_my_comments">Yorumlarıma cevaplar</string>
+	<string name="notif_suggestions">Öneriler</string>
+	<string name="notif_research">Araştırma</string>
+	<string name="site_achievements">Site başarıları</string>
+	<string name="username_mentions">Kullanıcı adı bahsedenleri</string>
+	<string name="likes_on_my_posts">Yazılarımdaki beğenmeler</string>
+	<string name="site_follows">Site takipleri</string>
+	<string name="likes_on_my_comments">Yorumlarımdaki beğenmeler</string>
+	<string name="comments_on_my_site">Sitemdeki yorumlar</string>
+	<string name="site_settings_list_editor_summary_other">%d öğe</string>
+	<string name="site_settings_list_editor_summary_one">1 öğe</string>
+	<string name="approve_auto_if_previously_approved">Bilinen kullanıcıların yorumları</string>
+	<string name="approve_auto">Tüm kullanıcılar</string>
+	<string name="approve_manual">Yorum yapılmamış</string>
+	<string name="site_settings_paging_summary_other">Sayfa başına %d yorum</string>
+	<string name="site_settings_paging_summary_one">Sayfa başına 1 yorum</string>
+	<string name="site_settings_multiple_links_summary_other">%d bağlantıdan fazlası onay gerektirir</string>
+	<string name="site_settings_multiple_links_summary_one">1 bağlantıdan fazlası onay gerektirir</string>
+	<string name="site_settings_multiple_links_summary_zero">0 bağlantıdan fazlası onay gerektirir</string>
+	<string name="detail_approve_auto">Herkesin yorumlarını otomatik olarak onayla.</string>
+	<string name="detail_approve_auto_if_previously_approved">Kullanıcının daha önceden onaylanmış bir yorumu varsa otomatik olarak onayla</string>
+	<string name="detail_approve_manual">Herkesin yorumları için el ile onaylama ister.</string>
+	<string name="filter_trashed_posts">Çöpe taşındı</string>
+	<string name="days_quantity_one">1 gün</string>
+	<string name="days_quantity_other">%d gün</string>
+	<string name="filter_published_posts">Yayımlandı</string>
+	<string name="filter_draft_posts">Taslaklar</string>
+	<string name="filter_scheduled_posts">Takvime Eklendi</string>
+	<string name="pending_email_change_snackbar">Yeni adresinizin onaylanması için %1$s adresine gönderilen e-postadaki doğrulama bağlantısına tıklayın.</string>
+	<string name="primary_site">Birincil site</string>
+	<string name="web_address">Web Adresi</string>
+	<string name="account_settings">@string/me_btn_settings</string>
+	<string name="editor_toast_failed_uploads">Bazı görsel yüklemeler başarısız oldu. Lütfen yeniden deneyin ya da silin.</string>
+	<string name="editor_toast_uploading_please_wait">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
+	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
+	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
+	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
+	<string name="new_editor_promo_desc">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
+	<string name="new_editor_promo_title">Yepyeni bir düzenleyici</string>
+	<string name="new_editor_promo_button_label">Harika, teşekkürler!</string>
+	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
+	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
+	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
+	<string name="editor_post_title_placeholder">Yazı Başlığı</string>
+	<string name="email_address">E-posta adresi</string>
+	<string name="preference_show_visual_editor">Görsel düzenleyiciyi göster</string>
+	<string name="dlg_sure_to_delete_comments">Bu yorumlar kalıcı olarak silinsin mi?</string>
+	<string name="preference_editor">Düzenleyici</string>
+	<string name="dlg_sure_to_delete_comment">Bu yorum kalıcı olarak silinsin mi?</string>
+	<string name="mnu_comment_delete_permanently">Sil</string>
+	<string name="comment_deleted_permanently">Yorum silindi</string>
+	<string name="mnu_comment_untrash">Geri yükle</string>
+	<string name="comments_empty_list_filtered">%s yorum yok</string>
+	<string name="could_not_load_page">Sayfa yüklenemiyor</string>
+	<string name="comment_status_all">Tümü</string>
+	<string name="interface_language">Arayüz Dili</string>
+	<string name="off">Kapalı</string>
+	<string name="about_the_app">Uygulama hakkında</string>
+	<string name="error_post_account_settings">Hesap ayarlarınız kaydedilemedi</string>
+	<string name="error_post_my_profile">Profiliniz kaydedilemedi</string>
+	<string name="error_fetch_account_settings">Hesap ayarlarınız alınamadı</string>
+	<string name="error_fetch_my_profile">Profiliniz alınamadı</string>
+	<string name="stats_widget_promo_ok_btn_label">Tamam, anladım</string>
+	<string name="stats_widget_promo_desc">İstatistiklerinize tek tıkla erişmek için widget’ı ana ekranınıza ekleyin.</string>
+	<string name="stats_widget_promo_title">Ana Ekran İstatistik Widget’ı</string>
+	<string name="site_settings_unknown_language_code_error">Dil kodu tanınmadı</string>
+	<string name="site_settings_threading_dialog_description">Yorumların zincirler halinde kademelenmesine izin ver</string>
+	<string name="site_settings_threading_dialog_header">Zincirdeki maksimum yorum sayısı:</string>
+	<string name="add_category">Kategori ekle</string>
+	<string name="remove">Kaldır</string>
+	<string name="search">Ara</string>
+	<string name="disabled">Devre dışı</string>
 	<string name="site_settings_image_original_size">Orijinal Boyut</string>
+	<string name="privacy_private">Siteniz sadece siz ve onay verdiğiniz kullanıcılar tarafından görüntülenebilir</string>
+	<string name="privacy_public_not_indexed">Siteniz herkes tarafından görüntülenebilir, ancak arama motorlarından kendisini indekslememelerini ister</string>
+	<string name="privacy_public">Siteniz herkes tarafından görülebilir ve arama motorları tarafından indekslenebilir</string>
 	<string name="about_me_hint">Hakkınızda birkaç kelime…</string>
 	<string name="public_display_name_hint">Ayarlanmazsa, görünen ad varsayılan olarak kullanıcı adınız şeklinde belirlenir</string>
 	<string name="about_me">Hakkımda</string>
@@ -473,11 +569,9 @@
 	<string name="hs__invalid_email_error">Geçerli bir e-posta adresi girin</string>
 	<string name="add_location">Konum Ekle</string>
 	<string name="current_location">Şimdiki Konumunuz</string>
-	<string name="your_signature">İmzanız:</string>
 	<string name="search_location">Arama</string>
 	<string name="edit_location">Düzenle</string>
 	<string name="search_current_location">Yerleştir</string>
-	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
 	<string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
 	<string name="update_verb">Güncelle</string>
@@ -513,12 +607,9 @@
 	<string name="adding_cat_failed">Kategori ekleme başarısız</string>
 	<string name="adding_cat_success">Kategori başarı ile eklendi</string>
 	<string name="no_account">WordPress hesabı bulunamadı, bir hesap ekleyip tekrar deneyin</string>
-	<string name="auto_sharing_preference_reset">Otomatik-Paylaşım ayarlarını sıfırlama</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Önceki seçilmiş blog görünmüyor</string>
 	<string name="sdcard_message">Medya yüklemek için takılı SD kart gereklidir</string>
 	<string name="stats_empty_comments">Henüz yorum yok</string>
 	<string name="stats_bar_graph_empty">Erişilebilir istatistikler yok</string>
-	<string name="invalid_url_message">Girdiğiniz blog URL\'sinin geçerli olduğunu kontrol edin</string>
 	<string name="reply_failed">Cevaplama başarısız</string>
 	<string name="notifications_empty_list">Bildirim yok</string>
 	<string name="error_delete_post">%s silinirken hata ile karşılaşıldı</string>
@@ -569,6 +660,7 @@
 	<string name="blog_name_contains_invalid_characters">Site adresi "_" karakteri içeremez</string>
 	<string name="blog_name_reserved">Bu site rezerve edilmiş</string>
 	<string name="blog_name_reserved_but_may_be_available">Bu site zaten rezerve edilmiş fakat birkaç gün içerisine erişilebilinir</string>
+	<string name="invalid_url_message">Girdiğiniz adresin geçerli olduğunu kontrol edin</string>
 	<string name="select_categories">Kategorileri seçin</string>
 	<string name="account_details">Hesap detayları</string>
 	<string name="add_comment">Yorum ekle</string>
@@ -672,6 +764,7 @@
 	<string name="post_not_published">Yazı durumu yayımlanmadı</string>
 	<string name="page_not_published">Sayfa durumu yayımlanmadı</string>
 	<string name="notifications_empty_all">Bildirim yok...henüz.</string>
+	<string name="invalid_site_url_message">Girdiğiniz site URL\'sinin geçerli olduğunu kontrol edin</string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>
@@ -685,12 +778,9 @@
 	<string name="reader_label_reply">Yanıtla</string>
 	<string name="video">Video</string>
 	<string name="download">Medya indiriliyor</string>
-	<string name="share_preference_title">WordPress ile paylaş</string>
-	<string name="reset_auto_share_preference">Otomatik paylaşma ayarlarını sıfırla</string>
 	<string name="reader_likes_multi">%,d kişi bunu beğendi</string>
 	<string name="reader_likes_you_and_multi">Siz ve %,d kişi bunu beğendi</string>
 	<string name="cant_share_no_visible_blog">Görünürbir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
-	<string name="always_use_these_settings_to_share">Herzaman bu ayarları kullan</string>
 	<string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
 	<string name="select_time">Zaman seçin</string>
 	<string name="select_date">Tarih seçin</string>
@@ -754,7 +844,6 @@
 	<string name="unattached">Bağlantısız</string>
 	<string name="media_gallery_image_order_random">Rastgele</string>
 	<string name="media_gallery_image_order_reverse">Tersten</string>
-	<string name="media_no_video_title">VideoPress kullanılabilir değil</string>
 	<string name="post_excerpt">Özet</string>
 	<string name="share_action">Paylaş</string>
 	<string name="stats">İstatistikler</string>
@@ -771,7 +860,6 @@
 	<string name="stats_totals_views">Görüntülemeler</string>
 	<string name="stats_totals_clicks">Tıklamalar</string>
 	<string name="stats_totals_plays">Çalınanlar</string>
-	<string name="menu_search">Ara</string>
 	<string name="passcode_manage">PIN kilidini yönet</string>
 	<string name="passcode_change_passcode">PIN değiştir</string>
 	<string name="passcode_set">PIN ayarla</string>
@@ -787,7 +875,6 @@
 	<string name="custom_date">Özel tarih</string>
 	<string name="media_gallery_type_squares">Kare</string>
 	<string name="media_gallery_type_circles">Çember</string>
-	<string name="media_no_video_message">Video gönderimi için VideoPress yükseltmesini edin!</string>
 	<string name="theme_activate_button">Aktifleştir</string>
 	<string name="theme_activating_button">Aktifleştiriliyor</string>
 	<string name="theme_auth_error_title">Temalar alınamadı</string>
@@ -806,8 +893,6 @@
 	<string name="note_reply_successful">Yanıt yayımlandı</string>
 	<string name="follows">Takipçiler</string>
 	<string name="loading">Yükleniyor...</string>
-	<string name="post_signature">Yazı imzası</string>
-	<string name="add_tagline">Yeni yazılara imza ekle</string>
 	<string name="httpuser">HTTP Kullanici Adi</string>
 	<string name="httppassword">HTTP Sifre</string>
 	<string name="error_media_upload">Ortam yüklenirken bir hata oluştu</string>
@@ -832,14 +917,11 @@
 	<string name="blogusername">blogkullanıcıadı</string>
 	<string name="scaled_image">Oranlanmış görsel genişliği</string>
 	<string name="upload_scaled_image">Boyutlandırılmış görseli yükle ve bağlantı ver</string>
-	<string name="remove_location">Çıkart</string>
 	<string name="scheduled">Zamanlandı</string>
 	<string name="link_enter_url">Adres</string>
-	<string name="posted_from">Android için WordPress ile gönderilmiştir</string>
 	<string name="version">Sürüm</string>
 	<string name="app_title">Android için WordPress</string>
 	<string name="tos">Hizmet Şartları</string>
-	<string name="about">Hakkında</string>
 	<string name="max_thumbnail_px_width">Varsayılan Görsel Genişliği</string>
 	<string name="image_alignment">Konumlandırma</string>
 	<string name="refresh">Yenile</string>
@@ -861,6 +943,7 @@
 	<string name="categories">Kategoriler</string>
 	<string name="tags_separate_with_commas">Etiketler (etiketleri virgül ile ayırın)</string>
 	<string name="title">Başlık</string>
+	<string name="dlg_deleting_comments">Yorumlar siliniyor</string>
 	<string name="notification_sound">Bilgilendirme sesi çal</string>
 	<string name="notification_vibrate">Titre</string>
 	<string name="notification_blink">Bilgilendirme ışığını parlat</string>
@@ -884,82 +967,4 @@
 	<string name="no">Hayır</string>
 	<string name="category_refresh_error">Kategori tazeleme hatası</string>
 	<string name="notification_settings">Bildirim Ayarları</string>
-	<string-array name="alignment_array">
-		<item>Hiç biri</item>
-		<item>Sol</item>
-		<item>Orta</item>
-		<item>Sağ</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Sitemdeki yorumlar</item>
-		<item>Yorumlarımdaki beğenmeler</item>
-		<item>Yazılarımdaki beğenmeler</item>
-		<item>Site takipleri</item>
-		<item>Site başarıları</item>
-		<item>Kullanıcı adı bahsedenleri</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Yorumlarıma cevaplar</item>
-		<item>Yorumlarımdaki beğenmeler</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Öneriler</item>
-		<item>Araştırma</item>
-		<item>Topluluk</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>WordPress.com\'dan en iyi biçimde yararlanmak için ipuçları.</item>
-		<item>WordPress.com araştırma ve anketlerine katılma olanağı.</item>
-		<item>WordPress.com kursları ve etkinlikleri (çevrimiçi ve yüz yüze) hakkında bilgi.</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Yayımlandı</item>
-		<item>Taslaklar</item>
-		<item>Zamanlandı</item>
-		<item>Çöpe taşındı</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Yan sütun</item>
-		<item>Ses</item>
-		<item>Sohbet</item>
-		<item>Galeri</item>
-		<item>Görsel</item>
-		<item>Bağlantı</item>
-		<item>Alıntı</item>
-		<item>Standard</item>
-		<item>Durum</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Siteniz herkes tarafından görülebilir ve arama motorları tarafından endekslenebilir</item>
-		<item>Siteniz herkes tarafından görülebilir, ancak arama motorlarından kendisini endekslememelerini ister</item>
-		<item>Siteniz sadece siz ve onay verdiğiniz kullanıcılar tarafından görülebilir</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Herkesin yorumları için el ile onaylama ister.</item>
-		<item>Kullanıcının daha önceden onaylanmış bir yorumu varsa otomatik olarak onayla.</item>
-		<item>Herkesin yorumlarını otomatik olarak onayla.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>Hiçbir yorum</item>
-		<item>Bilinen kullanıcıların yorumları</item>
-		<item>Tüm kullanıcılar</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>Hiçbiri</item>
-		<item>İki seviye</item>
-		<item>Üç seviye</item>
-		<item>Dört seviye</item>
-		<item>Beş seviye</item>
-		<item>Altı seviye</item>
-		<item>Yedi seviye</item>
-		<item>Sekiz seviye</item>
-		<item>Dokuz seviye</item>
-		<item>On seviye</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Ücretsiz</item>
-		<item>Tümü</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

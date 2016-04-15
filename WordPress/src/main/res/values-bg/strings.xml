@@ -314,11 +314,9 @@
 	<string name="hs__invalid_email_error">Въведете валидна електронна поща</string>
 	<string name="add_location">Добавете местоположение</string>
 	<string name="current_location">Текущо местоположение</string>
-	<string name="your_signature">Вашият подпис:</string>
 	<string name="search_location">Търсене</string>
 	<string name="edit_location">Редактиране</string>
 	<string name="search_current_location">Местоположение</string>
-	<string name="preference_privacy">Поверителност </string>
 	<string name="preference_send_usage_stats_summary">Автоматично изпращане на статистика за ползването, за да помогнете на развитието на WordPress за Android</string>
 	<string name="preference_send_usage_stats">Изпращане на статистика</string>
 	<string name="update_verb">Актуализиране</string>
@@ -349,7 +347,6 @@
 	<string name="comments_empty_list">Няма коментари</string>
 	<string name="wait_until_upload_completes">Изчакай трансфера да завърши</string>
 	<string name="category_automatically_renamed">Категорията %1$s не е валидна. Преименувана е на %2$s,</string>
-	<string name="invalid_url_message">Провери дали зададеният URL е валиден</string>
 	<string name="stats_empty_comments">Няма коментари</string>
 	<string name="error_refresh_pages">Страниците не могат да бъдат обновени в момента</string>
 	<string name="error_refresh_comments">Коментарите не могат да бъдат обновени в момента</string>
@@ -357,7 +354,6 @@
 	<string name="error_load_comment">Коментарът не можеше да бъде зареден</string>
 	<string name="passcode_wrong_passcode">Грешен ПИН</string>
 	<string name="theme_set_failed">Възникна грешка при смяна на темата</string>
-	<string name="auto_sharing_preference_reset">Нулиране на настройките за автоматично споделяне</string>
 	<string name="adding_cat_success">Категорията е добавена успешно</string>
 	<string name="error_downloading_image">Възникна грешка при извличане на това изображение</string>
 	<string name="invalid_username_too_short">Потребителското име трябва да е по-дълго от 4 символа</string>
@@ -377,7 +373,6 @@
 	<string name="username_reserved_but_may_be_available">Това потребителско име е резервирано в момента, но може да бъде налично в близките дни</string>
 	<string name="blog_not_found">Възникна грешка при достъпване на този блог</string>
 	<string name="error_edit_comment">Възникна грешка при редактирането на коментара</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Предишно избрания блог вече не е видим </string>
 	<string name="no_network_message">Няма налична мрежа</string>
 	<string name="blog_name_exists">Този уебсайт вече съществува</string>
 	<string name="username_required">Въведете потребителско име</string>
@@ -528,11 +523,8 @@
 	<string name="reader_label_reply">Отговор</string>
 	<string name="cant_share_no_visible_blog">Не можете да споделяте към WordPress без видим блог</string>
 	<string name="reader_toast_err_get_comment">Възникна грешка при извличането на този коментар</string>
-	<string name="reset_auto_share_preference">Нулирайте настройките на автоматичното споделяне</string>
 	<string name="download">Сваляне на медиа</string>
 	<string name="comment_spammed">Коментарът е отбелязан като спам</string>
-	<string name="share_preference_title">Споделяне с WordPress</string>
-	<string name="always_use_these_settings_to_share">Винаги тези настройки</string>
 	<string name="validating_site_data">Валидиране на даннитена сайта</string>
 	<string name="validating_user_data">Валидиране на данните на потребителя</string>
 	<string name="account_two_step_auth_enabled">За този профил е активирана двустепенна защита. За да генерирате необходимата парола посетете WordPress.com .</string>
@@ -622,8 +614,6 @@
 	<string name="media_gallery_image_order_random">Произволен</string>
 	<string name="media_gallery_type">Вид</string>
 	<string name="media_gallery_type_tiled">Плочки</string>
-	<string name="media_no_video_title">VideoPress не е наличен</string>
-	<string name="media_no_video_message">Обновете VideoPress за да качите видео!</string>
 	<string name="media_edit_failure">Актуализирането е неуспешно</string>
 	<string name="themes_details_label">Подробности</string>
 	<string name="themes_features_label">Възможности</string>
@@ -632,7 +622,6 @@
 	<string name="share_action">Споделяне</string>
 	<string name="stats">Статистика</string>
 	<string name="stats_view_tags_and_categories">Етикети и категории</string>
-	<string name="menu_search">Търсене</string>
 	<string name="passcode_manage">Управление на заключването чрез ПИН</string>
 	<string name="passcode_enter_passcode">Въведете ПИН</string>
 	<string name="passcode_enter_old_passcode">Въведете стария ПИН</string>
@@ -648,8 +637,6 @@
 	<string name="follows">Следва</string>
 	<string name="loading">Зареждане...</string>
 	<string name="httppassword">HTTP Парола</string>
-	<string name="post_signature">Подпис на публикациите</string>
-	<string name="add_tagline">Добавяне на подпис към новите публикации</string>
 	<string name="httpuser">Потребител за HTTP</string>
 	<string name="error_media_upload">Грешка при качването на медийния файл</string>
 	<string name="post_content">Съдържание (докосни, за да добавиш текст и снимки)</string>
@@ -673,14 +660,11 @@
 	<string name="ok">ОК</string>
 	<string name="upload_scaled_image">Качване и свързване с оразмерено изображение</string>
 	<string name="scaled_image">Оразмеряване ширината на изображението</string>
-	<string name="remove_location">Премахване</string>
 	<string name="scheduled">Планирана</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Публикувано чрез WordPress за Android</string>
 	<string name="version">Версия</string>
 	<string name="tos">Условия за ползване</string>
 	<string name="app_title">WordPress за Android</string>
-	<string name="about">Относно</string>
 	<string name="image_alignment">Подравняване</string>
 	<string name="refresh">Презареждане</string>
 	<string name="untitled">Неозаглавен</string>
@@ -724,50 +708,4 @@
 	<string name="add">Добавяне</string>
 	<string name="preview">Предвариетелен преглед</string>
 	<string name="reply">Отговор</string>
-	<string-array name="alignment_array">
-		<item>Няма</item>
-		<item>Ляво</item>
-		<item>Център</item>
-		<item>Дясно</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Коментара на моя сайт</item>
-		<item>Харесвания на моите коментари</item>
-		<item>Харесвания на моите публикации</item>
-		<item>Последвани сайта</item>
-		<item>Достижения на сайта</item>
-		<item>Споменавания на потребителското име</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Отговори на моите коментари</item>
-		<item>Харесвания на моите коментари</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Предложения</item>
-		<item>Изследване</item>
-		<item>Общност</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Подсказки как да извлечем максима от WordPress.com</item>
-		<item>Възможности за участие в проучванията и изследванията на WordPress.com</item>
-		<item>Информация за курсовете и събитията (онлайн и лице-в-лице) на WordPress.com</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Публикувани</item>
-		<item>Чернови</item>
-		<item>В график</item>
-		<item>Изхвърлени</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Бележка</item>
-		<item>Аудио</item>
-		<item>Чат</item>
-		<item>Галерия</item>
-		<item>Изображение</item>
-		<item>Връзка</item>
-		<item>Цитат</item>
-		<item>Стандартен</item>
-		<item>Състояние</item>
-		<item>Видео</item>
-	</string-array>
 </resources>
