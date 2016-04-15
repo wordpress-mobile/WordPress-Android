@@ -19,7 +19,14 @@ public class SlidingRelativeLayout extends RelativeLayout {
 
     private ViewTreeObserver.OnPreDrawListener mPreDrawListener = null;
 
+    // This property is used by the objectAnimator for Fragment slide animations. ex: `fragment_slide_in_from_left.xml`
+    @SuppressWarnings("UnusedDeclaration")
+    public float getXFraction() {
+        return mXFraction;
+    }
+
     // This implementation fixes the first frame not being translated: http://trickyandroid.com/fragments-translate-animation/
+    @SuppressWarnings("UnusedDeclaration")
     public void setXFraction(float fraction) {
         mXFraction = fraction;
 
@@ -40,9 +47,5 @@ public class SlidingRelativeLayout extends RelativeLayout {
 
         float translationX = getWidth() * fraction;
         setTranslationX(translationX);
-    }
-
-    public float getXFraction() {
-        return mXFraction;
     }
 }
