@@ -76,15 +76,17 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUsersList(String dotComBlogId, final int localBlogId) {
-        PeopleUtils.fetchUsers(dotComBlogId, localBlogId, new PeopleUtils.Callback() {
+    private void refreshUsersList(String dotComBlogId, final int localTableBlogId) {
+        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.Callback() {
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
 
                 FragmentManager fragmentManager = getFragmentManager();
-                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager.findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
-                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                        .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                        .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
                 if (peopleListFragment != null) {
                     peopleListFragment.refreshPeopleList();
@@ -109,7 +111,8 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
     @Override
     public void onPersonSelected(Person person) {
         FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
@@ -120,8 +123,10 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
         }
         if (!personDetailFragment.isAdded()) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_from_right, R.animator.fragment_slide_out_to_left,
-                    R.animator.fragment_slide_in_from_left, R.animator.fragment_slide_out_to_right);
+            fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_from_right,
+                    R.animator.fragment_slide_out_to_left,
+                    R.animator.fragment_slide_in_from_left,
+                    R.animator.fragment_slide_out_to_right);
             fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
