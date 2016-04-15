@@ -89,7 +89,6 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
             setListAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
-            peopleAdapter.notifyDataSetChanged();
         }
     }
 
