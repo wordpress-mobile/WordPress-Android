@@ -254,6 +254,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                         mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                                     }
                                 }
+                                if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
+                                    mThemeSearchFragment.setRefreshing(false);
+                                }
                             }
                         } catch (JSONException e) {
                             AppLog.e(T.THEMES, e);
