@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -79,6 +80,9 @@ public class PersonDetailFragment extends Fragment {
                     //TODO: remove user
                 }
             });
+        } else {
+            AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
+                    + " & localTableBlogID: " + mLocalTableBlogID);
         }
     }
 
