@@ -325,14 +325,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private Runnable mAutoSave = new Runnable() {
         @Override
         public void run() {
-            updatePostObject(true);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    updatePostObject(true);
                     savePostToDb();
+                    mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
                 }
             }).start();
-            mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
         }
     };
 
@@ -624,6 +624,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean publishPost() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
+            return false;
+        }
+
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (mEditorFragment.hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -638,26 +643,35 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
 
-        // If the post is new and there are no changes, don't publish
-        updatePostObject(false);
-        if (!mPost.isPublishable()) {
-            ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
-            return false;
-        }
+        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updatePostObject(false);
+                savePostToDb();
 
-        savePostToDb();
-        trackSavePostAnalytics();
+                // If the post is empty, don't publish
+                if (!mPost.isPublishable()) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                        }
+                    });
+                    return;
+                }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
-            return false;
-        }
+                trackSavePostAnalytics();
 
-        PostUploadService.addPostToUpload(mPost);
-        PostUploadService.setLegacyMode(!mShowNewEditor);
-        startService(new Intent(this, PostUploadService.class));
-        setResult(RESULT_OK);
-        finish();
+                PostUploadService.addPostToUpload(mPost);
+                PostUploadService.setLegacyMode(!mShowNewEditor);
+                startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                setResult(RESULT_OK);
+                finish();
+            }
+        }).start();
         return true;
     }
 
@@ -768,7 +782,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         );
     }
 
-    private void updatePostObject(boolean isAutosave) {
+    private synchronized void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -791,8 +805,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void savePost() {
-        updatePostObject(false);
-        savePostToDb();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updatePostObject(false);
+                savePostToDb();
+            }
+        }).start();
     }
 
     private synchronized void savePostToDb() {
