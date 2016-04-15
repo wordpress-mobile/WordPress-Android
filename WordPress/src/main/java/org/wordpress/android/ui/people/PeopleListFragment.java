@@ -17,7 +17,7 @@ import org.wordpress.android.models.Person;
 import java.util.List;
 
 public class PeopleListFragment extends ListFragment implements OnItemClickListener {
-    private static String ARG_LOCAL_TABLE_BLOG_ID = "LOCAL_TABLE_BLOG_ID";
+    private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
     private int mLocalTableBlogID;
     private OnPersonSelectedListener mListener;

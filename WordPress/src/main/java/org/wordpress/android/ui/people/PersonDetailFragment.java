@@ -15,8 +15,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonDetailFragment extends Fragment {
-    private static String ARG_PERSON_ID = "PERSON_ID";
-    private static String ARG_LOCAL_TABLE_BLOG_ID = "LOCAL_TABLE_BLOG_ID";
+    private static String ARG_PERSON_ID = "person_id";
+    private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
     private long mPersonID;
     private int mLocalTableBlogID;
