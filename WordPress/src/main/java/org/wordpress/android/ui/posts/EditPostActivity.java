@@ -57,6 +57,8 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListene
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
+import org.wordpress.android.editor.EditorWebViewCompatibility;
+import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.AccountHelper;
@@ -122,7 +124,7 @@ import java.util.TimerTask;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -867,6 +869,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
+     * Disable visual editor mode and log the exception if we get a Reflection failure when the webview is being
+     * initialized.
+     */
+    @Override
+    public void onReflectionFailure(ReflectionException e) {
+        CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.EDITOR, "Reflection Failure on Visual Editor init");
+        // Disable visual editor and show an error message
+        AppPrefs.setVisualEditorEnabled(false);
+        ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
+        // Restart the activity (will start the legacy editor)
+        finish();
+        startActivity(getIntent());
+    }
+
+    /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
@@ -886,6 +903,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
                     if (mShowNewEditor) {
+                        EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
                     } else {
                         return new LegacyEditorFragment();
