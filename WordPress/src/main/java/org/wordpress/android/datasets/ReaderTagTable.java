@@ -26,6 +26,7 @@ public class ReaderTagTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_tags ("
                  + "	tag_name     TEXT COLLATE NOCASE,"
+                 + "	tag_title    TEXT COLLATE NOCASE,"
                  + "    tag_type     INTEGER DEFAULT 0,"
                  + "    endpoint     TEXT,"
                 + " 	date_updated TEXT,"
@@ -34,6 +35,7 @@ public class ReaderTagTable {
 
         db.execSQL("CREATE TABLE tbl_tags_recommended ("
                  + "	tag_name	TEXT COLLATE NOCASE,"
+                 + "	tag_title   TEXT COLLATE NOCASE,"
                  + "    tag_type    INTEGER DEFAULT 0,"
                  + "    endpoint    TEXT,"
                  + "    PRIMARY KEY (tag_name, tag_type)"
@@ -148,10 +150,11 @@ public class ReaderTagTable {
         }
 
         String tagName = c.getString(c.getColumnIndex("tag_name"));
+        String tagTitle = c.getString(c.getColumnIndex("tag_title"));
         String endpoint = c.getString(c.getColumnIndex("endpoint"));
         ReaderTagType tagType = ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
 
-        return new ReaderTag(tagName, endpoint, tagType);
+        return new ReaderTag(tagName, tagTitle, endpoint, tagType);
     }
 
     public static ReaderTag getTag(String tagName, ReaderTagType tagType) {
@@ -318,7 +321,7 @@ public class ReaderTagTable {
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement
-                ("INSERT INTO tbl_tags_recommended (tag_name, tag_type, endpoint) VALUES (?1,?2,?3)");
+                ("INSERT INTO tbl_tags_recommended (tag_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4)");
         db.beginTransaction();
         try {
             try {
@@ -328,8 +331,9 @@ public class ReaderTagTable {
                 // then insert the passed ones
                 for (ReaderTag tag: tagList) {
                     stmt.bindString(1, tag.getTagName());
-                    stmt.bindLong  (2, tag.tagType.toInt());
-                    stmt.bindString(3, tag.getEndpoint());
+                    stmt.bindString(2, tag.getTagTitle());
+                    stmt.bindLong  (3, tag.tagType.toInt());
+                    stmt.bindString(4, tag.getEndpoint());
                     stmt.execute();
                 }
 

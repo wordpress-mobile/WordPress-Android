@@ -53,7 +53,7 @@ public class ReaderTagActions {
 
             case ADD :
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tag.getTagName(), endpoint, ReaderTagType.FOLLOWED);
+                ReaderTag newTopic = new ReaderTag(tag.getTagName(), tag.getTagTitle(), endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
