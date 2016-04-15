@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -116,8 +117,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
@@ -154,9 +153,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static int PAGE_SETTINGS = 1;
     private static int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
-    private Timer mAutoSaveTimer;
+    private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
+    private Handler mHandler;
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
@@ -318,7 +317,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePost(true);
+                    savePost();
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
@@ -328,18 +327,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
-    class AutoSaveTask extends TimerTask {
+    private Runnable mAutoSave = new Runnable() {
+        @Override
         public void run() {
-            savePost(true);
+            updatePostObject(true);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    savePostToDb();
+                }
+            }).start();
+            mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
         }
-    }
+    };
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        mAutoSaveTimer = new Timer();
-        mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
+        mHandler = new Handler();
+        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
     }
 
     @Override
@@ -365,7 +371,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         stopMediaUploadService();
-        mAutoSaveTimer.cancel();
+        mHandler.removeCallbacks(mAutoSave);
+        mHandler = null;
     }
 
     @Override
@@ -383,7 +390,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePost(true);
+        savePost();
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
@@ -607,7 +614,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (itemId == R.id.menu_save_post) {
-            return savePost();
+            return publishPost();
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == R.id.menu_post_settings) {
@@ -621,7 +628,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return false;
     }
 
-    private boolean savePost() {
+    private boolean publishPost() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (mEditorFragment.hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -788,13 +795,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void savePost(boolean isAutosave) {
-        updatePostObject(isAutosave);
-
+    private void savePost() {
+        updatePostObject(false);
         savePostToDb();
     }
 
-    private void savePostToDb() {
+    private synchronized void savePostToDb() {
         WordPress.wpDB.updatePost(mPost);
     }
 
@@ -828,7 +834,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void saveAndFinish() {
         // Fetch post title and content from editor fields and update the Post object
-        savePost(true);
+        savePost();
 
         if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
             // new and empty post? delete it
@@ -852,7 +858,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostToDb();
             } else {
                 // TODO: Remove when legacy editor is dropped
-                savePost(false);
+                savePost();
             }
         }
 
