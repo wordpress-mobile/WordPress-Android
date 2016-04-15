@@ -144,11 +144,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
 
-    private static final String PROP_LOCAL_PHOTOS = "number_of_local_photos_added";
-    private static final String PROP_LIBRARY_PHOTOS = "number_of_wp_library_photos_added";
-    private static final String PROP_LOCAL_VIDEOS = "number_of_local_videos_added";
-    private static final String PROP_LIBRARY_VIDEOS = "number_of_wp_library_videos_added";
-
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
     private static int PAGE_PREVIEW = 2;
