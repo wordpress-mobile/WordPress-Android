@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
     private String tagName;
+    private String tagTitle;
     private String endpoint;
     public final ReaderTagType tagType;
 
@@ -19,12 +20,16 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
     public static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
 
-    public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
+    public ReaderTag(String tagName,
+                     String tagTitle,
+                     String endpoint,
+                     ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
             this.setTagName(getTagNameFromEndpoint(endpoint));
         } else {
             this.setTagName(tagName);
         }
+        this.setTagTitle(tagTitle);
         this.setEndpoint(endpoint);
         this.tagType = tagType;
     }
@@ -43,6 +48,13 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
     void setEndpoint(String endpoint) {
         this.endpoint = StringUtils.notNullStr(endpoint);
+    }
+
+    public String getTagTitle() {
+        return StringUtils.notNullStr(tagTitle);
+    }
+    void setTagTitle(String title) {
+        this.tagTitle = StringUtils.notNullStr(title);
     }
 
     public String getTagName() {
