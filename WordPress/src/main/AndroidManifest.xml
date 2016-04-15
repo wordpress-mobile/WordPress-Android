@@ -335,7 +335,8 @@
 
         <!--People Management-->
         <activity
-            android:name="org.wordpress.android.ui.people.PeopleManagementActivity"
+            android:name=".ui.people.PeopleManagementActivity"
+            android:label="@string/people"
             android:theme="@style/CalypsoTheme"/>
 
         <!-- Me activities -->

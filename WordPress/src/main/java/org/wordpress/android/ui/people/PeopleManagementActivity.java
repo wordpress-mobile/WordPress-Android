@@ -35,7 +35,6 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         setContentView(R.layout.people_management_activity);
-        setTitle(R.string.people);
 
         int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
         Blog blog = WordPress.getBlog(localBlogId);
