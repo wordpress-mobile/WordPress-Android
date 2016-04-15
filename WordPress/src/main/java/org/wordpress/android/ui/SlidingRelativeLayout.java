@@ -19,7 +19,7 @@ public class SlidingRelativeLayout extends RelativeLayout {
 
     private ViewTreeObserver.OnPreDrawListener mPreDrawListener = null;
 
-    // This property is used by the objectAnimator for Fragment slide animations. ex: `fragment_slide_in_from_left.xml`
+    // This property is used by the objectAnimator for Fragment slide animations. ex: `fragment_slide_in_from_right.xml`
     @SuppressWarnings("UnusedDeclaration")
     public float getXFraction() {
         return mXFraction;

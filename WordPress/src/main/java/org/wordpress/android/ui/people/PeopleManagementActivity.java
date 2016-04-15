@@ -123,11 +123,9 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
         }
         if (!personDetailFragment.isAdded()) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_from_right,
-                    R.animator.fragment_slide_out_to_left,
-                    R.animator.fragment_slide_in_from_left,
+            fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_from_right, 0, 0,
                     R.animator.fragment_slide_out_to_right);
-            fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
+            fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
