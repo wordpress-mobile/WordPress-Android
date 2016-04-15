@@ -12,38 +12,43 @@
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin">
 
-        <FrameLayout
-            android:id="@+id/frame_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/me_avatar_margin_top">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <FrameLayout
+                android:id="@+id/frame_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/content_margin"
-                android:background="?android:attr/selectableItemBackgroundBorderless" tools:targetApi="lollipop">
+                android:layout_centerInParent="true"
+                android:paddingTop="@dimen/me_avatar_margin_top">
 
-                <org.wordpress.android.widgets.WPNetworkImageView
-                    android:id="@+id/me_avatar"
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/content_margin"
+                    android:background="?android:attr/selectableItemBackgroundBorderless" tools:targetApi="lollipop">
+
+                    <org.wordpress.android.widgets.WPNetworkImageView
+                        android:id="@+id/me_avatar"
+                        android:layout_width="@dimen/avatar_sz_large"
+                        android:layout_height="@dimen/avatar_sz_large" />
+                </FrameLayout>
+
+                <ProgressBar
+                    android:id="@+id/avatar_progress"
+                    style="@android:style/Widget.Holo.ProgressBar"
                     android:layout_width="@dimen/avatar_sz_large"
-                    android:layout_height="@dimen/avatar_sz_large" />
+                    android:layout_height="@dimen/avatar_sz_large"
+                    android:background="@drawable/shape_oval_translucent"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/margin_large"
+                    android:indeterminate="true"
+                    android:clickable="true"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
             </FrameLayout>
-
-            <ProgressBar
-                android:id="@+id/avatar_progress"
-                style="@android:style/Widget.Holo.ProgressBar"
-                android:layout_width="@dimen/avatar_sz_large"
-                android:layout_height="@dimen/avatar_sz_large"
-                android:background="@drawable/shape_oval_translucent"
-                android:layout_gravity="center"
-                android:padding="@dimen/margin_large"
-                android:indeterminate="true"
-                android:clickable="true"
-                android:visibility="gone"
-                tools:visibility="visible"/>
-        </FrameLayout>
+        </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/me_display_name"
