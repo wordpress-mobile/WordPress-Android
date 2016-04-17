@@ -17,7 +17,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     // these are the default tag names, which aren't localized in the /read/menu/ response
     private static final String TAG_NAME_LIKED = "Posts I Like";
     private static final String TAG_NAME_DISCOVER = "Discover";
-    private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
+    public  static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
     public  static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
 
     public ReaderTag(String tagName,
@@ -32,15 +32,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
         this.setTagTitle(tagTitle);
         this.setEndpoint(endpoint);
         this.tagType = tagType;
-    }
-
-    public ReaderTag(String tagName, ReaderTagType tagType) {
-        this.setTagName(tagName);
-        this.tagType = tagType;
-    }
-
-    public static ReaderTag getDefaultTag() {
-        return new ReaderTag(TAG_NAME_DEFAULT, ReaderTagType.DEFAULT);
     }
 
     public String getEndpoint() {
