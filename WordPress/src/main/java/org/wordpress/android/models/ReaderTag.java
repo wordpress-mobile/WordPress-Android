@@ -63,8 +63,16 @@ public class ReaderTag implements Serializable, FilterCriteria {
     void setTagName(String name) {
         this.tagName = StringUtils.notNullStr(name);
     }
-    public String getCapitalizedTagName() {
-        if (tagName == null || tagName.length() == 0) {
+
+    /*
+     * when displaying a tag name, we want to use the title when available since it's often
+     * more user-friendly
+     */
+    public String getTagNameForDisplay() {
+        if (!TextUtils.isEmpty(tagTitle)) {
+            return tagTitle;
+        }
+        if (TextUtils.isEmpty(tagName)) {
             return "";
         }
         // If already uppercase, assume correctly formatted
@@ -178,14 +186,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * the label is the text displayed in the dropdown filter - use the title when available
+     * the label is the text displayed in the dropdown filter
      */
     @Override
     public String getLabel() {
-        if (TextUtils.isEmpty(tagTitle)) {
-            return getCapitalizedTagName();
-        }
-        return tagTitle;
+        return getTagNameForDisplay();
     }
 
     @Override
