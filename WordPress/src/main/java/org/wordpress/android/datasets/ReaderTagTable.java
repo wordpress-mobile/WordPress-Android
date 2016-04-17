@@ -94,13 +94,14 @@ public class ReaderTagTable {
         SQLiteStatement stmt = null;
         try {
             stmt = ReaderDatabase.getWritableDb().compileStatement(
-                    "INSERT OR REPLACE INTO tbl_tags (tag_name, tag_type, endpoint) VALUES (?1,?2,?3)"
+                    "INSERT OR REPLACE INTO tbl_tags (tag_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4)"
             );
 
             for (ReaderTag tag: tagList) {
                 stmt.bindString(1, tag.getTagName());
-                stmt.bindLong  (2, tag.tagType.toInt());
-                stmt.bindString(3, tag.getEndpoint());
+                stmt.bindString(2, tag.getTagTitle());
+                stmt.bindLong  (3, tag.tagType.toInt());
+                stmt.bindString(4, tag.getEndpoint());
                 stmt.execute();
             }
 

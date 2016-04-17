@@ -193,8 +193,6 @@ public class WordPress extends Application {
 
         RestClientUtils.setUserAgent(getUserAgent());
 
-        ReaderDatabase.reset(); // TODO: REMOVE THIS
-
         // Volley networking setup
         setupVolleyQueue();
 
