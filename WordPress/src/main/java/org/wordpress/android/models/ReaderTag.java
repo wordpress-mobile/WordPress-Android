@@ -9,16 +9,16 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
-    private String tagName;
-    private String tagTitle;
-    private String endpoint;
+    private String tagName;     // tag for API calls, ex: "news-current-events"
+    private String tagTitle;    // tag for display, ex: "News & Current Events"
+    private String endpoint;    // endpoint for updating posts with this tag
     public final ReaderTagType tagType;
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
     private static final String TAG_NAME_LIKED = "Posts I Like";
     private static final String TAG_NAME_DISCOVER = "Discover";
     private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
-    public static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
+    public  static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
 
     public ReaderTag(String tagName,
                      String tagTitle,
@@ -177,9 +177,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.toLowerCase().contains("/read/list/");
     }
 
+    /*
+     * the label is the text displayed in the dropdown filter - use the title when available
+     */
     @Override
     public String getLabel() {
-        return getCapitalizedTagName();
+        if (TextUtils.isEmpty(tagTitle)) {
+            return getCapitalizedTagName();
+        }
+        return tagTitle;
     }
 
     @Override
