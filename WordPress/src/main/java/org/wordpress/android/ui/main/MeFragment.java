@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
@@ -47,7 +49,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.File;
@@ -58,6 +62,8 @@ import de.greenrobot.event.EventBus;
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String MEDIA_CAPTURE_PATH = "MEDIA_CAPTURE_PATH";
+
+    private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
@@ -167,13 +173,10 @@ public class MeFragment extends Fragment {
                 // and no need to promote the feature any more
                 AppPrefs.setGravatarChangePromoRequired(false);
 
-                WordPressMediaUtils.launchPictureLibraryOrCapture(MeFragment.this, new WordPressMediaUtils
-                        .LaunchCameraCallback() {
-                    @Override
-                    public void onMediaCapturePathReady(String mediaCapturePath) {
-                        mMediaCapturePath = mediaCapturePath;
-                    }
-                });
+                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
+                        CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
+                    askForCameraOrGallery();
+                }
             }
         });
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
@@ -357,6 +360,23 @@ public class MeFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[]
+            grantResults) {
+        switch (requestCode) {
+            case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
+                for (int grantResult : grantResults) {
+                    if (grantResult == PackageManager.PERMISSION_DENIED) {
+                        ToastUtils.showToast(this.getActivity(), getString(R.string
+                                .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
+                        return;
+                    }
+                }
+                askForCameraOrGallery();
+                break;
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -390,6 +410,16 @@ public class MeFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void askForCameraOrGallery() {
+        WordPressMediaUtils.launchPictureLibraryOrCapture(MeFragment.this, new WordPressMediaUtils
+                .LaunchCameraCallback() {
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+            }
+        });
     }
 
     private void startCropActivity(Uri uri) {
