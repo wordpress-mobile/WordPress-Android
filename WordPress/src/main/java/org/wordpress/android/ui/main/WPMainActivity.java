@@ -15,9 +15,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
@@ -174,6 +176,8 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 }
             }
         });
+
+        Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
