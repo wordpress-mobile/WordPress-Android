@@ -591,7 +591,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         finishCurrentActivity(userBlogList);
                         String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
                         Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
-                        saveCrendentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
+                        saveCredentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
                     }
                 }, null);
             } else {
@@ -674,7 +674,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
-    private void saveCrendentialsInSmartLock() {
+    private void saveCredentialsInSmartLock(String username, String password, String displayName, Uri profilePicture) {
         if (!isSmartLockAvailable()) {
             return;
         }
@@ -733,7 +733,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     protected void configureAccountAfterSuccessfulSignIn() {
         mShouldSendTwoStepSMS = false;
-        saveCrendentialsInSmartLock();
+        saveCredentialsInSmartLock();
 
         // Finish this activity if we've authenticated to a Jetpack site
         if (isJetpackAuth() && getActivity() != null) {
