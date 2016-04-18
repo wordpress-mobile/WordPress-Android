@@ -67,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -343,9 +344,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
-        mUsernameEditText.setText(credential.getId());
-        mPasswordEditText.setText(credential.getPassword());
+        if (EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty()) {
+            AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+            mUsernameEditText.setText(credential.getId());
+            mPasswordEditText.setText(credential.getPassword());
+        }
     }
 
     @Override
@@ -356,6 +359,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     @Override
     public void onConnected(Bundle bundle) {
         AppLog.d(T.NUX, "Google API client connected");
+        smartLockAutoFill();
     }
 
     @Override
@@ -568,6 +572,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
                         finishCurrentActivity(userBlogList);
+                        String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
+                        Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
+                        saveCrendentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
                     }
                 }, null);
             } else {
@@ -650,11 +657,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
-    private void saveCrendentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+    private void saveCrendentialsInSmartLock(String username, String password, String displayName, Uri profilePicture) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
-        Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
+        Credential credential = new Credential.Builder(username).setPassword(password)
+                .setName(displayName).setProfilePictureUri(profilePicture).build();
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -672,7 +680,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void deleteCredentialsInSmartLock() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
@@ -692,8 +700,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             @Override
             public void onSuccess() {
                 mShouldSendTwoStepSMS = false;
-                saveCrendentialsInSmartLock();
-
                 // Finish this activity if we've authenticated to a Jetpack site
                 if (isJetpackAuth() && getActivity() != null) {
                     getActivity().setResult(Activity.RESULT_OK);

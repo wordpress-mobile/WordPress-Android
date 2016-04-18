@@ -64,7 +64,6 @@ public class SignInActivity extends FragmentActivity {
             default:
                 break;
         }
-        mSignInFragment.smartLockAutoFill();
     }
 
     @Override
