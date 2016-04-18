@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.people;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +37,19 @@ public class PersonDetailFragment extends Fragment {
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
+    }
+
+    /**
+     *  Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
+     *  changes, this method is used instead of FragmentTransaction for the animation.
+     */
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        if (enter) {
+            return AnimatorInflater.loadAnimator(getActivity(), R.animator.fragment_slide_in_from_right);
+        } else {
+            return AnimatorInflater.loadAnimator(getActivity(), R.animator.fragment_slide_out_to_right);
+        }
     }
 
     @Override
