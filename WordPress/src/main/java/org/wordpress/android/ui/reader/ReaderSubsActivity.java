@@ -189,15 +189,18 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     private void performUpdate() {
+        performUpdate(EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS,
+                UpdateTask.RECOMMENDED_BLOGS));
+    }
+
+    private void performUpdate(EnumSet<UpdateTask> tasks) {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS,
-                           UpdateTask.RECOMMENDED_BLOGS));
-
+        ReaderUpdateService.startService(this, tasks);
         mHasPerformedUpdate = true;
     }
 
@@ -329,7 +332,10 @@ public class ReaderSubsActivity extends AppCompatActivity
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
+                if (succeeded) {
+                    // update tags when one is added
+                    performUpdate(EnumSet.of(UpdateTask.TAGS));
+                } else if (!succeeded && !isFinishing()) {
                     getPageAdapter().refreshFollowedTagFragment();
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
