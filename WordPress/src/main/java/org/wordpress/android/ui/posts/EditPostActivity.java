@@ -312,7 +312,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePost();
+                    savePostAsync();
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
@@ -330,7 +330,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 public void run() {
                     updatePostObject(true);
                     savePostToDb();
-                    mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+                    if (mHandler != null) {
+                        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+                    }
                 }
             }).start();
         }
@@ -385,7 +387,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePost();
+        savePostAsync();
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
@@ -804,7 +806,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void savePost() {
+    private void savePostAsync() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -848,7 +850,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void saveAndFinish() {
         // Fetch post title and content from editor fields and update the Post object
-        savePost();
+        updatePostObject(false);
 
         if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
             // new and empty post? delete it
@@ -872,7 +874,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostToDb();
             } else {
                 // TODO: Remove when legacy editor is dropped
-                savePost();
+                savePostAsync();
             }
         }
 
