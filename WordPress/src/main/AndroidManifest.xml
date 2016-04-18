@@ -75,7 +75,14 @@
         <!-- Main tab activity -->
         <activity
             android:name=".ui.main.WPMainActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="{optimizelyScheme}" />
+            </intent-filter>
+        </activity>
 
         <!-- Account activities -->
         <activity
