@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 111;
+    private static final int DB_VERSION = 112;
 
     /*
      * version history
@@ -63,6 +63,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  109 - added "feed_item_id" to tbl_posts
      *  110 - added xpost_post_id and xpost_blog_id to tbl_posts
      *  111 - added author_first_name to tbl_posts
+     *  112 - no structural change, just reset db
      */
 
     /*

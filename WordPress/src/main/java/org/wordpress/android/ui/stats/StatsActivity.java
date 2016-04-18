@@ -519,9 +519,9 @@ public class StatsActivity extends AppCompatActivity
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mLocalBlogID);
         signInIntent.putExtra(
-                SignInActivity.ARG_JETPACK_MESSAGE_AUTH,
+                SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
                 getString(R.string.stats_sign_in_jetpack_different_com_account)
         );
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
@@ -621,6 +621,7 @@ public class StatsActivity extends AppCompatActivity
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         if (currentBlog.isAdmin()) {
@@ -652,9 +653,17 @@ public class StatsActivity extends AppCompatActivity
                     .setTitle(getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, null);
         }
-        builder.create().show();
-    }
 
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

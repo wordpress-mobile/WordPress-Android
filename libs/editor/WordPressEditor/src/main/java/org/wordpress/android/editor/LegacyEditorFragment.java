@@ -9,9 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -1023,66 +1022,83 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         outState.putString(KEY_CONTENT, mContentEditText.getText().toString());
     }
 
-    public void addMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader, final int start, final int end) {
-        mediaFile.setFileURL(imageUrl);
-        mediaFile.setFilePath(imageUrl);
-        final WPEditImageSpan imageSpan = createWPEditImageSpan(getActivity(), mediaFile);
-        mEditorFragmentListener.saveMediaFile(mediaFile);
-        imageSpan.setMediaFile(mediaFile);
+    private class AddMediaFileTask extends AsyncTask<Void, Void, WPEditImageSpan> {
+        private MediaFile mMediaFile;
+        private String mImageUrl;
+        private ImageLoader mImageLoader;
+        private int mStart;
+        private int mEnd;
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        final Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                // Insert the WPImageSpan in the content field
-                int selectionStart = start;
-                int selectionEnd = end;
+        public AddMediaFileTask(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader, int start, int end) {
+            mMediaFile = mediaFile;
+            mImageUrl = imageUrl;
+            mImageLoader = imageLoader;
+            mStart = start;
+            mEnd = end;
+        }
 
-                if (selectionStart > selectionEnd) {
-                    int temp = selectionEnd;
-                    selectionEnd = selectionStart;
-                    selectionStart = temp;
-                }
+        protected WPEditImageSpan doInBackground(Void... voids) {
+            mMediaFile.setFileURL(mImageUrl);
+            mMediaFile.setFilePath(mImageUrl);
+            WPEditImageSpan imageSpan = createWPEditImageSpan(getActivity(), mMediaFile);
+            mEditorFragmentListener.saveMediaFile(mMediaFile);
+            return imageSpan;
+        }
 
-                imageSpan.setPosition(selectionStart, selectionEnd);
+        protected void onPostExecute(WPEditImageSpan imageSpan) {
+            // Insert the WPImageSpan in the content field
+            int selectionStart = mStart;
+            int selectionEnd = mEnd;
 
-                int line, column = 0;
-                if (mContentEditText.getLayout() != null) {
-                    line = mContentEditText.getLayout().getLineForOffset(selectionStart);
-                    column = selectionStart - mContentEditText.getLayout().getLineStart(line);
-                }
-
-                Editable s = mContentEditText.getText();
-                if (s == null) {
-                    return;
-                }
-
-                WPImageSpan[] imageSpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
-                if (imageSpans.length != 0) {
-                    // insert a few line breaks if the cursor is already on an image
-                    s.insert(selectionEnd, "\n\n");
-                    selectionStart = selectionStart + 2;
-                    selectionEnd = selectionEnd + 2;
-                } else if (column != 0) {
-                    // insert one line break if the cursor is not at the first column
-                    s.insert(selectionEnd, "\n");
-                    selectionStart = selectionStart + 1;
-                    selectionEnd = selectionEnd + 1;
-                }
-
-                s.insert(selectionStart, " ");
-                s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
-                s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                s.insert(selectionEnd + 1, "\n\n");
-
-                // Fetch and replace the WPImageSpan if it's a remote media
-                if (imageLoader != null && URLUtil.isNetworkUrl(imageUrl)) {
-                    loadWPImageSpanThumbnail(mediaFile, imageUrl, imageLoader);
-                }
+            if (selectionStart > selectionEnd) {
+                int temp = selectionEnd;
+                selectionEnd = selectionStart;
+                selectionStart = temp;
             }
-        };
-        handler.postDelayed(r, 1);
+
+            imageSpan.setPosition(selectionStart, selectionEnd);
+
+            int line, column = 0;
+            if (mContentEditText.getLayout() != null) {
+                line = mContentEditText.getLayout().getLineForOffset(selectionStart);
+                column = selectionStart - mContentEditText.getLayout().getLineStart(line);
+            }
+
+            Editable s = mContentEditText.getText();
+            if (s == null) {
+                return;
+            }
+
+            WPImageSpan[] imageSpans = s.getSpans(selectionStart, selectionEnd, WPImageSpan.class);
+            if (imageSpans.length != 0) {
+                // insert a few line breaks if the cursor is already on an image
+                s.insert(selectionEnd, "\n\n");
+                selectionStart = selectionStart + 2;
+                selectionEnd = selectionEnd + 2;
+            } else if (column != 0) {
+                // insert one line break if the cursor is not at the first column
+                s.insert(selectionEnd, "\n");
+                selectionStart = selectionStart + 1;
+                selectionEnd = selectionEnd + 1;
+            }
+
+            s.insert(selectionStart, " ");
+            s.setSpan(imageSpan, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            AlignmentSpan.Standard as = new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER);
+            s.setSpan(as, selectionStart, selectionEnd + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.insert(selectionEnd + 1, "\n\n");
+
+            // Fetch and replace the WPImageSpan if it's a remote media
+            if (mImageLoader != null && URLUtil.isNetworkUrl(mImageUrl)) {
+                loadWPImageSpanThumbnail(mMediaFile, mImageUrl, mImageLoader);
+            }
+        }
+    }
+
+    public void addMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader,
+                             final int start, final int end) {
+        AddMediaFileTask addMediaFileTask = new AddMediaFileTask(mediaFile, imageUrl, imageLoader, start, end);
+        addMediaFileTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
