@@ -68,6 +68,7 @@ public class MeFragment extends Fragment {
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
     private ToolTipView mGravatarToolTipView;
+    private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
@@ -150,6 +151,7 @@ public class MeFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
+        mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
@@ -163,7 +165,7 @@ public class MeFragment extends Fragment {
         addDropShadowToAvatar();
         refreshAccountDetails();
 
-        mAvatarImageView.setOnClickListener(new View.OnClickListener() {
+        mAvatarContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // User tapped the Gravatar so dismiss the tooltip
