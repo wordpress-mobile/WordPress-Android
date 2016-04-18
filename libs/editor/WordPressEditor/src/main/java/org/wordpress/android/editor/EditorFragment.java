@@ -448,21 +448,39 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         updateFormatBarEnabledState(true);
 
         if (toggleButton.isChecked()) {
-            mSourceViewTitle.setText(getTitle());
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // Update mTitle and mContentHtml with the latest state from the ZSSEditor
+                    getTitle();
+                    getContent();
 
-            SpannableString spannableContent = new SpannableString(getContent());
-            HtmlStyleUtils.styleHtmlForDisplay(spannableContent);
-            mSourceViewContent.setText(spannableContent);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Set HTML mode state
+                            mSourceViewTitle.setText(mTitle);
 
-            mWebView.setVisibility(View.GONE);
-            mSourceView.setVisibility(View.VISIBLE);
+                            SpannableString spannableContent = new SpannableString(mContentHtml);
+                            HtmlStyleUtils.styleHtmlForDisplay(spannableContent);
+                            mSourceViewContent.setText(spannableContent);
 
-            mSourceViewContent.requestFocus();
-            mSourceViewContent.setSelection(0);
+                            mWebView.setVisibility(View.GONE);
+                            mSourceView.setVisibility(View.VISIBLE);
 
-            InputMethodManager imm = ((InputMethodManager) getActivity()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE));
-            imm.showSoftInput(mSourceViewContent, InputMethodManager.SHOW_IMPLICIT);
+                            mSourceViewContent.requestFocus();
+                            mSourceViewContent.setSelection(0);
+
+                            InputMethodManager imm = ((InputMethodManager) getActivity()
+                                    .getSystemService(Context.INPUT_METHOD_SERVICE));
+                            imm.showSoftInput(mSourceViewContent, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    });
+                }
+            });
+
+            thread.start();
+
         } else {
             mWebView.setVisibility(View.VISIBLE);
             mSourceView.setVisibility(View.GONE);
@@ -476,6 +494,60 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             // Reset selection to avoid buggy cursor behavior
             mWebView.execJavaScriptFromString("ZSSEditor.resetSelectionOnField('zss_field_content');");
+        }
+    }
+
+    private void displayLinkDialog() {
+        final LinkDialogFragment linkDialogFragment = new LinkDialogFragment();
+        linkDialogFragment.setTargetFragment(this, LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD);
+
+        final Bundle dialogBundle = new Bundle();
+
+        // Pass potential URL from user clipboard
+        String clipboardUri = Utils.getUrlFromClipboard(getActivity());
+        if (clipboardUri != null) {
+            dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, clipboardUri);
+        }
+
+        // Pass selected text to dialog
+        if (mSourceView.getVisibility() == View.VISIBLE) {
+            // HTML mode
+            mSelectionStart = mSourceViewContent.getSelectionStart();
+            mSelectionEnd = mSourceViewContent.getSelectionEnd();
+
+            String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
+            dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, selectedText);
+
+            linkDialogFragment.setArguments(dialogBundle);
+            linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
+        } else {
+            // Visual mode
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mGetSelectedTextCountDownLatch = new CountDownLatch(1);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mWebView.execJavaScriptFromString(
+                                    "ZSSEditor.execFunctionForResult('getSelectedTextToLinkify');");
+                        }
+                    });
+
+                    try {
+                        if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
+                            dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
+                        }
+                    } catch (InterruptedException e) {
+                        AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
+                    }
+
+                    linkDialogFragment.setArguments(dialogBundle);
+                    linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
+                }
+            });
+
+            thread.start();
         }
     }
 
@@ -507,40 +579,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             ((ToggleButton) v).setChecked(false);
 
-            LinkDialogFragment linkDialogFragment = new LinkDialogFragment();
-            linkDialogFragment.setTargetFragment(this, LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD);
-
-            Bundle dialogBundle = new Bundle();
-
-            // Pass potential URL from user clipboard
-            String clipboardUri = Utils.getUrlFromClipboard(getActivity());
-            if (clipboardUri != null) {
-                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_URL, clipboardUri);
-            }
-
-            // Pass selected text to dialog
-            if (mSourceView.getVisibility() == View.VISIBLE) {
-                // HTML mode
-                mSelectionStart = mSourceViewContent.getSelectionStart();
-                mSelectionEnd = mSourceViewContent.getSelectionEnd();
-
-                String selectedText = mSourceViewContent.getText().toString().substring(mSelectionStart, mSelectionEnd);
-                dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, selectedText);
-            } else {
-                // Visual mode
-                mGetSelectedTextCountDownLatch = new CountDownLatch(1);
-                mWebView.execJavaScriptFromString("ZSSEditor.execFunctionForResult('getSelectedTextToLinkify');");
-                try {
-                    if (mGetSelectedTextCountDownLatch.await(1, TimeUnit.SECONDS)) {
-                        dialogBundle.putString(LinkDialogFragment.LINK_DIALOG_ARG_TEXT, mJavaScriptResult);
-                    }
-                } catch (InterruptedException e) {
-                    AppLog.d(T.EDITOR, "Failed to obtain selected text from JS editor.");
-                }
-            }
-
-            linkDialogFragment.setArguments(dialogBundle);
-            linkDialogFragment.show(getFragmentManager(), LinkDialogFragment.class.getSimpleName());
+            displayLinkDialog();
         } else {
             if (v instanceof ToggleButton) {
                 onFormattingButtonClicked((ToggleButton) v);

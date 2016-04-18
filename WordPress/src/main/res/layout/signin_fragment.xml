@@ -100,8 +100,7 @@
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/nux_password"
-                    android:maxLength="@integer/max_length_username"
-                    app:persistenceEnabled="true" />
+                    android:maxLength="@integer/max_length_username" />
 
                 <ImageView
                     android:id="@+id/imageView"

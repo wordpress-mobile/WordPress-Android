@@ -67,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -272,7 +273,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isSmartLockAvailable() {
-        return (isAdded() && isGooglePlayServicesAvailable()) || mCredentialsClient != null;
+        return (isAdded() && isGooglePlayServicesAvailable()) && mCredentialsClient != null && mCredentialsClient.isConnected();
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
@@ -370,9 +371,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
-        mUsernameEditText.setText(credential.getId());
-        mPasswordEditText.setText(credential.getPassword());
+        if (EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty()) {
+            track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
+            mUsernameEditText.setText(credential.getId());
+            mPasswordEditText.setText(credential.getPassword());
+        }
     }
 
     @Override
@@ -389,6 +392,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     @Override
     public void onConnected(Bundle bundle) {
         AppLog.d(T.NUX, "Google API client connected");
+        smartLockAutoFill();
     }
 
     @Override
@@ -585,6 +589,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
                         finishCurrentActivity(userBlogList);
+                        String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
+                        Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
+                        saveCrendentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
                     }
                 }, null);
             } else {
@@ -671,7 +678,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         if (!isSmartLockAvailable()) {
             return;
         }
-        Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
+        Credential credential = new Credential.Builder(username).setPassword(password)
+                .setName(displayName).setProfilePictureUri(profilePicture).build();
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
