@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    SlidingRelativeLayout is used for animating the slide in-out between fragments
+    Background color is set so the fragment below it, PeopleListFragment won't be visible
+-->
+<org.wordpress.android.ui.SlidingRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -87,4 +93,5 @@
         android:textSize="@dimen/text_sz_medium"
         tools:text="REMOVE USER" />
 
-</RelativeLayout>
+</org.wordpress.android.ui.SlidingRelativeLayout >
+

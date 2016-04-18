@@ -30,6 +30,7 @@ public class PeopleAdapter extends BaseAdapter {
 
     public void setPeopleList(List<Person> peopleList) {
         mPeopleList = peopleList;
+        notifyDataSetChanged();
     }
 
     @Override
