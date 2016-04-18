@@ -200,8 +200,13 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
                 String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
+                String tagName;
+                if (jsonTopic.has("display_name")) {
+                    tagName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
+                } else {
+                    tagName = tagTitle;
+                }
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
                 topics.add(new ReaderTag(tagName, tagTitle, endpoint, topicType));
             }
