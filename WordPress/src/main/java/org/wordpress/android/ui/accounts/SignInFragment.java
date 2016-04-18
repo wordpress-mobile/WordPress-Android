@@ -733,7 +733,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     protected void configureAccountAfterSuccessfulSignIn() {
         mShouldSendTwoStepSMS = false;
-        saveCredentialsInSmartLock();
 
         // Finish this activity if we've authenticated to a Jetpack site
         if (isJetpackAuth() && getActivity() != null) {
