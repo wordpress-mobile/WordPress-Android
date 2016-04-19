@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -201,14 +202,13 @@ public class ReaderUpdateService extends Service {
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
                 String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
-                String tagSlug;
-                if (jsonTopic.has("slug")) {
-                    tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
-                } else {
+                String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
+                String tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
+                String endpoint = JSONUtils.getString(jsonTopic, "URL");
+                if (TextUtils.isEmpty(tagSlug)) {
                     tagSlug = tagTitle;
                 }
-                String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, topicType));
+                topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, topicType));
             }
         }
 

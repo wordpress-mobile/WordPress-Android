@@ -8,9 +8,10 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
-    private String tagSlug;     // tag for API calls, ex: "news-current-events"
-    private String tagTitle;    // tag for display, ex: "News & Current Events"
-    private String endpoint;    // endpoint for updating posts with this tag
+    private String tagSlug;         // tag for API calls
+    private String tagDisplayName;  // tag for display, usually the same as the slug
+    private String tagTitle;        // title, used for default tags
+    private String endpoint;        // endpoint for updating posts with this tag
     public final ReaderTagType tagType;
 
     // these are the default tags, which aren't localized in the /read/menu/ response
@@ -20,6 +21,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
 
     public ReaderTag(String tagSlug,
+                     String tagDisplayName,
                      String tagTitle,
                      String endpoint,
                      ReaderTagType tagType) {
@@ -28,6 +30,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         } else {
             this.setTagSlug(tagSlug);
         }
+        this.setTagDisplayName(tagDisplayName);
         this.setTagTitle(tagTitle);
         this.setEndpoint(endpoint);
         this.tagType = tagType;
@@ -46,37 +49,22 @@ public class ReaderTag implements Serializable, FilterCriteria {
     void setTagTitle(String title) {
         this.tagTitle = StringUtils.notNullStr(title);
     }
+    boolean hasTagTitle() {
+        return !TextUtils.isEmpty(tagTitle);
+    }
+
+    public String getTagDisplayName() {
+        return StringUtils.notNullStr(tagDisplayName);
+    }
+    void setTagDisplayName(String displayName) {
+        this.tagDisplayName = StringUtils.notNullStr(displayName);
+    }
 
     public String getTagSlug() {
         return StringUtils.notNullStr(tagSlug);
     }
     void setTagSlug(String slug) {
         this.tagSlug = StringUtils.notNullStr(slug);
-    }
-
-    /*
-     * when displaying a tag name, we want to use the title when available since it's often
-     * more user-friendly
-     */
-    public String getTagDisplayName() {
-        if (!TextUtils.isEmpty(tagTitle)) {
-            return tagTitle;
-        }
-        if (TextUtils.isEmpty(tagSlug)) {
-            return "";
-        }
-        // If already uppercase, assume correctly formatted
-        if (Character.isUpperCase(tagSlug.charAt(0))) {
-            return tagSlug;
-        }
-        // Accounts for iPhone, ePaper, etc.
-        if (tagSlug.length() > 1 &&
-                Character.isLowerCase(tagSlug.charAt(0)) &&
-                Character.isUpperCase(tagSlug.charAt(1))) {
-            return tagSlug;
-        }
-        // Capitalize anything else.
-        return StringUtils.capitalize(tagSlug);
     }
 
     /*
@@ -172,11 +160,37 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * the label is the text displayed in the dropdown filter
+     * the label is the text displayed in the dropdown filter - use title for the default tags, use
+     * lowercase slugs if a tag slug is alphanumeric (dashes are also permitted), otherwise, use
+     * the title.
      */
     @Override
     public String getLabel() {
-        return getTagDisplayName();
+        if (tagType == ReaderTagType.DEFAULT) {
+            return getTagTitle();
+        } else if (isTagAlphaNumeric(tagDisplayName)) {
+            return tagDisplayName.toLowerCase();
+        } else if (hasTagTitle()) {
+            return getTagTitle();
+        } else {
+            return getTagDisplayName();
+        }
+    }
+
+    /*
+     * returns true if the passed tag string contains only alpha-numeric characters or hyphens
+     */
+    private static boolean isTagAlphaNumeric(String tagString) {
+        if (tagString == null) return false;
+
+        for (int i=0; i < tagString.length(); i++) {
+            char c = tagString.charAt(i);
+            if (!Character.isLetterOrDigit(c) && c != '-') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

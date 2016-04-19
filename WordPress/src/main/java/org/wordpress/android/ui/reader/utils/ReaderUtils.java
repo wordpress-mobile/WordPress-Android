@@ -196,7 +196,7 @@ public class ReaderUtils {
         if (tag != null) {
             return tag;
         }
-        return new ReaderTag(tagName, null, null, tagType);
+        return new ReaderTag(tagName, null, null, null, tagType);
     }
 
     /*
