@@ -97,7 +97,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        copyDatabase(db);
+        //copyDatabase(db);
     }
 
     /*
