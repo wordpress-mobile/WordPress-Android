@@ -339,6 +339,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                eventName = "stats_connect_jetpack_selected";
+                break;
             case STATS_WIDGET_ADDED:
                 eventName = "stats_widget_added";
                 break;
