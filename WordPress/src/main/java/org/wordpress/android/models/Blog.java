@@ -511,4 +511,17 @@ public class Blog {
     public void setCapabilities(String capabilities) {
         this.capabilities = capabilities;
     }
+
+    public boolean checkCapability(String capability) {
+        if (capabilities == null || capabilities.isEmpty() || capability == null || capability.isEmpty()) {
+            return false;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(capabilities);
+            return jsonObject.optBoolean(capability);
+        } catch (JSONException e) {
+            AppLog.e(T.PEOPLE, "Capabilities is not a valid json: " + capabilities);
+            return false;
+        }
+    }
 }
