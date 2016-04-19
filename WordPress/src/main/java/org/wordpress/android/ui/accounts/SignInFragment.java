@@ -228,7 +228,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        disconnectCredentialsClient();
     }
 
     @Override
@@ -293,13 +292,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 }
             }
         });
-    }
-
-    private void disconnectCredentialsClient() {
-        if (mCredentialsClient != null && mCredentialsClient.isConnected()) {
-            mCredentialsClient.stopAutoManage(getActivity());
-            mCredentialsClient.disconnect();
-        }
     }
 
     private boolean isGooglePlayServicesAvailable() {

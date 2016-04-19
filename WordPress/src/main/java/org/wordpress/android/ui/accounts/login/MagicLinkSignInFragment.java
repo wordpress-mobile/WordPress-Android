@@ -185,8 +185,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
         mSignInButton.setText(getString(R.string.button_next));
     }
 
-
-
     private void showPasswordFieldAndFocus() {
         showPasswordField();
         mPasswordEditText.requestFocus();
