@@ -848,44 +848,53 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private void saveAndFinish() {
-        // Fetch post title and content from editor fields and update the Post object
-        updatePostObject(false);
+    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // Fetch post title and content from editor fields and update the Post object
+            updatePostObject(false);
 
-        if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
-            // new and empty post? delete it
-            if (mIsNewPost) {
-                WordPress.wpDB.deletePost(mPost);
-                finish();
-                return;
-            }
-        } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
-            // if no changes have been made to the post, set it back to the original don't save it
-            WordPress.wpDB.updatePost(mOriginalPost);
-            finish();
-            return;
-        } else {
-            // changes have been made, save the post and ask for the post list to refresh.
-            // We consider this being "manual save", it will replace some Android "spans" by an html
-            // or a shortcode replacement (for instance for images and galleries)
-            if (mShowNewEditor) {
-                // Update the post object directly, without re-fetching the fields from the EditorFragment
-                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                savePostToDb();
+            if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
+                // new and empty post? delete it
+                if (mIsNewPost) {
+                    WordPress.wpDB.deletePost(mPost);
+                    return false;
+                }
+            } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+                // if no changes have been made to the post, set it back to the original don't save it
+                WordPress.wpDB.updatePost(mOriginalPost);
+                return false;
             } else {
-                // TODO: Remove when legacy editor is dropped
-                savePostAsync();
+                // changes have been made, save the post and ask for the post list to refresh.
+                // We consider this being "manual save", it will replace some Android "spans" by an html
+                // or a shortcode replacement (for instance for images and galleries)
+                if (mShowNewEditor) {
+                    // Update the post object directly, without re-fetching the fields from the EditorFragment
+                    updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
+                    savePostToDb();
+                } else {
+                    updatePostObject(false);
+                    savePostToDb();
+                }
             }
+            return true;
         }
 
-        Intent i = new Intent();
-        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
-        i.putExtra(EXTRA_IS_PAGE, mIsPage);
-        setResult(RESULT_OK, i);
+        @Override
+        protected void onPostExecute(Boolean saved) {
+            if (saved) {
+                Intent i = new Intent();
+                i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+                i.putExtra(EXTRA_IS_PAGE, mIsPage);
+                setResult(RESULT_OK, i);
+                ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
+            }
+            finish();
+        }
+    }
 
-        ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
-
-        finish();
+    private void saveAndFinish() {
+        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
