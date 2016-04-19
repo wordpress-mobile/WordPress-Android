@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -59,7 +58,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * when displaying a tag name, we want to use the title when available since it's often
      * more user-friendly
      */
-    public String getTagNameForDisplay() {
+    public String getTagDisplayName() {
         if (!TextUtils.isEmpty(tagTitle)) {
             return tagTitle;
         }
@@ -144,16 +143,12 @@ public class ReaderTag implements Serializable, FilterCriteria {
                 || title.equalsIgnoreCase(TAG_TITLE_LIKED));
     }
 
-    private String getSanitizedTagSlug() {
-        return ReaderUtils.sanitizeWithDashes(this.tagSlug);
-    }
-
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
         if (tag1 == null || tag2 == null) {
             return false;
         }
         return tag1.tagType == tag2.tagType
-            && tag1.getSanitizedTagSlug().equalsIgnoreCase(tag2.getSanitizedTagSlug());
+            && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
     }
 
     public boolean isPostsILike() {
@@ -181,7 +176,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      */
     @Override
     public String getLabel() {
-        return getTagNameForDisplay();
+        return getTagDisplayName();
     }
 
     @Override

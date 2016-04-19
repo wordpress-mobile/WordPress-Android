@@ -90,7 +90,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
-        holder.txtTagName.setText(tag.getTagNameForDisplay());
+        holder.txtTagName.setText(tag.getTagDisplayName());
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
