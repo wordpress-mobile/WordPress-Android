@@ -407,7 +407,7 @@ public class WPRestClient {
         }
 
         public void sendWithAccessToken(String token){
-            mRequest.setAccessToken(token.toString());
+            mRequest.setAccessToken(token);
             mRestClient.send(mRequest);
         }
 
