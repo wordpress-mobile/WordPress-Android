@@ -818,6 +818,9 @@ public class StatsActivity extends AppCompatActivity
         if (!event.isError) {
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (currentBlog == null) {
+                AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+                Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+                finish();
                 return;
             }
             if (currentBlog.getDotComBlogId() == null) {
