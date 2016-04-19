@@ -39,6 +39,7 @@ public class Blog {
     private String httppassword = "";
     private String postFormats;
     private String blogOptions = "{}";
+    private String capabilities;
     private boolean isAdmin;
     private boolean isHidden;
     private long planID;
@@ -47,7 +48,7 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
+    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, String capabilities, boolean isAdmin, boolean isHidden) {
         this.localTableBlogId = localTableBlogId;
         this.url = url;
         this.homeURL = homeURL;
@@ -72,6 +73,7 @@ public class Blog {
         this.httppassword = httppassword;
         this.postFormats = postFormats;
         this.blogOptions = blogOptions;
+        this.capabilities = capabilities;
         this.isAdmin = isAdmin;
         this.isHidden = isHidden;
     }
@@ -497,7 +499,16 @@ public class Blog {
     public String getPlanShortName() {
         return StringUtils.notNullStr(planShortName);
     }
+
     public void setPlanShortName(String name) {
         this.planShortName = StringUtils.notNullStr(name);
+    }
+
+    public String getCapabilities() {
+        return capabilities;
+    }
+
+    public void setCapabilities(String capabilities) {
+        this.capabilities = capabilities;
     }
 }
