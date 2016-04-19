@@ -78,7 +78,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     @Override
     public long getItemId(int position) {
-        return mTags.get(position).getTagName().hashCode();
+        return mTags.get(position).getTagSlug().hashCode();
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         boolean success = ReaderTagActions.performTagAction(tag, TagAction.DELETE, actionListener);
 
         if (success) {
-            int index = mTags.indexOfTagName(tag.getTagName());
+            int index = mTags.indexOfTagName(tag.getTagSlug());
             if (index > -1) {
                 mTags.remove(index);
                 notifyItemRemoved(index);

@@ -9,25 +9,25 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
-    private String tagName;     // tag for API calls, ex: "news-current-events"
+    private String tagSlug;     // tag for API calls, ex: "news-current-events"
     private String tagTitle;    // tag for display, ex: "News & Current Events"
     private String endpoint;    // endpoint for updating posts with this tag
     public final ReaderTagType tagType;
 
-    // these are the default tag names, which aren't localized in the /read/menu/ response
-    private static final String TAG_NAME_LIKED = "Posts I Like";
-    private static final String TAG_NAME_DISCOVER = "Discover";
-    public  static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
-    public  static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
+    // these are the default tags, which aren't localized in the /read/menu/ response
+    private static final String TAG_TITLE_LIKED = "Posts I Like";
+    private static final String TAG_TITLE_DISCOVER = "Discover";
+    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_DISCOVER;
+    public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
 
-    public ReaderTag(String tagName,
+    public ReaderTag(String tagSlug,
                      String tagTitle,
                      String endpoint,
                      ReaderTagType tagType) {
-        if (TextUtils.isEmpty(tagName)) {
-            this.setTagName(getTagNameFromEndpoint(endpoint));
+        if (TextUtils.isEmpty(tagSlug)) {
+            this.setTagSlug(getTagSlugFromEndpoint(endpoint));
         } else {
-            this.setTagName(tagName);
+            this.setTagSlug(tagSlug);
         }
         this.setTagTitle(tagTitle);
         this.setEndpoint(endpoint);
@@ -48,11 +48,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
         this.tagTitle = StringUtils.notNullStr(title);
     }
 
-    public String getTagName() {
-        return StringUtils.notNullStr(tagName);
+    public String getTagSlug() {
+        return StringUtils.notNullStr(tagSlug);
     }
-    void setTagName(String name) {
-        this.tagName = StringUtils.notNullStr(name);
+    void setTagSlug(String slug) {
+        this.tagSlug = StringUtils.notNullStr(slug);
     }
 
     /*
@@ -63,21 +63,21 @@ public class ReaderTag implements Serializable, FilterCriteria {
         if (!TextUtils.isEmpty(tagTitle)) {
             return tagTitle;
         }
-        if (TextUtils.isEmpty(tagName)) {
+        if (TextUtils.isEmpty(tagSlug)) {
             return "";
         }
         // If already uppercase, assume correctly formatted
-        if (Character.isUpperCase(tagName.charAt(0))) {
-            return tagName;
+        if (Character.isUpperCase(tagSlug.charAt(0))) {
+            return tagSlug;
         }
         // Accounts for iPhone, ePaper, etc.
-        if (tagName.length() > 1 &&
-                Character.isLowerCase(tagName.charAt(0)) &&
-                Character.isUpperCase(tagName.charAt(1))) {
-            return tagName;
+        if (tagSlug.length() > 1 &&
+                Character.isLowerCase(tagSlug.charAt(0)) &&
+                Character.isUpperCase(tagSlug.charAt(1))) {
+            return tagSlug;
         }
         // Capitalize anything else.
-        return StringUtils.capitalize(tagName);
+        return StringUtils.capitalize(tagSlug);
     }
 
     /*
@@ -86,15 +86,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * in the log could be considered a privacy issue
      */
     public String getTagNameForLog() {
-        String tagName = getTagName();
+        String tagSlug = getTagSlug();
         if (tagType == ReaderTagType.DEFAULT) {
-            return tagName;
-        } else if (tagName.length() >= 6) {
-            return tagName.substring(0, 3) + "...";
-        } else if (tagName.length() >= 4) {
-            return tagName.substring(0, 2) + "...";
-        } else if (tagName.length() >= 2) {
-            return tagName.substring(0, 1) + "...";
+            return tagSlug;
+        } else if (tagSlug.length() >= 6) {
+            return tagSlug.substring(0, 3) + "...";
+        } else if (tagSlug.length() >= 4) {
+            return tagSlug.substring(0, 2) + "...";
+        } else if (tagSlug.length() >= 2) {
+            return tagSlug.substring(0, 1) + "...";
         } else {
             return "...";
         }
@@ -110,9 +110,9 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * extracts the tag name from a valid read/tags/[tagName]/posts endpoint
+     * extracts the tag slug from a valid read/tags/[tagSlug]/posts endpoint
      */
-    private static String getTagNameFromEndpoint(final String endpoint) {
+    private static String getTagSlugFromEndpoint(final String endpoint) {
         if (TextUtils.isEmpty(endpoint))
             return "";
 
@@ -133,19 +133,19 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * is the passed tag name one of the default tags?
+     * is the passed string one of the default tags?
      */
-    public static boolean isDefaultTagName(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static boolean isDefaultTagTitle(String title) {
+        if (TextUtils.isEmpty(title)) {
             return false;
         }
-        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWED_SITES)
-                || tagName.equalsIgnoreCase(TAG_NAME_DISCOVER)
-                || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+        return (title.equalsIgnoreCase(TAG_TITLE_FOLLOWED_SITES)
+                || title.equalsIgnoreCase(TAG_TITLE_DISCOVER)
+                || title.equalsIgnoreCase(TAG_TITLE_LIKED));
     }
 
-    private String getSanitizedTagName() {
-        return ReaderUtils.sanitizeWithDashes(this.tagName);
+    private String getSanitizedTagSlug() {
+        return ReaderUtils.sanitizeWithDashes(this.tagSlug);
     }
 
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
@@ -153,7 +153,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
             return false;
         }
         return tag1.tagType == tag2.tagType
-            && tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName());
+            && tag1.getSanitizedTagSlug().equalsIgnoreCase(tag2.getSanitizedTagSlug());
     }
 
     public boolean isPostsILike() {
@@ -164,7 +164,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isDiscover() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().equals(TAG_NAME_DISCOVER);
+        return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
     }
 
     public boolean isTagTopic() {

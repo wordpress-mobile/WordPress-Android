@@ -168,8 +168,8 @@ public class AppPrefs {
     }
 
     public static void setReaderTag(ReaderTag tag) {
-        if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
-            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
+        if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
+            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
         } else {
             prefs().edit()

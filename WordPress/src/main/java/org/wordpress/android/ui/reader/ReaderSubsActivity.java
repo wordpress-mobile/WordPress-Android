@@ -347,7 +347,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagName();
+            mLastAddedTagName = tag.getTagSlug();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
             String labelAddedTag = getString(R.string.reader_label_added_tag);
@@ -460,7 +460,7 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onTagDeleted(ReaderTag tag) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
-        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
+        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);

@@ -204,7 +204,7 @@ public class ReaderUtils {
      * the user hasn't already chosen one
      */
     public static ReaderTag getDefaultTag() {
-        return getTagFromTagName(ReaderTag.TAG_NAME_DEFAULT, ReaderTagType.DEFAULT);
+        return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
     }
 
 

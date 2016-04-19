@@ -43,7 +43,7 @@ public class ReaderTagActions {
         }
 
         final String path;
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagName());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
 
         switch (action) {
             case DELETE:
@@ -53,7 +53,7 @@ public class ReaderTagActions {
 
             case ADD :
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tag.getTagName(), tag.getTagTitle(), endpoint, ReaderTagType.FOLLOWED);
+                ReaderTag newTopic = new ReaderTag(tag.getTagSlug(), tag.getTagTitle(), endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;

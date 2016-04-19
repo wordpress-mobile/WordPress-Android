@@ -742,7 +742,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private String getCurrentTagName() {
-        return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
+        return (mCurrentTag != null ? mCurrentTag.getTagSlug() : "");
     }
 
     private boolean hasCurrentTag() {
@@ -769,7 +769,7 @@ public class ReaderPostListFragment extends Fragment
                 AppPrefs.setReaderTag(tag);
                 break;
             case TAG_PREVIEW:
-                mTagPreviewHistory.push(tag.getTagName());
+                mTagPreviewHistory.push(tag.getTagSlug());
                 break;
         }
 
@@ -1154,7 +1154,7 @@ public class ReaderPostListFragment extends Fragment
         if (stat == null) return;
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagName());
+        properties.put("tag", tag.getTagSlug());
 
         AnalyticsTracker.track(stat, properties);
     }

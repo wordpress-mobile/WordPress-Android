@@ -365,7 +365,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // show the best tag for this post
-        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
+        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagSlug()) : null);
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
             holder.txtTag.setVisibility(View.VISIBLE);

@@ -424,7 +424,7 @@ public class ReaderPost {
     }
     public void setPrimaryTag(String tagName) {
         // this is a bit of a hack to avoid setting the primary tag to one of the defaults
-        if (!ReaderTag.isDefaultTagName(tagName)) {
+        if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
@@ -436,7 +436,7 @@ public class ReaderPost {
         return StringUtils.notNullStr(secondaryTag);
     }
     public void setSecondaryTag(String tagName) {
-        if (!ReaderTag.isDefaultTagName(tagName)) {
+        if (!ReaderTag.isDefaultTagTitle(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
     }

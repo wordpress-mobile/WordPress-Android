@@ -98,7 +98,7 @@ public class ReaderTagTable {
             );
 
             for (ReaderTag tag: tagList) {
-                stmt.bindString(1, tag.getTagName());
+                stmt.bindString(1, tag.getTagSlug());
                 stmt.bindString(2, tag.getTagTitle());
                 stmt.bindLong  (3, tag.tagType.toInt());
                 stmt.bindString(4, tag.getEndpoint());
@@ -117,7 +117,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return false;
         }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
                 args);
@@ -179,7 +179,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return null;
         }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
                "SELECT endpoint FROM tbl_tags WHERE tag_name=? AND tag_type=?",
                args);
@@ -228,7 +228,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return;
         }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_name=? AND tag_type=?", args);
     }
 
@@ -237,7 +237,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return "";
         }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT date_updated FROM tbl_tags WHERE tag_name=? AND tag_type=?",
                 args);
@@ -253,7 +253,7 @@ public class ReaderTagTable {
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindString(1, date);
-            stmt.bindString(2, tag.getTagName());
+            stmt.bindString(2, tag.getTagSlug());
             stmt.bindLong  (3, tag.tagType.toInt());
             stmt.execute();
         } finally {
@@ -331,7 +331,7 @@ public class ReaderTagTable {
 
                 // then insert the passed ones
                 for (ReaderTag tag: tagList) {
-                    stmt.bindString(1, tag.getTagName());
+                    stmt.bindString(1, tag.getTagSlug());
                     stmt.bindString(2, tag.getTagTitle());
                     stmt.bindLong  (3, tag.tagType.toInt());
                     stmt.bindString(4, tag.getEndpoint());
