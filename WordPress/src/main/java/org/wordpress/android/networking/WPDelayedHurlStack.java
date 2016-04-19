@@ -88,6 +88,19 @@ public class WPDelayedHurlStack implements HttpStack {
         sslContextInitializer.start();
     }
 
+
+    private static boolean hasAuthorizationHeader(Request request) {
+        try {
+            if (request.getHeaders() != null && request.getHeaders().containsKey("Authorization")) {
+                return true;
+            }
+        } catch (AuthFailureError e) {
+            // nope
+        }
+
+        return false;
+    }
+
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
@@ -99,9 +112,15 @@ public class WPDelayedHurlStack implements HttpStack {
                 additionalHeaders.put("Authorization", auth);
             }
 
+            /**
+             *  Add the Authorization header to access private WP.com files.
+             *
+             *  Note: Additional headers have precedence over request headers, so add Authorization only it it's not already
+             *  available in the request.
+             *
+             */
             if (WPUrlUtils.safeToAddWordPressComAuthToken(request.getUrl()) && mCtx != null
-                    && AccountHelper.isSignedInWordPressDotCom()) {
-                // Add the auth header to access private WP.com files
+                    && AccountHelper.isSignedInWordPressDotCom() && !hasAuthorizationHeader(request)) {
                 additionalHeaders.put("Authorization", "Bearer " + AccountHelper.getDefaultAccount().getAccessToken());
             }
         }
@@ -110,8 +129,8 @@ public class WPDelayedHurlStack implements HttpStack {
 
         String url = request.getUrl();
 
-        // Ensure that an HTTPS request is made for images in private sites
-        if (additionalHeaders.containsKey("Authorization")) {
+        // Ensure that an HTTPS request is made to wpcom when Authorization is set.
+        if (additionalHeaders.containsKey("Authorization") || hasAuthorizationHeader(request)) {
             url = UrlUtils.makeHttps(url);
         }
 
