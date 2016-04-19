@@ -694,7 +694,7 @@ public class StatsActivity extends AppCompatActivity
                     jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
                     jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
                     startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 }
             });
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
