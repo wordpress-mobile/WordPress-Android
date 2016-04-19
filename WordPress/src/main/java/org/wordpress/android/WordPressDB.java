@@ -260,7 +260,7 @@ public class WordPressDB {
         boolean isNewInstall = (currentVersion == 0);
 
         if (!isNewInstall && currentVersion != DATABASE_VERSION) {
-            AppLog.d(T.DB, "updgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+            AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
         switch (currentVersion) {
