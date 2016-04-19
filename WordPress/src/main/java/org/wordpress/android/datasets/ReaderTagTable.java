@@ -141,10 +141,6 @@ public class ReaderTagTable {
         return tagExistsOfType(tagSlug, ReaderTagType.FOLLOWED);
     }
 
-    public static boolean isDefaultTagName(String tagSlug) {
-        return tagExistsOfType(tagSlug, ReaderTagType.DEFAULT);
-    }
-
     private static ReaderTag getTagFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("null tag cursor");
