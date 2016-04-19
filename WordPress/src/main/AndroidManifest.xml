@@ -467,4 +467,6 @@
         </service>
     </application>
 
+    <!-- Smart Lock for Passwords -->
+    <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 </manifest>

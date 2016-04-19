@@ -247,4 +247,9 @@
         <item>431</item>
         <item>11</item>
     </string-array>
+
+    <!-- Smart Lock for Passwords -->
+    <string name="asset_statements" translatable="false">
+        [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
+    </string>
 </resources>
