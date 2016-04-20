@@ -10,7 +10,10 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -183,4 +186,26 @@ public class ReaderUtils {
             view.setBackgroundResource(R.drawable.ripple_oval);
         }
     }
+
+    /*
+     * returns a tag object from the passed tag name - first checks for it in the tag db
+     * (so we can also get its title & endpoint), returns a new tag if that fails
+     */
+    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType) {
+        ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
+        if (tag != null) {
+            return tag;
+        }
+        return new ReaderTag(tagName, null, null, tagType);
+    }
+
+    /*
+     * returns the default tag, which is the one selected by default in the reader when
+     * the user hasn't already chosen one
+     */
+    public static ReaderTag getDefaultTag() {
+        return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
+    }
+
+
 }

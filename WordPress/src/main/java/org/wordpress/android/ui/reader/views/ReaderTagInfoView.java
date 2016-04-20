@@ -49,13 +49,13 @@ public class ReaderTagInfoView extends LinearLayout {
         mCurrentTag = tag;
 
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
-        txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagName()));
+        txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagSlug()));
 
         if (ReaderUtils.isLoggedOutReader()) {
             mFollowButton.setVisibility(View.GONE);
         } else {
             mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagName()));
+            mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagSlug()));
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,7 +70,7 @@ public class ReaderTagInfoView extends LinearLayout {
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagName());
+        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagSlug());
         ReaderTagActions.TagAction action = isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
