@@ -39,10 +39,12 @@ public class SignInActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
 
-        mSignInFragment = getSignInFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
-        fragmentTransaction.commit();
+        if (savedInstanceState == null) {
+            mSignInFragment = getSignInFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
+            fragmentTransaction.commit();
+        }
 
         actionMode(getIntent().getExtras());
         ActivityId.trackLastActivity(ActivityId.LOGIN);
