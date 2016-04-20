@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -61,6 +62,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPeopleView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -142,6 +144,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
@@ -224,7 +227,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.row_people).setOnClickListener(new View.OnClickListener() {
+        mPeopleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPeople(getActivity());
@@ -388,6 +391,10 @@ public class MySiteFragment extends Fragment
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
+
+        // toggle people row visibility
+        boolean canVisitPeople = blog.checkCapability(Capability.LIST_USERS);
+        mPeopleView.setVisibility(canVisitPeople ? View.VISIBLE : View.GONE);
     }
 
     private void toggleAdminVisibility() {
