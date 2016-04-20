@@ -317,7 +317,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void initSmartLockForPasswords() {
-        if (!isSmartLockAvailable()) {
+        if (!isGooglePlayServicesAvailable()) {
             return;
         }
 
