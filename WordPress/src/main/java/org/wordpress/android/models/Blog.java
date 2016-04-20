@@ -512,7 +512,7 @@ public class Blog {
         this.capabilities = capabilities;
     }
 
-    public boolean checkCapability(Capability capability) {
+    public boolean hasCapability(Capability capability) {
         // If a capability is missing it means the user don't have it.
         if (capabilities == null || capabilities.isEmpty() || capability == null) {
             return false;
