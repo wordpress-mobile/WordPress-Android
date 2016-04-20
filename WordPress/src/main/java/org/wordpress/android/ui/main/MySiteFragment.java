@@ -393,8 +393,8 @@ public class MySiteFragment extends Fragment
         }
 
         // toggle people row visibility
-        boolean canVisitPeople = blog.hasCapability(Capability.LIST_USERS);
-        mPeopleView.setVisibility(canVisitPeople ? View.VISIBLE : View.GONE);
+        boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
+        mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
     }
 
     private void toggleAdminVisibility() {
