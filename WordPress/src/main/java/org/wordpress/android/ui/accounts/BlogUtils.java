@@ -152,7 +152,7 @@ public class BlogUtils {
                     blog.setPlanShortName(planShortName);
                     blogUpdated = true;
                 }
-                if (!blog.getCapabilities().equals(capabilities)) {
+                if (blog.getCapabilities() == null || !blog.getCapabilities().equals(capabilities)) {
                     blog.setCapabilities(capabilities);
                     blogUpdated = true;
                 }
