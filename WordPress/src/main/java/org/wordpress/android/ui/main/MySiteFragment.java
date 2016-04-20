@@ -360,9 +360,14 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        boolean isAdminOrSelfHosted =  blog.isAdmin() || !blog.isDotcomFlag();
+        boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
+        mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
+        mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
+
+        // if either people or settings is visible, configuration header should be visible
+        int settingsVisibility = (isAdminOrSelfHosted || canListPeople) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
-        mSettingsView.setVisibility(settingsVisibility);
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
@@ -391,10 +396,6 @@ public class MySiteFragment extends Fragment
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
-
-        // toggle people row visibility
-        boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
-        mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
     }
 
     private void toggleAdminVisibility() {
