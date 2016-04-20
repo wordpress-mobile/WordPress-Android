@@ -45,7 +45,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
                     site.put("isVisible", jsonSite.get("visible"));
 
                     // store capabilities as a text blob
-                    site.put("capabilities", jsonSite.get("capabilities").toString());
+                    site.put("capabilities", jsonSite.getString("capabilities"));
 
                     JSONObject plan = jsonSite.getJSONObject("plan");
                     site.put("planID", plan.get("product_id"));
