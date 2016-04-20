@@ -14,4 +14,9 @@ public enum Capability {
     Capability(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        return label;
+    }
 }
