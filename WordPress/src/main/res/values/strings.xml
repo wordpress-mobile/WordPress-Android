@@ -1426,5 +1426,5 @@
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="check_your_email">Check your email</string>
-    <string name="open_mail">Open mail</string>
+    <string name="launch_your_email_app">Launch your email app</string>
 </resources>
