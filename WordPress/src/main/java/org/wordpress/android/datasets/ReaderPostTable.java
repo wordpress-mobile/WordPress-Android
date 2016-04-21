@@ -197,7 +197,7 @@ public class ReaderPostTable {
         }
 
         int numToPurge = numPosts - MAX_POSTS_PER_TAG;
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
         String where = "pseudo_id IN ("
                 + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
                 + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
@@ -233,7 +233,7 @@ public class ReaderPostTable {
         if (tag == null) {
             return 0;
         }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                     "SELECT count(*) FROM tbl_post_tags WHERE tag_name=? AND tag_type=?",
                     args);
@@ -385,7 +385,7 @@ public class ReaderPostTable {
         }
 
         // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags",
                 "tag_name=? AND tag_type=?",
                 args);
@@ -415,7 +415,7 @@ public class ReaderPostTable {
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
                    + " ORDER BY published LIMIT 1";
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
@@ -439,7 +439,7 @@ public class ReaderPostTable {
     public static void removeGapMarkerForTag(final ReaderTag tag) {
         if (tag == null) return;
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String sql = "UPDATE tbl_post_tags SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
@@ -452,7 +452,7 @@ public class ReaderPostTable {
             return null;
         }
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String sql = "SELECT blog_id, post_id FROM tbl_post_tags WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
@@ -474,7 +474,7 @@ public class ReaderPostTable {
         String[] args = {
                 Long.toString(blogId),
                 Long.toString(postId),
-                tag.getTagName(),
+                tag.getTagSlug(),
                 Integer.toString(tag.tagType.toInt())
         };
         String sql = "UPDATE tbl_post_tags SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
@@ -511,7 +511,7 @@ public class ReaderPostTable {
         long timestamp = getGapMarkerTimestampForTag(tag);
         if (timestamp == 0) return;
 
-        String[] args = {Long.toString(timestamp), tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {Long.toString(timestamp), tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
                 + " WHERE tbl_posts.timestamp < ?"
                 + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
@@ -545,15 +545,15 @@ public class ReaderPostTable {
             }
 
 
-            // if blog/feed is no longer followed, remove its posts tagged with "Blogs I Follow" in
+            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites" in
             // tbl_post_tags
             if (!isFollowed) {
                 if (blogId != 0) {
                     db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
-                            new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWED_SITES});
+                            new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
                 } else {
                     db.delete("tbl_post_tags", "feed_id=? AND tag_name=?",
-                            new String[]{Long.toString(feedId), ReaderTag.TAG_NAME_FOLLOWED_SITES});
+                            new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
                 }
             }
 
@@ -647,7 +647,7 @@ public class ReaderPostTable {
 
             // now add to tbl_post_tags if a tag was passed
             if (tag != null) {
-                String tagName = tag.getTagName();
+                String tagName = tag.getTagSlug();
                 int tagType = tag.tagType.toInt();
                 for (ReaderPost post: posts) {
                     stmtTags.bindLong  (1, post.postId);
@@ -683,7 +683,7 @@ public class ReaderPostTable {
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
             // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
-            // longer followed if this is "Blogs I Follow"
+            // longer followed if this is "Followed Sites"
             if (tag.isPostsILike()) {
                 sql += " AND tbl_posts.is_liked != 0";
             } else if (tag.isFollowedSites()) {
@@ -697,7 +697,7 @@ public class ReaderPostTable {
             sql += " LIMIT " + Integer.toString(maxPosts);
         }
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             return getPostListFromCursor(cursor);
@@ -767,7 +767,7 @@ public class ReaderPostTable {
             sql += " LIMIT " + Integer.toString(maxPosts);
         }
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (cursor != null && cursor.moveToFirst()) {

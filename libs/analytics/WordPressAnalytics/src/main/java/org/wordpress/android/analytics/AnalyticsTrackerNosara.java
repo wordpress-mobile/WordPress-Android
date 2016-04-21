@@ -273,13 +273,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("menu_item", "site_settings");
                 break;
             case OPENED_ACCOUNT_SETTINGS:
-                eventName = "me_opened_account_settings";
+                eventName = "account_settings_opened";
                 break;
             case OPENED_APP_SETTINGS:
-                eventName = "me_opened_app_settings";
+                eventName = "app_settings_opened";
                 break;
             case OPENED_MY_PROFILE:
-                eventName = "me_opened_my_profile";
+                eventName = "my_profile_opened";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -339,6 +339,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                eventName = "stats_connect_jetpack_selected";
+                break;
             case STATS_WIDGET_ADDED:
                 eventName = "stats_widget_added";
                 break;
@@ -368,6 +371,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case LOGIN_INSERTED_INVALID_URL:
                 eventName = "login_inserted_invalid_url";
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                eventName = "login_autofill_credentials_filled";
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                eventName = "login_autofill_credentials_updated";
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";
