@@ -23,8 +23,7 @@ public class ReaderTagActions {
 
     public static boolean deleteTag(final ReaderTag tag,
                                     final ReaderActions.ActionListener actionListener) {
-        // for safety, don't allow deleting a default tag
-        if (tag == null || tag.tagType == ReaderTagType.DEFAULT) {
+        if (tag == null) {
             ReaderActions.callActionListener(actionListener, false);
             return false;
         }
@@ -69,7 +68,7 @@ public class ReaderTagActions {
 
     public static boolean addTag(final ReaderTag tag,
                                  final ReaderActions.ActionListener actionListener) {
-        if (tag == null || tag.tagType == ReaderTagType.DEFAULT) {
+        if (tag == null) {
             ReaderActions.callActionListener(actionListener, false);
             return false;
         }
