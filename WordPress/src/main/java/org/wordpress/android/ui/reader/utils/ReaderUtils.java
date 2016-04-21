@@ -202,7 +202,8 @@ public class ReaderUtils {
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
         String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
-        return new ReaderTag(tagSlug, tagName, tagName, null, tagType);
+        String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
+        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
     }
 
     /*
