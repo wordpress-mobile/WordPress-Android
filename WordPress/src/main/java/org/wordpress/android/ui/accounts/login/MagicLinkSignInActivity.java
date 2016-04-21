@@ -67,6 +67,14 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
         slideInFragment(magicLinkRequestFragment);
     }
 
+    @Override
+    protected void addSignInFragment() {
+        MagicLinkSignInFragment signInFragment = new MagicLinkSignInFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, signInFragment, MagicLinkSignInFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
     private void cancelProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.cancel();

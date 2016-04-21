@@ -38,14 +38,18 @@ public class SignInActivity extends FragmentActivity {
         setContentView(R.layout.welcome_activity);
 
         if (savedInstanceState == null) {
-            mSignInFragment = getSignInFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, mSignInFragment);
-            fragmentTransaction.commit();
+            addSignInFragment();
         }
 
         actionMode(getIntent().getExtras());
         ActivityId.trackLastActivity(ActivityId.LOGIN);
+    }
+
+    protected void addSignInFragment() {
+        SignInFragment signInFragment = new SignInFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     protected void actionMode(Bundle extras) {
