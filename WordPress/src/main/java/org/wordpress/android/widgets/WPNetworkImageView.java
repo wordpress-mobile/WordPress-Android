@@ -69,12 +69,11 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     public void setImageUrl(String url, ImageType imageType) {
-        setImageUrl(url, imageType, false, null);
+        setImageUrl(url, imageType, null);
     }
 
-    public void setImageUrl(String url, ImageType imageType, boolean force, ImageLoadListener imageLoadListener) {
-        // Hack to bypass the Volley cache: append something to the URL to make it unique
-        mUrl = url + (force ? "&" + System.currentTimeMillis() : "");
+    public void setImageUrl(String url, ImageType imageType, ImageLoadListener imageLoadListener) {
+        mUrl = url;
         mImageType = imageType;
 
         // The URL has potentially changed. See if we need to load it.
@@ -272,6 +271,19 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
     }
 
+    public void invalidateImage() {
+        mUrlSkipList.clear();
+
+        if (mImageContainer != null) {
+            // If the view was bound to an image request, cancel it and clear
+            // out the image from the view.
+            mImageContainer.cancelRequest();
+            setImageBitmap(null);
+            // also clear out the container so we can reload the image if necessary.
+            mImageContainer = null;
+        }
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -282,14 +294,8 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     @Override
     protected void onDetachedFromWindow() {
-        if (mImageContainer != null) {
-            // If the view was bound to an image request, cancel it and clear
-            // out the image from the view.
-            mImageContainer.cancelRequest();
-            setImageBitmap(null);
-            // also clear out the container so we can reload the image if necessary.
-            mImageContainer = null;
-        }
+        invalidateImage();
+
         super.onDetachedFromWindow();
     }
 
