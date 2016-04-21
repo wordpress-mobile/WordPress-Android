@@ -22,6 +22,9 @@ import static org.wordpress.android.util.VolleyUtils.statusCodeFromVolleyError;
 import static org.wordpress.android.networking.menus.MenusDataModeler.*;
 
 /**
+ * Interface for WordPress.com Menus REST API methods.
+ *
+ * ref: https://developer.wordpress.com/docs/api/
  */
 public class MenusRestWPCom {
     public interface IMenusDelegate {
@@ -57,9 +60,8 @@ public class MenusRestWPCom {
         mDelegate = delegate;
     }
 
-    public boolean fetchMenu(long menuId) {
-        String siteId = String.valueOf(mDelegate.getSiteId());
-        String path = String.format(MENU_REST_PATH, siteId, String.valueOf(menuId));
+    public void fetchMenu(long menuId) {
+        String path = formatPath(MENU_REST_PATH, String.valueOf(menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
@@ -71,11 +73,10 @@ public class MenusRestWPCom {
                 mDelegate.onMenuReceived(statusCodeFromVolleyError(error), null);
             }
         });
-        return true;
     }
 
-    public boolean fetchAllMenus() {
-        String path = String.format(MENUS_REST_PATH, String.valueOf(mDelegate.getSiteId()));
+    public void fetchAllMenus() {
+        String path = formatPath(MENUS_REST_PATH, null);
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
@@ -94,12 +95,11 @@ public class MenusRestWPCom {
                 mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
             }
         });
-        return true;
     }
 
     public boolean createMenu(final MenuModel menu) {
         if (menu == null || TextUtils.isEmpty(menu.name)) return false;
-        String path = String.format(CREATE_MENU_REST_PATH, String.valueOf(mDelegate.getSiteId()));
+        String path = formatPath(CREATE_MENU_REST_PATH, null);
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
@@ -115,10 +115,8 @@ public class MenusRestWPCom {
         return true;
     }
 
-    public boolean updateMenu(final MenuModel menu) {
-        if (menu == null) return false;
-        String siteId = String.valueOf(mDelegate.getSiteId());
-        String path = String.format(MENU_REST_PATH, siteId, String.valueOf(menu.menuId));
+    public void updateMenu(final MenuModel menu) {
+        String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
@@ -130,13 +128,10 @@ public class MenusRestWPCom {
                 mDelegate.onMenuUpdated(statusCodeFromVolleyError(error), menu);
             }
         });
-        return true;
     }
 
-    public boolean deleteMenu(final MenuModel menu) {
-        if (menu == null) return false;
-        String siteId = String.valueOf(mDelegate.getSiteId());
-        String path = String.format(DELETE_MENU_REST_PATH, siteId, String.valueOf(menu.menuId));
+    public void deleteMenu(final MenuModel menu) {
+        String path = formatPath(DELETE_MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
@@ -148,6 +143,12 @@ public class MenusRestWPCom {
                 mDelegate.onMenuDeleted(statusCodeFromVolleyError(error), menu, false);
             }
         });
-        return true;
+    }
+
+    private String formatPath(String base, String menuId) {
+        if (!TextUtils.isEmpty(menuId)) {
+            return String.format(base, String.valueOf(mDelegate.getSiteId()), menuId);
+        }
+        return String.format(base, String.valueOf(mDelegate.getSiteId()));
     }
 }
