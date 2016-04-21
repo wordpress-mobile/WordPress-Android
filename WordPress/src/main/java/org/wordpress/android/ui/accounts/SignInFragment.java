@@ -139,6 +139,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
+        } else {
+            initSmartLockForPasswords();
         }
     }
 
@@ -220,7 +222,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
-        initSmartLockForPasswords();
 
         return rootView;
     }
