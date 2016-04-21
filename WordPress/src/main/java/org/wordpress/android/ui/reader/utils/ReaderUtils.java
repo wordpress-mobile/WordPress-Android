@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -26,10 +27,12 @@ public class ReaderUtils {
                                             int height,
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
+
+        final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
         if (isPrivate) {
-            return getPrivateImageForDisplay(imageUrl, width, height);
+            return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
-            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height, quality);
+            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality);
         }
     }
 
