@@ -39,7 +39,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MagicLinkSignInFragment extends SignInFragment {
-
     public static final String REASON_ERROR = "error";
     public static final String REASON_ERROR_TAKEN = "taken";
     public static final int MAX_EMAIL_LENGTH = 100;

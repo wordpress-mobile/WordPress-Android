@@ -86,6 +86,7 @@ import java.util.regex.Pattern;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher, ConnectionCallbacks,
         OnConnectionFailedListener {
+    public static final String TAG = "sign_in_fragment_tag";
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;

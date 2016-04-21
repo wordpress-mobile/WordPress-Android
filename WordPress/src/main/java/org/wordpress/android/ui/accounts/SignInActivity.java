@@ -2,8 +2,8 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 
@@ -31,8 +31,6 @@ public class SignInActivity extends FragmentActivity {
     public static final String EXTRA_JETPACK_MESSAGE_AUTH = "EXTRA_JETPACK_MESSAGE_AUTH";
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
 
-    protected SignInFragment mSignInFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,15 +56,15 @@ public class SignInActivity extends FragmentActivity {
                 Blog jetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
                 if (jetpackBlog != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    mSignInFragment.setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
+                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
-                mSignInFragment.showAuthErrorMessage();
+                getSignInFragment().showAuthErrorMessage();
             }
         }
         switch (actionMode) {
             case ADD_SELF_HOSTED_BLOG:
-                mSignInFragment.forceSelfHostedMode();
+                getSignInFragment().forceSelfHostedMode();
                 break;
             default:
                 break;
@@ -78,7 +76,7 @@ public class SignInActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SHOW_CERT_DETAILS) {
-            mSignInFragment.askForSslTrust();
+            getSignInFragment().askForSslTrust();
         } else if (requestCode == SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
                 AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
@@ -90,7 +88,7 @@ public class SignInActivity extends FragmentActivity {
             if (resultCode == RESULT_OK) {
                 AppLog.d(T.NUX, "Credentials retrieved");
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                mSignInFragment.onCredentialRetrieved(credential);
+                getSignInFragment().onCredentialRetrieved(credential);
             } else {
                 AppLog.e(T.NUX, "Credential read failed");
             }
@@ -98,16 +96,17 @@ public class SignInActivity extends FragmentActivity {
             String username = data.getStringExtra("username");
             String password = data.getStringExtra("password");
             if (username != null) {
-                mSignInFragment.signInDotComUser(username, password);
+                getSignInFragment().signInDotComUser(username, password);
             }
         }
     }
 
     public SignInFragment getSignInFragment() {
-        if (mSignInFragment == null) {
+        SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+        if (signInFragment == null) {
             return new SignInFragment();
         } else {
-            return mSignInFragment;
+            return signInFragment;
         }
     }
 }

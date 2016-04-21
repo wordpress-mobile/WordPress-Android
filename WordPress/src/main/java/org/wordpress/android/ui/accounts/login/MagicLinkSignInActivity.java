@@ -37,10 +37,11 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
 
     @Override
     public MagicLinkSignInFragment getSignInFragment() {
-        if (mSignInFragment == null) {
+        MagicLinkSignInFragment signInFragment = (MagicLinkSignInFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSignInFragment.TAG);
+        if (signInFragment == null) {
             return new MagicLinkSignInFragment();
         } else {
-            return (MagicLinkSignInFragment) mSignInFragment;
+            return signInFragment;
         }
     }
 
