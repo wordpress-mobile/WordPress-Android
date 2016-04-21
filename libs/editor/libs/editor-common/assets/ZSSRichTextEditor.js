@@ -386,12 +386,14 @@ ZSSEditor.restoreRange = function(){
     }
 };
 
-ZSSEditor.resetSelectionOnField = function(fieldId) {
+ZSSEditor.resetSelectionOnField = function(fieldId, offset) {
+    offset = typeof offset !== 'undefined' ? offset : 0;
+
     var query = "div#" + fieldId;
     var field = document.querySelector(query);
     var range = document.createRange();
-    range.setStart(field, 0);
-    range.setEnd(field, 0);
+    range.setStart(field, offset);
+    range.setEnd(field, offset);
 
     var selection = document.getSelection();
     selection.removeAllRanges();
@@ -554,12 +556,6 @@ ZSSEditor.getYCaretInfo = function() {
     return this.caretInfo;
 };
 
-// MARK: - Default paragraph separator
-
-ZSSEditor.defaultParagraphSeparatorTag = function() {
-    return '<' + this.defaultParagraphSeparator + '>';
-};
-
 // MARK: - Styles
 
 ZSSEditor.setBold = function() {
@@ -638,7 +634,7 @@ ZSSEditor.setUnderline = function() {
 /**
  *  @brief      Turns blockquote ON or OFF for the current selection.
  *  @details    This method makes sure that the contents of the blockquotes are surrounded by the
- *              defaultParagraphSeparatorTag (by default '<p>').  This ensures parity with the web
+ *              defaultParagraphSeparator tag (by default '<p>').  This ensures parity with the web
  *              editor.
  */
 ZSSEditor.setBlockquote = function() {
@@ -682,9 +678,9 @@ ZSSEditor.setHeading = function(heading) {
 	var formatBlock = document.queryCommandValue('formatBlock');
 
 	if (formatBlock.length > 0 && formatBlock.toLowerCase() == formatTag) {
-		document.execCommand('formatBlock', false, this.defaultParagraphSeparatorTag());
+		document.execCommand('formatBlock', false, Util.buildOpeningTag(this.defaultParagraphSeparator));
 	} else {
-		document.execCommand('formatBlock', false, '<' + formatTag + '>');
+		document.execCommand('formatBlock', false, Util.buildOpeningTag(formatTag));
 	}
 
 	ZSSEditor.sendEnabledStyles();
@@ -695,9 +691,9 @@ ZSSEditor.setParagraph = function() {
 	var formatBlock = document.queryCommandValue('formatBlock');
 
 	if (formatBlock.length > 0 && formatBlock.toLowerCase() == formatTag) {
-		document.execCommand('formatBlock', false, this.defaultParagraphSeparatorTag());
+		document.execCommand('formatBlock', false, Util.buildOpeningTag(this.defaultParagraphSeparator));
 	} else {
-		document.execCommand('formatBlock', false, '<' + formatTag + '>');
+		document.execCommand('formatBlock', false, Util.buildOpeningTag(formatTag));
 	}
 
 	ZSSEditor.sendEnabledStyles();
@@ -790,8 +786,8 @@ ZSSEditor.setBackgroundColor = function(color) {
  */
 ZSSEditor.insertHTMLWrappedInParagraphTags = function(html) {
     var space = '<br>';
-    var paragraphOpenTag = '<' + this.defaultParagraphSeparator + '>';
-    var paragraphCloseTag = '</' + this.defaultParagraphSeparator + '>';
+    var paragraphOpenTag = Util.buildOpeningTag(this.defaultParagraphSeparator);
+    var paragraphCloseTag = Util.buildClosingTag(this.defaultParagraphSeparator);
 
     if (this.getFocusedField().getHTML().length == 0) {
         html = paragraphOpenTag + html;
@@ -816,7 +812,7 @@ ZSSEditor.insertLink = function(url, title) {
     var html = '<a href="' + url + '">' + title + "</a>";
 
     if (this.getFocusedField().getHTML().length == 0) {
-        html = '<' + this.defaultParagraphSeparator + '>' + html;
+        html = Util.buildOpeningTag(this.defaultParagraphSeparator) + html;
     }
 
     this.insertHTML(html);
@@ -2785,7 +2781,7 @@ ZSSEditor.joinAdjacentSiblingsBlockquotes = function(node) {
 ZSSEditor.joinAdjacentSiblingsOrAncestorBlockquotes = function(node) {
 
     var currentNode = node;
-    var rootNode = this.getFocusedField().wrappedDomNode();
+    var rootNode = this.getFocusedField().getWrappedDomNode();
     var joined = false;
 
     while (currentNode
@@ -3008,7 +3004,7 @@ function ZSSField(wrappedObject) {
     this.multiline = false;
     this.wrappedObject = wrappedObject;
 
-    if (this.wrappedDomNode().hasAttribute('nostyle')) {
+    if (this.getWrappedDomNode().hasAttribute('nostyle')) {
         this.hasNoStyle = true;
     }
 
@@ -3080,9 +3076,35 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
     } else if (wasEnterPressed && !this.isMultiline()) {
         e.preventDefault();
     } else if (this.isMultiline()) {
-        this.wrapCaretInParagraphIfNecessary();
+        // For hardware keyboards, don't do any paragraph handling for non-printable keyCodes
+        // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+        // This avoids the filler zero-width space character from being inserted and displayed in the content field
+        // when special keys are pressed in new posts
+        var wasTabPressed = (e.keyCode == '9');
+        var intKeyCode = parseInt(e.keyCode, 10);
+        if (wasTabPressed || (intKeyCode > 13 && intKeyCode < 46) || intKeyCode == 192) {
+            return;
+        }
+
+        // This is intended to work around an API19-only bug where paragraph wrapping the first character in a post
+        // will display a zero-width space character (from ZSSField.wrapCaretInParagraphIfNecessary)
+        // We can drop the if statement wrapping wrapCaretInParagraphIfNecessary() if we find a way to stop using
+        // zero-width space characters (e.g., autocorrect issues are fixed and we switch back to p tags)
+        var containsParagraphSeparators = this.getWrappedDomNode().innerHTML.search(
+                '<' + ZSSEditor.defaultParagraphSeparator) > -1;
+        if (nativeState.androidApiLevel != 19 || containsParagraphSeparators) {
+            this.wrapCaretInParagraphIfNecessary();
+        }
 
         if (wasEnterPressed) {
+            // Wrap the existing text in paragraph tags if necessary (this should only be needed if
+            // wrapCaretInParagraphIfNecessary() was skipped earlier (API19))
+            var currentHtml = this.getWrappedDomNode().innerHTML;
+            if (currentHtml.search('<' + ZSSEditor.defaultParagraphSeparator) == -1) {
+                ZSSEditor.focusedField.setHTML(Util.wrapHTMLInTag(currentHtml, ZSSEditor.defaultParagraphSeparator));
+                ZSSEditor.resetSelectionOnField(this.getWrappedDomNode().id, 1);
+            }
+
             var sel = window.getSelection();
             if (sel.rangeCount < 1) {
                 return null;
@@ -3358,7 +3380,7 @@ ZSSField.prototype.disableEditing = function () {
 ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
 {
     var closerParentNode = ZSSEditor.closerParentNode();
-    var parentNodeShouldBeParagraph = (closerParentNode == this.wrappedDomNode()
+    var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 
     if (parentNodeShouldBeParagraph) {
@@ -3419,7 +3441,14 @@ ZSSField.prototype.getHTML = function() {
 ZSSField.prototype.getHTMLForCallback = function() {
     var functionArgument = "function=getHTMLForCallback";
     var idArgument = "id=" + this.getNodeId();
-    var contentsArgument = "contents=" + this.getHTML();
+    var contentsArgument;
+
+    if (this.hasNoStyle) {
+        contentsArgument = "contents=" + this.strippedHTML();
+    } else {
+        contentsArgument = "contents=" + this.getHTML();
+    }
+
     var joinedArguments = functionArgument + defaultCallbackSeparator + idArgument + defaultCallbackSeparator +
         contentsArgument;
     ZSSEditor.callback('callback-response-string', joinedArguments);
@@ -3459,6 +3488,6 @@ ZSSField.prototype.setPlaceholderText = function(placeholder) {
 
 // MARK: - Wrapped Object
 
-ZSSField.prototype.wrappedDomNode = function() {
+ZSSField.prototype.getWrappedDomNode = function() {
     return this.wrappedObject[0];
 };
