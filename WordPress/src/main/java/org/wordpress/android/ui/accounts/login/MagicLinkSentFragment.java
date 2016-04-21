@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.util.HelpshiftHelper;
 
 public class MagicLinkSentFragment extends Fragment {
     public interface OnMagicLinkSentInteraction {
@@ -53,7 +56,22 @@ public class MagicLinkSentFragment extends Fragment {
             }
         });
 
+        initInfoButtons(view);
+
         return view;
+    }
+
+    private void initInfoButtons(View rootView) {
+        View.OnClickListener infoButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HelpActivity.class);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                startActivity(intent);
+            }
+        };
+        ImageView infoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(infoButtonListener);
     }
 
     private void openEmailClient() {

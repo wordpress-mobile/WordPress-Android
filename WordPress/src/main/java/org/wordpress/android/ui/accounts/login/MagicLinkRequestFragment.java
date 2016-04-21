@@ -3,12 +3,14 @@ package org.wordpress.android.ui.accounts.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -19,6 +21,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -80,6 +85,8 @@ public class MagicLinkRequestFragment extends Fragment {
             }
         });
 
+        initInfoButtons(view);
+
         return view;
     }
 
@@ -97,6 +104,19 @@ public class MagicLinkRequestFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void initInfoButtons(View rootView) {
+        View.OnClickListener infoButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HelpActivity.class);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.Tag.ORIGIN_LOGIN_SCREEN_HELP);
+                startActivity(intent);
+            }
+        };
+        ImageView infoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(infoButtonListener);
     }
 
     private void sendMagicLinkRequest() {
