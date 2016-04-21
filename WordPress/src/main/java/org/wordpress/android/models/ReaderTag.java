@@ -25,6 +25,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
                      String tagTitle,
                      String endpoint,
                      ReaderTagType tagType) {
+        // default tags may have a title with an empty slug, but we need a slug since it's used
+        // to uniquely ID the tag (including setting it as the primary key in the tag table)
         if (TextUtils.isEmpty(tagSlug)) {
             this.setTagSlug(getTagSlugFromEndpoint(endpoint));
         } else {

@@ -205,9 +205,6 @@ public class ReaderUpdateService extends Service {
                 String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
                 String tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                if (TextUtils.isEmpty(tagSlug)) {
-                    tagSlug = tagTitle;
-                }
                 topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, topicType));
             }
         }
