@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -519,9 +520,9 @@ public class StatsActivity extends AppCompatActivity
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mLocalBlogID);
         signInIntent.putExtra(
-                SignInActivity.ARG_JETPACK_MESSAGE_AUTH,
+                SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
                 getString(R.string.stats_sign_in_jetpack_different_com_account)
         );
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
@@ -612,6 +613,60 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void showJetpackNonConnectedAlert() {
+        if (isFinishing()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        if (currentBlog.isAdmin()) {
+            builder.setMessage(getString(R.string.jetpack_not_connected_message))
+                    .setTitle(getString(R.string.jetpack_not_connected));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String stringToLoad = currentBlog.getAdminUrl();
+                    String jetpackConnectPageAdminPath = "admin.php?page=jetpack";
+                    stringToLoad = stringToLoad.endsWith("/") ? stringToLoad + jetpackConnectPageAdminPath :
+                            stringToLoad + "/" + jetpackConnectPageAdminPath;
+                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
+                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
+                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog. Hide Stats.
+                    finish();
+                }
+            });
+        } else {
+            builder.setMessage(getString(R.string.jetpack_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_not_found));
+            builder.setPositiveButton(R.string.yes, null);
+        }
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
     private void showJetpackMissingAlert() {
         if (isFinishing()) {
             return;
@@ -621,6 +676,7 @@ public class StatsActivity extends AppCompatActivity
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         if (currentBlog.isAdmin()) {
@@ -652,9 +708,17 @@ public class StatsActivity extends AppCompatActivity
                     .setTitle(getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, null);
         }
-        builder.create().show();
-    }
 
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -750,14 +814,6 @@ public class StatsActivity extends AppCompatActivity
             }
         }
 
-        // check again that we've valid credentials for a Jetpack site
-        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
-                !AccountHelper.isSignedInWordPressDotCom()) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
-            return false;
-        }
-
         return true;
     }
 
@@ -809,16 +865,25 @@ public class StatsActivity extends AppCompatActivity
         if (!event.isError) {
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (currentBlog == null) {
+                AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+                Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+                finish();
                 return;
             }
             if (currentBlog.getDotComBlogId() == null) {
-                // Blog has not returned a jetpack_client_id
-                showJetpackMissingAlert();
+                if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
+                    // jetpack_version option is available, but not the jetpack_client_id ----> Jetpack available but not connected.
+                    showJetpackNonConnectedAlert();
+                } else {
+                    // Blog has not returned jetpack_version/jetpack_client_id.
+                    showJetpackMissingAlert();
+                }
             } else {
                 checkCredentials();
             }
         } else {
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 

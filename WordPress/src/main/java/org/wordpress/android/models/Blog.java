@@ -442,6 +442,24 @@ public class Blog {
         return false;
     }
 
+    /**
+     * Return the Jetpack plugin version code
+     *
+     * @return The Jetpack version string, null for non Jetpack sites, or wpcom sites
+     */
+    public String getJetpackVersion() {
+        String jetpackVersion = null;
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null && jsonOptions.has("jetpack_version")) {
+            try {
+                jetpackVersion = jsonOptions.getJSONObject("jetpack_version").getString("value");
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load jetpack_version from options: " + jsonOptions, e);
+            }
+        }
+        return jetpackVersion;
+    }
+
     public boolean isPhotonCapable() {
         return ((isDotcomFlag() && !isPrivate()) || (isJetpackPowered() && !hasValidHTTPAuthCredentials()));
     }

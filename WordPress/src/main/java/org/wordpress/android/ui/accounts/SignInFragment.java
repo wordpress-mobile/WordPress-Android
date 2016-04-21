@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,6 +29,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialRequest;
+import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -54,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -70,7 +84,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignInFragment extends AbstractFragment implements TextWatcher {
+public class SignInFragment extends AbstractFragment implements TextWatcher, ConnectionCallbacks,
+        OnConnectionFailedListener {
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -115,6 +130,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private String mHttpUsername;
     private String mHttpPassword;
     private Blog mJetpackBlog;
+
+    private GoogleApiClient mCredentialsClient;
 
     public SignInFragment() {
         mEmailChecker = new EmailChecker();
@@ -206,6 +223,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
+        initSmartLockForPasswords();
 
         return rootView;
     }
@@ -257,6 +275,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         moveBottomButtons();
     }
 
+    private boolean isGooglePlayServicesAvailable() {
+        return isAdded() && (GoogleApiAvailability.getInstance()
+                .isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS);
+    }
+
     private void initInfoButtons(View rootView) {
         OnClickListener infoButtonListener = new OnClickListener() {
             @Override
@@ -273,6 +296,75 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mInfoButtonSecondary = (ImageView) rootView.findViewById(R.id.info_button_secondary);
         mInfoButton.setOnClickListener(infoButtonListener);
         mInfoButtonSecondary.setOnClickListener(infoButtonListener);
+    }
+
+    private void initSmartLockForPasswords() {
+        if (!isGooglePlayServicesAvailable()) {
+            return;
+        }
+        mCredentialsClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .enableAutoManage((SignInActivity) getActivity(), this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
+    }
+
+    public void smartLockAutoFill() {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+            return;
+        }
+        CredentialRequest credentialRequest = new CredentialRequest.Builder()
+                .setSupportsPasswordLogin(true)
+                .build();
+        Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
+                new ResultCallback<CredentialRequestResult>() {
+                    @Override
+                    public void onResult(CredentialRequestResult result) {
+                        Status status = result.getStatus();
+                        if (status.isSuccess()) {
+                            Credential credential = result.getCredential();
+                            onCredentialRetrieved(credential);
+                        } else {
+                            if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
+                                try {
+                                    // Prompt the user to choose a saved credential
+                                    status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_READ);
+                                } catch (IntentSender.SendIntentException e) {
+                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential " +
+                                            "request");
+                                }
+                            } else {
+                                // The user must create an account or sign in manually.
+                                AppLog.d(T.NUX, "SmartLock: Unsuccessful credential request.");
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void onCredentialRetrieved(Credential credential) {
+        AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
+        if (EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty()) {
+            AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+            mUsernameEditText.setText(credential.getId());
+            mPasswordEditText.setText(credential.getPassword());
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        AppLog.d(T.NUX, "Connection result: " + connectionResult);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        AppLog.d(T.NUX, "Google API client connected");
+        smartLockAutoFill();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        AppLog.d(T.NUX, "Google API client connection suspended");
     }
 
     private void setSecondaryButtonVisible(boolean visible) {
@@ -480,6 +572,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         // Set primary blog
                         setPrimaryBlog(jsonObject);
                         finishCurrentActivity(userBlogList);
+                        String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
+                        Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
+                        saveCrendentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
                     }
                 }, null);
             } else {
@@ -562,13 +657,49 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
+    private void saveCrendentialsInSmartLock(String username, String password, String displayName, Uri profilePicture) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+            return;
+        }
+        Credential credential = new Credential.Builder(username).setPassword(password)
+                .setName(displayName).setProfilePictureUri(profilePicture).build();
+        Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (!status.isSuccess() && status.hasResolution()) {
+                            try {
+                                // This prompt the user to resolve the save request
+                                status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_SAVE);
+                            } catch (IntentSender.SendIntentException e) {
+                                // Could not resolve the request
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void deleteCredentialsInSmartLock() {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+            return;
+        }
+        Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
+        Auth.CredentialsApi.delete(mCredentialsClient, credential).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        AppLog.i(T.NUX, status.isSuccess() ? "SmartLock: credentials deleted for username: " + mUsername
+                                : "SmartLock: Credentials not deleted for username: " + mUsername );
+                    }
+                });
+    }
+
     private void signInAndFetchBlogListWPCom() {
         LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS, mJetpackBlog);
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
                 mShouldSendTwoStepSMS = false;
-
                 // Finish this activity if we've authenticated to a Jetpack site
                 if (isJetpackAuth() && getActivity() != null) {
                     getActivity().setResult(Activity.RESULT_OK);
@@ -584,6 +715,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
                 mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
                 mShouldSendTwoStepSMS = false;
+                // Delete credentials only if login failed with an incorrect username/password error
+                if (errorMessageId == R.string.username_or_password_incorrect) {
+                    deleteCredentialsInSmartLock();
+                }
             }
         });
     }

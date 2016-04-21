@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_search"
     android:layout_width="match_parent"
@@ -10,4 +11,5 @@
     app:contentInsetLeft="@dimen/margin_none"
     app:contentInsetStart="@dimen/margin_none"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    tools:targetApi="LOLLIPOP"/>

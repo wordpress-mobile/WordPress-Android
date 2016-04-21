@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.xmlrpc.android.LoggedInputStream;
 import org.xmlrpc.android.XMLRPCUtils;
 

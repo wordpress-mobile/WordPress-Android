@@ -76,6 +76,7 @@
     <string name="pref_key_email" translatable="false">wp_pref_key_email</string>
     <string name="pref_key_primary_site" translatable="false">wp_pref_key_primary_site></string>
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
+    <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
@@ -246,4 +247,9 @@
         <item>431</item>
         <item>11</item>
     </string-array>
+
+    <!-- Smart Lock for Passwords -->
+    <string name="asset_statements" translatable="false">
+        [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
+    </string>
 </resources>

@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -57,6 +58,8 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListene
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
+import org.wordpress.android.editor.EditorWebViewCompatibility;
+import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.AccountHelper;
@@ -116,13 +119,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
+        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -145,18 +146,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
 
-    private static final String PROP_LOCAL_PHOTOS = "number_of_local_photos_added";
-    private static final String PROP_LIBRARY_PHOTOS = "number_of_wp_library_photos_added";
-    private static final String PROP_LOCAL_VIDEOS = "number_of_local_videos_added";
-    private static final String PROP_LIBRARY_VIDEOS = "number_of_wp_library_videos_added";
-
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
     private static int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 10000;
-    private Timer mAutoSaveTimer;
+    private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
+    private Handler mHandler;
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
@@ -318,7 +314,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePost(true);
+                    savePostAsync();
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
@@ -328,18 +324,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
-    class AutoSaveTask extends TimerTask {
+    private Runnable mAutoSave = new Runnable() {
+        @Override
         public void run() {
-            savePost(true);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    updatePostObject(true);
+                    savePostToDb();
+                    if (mHandler != null) {
+                        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
+                    }
+                }
+            }).start();
         }
-    }
+    };
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        mAutoSaveTimer = new Timer();
-        mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
+        mHandler = new Handler();
+        mHandler.postDelayed(mAutoSave, AUTOSAVE_INTERVAL_MILLIS);
     }
 
     @Override
@@ -365,7 +370,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         stopMediaUploadService();
-        mAutoSaveTimer.cancel();
+        mHandler.removeCallbacks(mAutoSave);
+        mHandler = null;
     }
 
     @Override
@@ -383,7 +389,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePost(true);
+        savePostAsync();
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
@@ -607,7 +613,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (itemId == R.id.menu_save_post) {
-            return savePost();
+            return publishPost();
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == R.id.menu_post_settings) {
@@ -621,7 +627,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return false;
     }
 
-    private boolean savePost() {
+    private boolean publishPost() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
+            return false;
+        }
+
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (mEditorFragment.hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -636,26 +647,35 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
 
-        // If the post is new and there are no changes, don't publish
-        updatePostObject(false);
-        if (!mPost.isPublishable()) {
-            ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
-            return false;
-        }
+        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updatePostObject(false);
+                savePostToDb();
 
-        savePostToDb();
-        trackSavePostAnalytics();
+                // If the post is empty, don't publish
+                if (!mPost.isPublishable()) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                        }
+                    });
+                    return;
+                }
 
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
-            return false;
-        }
+                trackSavePostAnalytics();
 
-        PostUploadService.addPostToUpload(mPost);
-        PostUploadService.setLegacyMode(!mShowNewEditor);
-        startService(new Intent(this, PostUploadService.class));
-        setResult(RESULT_OK);
-        finish();
+                PostUploadService.addPostToUpload(mPost);
+                PostUploadService.setLegacyMode(!mShowNewEditor);
+                startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                setResult(RESULT_OK);
+                finish();
+            }
+        }).start();
         return true;
     }
 
@@ -766,7 +786,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         );
     }
 
-    private void updatePostObject(boolean isAutosave) {
+    private synchronized void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -788,13 +808,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void savePost(boolean isAutosave) {
-        updatePostObject(isAutosave);
-
-        savePostToDb();
+    private void savePostAsync() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updatePostObject(false);
+                savePostToDb();
+            }
+        }).start();
     }
 
-    private void savePostToDb() {
+    private synchronized void savePostToDb() {
         WordPress.wpDB.updatePost(mPost);
     }
 
@@ -826,44 +850,68 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private void saveAndFinish() {
-        // Fetch post title and content from editor fields and update the Post object
-        savePost(true);
+    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // Fetch post title and content from editor fields and update the Post object
+            updatePostObject(false);
 
-        if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
-            // new and empty post? delete it
-            if (mIsNewPost) {
-                WordPress.wpDB.deletePost(mPost);
-                finish();
-                return;
-            }
-        } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
-            // if no changes have been made to the post, set it back to the original don't save it
-            WordPress.wpDB.updatePost(mOriginalPost);
-            finish();
-            return;
-        } else {
-            // changes have been made, save the post and ask for the post list to refresh.
-            // We consider this being "manual save", it will replace some Android "spans" by an html
-            // or a shortcode replacement (for instance for images and galleries)
-            if (mShowNewEditor) {
-                // Update the post object directly, without re-fetching the fields from the EditorFragment
-                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                savePostToDb();
+            if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
+                // new and empty post? delete it
+                if (mIsNewPost) {
+                    WordPress.wpDB.deletePost(mPost);
+                    return false;
+                }
+            } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+                // if no changes have been made to the post, set it back to the original don't save it
+                WordPress.wpDB.updatePost(mOriginalPost);
+                return false;
             } else {
-                // TODO: Remove when legacy editor is dropped
-                savePost(false);
+                // changes have been made, save the post and ask for the post list to refresh.
+                // We consider this being "manual save", it will replace some Android "spans" by an html
+                // or a shortcode replacement (for instance for images and galleries)
+                if (mShowNewEditor) {
+                    // Update the post object directly, without re-fetching the fields from the EditorFragment
+                    updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
+                    savePostToDb();
+                } else {
+                    updatePostObject(false);
+                    savePostToDb();
+                }
             }
+            return true;
         }
 
-        Intent i = new Intent();
-        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
-        i.putExtra(EXTRA_IS_PAGE, mIsPage);
-        setResult(RESULT_OK, i);
+        @Override
+        protected void onPostExecute(Boolean saved) {
+            if (saved) {
+                Intent i = new Intent();
+                i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+                i.putExtra(EXTRA_IS_PAGE, mIsPage);
+                setResult(RESULT_OK, i);
+                ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
+            }
+            finish();
+        }
+    }
 
-        ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+    private void saveAndFinish() {
+        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
+    /**
+     * Disable visual editor mode and log the exception if we get a Reflection failure when the webview is being
+     * initialized.
+     */
+    @Override
+    public void onReflectionFailure(ReflectionException e) {
+        CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.EDITOR, "Reflection Failure on Visual Editor init");
+        // Disable visual editor and show an error message
+        AppPrefs.setVisualEditorEnabled(false);
+        ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
+        // Restart the activity (will start the legacy editor)
         finish();
+        startActivity(getIntent());
     }
 
     /**
@@ -886,6 +934,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
                     if (mShowNewEditor) {
+                        EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
                     } else {
                         return new LegacyEditorFragment();
@@ -1058,14 +1107,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (spanned != null) {
                 mEditorFragment.setContent(spanned);
             }
-        }
-    }
-
-    private class HandleMediaSelectionTask extends AsyncTask<Intent, Void, Void> {
-        @Override
-        protected Void doInBackground(Intent... params) {
-            handleMediaSelectionResult(params[0]);
-            return null;
         }
     }
 
@@ -1498,7 +1539,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
         mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
-
         return true;
     }
 
@@ -1511,8 +1551,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (requestCode) {
                 case MediaPickerActivity.ACTIVITY_REQUEST_CODE_MEDIA_SELECTION:
                     if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_MEDIA_SELECTED) {
-                        new HandleMediaSelectionTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                data);
+                        handleMediaSelectionResult(data);
                     } else if (resultCode == MediaPickerActivity.ACTIVITY_RESULT_CODE_GALLERY_CREATED) {
                         handleGalleryResult(data);
                     }

@@ -12,6 +12,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
@@ -163,12 +164,12 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
     }
 
     public static void setReaderTag(ReaderTag tag) {
-        if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
-            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
+        if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
+            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
         } else {
             prefs().edit()
