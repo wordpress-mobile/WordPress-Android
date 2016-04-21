@@ -74,7 +74,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (didPressNextKey(actionId, event) && !isEnterPasswordMode()) {
+                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && !isEnterPasswordMode()) {
                     signIn();
                     return true;
                 } else {
@@ -171,10 +171,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
     private boolean isEnterPasswordMode() {
         return mPasswordLayout.getVisibility() == View.VISIBLE;
-    }
-
-    private boolean didPressNextKey(int actionId, KeyEvent event) {
-        return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
     }
 
     private void configureMagicLinkUI() {
