@@ -80,6 +80,31 @@ public class ReaderTagTable {
         }
     }
 
+    /*
+     * similar to the above but only replaces followed tags
+     */
+    public static void replaceFollowedTags(ReaderTagList tags) {
+        if (tags == null || tags.size() == 0) {
+            return;
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            try {
+                // first delete all existing followed tags, then insert the passed ones
+                String[] args = {Integer.toString(ReaderTagType.FOLLOWED.toInt())};
+                db.execSQL("DELETE FROM tbl_tags WHERE tag_type=?", args);
+                addOrUpdateTags(tags);
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                AppLog.e(T.READER, e);
+            }
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public static void addOrUpdateTag(ReaderTag tag) {
         if (tag == null) {
             return;

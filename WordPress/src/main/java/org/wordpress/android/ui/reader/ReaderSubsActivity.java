@@ -332,11 +332,11 @@ public class ReaderSubsActivity extends AppCompatActivity
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (succeeded) {
-                    // update tags when one is added
-                    performUpdate(EnumSet.of(UpdateTask.TAGS));
-                } else if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshFollowedTagFragment();
+                if (isFinishing()) return;
+
+                getPageAdapter().refreshFollowedTagFragment();
+
+                if (!succeeded) {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }

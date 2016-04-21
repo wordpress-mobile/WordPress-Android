@@ -1,16 +1,21 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.text.TextUtils;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 public class ReaderTagActions {
@@ -71,6 +76,12 @@ public class ReaderTagActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.i(T.READER, "tag action " + action.name() + " succeeded");
+                // if we're adding a tag, the response will contain the list of the
+                // user's followed tags
+                if (action == TagAction.ADD) {
+                    ReaderTagList tags = parseFollowedTags(jsonObject);
+                    ReaderTagTable.replaceFollowedTags(tags);
+                }
                 if (actionListener != null) {
                     actionListener.onActionResult(true);
                 }
@@ -117,5 +128,52 @@ public class ReaderTagActions {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
+    }
+
+    /*
+     * return the user's followed tags from the response to read/tags/{tag}/mine/new
+     */
+    /*
+        {
+        "added_tag": "84776",
+        "subscribed": true,
+        "tags": [
+            {
+                "display_name": "未分類",
+                "ID": "1982",
+                "slug": "%e6%9c%aa%e5%88%86%e9%a1%9e",
+                "title": "未分類",
+                "URL": "https://public-api.wordpress.com/rest/v1.1/read/tags/%e6%9c%aa%e5%88%86%e9%a1%9e/posts"
+            },
+            {
+                "display_name": "fitness",
+                "ID": "5189",
+                "slug": "fitness",
+                "title": "Fitness",
+                "URL": "https://public-api.wordpress.com/rest/v1.1/read/tags/fitness/posts"
+            },
+        }
+     */
+    private static ReaderTagList parseFollowedTags(JSONObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
+        }
+
+        JSONArray jsonTags = jsonObject.optJSONArray("tags");
+        if (jsonTags == null || jsonTags.length() == 0) {
+            return null;
+        }
+
+        ReaderTagList tags = new ReaderTagList();
+        for (int i=0; i < jsonTags.length(); i++) {
+            JSONObject jsonThisTag = jsonTags.optJSONObject(i);
+            String tagTitle = JSONUtils.getStringDecoded(jsonThisTag, "title");
+            String tagDisplayName = JSONUtils.getStringDecoded(jsonThisTag, "display_name");
+            String tagSlug = JSONUtils.getStringDecoded(jsonThisTag, "slug");
+            String endpoint = JSONUtils.getString(jsonThisTag, "URL");
+            tags.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, ReaderTagType.FOLLOWED));
+        }
+
+        return tags;
     }
 }
