@@ -342,7 +342,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             }
         };
 
-        ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.addTag(tag, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);

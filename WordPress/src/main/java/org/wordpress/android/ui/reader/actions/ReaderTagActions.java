@@ -32,8 +32,6 @@ public class ReaderTagActions {
         final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/delete";
 
-        ReaderTagTable.deleteTag(tag);
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -41,6 +39,7 @@ public class ReaderTagActions {
                 ReaderActions.callActionListener(actionListener, true);
             }
         };
+
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
@@ -62,7 +61,9 @@ public class ReaderTagActions {
             }
         };
 
+        ReaderTagTable.deleteTag(tag);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+
         return true;
     }
 
@@ -84,8 +85,6 @@ public class ReaderTagActions {
                 endpoint,
                 ReaderTagType.FOLLOWED);
 
-        ReaderTagTable.addOrUpdateTag(newTag);
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -96,6 +95,7 @@ public class ReaderTagActions {
                 ReaderActions.callActionListener(actionListener, true);
             }
         };
+
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
@@ -118,7 +118,9 @@ public class ReaderTagActions {
             }
         };
 
+        ReaderTagTable.addOrUpdateTag(newTag);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+
         return true;
     }
 
