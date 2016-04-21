@@ -519,7 +519,7 @@ public class Blog {
         }
         try {
             JSONObject jsonObject = new JSONObject(capabilities);
-            return jsonObject.optBoolean(capability.toString());
+            return jsonObject.optBoolean(capability.getLabel());
         } catch (JSONException e) {
             AppLog.e(T.PEOPLE, "Capabilities is not a valid json: " + capabilities);
             return false;

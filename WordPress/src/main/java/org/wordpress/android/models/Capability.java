@@ -15,8 +15,7 @@ public enum Capability {
         this.label = label;
     }
 
-    @Override
-    public String toString() {
+    public String getLabel() {
         return label;
     }
 }
