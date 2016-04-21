@@ -41,8 +41,13 @@ public class SignInActivity extends FragmentActivity {
             addSignInFragment();
         }
 
-        actionMode(getIntent().getExtras());
         ActivityId.trackLastActivity(ActivityId.LOGIN);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        actionMode(getIntent().getExtras());
     }
 
     protected void addSignInFragment() {
