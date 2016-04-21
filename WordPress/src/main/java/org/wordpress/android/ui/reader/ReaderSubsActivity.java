@@ -34,7 +34,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -345,7 +344,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
-        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
+        if (ReaderTagActions.addTag(tag, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
             mLastAddedTagName = tag.getTagSlug();
             // make sure addition is reflected on followed tags
