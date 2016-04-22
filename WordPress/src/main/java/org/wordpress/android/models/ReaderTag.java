@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -26,17 +27,17 @@ public class ReaderTag implements Serializable, FilterCriteria {
                      String endpoint,
                      ReaderTagType tagType) {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
-        // primary key in the tag table) - note that the endpoint returns default tags with a
-        // title but no slug, so we set the slug to the title in that situation
+        // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
-            if (tagType == ReaderTagType.DEFAULT && !TextUtils.isEmpty(title)) {
-                setTagSlug(title);
+            if (!TextUtils.isEmpty(title)) {
+                setTagSlug(ReaderUtils.sanitizeWithDashes(title));
             } else {
                 setTagSlug(getTagSlugFromEndpoint(endpoint));
             }
         } else {
             setTagSlug(slug);
         }
+
         setTagDisplayName(displayName);
         setTagTitle(title);
         setEndpoint(endpoint);
