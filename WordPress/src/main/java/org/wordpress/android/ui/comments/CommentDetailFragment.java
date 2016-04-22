@@ -284,6 +284,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!hasComment()) return;
+
                 if (mComment.willTrashingPermanentlyDelete()) {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                             getActivity());
