@@ -20,21 +20,26 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_DISCOVER;
     public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
 
-    public ReaderTag(String tagSlug,
-                     String tagDisplayName,
-                     String tagTitle,
+    public ReaderTag(String slug,
+                     String displayName,
+                     String title,
                      String endpoint,
                      ReaderTagType tagType) {
-        // default tags may have a title with an empty slug, but we need a slug since it's used
-        // to uniquely ID the tag (including setting it as the primary key in the tag table)
-        if (TextUtils.isEmpty(tagSlug)) {
-            this.setTagSlug(getTagSlugFromEndpoint(endpoint));
+        // we need a slug since it's used to uniquely ID the tag (including setting it as the
+        // primary key in the tag table) - note that the endpoint returns default tags with a
+        // title but no slug, so we set the slug to the title in that situation
+        if (TextUtils.isEmpty(slug)) {
+            if (tagType == ReaderTagType.DEFAULT && !TextUtils.isEmpty(title)) {
+                setTagSlug(title);
+            } else {
+                setTagSlug(getTagSlugFromEndpoint(endpoint));
+            }
         } else {
-            this.setTagSlug(tagSlug);
+            setTagSlug(slug);
         }
-        this.setTagDisplayName(tagDisplayName);
-        this.setTagTitle(tagTitle);
-        this.setEndpoint(endpoint);
+        setTagDisplayName(displayName);
+        setTagTitle(title);
+        setEndpoint(endpoint);
         this.tagType = tagType;
     }
 
