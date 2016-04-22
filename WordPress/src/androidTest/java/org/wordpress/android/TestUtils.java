@@ -9,6 +9,8 @@ import android.text.TextUtils;
 
 import com.google.gson.internal.StringMap;
 
+import org.wordpress.android.ui.accounts.helpers.LoginAbstract.Callback;
+import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.io.BufferedReader;
@@ -30,6 +32,11 @@ import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
     private static String DATABASE_NAME = "wordpress";
+
+    public static void loginWPCom(String username, String password, Callback callback) {
+        LoginWPCom login = new LoginWPCom(username, password, null, false, null);
+        login.execute(callback);
+    }
 
     public static SQLiteDatabase loadDBFromDump(Context targetContext, Context testContext, String filename) {
         targetContext.deleteDatabase(DATABASE_NAME);
