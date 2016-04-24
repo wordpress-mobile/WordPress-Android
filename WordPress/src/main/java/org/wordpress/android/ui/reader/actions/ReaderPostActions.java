@@ -138,6 +138,16 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
+
+                // TODO: remove this temporary fix for backend issue - these fields aren't set
+                // correctly by the endpoint to request a single post, so we need to copy them
+                // from the local post
+                if (serverPost.feedId == 0 && localPost.feedId != 0) {
+                    serverPost.feedId = localPost.feedId;
+                    serverPost.feedItemId = localPost.feedItemId;
+                    serverPost.isFollowedByCurrentUser = localPost.isFollowedByCurrentUser;
+                }
+
                 boolean hasChanges = !serverPost.isSamePost(localPost);
 
                 if (hasChanges) {
