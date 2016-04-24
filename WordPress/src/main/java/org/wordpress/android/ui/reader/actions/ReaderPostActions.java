@@ -141,7 +141,8 @@ public class ReaderPostActions {
 
                 // TODO: remove this temporary fix for backend issue - these fields aren't set
                 // correctly by the endpoint to request a single post, so we need to copy them
-                // from the local post
+                // from the local post before calling isSamePost (since the difference in those
+                // fields will cause isSamePost to always return false)
                 if (serverPost.feedId == 0 && localPost.feedId != 0) {
                     serverPost.feedId = localPost.feedId;
                     serverPost.feedItemId = localPost.feedItemId;
