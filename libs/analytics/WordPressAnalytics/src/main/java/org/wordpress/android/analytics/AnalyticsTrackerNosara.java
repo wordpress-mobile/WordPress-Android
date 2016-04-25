@@ -492,6 +492,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 eventName = "site_settings_delete_site_response_error";
                 break;
+            case ABTEST_START:
+                eventName = "abtest_start";
+                break;
             default:
                 eventName = null;
                 break;

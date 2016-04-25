@@ -957,6 +957,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
                 break;
+            case ABTEST_START:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
+                break;
             default:
                 instructions = null;
                 break;
