@@ -273,9 +273,7 @@ public class ReaderPostListFragment extends Fragment
         super.onStart();
         EventBus.getDefault().register(this);
 
-        if (mRecyclerView != null) {
-            mRecyclerView.refreshFilterCriteriaOptions();
-        }
+        reloadTags();
 
         // purge database and update followed tags/blog if necessary - note that we don't purge unless
         // there's a connection to avoid removing posts the user would expect to see offline
@@ -312,6 +310,9 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            // reload the tag filter since tags have changed
+            reloadTags();
+
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
             if (isPostAdapterEmpty()) {
@@ -830,6 +831,16 @@ public class ReaderPostListFragment extends Fragment
             getPostAdapter().reload();
         }
     }
+
+    /*
+     * reload the list of tags for the dropdown filter
+     */
+    private void reloadTags() {
+        if (isAdded() && mRecyclerView != null) {
+            mRecyclerView.refreshFilterCriteriaOptions();
+        }
+    }
+
 
     /*
      * get posts for the current blog from the server
