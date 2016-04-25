@@ -315,9 +315,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     savePostAsync();
-                    if (mEditPostPreviewFragment != null) {
-                        mEditPostPreviewFragment.loadPost();
-                    }
                 }
             }
         });
@@ -814,6 +811,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             public void run() {
                 updatePostObject(false);
                 savePostToDb();
+                if (mEditPostPreviewFragment != null) {
+                    mEditPostPreviewFragment.loadPost();
+                }
             }
         }).start();
     }
