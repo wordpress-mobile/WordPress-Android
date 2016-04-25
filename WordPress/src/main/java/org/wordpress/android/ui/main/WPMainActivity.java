@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.optimizely.Optimizely;
+import com.optimizely.integration.OptimizelyEventListener;
+import com.optimizely.integration.OptimizelyExperimentData;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
@@ -56,7 +58,11 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPOptimizelyEventListener;
 import org.wordpress.android.widgets.WPViewPager;
+
+import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -176,7 +182,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
             }
         });
 
-        Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
+        configureOptimizely();
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
@@ -197,6 +203,11 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+    }
+
+    private void configureOptimizely() {
+        Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
+        Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
     }
 
     private void setTabLayoutElevation(float newElevation){
