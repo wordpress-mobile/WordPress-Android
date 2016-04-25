@@ -139,14 +139,13 @@ public class ReaderPostActions {
             public void run() {
                 ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
 
-                // TODO: remove this temporary fix for backend issue - these fields aren't set
-                // correctly by the endpoint to request a single post, so we need to copy them
-                // from the local post before calling isSamePost (since the difference in those
-                // fields will cause isSamePost to always return false)
+                // TODO: this temporary fix was added 25-Apr-2016 as a workound for the fact that
+                // the read/sites/{blogId}/posts/{postId} endpoint doesn't contain the feedId or
+                // feedItemId of the post. because of this, we need to copy them from the local post
+                // before calling isSamePost (since the difference in those IDs causes it to return false)
                 if (serverPost.feedId == 0 && localPost.feedId != 0) {
                     serverPost.feedId = localPost.feedId;
                     serverPost.feedItemId = localPost.feedItemId;
-                    serverPost.isFollowedByCurrentUser = localPost.isFollowedByCurrentUser;
                 }
 
                 boolean hasChanges = !serverPost.isSamePost(localPost);
