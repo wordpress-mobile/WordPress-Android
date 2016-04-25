@@ -428,7 +428,7 @@ public class PostsListFragment extends Fragment
      * send the passed post to the trash with undo
      */
     private void trashPost(final PostsListPost post) {
-        if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) {
+        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
             return;
         }
 
