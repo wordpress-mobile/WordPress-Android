@@ -1134,15 +1134,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private String migrateLegacyDraft(String content) {
-        if (content.contains("<img src=\"null\" android-uri=\"file:")) {
+        if (content.contains("<img src=\"null\" android-uri=\"")) {
             // We must replace image tags specific to the legacy editor local drafts:
             // <img src="null" android-uri="file:///..." />
             // And trigger an upload action for the specific image / video
-            Pattern pattern = Pattern.compile("<img src=\"null\" android-uri=\"([^\"]*)\".*/>");
+            Pattern pattern = Pattern.compile("<img src=\"null\" android-uri=\"([^\"]*)\".*>");
             Matcher matcher = pattern.matcher(content);
             StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
-                String path = matcher.group(1).replace("file://", "");
+                String path = null;
+                String stringUri = matcher.group(1);
+                Uri uri = Uri.parse(stringUri);
+                if (uri != null && stringUri.contains("content:")) {
+                    path = getPathFromContentUri(uri);
+                    if (path == null) {
+                        continue;
+                    }
+                } else {
+                    path = stringUri.replace("file://", "");
+                }
                 MediaFile mediaFile = queueFileForUpload(path, null, "failed");
                 if (mediaFile == null) {
                     continue;
@@ -1536,17 +1546,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getPathFromContentUri(Uri imageUri) {
+        String path = null;
+        String[] projection = new String[]{MediaStore.Images.Media.DATA};
+        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
+        if (cur != null && cur.moveToFirst()) {
+            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+            path = cur.getString(dataColumn);
+            cur.close();
+        }
+        return path;
+    }
+
     private boolean addMediaVisualEditor(Uri imageUri) {
         String path = "";
         if (imageUri.toString().contains("content:")) {
-            String[] projection = new String[]{MediaStore.Images.Media.DATA};
-
-            Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-            if (cur != null && cur.moveToFirst()) {
-                int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                path = cur.getString(dataColumn);
-                cur.close();
-            }
+            path = getPathFromContentUri(imageUri);
         } else {
             // File is not in media library
             path = imageUri.toString().replace("file://", "");
