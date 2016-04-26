@@ -270,6 +270,6 @@
     <dimen name="plan_icon_size">79dp</dimen>
 
     <!--people management-->
-    <dimen name="people_list_row_height">84dp</dimen>
+    <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_divider_height">1dp</dimen>
 </resources>
