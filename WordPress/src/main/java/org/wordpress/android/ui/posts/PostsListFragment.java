@@ -428,6 +428,8 @@ public class PostsListFragment extends Fragment
      * send the passed post to the trash with undo
      */
     private void trashPost(final PostsListPost post) {
+        //only check if network is available in case this is not a local draft - local drafts have not yet
+        //been posted to the server so they can be trashed w/o further care
         if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
             return;
         }
