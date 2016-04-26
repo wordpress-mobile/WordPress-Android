@@ -78,7 +78,6 @@ public class PeopleAdapter extends BaseAdapter {
             holder.txtDisplayName.setText(person.getDisplayName());
             holder.txtUsername.setText(String.format("@%s", person.getUsername()));
             holder.txtRole.setText(Role.getLabel(mContext, person.getRole()));
-            holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
         }
 
         return convertView;

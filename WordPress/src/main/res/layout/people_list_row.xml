@@ -54,6 +54,7 @@
         android:layout_toEndOf="@id/people_list_row_display_name"
         android:layout_toRightOf="@id/people_list_row_display_name"
         android:ellipsize="end"
+        android:gravity="end"
         android:maxLines="1"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_small"
