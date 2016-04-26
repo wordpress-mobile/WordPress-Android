@@ -234,7 +234,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         showErrorAndFinish(R.string.error_blog_hidden);
                         return;
                     }
-                    WordPress.currentBlog = quickPressBlog;
+                    WordPress.setCurrentBlog(quickPressBlog);
                 }
 
                 // Create a new post for share intents and QuickPress
@@ -1895,10 +1895,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
+                            Blog currentBlog = WordPress.getCurrentBlog();
+                            if (currentBlog != null && mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
                                 // If there are pending requests for video URLs from VideoPress ids, query the DB for
                                 // them again and notify the editor
-                                String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+                                String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
                                 for (String videoId : mPendingVideoPressInfoRequests) {
                                     String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
                                     String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
@@ -2051,27 +2052,30 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onVideoPressInfoRequested(final String videoId) {
-        String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
-        String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null) {
+            String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
+            String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
 
-        if (videoUrl.isEmpty()) {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mPendingVideoPressInfoRequests == null) {
-                            mPendingVideoPressInfoRequests = new ArrayList<>();
+            if (videoUrl.isEmpty()) {
+                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mPendingVideoPressInfoRequests == null) {
+                                mPendingVideoPressInfoRequests = new ArrayList<>();
+                            }
+                            mPendingVideoPressInfoRequests.add(videoId);
+                            refreshBlogMedia();
                         }
-                        mPendingVideoPressInfoRequests.add(videoId);
-                        refreshBlogMedia();
-                    }
-                });
+                    });
+                }
             }
+
+            String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
+
+            mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
         }
-
-        String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
-
-        mEditorFragment.setUrlForVideoPressId(videoId, videoUrl, posterUrl);
     }
 
     @Override

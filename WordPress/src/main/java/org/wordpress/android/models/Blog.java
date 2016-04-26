@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Blog {
+    public static final int DEFAULT_LOCAL_TABLE_BLOG_ID = -1;
     private int localTableBlogId;
     private String url;
     private String homeURL;
@@ -80,7 +81,7 @@ public class Blog {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.localTableBlogId = -1;
+        this.localTableBlogId = DEFAULT_LOCAL_TABLE_BLOG_ID;
     }
 
     public int getLocalTableBlogId() {

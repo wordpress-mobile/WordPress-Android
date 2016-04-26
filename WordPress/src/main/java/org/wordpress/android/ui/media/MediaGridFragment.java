@@ -282,7 +282,7 @@ public class MediaGridFragment extends Fragment
     }
 
     void updateFilterText() {
-        if (WordPress.currentBlog == null)
+        if (WordPress.getCurrentBlog() == null)
             return;
 
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
