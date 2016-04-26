@@ -81,9 +81,6 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -180,14 +177,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private Post mPost;
     private Post mOriginalPost;
-    private TagSuggestionAdapter mTagSuggestionAdapter;
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
-    private int remoteBlogId;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
-    private SuggestionAutoCompleteText mTags;
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
@@ -379,10 +372,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         super.onDestroy();
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
-
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
     }
 
     @Override
@@ -406,27 +395,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
-        }
-
-        mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
-        if (mTags != null) {
-            mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
-
-            remoteBlogId = -1;
-            String blogID = WordPress.getCurrentRemoteBlogId();
-            if (blogID != null) {
-                try {
-                    remoteBlogId = Integer.parseInt(blogID);
-                } catch (NumberFormatException e) {
-                    AppLog.e(T.EDITOR, "The remote blog ID can't be parsed as Integer: " + remoteBlogId);
-                }
-            }
-
-            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-            if (mTagSuggestionAdapter != null) {
-                mTags.setAdapter(mTagSuggestionAdapter);
-            }
         }
 
         return true;

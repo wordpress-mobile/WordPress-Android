@@ -56,6 +56,9 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -65,6 +68,7 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.xmlrpc.android.ApiHelper;
 
 import java.lang.reflect.Type;
@@ -93,6 +97,11 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mFeaturedImageLabel;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
+    private SuggestionAutoCompleteText mTags;
+
+    private TagSuggestionAdapter mTagSuggestionAdapter;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
+    private int remoteBlogId;
 
     private int mFeaturedImageId;
 
@@ -116,6 +125,14 @@ public class EditPostSettingsFragment extends Fragment
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -237,6 +254,23 @@ public class EditPostSettingsFragment extends Fragment
                         }
                     }
             );
+
+            mTags = (SuggestionAutoCompleteText) mRootView.findViewById(R.id.tags);
+            if (mTags != null) {
+                mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+
+                remoteBlogId = -1;
+                String blogID = WordPress.getCurrentRemoteBlogId();
+                if (blogID != null) {
+                    try {
+                        remoteBlogId = Integer.parseInt(blogID);
+                    } catch (NumberFormatException e) {
+                        AppLog.e(T.EDITOR, "The remote blog ID can't be parsed as Integer: " + remoteBlogId);
+                    }
+                }
+
+                setupSuggestionServiceAndAdapter();
+            }
         }
 
         initSettingsFields();
@@ -264,6 +298,16 @@ public class EditPostSettingsFragment extends Fragment
                 return true;
             default:
                 return false;
+        }
+    }
+
+    private void setupSuggestionServiceAndAdapter() {
+        if (!isAdded()) return;
+
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
+        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
+        if (mTagSuggestionAdapter != null) {
+            mTags.setAdapter(mTagSuggestionAdapter);
         }
     }
 
