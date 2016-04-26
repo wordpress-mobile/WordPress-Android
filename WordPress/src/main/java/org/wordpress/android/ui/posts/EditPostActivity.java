@@ -318,7 +318,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         @Override
                         public void onPostSave() {
                             if (mEditPostPreviewFragment != null) {
-                                mEditPostPreviewFragment.loadPost();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mEditPostPreviewFragment != null) {
+                                            mEditPostPreviewFragment.loadPost();
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
