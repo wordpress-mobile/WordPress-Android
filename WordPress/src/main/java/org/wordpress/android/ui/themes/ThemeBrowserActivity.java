@@ -304,7 +304,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void fetchPurchasedThemes() {
         if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null) {
-            WordPress.getRestClientUtilsV1_2().getPurchasedThemes(getBlogId(), new Listener() {
+            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(getBlogId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     new FetchThemesTask().execute(response);
