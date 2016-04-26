@@ -181,17 +181,12 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private boolean selectBlog(int blogId) {
-        Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-        if (currentBlog == null) {
+        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
+        if (WordPress.currentBlog == null || WordPress.currentBlog.isHidden()) {
             return false;
         }
-
-        if (currentBlog.isHidden()) {
-            return false;
-        } else {
-            WordPress.wpDB.updateLastBlogId(currentBlog.getLocalTableBlogId());
-            return true;
-        }
+        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
+        return true;
     }
 
     private void startActivityAndFinish(Intent intent) {
@@ -247,15 +242,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private void savePreferences() {
-        Blog currentBlog = WordPress.getCurrentBlog();
         // If current blog is not set don't save preferences
-        if (currentBlog == null) {
+        if (WordPress.currentBlog == null) {
             return ;
         }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
 
         // Save last used settings
-        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, currentBlog.getLocalTableBlogId());
+        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
         editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
         editor.commit();
     }

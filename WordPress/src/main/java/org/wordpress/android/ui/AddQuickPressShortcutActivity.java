@@ -26,7 +26,6 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -150,11 +149,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
                     WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
 
-                    if (WordPress.getCurrentBlog() == null) {
-                        Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
-                        if (currentBlog != null) {
-                            WordPress.setCurrentBlog(currentBlog.getLocalTableBlogId());
-                        }
+                    if (WordPress.currentBlog == null) {
+                        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
                         WordPress.wpDB.updateLastBlogId(accountIDs[position]);
                     }
 

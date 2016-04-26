@@ -1141,7 +1141,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             AnalyticsUtils.refreshMetadata();
             ToastUtils.showToast(getActivity(), R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();
-            WordPress.setCurrentBlog(null);
+            WordPress.currentBlog = null;
             getActivity().setResult(RESULT_BLOG_REMOVED);
 
             // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event

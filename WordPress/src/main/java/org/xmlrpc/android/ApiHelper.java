@@ -519,8 +519,8 @@ public class ApiHelper {
         @Override
         protected Integer doInBackground(List<?>... params) {
             List<?> arguments = params[0];
-            WordPress.setCurrentBlog((Blog) arguments.get(0));
-            Blog blog = WordPress.getCurrentBlog();
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return 0;
@@ -624,8 +624,8 @@ public class ApiHelper {
         @Override
         protected Boolean doInBackground(List<?>... params) {
             List<?> arguments = params[0];
-            WordPress.setCurrentBlog((Blog) arguments.get(0));
-            Blog blog = WordPress.getCurrentBlog();
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
 
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
@@ -689,8 +689,8 @@ public class ApiHelper {
         @Override
         protected MediaFile doInBackground(List<?>... params) {
             List<?> arguments = params[0];
-            WordPress.setCurrentBlog((Blog) arguments.get(0));
-            Blog blog = WordPress.getCurrentBlog();
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return null;
@@ -760,8 +760,8 @@ public class ApiHelper {
         @Override
         protected Map<?, ?> doInBackground(List<?>... params) {
             List<?> arguments = params[0];
-            WordPress.setCurrentBlog((Blog) arguments.get(0));
-            Blog blog = WordPress.getCurrentBlog();
+            WordPress.currentBlog = (Blog) arguments.get(0);
+            Blog blog = WordPress.currentBlog;
 
             if (blog == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "current blog is null");

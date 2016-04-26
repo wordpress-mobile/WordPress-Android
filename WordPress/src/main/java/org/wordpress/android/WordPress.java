@@ -88,6 +88,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends Application {
     public static String versionName;
+    public static Blog currentBlog;
     public static WordPressDB wpDB;
 
     public static RequestQueue requestQueue;
@@ -102,7 +103,6 @@ public class WordPress extends Application {
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
-    private static int currentBlogId;
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
@@ -280,7 +280,7 @@ public class WordPress extends Application {
     private void initWpDb() {
         if (!createAndVerifyWpDb()) {
             AppLog.e(T.DB, "Invalid database, sign out user and delete database");
-            currentBlogId = 0;
+            currentBlog = null;
             if (wpDB != null) {
                 wpDB.updateLastBlogId(-1);
             }
@@ -410,12 +410,11 @@ public class WordPress extends Application {
      * hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
-        Blog currentBlog = getBlog(currentBlogId);
-        if (currentBlog == null) {
-            return lastActiveOrFirstBlog();
-        } else {
-            return currentBlog;
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
+            attemptToRestoreLastActiveBlog();
         }
+
+        return currentBlog;
     }
 
     /**
@@ -433,26 +432,40 @@ public class WordPress extends Application {
     }
 
     /**
+     * Set the last active blog as the current blog.
+     *
+     * @return the current blog
+     */
+    public static Blog setCurrentBlogToLastActive() {
+        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
+
+        int lastBlogId = WordPress.wpDB.getLastBlogId();
+        if (lastBlogId != -1) {
+            for (Map<String, Object> account : accounts) {
+                int id = Integer.valueOf(account.get("id").toString());
+                if (id == lastBlogId) {
+                    setCurrentBlog(id);
+                    return currentBlog;
+                }
+            }
+        }
+        // Previous active blog is hidden or deleted
+        currentBlog = null;
+        return null;
+    }
+
+    /**
      * Set the blog with the specified id as the current blog.
      *
      * @param id id of the blog to set as current
      */
     public static void setCurrentBlog(int id) {
-        currentBlogId = id;
-    }
-
-    public static void setCurrentBlog(Blog blog) {
-        if (blog != null) {
-            currentBlogId = blog.getLocalTableBlogId();
-        } else {
-            currentBlogId = 0;
-        }
+        currentBlog = getBlog(id);
     }
 
     public static void setCurrentBlogAndSetVisible(int id) {
         setCurrentBlog(id);
 
-        Blog currentBlog = getBlog(id);
         if (currentBlog != null && currentBlog.isHidden()) {
             wpDB.setDotComBlogsVisibility(id, true);
         }
@@ -466,7 +479,7 @@ public class WordPress extends Application {
     }
 
     public static int getCurrentLocalTableBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : Blog.DEFAULT_LOCAL_TABLE_BLOG_ID);
+        return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
     /**
@@ -647,29 +660,15 @@ public class WordPress extends Application {
         }
     }
 
-    private static Blog lastActiveOrFirstBlog() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-
-        int lastBlogId = WordPress.wpDB.getLastBlogId();
-        if (lastBlogId != Blog.DEFAULT_LOCAL_TABLE_BLOG_ID) {
-            for (Map<String, Object> account : accounts) {
-                int id = Integer.valueOf(account.get("id").toString());
-                if (id == lastBlogId) {
-                    setCurrentBlog(id);
-                    return getBlog(id);
-                }
+    private static void attemptToRestoreLastActiveBlog() {
+        if (setCurrentBlogToLastActive() == null) {
+            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            if (blogId == 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
 
-            return null;
-        } else {
-            lastBlogId = WordPress.wpDB.getFirstVisibleBlogId();
-            if (lastBlogId == 0) {
-                lastBlogId = WordPress.wpDB.getFirstHiddenBlogId();
-            }
-            setCurrentBlogAndSetVisible(lastBlogId);
-            wpDB.updateLastBlogId(lastBlogId);
-
-            return getBlog(lastBlogId);
+            setCurrentBlogAndSetVisible(blogId);
+            wpDB.updateLastBlogId(blogId);
         }
     }
 

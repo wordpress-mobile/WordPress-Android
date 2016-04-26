@@ -21,7 +21,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -192,16 +191,15 @@ public class WordPressMediaUtils {
      * within the app. See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null) {
+        if (WordPress.currentBlog == null) {
             return false;
         }
 
-        if (currentBlog.getWpVersion() == null) {
+        if (WordPress.currentBlog.getWpVersion() == null) {
             return true;
         }
 
-        if (currentBlog.isDotcomFlag()) {
+        if (WordPress.currentBlog.isDotcomFlag()) {
             return true;
         }
 
@@ -209,7 +207,7 @@ public class WordPressMediaUtils {
         Version currentVersion;
         try {
             minVersion = new Version("3.5.2");
-            currentVersion = new Version(currentBlog.getWpVersion());
+            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
 
             if (currentVersion.compareTo(minVersion) == -1) {
                 return false;

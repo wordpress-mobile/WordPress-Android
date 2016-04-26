@@ -179,7 +179,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         WordPress.wpDB.saveBlog(blog);
 
         if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId()) {
-            WordPress.setCurrentBlog(blog);
+            WordPress.currentBlog = blog;
         }
     }
 
@@ -336,7 +336,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             AnalyticsUtils.refreshMetadata();
             ToastUtils.showToast(this, R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();
-            WordPress.setCurrentBlog(null);
+            WordPress.currentBlog = null;
             mBlogDeleted = true;
             setResult(RESULT_BLOG_REMOVED);
 

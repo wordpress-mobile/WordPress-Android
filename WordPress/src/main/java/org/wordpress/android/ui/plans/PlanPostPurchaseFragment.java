@@ -135,7 +135,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.currentBlog, false);
                 break;
         }
 
