@@ -337,7 +337,7 @@
         <activity
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
-            android:theme="@style/CalypsoTheme"/>
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
         <activity
