@@ -30,7 +30,6 @@ public class PeopleTable {
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
                 + "last_name               TEXT,"
-                + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
                 + "role                    TEXT,"
                 + "PRIMARY KEY (person_id, local_blog_id)"
@@ -58,7 +57,6 @@ public class PeopleTable {
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
         values.put("last_name", person.getLastName());
-        values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
         values.put("role", Role.toKey(person.getRole()));
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -117,10 +115,9 @@ public class PeopleTable {
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));
         String lastName = c.getString(c.getColumnIndex("last_name"));
-        String displayName = c.getString(c.getColumnIndex("display_name"));
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
         Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
 
-        return new Person(personId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, localTableBlogId, username, firstName, lastName, avatarUrl, role);
     }
 }

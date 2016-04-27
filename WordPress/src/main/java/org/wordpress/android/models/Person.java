@@ -13,7 +13,6 @@ public class Person {
     private String username;
     private String firstName;
     private String lastName;
-    private String displayName;
     private String avatarUrl;
     private Role role;
 
@@ -22,7 +21,6 @@ public class Person {
                   String username,
                   String firstName,
                   String lastName,
-                  String displayName,
                   String avatarUrl,
                   Role role) {
         this.personID = personID;
@@ -30,7 +28,6 @@ public class Person {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.displayName = displayName;
         this.avatarUrl = avatarUrl;
         this.role = role;
     }
@@ -47,12 +44,11 @@ public class Person {
             String username = json.optString("login");
             String firstName = json.optString("first_name");
             String lastName = json.optString("last_name");
-            String displayName = json.optString("nice_name");
             String avatarUrl = json.optString("avatar_URL");
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
 
-            return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+            return new Person(personID, localTableBlogId, username, firstName, lastName, avatarUrl, role);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PEOPLE, "JSON exception occurred while parsing the user json: " + e);
         } catch (NumberFormatException e) {
@@ -95,11 +91,7 @@ public class Person {
     }
 
     public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        return getFirstName() + " " + getLastName();
     }
 
     public Role getRole() {
