@@ -40,7 +40,7 @@ public class WPOptimizelyEventListener implements OptimizelyEventListener {
             HashMap<String, String> abTestProperties = new HashMap<>();
             abTestProperties.put(ABTEST_NAME, experiment.experimentName);
             abTestProperties.put(ABTEST_VARIATION, experiment.variationName);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.ABTEST_START);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.ABTEST_START, abTestProperties);
         }
     }
 
