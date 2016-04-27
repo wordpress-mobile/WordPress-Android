@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.comments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -25,6 +29,8 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -169,8 +175,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
-        holder.txtComment.setText(comment.getUnescapedCommentText());
-        //holder.txtComment.setText
+        holder.txtComment.setText(comment.getUnescapedCommentTextWithDrawables());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
         // status is only shown for comments that haven't been approved
@@ -420,19 +425,32 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return false;
             }
 
-            int maxImageWidth = ImageUtils.getMaximumImageWidthForComment(mContext);
+            final int maxImageWidth = ImageUtils.getMaximumImageWidthForComment(mContext);
+            WPHtml.ImageGetter imgGetter = new WPHtml.ImageGetter() {
+                @Override
+                public Drawable getDrawable(String source) {
+                    try {
+                        Bitmap bmp = ImageUtils.getScaledBitmapAtLongestSide(BitmapFactory.decodeStream(new URL(source).openStream()), maxImageWidth);
+                        BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), bmp);
+                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
+                        return drawable;
+                    } catch(IOException exception) {
+                        return null;
+                    }
+                }
+            };
+
 
             // pre-calc transient values so they're cached prior to display
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
-                comment.getUnescapedCommentText();
                 comment.getUnescapedPostTitle();
                 comment.getAvatarForDisplay(mAvatarSz);
                 comment.getFormattedTitle();
 
                 //load images embedded within comments
                 String content = StringUtils.notNullStr(comment.getCommentText());
-                Spanned spanned = WPHtml.fromHtml(content, mContext, null, maxImageWidth);
+                Spanned spanned = WPHtml.fromHtml(content, imgGetter, null, mContext, null, maxImageWidth);
                 comment.setUnescapedCommentWithDrawables(spanned);
             }
 

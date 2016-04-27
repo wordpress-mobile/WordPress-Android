@@ -183,13 +183,6 @@ public class Comment {
         return dtPublished;
     }
 
-    private transient String unescapedCommentText;
-    public String getUnescapedCommentText() {
-        if (unescapedCommentText == null)
-            unescapedCommentText = StringUtils.unescapeHTML(getCommentText()).trim();
-        return unescapedCommentText;
-    }
-
     private transient Spanned unescapedCommentWithDrawables;
     public void setUnescapedCommentWithDrawables(Spanned spanned){
         unescapedCommentWithDrawables = spanned;
