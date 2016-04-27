@@ -332,6 +332,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         });
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
@@ -387,13 +388,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
 
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();
         }
+
+        super.onDestroy();
     }
 
     @Override
@@ -433,10 +434,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-            if (mTagSuggestionAdapter != null) {
-                mTags.setAdapter(mTagSuggestionAdapter);
+            if (mSuggestionServiceConnectionManager == null) {
+                mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
+                mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
+                if (mTagSuggestionAdapter != null) {
+                    mTags.setAdapter(mTagSuggestionAdapter);
+                }
             }
         }
 
