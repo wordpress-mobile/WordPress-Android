@@ -314,10 +314,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePostAsync();
-                    if (mEditPostPreviewFragment != null) {
-                        mEditPostPreviewFragment.loadPost();
-                    }
+                    savePostAsync(new AfterSavePostListener() {
+                        @Override
+                        public void onPostSave() {
+                            if (mEditPostPreviewFragment != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mEditPostPreviewFragment != null) {
+                                            mEditPostPreviewFragment.loadPost();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -389,7 +400,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePostAsync();
+        savePostAsync(null);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
@@ -808,14 +819,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void savePostAsync() {
+    private void savePostAsync(final AfterSavePostListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 updatePostObject(false);
                 savePostToDb();
+                if (listener != null) {
+                    listener.onPostSave();
+                }
             }
         }).start();
+    }
+
+    private interface AfterSavePostListener {
+        void onPostSave();
     }
 
     private synchronized void savePostToDb() {
