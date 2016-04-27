@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.helpshift.util.StringUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
@@ -66,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -101,7 +103,6 @@ public class EditPostSettingsFragment extends Fragment
 
     private TagSuggestionAdapter mTagSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
-    private int remoteBlogId;
 
     private int mFeaturedImageId;
 
@@ -259,16 +260,6 @@ public class EditPostSettingsFragment extends Fragment
             if (mTags != null) {
                 mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
-                remoteBlogId = -1;
-                String blogID = WordPress.getCurrentRemoteBlogId();
-                if (blogID != null) {
-                    try {
-                        remoteBlogId = Integer.parseInt(blogID);
-                    } catch (NumberFormatException e) {
-                        AppLog.e(T.EDITOR, "The remote blog ID can't be parsed as Integer: " + remoteBlogId);
-                    }
-                }
-
                 setupSuggestionServiceAndAdapter();
             }
         }
@@ -303,6 +294,10 @@ public class EditPostSettingsFragment extends Fragment
 
     private void setupSuggestionServiceAndAdapter() {
         if (!isAdded()) return;
+
+        int remoteBlogId = -1;
+        String blogID = WordPress.getCurrentRemoteBlogId();
+        remoteBlogId = StringUtils.stringToInt(blogID, -1);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
         mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
