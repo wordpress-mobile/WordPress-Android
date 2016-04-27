@@ -273,4 +273,5 @@
     <dimen name="people_avatar_sz">40dp</dimen>
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_divider_height">1dp</dimen>
+    <dimen name="people_list_divider_left_margin">64dp</dimen>
 </resources>
