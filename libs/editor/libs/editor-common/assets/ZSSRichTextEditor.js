@@ -387,13 +387,18 @@ ZSSEditor.restoreRange = function(){
 };
 
 ZSSEditor.resetSelectionOnField = function(fieldId, offset) {
-    offset = typeof offset !== 'undefined' ? offset : 0;
-
     var query = "div#" + fieldId;
     var field = document.querySelector(query);
+
+    this.giveFocusToElement(field, offset);
+};
+
+ZSSEditor.giveFocusToElement = function(element, offset) {
+    offset = typeof offset !== 'undefined' ? offset : 0;
+
     var range = document.createRange();
-    range.setStart(field, offset);
-    range.setEnd(field, offset);
+    range.setStart(element, offset);
+    range.setEnd(element, offset);
 
     var selection = document.getSelection();
     selection.removeAllRanges();
@@ -643,6 +648,13 @@ ZSSEditor.setBlockquote = function() {
     var selection = document.getSelection();
     var range = selection.getRangeAt(0).cloneRange();
     var sendStyles = false;
+
+    // Make sure text being wrapped in blockquotes is inside paragraph tags
+    // (should be <blockquote><paragraph>contents</paragraph></blockquote>)
+    var currentHtml = ZSSEditor.focusedField.getWrappedDomNode().innerHTML;
+    if (currentHtml.search('<' + ZSSEditor.defaultParagraphSeparator) == -1) {
+        ZSSEditor.focusedField.setHTML(Util.wrapHTMLInTag(currentHtml, ZSSEditor.defaultParagraphSeparator));
+    }
 
     var ancestorElement = this.getAncestorElementForSettingBlockquote(range);
 
@@ -3024,6 +3036,9 @@ ZSSField.prototype.bindListeners = function() {
     this.wrappedObject.bind('input', function(e) { thisObj.handleInputEvent(e); });
     this.wrappedObject.bind('compositionstart', function(e) { thisObj.handleCompositionStartEvent(e); });
     this.wrappedObject.bind('compositionend', function(e) { thisObj.handleCompositionEndEvent(e); });
+
+    // Only supported on API19+
+    this.wrappedObject.on('paste', function(e) { thisObj.handlePasteEvent(e); });
 };
 
 // MARK: - Emptying the field when it should be, well... empty (HTML madness)
@@ -3071,6 +3086,9 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
 
     var wasEnterPressed = (e.keyCode == '13');
 
+    // Handle keyDownEvent actions that need to happen after the event has completed (and the field has been modified)
+    setTimeout(this.afterKeyDownEvent, 20, e.target.innerHTML, e);
+
     if (this.isComposing) {
         e.stopPropagation();
     } else if (wasEnterPressed && !this.isMultiline()) {
@@ -3086,13 +3104,25 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
             return;
         }
 
-        // This is intended to work around an API19-only bug where paragraph wrapping the first character in a post
-        // will display a zero-width space character (from ZSSField.wrapCaretInParagraphIfNecessary)
+        // The containsParagraphSeparators check is intended to work around three bugs:
+        // 1. On API19 only, paragraph wrapping the first character in a post will display a zero-width space character
+        // (from ZSSField.wrapCaretInParagraphIfNecessary)
         // We can drop the if statement wrapping wrapCaretInParagraphIfNecessary() if we find a way to stop using
         // zero-width space characters (e.g., autocorrect issues are fixed and we switch back to p tags)
+        //
+        // 2. On all APIs, software pasting (long press -> paste) doesn't automatically wrap the paste in paragraph
+        // tags in new posts. On API19+ this is corrected by ZSSField.handlePasteEvent(), but earlier APIs don't support
+        // it. So, instead, we allow the editor not to wrap the paste in paragraph tags and it's automatically corrected
+        // after adding a newline. But allowing wrapCaretInParagraphIfNecessary() to go through will wrap the paragraph
+        // incorrectly, so we skip it in this case.
+        //
+        // 3. On all APIs, hardware pasting (CTRL + V) doesn't automatically wrap the paste in paragraph tags in
+        // new posts. ZSSField.handlePasteEvent() does not address this problem. It's the same fix as #2 above, but we
+        // have to extend the `containsParagraphSeparators` check to all APIs, not just API19 and below, to fix
+        // hardware pasting.
         var containsParagraphSeparators = this.getWrappedDomNode().innerHTML.search(
                 '<' + ZSSEditor.defaultParagraphSeparator) > -1;
-        if (nativeState.androidApiLevel != 19 || containsParagraphSeparators) {
+        if (containsParagraphSeparators) {
             this.wrapCaretInParagraphIfNecessary();
         }
 
@@ -3252,6 +3282,50 @@ ZSSField.prototype.handleTapEvent = function(e) {
     }
 };
 
+ZSSField.prototype.handlePasteEvent = function(e) {
+    if (this.isMultiline() && this.getHTML().length == 0) {
+        ZSSEditor.insertHTML(Util.wrapHTMLInTag('&#x200b;', ZSSEditor.defaultParagraphSeparator));
+    }
+};
+
+/**
+ *  @brief      Fires after 'keydown' events, when the field contents have already been modified
+ */
+ZSSField.prototype.afterKeyDownEvent = function(beforeHTML, e) {
+    var htmlWasModified = (beforeHTML != e.target.innerHTML);
+
+    var selection = document.getSelection();
+    var range = selection.getRangeAt(0).cloneRange();
+    var focusedNode = range.startContainer;
+
+    var focusedNodeIsEmpty = (focusedNode.innerHTML != undefined
+        && (focusedNode.innerHTML.length == 0 || focusedNode.innerHTML == '<br>'));
+
+    // Blockquote handling
+    if (focusedNode.nodeName == NodeName.BLOCKQUOTE && focusedNodeIsEmpty) {
+        if (!htmlWasModified) {
+            // We only want to handle this if the last character inside a blockquote was just deleted - if the HTML
+            // is unchanged, it might be that afterKeyDownEvent was called too soon, and we should avoid doing anything
+            return;
+        }
+
+        // When using backspace to delete the contents of a blockquote, the div within the blockquote is deleted
+        // This makes the blockquote unable to be deleted using backspace, and also causes autocorrect issues on API19+
+        range.startContainer.innerHTML = Util.wrapHTMLInTag('<br>', ZSSEditor.defaultParagraphSeparator);
+
+        // Give focus to new div
+        var newFocusElement = focusedNode.firstChild;
+        ZSSEditor.giveFocusToElement(newFocusElement, 1);
+    } else if (focusedNode.nodeName == NodeName.DIV && focusedNode.parentNode.nodeName == NodeName.BLOCKQUOTE
+        && focusedNode.parentNode.previousSibling == null && focusedNode.parentNode.childNodes.length == 1
+        && focusedNodeIsEmpty) {
+        // When a post begins with a blockquote, and there's content after that blockquote, backspacing inside that
+        // blockquote will work until the blockquote is empty. After that, backspace will have no effect
+        // This fix identifies that situation and makes the call to setBlockquote() to toggle off the blockquote
+        ZSSEditor.setBlockquote();
+    }
+};
+
 ZSSField.prototype.sendImageTappedCallback = function(imageNode) {
     var meta = JSON.stringify(ZSSEditor.extractImageMeta(imageNode));
     var imageId = "", mediaType = "image";
@@ -3383,13 +3457,23 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
     var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 
-    if (parentNodeShouldBeParagraph) {
+    // When starting a post with a blockquote (before any text is entered), the paragraph tags inside the blockquote
+    // won't properly wrap the text once it's entered
+    // In that case, remove the paragraph tags and re-apply them, wrapping around the newly entered text
+    var fixNewPostBlockquoteBug = (closerParentNode.nodeName == NodeName.DIV
+                                       && closerParentNode.parentNode.nodeName == NodeName.BLOCKQUOTE
+                                       && closerParentNode.innerHTML.length == 0);
+
+    if (parentNodeShouldBeParagraph || fixNewPostBlockquoteBug) {
         var selection = window.getSelection();
 
         if (selection && selection.rangeCount > 0) {
             var range = selection.getRangeAt(0);
 
             if (range.startContainer == range.endContainer) {
+                if (fixNewPostBlockquoteBug) {
+                    closerParentNode.parentNode.removeChild(closerParentNode);
+                }
                 var paragraph = document.createElement("div");
                 var textNode = document.createTextNode("&#x200b;");
 
@@ -3446,9 +3530,16 @@ ZSSField.prototype.getHTMLForCallback = function() {
     if (this.hasNoStyle) {
         contentsArgument = "contents=" + this.strippedHTML();
     } else {
-        contentsArgument = "contents=" + this.getHTML();
+        var html;
+        if (nativeState.androidApiLevel < 17) {
+            // URI Encode HTML on API < 17 because of the use of WebViewClient.shouldOverrideUrlLoading. Data must
+            // be decoded in shouldOverrideUrlLoading.
+            html = encodeURIComponent(this.getHTML());
+        } else {
+            html = this.getHTML();
+        }
+        contentsArgument = "contents=" + html;
     }
-
     var joinedArguments = functionArgument + defaultCallbackSeparator + idArgument + defaultCallbackSeparator +
         contentsArgument;
     ZSSEditor.callback('callback-response-string', joinedArguments);
