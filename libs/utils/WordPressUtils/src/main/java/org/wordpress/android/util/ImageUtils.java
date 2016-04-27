@@ -638,4 +638,20 @@ public class ImageUtils {
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;
     }
+
+    /**
+     * Get the maximum size an image in a comment can be to fit in either portrait or landscape orientations.
+     */
+    public static int getMaximumImageWidthForComment(Context context) {
+        int maximumThumbnailWidthForEditor;
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        maximumThumbnailWidthForEditor = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+        // 48dp of padding on each side so you can still place the cursor next to the image.
+        int padding = DisplayUtils.dpToPx(context, 48) * 2;
+        maximumThumbnailWidthForEditor -= padding;
+        return maximumThumbnailWidthForEditor;
+    }
+
 }

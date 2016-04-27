@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 import android.content.Context;
+import android.text.Spanned;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
@@ -189,6 +190,14 @@ public class Comment {
         return unescapedCommentText;
     }
 
+    private transient Spanned unescapedCommentWithDrawables;
+    public void setUnescapedCommentWithDrawables(Spanned spanned){
+        unescapedCommentWithDrawables = spanned;
+    }
+    public Spanned getUnescapedCommentTextWithDrawables() {
+        return unescapedCommentWithDrawables;
+    }
+
     private transient String unescapedPostTitle;
     public String getUnescapedPostTitle() {
         if (unescapedPostTitle == null)
@@ -238,4 +247,5 @@ public class Comment {
         CommentStatus status = getStatusEnum();
         return CommentStatus.TRASH.equals(status) || CommentStatus.SPAM.equals(status);
     }
+
 }

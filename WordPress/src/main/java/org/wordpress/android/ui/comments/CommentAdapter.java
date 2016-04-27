@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,9 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -44,6 +48,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private final LayoutInflater mInflater;
+    private final Context mContext;
 
     private final CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
@@ -110,6 +115,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     CommentAdapter(Context context, int localBlogId) {
         mInflater = LayoutInflater.from(context);
+        mContext = context;
 
         mLocalBlogId = localBlogId;
 
@@ -164,6 +170,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
         holder.txtComment.setText(comment.getUnescapedCommentText());
+        //holder.txtComment.setText
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
 
         // status is only shown for comments that haven't been approved
@@ -413,6 +420,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return false;
             }
 
+            int maxImageWidth = ImageUtils.getMaximumImageWidthForComment(mContext);
+
             // pre-calc transient values so they're cached prior to display
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
@@ -420,6 +429,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 comment.getUnescapedPostTitle();
                 comment.getAvatarForDisplay(mAvatarSz);
                 comment.getFormattedTitle();
+
+                //load images embedded within comments
+                String content = StringUtils.notNullStr(comment.getCommentText());
+                Spanned spanned = WPHtml.fromHtml(content, mContext, null, maxImageWidth);
+                comment.setUnescapedCommentWithDrawables(spanned);
             }
 
             return true;
@@ -439,4 +453,5 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mIsLoadTaskRunning = false;
         }
     }
+
 }
