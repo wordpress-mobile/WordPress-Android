@@ -206,7 +206,6 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
     }
 
     private void configureOptimizely() {
-        Optimizely.setVisualExperimentsEnabled(false);
         Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
         Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
     }
