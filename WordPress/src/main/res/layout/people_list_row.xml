@@ -11,7 +11,7 @@
         layout="@layout/person_detail"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/people_list_row_role"
+        android:id="@+id/person_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

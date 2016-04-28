@@ -6,18 +6,18 @@
     android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/people_list_row_avatar"
+        android:id="@+id/person_avatar"
         android:layout_width="@dimen/people_avatar_sz"
         android:layout_height="@dimen/people_avatar_sz"
         android:layout_margin="@dimen/margin_extra_large"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/people_list_row_display_name"
+        android:id="@+id/person_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/people_list_row_avatar"
-        android:layout_toEndOf="@id/people_list_row_avatar"
-        android:layout_toRightOf="@id/people_list_row_avatar"
+        android:layout_alignTop="@id/person_avatar"
+        android:layout_toEndOf="@id/person_avatar"
+        android:layout_toRightOf="@id/person_avatar"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/grey_dark"
@@ -25,12 +25,12 @@
         tools:text="display_name"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/people_list_row_username"
+        android:id="@+id/person_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/people_list_row_display_name"
-        android:layout_alignStart="@id/people_list_row_display_name"
-        android:layout_below="@id/people_list_row_display_name"
+        android:layout_alignLeft="@id/person_display_name"
+        android:layout_alignStart="@id/person_display_name"
+        android:layout_below="@id/person_display_name"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/grey"
