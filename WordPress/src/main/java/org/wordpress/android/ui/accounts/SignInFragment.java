@@ -224,7 +224,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initInfoButtons(rootView);
         moveBottomButtons();
         initSmartLockForPasswords();
-
         return rootView;
     }
 
@@ -310,7 +309,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     public void smartLockAutoFill() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        // We don't want to autofill username and password fields if self hosted has been selected (pre-selected or
+        // user selected).
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || mSelfHosted) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
