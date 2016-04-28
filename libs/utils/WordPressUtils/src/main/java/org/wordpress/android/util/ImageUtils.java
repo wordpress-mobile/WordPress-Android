@@ -638,5 +638,4 @@ public class ImageUtils {
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;
     }
-
 }
