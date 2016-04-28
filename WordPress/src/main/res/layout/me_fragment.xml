@@ -14,14 +14,21 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/me_avatar_margin_top">
+
+            <View
+                android:id="@+id/avatar_tooltip_anchor"
+                android:layout_width="@dimen/avatar_sz_large"
+                android:layout_height="1dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"/>
 
             <FrameLayout
                 android:id="@+id/frame_avatar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/me_avatar_margin_top">
+                android:layout_centerHorizontal="true">
 
                 <FrameLayout
                     android:id="@+id/avatar_container"
@@ -49,31 +56,33 @@
                     android:visibility="gone"
                     tools:visibility="visible"/>
             </FrameLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_display_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/frame_avatar"
+                    android:layout_centerHorizontal="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-light"
+                    tools:text="Full Name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/me_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/me_display_name"
+                    android:layout_centerHorizontal="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_medium"
+                    tools:text="username" />
         </RelativeLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/me_display_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light"
-            tools:text="Full Name" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/me_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="username" />
 
         <LinearLayout
             android:id="@+id/row_my_profile"

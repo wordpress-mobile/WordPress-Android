@@ -76,6 +76,7 @@ public class MeFragment extends Fragment {
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
     private ToolTipView mGravatarToolTipView;
+    private View mAvatarTooltipAnchor;
     private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -124,7 +125,7 @@ public class MeFragment extends Fragment {
         ToolTip toolTip = createGravatarPromoToolTip(getString(R.string.gravatar_tip), ContextCompat.getColor
                 (getActivity(), R.color.color_primary));
         mGravatarToolTipView = new ToolTipView.Builder(getActivity())
-                .withAnchor(mAvatarFrame)
+                .withAnchor(mAvatarTooltipAnchor)
                 .withToolTip(toolTip)
                 .withGravity(Gravity.END)
                 .build();
@@ -161,6 +162,7 @@ public class MeFragment extends Fragment {
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
+        mAvatarTooltipAnchor = rootView.findViewById(R.id.avatar_tooltip_anchor);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
