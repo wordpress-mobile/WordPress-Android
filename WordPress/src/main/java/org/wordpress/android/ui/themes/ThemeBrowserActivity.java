@@ -254,6 +254,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                         mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getId());
                                     }
                                 }
+                                if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
+                                    mThemeSearchFragment.setRefreshing(false);
+                                }
                             }
                         } catch (JSONException e) {
                             AppLog.e(T.THEMES, e);
@@ -387,7 +390,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
         if (!newTheme.getAuthor().isEmpty()) {
-            thanksMessage = thanksMessage + String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthor());
+            thanksMessage = thanksMessage + " " + String.format(getString(R.string.theme_by_author_prompt_append), newTheme.getAuthor());
         }
 
         dialogBuilder.setMessage(thanksMessage);
