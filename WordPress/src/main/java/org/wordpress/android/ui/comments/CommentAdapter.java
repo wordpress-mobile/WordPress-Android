@@ -425,23 +425,6 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return false;
             }
 
-            final int maxImageWidth = (int) mContext.getResources().getDimension(R.dimen.reader_comment_embedded_image_max_size);
-
-            WPHtml.ImageGetter imgGetter = new WPHtml.ImageGetter() {
-                @Override
-                public Drawable getDrawable(String source) {
-                    try {
-                        Bitmap bmp = ImageUtils.getScaledBitmapAtLongestSide(BitmapFactory.decodeStream(new URL(source).openStream()), maxImageWidth);
-                        BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), bmp);
-                        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
-                        return drawable;
-                    } catch(IOException exception) {
-                        return null;
-                    }
-                }
-            };
-
-
             // pre-calc transient values so they're cached prior to display
             for (Comment comment: tmpComments) {
                 comment.getDatePublished();
@@ -451,7 +434,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 //load images embedded within comments
                 String content = StringUtils.notNullStr(comment.getCommentText());
-                Spanned spanned = WPHtml.fromHtml(content, imgGetter, null, mContext, null, maxImageWidth);
+                Spanned spanned = WPHtml.fromHtml(content, null, null, mContext, null, 0);
                 comment.setUnescapedCommentWithDrawables(spanned);
             }
 
