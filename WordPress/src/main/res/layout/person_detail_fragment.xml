@@ -8,12 +8,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_background"
-    android:orientation="vertical">
+    android:background="@color/white">
 
     <include
         android:id="@+id/person_details"
-        layout="@layout/person_detail"/>
+        layout="@layout/person_detail" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_role_label"
@@ -21,13 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/person_details"
-        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:ellipsize="end"
-        android:maxLines="1"
         android:text="@string/role"
-        android:textColor="@color/grey"
-        android:textSize="@dimen/text_sz_medium"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
         tools:text="@string/role" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -37,26 +35,18 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/person_role_label"
         android:layout_marginLeft="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_small"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/black"
+        android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="@string/role" />
+        tools:text="@string/role_admin" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/person_remove"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="?android:selectableItemBackground"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="@dimen/margin_extra_large"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_sz_medium"
-        tools:text="REMOVE USER" />
+        android:layout_height="@dimen/people_list_divider_height"
+        android:layout_below="@id/person_role"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:background="@color/grey_lighten_20" />
 
-</org.wordpress.android.ui.SlidingRelativeLayout >
+</org.wordpress.android.ui.SlidingRelativeLayout>
 

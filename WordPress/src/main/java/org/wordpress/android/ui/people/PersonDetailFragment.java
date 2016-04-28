@@ -28,7 +28,6 @@ public class PersonDetailFragment extends Fragment {
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private TextView mRoleTextView;
-    private TextView mRemoveTextView;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -63,7 +62,6 @@ public class PersonDetailFragment extends Fragment {
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-        mRemoveTextView = (TextView) rootView.findViewById(R.id.person_remove);
 
         return rootView;
     }
@@ -87,14 +85,6 @@ public class PersonDetailFragment extends Fragment {
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
-            mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
-
-            mRemoveTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: remove user
-                }
-            });
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
