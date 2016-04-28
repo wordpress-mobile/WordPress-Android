@@ -6,10 +6,6 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground">
 
-    <include
-        android:id="@+id/person_details"
-        layout="@layout/person_detail"/>
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_role"
         android:layout_width="wrap_content"
@@ -19,13 +15,21 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_toEndOf="@id/person_details"
-        android:layout_toRightOf="@id/person_details"
         android:ellipsize="end"
         android:gravity="end"
         android:maxLines="1"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_small"
         tools:text="role"/>
+
+    <include
+        android:id="@+id/person_details"
+        layout="@layout/person_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/person_role"
+        android:layout_toStartOf="@id/person_role"/>
 
 </RelativeLayout>
