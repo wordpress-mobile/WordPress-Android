@@ -116,8 +116,8 @@ public class MeFragment extends Fragment {
     }
 
     private void showGravatarTooltipIfNeeded() {
-        if (!isAdded() || !AppPrefs.isGravatarChangePromoRequired() || !mIsUserVisible || mGravatarToolTipView !=
-                null) {
+        if (!isAdded() || !AccountHelper.isSignedInWordPressDotCom() || !AppPrefs.isGravatarChangePromoRequired() ||
+                !mIsUserVisible || mGravatarToolTipView != null) {
             return;
         }
 
