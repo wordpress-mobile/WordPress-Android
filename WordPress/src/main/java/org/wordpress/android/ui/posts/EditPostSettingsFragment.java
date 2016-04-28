@@ -92,16 +92,15 @@ public class EditPostSettingsFragment extends Fragment
     private Post mPost;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
-    private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
+    private EditText mPasswordEditText, mExcerptEditText;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private ViewGroup mRootView;
     private TextView mFeaturedImageLabel;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
-    private SuggestionAutoCompleteText mTags;
+    private SuggestionAutoCompleteText mTagsEditText;
 
-    private TagSuggestionAdapter mTagSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private int mFeaturedImageId;
@@ -170,7 +169,6 @@ public class EditPostSettingsFragment extends Fragment
 
             }
         });
-        mTagsEditText = (EditText) mRootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) mRootView.findViewById(R.id.sectionCategories));
 
         mFeaturedImageLabel = (TextView) mRootView.findViewById(R.id.featuredImageLabel);
@@ -256,9 +254,9 @@ public class EditPostSettingsFragment extends Fragment
                     }
             );
 
-            mTags = (SuggestionAutoCompleteText) mRootView.findViewById(R.id.tags);
-            if (mTags != null) {
-                mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+            mTagsEditText = (SuggestionAutoCompleteText) mRootView.findViewById(R.id.tags);
+            if (mTagsEditText != null) {
+                mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
                 setupSuggestionServiceAndAdapter();
             }
@@ -300,9 +298,9 @@ public class EditPostSettingsFragment extends Fragment
         remoteBlogId = StringUtils.stringToInt(blogID, -1);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
-        if (mTagSuggestionAdapter != null) {
-            mTags.setAdapter(mTagSuggestionAdapter);
+        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
+        if (tagSuggestionAdapter != null) {
+            mTagsEditText.setAdapter(tagSuggestionAdapter);
         }
     }
 
