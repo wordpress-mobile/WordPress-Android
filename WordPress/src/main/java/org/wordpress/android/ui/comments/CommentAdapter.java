@@ -432,8 +432,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 comment.getAvatarForDisplay(mAvatarSz);
                 comment.getFormattedTitle();
 
-                //load images embedded within comments
                 String content = StringUtils.notNullStr(comment.getCommentText());
+                //to load images embedded within comments, pass an ImageGetter to WPHtml.fromHtml()
                 Spanned spanned = WPHtml.fromHtml(content, null, null, mContext, null, 0);
                 comment.setUnescapedCommentWithDrawables(spanned);
             }
