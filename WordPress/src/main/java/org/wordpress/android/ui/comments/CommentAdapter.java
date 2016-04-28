@@ -425,7 +425,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return false;
             }
 
-            final int maxImageWidth = ImageUtils.getMaximumImageWidthForComment(mContext);
+            final int maxImageWidth = (int) mContext.getResources().getDimension(R.dimen.reader_comment_embedded_image_max_size); //ImageUtils.getMaximumImageWidthForComment(mContext);
+
             WPHtml.ImageGetter imgGetter = new WPHtml.ImageGetter() {
                 @Override
                 public Drawable getDrawable(String source) {
