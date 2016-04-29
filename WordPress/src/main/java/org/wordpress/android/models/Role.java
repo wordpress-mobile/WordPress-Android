@@ -1,17 +1,16 @@
 package org.wordpress.android.models;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.R;
 
 public enum Role {
-    SUPER_ADMIN(R.string.role_super_admin, R.color.orange_fire),
-    ADMIN(R.string.role_admin, R.color.grey_dark),
-    EDITOR(R.string.role_editor, R.color.blue_dark),
-    AUTHOR(R.string.role_author, R.color.blue_wordpress),
-    CONTRIBUTOR(R.string.role_contributor, R.color.blue_wordpress),
-    UNSUPPORTED(R.string.role_unsupported, R.color.blue_wordpress);
+    SUPER_ADMIN(R.string.role_super_admin),
+    ADMIN(R.string.role_admin),
+    EDITOR(R.string.role_editor),
+    AUTHOR(R.string.role_author),
+    CONTRIBUTOR(R.string.role_contributor),
+    UNSUPPORTED(R.string.role_unsupported);
 
     private static String KEY_SUPER_ADMIN = "super_administrator";
     private static String KEY_ADMIN = "administrator";
@@ -20,11 +19,9 @@ public enum Role {
     private static String KEY_CONTRIBUTOR = "contributor";
 
     private final int label;
-    private final int backgroundColor;
 
-    Role(int label, int backgroundColor) {
+    Role(int label) {
         this.label = label;
-        this.backgroundColor = backgroundColor;
     }
 
     // Label to be used in UI
@@ -67,9 +64,5 @@ public enum Role {
         if (value.equals(KEY_CONTRIBUTOR))
             return Role.CONTRIBUTOR;
         return Role.UNSUPPORTED;
-    }
-
-    public static int backgroundColor(Context context, Role role) {
-        return ContextCompat.getColor(context, role.backgroundColor);
     }
 }
