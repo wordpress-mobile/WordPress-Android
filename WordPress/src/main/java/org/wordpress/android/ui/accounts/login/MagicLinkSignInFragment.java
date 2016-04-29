@@ -167,6 +167,11 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     @Override
+    protected boolean isGooglePlayServicesAvailable() {
+        return false;
+    }
+
+    @Override
     protected void showSelfHostedSignInForm() {
         super.showSelfHostedSignInForm();
         showPasswordField();

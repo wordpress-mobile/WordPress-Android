@@ -296,7 +296,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         });
     }
 
-    private boolean isGooglePlayServicesAvailable() {
+    protected boolean isGooglePlayServicesAvailable() {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS;
     }
 
