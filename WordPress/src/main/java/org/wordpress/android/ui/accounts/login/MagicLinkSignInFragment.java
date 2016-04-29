@@ -125,6 +125,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
             super.signIn();
         } else {
             if (isUsernameEmail()) {
+                startProgress(getActivity().getString(R.string.checking_email));
                 requestWPComEmailCheck();
             } else {
                 showPasswordFieldAndFocus();
@@ -183,6 +184,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     private void showPasswordFieldAndFocus() {
+        endProgress();
         showPasswordField();
         mPasswordEditText.requestFocus();
         mSignInButton.setText(getString(R.string.sign_in));
