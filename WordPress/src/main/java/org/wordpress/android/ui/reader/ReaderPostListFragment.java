@@ -1266,6 +1266,7 @@ public class ReaderPostListFragment extends Fragment
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+            tagList.addAll(ReaderTagTable.getCustomListTags());
             tagList.addAll(ReaderTagTable.getFollowedTags());
             return tagList;
         }
