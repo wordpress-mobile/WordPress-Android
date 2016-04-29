@@ -152,6 +152,7 @@ public class ReaderUpdateService extends Service {
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
+                localTopics.addAll(ReaderTagTable.getCustomListTags());
 
                 if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
