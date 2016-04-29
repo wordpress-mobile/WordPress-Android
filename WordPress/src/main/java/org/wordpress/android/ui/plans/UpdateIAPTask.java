@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
     private static final int GET_IAP_BINDER_TIMEOUT = 30000;
-    private static final String IAP_ENDPOINT = "/iap/refresh";
+    private static final String IAP_ENDPOINT = "/iap/validate";
     protected Context mContext;
     private IabHelper mIabHelper;
 
@@ -95,9 +95,6 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
                     params.put("blog_id", developerPayload.getString("blog_id"));
                     params.put("iap_sku", purchase.getSku());
                     params.put("iap_token", purchase.getToken());
-                    params.put("iap_package_name", purchase.getPackageName());
-                    params.put("client_id", BuildConfig.OAUTH_APP_ID);
-                    params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
                     WordPress.getRestClientUtilsV1_1().post(IAP_ENDPOINT, params, null,
                             new RestRequest.Listener() {
                                 @Override
