@@ -617,6 +617,8 @@ public class ReaderPostListFragment extends Fragment
                 }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
+            } else if (getCurrentTag().tagType == ReaderTagType.CUSTOM_LIST) {
+                titleResId = R.string.reader_empty_posts_in_custom_list;
             } else {
                 titleResId = R.string.reader_empty_posts_in_tag;
             }
