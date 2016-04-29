@@ -70,7 +70,9 @@ public class MagicLinkSignInFragment extends SignInFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        configureMagicLinkUI();
+        if (savedInstanceState == null) {
+            configureMagicLinkUI();
+        }
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
