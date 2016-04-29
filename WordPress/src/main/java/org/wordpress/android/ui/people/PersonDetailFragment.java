@@ -2,11 +2,15 @@ package org.wordpress.android.ui.people;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,8 +48,8 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     }
 
     /**
-     *  Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
-     *  changes, this method is used instead of FragmentTransaction for the animation.
+     * Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
+     * changes, this method is used instead of FragmentTransaction for the animation.
      */
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
@@ -110,11 +114,11 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     private void setupRoleContainerForCapability() {
         Blog blog = WordPress.getBlog(mLocalTableBlogID);
         boolean canChangeRole = blog != null && blog.hasCapability(Capability.EDIT_USERS);
-        if (canChangeRole) {
+        if (!canChangeRole) {
             mRoleContainer.setOnClickListener(this);
         } else {
             // Remove the selectableItemBackground if the user can't be edited
-            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 mRoleContainer.setBackgroundDrawable(null);
             } else {
                 mRoleContainer.setBackground(null);
@@ -124,6 +128,22 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        //TODO: change user role
+        Context context = getActivity();
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
+        builderSingle.setTitle("Role");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
+                android.R.layout.simple_list_item_1, Role.getRoles(context));
+
+        builderSingle.setNegativeButton(R.string.cancel, null);
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //String strName = arrayAdapter.getItem(which);
+            }
+        });
+        builderSingle.show();
     }
 }

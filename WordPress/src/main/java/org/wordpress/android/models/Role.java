@@ -65,4 +65,13 @@ public enum Role {
             return Role.CONTRIBUTOR;
         return Role.UNSUPPORTED;
     }
+
+    public static String[] getRoles(Context context) {
+        return new String[] {
+                Role.getLabel(context, Role.ADMIN),
+                Role.getLabel(context, Role.EDITOR),
+                Role.getLabel(context, Role.AUTHOR),
+                Role.getLabel(context, Role.CONTRIBUTOR),
+        };
+    }
 }
