@@ -81,9 +81,6 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -180,14 +177,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private Post mPost;
     private Post mOriginalPost;
-    private TagSuggestionAdapter mTagSuggestionAdapter;
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
-    private int remoteBlogId;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
-    private SuggestionAutoCompleteText mTags;
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
@@ -314,13 +307,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    savePostAsync();
-                    if (mEditPostPreviewFragment != null) {
-                        mEditPostPreviewFragment.loadPost();
-                    }
+                    savePostAsync(new AfterSavePostListener() {
+                        @Override
+                        public void onPostSave() {
+                            if (mEditPostPreviewFragment != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (mEditPostPreviewFragment != null) {
+                                            mEditPostPreviewFragment.loadPost();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             }
         });
+
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
     }
 
@@ -376,20 +381,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
-
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
+        super.onDestroy();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saves both post objects so we can restore them in onCreate()
-        savePostAsync();
+        savePostAsync(null);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
@@ -406,27 +406,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
-        }
-
-        mTags = (SuggestionAutoCompleteText) findViewById(R.id.tags);
-        if (mTags != null) {
-            mTags.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
-
-            remoteBlogId = -1;
-            String blogID = WordPress.getCurrentRemoteBlogId();
-            if (blogID != null) {
-                try {
-                    remoteBlogId = Integer.parseInt(blogID);
-                } catch (NumberFormatException e) {
-                    AppLog.e(T.EDITOR, "The remote blog ID can't be parsed as Integer: " + remoteBlogId);
-                }
-            }
-
-            mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteBlogId);
-            mTagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, this, mSuggestionServiceConnectionManager);
-            if (mTagSuggestionAdapter != null) {
-                mTags.setAdapter(mTagSuggestionAdapter);
-            }
         }
 
         return true;
@@ -808,14 +787,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void savePostAsync() {
+    private void savePostAsync(final AfterSavePostListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 updatePostObject(false);
                 savePostToDb();
+                if (listener != null) {
+                    listener.onPostSave();
+                }
             }
         }).start();
+    }
+
+    private interface AfterSavePostListener {
+        void onPostSave();
     }
 
     private synchronized void savePostToDb() {
