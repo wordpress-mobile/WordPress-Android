@@ -3,8 +3,8 @@ package org.wordpress.android.models;
 public enum ReaderTagType {
     FOLLOWED,
     DEFAULT,
-    CUSTOM_LIST,
-    RECOMMENDED;
+    RECOMMENDED,
+    CUSTOM_LIST;
 
     private static final int INT_DEFAULT     = 0;
     private static final int INT_FOLLOWED    = 1;
