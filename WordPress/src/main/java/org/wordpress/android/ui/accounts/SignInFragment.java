@@ -331,7 +331,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     public void smartLockAutoFill() {
-        if (!isSmartLockAvailable()) {
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
