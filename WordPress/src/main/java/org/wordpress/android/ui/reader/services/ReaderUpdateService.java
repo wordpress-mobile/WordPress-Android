@@ -183,7 +183,7 @@ public class ReaderUpdateService extends Service {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType tagType) {
         ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject == null) {
@@ -208,7 +208,13 @@ public class ReaderUpdateService extends Service {
                     tagSlug = tagTitle;
                 }
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, topicType));
+                // if the endpoint contains `read/list` then this is a custom list - these are
+                // included in the response as default tags
+                if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
+                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, ReaderTagType.LIST));
+                } else {
+                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, tagType));
+                }
             }
         }
 
