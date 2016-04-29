@@ -211,7 +211,7 @@ public class ReaderUpdateService extends Service {
                 // if the endpoint contains `read/list` then this is a custom list - these are
                 // included in the response as default tags
                 if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
-                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, ReaderTagType.LIST));
+                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, ReaderTagType.CUSTOM_LIST));
                 } else {
                     topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, tagType));
                 }
