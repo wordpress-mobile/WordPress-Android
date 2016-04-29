@@ -7,17 +7,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PersonDetailFragment extends Fragment {
+public class PersonDetailFragment extends Fragment implements View.OnClickListener {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
@@ -27,6 +31,7 @@ public class PersonDetailFragment extends Fragment {
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
+    private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
@@ -61,6 +66,7 @@ public class PersonDetailFragment extends Fragment {
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
+        mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
 
         return rootView;
@@ -85,6 +91,8 @@ public class PersonDetailFragment extends Fragment {
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
+
+            setupRoleContainerForCapability();
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -95,5 +103,27 @@ public class PersonDetailFragment extends Fragment {
         mPersonID = personID;
         mLocalTableBlogID = localTableBlogID;
         refreshPersonDetails();
+    }
+
+    // Checks current user's capabilities to decide whether she can change the role or not
+    @SuppressWarnings("deprecation")
+    private void setupRoleContainerForCapability() {
+        Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        boolean canChangeRole = blog != null && blog.hasCapability(Capability.EDIT_USERS);
+        if (canChangeRole) {
+            mRoleContainer.setOnClickListener(this);
+        } else {
+            // Remove the selectableItemBackground if the user can't be edited
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                mRoleContainer.setBackgroundDrawable(null);
+            } else {
+                mRoleContainer.setBackground(null);
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        //TODO: change user role
     }
 }
