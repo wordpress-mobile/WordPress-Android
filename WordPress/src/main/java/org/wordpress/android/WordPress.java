@@ -82,6 +82,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
@@ -698,8 +700,11 @@ public class WordPress extends Application {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean mIsInBackground = true;
         boolean mFirstActivityResumed = true;
+        private Timer mActivityTransitionTimer;
+        private TimerTask mActivityTransitionTimerTask;
+        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+        boolean mIsInBackground = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -713,25 +718,6 @@ public class WordPress extends Application {
 
         @Override
         public void onTrimMemory(final int level) {
-            if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
-                // We're in the Background
-                mIsInBackground = true;
-                String lastActivityString = AppPrefs.getLastActivityStr();
-                ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put("last_visible_screen", lastActivity.toString());
-                if (mApplicationOpenedDate != null) {
-                    Date now = new Date();
-                    properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
-                    mApplicationOpenedDate = null;
-                }
-                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
-                AnalyticsTracker.endSession(false);
-                onAppGoesToBackground();
-            } else {
-                mIsInBackground = false;
-            }
-
             boolean evictBitmaps = false;
             switch (level) {
                 case TRIM_MEMORY_COMPLETE:
@@ -776,9 +762,42 @@ public class WordPress extends Application {
             }
         }
 
-        public void onAppGoesToBackground() {
-            AppLog.i(T.UTILS, "App goes to background");
-            ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+        private void startActivityTransitionTimer() {
+            this.mActivityTransitionTimer = new Timer();
+            this.mActivityTransitionTimerTask = new TimerTask() {
+                public void run() {
+                    AppLog.i(T.UTILS, "App goes to background");
+                    // We're in the Background
+                    mIsInBackground = true;
+                    String lastActivityString = AppPrefs.getLastActivityStr();
+                    ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put("last_visible_screen", lastActivity.toString());
+                    if (mApplicationOpenedDate != null) {
+                        Date now = new Date();
+                        properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
+                        mApplicationOpenedDate = null;
+                    }
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
+                    AnalyticsTracker.endSession(false);
+                    ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+                }
+            };
+
+            this.mActivityTransitionTimer.schedule(mActivityTransitionTimerTask,
+                    MAX_ACTIVITY_TRANSITION_TIME_MS);
+        }
+
+        private void stopActivityTransitionTimer() {
+            if (this.mActivityTransitionTimerTask != null) {
+                this.mActivityTransitionTimerTask.cancel();
+            }
+
+            if (this.mActivityTransitionTimer != null) {
+                this.mActivityTransitionTimer.cancel();
+            }
+
+            mIsInBackground = false;
         }
 
         /**
@@ -786,7 +805,7 @@ public class WordPress extends Application {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        public void onAppComesFromBackground() {
+        private void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
@@ -811,6 +830,8 @@ public class WordPress extends Application {
                 // was in background before
                 onAppComesFromBackground();
             }
+            stopActivityTransitionTimer();
+
             mIsInBackground = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
@@ -829,6 +850,7 @@ public class WordPress extends Application {
         @Override
         public void onActivityPaused(Activity arg0) {
             mLastPingDate = new Date();
+            startActivityTransitionTimer();
         }
 
         @Override
