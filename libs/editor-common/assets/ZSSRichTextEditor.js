@@ -411,29 +411,39 @@ ZSSEditor.getSelectedText = function() {
 };
 
 ZSSEditor.canExpandBackward = function(range) {
-  var caretRange = range.cloneRange();
-  if (range.startOffset == 0) {
-  	return false;
-  }
-  caretRange.setStart(range.startContainer, range.startOffset - 1);
-  caretRange.setEnd(range.startContainer, range.startOffset);
-  if (!caretRange.toString().match(/\w/)) {
-  	return false;
-  }
-  return true;
+    // Can't expand if focus is not a text node
+    if (!range.endContainer.nodeType == 3) {
+        return false;
+    }
+    var caretRange = range.cloneRange();
+    if (range.startOffset == 0) {
+    return false;
+    }
+    caretRange.setStart(range.startContainer, range.startOffset - 1);
+    caretRange.setEnd(range.startContainer, range.startOffset);
+    if (!caretRange.toString().match(/\w/)) {
+    return false;
+    }
+    return true;
 };
 
 ZSSEditor.canExpandForward = function(range) {
-  var caretRange = range.cloneRange();
-  if (range.endOffset == range.endContainer.length)  {
-  	return false;
-  }
-  caretRange.setStart(range.endContainer, range.endOffset);
-  caretRange.setEnd(range.endContainer, range.endOffset + 1);
-  if (!caretRange.toString().match(/\w/)) {
-  	return false;
-  }
-  return true;
+    // Can't expand if focus is not a text node
+    if (!range.endContainer.nodeType == 3) {
+        return false;
+    }
+    var caretRange = range.cloneRange();
+    if (range.endOffset == range.endContainer.length)  {
+    return false;
+    }
+    caretRange.setStart(range.endContainer, range.endOffset);
+    if (range.endOffset )
+    caretRange.setEnd(range.endContainer, range.endOffset + 1);
+    var strin = caretRange.toString();
+    if (!caretRange.toString().match(/\w/)) {
+    return false;
+    }
+    return true;
 };
 
 ZSSEditor.getSelectedTextToLinkify = function() {
@@ -818,12 +828,25 @@ ZSSEditor.insertHTMLWrappedInParagraphTags = function(html) {
     this.insertHTML(paragraphOpenTag + space + paragraphCloseTag);
 };
 
-// Needs addClass method
-
 ZSSEditor.insertLink = function(url, title) {
     var html = '<a href="' + url + '">' + title + "</a>";
 
-    if (this.getFocusedField().getHTML().length == 0) {
+    var parentBlockQuoteNode = ZSSEditor.closerParentNodeWithName('blockquote');
+
+    var currentRange = document.getSelection().getRangeAt(0);
+    var currentNode = currentRange.startContainer;
+    var currentNodeIsEmpty = (currentNode.innerHTML == '' || currentNode.innerHTML == '<br>');
+
+    var selectionIsAtStartOrEnd = Util.rangeIsAtStartOfParent(currentRange) || Util.rangeIsAtEndOfParent(currentRange);
+
+    if (this.getFocusedField().getHTML().length == 0
+        || (parentBlockQuoteNode && !currentNodeIsEmpty && selectionIsAtStartOrEnd)) {
+        // Wrap the link tag in paragraph tags when the post is empty, and also when inside a blockquote
+        // The latter is to fix a bug with document.execCommand('insertHTML') inside a blockquote, where the div inside
+        // the blockquote is ignored and the link tag is inserted outside it, on a new line with no wrapping div
+        // Wrapping the link in paragraph tags makes insertHTML join it to the existing div, for some reason
+        // We exclude being on an empty line inside a blockquote and when the selection isn't at the beginning or end
+        // of the line, as the fix is unnecessary in both those cases and causes paragraph formatting issues
         html = Util.buildOpeningTag(this.defaultParagraphSeparator) + html;
     }
 
@@ -1037,13 +1060,13 @@ ZSSEditor.setProgressOnMedia = function(mediaNodeIdentifier, progress) {
     var mediaNode = this.getMediaNodeWithIdentifier(mediaNodeIdentifier);
     var mediaProgressNode = this.getMediaProgressNodeWithIdentifier(mediaNodeIdentifier);
 
+    if (progress == 0) {
+        mediaNode.addClass("uploading");
+    }
+
     // Don't allow the progress bar to move backward
     if (mediaNode.length == 0 || mediaProgressNode.length == 0 || mediaProgressNode.attr("value") > progress) {
         return;
-    }
-
-    if (progress == 0) {
-        mediaNode.addClass("uploading");
     }
 
     // Revert to non-compatibility image container once image upload has begun. This centers the overlays on the image
@@ -2579,7 +2602,7 @@ ZSSEditor.previousNode = function(node) {
         return node;
     }
     var parent = node.parentNode;
-    if (parent && parent.nodeType.hasChildNodes()) {
+    if (parent && parent.hasChildNodes()) {
         return parent;
     }
     return null;
@@ -2606,8 +2629,24 @@ ZSSEditor.completeListEditing = function() {
             if (node.nodeType == 1 &&
                     (node.tagName.toUpperCase() == NodeName.UL
                         || node.tagName.toUpperCase() == NodeName.OL)) {
-                // Make a new P node as a sibling to the parent node
-                document.execCommand('insertParagraph', false);
+
+                var focusedNode = document.getSelection().getRangeAt(0).startContainer;
+
+                if (focusedNode.nodeType == 3) {
+                    // If the focused node is a text node, the list item was not empty when toggled off
+                    // Wrap the text in a div and attach it as a sibling to the div wrapping the list
+                    var parentParagraph = focusedNode.parentNode;
+                    var paragraph = document.createElement('div');
+
+                    paragraph.appendChild(focusedNode);
+                    parentParagraph.insertAdjacentElement('afterEnd', paragraph);
+
+                    ZSSEditor.giveFocusToElement(paragraph, 1);
+                } else {
+                    // Attach a new paragraph node as a sibling to the parent node
+                    document.execCommand('insertParagraph', false);
+                }
+
                 // Remove any superfluous <br> tags that are created
                 ZSSEditor.scrubBRFromNode(node.parentNode);
                 break;
