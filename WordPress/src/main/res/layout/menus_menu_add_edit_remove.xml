@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/content_margin"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/menu_title_inactive_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/menu_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                tools:text="Title" />
+
+            <ImageButton
+                android:id="@+id/menu_title_edit_btn"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_menus_edit"
+                android:backgroundTint="@color/blue_wordpress"
+                android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPEditText
+            android:id="@+id/menu_title_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Title"
+            visi/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/menu_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_menus_trash"
+            android:backgroundTint="@color/blue_wordpress" />
+
+        <Button
+            android:id="@+id/menu_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:layout_gravity="center_vertical"
+            style="@style/Calypso.BlueButton"
+            />
+    </LinearLayout>
+
+</LinearLayout>
