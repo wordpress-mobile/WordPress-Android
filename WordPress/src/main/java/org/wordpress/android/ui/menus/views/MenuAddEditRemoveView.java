@@ -86,6 +86,16 @@ public class MenuAddEditRemoveView extends LinearLayout {
             }
         });
 
+        mMenuEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (v.getId() == R.id.menu_title_edit && !hasFocus) {
+                    //the edit text lost the focus, so we need to bring the inactive view to the front again
+                    setActive(false);
+                }
+            }
+        });
+
         mMenuRemove.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
