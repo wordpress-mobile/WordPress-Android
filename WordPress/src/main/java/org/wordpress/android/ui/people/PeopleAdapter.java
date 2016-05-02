@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -77,8 +76,7 @@ public class PeopleAdapter extends BaseAdapter {
             holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtDisplayName.setText(person.getDisplayName());
             holder.txtUsername.setText(String.format("@%s", person.getUsername()));
-            holder.txtRole.setText(Role.getLabel(mContext, person.getRole()));
-            holder.txtRole.setBackgroundColor(Role.backgroundColor(mContext, person.getRole()));
+            holder.txtRole.setText(person.getRole());
         }
 
         return convertView;

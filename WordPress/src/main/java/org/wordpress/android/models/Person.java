@@ -15,7 +15,7 @@ public class Person {
     private String lastName;
     private String displayName;
     private String avatarUrl;
-    private Role role;
+    private String role;
 
     public Person(long personID,
                   int localTableBlogId,
@@ -24,7 +24,7 @@ public class Person {
                   String lastName,
                   String displayName,
                   String avatarUrl,
-                  Role role) {
+                  String role) {
         this.personID = personID;
         this.localTableBlogId = localTableBlogId;
         this.username = username;
@@ -50,7 +50,7 @@ public class Person {
             String displayName = json.optString("nice_name");
             String avatarUrl = json.optString("avatar_URL");
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
-            Role role = Role.fromKey(json.optJSONArray("roles").optString(0));
+            String role = json.optJSONArray("roles").optString(0);
 
             return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
         } catch (JSONException e) {
@@ -102,11 +102,11 @@ public class Person {
         this.displayName = displayName;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
