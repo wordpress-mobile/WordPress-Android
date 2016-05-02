@@ -47,7 +47,7 @@ public class MenusFragment extends Fragment {
                     }
                 };
 
-                Snackbar snackbar = Snackbar.make(getView(), "About to remove this menu", Snackbar.LENGTH_LONG)
+                Snackbar snackbar = Snackbar.make(getView(), getString(R.string.menus_menu_deleted), Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo, undoListener);
 
                 // wait for the undo snackbar to disappear before actually deleting the post

@@ -1422,4 +1422,7 @@
     <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
     <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
+
+    <!-- Calypso menus -->
+    <string name="menus_menu_deleted">Menu deleted</string>
 </resources>
