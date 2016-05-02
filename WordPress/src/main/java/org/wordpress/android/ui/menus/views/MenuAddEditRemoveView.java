@@ -188,11 +188,16 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 mMenuSave.setEnabled(false);
             }
 
-            if (isDefault){
-                mMenuRemove.setVisibility(View.GONE);
-            } else {
-                mMenuRemove.setVisibility(View.VISIBLE);
-            }
+        } else {
+            mMenuEditText.setText(null);
+            mMenuInactiveTitleText.setText(null);
+            mMenuSave.setEnabled(false);
+        }
+
+        if (isDefault){
+            mMenuRemove.setVisibility(View.GONE);
+        } else {
+            mMenuRemove.setVisibility(View.VISIBLE);
         }
     }
 
