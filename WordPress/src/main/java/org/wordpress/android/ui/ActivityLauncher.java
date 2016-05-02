@@ -97,8 +97,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogMenus(Context context) {
         Intent intent = new Intent(context, MenusActivity.class);
         slideInFromRight(context, intent);
-        // TODO
-//        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MENUS);
     }
 
     public static void viewCurrentBlogPages(Context context) {

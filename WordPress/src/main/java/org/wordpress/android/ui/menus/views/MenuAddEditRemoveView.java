@@ -32,9 +32,9 @@ public class MenuAddEditRemoveView extends LinearLayout {
     private  MenuAddEditRemoveActionListener mActionListener;
 
     public interface MenuAddEditRemoveActionListener {
-        void onMenuCreated(MenuModel menu);
-        void onMenuDeleted(MenuModel menu);
-        void onMenuUpdated(MenuModel menu);
+        void onMenuCreate(MenuModel menu);
+        void onMenuDelete(MenuModel menu);
+        void onMenuUpdate(MenuModel menu);
     }
 
     public MenuAddEditRemoveView(Context context){
@@ -100,7 +100,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mActionListener != null){
-                    mActionListener.onMenuDeleted(mCurrentMenu);
+                    mActionListener.onMenuDelete(mCurrentMenu);
                 }
             }
         });
@@ -112,9 +112,9 @@ public class MenuAddEditRemoveView extends LinearLayout {
                     if (mCurrentMenu == null){
                         MenuModel menu = new MenuModel();
                         menu.name = mMenuEditText.getText().toString();
-                        mActionListener.onMenuCreated(menu);
+                        mActionListener.onMenuCreate(menu);
                     } else {
-                        mActionListener.onMenuUpdated(mCurrentMenu);
+                        mActionListener.onMenuUpdate(mCurrentMenu);
                     }
                 }
             }
