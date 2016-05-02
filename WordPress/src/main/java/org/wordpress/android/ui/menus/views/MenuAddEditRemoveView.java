@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.menus.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -163,13 +165,33 @@ public class MenuAddEditRemoveView extends LinearLayout {
         this.mIsActive = active;
 
         if (active) {
-            mMenuInactiveStateView.setVisibility(View.GONE);
-            mMenuEditText.setVisibility(View.VISIBLE);
-            mMenuEditText.selectAll();
-            mMenuEditText.requestFocus();
+            mMenuInactiveStateView.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mMenuInactiveStateView.setVisibility(View.GONE);
+                            mMenuEditText.setAlpha(1.0f);
+                            mMenuEditText.setVisibility(View.VISIBLE);
+                            mMenuEditText.selectAll();
+                            mMenuEditText.requestFocus();
+                        }
+                    });
         } else {
-            mMenuInactiveStateView.setVisibility(View.VISIBLE);
-            mMenuEditText.setVisibility(View.GONE);
+            mMenuEditText.animate()
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mMenuInactiveStateView.setVisibility(View.VISIBLE);
+                            mMenuInactiveStateView.setAlpha(1.0f);
+                            mMenuEditText.setVisibility(View.GONE);
+                        }
+                    });
         }
     }
 
@@ -182,7 +204,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
         if (menu != null){
             mMenuEditText.setText(menu.name);
             mMenuInactiveTitleText.setText(menu.name);
-            
+
             //save button is enabled only if a menu name is present
             if (!TextUtils.isEmpty(menu.name)) {
                 mMenuSave.setEnabled(true);
