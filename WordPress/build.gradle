@@ -13,6 +13,7 @@ repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'http://dl.bintray.com/optimizely/optimizely' }
 }
 
 apply plugin: 'com.android.application'
@@ -73,6 +74,10 @@ android {
 dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
+    }
+
+    compile('com.optimizely:optimizely:+@aar') {
+        transitive = true
     }
 
     // Provided by maven central
