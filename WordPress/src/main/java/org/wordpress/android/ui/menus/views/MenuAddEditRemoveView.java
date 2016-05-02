@@ -27,7 +27,6 @@ public class MenuAddEditRemoveView extends LinearLayout {
     private boolean mIsActive;
 
     private MenuModel mCurrentMenu;
-    private boolean mNewMenu;
 
     private  MenuAddEditRemoveActionListener mActionListener;
 
@@ -122,8 +121,9 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 if (mActionListener != null){
                     if (mCurrentMenu != null) {
                         mActionListener.onMenuDelete(mCurrentMenu);
+                        setMenu(null, false);
                     } else {
-                        // in case this is a new menu (i.e. not really editting) we don't call the listener
+                        // in case this is a new menu (i.e. not really editing) we don't call the listener
                         // - we just clear the text and set inactive
                         mMenuInactiveTitleText.setText(null);
                         mMenuEditText.setText(null);
