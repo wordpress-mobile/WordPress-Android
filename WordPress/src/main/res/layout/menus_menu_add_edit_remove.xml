@@ -56,13 +56,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/menu_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_menus_trash"
-                android:backgroundTint="@color/blue_wordpress" />
+                android:layout_margin="@dimen/content_margin"
+                android:drawableRight="@drawable/ic_action_trash"
+                android:drawableTint="@color/grey_darken_20"
+                android:padding="@dimen/content_margin"
+                android:background="@drawable/calypso_grey_button"/>
 
             <Button
                 android:id="@+id/menu_save"

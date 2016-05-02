@@ -7,9 +7,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuModel;
@@ -22,9 +20,9 @@ import org.wordpress.android.widgets.WPTextView;
  */
 public class MenuAddEditRemoveView extends LinearLayout {
     private LinearLayout mMenuInactiveStateView;
-    private TextView mMenuInactiveTitleText;
+    private WPTextView mMenuInactiveTitleText;
     private WPEditText mMenuEditText;
-    private ImageButton mMenuRemove;
+    private WPTextView mMenuRemove;
     private Button mMenuSave;
     private boolean mIsActive;
 
@@ -59,7 +57,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
         mMenuInactiveStateView = (LinearLayout) findViewById(R.id.menu_title_inactive_state);
         mMenuInactiveTitleText = (WPTextView) findViewById(R.id.menu_title_tv);
         mMenuEditText = (WPEditText) findViewById(R.id.menu_title_edit);
-        mMenuRemove = (ImageButton) findViewById(R.id.menu_remove);
+        mMenuRemove = (WPTextView) findViewById(R.id.menu_remove);
         mMenuSave = (Button) findViewById(R.id.menu_save);
 
         setupVisibilityBehavior();
