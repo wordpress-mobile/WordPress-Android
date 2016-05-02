@@ -16,13 +16,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.List;
 
 public class PeopleAdapter extends BaseAdapter {
-    private final Context mContext;
     private final LayoutInflater mInflater;
     private List<Person> mPeopleList;
     private int mAvatarSz;
 
     public PeopleAdapter(Context context, List<Person> peopleList) {
-        mContext = context;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mInflater = LayoutInflater.from(context);
         mPeopleList = peopleList;
