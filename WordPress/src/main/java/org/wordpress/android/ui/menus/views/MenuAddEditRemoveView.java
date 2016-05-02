@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.menus.views;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -96,11 +99,41 @@ public class MenuAddEditRemoveView extends LinearLayout {
             }
         });
 
+        mMenuEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0){
+                    mMenuSave.setEnabled(true);
+                } else {
+                    mMenuSave.setEnabled(false);
+                }
+            }
+        });
+
         mMenuRemove.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                setActive(false);
                 if (mActionListener != null){
-                    mActionListener.onMenuDelete(mCurrentMenu);
+                    if (mCurrentMenu != null) {
+                        mActionListener.onMenuDelete(mCurrentMenu);
+                    } else {
+                        // in case this is a new menu (i.e. not really editting) we don't call the listener
+                        // - we just clear the text and set inactive
+                        mMenuInactiveTitleText.setText(null);
+                        mMenuEditText.setText(null);
+                        setActive(false);
+                    }
                 }
             }
         });
@@ -108,13 +141,20 @@ public class MenuAddEditRemoveView extends LinearLayout {
         mMenuSave.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mActionListener != null){
-                    if (mCurrentMenu == null){
-                        MenuModel menu = new MenuModel();
-                        menu.name = mMenuEditText.getText().toString();
-                        mActionListener.onMenuCreate(menu);
-                    } else {
-                        mActionListener.onMenuUpdate(mCurrentMenu);
+                String menuTitle = mMenuEditText.getText().toString();
+                if (TextUtils.isEmpty(menuTitle)){
+                    // TODO show a snackbar indicating you need to enter a menu title in order to create a menu
+                } else {
+                    mMenuInactiveTitleText.setText(menuTitle);
+                    setActive(false);
+                    if (mActionListener != null){
+                        if (mCurrentMenu == null){
+                            MenuModel menu = new MenuModel();
+                            menu.name = menuTitle;
+                            mActionListener.onMenuCreate(menu);
+                        } else {
+                            mActionListener.onMenuUpdate(mCurrentMenu);
+                        }
                     }
                 }
             }

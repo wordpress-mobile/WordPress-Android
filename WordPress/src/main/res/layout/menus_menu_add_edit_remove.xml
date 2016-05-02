@@ -16,14 +16,14 @@
 
         <LinearLayout
             android:id="@+id/menu_title_inactive_state"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/menu_title_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 tools:text="Title" />
@@ -41,7 +41,7 @@
 
         <org.wordpress.android.widgets.WPEditText
             android:id="@+id/menu_title_edit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Title"
             />
