@@ -1428,4 +1428,5 @@
     <string name="check_your_email">Check your email</string>
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
+    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
 </resources>

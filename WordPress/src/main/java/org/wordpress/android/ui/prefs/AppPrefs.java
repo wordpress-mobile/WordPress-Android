@@ -326,10 +326,8 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        // TODO: When we allow users to test the visual editor, we should change this function by:
-        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
-        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE
+                || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
     }
 
     public static boolean isVisualEditorEnabled() {

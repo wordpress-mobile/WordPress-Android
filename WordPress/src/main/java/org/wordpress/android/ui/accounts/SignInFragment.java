@@ -41,6 +41,8 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.optimizely.Optimizely;
+import com.optimizely.Variable.LiveVariable;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -87,6 +89,7 @@ import java.util.regex.Pattern;
 public class SignInFragment extends AbstractFragment implements TextWatcher, ConnectionCallbacks,
         OnConnectionFailedListener {
     public static final String TAG = "sign_in_fragment_tag";
+    private static LiveVariable<Boolean> isNotOnWordPressComVariable = Optimizely.booleanForKey("isNotOnWordPressCom", false);
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -171,6 +174,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mCreateAccountButton = (WPTextView) rootView.findViewById(R.id.nux_create_account_button);
         mCreateAccountButton.setOnClickListener(mCreateAccountListener);
         mAddSelfHostedButton = (WPTextView) rootView.findViewById(R.id.nux_add_selfhosted_button);
+        setDotComAddSelfHostedButtonText();
         mAddSelfHostedButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,6 +246,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     }
 
+    private void setDotComAddSelfHostedButtonText() {
+        if (isNotOnWordPressComVariable.get()) {
+            mAddSelfHostedButton.setText(R.string.not_on_wordpress_com);
+        } else {
+            mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+        }
+    }
+
     /**
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
@@ -265,7 +277,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
 
     protected void showDotComSignInForm(){
         mUrlButtonLayout.setVisibility(View.GONE);
-        mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
+        setDotComAddSelfHostedButtonText();
     }
 
     protected void showSelfHostedSignInForm(){
@@ -331,7 +343,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     public void smartLockAutoFill() {
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null) {
+        // We don't want to autofill username and password fields if self hosted has been selected (pre-selected or
+        // user selected).
+        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || mSelfHosted) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
