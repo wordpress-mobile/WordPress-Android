@@ -28,6 +28,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +61,8 @@ public abstract class EditorWebViewAbstract extends WebView {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith("callback") && mJsCallbackReceiver != null) {
-                    String[] split = url.split(":", 2);
+                    String data = URLDecoder.decode(url);
+                    String[] split = data.split(":", 2);
                     String callbackId = split[0];
                     String params = (split.length > 1 ? split[1] : "");
                     mJsCallbackReceiver.executeCallback(callbackId, params);
