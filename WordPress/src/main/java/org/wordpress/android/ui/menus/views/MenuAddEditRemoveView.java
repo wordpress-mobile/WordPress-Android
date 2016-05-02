@@ -23,7 +23,6 @@ import org.wordpress.android.widgets.WPTextView;
 public class MenuAddEditRemoveView extends LinearLayout {
     private LinearLayout mMenuInactiveStateView;
     private TextView mMenuInactiveTitleText;
-    private ImageButton mMenuInactiveEditButton;
     private WPEditText mMenuEditText;
     private ImageButton mMenuRemove;
     private Button mMenuSave;
@@ -59,7 +58,6 @@ public class MenuAddEditRemoveView extends LinearLayout {
         inflate(context, R.layout.menus_menu_add_edit_remove, this);
         mMenuInactiveStateView = (LinearLayout) findViewById(R.id.menu_title_inactive_state);
         mMenuInactiveTitleText = (WPTextView) findViewById(R.id.menu_title_tv);
-        mMenuInactiveEditButton = (ImageButton) findViewById(R.id.menu_title_edit_btn);
         mMenuEditText = (WPEditText) findViewById(R.id.menu_title_edit);
         mMenuRemove = (ImageButton) findViewById(R.id.menu_remove);
         mMenuSave = (Button) findViewById(R.id.menu_save);
@@ -72,7 +70,6 @@ public class MenuAddEditRemoveView extends LinearLayout {
         super.setEnabled(enabled);
         mMenuInactiveStateView.setEnabled(enabled);
         mMenuInactiveTitleText.setEnabled(enabled);
-        mMenuInactiveEditButton.setEnabled(enabled);
         mMenuEditText.setEnabled(enabled);
         mMenuRemove.setEnabled(enabled);
         mMenuSave.setEnabled(enabled);
@@ -143,6 +140,8 @@ public class MenuAddEditRemoveView extends LinearLayout {
             public void onClick(View v) {
                 String menuTitle = mMenuEditText.getText().toString();
                 if (TextUtils.isEmpty(menuTitle)){
+                    // this place shouldn't be reached as emptiness is being checked in the onTextChangedListener,
+                    // but otherwise:
                     // TODO show a snackbar indicating you need to enter a menu title in order to create a menu
                 } else {
                     mMenuInactiveTitleText.setText(menuTitle);
@@ -183,6 +182,14 @@ public class MenuAddEditRemoveView extends LinearLayout {
         if (menu != null){
             mMenuEditText.setText(menu.name);
             mMenuInactiveTitleText.setText(menu.name);
+
+            //save button is enabled only if a menu name is present
+            if (!TextUtils.isEmpty(menu.name)) {
+                mMenuSave.setEnabled(true);
+            } else {
+                mMenuSave.setEnabled(false);
+            }
+
             if (isDefault){
                 mMenuRemove.setVisibility(View.GONE);
             } else {
