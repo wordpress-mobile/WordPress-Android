@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.google.gson.internal.StringMap;
-
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.io.BufferedReader;
@@ -108,20 +106,6 @@ public class TestUtils {
     public static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
-    }
-
-    public static HashMap<String, Object> stringMapToHashMap(StringMap<?> stringMap) {
-        HashMap<String, Object> res = new HashMap<String, Object>();
-        for (String key : stringMap.keySet()) {
-            Object value = stringMap.get(key);
-            if (StringMap.class.isInstance(value)) {
-                HashMap<String, Object> newValue = stringMapToHashMap((StringMap<?>) value);
-                res.put(key, newValue);
-            } else {
-                res.put(key, value);
-            }
-        }
-        return res;
     }
 
     public static Date gsonStringToJavaDate(final String strDate) {
