@@ -410,6 +410,11 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="MenuNameActiveText" parent="WordPress.NUXEditText">
+        <item name="android:background">@drawable/calypso_edit_text_selected</item>
+        <item name="android:layout_marginLeft">0dp</item>
+    </style>
+
     <style name="MenusDividerView" parent="GenericDividerView">
     </style>
 

@@ -106,7 +106,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0){
+                if (s.length() > 0) {
                     mMenuSave.setEnabled(true);
                 } else {
                     mMenuSave.setEnabled(false);
@@ -118,7 +118,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 setActive(false);
-                if (mActionListener != null){
+                if (mActionListener != null) {
                     if (mCurrentMenu != null) {
                         mActionListener.onMenuDelete(mCurrentMenu);
                         setMenu(null, false);
@@ -158,13 +158,15 @@ public class MenuAddEditRemoveView extends LinearLayout {
         });
     }
 
-    // called when the user clicks on
+    // called when the user clicks on the menu name control to start editing/entering the name
     public void setActive(boolean active){
         this.mIsActive = active;
 
         if (active) {
             mMenuInactiveStateView.setVisibility(View.GONE);
             mMenuEditText.setVisibility(View.VISIBLE);
+            mMenuEditText.selectAll();
+            mMenuEditText.requestFocus();
         } else {
             mMenuInactiveStateView.setVisibility(View.VISIBLE);
             mMenuEditText.setVisibility(View.GONE);
@@ -180,7 +182,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
         if (menu != null){
             mMenuEditText.setText(menu.name);
             mMenuInactiveTitleText.setText(menu.name);
-
+            
             //save button is enabled only if a menu name is present
             if (!TextUtils.isEmpty(menu.name)) {
                 mMenuSave.setEnabled(true);
@@ -199,6 +201,8 @@ public class MenuAddEditRemoveView extends LinearLayout {
         } else {
             mMenuRemove.setVisibility(View.VISIBLE);
         }
+
+        setActive(false);
     }
 
     public MenuModel getMenu() {
