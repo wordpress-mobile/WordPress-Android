@@ -397,7 +397,13 @@
         <item name="android:background">@color/me_divider</item>
     </style>
 
-
     <!-- Plans Styles -->
     <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />
+
+    <!-- Menu Add/remove styles -->
+    <style name="MenuNameInactiveText">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
 </resources>
