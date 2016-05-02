@@ -30,10 +30,10 @@
 
     <!-- self-defined permission prevents other apps to hijack PNs -->
     <permission
-        android:name="org.wordpress.android.permission.C2D_MESSAGE"
+        android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -106,13 +106,20 @@
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|screenSize"
+            android:label="@string/settings"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/account_settings"
+            android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.prefs.AppSettingsActivity"
             android:configChanges="locale|orientation|screenSize"
+            android:label="@string/me_btn_app_settings"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
@@ -177,6 +184,12 @@
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme" />
 
+        <!-- plans -->
+        <activity android:name=".ui.plans.PlansActivity"
+                  android:theme="@style/Calypso.NoActionBar"/>
+        <activity android:name=".ui.plans.PlanPostPurchaseActivity"
+                  android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Stats Activities -->
         <activity
             android:name=".ui.stats.StatsActivity"
@@ -220,7 +233,7 @@
             android:parentActivityName=".ui.themes.ThemeBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.wordpress.android.ui.themes.ThemeBrowserActivity" />
+                android:value=".ui.themes.ThemeBrowserActivity" />
         </activity>
 
         <!-- Deep Linking Activity -->
@@ -386,6 +399,10 @@
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
             android:label="Suggestion Service" />
+        <service
+            android:name=".ui.plans.PlanUpdateService"
+            android:exported="false"
+            android:label="Plans Update Service" />
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"
@@ -427,8 +444,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="org.wordpress.android" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -454,4 +470,6 @@
         </service>
     </application>
 
+    <!-- Smart Lock for Passwords -->
+    <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 </manifest>

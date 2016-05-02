@@ -77,7 +77,7 @@ public class AuthenticatorRequest {
     }
 
     public void sendWithAccessToken(String token){
-        mRequest.setAccessToken(token.toString());
+        mRequest.setAccessToken(token);
         mRestClient.send(mRequest);
     }
 

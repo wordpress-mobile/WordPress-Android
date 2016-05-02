@@ -33,6 +33,7 @@ import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,8 +199,17 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
-            public FilterCriteria[] onLoadFilterCriteriaOptions() {
-                return commentStatuses;
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
+                ArrayList<FilterCriteria> criterias = new ArrayList();
+                for (CommentStatus criteria : commentStatuses) {
+                    criterias.add(criteria);
+                }
+                return criterias;
+            }
+
+            @Override
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+                //noop
             }
 
             @Override
@@ -228,7 +238,18 @@ public class CommentsListFragment extends Fragment {
                     if (filter == null || CommentStatus.UNKNOWN.equals(filter)) {
                         return getString(R.string.comments_empty_list);
                     } else {
-                        return getString(R.string.comments_empty_list_filtered, mCommentStatusFilter.getLabel().toLowerCase());
+                        switch (mCommentStatusFilter) {
+                            case APPROVED:
+                                return getString(R.string.comments_empty_list_filtered_approved);
+                            case UNAPPROVED:
+                                return getString(R.string.comments_empty_list_filtered_pending);
+                            case SPAM:
+                                return getString(R.string.comments_empty_list_filtered_spam);
+                            case TRASH:
+                                return getString(R.string.comments_empty_list_filtered_trashed);
+                            default:
+                                return getString(R.string.comments_empty_list);
+                        }
                     }
 
                 } else {
@@ -251,7 +272,20 @@ public class CommentsListFragment extends Fragment {
                 }
 
             }
+
+            @Override
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
+                //noop
+            }
         });
+
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredCommentsView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredCommentsView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
 
         return view;
     }

@@ -90,7 +90,7 @@
                 android:background="@color/white"
                 android:clickable="true">
 
-                <org.wordpress.android.widgets.OpenSansEditText
+                <org.wordpress.android.widgets.WPEditText
                     android:id="@+id/nux_username"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -99,8 +99,7 @@
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/nux_password"
-                    android:maxLength="@integer/max_length_username"
-                    app:persistenceEnabled="true" />
+                    android:maxLength="@integer/max_length_username" />
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -122,7 +121,7 @@
                 android:background="@color/white"
                 android:clickable="true">
 
-                <org.wordpress.android.widgets.OpenSansEditText
+                <org.wordpress.android.widgets.WPEditText
                     android:id="@+id/nux_password"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -165,7 +164,7 @@
                 android:animateLayoutChanges="true"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.OpenSansEditText
+                <org.wordpress.android.widgets.WPEditText
                     android:id="@+id/nux_two_step"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -186,7 +185,7 @@
                 android:background="@color/white"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.OpenSansEditText
+                <org.wordpress.android.widgets.WPEditText
                     android:id="@+id/nux_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"

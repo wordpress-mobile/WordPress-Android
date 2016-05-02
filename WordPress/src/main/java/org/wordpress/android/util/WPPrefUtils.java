@@ -82,23 +82,23 @@ public class WPPrefUtils {
     }
 
     /**
-     * Font      : Open Sans
+     * Font      : Default
      * Style     : Normal
      * Variation : Normal
      */
     public static Typeface getNormalTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_OPEN_SANS, Typeface.NORMAL, TypefaceCache.VARIATION_NORMAL);
+                TypefaceCache.FAMILY_DEFAULT, Typeface.NORMAL);
     }
 
     /**
-     * Font      : Open Sans
+     * Font      : Default
      * Style     : Bold
      * Variation : Light
      */
     public static Typeface getSemiboldTypeface(Context context) {
         return TypefaceCache.getTypeface(context,
-                TypefaceCache.FAMILY_OPEN_SANS, Typeface.BOLD, TypefaceCache.VARIATION_LIGHT);
+                TypefaceCache.FAMILY_DEFAULT_LIGHT, Typeface.BOLD);
     }
 
     /**
@@ -192,6 +192,14 @@ public class WPPrefUtils {
     public static void layoutAsNumberPickerPeek(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, R.color.grey_dark, getNormalTypeface(view.getContext()));
+    }
+
+    /**
+     * Styles a {@link TextView} to display text in a dialog message.
+     */
+    public static void layoutAsDialogMessage(TextView view) {
+        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
+        setTextViewAttributes(view, size, R.color.grey_darken_10, getNormalTypeface(view.getContext()));
     }
 
     public static void setTextViewAttributes(TextView textView, int size, int colorRes, Typeface typeface) {

@@ -22,6 +22,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();
     public abstract boolean hasFailedMediaUploads();
+    public abstract void removeAllFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
 

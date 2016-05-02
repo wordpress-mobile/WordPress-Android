@@ -125,11 +125,9 @@
 	<string name="contact_us">Контактирај нè</string>
 	<string name="add_location">Додади локација</string>
 	<string name="current_location">Моментална локација</string>
-	<string name="your_signature">Ваш подпис:</string>
 	<string name="search_location">Пребарувај</string>
 	<string name="edit_location">Уреди</string>
 	<string name="search_current_location">Лоцирај</string>
-	<string name="preference_privacy">Приватност</string>
 	<string name="preference_send_usage_stats">Испрати статистика</string>
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
 	<string name="update_verb">Ажурирај</string>
@@ -182,9 +180,7 @@
 	<string name="blog_name_must_be_at_least_four_characters">Веб адресата мора да содржи барем 4 знака</string>
 	<string name="no_account">Не е пронајдена WordPress корисничка сметка, додади корисничка сметка и обиди се повторно</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Веб адреста треба да има помалку од 64 знака</string>
-	<string name="auto_sharing_preference_reset">Ресетирање на подесувањата за автоматско споделување</string>
 	<string name="blog_name_contains_invalid_characters">Веб адресата не треба да содржи знак  “_”</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Претходно избраниот блог повеќе не е видлив</string>
 	<string name="blog_name_cant_be_used">Вие не може да ја користите оваа веб адреса</string>
 	<string name="blog_name_exists">Оваа веб адреса веќе постои</string>
 	<string name="blog_name_reserved">Оваа веб адреса е резервирана</string>
@@ -212,7 +208,6 @@
 	<string name="blog_not_found">Настана грешка додека се достапувше блогот</string>
 	<string name="error_refresh_notifications">Известувањата неможат да се ажурират во моментот</string>
 	<string name="error_refresh_pages">Страниците неможат да се ажурират во моментот</string>
-	<string name="invalid_url_message">Проверете дали блог URL-то е воведно правилно</string>
 	<string name="error_refresh_posts">Напсите неможат да се ажурират во моментот</string>
 	<string name="blog_name_reserved_but_may_be_available">Ова адреса во моментот е резервирана, но можеби може да биде досптана по неколку денови</string>
 	<string name="gallery_error">Неможе да биде превземена медиата.</string>
@@ -333,9 +328,6 @@
 	<string name="video">Видео</string>
 	<string name="download">Преземање на медиа</string>
 	<string name="comment_spammed">Коментарот е означен како спам</string>
-	<string name="share_preference_title">Сподели до WordPress</string>
-	<string name="always_use_these_settings_to_share">Секогаш користи ги овие поднесувања</string>
-	<string name="reset_auto_share_preference">Ресетирање на подесувањата за автоматско споделување</string>
 	<string name="pick_photo">Избери фотографија</string>
 	<string name="validating_site_data">Валидирање на податоци за сајт</string>
 	<string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
@@ -391,8 +383,6 @@
 	<string name="media_gallery_type_tiled">Плочки</string>
 	<string name="media_gallery_type_circles">Кругови</string>
 	<string name="media_gallery_type_slideshow">Слајдшоу</string>
-	<string name="media_no_video_title">VideoPress не е достапен</string>
-	<string name="media_no_video_message">Преземи го ажурирањето за VideoPress за прикачување на видео!</string>
 	<string name="media_edit_title_text">Наслов</string>
 	<string name="media_edit_caption_text">Наслов</string>
 	<string name="media_edit_description_text">Опис</string>
@@ -402,7 +392,6 @@
 	<string name="media_edit_success">Ажурирано</string>
 	<string name="passcode_enter_old_passcode">Воведи го твојот стар ПИН</string>
 	<string name="stats_timeframe_weeks">Седмици</string>
-	<string name="menu_search">Пребарување</string>
 	<string name="passcode_manage">Управување со PIN заклучување</string>
 	<string name="passcode_enter_passcode">Внесете го вашиот PIN</string>
 	<string name="passcode_re_enter_passcode">Внесете го повторно вашиот PIN</string>
@@ -447,8 +436,6 @@
 	<string name="note_reply_successful">Одговори на објавено</string>
 	<string name="loading">Вчитување...</string>
 	<string name="httpuser">HTTP корисничко име</string>
-	<string name="post_signature">Потпис на написот</string>
-	<string name="add_tagline">Додади потпис на новите написи</string>
 	<string name="httppassword">HTTP лозинка</string>
 	<string name="error_media_upload">Настана грешка при качување на медиа</string>
 	<string name="publish_date">Објави</string>
@@ -472,14 +459,11 @@
 	<string name="blogusername">блогкорисник</string>
 	<string name="upload_scaled_image">Испрати и сврзи со намелана слика</string>
 	<string name="scaled_image">Ширина на прилагодена слика</string>
-	<string name="remove_location">Одстрани</string>
 	<string name="scheduled">Распоредени</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Објавено од WordPress за Android</string>
 	<string name="tos">Услови за користење</string>
 	<string name="version">Верзија</string>
 	<string name="app_title">WordPress за Андроид</string>
-	<string name="about">За нас</string>
 	<string name="image_alignment">Усогласување</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без наслов</string>
@@ -522,22 +506,4 @@
 	<string name="yes">Да</string>
 	<string name="no">Не</string>
 	<string name="preview">Преглед</string>
-	<string-array name="alignment_array">
-		<item>Никој</item>
-		<item>Лево</item>
-		<item>Центар</item>
-		<item>Десно</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Настрана</item>
-		<item>Аудио</item>
-		<item>Разговор</item>
-		<item>Галерија</item>
-		<item>Слика</item>
-		<item>Врска</item>
-		<item>Цитат</item>
-		<item>Стандардно</item>
-		<item>Статус</item>
-		<item>Видео</item>
-	</string-array>
 </resources>

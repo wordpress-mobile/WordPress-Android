@@ -16,12 +16,14 @@ public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {
 
     public PostUploadServiceTest() {
         super(PostUploadService.class);
-        FactoryUtils.initWithTestFactories();
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        FactoryUtils.initWithTestFactories();
+
         String namespace = BuildConfig.FLAVOR.equals("wasabi") ? "org.wordpress.android.beta"
                 : "org.wordpress.android";
         testContext = getContext().createPackageContext(namespace, Context.CONTEXT_IGNORE_SECURITY);
@@ -36,6 +38,12 @@ public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {
         XMLRPCFactoryTest.sMode = XMLRPCFactoryTest.Mode.CUSTOMIZABLE_XML;
         RestClientFactoryTest.sMode = RestClientFactoryTest.Mode.CUSTOMIZABLE;
         AppLog.v(AppLog.T.TESTS, "Modes set to customizable");
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        FactoryUtils.clearFactories();
+        super.tearDown();
     }
 
     public void testStartable() {

@@ -22,7 +22,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashMap;
@@ -124,7 +123,7 @@ public class ReaderActivityLauncher {
             return;
         }
         Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagName());
+        properties.put("tag", tag.getTagSlug());
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);

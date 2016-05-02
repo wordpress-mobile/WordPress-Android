@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blue_wordpress"
+                android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/divider"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/layout_nav"
+        android:background="#1078A4"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_nav"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_primary"
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/button_skip"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"/>
+
+        <LinearLayout
+            android:id="@+id/layout_indicator_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_indicator_1"
+                android:layout_width="@dimen/plan_indicator_size"
+                android:layout_height="@dimen/plan_indicator_size"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
+                android:background="@drawable/indicator_circle_selected"/>
+
+            <ImageView
+                android:id="@+id/image_indicator_2"
+                android:layout_width="@dimen/plan_indicator_size"
+                android:layout_height="@dimen/plan_indicator_size"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
+                android:background="@drawable/indicator_circle_unselected"/>
+
+            <ImageView
+                android:id="@+id/image_indicator_3"
+                android:layout_width="@dimen/plan_indicator_size"
+                android:layout_height="@dimen/plan_indicator_size"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
+                android:background="@drawable/indicator_circle_unselected"/>
+
+            <ImageView
+                android:id="@+id/image_indicator_4"
+                android:layout_width="@dimen/plan_indicator_size"
+                android:layout_height="@dimen/plan_indicator_size"
+                android:layout_marginLeft="@dimen/plan_indicator_margin"
+                android:layout_marginRight="@dimen/plan_indicator_margin"
+                android:background="@drawable/indicator_circle_unselected"/>
+
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/button_next"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

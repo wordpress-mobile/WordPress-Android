@@ -1,6 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
+	<string name="plans_post_purchase_button_themes">Browse Themes</string>
+	<string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
+	<string name="plans_post_purchase_button_video">Start new post</string>
+	<string name="plans_post_purchase_text_video">You can upload and host videos on your site with VideoPress and your expanded media storage.</string>
+	<string name="plans_post_purchase_title_video">Bring posts to life with video</string>
+	<string name="plans_post_purchase_button_customize">Customise my Site</string>
+	<string name="plans_post_purchase_text_customize">You now have access to custom fonts, custom colours, and custom CSS editing capabilities.</string>
+	<string name="plans_post_purchase_text_intro">Your site is doing somersaults in excitement! Now explore your site\'s new features and choose where you\'d like to begin.</string>
+	<string name="plans_post_purchase_title_customize">Customise Fonts &amp; Colours</string>
+	<string name="plan_purchase_now">Purchase Now</string>
+	<string name="plans_post_purchase_title_intro">It\'s all yours, way to go!</string>
+	<string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
+	<string name="plan">Plan</string>
+	<string name="plans">Plans</string>
+	<string name="plans_loading_error">Unable to load plans</string>
+	<string name="export_your_content">Export your content</string>
+	<string name="exporting_content_progress">Exporting content…</string>
+	<string name="export_email_sent">Export email sent!</string>
+	<string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
+	<string name="show_purchases">Show purchases</string>
+	<string name="checking_purchases">Checking purchases</string>
+	<string name="premium_upgrades_title">Premium Upgrades</string>
+	<string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
+	<string name="delete_site_progress">Deleting site…</string>
+	<string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
+	<string name="delete_site_hint">Delete your site</string>
+	<string name="export_site_hint">Export your site to an XML file</string>
+	<string name="are_you_sure">Are You Sure?</string>
+	<string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
+	<string name="keep_your_content">Keep Your Content</string>
+	<string name="domain_removal_hint">The domains that will not work once you remove your site</string>
+	<string name="domain_removal_summary">Be careful! Deleting your site will also remove your domain(s) listed below.</string>
+	<string name="primary_domain">Primary Domain</string>
+	<string name="domain_removal">Domain Removal</string>
+	<string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+	<string name="error_deleting_site">Error deleting site</string>
+	<string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
+	<string name="site_settings_export_content_title">Export content</string>
+	<string name="contact_support">Contact support</string>
+	<string name="confirm_delete_site">Confirm Delete Site</string>
+	<string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
+	<string name="site_settings_start_over_hint">Start your site over</string>
+	<string name="let_us_help">Let Us Help</string>
+	<string name="me_btn_account_settings">Account Settings</string>
+	<string name="me_btn_app_settings">App Settings</string>
+	<string name="start_over">Start Over</string>
+	<string name="editor_remove_failed_uploads">Remove failed uploads</string>
+	<string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state. Would you like to remove all failed media?</string>
+	<string name="comments_empty_list_filtered_trashed">No Trashed comments</string>
+	<string name="site_settings_advanced_header">Advanced</string>
+	<string name="comments_empty_list_filtered_pending">No Pending comments</string>
+	<string name="comments_empty_list_filtered_approved">No Approved comments</string>
+	<string name="button_done">Done</string>
+	<string name="button_skip">Skip</string>
+	<string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
+	<string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
+	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+	<string name="post_format_status">Status</string>
+	<string name="post_format_video">Video</string>
+	<string name="align_none">None</string>
+	<string name="align_left">Left</string>
+	<string name="align_center">Centre</string>
+	<string name="align_right">Right</string>
+	<string name="theme_free">Free</string>
+	<string name="theme_all">All</string>
+	<string name="theme_premium">Premium</string>
+	<string name="post_format_chat">Chat</string>
+	<string name="post_format_gallery">Gallery</string>
+	<string name="post_format_image">Image</string>
+	<string name="post_format_link">Link</string>
+	<string name="post_format_quote">Quote</string>
+	<string name="post_format_standard">Standard</string>
+	<string name="notif_events">Information on WordPress.com courses and events (online &amp; in-person).</string>
+	<string name="post_format_aside">Aside</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="notif_surveys">Opportunities to participate in WordPress.com research &amp; surveys.</string>
+	<string name="notif_tips">Tips for getting the most out of WordPress.com.</string>
+	<string name="notif_community">Community</string>
+	<string name="replies_to_my_comments">Replies to my comments</string>
+	<string name="notif_suggestions">Suggestions</string>
+	<string name="notif_research">Research</string>
+	<string name="site_achievements">Site achievements</string>
+	<string name="username_mentions">Username mentions</string>
+	<string name="likes_on_my_posts">Likes on my posts</string>
+	<string name="site_follows">Site follows</string>
+	<string name="likes_on_my_comments">Likes on my comments</string>
+	<string name="comments_on_my_site">Comments on my site</string>
+	<string name="site_settings_list_editor_summary_other">%d items</string>
+	<string name="site_settings_list_editor_summary_one">1 item</string>
+	<string name="approve_auto_if_previously_approved">Known users\' comments</string>
+	<string name="approve_auto">All users</string>
+	<string name="approve_manual">No comments</string>
+	<string name="site_settings_paging_summary_other">%d comments per page</string>
+	<string name="site_settings_paging_summary_one">1 comment per page</string>
+	<string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
+	<string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
+	<string name="site_settings_multiple_links_summary_zero">Require approval for more than 0 links</string>
+	<string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
+	<string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
+	<string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
+	<string name="filter_trashed_posts">Trashed</string>
+	<string name="days_quantity_one">1 day</string>
+	<string name="days_quantity_other">%d days</string>
+	<string name="filter_published_posts">Published</string>
+	<string name="filter_draft_posts">Drafts</string>
+	<string name="filter_scheduled_posts">Scheduled</string>
+	<string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
+	<string name="primary_site">Primary site</string>
+	<string name="web_address">Web Address</string>
+	<string name="account_settings">@string/me_btn_account_settings</string>
+	<string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
+	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
+	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+	<string name="editor_post_settings_featured_image">Featured Image</string>
+	<string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual\n    editor. Try it out by creating a new post.</string>
+	<string name="new_editor_promo_title">Brand new editor</string>
+	<string name="new_editor_promo_button_label">Great, thanks!</string>
+	<string name="visual_editor_enabled">Visual Editor enabled</string>
+	<string name="editor_content_placeholder">Share your story here…</string>
+	<string name="editor_page_title_placeholder">Page Title</string>
+	<string name="editor_post_title_placeholder">Post Title</string>
+	<string name="email_address">Email address</string>
+	<string name="preference_show_visual_editor">Show visual editor</string>
+	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
+	<string name="mnu_comment_delete_permanently">Delete</string>
+	<string name="comment_deleted_permanently">Comment deleted</string>
+	<string name="mnu_comment_untrash">Restore</string>
+	<string name="comments_empty_list_filtered_spam">No Spam comments</string>
+	<string name="could_not_load_page">Could not load page</string>
+	<string name="comment_status_all">All</string>
+	<string name="interface_language">Interface Language</string>
+	<string name="off">Off</string>
+	<string name="about_the_app">About the app</string>
+	<string name="error_post_account_settings">Couldn\'t save your account settings</string>
+	<string name="error_post_my_profile">Couldn\'t save your profile</string>
+	<string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>
+	<string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, got it</string>
+	<string name="stats_widget_promo_desc">Add the widget to your home screen to access your Stats in one click.</string>
+	<string name="stats_widget_promo_title">Home Screen Stats Widget</string>
+	<string name="site_settings_unknown_language_code_error">Language code not recognised</string>
+	<string name="site_settings_threading_dialog_description">Allow comments to be nested in threads.</string>
+	<string name="site_settings_threading_dialog_header">Thread up to</string>
+	<string name="remove">Remove</string>
+	<string name="search">Search</string>
+	<string name="add_category">Add category</string>
+	<string name="disabled">Disabled</string>
 	<string name="site_settings_image_original_size">Original Size</string>
+	<string name="privacy_private">Your site is visible only to you and users you approve</string>
+	<string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
+	<string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
 	<string name="about_me_hint">A few words about you…</string>
 	<string name="public_display_name_hint">Display name will default to your username if it is not set</string>
 	<string name="about_me">About me</string>
@@ -225,19 +378,19 @@
 	<string name="days_ago">%d days ago</string>
 	<string name="yesterday">Yesterday</string>
 	<string name="connectionbar_no_connection">No connection</string>
-	<string name="button_publish">Publish</string>
-	<string name="button_view">View</string>
-	<string name="button_edit">Edit</string>
-	<string name="button_trash">Trash</string>
-	<string name="button_preview">Preview</string>
-	<string name="button_stats">Stats</string>
+	<string name="page_trashed">Page sent to trash</string>
+	<string name="post_deleted">Post deleted</string>
+	<string name="post_trashed">Post sent to trash</string>
+	<string name="stats_no_activity_this_period">No activity this period</string>
 	<string name="trashed">Trashed</string>
 	<string name="button_back">Back</string>
 	<string name="page_deleted">Page deleted</string>
-	<string name="stats_no_activity_this_period">No activity this period</string>
-	<string name="post_trashed">Post sent to trash</string>
-	<string name="post_deleted">Post deleted</string>
-	<string name="page_trashed">Page sent to trash</string>
+	<string name="button_stats">Stats</string>
+	<string name="button_trash">Trash</string>
+	<string name="button_preview">Preview</string>
+	<string name="button_view">View</string>
+	<string name="button_edit">Edit</string>
+	<string name="button_publish">Publish</string>
 	<string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
 	<string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
 	<string name="my_site_no_sites_view_drake">Illustration</string>
@@ -261,161 +414,159 @@
 	<string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
 	<string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
-	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
+	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_btn_support">Help &amp; Support</string>
-	<string name="me_btn_settings">Account Settings</string>
+	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
 	<string name="site_picker_create_dotcom">Create WordPress.com site</string>
-	<string name="site_picker_edit_visibility">Show/hide sites</string>
-	<string name="site_picker_add_self_hosted">Add self-hosted site</string>
 	<string name="site_picker_add_site">Add site</string>
-	<string name="my_site_btn_switch_site">Switch Site</string>
-	<string name="site_picker_title">Choose site</string>
-	<string name="my_site_btn_view_site">View Site</string>
+	<string name="site_picker_add_self_hosted">Add self-hosted site</string>
+	<string name="site_picker_edit_visibility">Show/hide sites</string>
 	<string name="my_site_btn_view_admin">View Admin</string>
-	<string name="my_site_header_publish">Publish</string>
-	<string name="my_site_header_look_and_feel">Look and Feel</string>
-	<string name="my_site_btn_site_settings">Settings</string>
+	<string name="my_site_btn_view_site">View Site</string>
+	<string name="site_picker_title">Choose site</string>
+	<string name="my_site_btn_switch_site">Switch Site</string>
 	<string name="my_site_btn_blog_posts">Blog Posts</string>
-	<string name="my_site_header_admin">Admin</string>
-	<string name="reader_label_new_posts_subtitle">Tap to show them</string>
+	<string name="my_site_btn_site_settings">Settings</string>
+	<string name="my_site_header_look_and_feel">Look and Feel</string>
+	<string name="my_site_header_publish">Publish</string>
 	<string name="my_site_header_configuration">Configuration</string>
+	<string name="reader_label_new_posts_subtitle">Tap to show them</string>
+	<string name="my_site_header_admin">Admin</string>
 	<string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
 	<string name="stats_unknown_author">Unknown Author</string>
-	<string name="signout">Disconnect</string>
 	<string name="image_added">Image added</string>
-	<string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
-	<string name="select_all">Select all</string>
-	<string name="hide">Hide</string>
-	<string name="show">Show</string>
+	<string name="signout">Disconnect</string>
 	<string name="deselect_all">Deselect all</string>
+	<string name="show">Show</string>
+	<string name="hide">Hide</string>
+	<string name="select_all">Select all</string>
+	<string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
 	<string name="select_from_new_picker">Multi-select with the new picker</string>
-	<string name="loading_blog_videos">Fetching videos</string>
-	<string name="no_media_sources">Couldn\'t fetch media</string>
-	<string name="loading_blog_images">Fetching images</string>
-	<string name="error_loading_blog_images">Unable to fetch images</string>
-	<string name="error_loading_blog_videos">Unable to fetch videos</string>
-	<string name="error_loading_images">Error loading images</string>
-	<string name="error_loading_videos">Error loading videos</string>
+	<string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
 	<string name="no_device_videos">No videos</string>
 	<string name="no_blog_images">No images</string>
 	<string name="no_blog_videos">No videos</string>
 	<string name="no_device_images">No images</string>
-	<string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-	<string name="no_media">No media</string>
-	<string name="loading_images">Loading images</string>
+	<string name="error_loading_blog_images">Unable to fetch images</string>
+	<string name="error_loading_blog_videos">Unable to fetch videos</string>
+	<string name="error_loading_images">Error loading images</string>
+	<string name="error_loading_videos">Error loading videos</string>
+	<string name="loading_blog_images">Fetching images</string>
+	<string name="loading_blog_videos">Fetching videos</string>
+	<string name="no_media_sources">Couldn\'t fetch media</string>
 	<string name="loading_videos">Loading videos</string>
-	<string name="auth_required">Sign in again to continue.</string>
-	<string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
-	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
-	<string name="two_step_footer_button">Send code via text message</string>
-	<string name="two_step_footer_label">Enter the code from your authenticator app.</string>
-	<string name="verify">Verify</string>
-	<string name="invalid_verification_code">Invalid verification code</string>
-	<string name="verification_code">Verification code</string>
-	<string name="editor_toast_invalid_path">Invalid file path</string>
-	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
-	<string name="media_details_label_file_name">File name</string>
-	<string name="tab_title_site_videos">Site Videos</string>
-	<string name="tab_title_site_images">Site Images</string>
-	<string name="tab_title_device_videos">Device Videos</string>
-	<string name="tab_title_device_images">Device Images</string>
-	<string name="take_video">Take a video</string>
-	<string name="take_photo">Take a photo</string>
-	<string name="media_picker_title">Select media</string>
-	<string name="add_to_post">Add to Post</string>
-	<string name="language">Language</string>
+	<string name="loading_images">Loading images</string>
+	<string name="no_media">No media</string>
 	<string name="device">Device</string>
+	<string name="language">Language</string>
+	<string name="add_to_post">Add to Post</string>
+	<string name="media_picker_title">Select media</string>
+	<string name="take_photo">Take a photo</string>
+	<string name="take_video">Take a video</string>
+	<string name="tab_title_device_images">Device Images</string>
+	<string name="tab_title_device_videos">Device Videos</string>
+	<string name="tab_title_site_images">Site Images</string>
+	<string name="tab_title_site_videos">Site Videos</string>
+	<string name="media_details_label_file_name">File name</string>
 	<string name="media_details_label_file_type">File type</string>
-	<string name="media_fetching">Fetching media…</string>
-	<string name="posts_fetching">Fetching posts…</string>
-	<string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
-	<string name="comments_fetching">Fetching comments…</string>
-	<string name="pages_fetching">Fetching pages…</string>
-	<string name="stats_view_search_terms">Search Terms</string>
-	<string name="stats_entry_search_terms">Search Term</string>
-	<string name="stats_view_authors">Authors</string>
+	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
+	<string name="editor_toast_invalid_path">Invalid file path</string>
+	<string name="verification_code">Verification code</string>
+	<string name="invalid_verification_code">Invalid verification code</string>
+	<string name="verify">Verify</string>
+	<string name="two_step_footer_label">Enter the code from your authenticator app.</string>
+	<string name="two_step_footer_button">Send code via text message</string>
+	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
+	<string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
+	<string name="auth_required">Sign in again to continue.</string>
+	<string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
+	<string name="publisher">Publisher:</string>
+	<string name="error_notification_open">Could not open notification</string>
+	<string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
+	<string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
+	<string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
 	<string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
 	<string name="stats_empty_search_terms">No search terms recorded</string>
-	<string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
-	<string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
-	<string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
-	<string name="error_notification_open">Could not open notification</string>
-	<string name="publisher">Publisher:</string>
-	<string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
-	<string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
-	<string name="stats_recent_weeks">Recent Weeks</string>
-	<string name="stats_average_per_day">Average per Day</string>
-	<string name="reader_empty_posts_in_blog">This blog is empty</string>
-	<string name="stats_months_and_years">Months and Years</string>
-	<string name="reader_label_new_posts">New posts</string>
-	<string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
-	<string name="stats_period">Period</string>
-	<string name="stats_overall">Overall</string>
-	<string name="stats_total">Total</string>
+	<string name="stats_entry_search_terms">Search Term</string>
+	<string name="stats_view_authors">Authors</string>
+	<string name="stats_view_search_terms">Search Terms</string>
+	<string name="comments_fetching">Fetching comments…</string>
+	<string name="pages_fetching">Fetching pages…</string>
+	<string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+	<string name="posts_fetching">Fetching posts…</string>
+	<string name="media_fetching">Fetching media…</string>
 	<string name="post_uploading">Uploading</string>
+	<string name="stats_total">Total</string>
+	<string name="stats_overall">Overall</string>
+	<string name="stats_period">Period</string>
+	<string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
+	<string name="reader_label_new_posts">New posts</string>
+	<string name="reader_empty_posts_in_blog">This blog is empty</string>
+	<string name="stats_average_per_day">Average per Day</string>
+	<string name="stats_recent_weeks">Recent Weeks</string>
+	<string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
 	<string name="reader_page_recommended_blogs">Sites you may like</string>
+	<string name="stats_months_and_years">Months and Years</string>
+	<string name="themes_fetching">Fetching themes…</string>
+	<string name="stats_for">Stats for %s</string>
+	<string name="stats_other_recent_stats_label">Other Recent Stats</string>
+	<string name="stats_view_all">View all</string>
+	<string name="stats_view">View</string>
+	<string name="stats_followers_months">%1$d months</string>
+	<string name="stats_followers_a_year">A year</string>
+	<string name="stats_followers_years">%1$d years</string>
+	<string name="stats_followers_a_month">A month</string>
+	<string name="stats_followers_minutes">%1$d minutes</string>
+	<string name="stats_followers_an_hour_ago">an hour ago</string>
+	<string name="stats_followers_hours">%1$d hours</string>
+	<string name="stats_followers_a_day">A day</string>
+	<string name="stats_followers_days">%1$d days</string>
+	<string name="stats_followers_a_minute_ago">a minute ago</string>
+	<string name="stats_followers_seconds_ago">seconds ago</string>
+	<string name="stats_followers_total_email">Total Email Followers: %1$s</string>
+	<string name="stats_followers_wpcom_selector">WordPress.com</string>
+	<string name="stats_followers_email_selector">Email</string>
+	<string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
 	<string name="stats_comments_total_comments_followers">Total posts with comment followers: %1$s</string>
-	<string name="stats_visitors">Visitors</string>
-	<string name="stats_views">Views</string>
-	<string name="stats_pagination_label">Page %1$s of %2$s</string>
-	<string name="stats_timeframe_years">Years</string>
-	<string name="stats_likes">Likes</string>
-	<string name="stats_view_countries">Countries</string>
-	<string name="stats_view_publicize">Publicize</string>
-	<string name="stats_view_followers">Followers</string>
-	<string name="stats_view_videos">Videos</string>
+	<string name="stats_comments_by_authors">By Authors</string>
+	<string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
+	<string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
+	<string name="stats_empty_followers">No followers</string>
+	<string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
+	<string name="stats_empty_publicize">No publicize followers recorded</string>
+	<string name="stats_empty_video">No videos played</string>
+	<string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
+	<string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
+	<string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
+	<string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
+	<string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
+	<string name="stats_empty_clicks_desc">When your content includes links to other sites, you’ll see which ones your visitors click on the most.</string>
+	<string name="stats_empty_referrers_desc">Learn more about your site’s visibility by looking at the websites and search engines that send the most traffic your way</string>
+	<string name="stats_empty_clicks_title">No clicks recorded</string>
+	<string name="stats_empty_referrers_title">No referrers recorded</string>
+	<string name="stats_empty_top_posts_title">No posts or pages viewed</string>
+	<string name="stats_empty_top_posts_desc">Discover what your most-viewed content is, and check how individual posts and pages perform over time.</string>
+	<string name="stats_totals_followers">Since</string>
+	<string name="stats_empty_geoviews">No countries recorded</string>
+	<string name="stats_empty_geoviews_desc">Explore the list to see which countries and regions generate the most traffic to your site.</string>
+	<string name="stats_entry_video_plays">Video</string>
+	<string name="stats_entry_top_commenter">Author</string>
+	<string name="stats_entry_publicize">Service</string>
+	<string name="stats_entry_followers">Follower</string>
 	<string name="stats_totals_publicize">Followers</string>
 	<string name="stats_entry_clicks_link">Link</string>
 	<string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
-	<string name="stats_entry_followers">Follower</string>
-	<string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
-	<string name="stats_entry_publicize">Service</string>
-	<string name="stats_empty_video">No videos played</string>
-	<string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
-	<string name="stats_empty_publicize">No publicize followers recorded</string>
-	<string name="stats_empty_followers">No followers</string>
-	<string name="stats_empty_publicize_desc">Keep track of your followers from various social networking services using publicize.</string>
-	<string name="stats_empty_followers_desc">Keep track of your overall number of followers, and how long each one has been following your site.</string>
-	<string name="stats_comments_by_posts_and_pages">By Posts &amp; Pages</string>
-	<string name="stats_comments_by_authors">By Authors</string>
-	<string name="stats_followers_email_selector">Email</string>
-	<string name="stats_followers_total_wpcom">Total WordPress.com Followers: %1$s</string>
-	<string name="stats_followers_wpcom_selector">WordPress.com</string>
-	<string name="stats_followers_total_email">Total Email Followers: %1$s</string>
-	<string name="stats_followers_seconds_ago">seconds ago</string>
-	<string name="stats_entry_top_commenter">Author</string>
-	<string name="stats_entry_video_plays">Video</string>
-	<string name="stats_empty_geoviews_desc">Explore the list to see which countries and regions generate the most traffic to your site.</string>
-	<string name="stats_empty_geoviews">No countries recorded</string>
-	<string name="stats_totals_followers">Since</string>
-	<string name="stats_empty_top_posts_desc">Discover what your most-viewed content is, and check how individual posts and pages perform over time.</string>
-	<string name="stats_empty_top_posts_title">No posts or pages viewed</string>
-	<string name="stats_empty_referrers_title">No referrers recorded</string>
-	<string name="stats_empty_clicks_title">No clicks recorded</string>
-	<string name="stats_empty_referrers_desc">Learn more about your site’s visibility by looking at the websites and search engines that send the most traffic your way</string>
-	<string name="stats_empty_clicks_desc">When your content includes links to other sites, you’ll see which ones your visitors click on the most.</string>
-	<string name="stats_empty_tags_and_categories">No tagged posts or pages viewed</string>
-	<string name="stats_empty_top_authors_desc">Track the views on each contributor\'s posts, and zoom in to discover the most popular content by each author.</string>
-	<string name="stats_empty_tags_and_categories_desc">Get an overview of the most popular topics on your site, as reflected in your top posts from the past week.</string>
-	<string name="stats_followers_a_minute_ago">a minute ago</string>
-	<string name="stats_followers_days">%1$d days</string>
-	<string name="stats_followers_a_day">A day</string>
-	<string name="stats_followers_hours">%1$d hours</string>
-	<string name="stats_followers_an_hour_ago">an hour ago</string>
-	<string name="stats_followers_minutes">%1$d minutes</string>
-	<string name="stats_followers_years">%1$d years</string>
-	<string name="stats_followers_a_month">A month</string>
-	<string name="stats_followers_a_year">A year</string>
-	<string name="stats_followers_months">%1$d months</string>
-	<string name="stats_view">View</string>
-	<string name="stats_view_all">View all</string>
-	<string name="stats_other_recent_stats_label">Other Recent Stats</string>
-	<string name="stats_for">Stats for %s</string>
-	<string name="themes_fetching">Fetching themes…</string>
+	<string name="stats_view_videos">Videos</string>
+	<string name="stats_view_publicize">Publicize</string>
+	<string name="stats_view_followers">Followers</string>
+	<string name="stats_view_countries">Countries</string>
+	<string name="stats_likes">Likes</string>
+	<string name="stats_pagination_label">Page %1$s of %2$s</string>
+	<string name="stats_timeframe_years">Years</string>
+	<string name="stats_views">Views</string>
+	<string name="stats_visitors">Visitors</string>
 	<string name="ssl_certificate_details">Details</string>
-	<string name="sure_to_remove_account">Remove this site?</string>
 	<string name="delete_sure_post">Delete this post</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_page">Delete this page</string>
@@ -423,9 +574,11 @@
 	<string name="confirm_delete_media">Delete selected item?</string>
 	<string name="cab_selected">%d selected</string>
 	<string name="media_gallery_date_range">Displaying media from %1$s to %2$s</string>
-	<string name="browse_our_faq_button">Browse our FAQ</string>
-	<string name="faq_button">FAQ</string>
+	<string name="sure_to_remove_account">Remove this site?</string>
+	<string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
 	<string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+	<string name="faq_button">FAQ</string>
+	<string name="browse_our_faq_button">Browse our FAQ</string>
 	<string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
 	<string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
 	<string name="create_new_blog_wpcom">Create WordPress.com blog</string>
@@ -460,7 +613,6 @@
 	<string name="media_empty_list_custom_date">No media in this time interval</string>
 	<string name="posting_post">Posting "%s"</string>
 	<string name="signing_out">Signing out…</string>
-	<string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
 	<string name="reader_toast_err_generic">Unable to perform this action</string>
 	<string name="reader_toast_err_block_blog">Unable to block this blog</string>
 	<string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
@@ -473,17 +625,19 @@
 	<string name="hs__invalid_email_error">Enter a valid email address</string>
 	<string name="add_location">Add location</string>
 	<string name="current_location">Current location</string>
-	<string name="your_signature">Your signature:</string>
 	<string name="search_location">Search</string>
 	<string name="edit_location">Edit</string>
 	<string name="search_current_location">Locate</string>
-	<string name="preference_privacy">Privacy</string>
 	<string name="preference_send_usage_stats">Send statistics</string>
 	<string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 	<string name="update_verb">Update</string>
 	<string name="schedule_verb">Schedule</string>
+	<string name="reader_title_blog_preview">Reader Blog</string>
+	<string name="reader_title_tag_preview">Reader Tag</string>
 	<string name="reader_title_subs">Tags &amp; Blogs</string>
 	<string name="reader_page_followed_tags">Followed tags</string>
+	<string name="reader_page_followed_blogs">Followed sites</string>
+	<string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
 	<string name="reader_label_followed_blog">Blog followed</string>
 	<string name="reader_label_tag_preview">Posts tagged %s</string>
 	<string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
@@ -491,10 +645,6 @@
 	<string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
 	<string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
 	<string name="reader_empty_recommended_blogs">No recommended blogs</string>
-	<string name="reader_title_blog_preview">Reader Blog</string>
-	<string name="reader_title_tag_preview">Reader Tag</string>
-	<string name="reader_page_followed_blogs">Followed sites</string>
-	<string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
 	<string name="saving">Saving…</string>
 	<string name="media_empty_list">No media</string>
 	<string name="ptr_tip_message">Tip: Pull down to refresh</string>
@@ -504,9 +654,9 @@
 	<string name="help_center">Help centre</string>
 	<string name="ssl_certificate_error">Invalid SSL certificate</string>
 	<string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
-	<string name="could_not_remove_account">Couldn\'t remove site</string>
 	<string name="out_of_memory">Device out of memory</string>
 	<string name="no_network_message">There is no network available</string>
+	<string name="could_not_remove_account">Couldn\'t remove site</string>
 	<string name="gallery_error">The media item couldn\'t be retrieved</string>
 	<string name="blog_not_found">An error occurred when accessing this blog</string>
 	<string name="wait_until_upload_completes">Wait until upload completes</string>
@@ -521,12 +671,10 @@
 	<string name="cat_name_required">The category name field is required</string>
 	<string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 	<string name="no_account">No WordPress account found, add an account and try again</string>
-	<string name="auto_sharing_preference_reset">Auto-sharing settings reset</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Previously selected blog is no longer visible</string>
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
-	<string name="invalid_url_message">Check that the blog URL entered is valid</string>
+	<string name="invalid_url_message">Check that the URL entered is valid</string>
 	<string name="reply_failed">Reply failed</string>
 	<string name="notifications_empty_list">No notifications</string>
 	<string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -569,8 +717,6 @@
 	<string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days</string>
 	<string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
 	<string name="nux_cannot_log_in">We can\'t log you in</string>
-	<string name="blog_removed_successfully">Site removed successfully</string>
-	<string name="remove_account">Remove site</string>
 	<string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
 	<string name="select_categories">Select categories</string>
 	<string name="account_details">Account details</string>
@@ -626,6 +772,8 @@
 	<string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
 	<string name="content_required">Comment is required</string>
 	<string name="toast_comment_unedited">Comment hasn\'t changed</string>
+	<string name="remove_account">Remove site</string>
+	<string name="blog_removed_successfully">Site removed successfully</string>
 	<string name="delete_draft">Delete draft</string>
 	<string name="preview_page">Preview page</string>
 	<string name="preview_post">Preview post</string>
@@ -643,10 +791,12 @@
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="location_not_found">Unknown location</string>
 	<string name="open_source_licenses">Open source licences</string>
+	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 	<string name="pending_review">Pending review</string>
 	<string name="http_credentials">HTTP credentials (optional)</string>
 	<string name="http_authorization_required">Authorisation required</string>
 	<string name="post_format">Post format</string>
+	<string name="notifications_empty_all">No notifications…yet.</string>
 	<string name="new_post">New post</string>
 	<string name="new_media">New media</string>
 	<string name="view_site">View site</string>
@@ -671,7 +821,6 @@
 	<string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
 	<string name="blog_name_invalid">Invalid site address</string>
 	<string name="blog_title_invalid">Invalid site title</string>
-	<string name="notifications_empty_all">No notifications…yet.</string>
 	<string name="deleting_page">Deleting page</string>
 	<string name="deleting_post">Deleting post</string>
 	<string name="share_url_post">Share post</string>
@@ -689,11 +838,9 @@
 	<string name="download">Downloading media</string>
 	<string name="comment_spammed">Comment marked as spam</string>
 	<string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
-	<string name="share_preference_title">Share to WordPress</string>
-	<string name="reset_auto_share_preference">Reset auto-sharing settings</string>
-	<string name="always_use_these_settings_to_share">Always use these settings</string>
 	<string name="select_time">Select time</string>
 	<string name="reader_likes_you_and_one">You and one other like this</string>
+	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
 	<string name="select_date">Select date</string>
 	<string name="pick_photo">Select photo</string>
 	<string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
@@ -701,7 +848,6 @@
 	<string name="reader_toast_err_get_post">Unable to retrieve this post</string>
 	<string name="validating_user_data">Validating user data</string>
 	<string name="validating_site_data">Validating site data</string>
-	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
 	<string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
 	<string name="nux_tap_continue">Continue</string>
 	<string name="nux_welcome_create_account">Create account</string>
@@ -720,6 +866,7 @@
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_unfollow">Following</string>
+	<string name="reader_hint_comment_on_comment">Reply to comment…</string>
 	<string name="reader_label_added_tag">Added %s</string>
 	<string name="reader_label_removed_tag">Removed %s</string>
 	<string name="reader_likes_one">One person likes this</string>
@@ -732,12 +879,11 @@
 	<string name="reader_toast_err_url_intent">Unable to open %s</string>
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
+	<string name="button_next">Next</string>
 	<string name="connecting_wpcom">Connecting to WordPress.com</string>
 	<string name="username_invalid">Invalid username</string>
 	<string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
 	<string name="nux_tutorial_get_started_title">Get started!</string>
-	<string name="reader_hint_comment_on_comment">Reply to comment…</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
 	<string name="themes">Themes</string>
 	<string name="all">All</string>
 	<string name="images">Images</string>
@@ -752,8 +898,6 @@
 	<string name="media_gallery_type_tiled">Tiled</string>
 	<string name="media_gallery_type_circles">Circles</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
-	<string name="media_no_video_title">VideoPress unavailable</string>
-	<string name="media_no_video_message">Get the VideoPress upgrade to upload video!</string>
 	<string name="media_edit_title_text">Title</string>
 	<string name="media_edit_caption_text">Caption</string>
 	<string name="media_edit_description_text">Description</string>
@@ -774,6 +918,7 @@
 	<string name="stats">Stats</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
 	<string name="stats_view_clicks">Clicks</string>
+	<string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
 	<string name="stats_view_referrers">Referrers</string>
 	<string name="stats_timeframe_today">Today</string>
 	<string name="stats_timeframe_yesterday">Yesterday</string>
@@ -788,7 +933,6 @@
 	<string name="stats_totals_views">Views</string>
 	<string name="stats_totals_clicks">Clicks</string>
 	<string name="stats_totals_plays">Plays</string>
-	<string name="menu_search">Search</string>
 	<string name="passcode_manage">Manage PIN lock</string>
 	<string name="passcode_enter_passcode">Enter your PIN</string>
 	<string name="passcode_enter_old_passcode">Enter your old PIN</string>
@@ -802,12 +946,10 @@
 	<string name="sign_in">Sign in</string>
 	<string name="notifications">Notifications</string>
 	<string name="note_reply_successful">Reply published</string>
+	<string name="follows">Follows</string>
 	<string name="new_notifications">%d new notifications</string>
 	<string name="more_notifications">and %d more.</string>
-	<string name="follows">Follows</string>
 	<string name="loading">Loading…</string>
-	<string name="post_signature">Post signature</string>
-	<string name="add_tagline">Add a signature to new posts</string>
 	<string name="httpuser">HTTP username</string>
 	<string name="httppassword">HTTP password</string>
 	<string name="error_media_upload">An error occurred while uploading media</string>
@@ -832,14 +974,11 @@
 	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Upload and link to scaled image</string>
 	<string name="scaled_image">Scaled image width</string>
-	<string name="remove_location">Remove</string>
 	<string name="scheduled">Scheduled</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Posted from WordPress for Android</string>
 	<string name="version">Version</string>
 	<string name="tos">Terms of Service</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">About</string>
 	<string name="max_thumbnail_px_width">Default Image Width</string>
 	<string name="image_alignment">Alignment</string>
 	<string name="refresh">Refresh</string>
@@ -849,8 +988,8 @@
 	<string name="post_password">Password (optional)</string>
 	<string name="immediately">Immediately</string>
 	<string name="quickpress_add_alert_title">Set shortcut name</string>
-	<string name="settings">Settings</string>
 	<string name="today">Today</string>
+	<string name="settings">Settings</string>
 	<string name="share_url">Share URL</string>
 	<string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
 	<string name="quickpress_add_error">Shortcut name can\'t be empty</string>
@@ -861,6 +1000,7 @@
 	<string name="title">Title</string>
 	<string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
 	<string name="categories">Categories</string>
+	<string name="dlg_deleting_comments">Deleting comments</string>
 	<string name="notification_blink">Blink notification light</string>
 	<string name="notification_sound">Play notification sound</string>
 	<string name="notification_vibrate">Vibrate</string>
@@ -881,85 +1021,7 @@
 	<string name="preview">Preview</string>
 	<string name="on">on</string>
 	<string name="reply">Reply</string>
+	<string name="notification_settings">Notification Settings</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
-	<string name="notification_settings">Notification Settings</string>
-	<string-array name="alignment_array">
-		<item>None</item>
-		<item>Left</item>
-		<item>Centre</item>
-		<item>Right</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Comments on my site</item>
-		<item>Likes on my comments</item>
-		<item>Likes on my posts</item>
-		<item>Site follows</item>
-		<item>Site achievements</item>
-		<item>Username mentions</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Replies to my comments</item>
-		<item>Likes on my comments</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Suggestions</item>
-		<item>Research</item>
-		<item>Community</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tips for getting the most out of WordPress.com.</item>
-		<item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
-		<item>Information on WordPress.com courses and events (online &amp; in-person).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Published</item>
-		<item>Drafts</item>
-		<item>Scheduled</item>
-		<item>Trashed</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Aside</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Gallery</item>
-		<item>Image</item>
-		<item>Link</item>
-		<item>Quote</item>
-		<item>Standard</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="privacy_details">
-		<item>Your site is visible to everyone and may be indexed by search engines</item>
-		<item>Your site is visible to everyone but asks search engines not to index it</item>
-		<item>Your site is visible only to you and users you approve</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_details">
-		<item>Require manual approval for everyone\'s comments.</item>
-		<item>Automatically approve if the user has a previously approved comment.</item>
-		<item>Automatically approve everyone\'s comments.</item>
-	</string-array>
-	<string-array name="site_settings_auto_approve_entries">
-		<item>No comments</item>
-		<item>Known users\' comments</item>
-		<item>All users</item>
-	</string-array>
-	<string-array name="site_settings_threading_entries">
-		<item>None</item>
-		<item>Two levels</item>
-		<item>Three levels</item>
-		<item>Four levels</item>
-		<item>Five levels</item>
-		<item>Six levels</item>
-		<item>Seven levels</item>
-		<item>Eight levels</item>
-		<item>Nine levels</item>
-		<item>Ten levels</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Free</item>
-		<item>All</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

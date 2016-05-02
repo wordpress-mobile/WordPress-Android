@@ -200,14 +200,15 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagName = JSONUtils.getStringDecoded(jsonTopic, "title");
-                String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                // rename "Blogs I Follow" to "Followed Sites"
-                if (topicType == ReaderTagType.DEFAULT
-                        && tagName.equals(ReaderTag.TAG_NAME_FOLLOWED_SITES_OLD)) {
-                    tagName = ReaderTag.TAG_NAME_FOLLOWED_SITES;
+                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
+                String tagSlug;
+                if (jsonTopic.has("slug")) {
+                    tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
+                } else {
+                    tagSlug = tagTitle;
                 }
-                topics.add(new ReaderTag(tagName, endpoint, topicType));
+                String endpoint = JSONUtils.getString(jsonTopic, "URL");
+                topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, topicType));
             }
         }
 

@@ -221,6 +221,11 @@ public class RestClientUtils {
         getThemes("free", siteId, limit, offset, listener, errorListener);
     }
 
+    public void getPurchasedThemes(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/themes/purchased", siteId);
+        get(path, listener, errorListener);
+    }
+
     /**
      * Get all a site's themes
      */
@@ -257,6 +262,24 @@ public class RestClientUtils {
                                        Map<String, String> params) {
         String path = String.format("sites/%s/settings", siteId);
         post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * Delete a site
+     */
+    public void deleteSite(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/delete", siteId);
+        post(path, listener, errorListener);
+    }
+
+    public void getSitePurchases(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/purchases", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void exportContentAll(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/exports/start", siteId);
+        post(path, listener, errorListener);
     }
 
     /**

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/percent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/content_margin"
+    android:paddingRight="@dimen/content_margin"
+    tools:background="@color/blue_wordpress">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:layout_marginBottomPercent="10%"
+        app:layout_marginTopPercent="25%"
+        tools:src="@drawable/plans_business_active" />
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_widthPercent="75%">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:gravity="center_horizontal"
+            android:textColor="@color/grey_light"
+            android:textSize="@dimen/text_sz_double_extra_large"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:gravity="center_horizontal"
+            android:textColor="@color/grey_light"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="text_description_text_description_text_description_text_description_text_description_text_description" />
+
+        <org.wordpress.android.widgets.WPButton
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:textColor="@color/blue_wordpress"
+            tools:text="Button" />
+    </LinearLayout>
+
+</android.support.percent.PercentRelativeLayout>

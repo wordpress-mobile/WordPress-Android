@@ -22,12 +22,14 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
@@ -71,6 +73,12 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        slideInFromRight(context, intent);
+    }
+
+    public static void viewBlogPlans(Context context, int blogLocalTableId) {
+        Intent intent = new Intent(context, PlansActivity.class);
+        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         slideInFromRight(context, intent);
     }
 
@@ -176,9 +184,8 @@ public class ActivityLauncher {
     public static void browsePostOrPage(Context context, Blog blog, Post post) {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
-        String url = post.getPermaLink();
-        // Add the preview parameter if the post is not published yet
-        url = UrlUtils.appendUrlParameter(url, "preview", "true");
+        // always add the preview parameter to avoid bumping stats when viewing posts
+        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
         WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
     }
 
@@ -192,10 +199,16 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewAccountSettings(Activity activity) {
-        Intent intent = new Intent(activity, AccountSettingsActivity.class);
+    public static void viewAccountSettings(Context context) {
+        Intent intent = new Intent(context, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
-        slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
+        slideInFromRight(context, intent);
+    }
+
+    public static void viewAppSettings(Activity activity) {
+        Intent intent = new Intent(activity, AppSettingsActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
+        slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewNotificationsSettings(Activity activity) {
@@ -267,7 +280,7 @@ public class ActivityLauncher {
 
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
-        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

@@ -643,6 +643,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened Account Settings");
                 break;
+            case OPENED_APP_SETTINGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Opened App Settings");
+                break;
             case OPENED_MY_PROFILE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened My Profile");
@@ -744,6 +748,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Selected Install Jetpack");
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Selected Connect Jetpack");
+                break;
             case STATS_WIDGET_ADDED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Widget Added");
@@ -781,6 +789,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
+                break;
+            case LOGIN_INSERTED_INVALID_URL:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Inserted Invalid URL");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Filled");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Updated");
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -858,9 +878,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Details Accessed");
                 break;
-            case ACCOUNT_SETTINGS_LANGUAGE_SELECTION_FORCED:
+            case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Settings - Forced Language Selection");
+                        mixpanelInstructionsForEventName("Account Settings - Changed Language");
                 break;
             case SITE_SETTINGS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -901,6 +921,48 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Settings - Saved Remotely");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_settings_updated_remotely");
+                break;
+            case SITE_SETTINGS_START_OVER_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Start Over Accessed");
+                break;
+            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Start Over Contact Support Clicked");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Accessed");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Requested");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Response OK");
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Export Site Response Error");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Accessed");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Purchases Requested");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Purchases Shown");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Show Purchases Clicked");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Requested");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response OK");
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
+                break;
+            case ABTEST_START:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
                 break;
             default:
                 instructions = null;

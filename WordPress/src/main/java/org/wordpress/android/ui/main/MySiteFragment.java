@@ -49,8 +49,8 @@ import de.greenrobot.event.EventBus;
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
-    private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
-    private static final long ALERT_ANIM_DURATION_MS = 1000l;
+    private static final long ALERT_ANIM_OFFSET_MS   = 1000L;
+    private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -61,6 +61,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -68,6 +69,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
+    private WPTextView mCurrentPlanNameTextView;
     private View mSharingView;
 
     private int mFabTargetYTranslation;
@@ -141,6 +143,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
@@ -149,6 +152,7 @@ public class MySiteFragment extends Fragment
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
+        mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +181,15 @@ public class MySiteFragment extends Fragment
                 ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
             }
         });
+
+        if (isPlansEnabled()) {
+            mPlanContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+                }
+            });
+        }
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,6 +255,13 @@ public class MySiteFragment extends Fragment
         });
 
         return rootView;
+    }
+
+    /*
+     * plans is a work-in-progress and is currently only exposed to alpha testers
+     */
+    private static boolean isPlansEnabled() {
+        return AppPrefs.isInAppBillingAvailable();
     }
 
     private void showSitePicker() {
@@ -361,6 +381,19 @@ public class MySiteFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
+
+        // Hide the Plan item if the Plans feature is not available.
+        if (isPlansEnabled()) {
+            String planShortName = blog.getPlanShortName();
+            if (!TextUtils.isEmpty(planShortName)) {
+                mCurrentPlanNameTextView.setText(planShortName);
+                mPlanContainer.setVisibility(View.VISIBLE);
+            } else {
+                mPlanContainer.setVisibility(View.GONE);
+            }
+        } else {
+            mPlanContainer.setVisibility(View.GONE);
+        }
     }
 
     private void toggleAdminVisibility() {

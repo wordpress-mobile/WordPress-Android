@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -79,6 +80,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -95,6 +97,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtils;
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
+    private static RestClientUtils mRestClientUtilsVersion1_3;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -209,6 +212,16 @@ public class WordPress extends Application {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // TODO: remove this after the visual editor is enabled in a release version (5.4 if everything goes well)
+        enableVisualEditorForBetaUsers();
+    }
+
+    private void enableVisualEditorForBetaUsers() {
+        if (BuildConfig.VERSION_NAME.contains("5.4-rc")) {
+            AppPrefs.setVisualEditorAvailable(true);
+            AppPrefs.setVisualEditorEnabled(true);
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -224,6 +237,7 @@ public class WordPress extends Application {
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
+            AppPrefs.setVisualEditorPromoRequired(false);
         }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);
@@ -245,7 +259,7 @@ public class WordPress extends Application {
     public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        if (checkPlayServices(activity)) {
+        if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
@@ -336,6 +350,14 @@ public class WordPress extends Application {
         return mRestClientUtilsVersion1_2;
     }
 
+    public static RestClientUtils getRestClientUtilsV1_3() {
+        if (mRestClientUtilsVersion1_3 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+        }
+        return mRestClientUtilsVersion1_3;
+    }
+
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
@@ -366,21 +388,25 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    public boolean checkPlayServices(Activity activity) {
-        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
             // Success: return true
             case ConnectionResult.SUCCESS:
                 return true;
             // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
             default:
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:
             case ConnectionResult.SERVICE_INVALID:
                 AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                        + GooglePlayServicesUtil.getErrorString(connectionResult));
+                        + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
     }
@@ -389,8 +415,9 @@ public class WordPress extends Application {
      * Get the currently active blog.
      * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
-     * time the application was used. If we're not able to determine the last active blog, just
-     * select the first one.
+     * time the application was used. If we're not able to determine the last active blog, try to
+     * select the first visible blog. If there are no more visible blogs, try to select the first
+     * hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
         if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
@@ -579,17 +606,21 @@ public class WordPress extends Application {
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mDefaultUserAgent = WebSettings.getDefaultUserAgent(getContext());
                 } else {
                     mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
                 }
-            } catch (AndroidRuntimeException e) {
+            } catch (AndroidRuntimeException |  NullPointerException e) {
+                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
+                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
+                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
+
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
+
         }
         return mDefaultUserAgent;
     }
@@ -641,14 +672,26 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            // fallback to just using the first blog
-            List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-            if (accounts.size() > 0) {
-                int id = Integer.valueOf(accounts.get(0).get("id").toString());
-                setCurrentBlog(id);
-                wpDB.updateLastBlogId(id);
+            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            if (blogId == 0) {
+                blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
+
+            setCurrentBlogAndSetVisible(blogId);
+            wpDB.updateLastBlogId(blogId);
         }
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static Map<String, String> getRestLocaleParams() {
+        String deviceLanguageCode = Locale.getDefault().getLanguage();
+        Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
     /**
