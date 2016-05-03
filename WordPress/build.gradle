@@ -32,8 +32,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-7"
-        versionCode 253
+        versionName "alpha-8"
+        versionCode 256
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -85,7 +85,7 @@ dependencies {
     compile ('org.wordpress:mediapicker:1.2.4') {
         exclude group:'com.android.support'
     }
-    compile 'com.google.code.gson:gson:2.2.2'
+    compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
@@ -98,10 +98,8 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.3'
-
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
-
+    compile 'com.automattic:rest:1.0.5'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
 
