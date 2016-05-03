@@ -111,9 +111,8 @@ public class WordPressMediaUtils {
     }
 
     private static Intent preparePictureLibraryIntent(String title) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         return Intent.createChooser(intent, title);
     }
 
