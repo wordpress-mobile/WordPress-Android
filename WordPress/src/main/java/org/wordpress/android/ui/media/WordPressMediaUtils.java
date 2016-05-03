@@ -72,9 +72,8 @@ public class WordPressMediaUtils {
 
 
     public static Intent prepareVideoLibraryIntent(Context context) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
