@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashMap;
@@ -231,21 +232,37 @@ public class ReaderActivityLauncher {
         }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            // That won't work on wpcom sites with custom urls
-            if (WPUrlUtils.isWordPressCom(url)) {
-                WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                        AccountHelper.getDefaultAccount().getUserName());
-            } else {
-                WPWebViewActivity.openURL(context, url);
-            }
+            openUrlInternal(context, url);
         } else {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
-                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
-            }
+            openUrlExternal(context, url);
+        }
+    }
+
+    /*
+     * open the passed url in the app's internal WebView activity
+     */
+    private static void openUrlInternal(Context context, String url) {
+        // That won't work on wpcom sites with custom urls
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
+                    AccountHelper.getDefaultAccount().getUserName());
+        } else {
+            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
+        }
+    }
+
+    /*
+     * open the passed url in the device's external browser
+     */
+    private static void openUrlExternal(Context context, String url) {
+        try {
+            // add the GA utm_source param to the URL
+            url = UrlUtils.appendUrlParameter(url, "utm_source", ReaderConstants.HTTP_REFERER_URL);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+            ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
         }
     }
 }
