@@ -102,7 +102,7 @@ public class WordPress extends Application {
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
-    private static final int SECONDS_BETWEEN_IAP_UPDATE = 5 * 60;
+    private static final int SECONDS_BETWEEN_IAP_UPDATE = 5 * 60; // 5 minutes
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
@@ -829,7 +829,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
-            sUpdateIAPsWordPressCom.forceRun(); // TODO: changes to run if not limited
+            sUpdateIAPsWordPressCom.runIfNotLimited();
         }
 
         @Override

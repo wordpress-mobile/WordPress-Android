@@ -94,6 +94,24 @@ public class PlansUtils {
         return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);
     }
 
+    public static boolean isFreePlan(Plan plan) {
+        return plan.getProductSlug().equals("free_plan") ||
+               plan.getProductSlug().equals("jetpack_free");
+    }
+
+    /**
+     * Weather the plan ID is a free plan.
+     *
+     * 2002 = Jetpack free
+     * 1    = WordPress.com free
+     *
+     * @param planID - The plan ID
+     * @return boolean - true if the current blog is on a free plan.
+     */
+    public static boolean isFreePlan(long planID) {
+        return planID == 2002 || planID == 1;
+    }
+
     /**
      * Removes stored plan data - for testing purposes
      */
