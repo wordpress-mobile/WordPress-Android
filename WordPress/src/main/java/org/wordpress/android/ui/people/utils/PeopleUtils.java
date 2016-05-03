@@ -16,14 +16,14 @@ import java.util.List;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(String siteID, final int localTableBlogId, final FetchUsersCallback callback) {
+    public static void fetchUsers(final String siteID, final int localTableBlogId, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId);
+                        List<Person> people = peopleListFromJSON(jsonArray, siteID, localTableBlogId);
                         callback.onSuccess(people);
 
                     }
@@ -49,12 +49,12 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static void updateRole(String siteID, String userID, String newRole, final int localTableBlogId, final UpdateUserCallback callback) {
+    public static void updateRole(final String siteID, String userID, String newRole, final int localTableBlogId, final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
-                    Person person = Person.fromJSON(jsonObject, localTableBlogId);
+                    Person person = Person.fromJSON(jsonObject, siteID, localTableBlogId);
                     callback.onSuccess(person);
                 }
             }
@@ -85,7 +85,7 @@ public class PeopleUtils {
         }
     }
 
-    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId) {
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, String siteID, int localTableBlogId) {
         if (jsonArray == null) {
             return null;
         }
@@ -93,7 +93,7 @@ public class PeopleUtils {
         ArrayList<Person> peopleList = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Person person = Person.fromJSON(jsonArray.optJSONObject(i), localTableBlogId);
+            Person person = Person.fromJSON(jsonArray.optJSONObject(i), siteID, localTableBlogId);
             if (person != null) {
                 peopleList.add(person);
             }

@@ -25,7 +25,7 @@ public class PeopleTable {
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
-                + "site_id                 INTEGER DEFAULT 0,"
+                + "site_id                 TEXT,"
                 + "local_blog_id           INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
@@ -115,7 +115,7 @@ public class PeopleTable {
 
     private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
-        long siteId = c.getInt(c.getColumnIndex("site_id"));
+        String siteId = c.getString(c.getColumnIndex("site_id"));
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));
         String lastName = c.getString(c.getColumnIndex("last_name"));

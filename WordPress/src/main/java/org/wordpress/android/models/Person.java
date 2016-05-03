@@ -8,7 +8,7 @@ import org.wordpress.android.util.AppLog;
 
 public class Person {
     private long personID;
-    private long siteID;
+    private String siteID;
     private int localTableBlogId;
 
     private String username;
@@ -19,7 +19,7 @@ public class Person {
     private String role;
 
     public Person(long personID,
-                  long siteID,
+                  String siteID,
                   int localTableBlogId,
                   String username,
                   String firstName,
@@ -39,7 +39,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, int localTableBlogId) {
+    public static Person fromJSON(JSONObject json, String siteID, int localTableBlogId) {
         if (json == null) {
             return null;
         }
@@ -47,7 +47,6 @@ public class Person {
         // Response parameters can be found in https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            long siteID = Long.parseLong(json.getString("site_ID"));
             String username = json.optString("login");
             String firstName = json.optString("first_name");
             String lastName = json.optString("last_name");
@@ -70,7 +69,7 @@ public class Person {
         return personID;
     }
 
-    public long getSiteID() {
+    public String getSiteID() {
         return siteID;
     }
 
