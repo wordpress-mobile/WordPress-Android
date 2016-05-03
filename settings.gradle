@@ -1,9 +1,5 @@
 include ':WordPress'
 include ':libs:utils:WordPressUtils'
-include ':libs:android-wordpress-com-rest:WordPressComRest'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
-include ':libs:automattictracks:AutomatticTracks'
-include ':libs:Android-Passcodelock:library'
-
