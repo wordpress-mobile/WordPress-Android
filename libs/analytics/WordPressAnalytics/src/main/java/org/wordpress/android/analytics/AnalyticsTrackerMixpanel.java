@@ -748,6 +748,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Selected Install Jetpack");
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Selected Connect Jetpack");
+                break;
             case STATS_WIDGET_ADDED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Widget Added");
@@ -956,6 +960,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
+                break;
+            case ABTEST_START:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
                 break;
             default:
                 instructions = null;

@@ -339,6 +339,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                eventName = "stats_connect_jetpack_selected";
+                break;
             case STATS_WIDGET_ADDED:
                 eventName = "stats_widget_added";
                 break;
@@ -491,6 +494,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 eventName = "site_settings_delete_site_response_error";
+                break;
+            case ABTEST_START:
+                eventName = "abtest_start";
                 break;
             default:
                 eventName = null;

@@ -12,6 +12,9 @@
         <warning path="src/main/res/values/reader_styles.xml" />
         <warning path="src/main/res/values/styles.xml" />
     </issue>
+    <issue id="InvalidPackage">
+        <ignore regexp="okio-1.6.0.jar" />
+    </issue>
 
     <issue id="HardcodedText" severity="error" />
     <issue id="IconDuplicates" severity="error" />
