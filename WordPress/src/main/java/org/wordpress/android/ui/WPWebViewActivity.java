@@ -212,8 +212,8 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
-            // Only the URL to load is passed to this activity. Use a the normal loader
-            // not authenticated, and add our referrer header
+            // Only the URL to load is passed to this activity. Use the normal un-authenticated
+            // loader, optionally with our referrer header
             String referrerUrl = extras.getString(REFERRER_URL);
             if (!TextUtils.isEmpty(referrerUrl)) {
                 Map<String, String> headers = new HashMap<>();
