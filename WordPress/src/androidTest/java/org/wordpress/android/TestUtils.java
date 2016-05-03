@@ -144,8 +144,6 @@ public class TestUtils {
             return (int) Math.round((Double) value);
         } else if (value instanceof Object[]) {
             return injectDateInArray((Object[]) value);
-        } else if (value instanceof StringMap) {
-            return injectDateInHashMap(stringMapToHashMap((StringMap) value));
         }
         return value;
     }
