@@ -25,6 +25,7 @@ public class PeopleTable {
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
+                + "site_id                 INTEGER DEFAULT 0,"
                 + "local_blog_id           INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
@@ -53,6 +54,7 @@ public class PeopleTable {
     public static void save(Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonID());
+        values.put("site_id", person.getSiteID());
         values.put("local_blog_id", person.getLocalTableBlogId());
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
@@ -113,6 +115,7 @@ public class PeopleTable {
 
     private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
+        long siteId = c.getInt(c.getColumnIndex("site_id"));
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));
         String lastName = c.getString(c.getColumnIndex("last_name"));
@@ -120,6 +123,6 @@ public class PeopleTable {
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
         String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, siteId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
     }
 }

@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog;
 
 public class Person {
     private long personID;
+    private long siteID;
     private int localTableBlogId;
 
     private String username;
@@ -18,6 +19,7 @@ public class Person {
     private String role;
 
     public Person(long personID,
+                  long siteID,
                   int localTableBlogId,
                   String username,
                   String firstName,
@@ -26,6 +28,7 @@ public class Person {
                   String avatarUrl,
                   String role) {
         this.personID = personID;
+        this.siteID = siteID;
         this.localTableBlogId = localTableBlogId;
         this.username = username;
         this.firstName = firstName;
@@ -44,6 +47,7 @@ public class Person {
         // Response parameters can be found in https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
+            long siteID = Long.parseLong(json.getString("site_ID"));
             String username = json.optString("login");
             String firstName = json.optString("first_name");
             String lastName = json.optString("last_name");
@@ -52,7 +56,7 @@ public class Person {
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.optJSONArray("roles").optString(0);
 
-            return new Person(personID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+            return new Person(personID, siteID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PEOPLE, "JSON exception occurred while parsing the user json: " + e);
         } catch (NumberFormatException e) {
@@ -64,6 +68,10 @@ public class Person {
 
     public long getPersonID() {
         return personID;
+    }
+
+    public long getSiteID() {
+        return siteID;
     }
 
     public int getLocalTableBlogId() {
