@@ -29,8 +29,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
     private boolean mIsActive;
 
     private MenuModel mCurrentMenu;
-
-    private  MenuAddEditRemoveActionListener mActionListener;
+    private MenuAddEditRemoveActionListener mActionListener;
 
     public interface MenuAddEditRemoveActionListener {
         void onMenuCreate(MenuModel menu);
@@ -152,6 +151,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
                             menu.name = menuTitle;
                             mActionListener.onMenuCreate(menu);
                         } else {
+                            mCurrentMenu.name = menuTitle;
                             mActionListener.onMenuUpdate(mCurrentMenu);
                         }
                     }

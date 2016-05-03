@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -8,31 +9,93 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenusFragment extends Fragment {
 
     private boolean mUndoPressed = false;
+    private MenusRestWPCom mRestWPCom;
+    private MenuAddEditRemoveView mAddEditRemoveControl;
+    private List<MenuModel> mMenus = new ArrayList<>();
+    private TextView mAllMenuNamesTextView;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        mRestWPCom = new MenusRestWPCom(new MenusRestWPCom.IMenusDelegate() {
+            @Override public long getSiteId() {
+                return Long.valueOf(WordPress.getCurrentRemoteBlogId());
+            }
+            @Override public void onMenuCreated(int statusCode, MenuModel menu) {
+                Toast.makeText(getActivity(), "menu: " + menu.name + " created", Toast.LENGTH_SHORT).show();
+            }
+            @Override public Context getContext() { return getActivity(); }
+            @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) {
+                if (statusCode == 200){
+                    mMenus = menus;
+                    if (mMenus != null) {
+                        String menuNames = "";
+                        for (MenuModel menu : mMenus){
+                            if (menu.name != null){
+                                menuNames = menuNames + menu.name + "\n";
+                            }
+                        }
+                        mAllMenuNamesTextView.setText(menuNames);
+                    }
+                    Toast.makeText(getActivity(), "menus successfully retrieved", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "could not retrieve menus", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override public void onMenuReceived(int statusCode, MenuModel menu) {
+                if (statusCode == 200 && menu != null) {
+                    mAddEditRemoveControl.setMenu(menu, false);
+                }
+                else {
+                    Toast.makeText(getActivity(), "menu not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) {
+                if (statusCode == 200) {
+                    if (deleted)
+                        Toast.makeText(getActivity(), "menu: " + menu.name + " deleted", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(getActivity(), "menu: " + menu.name + " delete request NOT DELETED", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "menu: " + menu.name + " delete request NOT DELETED - statuscode: " + statusCode, Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override public void onMenuUpdated(int statusCode, MenuModel menu) {
+                if (statusCode == 200)
+                    Toast.makeText(getActivity(), "menu: " + menu.name + " updated", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getActivity(), "menu: " + menu.name + " NOT FOUND", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.menus_fragment, container, false);
-        final MenuAddEditRemoveView control = (MenuAddEditRemoveView) view.findViewById(R.id.menu_add_edit_remove_view);
-        control.setMenuActionListener(new MenuAddEditRemoveView.MenuAddEditRemoveActionListener() {
+        mAllMenuNamesTextView = (TextView) view.findViewById(R.id.test_text);
+        mAddEditRemoveControl = (MenuAddEditRemoveView) view.findViewById(R.id.menu_add_edit_remove_view);
+        mAddEditRemoveControl.setMenuActionListener(new MenuAddEditRemoveView.MenuAddEditRemoveActionListener() {
             @Override
             public void onMenuCreate(MenuModel menu) {
-                // TODO implement menu created listener
-                Toast.makeText(getActivity(), "menu: " + menu.name + " create request",Toast.LENGTH_SHORT).show();
+                mRestWPCom.createMenu(menu);
             }
 
             @Override
@@ -42,8 +105,8 @@ public class MenusFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         mUndoPressed = true;
-                        // user undid the trash, so reset the control to whatever it had
-                        control.setMenu(menu, false);
+                        // user undid the trash action, so reset the control to whatever it had
+                        mAddEditRemoveControl.setMenu(menu, false);
                     }
                 };
 
@@ -60,8 +123,7 @@ public class MenusFragment extends Fragment {
                             return;
                         }
 
-                        // TODO implement menu deleted action against the server, using the network layer
-                        Toast.makeText(getActivity(), "menu: " + menu.name + " delete request",Toast.LENGTH_SHORT).show();
+                        mRestWPCom.deleteMenu(menu);
                     }
                 });
 
@@ -70,8 +132,7 @@ public class MenusFragment extends Fragment {
 
             @Override
             public void onMenuUpdate(MenuModel menu) {
-                // TODO implement menu updated listener
-                Toast.makeText(getActivity(), "menu: " + menu.name + " update request",Toast.LENGTH_SHORT).show();
+                mRestWPCom.updateMenu(menu);
             }
         });
 
@@ -82,7 +143,7 @@ public class MenusFragment extends Fragment {
             public void onClick(View v) {
                 MenuModel model = new MenuModel();
                 model.name = "test menu name";
-                control.setMenu(model, false);
+                mAddEditRemoveControl.setMenu(model, false);
             }
         });
 
@@ -92,7 +153,7 @@ public class MenusFragment extends Fragment {
             public void onClick(View v) {
                 MenuModel model = new MenuModel();
                 model.name = "Default menu can't be trashed";
-                control.setMenu(model, true);
+                mAddEditRemoveControl.setMenu(model, true);
             }
         });
 
@@ -100,9 +161,51 @@ public class MenusFragment extends Fragment {
         resetMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                control.setMenu(null, false);
+                mAddEditRemoveControl.setMenu(null, false);
+                mAllMenuNamesTextView.setText(null);
             }
         });
+
+
+        // fetching buttons
+
+        Button fetchAllMenusBtn = (Button) view.findViewById(R.id.menu_test_fetch_all);
+        fetchAllMenusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRestWPCom.fetchAllMenus();
+            }
+        });
+
+        Button fetchGoodMenuBtn = (Button) view.findViewById(R.id.menu_test_fetch_good_menu);
+        fetchGoodMenuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //mRestWPCom.fetchMenu(483627674);
+                if (mMenus.size() > 0) {
+                    mRestWPCom.fetchMenu(mMenus.get(mMenus.size()-1).menuId);
+                } else {
+                    Toast.makeText(getActivity(), "Please fetch all menus first", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Button fetchInexistentMenuBtn = (Button) view.findViewById(R.id.menu_test_fetch_bad_menu);
+        fetchInexistentMenuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRestWPCom.fetchMenu(4836); //fake number
+            }
+        });
+
+        Button fetchZeroIdMenuBtn = (Button) view.findViewById(R.id.menu_test_fetch_zero_menu);
+        fetchZeroIdMenuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRestWPCom.fetchMenu(0);
+            }
+        });
+
         //FIXME: end - delete all this test code!
 
         return view;
