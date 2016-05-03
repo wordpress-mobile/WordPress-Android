@@ -49,6 +49,42 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
+    public static void updateRole(String siteID, String userID, String newRole, final int localTableBlogId, final UpdateUserCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    Person person = Person.fromJSON(jsonObject, localTableBlogId);
+                    callback.onSuccess(person);
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError(volleyError);
+                }
+            }
+        };
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            JSONArray roles = new JSONArray();
+            roles.put(newRole);
+            jsonObject.put("roles", roles);
+
+            String path = String.format("sites/%s/users/%s", siteID, userID);
+            WordPress.getRestClientUtilsV1_1().post(path, jsonObject, null, listener, errorListener);
+        } catch (JSONException e) {
+            if (callback != null) {
+                callback.onJSONException(e);
+            }
+        }
+    }
+
     private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId) {
         if (jsonArray == null) {
             return null;
@@ -68,6 +104,10 @@ public class PeopleUtils {
 
     public interface FetchUsersCallback extends Callback {
         void onSuccess(List<Person> peopleList);
+    }
+
+    public interface UpdateUserCallback extends Callback {
+        void onSuccess(Person person);
     }
 
     public interface Callback {
