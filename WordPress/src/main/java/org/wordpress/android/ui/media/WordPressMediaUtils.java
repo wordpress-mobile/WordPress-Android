@@ -116,6 +116,12 @@ public class WordPressMediaUtils {
         return Intent.createChooser(intent, title);
     }
 
+    private static Intent prepareGalleryIntent(String title) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        return Intent.createChooser(intent, title);
+    }
+
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
         Intent intent = preparelaunchCamera(activity, callback);
         if (intent != null) {
@@ -178,7 +184,7 @@ public class WordPressMediaUtils {
     }
 
     private static Intent makePickOrCaptureIntent(Context context, LaunchCameraCallback callback) {
-        Intent pickPhotoIntent = preparePictureLibraryIntent(context.getString(R.string.capture_or_pick_photo));
+        Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
         if (DeviceUtils.getInstance().hasCamera(context)) {
             Intent cameraIntent = getLaunchCameraIntent(callback);
