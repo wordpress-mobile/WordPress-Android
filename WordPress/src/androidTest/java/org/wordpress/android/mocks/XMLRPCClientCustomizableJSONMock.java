@@ -44,7 +44,7 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
                 // If that fails, try to load a JSONObject
                 Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
                 HashMap<String, Object> map = gson.fromJson(jsonString, type);
-                return TestUtils.injectDateInHashMap(map);
+                return TestUtils.injectDateInMap(map);
             }
         } catch (IOException e) {
             AppLog.e(T.TESTS, "can't read file: " + filename);

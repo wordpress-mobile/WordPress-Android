@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -132,7 +133,7 @@ public class TestUtils {
 
     public static Object castIt(Object value) {
         if (value instanceof HashMap) {
-            return injectDateInHashMap((HashMap<String, Object>) value);
+            return injectDateInMap((Map<String, Object>) value);
         } else if (value instanceof String) {
             Date newValue = parseStringToDate((String) value);
             if (newValue != null) {
@@ -156,8 +157,8 @@ public class TestUtils {
         return res.toArray();
     }
 
-    public static HashMap<String, Object> injectDateInHashMap(HashMap<String, Object> hashMap) {
-        HashMap<String, Object> res = new HashMap<String, Object>();
+    public static Map<String, Object> injectDateInMap(Map<String, Object> hashMap) {
+        Map<String, Object> res = new HashMap<String, Object>();
         for (String key : hashMap.keySet()) {
             Object value = hashMap.get(key);
             res.put(key, castIt(value));
