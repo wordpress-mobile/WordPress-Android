@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.0.0'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -13,7 +13,6 @@ repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'http://dl.bintray.com/optimizely/optimizely' }
 }
 
 apply plugin: 'com.android.application'
@@ -31,8 +30,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-7"
-        versionCode 253
+        versionName "alpha-6"
+        versionCode 252
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -60,8 +59,9 @@ android {
         release {
             // Proguard is only used to fix an issue with some Samsung device
             // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            // minifyEnabled true
+            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            debuggable true
         }
 
         debug {
@@ -74,10 +74,6 @@ android {
 dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
-    }
-
-    compile('com.optimizely:optimizely:+@aar') {
-        transitive = true
     }
 
     // Provided by maven central
@@ -97,7 +93,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.3'
+    // compile 'com.automattic:rest:1.0.3'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
 
@@ -110,7 +106,7 @@ dependencies {
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:passcodelock:1.1.0'
+   // compile 'org.wordpress:passcodelock:1.1.0'
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
@@ -124,6 +120,12 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+
+    releaseCompile project(path:':libs:android-wordpress-com-rest:WordPressComRest', configuration: 'release')
+    debugCompile project(path:':libs:android-wordpress-com-rest:WordPressComRest', configuration: 'debug')
+
+    releaseCompile project(path:':libs:Android-Passcodelock:library', configuration: 'release')
+    debugCompile project(path:':libs:Android-Passcodelock:library', configuration: 'debug')
 }
 
 configurations.all {

@@ -84,4 +84,5 @@
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="send_link">Send link</string>
 </resources>

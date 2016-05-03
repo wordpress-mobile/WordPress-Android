@@ -30,7 +30,10 @@ android {
 
 dependencies {
     compile 'org.wordpress:utils:1.9.0'
-    compile 'com.automattic:rest:1.0.3'
+    //compile 'com.automattic:rest:1.0.3'
+
+    releaseCompile project(path:':libs:android-wordpress-com-rest:WordPressComRest', configuration: 'release')
+    debugCompile project(path:':libs:android-wordpress-com-rest:WordPressComRest', configuration: 'debug')
 }
 
 uploadArchives {
