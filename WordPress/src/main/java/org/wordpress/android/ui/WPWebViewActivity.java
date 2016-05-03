@@ -33,6 +33,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,6 +76,8 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
     public static final String SHARABLE_URL = "sharable_url";
+
+    public static final String HTTP_REFERER_URL = "https://wordpress.com";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -163,17 +166,20 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
+        WebViewClient webViewClient;
+
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (blog == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            mWebView.setWebViewClient(new WPWebViewClient(blog));
+            webViewClient = new WPWebViewClient(blog);
         } else {
-            mWebView.setWebViewClient(new WebViewClient());
+            webViewClient = new WebViewClient();
         }
 
+        mWebView.setWebViewClient(webViewClient);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
     }
 
@@ -201,7 +207,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
             // Only the URL to load is passed to this activity. Use a the normal loader not authenticated.
-            loadUrl(addressToLoad);
+            loadUrl(addressToLoad, getExtraHeaders());
         } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
@@ -218,6 +224,15 @@ public class WPWebViewActivity extends WebViewActivity {
 
             loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
+    }
+
+    /*
+     * returns custom HTTP headers so we can set the referer
+     */
+    private Map<String, String> getExtraHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Referer", HTTP_REFERER_URL);
+        return headers;
     }
 
     @Override
