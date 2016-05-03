@@ -7,9 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
