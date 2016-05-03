@@ -352,6 +352,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Lib activities-->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"
