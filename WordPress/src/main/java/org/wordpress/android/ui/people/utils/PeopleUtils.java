@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(String siteID, final int localTableBlogId, final PeopleUtils.Callback callback) {
+    public static void fetchUsers(String siteID, final int localTableBlogId, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -66,9 +66,11 @@ public class PeopleUtils {
         return peopleList;
     }
 
-    public interface Callback {
+    public interface FetchUsersCallback extends Callback {
         void onSuccess(List<Person> peopleList);
+    }
 
+    public interface Callback {
         void onError(VolleyError error);
 
         void onJSONException(JSONException e);

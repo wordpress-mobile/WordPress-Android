@@ -77,7 +77,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
     }
 
     private void refreshUsersList(String dotComBlogId, final int localTableBlogId) {
-        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.Callback() {
+        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
