@@ -1410,6 +1410,9 @@
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plan_purchase_now">Purchase Now</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="plan_upgrade_now">Upgrade Now</string>
+    <string name="plan_upgrade_not_available">Upgrade not available</string>
+    <string name="plan_upgrade_contact_support_text">This blog already has a plan subscription. Please contact our support team to upgrade to %1$s. Do you want to contact support now?</string>
 
     <!-- Plans business post-purchase -->
     <string name="plans_post_purchase_title_intro">It\'s all yours, way to go!</string>
