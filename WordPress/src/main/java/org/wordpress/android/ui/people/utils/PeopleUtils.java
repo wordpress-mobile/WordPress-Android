@@ -49,7 +49,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static void updateRole(final String siteID, String userID, String newRole, final int localTableBlogId, final UpdateUserCallback callback) {
+    public static void updateRole(final String siteID, String userID, String newRole, final int localTableBlogId,
+                                  final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

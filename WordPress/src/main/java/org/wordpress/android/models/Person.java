@@ -44,7 +44,7 @@ public class Person {
             return null;
         }
 
-        // Response parameters can be found in https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
             String username = json.optString("login");
@@ -55,7 +55,8 @@ public class Person {
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
 
-            return new Person(personID, siteID, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+            return new Person(personID, siteID, localTableBlogId, username,
+                    firstName, lastName, displayName, avatarUrl, role);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PEOPLE, "JSON exception occurred while parsing the user json: " + e);
         } catch (NumberFormatException e) {
