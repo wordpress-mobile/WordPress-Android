@@ -56,7 +56,12 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         Person person = Person.fromJSON(jsonObject, siteID, localTableBlogId);
-                        callback.onSuccess(person);
+                        if (person != null) {
+                            callback.onSuccess(person);
+                        } else {
+                            AppLog.e(T.API, "Couldn't map jsonObject + " + jsonObject + " to person model.");
+                            callback.onError();
+                        }
                     } catch (JSONException e) {
                         callback.onError();
                     }
