@@ -3,7 +3,6 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -21,6 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -28,7 +28,6 @@ import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -341,16 +340,8 @@ public class WPWebViewActivity extends WebViewActivity {
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
-            String url = mWebView.getUrl();
-            if (url != null) {
-                Uri uri = Uri.parse(url);
-                if (uri != null) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(uri);
-                    startActivity(i);
-                    AppLockManager.getInstance().setExtendedTimeout();
-                }
-            }
+            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+            // AppLockManager.getInstance().setExtendedTimeout();
             return true;
         }
 

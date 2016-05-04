@@ -227,9 +227,7 @@ public class ReaderActivityLauncher {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
+        if (TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             openUrlInternal(context, url);
