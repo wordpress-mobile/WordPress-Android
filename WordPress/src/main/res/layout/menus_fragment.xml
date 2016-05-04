@@ -14,14 +14,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/content_margin"
-        android:text="Test"/>
+        android:text="@string/menus_test_test"/>
 
     <Button
         android:id="@+id/menu_test_fetch_all"
         android:layout_margin="@dimen/content_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get all menus"
+        android:text="@string/menus_test_get_all_menus"
         />
 
     <TextView
@@ -38,21 +38,21 @@
             android:id="@+id/menu_test_fetch_good_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="get last menu"
+            android:text="@string/menus_test_get_last_menu"
             />
 
         <Button
             android:id="@+id/menu_test_fetch_bad_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="get inexistent menu"
+            android:text="@string/menus_test_get_inexistent_menu"
             />
 
         <Button
             android:id="@+id/menu_test_fetch_zero_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Get id=0 menu"
+            android:text="@string/menus_test_get_id_zero"
             />
 
     </LinearLayout>
@@ -66,21 +66,21 @@
             android:id="@+id/menu_test_set_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set menu"
+            android:text="@string/menus_test_set_menu"
             />
 
         <Button
             android:id="@+id/menu_test_set_menu_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set default menu"
+            android:text="@string/menus_test_set_default"
             />
 
         <Button
             android:id="@+id/menu_test_reset_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset"
+            android:text="@string/menus_test_reset"
             />
     </LinearLayout>
 
@@ -89,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/content_margin"
-        android:text="Add / Edit / Remove component starts below"/>
+        android:text="@string/menus_test_start_label"/>
 
     <View style="@style/MenusDividerView" />
    <!--//FIXME: end - delete all this!-->

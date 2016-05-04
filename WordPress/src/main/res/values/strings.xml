@@ -1425,4 +1425,16 @@
 
     <!-- Calypso menus -->
     <string name="menus_menu_deleted">Menu deleted</string>
+
+    <!-- FIXME delete these test strings -->
+    <string name="menus_test_test">Test</string>
+    <string name="menus_test_get_all_menus">Get all menus</string>
+    <string name="menus_test_get_last_menu">get last menu</string>
+    <string name="menus_test_get_inexistent_menu">get inexistent menu</string>
+    <string name="menus_test_get_id_zero">Get id=0 menu</string>
+    <string name="menus_test_set_menu">Set menu</string>
+    <string name="menus_test_set_default">Set default menu</string>
+    <string name="menus_test_reset">Reset</string>
+    <string name="menus_test_start_label">Add / Edit / Remove component starts below</string>
+    
 </resources>
