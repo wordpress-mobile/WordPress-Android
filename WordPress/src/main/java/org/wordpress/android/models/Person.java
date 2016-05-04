@@ -8,7 +8,7 @@ import org.wordpress.android.util.AppLog;
 
 public class Person {
     private long personID;
-    private String siteID;
+    private String blogId;
     private int localTableBlogId;
 
     private String username;
@@ -19,7 +19,7 @@ public class Person {
     private String role;
 
     public Person(long personID,
-                  String siteID,
+                  String blogId,
                   int localTableBlogId,
                   String username,
                   String firstName,
@@ -28,7 +28,7 @@ public class Person {
                   String avatarUrl,
                   String role) {
         this.personID = personID;
-        this.siteID = siteID;
+        this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
         this.username = username;
         this.firstName = firstName;
@@ -39,7 +39,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, String siteID, int localTableBlogId) throws JSONException {
+    public static Person fromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class Person {
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
 
-            return new Person(personID, siteID, localTableBlogId, username,
+            return new Person(personID, blogId, localTableBlogId, username,
                     firstName, lastName, displayName, avatarUrl, role);
         } catch (NumberFormatException e) {
             AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
@@ -68,8 +68,8 @@ public class Person {
         return personID;
     }
 
-    public String getSiteID() {
-        return siteID;
+    public String getBlogId() {
+        return blogId;
     }
 
     public int getLocalTableBlogId() {
