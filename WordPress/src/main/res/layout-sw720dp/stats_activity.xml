@@ -45,13 +45,13 @@
             <org.wordpress.android.ui.stats.NestedScrollViewExt
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingLeft="@dimen/content_margin"
+                android:paddingRight="@dimen/content_margin"
                 android:id="@+id/scroll_view_stats"
                 android:fillViewport="true">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/content_margin"
-                    android:layout_marginRight="@dimen/content_margin"
                     android:orientation="vertical">
 
                     <!-- Insights -->

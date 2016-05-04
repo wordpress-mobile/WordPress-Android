@@ -211,7 +211,7 @@ public class JsCallbackReceiver {
                             responseIds.add("id");
                             responseIds.add("contents");
                             break;
-                        case "getSelectedText":
+                        case "getSelectedTextToLinkify":
                             responseIds.add("result");
                             break;
                         case "getFailedMedia":

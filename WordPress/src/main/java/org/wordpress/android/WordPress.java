@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.Gson;
@@ -97,6 +98,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
     private static RestClientUtils mRestClientUtilsVersion1_3;
+    private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -211,6 +213,16 @@ public class WordPress extends Application {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // TODO: remove this after the visual editor is enabled in a release version (5.4 if everything goes well)
+        enableVisualEditorForBetaUsers();
+    }
+
+    private void enableVisualEditorForBetaUsers() {
+        if (BuildConfig.VERSION_NAME.contains("5.4-rc")) {
+            AppPrefs.setVisualEditorAvailable(true);
+            AppPrefs.setVisualEditorEnabled(true);
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -248,7 +260,7 @@ public class WordPress extends Application {
     public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        if (checkPlayServices(activity)) {
+        if (isGooglePlayServicesAvailable(activity)) {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
@@ -347,6 +359,14 @@ public class WordPress extends Application {
         return mRestClientUtilsVersion1_3;
     }
 
+    public static RestClientUtils getRestClientUtilsV0() {
+        if (mRestClientUtilsVersion0 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion0 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
+        }
+        return mRestClientUtilsVersion0;
+    }
+
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
@@ -377,21 +397,25 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    public boolean checkPlayServices(Activity activity) {
-        int connectionResult = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
             // Success: return true
             case ConnectionResult.SUCCESS:
                 return true;
             // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                GooglePlayServicesUtil.getErrorDialog(connectionResult, activity, 0);
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
             default:
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:
             case ConnectionResult.SERVICE_INVALID:
                 AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                        + GooglePlayServicesUtil.getErrorString(connectionResult));
+                        + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
     }

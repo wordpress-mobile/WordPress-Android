@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -93,6 +95,16 @@ public class ProfileInputDialogFragment extends DialogFragment {
                         });
 
         return alertDialogBuilder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AlertDialog dialog = (AlertDialog) getDialog();
+        Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
     }
 
     public interface Callback {

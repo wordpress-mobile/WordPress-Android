@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/sign_in_scroll_view"
+    android:background="@color/nux_background"
     android:animateLayoutChanges="true"
     android:fillViewport="true"
     android:gravity="center">
@@ -99,8 +100,7 @@
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
                     android:nextFocusDown="@+id/nux_password"
-                    android:maxLength="@integer/max_length_username"
-                    app:persistenceEnabled="true" />
+                    android:maxLength="@integer/max_length_username" />
 
                 <ImageView
                     android:id="@+id/imageView"

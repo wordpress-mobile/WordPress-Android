@@ -7,6 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 
+import com.optimizely.Optimizely;
+import com.optimizely.Variable.LiveVariable;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -18,6 +21,7 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -47,7 +51,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-
+    private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
@@ -239,8 +243,13 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        if (isMagicLinkEnabledVariable.get()) {
+            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        } else {
+            Intent intent = new Intent(activity, SignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        }
     }
 
     public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
@@ -270,7 +279,7 @@ public class ActivityLauncher {
 
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
-        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

@@ -748,6 +748,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Selected Install Jetpack");
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Selected Connect Jetpack");
+                break;
             case STATS_WIDGET_ADDED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Stats - Widget Added");
@@ -778,6 +782,26 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Support - Replied to Helpshift");
                 instructions.addSuperPropertyToFlag("support_replied_to_helpshift");
                 break;
+            case LOGIN_MAGIC_LINK_EXITED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link exited");
+                break;
+            case LOGIN_MAGIC_LINK_FAILED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link failed");
+                break;
+            case LOGIN_MAGIC_LINK_OPENED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link opened");
+                break;
+            case LOGIN_MAGIC_LINK_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link requested");
+                break;
+            case LOGIN_MAGIC_LINK_SUCCEEDED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link succeeded");
+                break;
             case LOGIN_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed Login");
@@ -785,6 +809,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Failed To Guess XMLRPC");
+                break;
+            case LOGIN_INSERTED_INVALID_URL:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Inserted Invalid URL");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Filled");
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Auto Fill Credentials Updated");
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -944,6 +980,9 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
+                break;
+            case ABTEST_START:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
                 break;
             default:
                 instructions = null;

@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-rc1'
+        classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -13,6 +13,8 @@ repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'http://dl.bintray.com/optimizely/optimizely' }
+    maven { url "https://jitpack.io" }
 }
 
 apply plugin: 'com.android.application'
@@ -26,12 +28,12 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "5.3-rc-1"
-        versionCode 250
+        versionName "5.4-rc-1"
+        versionCode 258
         minSdkVersion 14
         targetSdkVersion 23
 
@@ -75,11 +77,15 @@ dependencies {
         transitive = true;
     }
 
+    compile('com.optimizely:optimizely:+@aar') {
+        transitive = true
+    }
+
     // Provided by maven central
     compile ('org.wordpress:mediapicker:1.2.4') {
         exclude group:'com.android.support'
     }
-    compile 'com.google.code.gson:gson:2.2.2'
+    compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
@@ -88,12 +94,16 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:percent:23.1.1'
     compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.3'
+    compile 'com.automattic:rest:1.0.5'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
+
+    compile 'com.yalantis:ucrop:1.2.4'
+    compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'

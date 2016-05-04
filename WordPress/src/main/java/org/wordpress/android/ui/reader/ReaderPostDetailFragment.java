@@ -732,7 +732,7 @@ public class ReaderPostDetailFragment extends Fragment
                 txtTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderTag tag = new ReaderTag(tagToDisplay, ReaderTagType.FOLLOWED);
+                        ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
                         ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
                     }
                 });
