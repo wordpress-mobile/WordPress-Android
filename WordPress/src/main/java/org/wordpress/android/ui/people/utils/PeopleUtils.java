@@ -25,11 +25,10 @@ public class PeopleUtils {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
                         List<Person> people = peopleListFromJSON(jsonArray, siteID, localTableBlogId);
                         callback.onSuccess(people);
-
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
-                        callback.onJSONException(e);
+                        callback.onError();
                     }
                 }
             }
@@ -40,7 +39,7 @@ public class PeopleUtils {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
                 if (callback != null) {
-                    callback.onError(volleyError);
+                    callback.onError();
                 }
             }
         };
@@ -55,8 +54,12 @@ public class PeopleUtils {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
-                    Person person = Person.fromJSON(jsonObject, siteID, localTableBlogId);
-                    callback.onSuccess(person);
+                    try {
+                        Person person = Person.fromJSON(jsonObject, siteID, localTableBlogId);
+                        callback.onSuccess(person);
+                    } catch (JSONException e) {
+                        callback.onError();
+                    }
                 }
             }
         };
@@ -66,7 +69,7 @@ public class PeopleUtils {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.API, volleyError);
                 if (callback != null) {
-                    callback.onError(volleyError);
+                    callback.onError();
                 }
             }
         };
@@ -81,12 +84,13 @@ public class PeopleUtils {
             WordPress.getRestClientUtilsV1_1().post(path, jsonObject, null, listener, errorListener);
         } catch (JSONException e) {
             if (callback != null) {
-                callback.onJSONException(e);
+                callback.onError();
             }
         }
     }
 
-    private static List<Person> peopleListFromJSON(JSONArray jsonArray, String siteID, int localTableBlogId) {
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, String siteID, int localTableBlogId)
+            throws JSONException {
         if (jsonArray == null) {
             return null;
         }
@@ -112,8 +116,6 @@ public class PeopleUtils {
     }
 
     public interface Callback {
-        void onError(VolleyError error);
-
-        void onJSONException(JSONException e);
+        void onError();
     }
 }

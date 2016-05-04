@@ -39,7 +39,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, String siteID, int localTableBlogId) {
+    public static Person fromJSON(JSONObject json, String siteID, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -57,8 +57,6 @@ public class Person {
 
             return new Person(personID, siteID, localTableBlogId, username,
                     firstName, lastName, displayName, avatarUrl, role);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.PEOPLE, "JSON exception occurred while parsing the user json: " + e);
         } catch (NumberFormatException e) {
             AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
         }
