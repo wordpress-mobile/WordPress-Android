@@ -24,6 +24,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.helpers.Version;
@@ -71,9 +72,8 @@ public class WordPressMediaUtils {
 
 
     public static Intent prepareVideoLibraryIntent(Context context) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
@@ -96,7 +96,7 @@ public class WordPressMediaUtils {
 
     public static void launchPictureLibrary(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(preparePictureLibraryIntent(activity),
+        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
@@ -105,15 +105,20 @@ public class WordPressMediaUtils {
             return;
         }
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()),
-                RequestCodes.PICTURE_LIBRARY);
+        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()
+                .getString(R.string.pick_photo)), RequestCodes.PICTURE_LIBRARY);
     }
 
-    private static Intent preparePictureLibraryIntent(Context context) {
+    private static Intent preparePictureLibraryIntent(String title) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        return Intent.createChooser(intent, title);
+    }
+
+    private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        return Intent.createChooser(intent, context.getString(R.string.pick_photo));
+        return Intent.createChooser(intent, title);
     }
 
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
@@ -166,6 +171,28 @@ public class WordPressMediaUtils {
             }
         }
         return intent;
+    }
+
+    public static void launchPictureLibraryOrCapture(Fragment fragment, LaunchCameraCallback callback) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        AppLockManager.getInstance().setExtendedTimeout();
+        fragment.startActivityForResult(makePickOrCaptureIntent(fragment.getActivity(), callback),
+                RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
+    }
+
+    private static Intent makePickOrCaptureIntent(Context context, LaunchCameraCallback callback) {
+        Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
+
+        if (DeviceUtils.getInstance().hasCamera(context)) {
+            Intent cameraIntent = getLaunchCameraIntent(callback);
+            pickPhotoIntent.putExtra(
+                    Intent.EXTRA_INITIAL_INTENTS,
+                    new Intent[]{ cameraIntent });
+        }
+
+        return pickPhotoIntent;
     }
 
     public static int getPlaceholder(String url) {
