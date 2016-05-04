@@ -202,11 +202,12 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     @Override
-    public boolean equals(Object tag){
-        if (tag == null) return false;
-
-        if (!ReaderTag.class.isAssignableFrom(tag.getClass())) return false;
-
-        return getLabel().equals(((ReaderTag) tag).getLabel());
+    public boolean equals(Object object){
+        if (object instanceof ReaderTag) {
+            ReaderTag tag = (ReaderTag) object;
+            return (tag.tagType == this.tagType && tag.getLabel().equals(this.getLabel()));
+        } else {
+            return false;
+        }
     }
 }

@@ -13,7 +13,7 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
     private final Context mContext;
     private final int mRemoteBlogId;
     private boolean mAttemptingToBind = false;
-    private boolean mBound = false;
+    private boolean mBindCalled = false;
 
     public SuggestionServiceConnectionManager(Context context, int remoteBlogId) {
         mContext = context;
@@ -23,6 +23,7 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
     public void bindToService() {
         if (!mAttemptingToBind) {
             mAttemptingToBind = true;
+            mBindCalled = true;
             Intent intent = new Intent(mContext, SuggestionService.class);
             mContext.bindService(intent, this, Context.BIND_AUTO_CREATE);
         }
@@ -30,9 +31,9 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
 
     public void unbindFromService() {
         mAttemptingToBind = false;
-        if (mBound) {
+        if (mBindCalled) {
             mContext.unbindService(this);
-            mBound = false;
+            mBindCalled = false;
         }
     }
 
@@ -45,11 +46,10 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
         suggestionService.updateTags(mRemoteBlogId);
 
         mAttemptingToBind = false;
-        mBound = true;
     }
 
     @Override
     public void onServiceDisconnected(ComponentName componentName) {
-        mBound = false;
+        // noop
     }
 }

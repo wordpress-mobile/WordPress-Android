@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -67,8 +67,7 @@ public abstract class AbstractFragment extends Fragment {
     protected abstract boolean isUserDataValid();
 
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
-                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+        if (didPressEnterKey(actionId, event)) {
             if (!isUserDataValid()) {
                 return true;
             }
@@ -82,6 +81,16 @@ public abstract class AbstractFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    protected boolean didPressNextKey(int actionId, KeyEvent event) {
+        return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
+    }
+
+    protected boolean didPressEnterKey(int actionId, KeyEvent event) {
+        return actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
     }
 
     protected void initPasswordVisibilityButton(View rootView, final EditText passwordEditText) {
