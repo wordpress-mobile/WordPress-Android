@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -228,7 +229,7 @@ public class ReaderActivityLauncher {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (TextUtils.isEmpty(url)) return;
+        if (context == null || TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             openUrlInternal(context, url);
@@ -240,7 +241,7 @@ public class ReaderActivityLauncher {
     /*
      * open the passed url in the app's internal WebView activity
      */
-    private static void openUrlInternal(Context context, String url) {
+    private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
             WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
@@ -253,7 +254,7 @@ public class ReaderActivityLauncher {
     /*
      * open the passed url in the device's external browser
      */
-    private static void openUrlExternal(Context context, String url) {
+    private static void openUrlExternal(Context context, @NonNull String url) {
         try {
             // add the GA utm_source param to the URL
             url = UrlUtils.appendUrlParameter(url, "utm_source", ReaderConstants.HTTP_REFERER_URL);
