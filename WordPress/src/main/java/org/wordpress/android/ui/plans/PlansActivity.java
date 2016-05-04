@@ -2,8 +2,6 @@ package org.wordpress.android.ui.plans;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
@@ -39,7 +37,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -161,6 +158,9 @@ public class PlansActivity extends AppCompatActivity {
     /**
      * The 'Upgrade' button should be available if the current plan is NOT free,
      * and the selected plan upgrade is available, and the current plan ID < new plan ID.
+     *
+     * Note: Not used now, but will be when we'll implement upgrade of plan within the app.
+     *
      * @param position
      * @return boolean - true if the current plan could be upgraded to the blog.
      */
@@ -182,20 +182,13 @@ public class PlansActivity extends AppCompatActivity {
 
     private void updatePurchaseUI(final int position) {
         final Plan plan = getPageAdapter().getPlan(position);
-        boolean showPurchaseButton = isBuyButtonAvailable(position) || isUpgradeButtonAvailable(position);
+        boolean showPurchaseButton = isBuyButtonAvailable(position);
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
         if (showPurchaseButton) {
             TextView txtPurchasePrice = (TextView) framePurchase.findViewById(R.id.text_purchase_price);
             txtPurchasePrice.setText(PlansUtils.getPlanDisplayPrice(plan));
-
-            TextView txtPurchaseLabel = (TextView) framePurchase.findViewById(R.id.text_purchase_label);
-            if (isBuyButtonAvailable(position)) {
-                txtPurchaseLabel.setText(getString(R.string.plan_purchase_now));
-            } else if (isUpgradeButtonAvailable(position)) {
-                txtPurchaseLabel.setText(getString(R.string.plan_upgrade_now));
-            }
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -347,27 +340,6 @@ public class PlansActivity extends AppCompatActivity {
 
     private void startPurchaseProcess(int position) {
         final Plan plan = getPageAdapter().getPlan(position);
-
-        // if it's an upgrade show the message and return. We don't handle upgrades in app.
-        if (isUpgradeButtonAvailable(position)) {
-            String upgradeText = getString(R.string.plan_upgrade_contact_support_text, plan.getProductName());
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(upgradeText)
-                    .setTitle(getString(R.string.plan_upgrade_not_available));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    HelpshiftHelper.getInstance().showConversation(PlansActivity.this, HelpshiftHelper.Tag.ORIGIN_UNKNOWN);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Do nothing
-                }
-            });
-            builder.create().show();
-            return;
-        }
-
         String sku = plan.getAndroidSKU();
         Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         JSONObject extraData = new JSONObject();
