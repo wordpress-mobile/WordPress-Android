@@ -12,6 +12,8 @@ import android.webkit.WebView;
 
 import org.wordpress.android.R;
 
+import java.util.Map;
+
 /**
  * Basic activity for displaying a WebView.
  */
@@ -133,6 +135,10 @@ public abstract class WebViewActivity extends AppCompatActivity {
      */
     protected void loadUrl(String url) {
         mWebView.loadUrl(url);
+    }
+
+    public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
+        mWebView.loadUrl(url, additionalHttpHeaders);
     }
 
     @Override
