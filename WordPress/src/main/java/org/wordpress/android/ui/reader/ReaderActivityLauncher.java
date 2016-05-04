@@ -24,6 +24,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -258,6 +259,7 @@ public class ReaderActivityLauncher {
             url = UrlUtils.appendUrlParameter(url, "utm_source", ReaderConstants.HTTP_REFERER_URL);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
+            AppLockManager.getInstance().setExtendedTimeout();
         } catch (ActivityNotFoundException e) {
             String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
             ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);

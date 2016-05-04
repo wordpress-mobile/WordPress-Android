@@ -341,7 +341,6 @@ public class WPWebViewActivity extends WebViewActivity {
             return true;
         } else if (itemID == R.id.menu_browser) {
             ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
-            // AppLockManager.getInstance().setExtendedTimeout();
             return true;
         }
 
