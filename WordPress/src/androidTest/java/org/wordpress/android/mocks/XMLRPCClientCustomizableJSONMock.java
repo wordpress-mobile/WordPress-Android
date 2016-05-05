@@ -1,7 +1,7 @@
 package org.wordpress.android.mocks;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
+import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.util.AppLog;
@@ -12,7 +12,9 @@ import org.xmlrpc.android.XMLRPCException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.HashMap;
 
 public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMockAbstract {
     private LoggedInputStream mLoggedInputStream;
@@ -40,7 +42,9 @@ public class XMLRPCClientCustomizableJSONMock extends XMLRPCClientCustomizableMo
                 return TestUtils.injectDateInArray(gson.fromJson(jsonString, Object[].class));
             } catch (Exception e) {
                 // If that fails, try to load a JSONObject
-                return TestUtils.injectDateInHashMap(TestUtils.stringMapToHashMap((StringMap) gson.fromJson(jsonString, Object.class)));
+                Type type = new TypeToken<HashMap<String, Object>>(){}.getType();
+                HashMap<String, Object> map = gson.fromJson(jsonString, type);
+                return TestUtils.injectDateInMap(map);
             }
         } catch (IOException e) {
             AppLog.e(T.TESTS, "can't read file: " + filename);

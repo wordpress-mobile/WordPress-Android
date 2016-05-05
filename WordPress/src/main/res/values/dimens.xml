@@ -269,6 +269,11 @@
     <dimen name="plan_indicator_margin">6dp</dimen>
     <dimen name="plan_icon_size">79dp</dimen>
 
+    <!-- gravatar tooltip -->
+    <dimen name="tooltip_padding">7dp</dimen>
+    <dimen name="tooltip_text_size">16sp</dimen>
+    <dimen name="tooltip_radius">5dp</dimen>
+
     <!--people management-->
     <dimen name="people_list_row_height">84dp</dimen>
     <dimen name="people_list_divider_height">1dp</dimen>

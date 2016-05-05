@@ -131,6 +131,7 @@
     <string name="media_gallery_edit">Edit gallery</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
@@ -1165,6 +1166,7 @@
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
+    <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
@@ -1200,7 +1202,7 @@
     <string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
     <string name="email_hint">Email address</string>
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
-    <string name="username_email">Username or email</string>
+    <string name="username_email">Email or username</string>
     <string name="site_address">Your self-hosted address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
@@ -1414,6 +1416,7 @@
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
     <string name="plan_purchase_now">Purchase Now</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
 
     <!-- Plans business post-purchase -->
     <string name="plans_post_purchase_title_intro">It\'s all yours, way to go!</string>
@@ -1427,5 +1430,19 @@
     <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
     <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="logging_in">Logging in</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="launch_your_email_app">Launch your email app</string>
+    <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
+
+    <!-- gravatar -->
+    <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
+    <string name="error_cropping_image">Error cropping the image</string>
+    <string name="error_locating_image">Error locating the cropped image</string>
+    <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
+    <string name="error_updating_gravatar">Error updating your Gravatar</string>
+    <string name="gravatar_camera_and_media_permission_required">Permissions required in order to select or capture a photo</string>
 </resources>

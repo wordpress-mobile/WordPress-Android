@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -30,20 +30,33 @@ public class SignInActivity extends FragmentActivity {
     public static final String EXTRA_JETPACK_MESSAGE_AUTH = "EXTRA_JETPACK_MESSAGE_AUTH";
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
 
-    private SignInFragment mSignInFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
-        FragmentManager fragmentManager = getFragmentManager();
-        mSignInFragment = (SignInFragment) fragmentManager.findFragmentById(R.id.sign_in_fragment);
-        actionMode(getIntent().getExtras());
+
+        if (savedInstanceState == null) {
+            addSignInFragment();
+        }
+
         ActivityId.trackLastActivity(ActivityId.LOGIN);
     }
 
-    private void actionMode(Bundle extras) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        actionMode(getIntent().getExtras());
+    }
+
+    protected void addSignInFragment() {
+        SignInFragment signInFragment = new SignInFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
+        fragmentTransaction.commit();
+    }
+
+    protected void actionMode(Bundle extras) {
         int actionMode = SIGN_IN_REQUEST;
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
@@ -51,15 +64,15 @@ public class SignInActivity extends FragmentActivity {
                 Blog jetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
                 if (jetpackBlog != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    mSignInFragment.setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
+                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(jetpackBlog, customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
-                mSignInFragment.showAuthErrorMessage();
+                getSignInFragment().showAuthErrorMessage();
             }
         }
         switch (actionMode) {
             case ADD_SELF_HOSTED_BLOG:
-                mSignInFragment.forceSelfHostedMode();
+                getSignInFragment().forceSelfHostedMode();
                 break;
             default:
                 break;
@@ -71,7 +84,7 @@ public class SignInActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SHOW_CERT_DETAILS) {
-            mSignInFragment.askForSslTrust();
+            getSignInFragment().askForSslTrust();
         } else if (requestCode == SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
                 AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
@@ -83,7 +96,7 @@ public class SignInActivity extends FragmentActivity {
             if (resultCode == RESULT_OK) {
                 AppLog.d(T.NUX, "Credentials retrieved");
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                mSignInFragment.onCredentialRetrieved(credential);
+                getSignInFragment().onCredentialRetrieved(credential);
             } else {
                 AppLog.e(T.NUX, "Credential read failed");
             }
@@ -91,8 +104,17 @@ public class SignInActivity extends FragmentActivity {
             String username = data.getStringExtra("username");
             String password = data.getStringExtra("password");
             if (username != null) {
-                mSignInFragment.signInDotComUser(username, password);
+                getSignInFragment().signInDotComUser(username, password);
             }
+        }
+    }
+
+    public SignInFragment getSignInFragment() {
+        SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+        if (signInFragment == null) {
+            return new SignInFragment();
+        } else {
+            return signInFragment;
         }
     }
 }
