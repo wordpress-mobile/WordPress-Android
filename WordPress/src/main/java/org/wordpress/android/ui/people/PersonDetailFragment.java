@@ -20,9 +20,9 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonDetailFragment extends Fragment implements View.OnClickListener {
@@ -94,7 +94,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
-            mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
+            mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
             setupRoleContainerForCapability();
         } else {

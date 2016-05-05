@@ -8,9 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.android.volley.VolleyError;
-
-import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -82,7 +79,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
     }
 
     private void refreshUsersList(String dotComBlogId, final int localTableBlogId) {
-        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.Callback() {
+        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
@@ -102,12 +99,7 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             }
 
             @Override
-            public void onError(VolleyError error) {
-                //TODO: show some kind of error to the user
-            }
-
-            @Override
-            public void onJSONException(JSONException exception) {
+            public void onError() {
                 //TODO: show some kind of error to the user
             }
         });

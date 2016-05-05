@@ -81,6 +81,9 @@ public class AppPrefs {
 
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
+
+        // When we need to show the Gravatar Change Promo Tooltip
+        GRAVATAR_CHANGE_PROMO_REQUIRED,
     }
 
     private static SharedPreferences prefs() {
@@ -326,10 +329,8 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        // TODO: When we allow users to test the visual editor, we should change this function by:
-        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
-        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE
+                || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
     }
 
     public static boolean isVisualEditorEnabled() {
@@ -342,6 +343,14 @@ public class AppPrefs {
 
     public static void setVisualEditorPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
+    }
+
+    public static boolean isGravatarChangePromoRequired() {
+        return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
+    }
+
+    public static void setGravatarChangePromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, required);
     }
 
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog

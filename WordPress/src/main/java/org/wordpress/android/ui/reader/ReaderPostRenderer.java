@@ -93,7 +93,9 @@ class ReaderPostRenderer {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl, int start, int end) {
-                replaceImageTag(imageTag, imageUrl);
+                if (!imageUrl.contains("wpcom-smileys")) {
+                    replaceImageTag(imageTag, imageUrl);
+                }
             }
             @Override
             public void onScanCompleted() {
