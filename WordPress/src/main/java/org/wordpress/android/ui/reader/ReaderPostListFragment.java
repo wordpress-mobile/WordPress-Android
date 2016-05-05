@@ -467,6 +467,9 @@ public class ReaderPostListFragment extends Fragment
             Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
+                    if (!isAdded()) {
+                        return false;
+                    }
                     if (item.getItemId() == R.id.menu_settings) {
                         ReaderActivityLauncher.showReaderSubs(getActivity());
                         return true;
