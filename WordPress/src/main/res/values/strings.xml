@@ -1166,6 +1166,7 @@
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
+    <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
