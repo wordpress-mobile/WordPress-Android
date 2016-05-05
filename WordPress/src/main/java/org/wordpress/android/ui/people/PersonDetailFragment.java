@@ -24,6 +24,7 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -42,6 +43,8 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     private TextView mUsernameTextView;
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
+
+    private String mSelectedRole;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -102,6 +105,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
             setupRoleContainerForCapability();
+            mSelectedRole = person.getRole();
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -137,11 +141,25 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+                if (person != null) {
+                    mSelectedRole = person.getRole();
+                }
+            }
+        });
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                updatePersonRole(mSelectedRole);
+            }
+        });
 
-        String[] roles = getResources().getStringArray(R.array.roles);
-        ArrayAdapter<String> arrayAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
-        builder.setAdapter(arrayAdapter, null);
+        final String[] roles = getResources().getStringArray(R.array.roles);
+        ArrayAdapter<String> roleAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
+        builder.setAdapter(roleAdapter, null);
 
         AlertDialog dialog = builder.show();
         Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
@@ -153,9 +171,26 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private class RoleListAdapter extends ArrayAdapter<String> {
-        private int mSelectedIndex;
+    private void updatePersonRole(String newRole) {
+        Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+        if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
+            return;
+        }
+        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID() + "", newRole, mLocalTableBlogID, new PeopleUtils.UpdateUserCallback() {
+            @Override
+            public void onSuccess(Person person) {
+                PeopleTable.save(person);
+                refreshPersonDetails();
+            }
 
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    private class RoleListAdapter extends ArrayAdapter<String> {
         public RoleListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -168,10 +203,11 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
 
             final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
             TextView mainText = (TextView) convertView.findViewById(R.id.main_text);
-            mainText.setText(getItem(position));
+            String role = getItem(position);
+            mainText.setText(role);
 
             if (radioButton != null) {
-                radioButton.setChecked(mSelectedIndex == position);
+                radioButton.setChecked(mSelectedRole.equalsIgnoreCase(role));
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -191,7 +227,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         }
 
         private void changeSelection(int position) {
-            mSelectedIndex = position;
+            mSelectedRole = getItem(position);
             notifyDataSetChanged();
         }
     }
