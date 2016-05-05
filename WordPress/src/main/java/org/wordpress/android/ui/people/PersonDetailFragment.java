@@ -12,9 +12,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonDetailFragment extends Fragment {
@@ -86,7 +86,7 @@ public class PersonDetailFragment extends Fragment {
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
-            mRoleTextView.setText(Role.getLabel(getActivity(), person.getRole()));
+            mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
             mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
 
             mRemoveTextView.setOnClickListener(new View.OnClickListener() {

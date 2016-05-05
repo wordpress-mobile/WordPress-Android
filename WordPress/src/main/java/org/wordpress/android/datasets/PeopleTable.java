@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -26,6 +25,7 @@ public class PeopleTable {
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
+                + "blog_id                 TEXT,"
                 + "local_blog_id           INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
                 + "first_name              TEXT,"
@@ -54,13 +54,14 @@ public class PeopleTable {
     public static void save(Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonID());
+        values.put("blog_id", person.getBlogId());
         values.put("local_blog_id", person.getLocalTableBlogId());
         values.put("user_name", person.getUsername());
         values.put("first_name", person.getFirstName());
         values.put("last_name", person.getLastName());
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
-        values.put("role", Role.toKey(person.getRole()));
+        values.put("role", person.getRole());
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -95,7 +96,7 @@ public class PeopleTable {
 
     /**
      * retrieve a single person
-     * @param personId - id of a person in a particular site
+     * @param personId - id of a person in a particular blog
      * @param localTableBlogId - the local blog id the user belongs to
      * @return Person if found, null otherwise
      */
@@ -114,13 +115,14 @@ public class PeopleTable {
 
     private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
+        String blogId = c.getString(c.getColumnIndex("blog_id"));
         String username = c.getString(c.getColumnIndex("user_name"));
         String firstName = c.getString(c.getColumnIndex("first_name"));
         String lastName = c.getString(c.getColumnIndex("last_name"));
         String displayName = c.getString(c.getColumnIndex("display_name"));
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
-        Role role = Role.fromKey(c.getString(c.getColumnIndex("role")));
+        String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, blogId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
     }
 }
