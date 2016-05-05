@@ -459,16 +459,33 @@ public class ReaderPostListFragment extends Fragment
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
+        // add buttons to the filtered recyclerview's toolbar
         if (!ReaderUtils.isLoggedOutReader()) {
-            View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);
-            mRecyclerView.addToolbarCustomControl(settingsControl, new View.OnClickListener() {
+            ViewGroup controls = (ViewGroup) inflater.inflate(R.layout.reader_filtered_recyclerview_controls, null);
+
+            // settings - shows tags & followed sites
+            View btnSettings = controls.findViewById(R.id.btn_settings);
+            ReaderUtils.setBackgroundToRoundRipple(btnSettings);
+            btnSettings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.showReaderSubs(v.getContext());
                 }
             });
-            ReaderUtils.setBackgroundToRoundRipple(settingsControl);
+
+            // search - a work in progress
+            View btnSearch = controls.findViewById(R.id.btn_search);
+            ReaderUtils.setBackgroundToRoundRipple(btnSearch);
+            btnSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO
+                }
+            });
+
+            mRecyclerView.addToolbarCustomControl(controls, null);
         }
+
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
         mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
