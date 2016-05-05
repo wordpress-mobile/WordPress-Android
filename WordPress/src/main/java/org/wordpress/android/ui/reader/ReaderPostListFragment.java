@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -461,29 +464,20 @@ public class ReaderPostListFragment extends Fragment
 
         // add buttons to the filtered recyclerview's toolbar
         if (!ReaderUtils.isLoggedOutReader()) {
-            ViewGroup controls = (ViewGroup) inflater.inflate(R.layout.reader_filtered_recyclerview_controls, null);
-
-            // settings - shows tags & followed sites
-            View btnSettings = controls.findViewById(R.id.btn_settings);
-            ReaderUtils.setBackgroundToRoundRipple(btnSettings);
-            btnSettings.setOnClickListener(new View.OnClickListener() {
+            Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
                 @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderSubs(v.getContext());
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.menu_settings) {
+                        ReaderActivityLauncher.showReaderSubs(getActivity());
+                        return true;
+                    } else if (item.getItemId() == R.id.menu_search) {
+                        // TODO
+                        return true;
+                    }
+                    return false;
                 }
-            });
-
-            // search - a work in progress
-            View btnSearch = controls.findViewById(R.id.btn_search);
-            ReaderUtils.setBackgroundToRoundRipple(btnSearch);
-            btnSearch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO
-                }
-            });
-
-            mRecyclerView.addToolbarCustomControl(controls, null);
+            };
+            mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
         }
 
         // the following will change the look and feel of the toolbar to match the current design
