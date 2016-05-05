@@ -69,6 +69,7 @@ import de.greenrobot.event.EventBus;
 
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
+    private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
     private static final String MEDIA_CAPTURE_PATH = "MEDIA_CAPTURE_PATH";
 
     private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
@@ -92,6 +93,8 @@ public class MeFragment extends Fragment {
     // setUserVisibleHint is not available so we need to manually handle the UserVisibleHint state
     private boolean mIsUserVisible;
 
+    private boolean mIsUpdatingGravatar;
+
     public static MeFragment newInstance() {
         return new MeFragment();
     }
@@ -102,6 +105,7 @@ public class MeFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mMediaCapturePath = savedInstanceState.getString(MEDIA_CAPTURE_PATH);
+            mIsUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR);
         }
     }
 
@@ -237,8 +241,14 @@ public class MeFragment extends Fragment {
             }
         });
 
-        if (savedInstanceState != null && savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
-            showDisconnectDialog(getActivity());
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
+                showDisconnectDialog(getActivity());
+            }
+
+            if (savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR, false)) {
+                showGravatarProgressBar(true);
+            }
         }
 
         return rootView;
@@ -253,6 +263,8 @@ public class MeFragment extends Fragment {
         if (mMediaCapturePath != null) {
             outState.putString(MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
+
+        outState.putBoolean(IS_UPDATING_GRAVATAR, mIsUpdatingGravatar);
 
         super.onSaveInstanceState(outState);
     }
@@ -314,7 +326,8 @@ public class MeFragment extends Fragment {
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
 
-            loadAvatar(defaultAccount, null, null);
+            final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
+            loadAvatar(avatarUrl, null);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
@@ -338,11 +351,17 @@ public class MeFragment extends Fragment {
         }
     }
 
-    private void loadAvatar(Account account, String injectFilePath, WPNetworkImageView.ImageLoadListener imageLoadListener) {
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-        String avatarUrl = GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
-        AppLog.i(AppLog.T.API, avatarUrl);
+    private void showGravatarProgressBar(boolean isUpdating) {
+        mProgressBar.setVisibility(isUpdating ? View.VISIBLE : View.GONE);
+        mIsUpdatingGravatar = isUpdating;
+    }
 
+    private String constructGravatarUrl(Account account) {
+        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
+    }
+
+    private void loadAvatar(String avatarUrl, String injectFilePath) {
         if (injectFilePath != null && !injectFilePath.isEmpty()) {
             // invalidate the specific gravatar entry from the bitmap cache. It will be updated via the injected
             // request cache.
@@ -353,16 +372,25 @@ public class MeFragment extends Fragment {
                 // can't be trusted to have updated the image quick enough.
                 injectCache(new File(injectFilePath), avatarUrl);
             } catch (IOException e) {
-                if (imageLoadListener != null) {
-                    imageLoadListener.onError();
-                }
+                EventBus.getDefault().post(new GravatarLoadFinished(false));
             }
 
             // invalidate the WPNetworkImageView
             mAvatarImageView.invalidateImage();
         }
 
-        mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, imageLoadListener);
+        mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
+                .ImageLoadListener() {
+            @Override
+            public void onLoaded() {
+                EventBus.getDefault().post(new GravatarLoadFinished(true));
+            }
+
+            @Override
+            public void onError() {
+                EventBus.getDefault().post(new GravatarLoadFinished(false));
+            }
+        });
     }
 
     private void signOutWordPressComWithConfirmation() {
@@ -550,32 +578,55 @@ public class MeFragment extends Fragment {
             return;
         }
 
-        mProgressBar.setVisibility(View.VISIBLE);
+        showGravatarProgressBar(true);
 
         GravatarApi.uploadGravatar(file, new GravatarApi.GravatarUploadListener() {
             @Override
             public void onSuccess() {
-                loadAvatar(AccountHelper.getDefaultAccount(), filePath, new WPNetworkImageView.ImageLoadListener() {
-                    @Override
-                    public void onLoaded() {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        mProgressBar.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast
-                                .LENGTH_SHORT).show();
-                    }
-                });
+                EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
             }
 
             @Override
             public void onError() {
-                mProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
             }
         });
+    }
+
+    static public class GravatarUploadFinished {
+        public final String filePath;
+        public final boolean success;
+
+        public GravatarUploadFinished(String filePath, boolean success) {
+            this.filePath = filePath;
+            this.success = success;
+        }
+    }
+
+    public void onEventMainThread(GravatarUploadFinished event) {
+        if (event.success) {
+            final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
+            loadAvatar(avatarUrl, event.filePath);
+        } else {
+            showGravatarProgressBar(false);
+            Toast.makeText(getActivity(), getString(R.string.error_updating_gravatar), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    static public class GravatarLoadFinished {
+        public final boolean success;
+
+        public GravatarLoadFinished(boolean success) {
+            this.success = success;
+        }
+    }
+
+    public void onEventMainThread(GravatarLoadFinished event) {
+        showGravatarProgressBar(false);
+
+        if (!event.success) {
+            Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
+        }
     }
 
     // injects a fabricated cache entry to the request cache
