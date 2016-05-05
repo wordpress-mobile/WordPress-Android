@@ -6,12 +6,16 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -23,6 +27,7 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonDetailFragment extends Fragment implements View.OnClickListener {
@@ -130,20 +135,64 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         Context context = getActivity();
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
-        builderSingle.setTitle("Role");
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
+        builder.setTitle(R.string.role);
+        builder.setNegativeButton(R.string.cancel, null);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context,
-                android.R.layout.simple_list_item_1, Role.getRoles(context));
+        String[] roles = getResources().getStringArray(R.array.roles);
+        ArrayAdapter<String> arrayAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
+        builder.setAdapter(arrayAdapter, null);
 
-        builderSingle.setNegativeButton(R.string.cancel, null);
+        AlertDialog dialog = builder.show();
+        Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
 
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //String strName = arrayAdapter.getItem(which);
+        if (negative != null) {
+            Typeface typeface = TypefaceCache.getTypeface(context, TypefaceCache.FAMILY_DEFAULT_LIGHT, Typeface.BOLD);
+            negative.setTypeface(typeface);
+            negative.setTextColor(ContextCompat.getColor(context, R.color.blue_medium));
+        }
+    }
+
+    private class RoleListAdapter extends ArrayAdapter<String> {
+        private int mSelectedIndex;
+
+        public RoleListAdapter(Context context, int resource, String[] objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = View.inflate(getContext(), R.layout.role_list_row, null);
             }
-        });
-        builderSingle.show();
+
+            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
+            TextView mainText = (TextView) convertView.findViewById(R.id.main_text);
+            mainText.setText(getItem(position));
+
+            if (radioButton != null) {
+                radioButton.setChecked(mSelectedIndex == position);
+                radioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeSelection(position);
+                    }
+                });
+            }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeSelection(position);
+                }
+            });
+
+            return convertView;
+        }
+
+        private void changeSelection(int position) {
+            mSelectedIndex = position;
+            notifyDataSetChanged();
+        }
     }
 }
