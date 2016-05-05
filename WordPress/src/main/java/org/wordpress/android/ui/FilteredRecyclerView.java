@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -276,13 +277,15 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     /*
-     * add a menu to the right side of the toolbar
+     * add a menu to the right side of the toolbar, returns the toolbar menu so the caller
+     * can act upon it
      */
-    public void addToolbarMenu(@MenuRes int menuResId, Toolbar.OnMenuItemClickListener listener) {
+    public Menu addToolbarMenu(@MenuRes int menuResId, Toolbar.OnMenuItemClickListener listener) {
         mToolbar.inflateMenu(menuResId);
         if (listener != null) {
             mToolbar.setOnMenuItemClickListener(listener);
         }
+        return mToolbar.getMenu();
     }
 
     public void setToolbarBackgroundColor(int color){

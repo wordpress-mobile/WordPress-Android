@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -82,6 +84,7 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+    private SearchView mSearchView;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -462,27 +465,6 @@ public class ReaderPostListFragment extends Fragment
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        // add buttons to the filtered recyclerview's toolbar
-        if (!ReaderUtils.isLoggedOutReader()) {
-            Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (!isAdded()) {
-                        return false;
-                    }
-                    if (item.getItemId() == R.id.menu_settings) {
-                        ReaderActivityLauncher.showReaderSubs(getActivity());
-                        return true;
-                    } else if (item.getItemId() == R.id.menu_search) {
-                        // TODO
-                        return true;
-                    }
-                    return false;
-                }
-            };
-            mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
-        }
-
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
         mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
@@ -490,6 +472,11 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+
+        // add a menu to the filtered recyclerview's toolbar
+        if (!ReaderUtils.isLoggedOutReader() && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            setupRecyclerToolbar();
+        }
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -502,12 +489,49 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
         return rootView;
+    }
+
+    /*
+     * adds a menu to the recycler's toolbar containing settings & search items - only called
+     * for followed tags
+     */
+    private void setupRecyclerToolbar() {
+        Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (!isAdded()) {
+                    return false;
+                }
+                if (item.getItemId() == R.id.menu_settings) {
+                    ReaderActivityLauncher.showReaderSubs(getActivity());
+                    return true;
+                } else if (item.getItemId() == R.id.menu_search) {
+                    // TODO
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        mSearchView.setQueryHint("Search hint");
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.setIconified(true);
+        mSearchView.setFocusable(false);
+
+        //mSearchView.setOnQueryTextListener(this);
     }
 
     /*
