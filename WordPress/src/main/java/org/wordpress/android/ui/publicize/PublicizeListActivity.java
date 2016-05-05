@@ -26,7 +26,7 @@ import de.greenrobot.event.EventBus;
 public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
-        PublicizeServiceAdapter.OnServiceConnectionClickListener {
+        PublicizeServiceAdapter.OnServiceClickListener {
 
     private int mSiteId;
 
@@ -110,13 +110,11 @@ public class PublicizeListActivity extends AppCompatActivity
         getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    private void showDetailFragment(int siteId,
-                                    PublicizeService service,
-                                    PublicizeConnection connection) {
+    private void showDetailFragment(int siteId, PublicizeService service) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service, connection);
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
@@ -138,7 +136,7 @@ public class PublicizeListActivity extends AppCompatActivity
     private void reloadDetailFragment() {
         PublicizeDetailFragment detailFragment = getDetailFragment();
         if (detailFragment != null) {
-            detailFragment.getData();
+            detailFragment.loadData();
         }
     }
 
@@ -201,8 +199,8 @@ public class PublicizeListActivity extends AppCompatActivity
      * user tapped a service in the list fragment
      */
     @Override
-    public void onServiceConnectionClicked(PublicizeService service, PublicizeConnection connection) {
-        showDetailFragment(mSiteId, service, connection);
+    public void onServiceClicked(PublicizeService service) {
+        showDetailFragment(mSiteId, service);
     }
 
     /*
@@ -239,7 +237,7 @@ public class PublicizeListActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 PublicizeActions.disconnect(connection);
-                returnToListFragment();
+                reloadDetailFragment();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -262,11 +260,10 @@ public class PublicizeListActivity extends AppCompatActivity
     public void onEventMainThread(PublicizeEvents.ActionCompleted event) {
         if (isFinishing()) return;
 
-        if (event.didSucceed()) {
-            returnToListFragment();
-        } else {
-            closeWebViewFragment();
-            reloadDetailFragment();
+        closeWebViewFragment();
+        reloadDetailFragment();
+
+        if (!event.didSucceed()) {
             ToastUtils.showToast(this, R.string.error_generic);
         }
     }

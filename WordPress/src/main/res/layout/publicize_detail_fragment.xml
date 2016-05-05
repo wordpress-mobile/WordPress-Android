@@ -21,6 +21,7 @@
             android:id="@+id/image_icon"
             android:layout_width="@dimen/avatar_sz_medium"
             android:layout_height="@dimen/avatar_sz_medium"
+            android:layout_gravity="center_vertical"
             tools:src="@drawable/blavatar_placeholder" />
 
         <LinearLayout
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
+                android:textSize="@dimen/text_sz_extra_large"
                 tools:text="text_service" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -47,15 +48,6 @@
                 android:textColor="@color/grey_darken_20"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_description" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:textColor="@color/grey_darken_10"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_user" />
         </LinearLayout>
 
     </LinearLayout>
@@ -64,6 +56,34 @@
         android:id="@+id/button_connect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large" />
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/layout_connections"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connected_accounts_label"
+            android:textAllCaps="true"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large" />
+    </LinearLayout>
+
 
 </LinearLayout>

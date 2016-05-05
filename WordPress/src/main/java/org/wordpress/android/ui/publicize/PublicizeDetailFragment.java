@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,36 +9,30 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PublicizeDetailFragment extends PublicizeBaseFragment {
+public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
 
     private int mSiteId;
-    private int mConnectionId;
     private String mServiceId;
 
     private PublicizeService mService;
-    private PublicizeConnection mConnection;
 
-    private ConnectButton mConnectButton;
-    private PublicizeActions.OnPublicizeActionListener mActionListener;
+    private ConnectButton mConnectBtn;
+    private RecyclerView mRecycler;
+    private ViewGroup mLayoutConnections;
 
-    public static PublicizeDetailFragment newInstance(
-            int siteId,
-            PublicizeService service,
-            PublicizeConnection connection) {
+    public static PublicizeDetailFragment newInstance(int siteId, PublicizeService service) {
         Bundle args = new Bundle();
         args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
-        if (connection != null) {
-            args.putInt(PublicizeConstants.ARG_CONNECTION_ID, connection.connectionId);
-        }
-
         PublicizeDetailFragment fragment = new PublicizeDetailFragment();
         fragment.setArguments(args);
 
@@ -52,7 +46,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
-            mConnectionId = args.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
     }
 
@@ -63,7 +56,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
-            mConnectionId = savedInstanceState.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
     }
 
@@ -72,56 +64,40 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         super.onSaveInstanceState(outState);
         outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
-        outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
-        mConnectButton = (ConnectButton) rootView.findViewById(R.id.button_connect);
-        return rootView;
-    }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof PublicizeActions.OnPublicizeActionListener) {
-            mActionListener = (PublicizeActions.OnPublicizeActionListener) activity;
-        }
+        mConnectBtn = (ConnectButton) rootView.findViewById(R.id.button_connect);
+        mLayoutConnections = (ViewGroup) rootView.findViewById(R.id.layout_connections);
+        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+        int spacingHorizontal = 0;
+        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
+        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
+
+        return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getData();
+        loadData();
         setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
     }
 
-    void getData() {
-        new Thread() {
-            @Override
-            public void run() {
-                // service should always exist, but connection will be null if no connection
-                // has been enabled for this service
-                mService = PublicizeTable.getService(mServiceId);
-                mConnection = PublicizeTable.getConnection(mConnectionId);
-
-                if (isAdded()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isAdded()) {
-                                showData();
-                            }
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
-    private void showData() {
+    public void loadData() {
         if (!isAdded()) return;
+
+        mService = PublicizeTable.getService(mServiceId);
+        if (mService == null) {
+            ToastUtils.showToast(getActivity(), R.string.error_generic);
+            return;
+        }
+
+        setTitle(mService.getLabel());
 
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
         TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
@@ -134,42 +110,40 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment {
         String iconUrl = PhotonUtils.getPhotonImageUrl(mService.getIconUrl(), avatarSz, avatarSz);
         imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
-        ConnectAction action;
-        if (mConnection == null) {
-            action = ConnectAction.CONNECT;
-        } else if (mConnection.getStatusEnum() == PublicizeConnection.ConnectStatus.BROKEN) {
-            action = ConnectAction.RECONNECT;
-        } else {
-            action = ConnectAction.DISCONNECT;
-        }
-        mConnectButton.setAction(action);
-        mConnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doConnectBtnClick();
-            }
-        });
+        PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(getActivity(), mSiteId, mServiceId);
+        adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
+        adapter.setOnAdapterLoadedListener(this);
 
-        setTitle(mService.getLabel());
+        mRecycler.setAdapter(adapter);
+        adapter.refresh();
     }
 
-    private void doConnectBtnClick() {
-        if (mActionListener == null) return;
+    private boolean hasOnPublicizeActionListener() {
+        return getOnPublicizeActionListener() != null;
+    }
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            return;
+    private PublicizeActions.OnPublicizeActionListener getOnPublicizeActionListener() {
+        if (getActivity() instanceof PublicizeActions.OnPublicizeActionListener) {
+            return (PublicizeActions.OnPublicizeActionListener) getActivity();
         }
+        return null;
+    }
 
-        switch (mConnectButton.getAction()) {
-            case CONNECT:
-                mActionListener.onRequestConnect(mService);
-                break;
-            case DISCONNECT:
-                mActionListener.onRequestDisconnect(mConnection);
-                break;
-            case RECONNECT:
-                mActionListener.onRequestReconnect(mService, mConnection);
-                break;
+    @Override
+    public void onAdapterLoaded(boolean isEmpty) {
+        if (!isAdded()) return;
+
+        mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectBtn.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+
+        if (isEmpty && hasOnPublicizeActionListener()) {
+            mConnectBtn.setAction(ConnectAction.CONNECT);
+            mConnectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getOnPublicizeActionListener().onRequestConnect(mService);
+                }
+            });
         }
     }
 }

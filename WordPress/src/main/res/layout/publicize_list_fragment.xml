@@ -34,7 +34,7 @@
             android:textSize="@dimen/text_sz_medium" />
 
         <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-            android:id="@+id/recycler_connections"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

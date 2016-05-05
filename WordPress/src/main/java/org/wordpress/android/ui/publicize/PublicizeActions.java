@@ -26,7 +26,7 @@ import de.greenrobot.event.EventBus;
 /**
  * API calls to connect/disconnect publicize services
  */
-class PublicizeActions {
+public class PublicizeActions {
 
     public interface OnPublicizeActionListener {
         void onRequestConnect(PublicizeService service);

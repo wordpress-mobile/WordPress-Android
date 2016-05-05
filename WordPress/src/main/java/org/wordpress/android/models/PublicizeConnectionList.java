@@ -1,5 +1,7 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,19 +38,20 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
         return true;
     }
 
-    public PublicizeConnection getServiceConnectionForUser(long userId, PublicizeService service) {
-        if (service == null) return null;
+    public PublicizeConnectionList getServiceConnectionsForUser(long userId, String serviceId) {
+        PublicizeConnectionList connections = new PublicizeConnectionList();
+        if (TextUtils.isEmpty(serviceId)) return connections;
 
         for (PublicizeConnection connection: this) {
-            if (connection.getService().equalsIgnoreCase(service.getId())) {
+            if (connection.getService().equalsIgnoreCase(serviceId)) {
                 // shared connections are available to all users, otherwise the service userId
                 // must match the current userId to be considered connected
                 if (connection.isShared || connection.userId == userId) {
-                    return connection;
+                    connections.add(connection);
                 }
             }
         }
-        return null;
+        return connections;
     }
 
     public boolean isServiceConnectedForUser(long userId, PublicizeService service) {
@@ -62,6 +65,20 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
             }
         }
         return false;
+    }
+
+    /*
+     * returns comma-separated string of user display names
+     */
+    public String getUserDisplayNames() {
+        StringBuilder users = new StringBuilder();
+        for (PublicizeConnection connection: this) {
+            if (users.length() > 0) {
+                users.append(", ");
+            }
+            users.append(connection.getExternalDisplayName());
+        }
+        return users.toString();
     }
 
     /*

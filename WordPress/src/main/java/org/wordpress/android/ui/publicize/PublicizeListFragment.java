@@ -10,7 +10,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
-import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceConnectionClickListener;
+import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -69,7 +69,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_list_fragment, container, false);
 
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_connections);
+        mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
 
         int spacingHorizontal = 0;
@@ -99,8 +99,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mAdapter == null) {
             mAdapter = new PublicizeServiceAdapter(getActivity(), mSiteId);
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
-            if (getActivity() instanceof OnServiceConnectionClickListener) {
-                mAdapter.setOnServiceClickListener((OnServiceConnectionClickListener) getActivity());
+            if (getActivity() instanceof OnServiceClickListener) {
+                mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());
             }
         }
         return mAdapter;

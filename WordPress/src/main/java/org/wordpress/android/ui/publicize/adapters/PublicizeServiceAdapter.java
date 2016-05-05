@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.publicize.adapters;
 
 import android.content.Context;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +14,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -28,25 +28,37 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     public interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
-    public interface OnServiceConnectionClickListener {
-        void onServiceConnectionClicked(PublicizeService service, PublicizeConnection connection);
+    public interface OnServiceClickListener {
+        void onServiceClicked(PublicizeService service);
     }
 
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
     private final int mSiteId;
-    private final int mAvatarSz;
+    private final int mBlavatarSz;
+    private final ColorFilter mGrayScaleFilter;
+    private final int mColorConnected;
+    private final int mColorNotConnected;
     private final long mCurrentUserId;
 
     private OnAdapterLoadedListener mAdapterLoadedListener;
-    private OnServiceConnectionClickListener mServiceClickListener;
+    private OnServiceClickListener mServiceClickListener;
 
     public PublicizeServiceAdapter(Context context, int siteId) {
         super();
+
         mSiteId = siteId;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
+        mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = AccountHelper.getDefaultAccount().getUserId();
+
+        mColorConnected = context.getResources().getColor(R.color.grey_dark);
+        mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        mGrayScaleFilter = new ColorMatrixColorFilter(matrix);
+
         setHasStableIds(true);
     }
 
@@ -54,16 +66,14 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mAdapterLoadedListener = listener;
     }
 
-    public void setOnServiceClickListener(OnServiceConnectionClickListener listener) {
+    public void setOnServiceClickListener(OnServiceClickListener listener) {
         mServiceClickListener = listener;
     }
 
     public void refresh() {
-        if (mIsTaskRunning) {
-            AppLog.w(T.SHARING, "sharing task is already running");
-            return;
+        if (!mIsTaskRunning) {
+            new LoadServicesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void reload() {
@@ -93,31 +103,37 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     @Override
     public SharingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_service, parent, false);
         return new SharingViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SharingViewHolder holder, int position) {
         final PublicizeService service = mServices.get(position);
-        final PublicizeConnection connection = mConnections.getServiceConnectionForUser(mCurrentUserId, service);
-
-        String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mAvatarSz, mAvatarSz);
-        holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        final PublicizeConnectionList connections = mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
 
         holder.txtService.setText(service.getLabel());
-        if (connection != null && connection.hasExternalDisplayName()) {
-            holder.txtUser.setText(connection.getExternalDisplayName());
+        String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
+        holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
+
+        if (connections.size() > 0) {
+            holder.txtService.setTextColor(mColorConnected);
+            holder.txtUser.setText(connections.getUserDisplayNames());
             holder.txtUser.setVisibility(View.VISIBLE);
+            holder.imgIcon.clearColorFilter();
+            holder.imgIcon.setImageAlpha(255);
         } else {
+            holder.txtService.setTextColor(mColorNotConnected);
             holder.txtUser.setVisibility(View.GONE);
+            holder.imgIcon.setColorFilter(mGrayScaleFilter);
+            holder.imgIcon.setImageAlpha(128);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mServiceClickListener != null) {
-                    mServiceClickListener.onServiceConnectionClicked(service, connection);
+                    mServiceClickListener.onServiceClicked(service);
                 }
             }
         });
@@ -140,7 +156,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
      * AsyncTask to load services
      */
     private boolean mIsTaskRunning = false;
-    private class LoadTagsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private PublicizeServiceList tmpServices;
         private PublicizeConnectionList tmpConnections;
 
