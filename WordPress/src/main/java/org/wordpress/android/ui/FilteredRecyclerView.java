@@ -280,11 +280,8 @@ public class FilteredRecyclerView extends RelativeLayout {
      * add a menu to the right side of the toolbar, returns the toolbar menu so the caller
      * can act upon it
      */
-    public Menu addToolbarMenu(@MenuRes int menuResId, Toolbar.OnMenuItemClickListener listener) {
+    public Menu addToolbarMenu(@MenuRes int menuResId) {
         mToolbar.inflateMenu(menuResId);
-        if (listener != null) {
-            mToolbar.setOnMenuItemClickListener(listener);
-        }
         return mToolbar.getMenu();
     }
 

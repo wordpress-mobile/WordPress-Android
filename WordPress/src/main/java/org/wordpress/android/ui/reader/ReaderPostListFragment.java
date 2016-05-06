@@ -10,7 +10,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -505,24 +504,17 @@ public class ReaderPostListFragment extends Fragment
      * for followed tags
      */
     private void setupRecyclerToolbar() {
-        Toolbar.OnMenuItemClickListener toolbarListener = new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (!isAdded()) {
-                    return false;
-                }
-                if (item.getItemId() == R.id.menu_settings) {
-                    ReaderActivityLauncher.showReaderSubs(getActivity());
-                    return true;
-                }
-                return false;
-            }
-        };
-
-
-        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
+        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
         mSettingsMenuItem = menu.findItem(R.id.menu_settings);
         mSearchMenuItem = menu.findItem(R.id.menu_search);
+
+        mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ReaderActivityLauncher.showReaderSubs(getActivity());
+                return true;
+            }
+        });
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
@@ -548,7 +540,19 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        //mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+               @Override
+               public boolean onQueryTextSubmit(String query) {
+                   // TODO: perform search
+                   return false;
+               }
+
+               @Override
+               public boolean onQueryTextChange(String newText) {
+                   return false;
+               }
+           }
+        );
     }
 
     /*

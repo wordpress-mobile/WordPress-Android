@@ -257,9 +257,6 @@
             android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader"
             android:theme="@style/Calypso.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
