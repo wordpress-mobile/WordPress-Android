@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -84,7 +85,10 @@ public class ReaderPostListFragment extends Fragment
     private View mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+
     private SearchView mSearchView;
+    private MenuItem mSettingsMenuItem;
+    private MenuItem mSearchMenuItem;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -517,10 +521,10 @@ public class ReaderPostListFragment extends Fragment
 
 
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
-        MenuItem settingsItem = menu.findItem(R.id.menu_settings);
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        mSettingsMenuItem = menu.findItem(R.id.menu_settings);
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
 
-        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
@@ -530,7 +534,19 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setIconified(true);
         mSearchView.setFocusable(false);
 
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mSettingsMenuItem.setVisible(false);
+                return true;
+            }
 
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mSettingsMenuItem.setVisible(true);
+                return true;
+            }
+        });
 
         //mSearchView.setOnQueryTextListener(this);
     }
