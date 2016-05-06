@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -46,6 +47,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
+    private String mCurrentSearchQuery;
     private int mGapMarkerPosition = -1;
 
     private final int mPhotonWidth;
@@ -526,6 +528,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
     }
 
+    private boolean isSearchResults() {
+        return getPostListType() == ReaderTypes.ReaderPostListType.SEARCH_RESULTS;
+    }
+
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
@@ -574,6 +580,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (blogId != mCurrentBlogId || feedId != mCurrentFeedId) {
             mCurrentBlogId = blogId;
             mCurrentFeedId = feedId;
+            reload();
+        }
+    }
+
+    // used when the list type is ReaderPostListType.SEARCH_RESULTS
+    public void setCurrentSearchQuery(@NonNull String query) {
+        if (!query.equals(mCurrentSearchQuery)) {
+            mCurrentSearchQuery = query;
             reload();
         }
     }
@@ -801,6 +815,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
+                    break;
+                case SEARCH_RESULTS:
+                    // TODO: load cached search results
+                    allPosts = new ReaderPostList();
+                    numExisting = 0;
                     break;
                 default:
                     return false;

@@ -134,14 +134,13 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    // TODO: implement search in ReaderPostListActivity for a future PR
     public static void showReaderSearchResults(Context context, String query) {
         if (TextUtils.isEmpty(query)) {
             return;
         }
 
         // TODO: track this
-        //AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
+        //AnalyticsTracker.track(AnalyticsTracker.Stat.???);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_SEARCH_QUERY, query);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);

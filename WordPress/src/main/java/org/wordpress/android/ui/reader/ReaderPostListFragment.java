@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
@@ -91,6 +92,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
+    private String mCurrentSearchQuery;
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
@@ -182,6 +184,19 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    public static ReaderPostListFragment newInstanceForSearch(@NonNull String query) {
+        AppLog.d(T.READER, "reader post list > newInstance (search)");
+
+        Bundle args = new Bundle();
+        args.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -196,6 +211,7 @@ public class ReaderPostListFragment extends Fragment
 
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
+            mCurrentSearchQuery = args.getString(ReaderConstants.ARG_SEARCH_QUERY);
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
@@ -217,6 +233,9 @@ public class ReaderPostListFragment extends Fragment
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_FEED_ID)) {
                 mCurrentFeedId = savedInstanceState.getLong(ReaderConstants.ARG_FEED_ID);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
+                mCurrentSearchQuery = savedInstanceState.getString(ReaderConstants.ARG_SEARCH_QUERY);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -352,6 +371,7 @@ public class ReaderPostListFragment extends Fragment
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
+        outState.putString(ReaderConstants.ARG_SEARCH_QUERY, mCurrentSearchQuery);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
@@ -637,9 +657,7 @@ public class ReaderPostListFragment extends Fragment
         return getPostListType().isTagType();
     }
     private void startBoxAndPagesAnimation() {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
         ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
         ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
@@ -651,49 +669,50 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescription(boolean requestFailed) {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
-        int titleResId;
-        int descriptionResId = 0;
+        String title;
+        String description = null;
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            titleResId = R.string.reader_empty_posts_no_connection;
+            title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            titleResId = R.string.reader_empty_posts_request_failed;
+            title = getString(R.string.reader_empty_posts_request_failed);
         } else if (isUpdating()) {
-            titleResId = R.string.reader_empty_posts_in_tag_updating;
+            title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            titleResId = R.string.reader_empty_posts_in_blog;
+            title = getString(R.string.reader_empty_posts_in_blog);
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
             if (getCurrentTag().isFollowedSites()) {
                 if (ReaderBlogTable.hasFollowedBlogs()) {
-                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
-                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
+                    title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
+                    description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
                 } else {
-                    titleResId = R.string.reader_empty_followed_blogs_title;
-                    descriptionResId = R.string.reader_empty_followed_blogs_description;
+                    title = getString(R.string.reader_empty_followed_blogs_title);
+                    description = getString(R.string.reader_empty_followed_blogs_description);
                 }
             } else if (getCurrentTag().isPostsILike()) {
-                titleResId = R.string.reader_empty_posts_liked;
+                title = getString(R.string.reader_empty_posts_liked);
             } else if (getCurrentTag().tagType == ReaderTagType.CUSTOM_LIST) {
-                titleResId = R.string.reader_empty_posts_in_custom_list;
+                title = getString(R.string.reader_empty_posts_in_custom_list);
             } else {
-                titleResId = R.string.reader_empty_posts_in_tag;
+                title = getString(R.string.reader_empty_posts_in_tag);
             }
+        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            title = getString(R.string.reader_empty_posts_in_search_title);
+            description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
         } else {
-            titleResId = R.string.reader_empty_posts_in_tag;
+            title = getString(R.string.reader_empty_posts_in_tag);
         }
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
-        titleView.setText(getString(titleResId));
+        titleView.setText(title);
 
         TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
-        if (descriptionResId == 0) {
+        if (description == null) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
-            descriptionView.setText(getString(descriptionResId));
+            descriptionView.setText(description);
             descriptionView.setVisibility(View.VISIBLE);
         }
     }
@@ -780,6 +799,8 @@ public class ReaderPostListFragment extends Fragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
+            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                mPostAdapter.setCurrentSearchQuery(mCurrentSearchQuery);
             }
         }
         return mPostAdapter;
