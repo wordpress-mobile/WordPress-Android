@@ -19,7 +19,8 @@ import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 import java.util.List;
 
-public class PeopleManagementActivity extends AppCompatActivity implements PeopleListFragment.OnPersonSelectedListener {
+public class PeopleManagementActivity extends AppCompatActivity
+        implements PeopleListFragment.OnPersonSelectedListener, PersonDetailFragment.OnChangeListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
@@ -124,5 +125,37 @@ public class PeopleManagementActivity extends AppCompatActivity implements Peopl
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
+    }
+
+    @Override
+    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
+        Person person = PeopleTable.getPerson(personID, localTableBlogId);
+        if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
+            return;
+        }
+        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID() + "", newRole, localTableBlogId, new PeopleUtils.UpdateUserCallback() {
+            @Override
+            public void onSuccess(Person person) {
+                PeopleTable.save(person);
+
+                FragmentManager fragmentManager = getFragmentManager();
+                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                        .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                        .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+                if (peopleListFragment != null) {
+                    peopleListFragment.refreshPeopleList();
+                }
+                if (personDetailFragment != null) {
+                    personDetailFragment.refreshPersonDetails();
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

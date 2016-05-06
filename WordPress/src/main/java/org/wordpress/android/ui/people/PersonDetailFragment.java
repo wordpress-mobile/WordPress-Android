@@ -2,6 +2,7 @@ package org.wordpress.android.ui.people;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -24,7 +25,6 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -45,6 +45,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     private TextView mRoleTextView;
 
     private String mSelectedRole;
+    private OnChangeListener mListener;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -53,6 +54,34 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnChangeListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnChangeListener");
+        }
+    }
+
+    // We need to override this for devices pre API 23
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnChangeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnChangeListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     /**
@@ -153,7 +182,9 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                updatePersonRole(mSelectedRole);
+                if (mListener != null) {
+                    mListener.onRoleChanged(mPersonID, mLocalTableBlogID, mSelectedRole);
+                }
             }
         });
 
@@ -169,25 +200,6 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             negative.setTypeface(typeface);
             negative.setTextColor(ContextCompat.getColor(context, R.color.blue_medium));
         }
-    }
-
-    private void updatePersonRole(String newRole) {
-        Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
-        if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
-            return;
-        }
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID() + "", newRole, mLocalTableBlogID, new PeopleUtils.UpdateUserCallback() {
-            @Override
-            public void onSuccess(Person person) {
-                PeopleTable.save(person);
-                refreshPersonDetails();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
     }
 
     private class RoleListAdapter extends ArrayAdapter<String> {
@@ -230,5 +242,10 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             mSelectedRole = getItem(position);
             notifyDataSetChanged();
         }
+    }
+
+    // Container Activity must implement this interface
+    public interface OnChangeListener {
+        void onRoleChanged(long personID, int localTableBlogId, String newRole);
     }
 }
