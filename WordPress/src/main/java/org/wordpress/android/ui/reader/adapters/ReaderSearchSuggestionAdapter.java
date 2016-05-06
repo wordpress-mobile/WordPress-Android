@@ -22,7 +22,11 @@ public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
     }
 
     public void populate() {
-        mSearchSuggestions = ReaderSearchTable.getQueryStrings();
+        populate(null);
+    }
+
+    public void populate(String filter) {
+        mSearchSuggestions = ReaderSearchTable.getQueryStrings(filter);
         MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "query"});
 
         int id = 0;

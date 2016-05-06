@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -54,16 +55,27 @@ public class ReaderSearchTable {
     }
 
     public static List<String> getQueryStrings() {
+        return getQueryStrings(null);
+    }
+    public static List<String> getQueryStrings(String filter) {
         List<String> queries = new ArrayList<>();
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
-                "SELECT query_string FROM tbl_search_history ORDER BY date_used DESC", null);
+        Cursor cursor;
+        if (TextUtils.isEmpty(filter)) {
+            cursor = ReaderDatabase.getReadableDb().rawQuery(
+                    "SELECT query_string FROM tbl_search_history ORDER BY date_used DESC", null);
+        } else {
+            String likeFilter = filter + "%";
+            cursor = ReaderDatabase.getReadableDb().rawQuery(
+                    "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ? ORDER BY date_used DESC", new String[]{likeFilter});
+        }
+
         try {
-            while (c.moveToNext()) {
-                queries.add(c.getString(0));
+            while (cursor.moveToNext()) {
+                queries.add(cursor.getString(0));
             }
             return queries;
         } finally {
-            SqlUtils.closeCursor(c);
+            SqlUtils.closeCursor(cursor);
         }
     }
 }

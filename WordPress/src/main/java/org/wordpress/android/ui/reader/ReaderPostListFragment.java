@@ -558,6 +558,7 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     mSearchSuggestionAdapter.populate();
                 }
+                // TODO: show empty message letting user know what they're querying
                 return true;
             }
 
@@ -573,9 +574,8 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                @Override
                public boolean onQueryTextSubmit(String query) {
-                   // TODO: perform search
                    if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                       // reuse existing fragment
+                       // TODO: reuse existing fragment
                    } else {
                        ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
                    }
@@ -584,7 +584,8 @@ public class ReaderPostListFragment extends Fragment
 
                @Override
                public boolean onQueryTextChange(String newText) {
-                   return false;
+                   mSearchSuggestionAdapter.populate(newText);
+                   return true;
                }
            }
         );
