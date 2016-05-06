@@ -2,11 +2,13 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -27,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
@@ -77,6 +80,10 @@ public class ReaderPostListFragment extends Fragment
                    WPMainActivity.OnScrollToTopListener {
 
     private ReaderPostAdapter mPostAdapter;
+
+    private SimpleCursorAdapter mSearchSuggestionAdapter;
+    private List<String> mSearchSuggestions;
+
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
     private ReaderTagList mTags = new ReaderTagList();
@@ -495,7 +502,7 @@ public class ReaderPostListFragment extends Fragment
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
-        // add a menu to the filtered recyclerview's toolbar
+        // add a menu to the filtered recycler's toolbar
         if (!ReaderUtils.isLoggedOutReader() && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             setupRecyclerToolbar();
         }
@@ -547,6 +554,7 @@ public class ReaderPostListFragment extends Fragment
                 // hide settings icon and clear post list when search input is expanded
                 mSettingsMenuItem.setVisible(false);
                 getPostAdapter().clear();
+                setupSearchSuggestions();
                 return true;
             }
 
@@ -577,6 +585,44 @@ public class ReaderPostListFragment extends Fragment
                }
            }
         );
+    }
+
+    /*
+     * create and assign the suggestion adapter for the search view
+     */
+    private void setupSearchSuggestions() {
+        mSearchSuggestions = ReaderSearchTable.getQueryStrings();
+        MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "query"});
+
+        int id = 0;
+        for (String query : mSearchSuggestions) {
+            cursor.addRow(new Object[] {id++, query});
+        }
+
+        String[] fromColumns = new String[]{"query"};
+        int[] toView = new int[]{android.R.id.text1};
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
+                getActivity(),
+                android.R.layout.simple_list_item_1,
+                cursor,
+                fromColumns,
+                toView,
+                0);
+        mSearchView.setSuggestionsAdapter(adapter);
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                String query = mSearchSuggestions.get(position);
+                mSearchView.setQuery(query, false);
+                return true;
+            }
+        });
     }
 
     /*
