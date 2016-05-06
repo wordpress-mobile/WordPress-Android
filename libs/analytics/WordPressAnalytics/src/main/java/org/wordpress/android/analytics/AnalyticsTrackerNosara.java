@@ -417,6 +417,30 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
                 break;
+            case ME_GRAVATAR_TAPPED:
+                eventName = "me_gravatar_tapped";
+                break;
+            case ME_GRAVATAR_TAPPED_TOOLTIP:
+                eventName = "me_gravatar_tapped_tooltip";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                eventName = "me_gravatar_permissions_denied";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                eventName = "me_gravatar_permissions_accepted";
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                eventName = "me_gravatar_shot_new";
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                eventName = "me_gravatar_gallery_picked";
+                break;
+            case ME_GRAVATAR_CROPPED:
+                eventName = "me_gravatar_cropped";
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                eventName = "me_gravatar_uploaded";
+                break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
                 break;

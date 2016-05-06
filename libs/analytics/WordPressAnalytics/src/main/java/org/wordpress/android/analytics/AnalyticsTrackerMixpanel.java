@@ -855,6 +855,38 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Me Tab - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_me_tab");
                 break;
+            case ME_GRAVATAR_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Tapped Gravatar");
+                break;
+            case ME_GRAVATAR_TAPPED_TOOLTIP:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Tapped Gravatar Tooltip");
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Permissions Denied");
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Permissions Accepted");
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Shot New Photo");
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Picked From Gallery");
+                break;
+            case ME_GRAVATAR_CROPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Cropped");
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Uploaded");
+                break;
             case MY_SITE_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("My Site - Accessed");
