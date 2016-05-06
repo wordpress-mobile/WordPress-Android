@@ -84,19 +84,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList) {
                 PeopleTable.savePeople(peopleList);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                        .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
-                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                        .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-                if (peopleListFragment != null) {
-                    peopleListFragment.refreshPeopleList();
-                }
-                if (personDetailFragment != null) {
-                    personDetailFragment.refreshPersonDetails();
-                }
+                refreshOnScreenFragmentDetails();
             }
 
             @Override
@@ -137,19 +125,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(Person person) {
                 PeopleTable.save(person);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                        .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
-                PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                        .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-                if (peopleListFragment != null) {
-                    peopleListFragment.refreshPeopleList();
-                }
-                if (personDetailFragment != null) {
-                    personDetailFragment.refreshPersonDetails();
-                }
+                refreshOnScreenFragmentDetails();
             }
 
             @Override
@@ -157,5 +133,21 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    // This helper method is used after a successful network request
+    private void refreshOnScreenFragmentDetails() {
+        FragmentManager fragmentManager = getFragmentManager();
+        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (peopleListFragment != null) {
+            peopleListFragment.refreshPeopleList();
+        }
+        if (personDetailFragment != null) {
+            personDetailFragment.refreshPersonDetails();
+        }
     }
 }
