@@ -27,7 +27,11 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
+        <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
     </style>
+
+    <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.Light.SearchView" />
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>

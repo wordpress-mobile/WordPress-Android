@@ -521,6 +521,7 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setIconified(true);
 
+        // toggle settings icon when search expands/collapses
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -539,7 +540,12 @@ public class ReaderPostListFragment extends Fragment
                @Override
                public boolean onQueryTextSubmit(String query) {
                    // TODO: perform search
-                   return false;
+                   if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                       // reuse existing fragment
+                   } else {
+                       ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
+                   }
+                   return true;
                }
 
                @Override
