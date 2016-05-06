@@ -12,7 +12,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_with_spinner"
-            style="@style/FilteredRecyclerViewFilterContainer"
+            style="@style/FilteredRecyclerViewToolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             app:contentInsetLeft="0dp"

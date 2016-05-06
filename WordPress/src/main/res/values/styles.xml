@@ -90,7 +90,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterContainer">
+    <style name="FilteredRecyclerViewToolbar">
         <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
         <item name="android:background">@color/blue_medium</item>
