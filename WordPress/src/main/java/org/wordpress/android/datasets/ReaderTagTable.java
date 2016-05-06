@@ -29,7 +29,7 @@ public class ReaderTagTable {
                  + "	tag_title    TEXT COLLATE NOCASE,"
                  + "    tag_type     INTEGER DEFAULT 0,"
                  + "    endpoint     TEXT,"
-                + " 	date_updated TEXT,"
+                 + " 	date_updated TEXT,"
                  + "    PRIMARY KEY (tag_slug, tag_type)"
                  + ")");
 
