@@ -8,13 +8,13 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_subtitle_height">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_with_spinner"
             style="@style/FilteredRecyclerViewFilterContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll|enterAlways">

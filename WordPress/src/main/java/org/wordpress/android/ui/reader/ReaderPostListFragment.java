@@ -510,26 +510,27 @@ public class ReaderPostListFragment extends Fragment
                 if (item.getItemId() == R.id.menu_settings) {
                     ReaderActivityLauncher.showReaderSubs(getActivity());
                     return true;
-                } else if (item.getItemId() == R.id.menu_search) {
-                    // TODO
-                    return true;
                 }
                 return false;
             }
         };
 
-        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
 
+        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list, toolbarListener);
+        MenuItem settingsItem = menu.findItem(R.id.menu_settings);
         MenuItem searchItem = menu.findItem(R.id.menu_search);
+
         mSearchView = (SearchView) searchItem.getActionView();
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        mSearchView.setQueryHint("Search hint");
+        mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setIconified(true);
         mSearchView.setFocusable(false);
+
+
 
         //mSearchView.setOnQueryTextListener(this);
     }

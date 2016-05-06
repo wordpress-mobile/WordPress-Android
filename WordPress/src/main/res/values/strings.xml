@@ -1095,6 +1095,7 @@
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
+    <string name="reader_hint_post_search">Search for posts</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
