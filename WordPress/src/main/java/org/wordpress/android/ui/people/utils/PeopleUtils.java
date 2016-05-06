@@ -12,7 +12,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PeopleUtils {
 
@@ -79,19 +81,10 @@ public class PeopleUtils {
             }
         };
 
-        try {
-            JSONObject jsonObject = new JSONObject();
-            JSONArray roles = new JSONArray();
-            roles.put(newRole);
-            jsonObject.put("roles", roles);
-
-            String path = String.format("sites/%s/users/%s", blogId, userID);
-            WordPress.getRestClientUtilsV1_1().post(path, jsonObject, null, listener, errorListener);
-        } catch (JSONException e) {
-            if (callback != null) {
-                callback.onError();
-            }
-        }
+        Map<String, String> params = new HashMap<>();
+        params.put("roles", newRole.toLowerCase());
+        String path = String.format("sites/%s/users/%s", blogId, userID);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     private static List<Person> peopleListFromJSON(JSONArray jsonArray, String blogId, int localTableBlogId)
