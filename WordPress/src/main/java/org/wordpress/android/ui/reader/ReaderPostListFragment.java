@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
-import android.app.SearchManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -517,14 +516,10 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
-        mSearchView.setIconifiedByDefault(false);
         mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.setIconifiedByDefault(false);
         mSearchView.setIconified(true);
-        mSearchView.setFocusable(false);
 
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
