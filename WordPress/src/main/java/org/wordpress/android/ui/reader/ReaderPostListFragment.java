@@ -542,7 +542,7 @@ public class ReaderPostListFragment extends Fragment
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
         mSearchView.setSubmitButtonEnabled(false);
-        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(true);
 
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
@@ -579,6 +579,7 @@ public class ReaderPostListFragment extends Fragment
                    } else {
                        ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
                    }
+                   mSearchMenuItem.collapseActionView();
                    return true;
                }
 
