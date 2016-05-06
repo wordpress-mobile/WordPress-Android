@@ -2,16 +2,15 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.database.MatrixCursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
@@ -47,6 +45,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -80,9 +79,7 @@ public class ReaderPostListFragment extends Fragment
                    WPMainActivity.OnScrollToTopListener {
 
     private ReaderPostAdapter mPostAdapter;
-
-    private SimpleCursorAdapter mSearchSuggestionAdapter;
-    private List<String> mSearchSuggestions;
+    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
@@ -554,7 +551,13 @@ public class ReaderPostListFragment extends Fragment
                 // hide settings icon and clear post list when search input is expanded
                 mSettingsMenuItem.setVisible(false);
                 getPostAdapter().clear();
-                setupSearchSuggestions();
+                // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
+                // so the latest suggestions appear
+                if (mSearchSuggestionAdapter == null) {
+                    setupSearchSuggestions();
+                } else {
+                    mSearchSuggestionAdapter.populate();
+                }
                 return true;
             }
 
@@ -591,24 +594,8 @@ public class ReaderPostListFragment extends Fragment
      * create and assign the suggestion adapter for the search view
      */
     private void setupSearchSuggestions() {
-        mSearchSuggestions = ReaderSearchTable.getQueryStrings();
-        MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "query"});
-
-        int id = 0;
-        for (String query : mSearchSuggestions) {
-            cursor.addRow(new Object[] {id++, query});
-        }
-
-        String[] fromColumns = new String[]{"query"};
-        int[] toView = new int[]{android.R.id.text1};
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                cursor,
-                fromColumns,
-                toView,
-                0);
-        mSearchView.setSuggestionsAdapter(adapter);
+        mSearchSuggestionAdapter = new ReaderSearchSuggestionAdapter(getActivity());
+        mSearchView.setSuggestionsAdapter(mSearchSuggestionAdapter);
 
         mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
@@ -618,8 +605,10 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public boolean onSuggestionClick(int position) {
-                String query = mSearchSuggestions.get(position);
-                mSearchView.setQuery(query, false);
+                String query = mSearchSuggestionAdapter.getSuggestion(position);
+                if (!TextUtils.isEmpty(query)) {
+                    mSearchView.setQuery(query, false);
+                }
                 return true;
             }
         });
