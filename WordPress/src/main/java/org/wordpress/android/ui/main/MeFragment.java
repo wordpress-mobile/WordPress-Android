@@ -48,7 +48,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.PrefsEvents;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -138,7 +137,7 @@ public class MeFragment extends Fragment {
         mGravatarToolTipView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED_TOOLTIP);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TOOLTIP_TAPPED);
 
                 mGravatarToolTipView.remove();
                 AppPrefs.setGravatarChangePromoRequired(false);

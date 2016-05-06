@@ -859,7 +859,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Tapped Gravatar");
                 break;
-            case ME_GRAVATAR_TAPPED_TOOLTIP:
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Tapped Gravatar Tooltip");
                 break;
