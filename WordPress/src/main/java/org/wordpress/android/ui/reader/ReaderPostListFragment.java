@@ -541,17 +541,20 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setIconified(true);
 
-        // toggle settings icon when search expands/collapses
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                // hide settings icon and clear post list when search input is expanded
                 mSettingsMenuItem.setVisible(false);
+                getPostAdapter().clear();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                // redisplay settings icon and reload post list when search input is collapsed
                 mSettingsMenuItem.setVisible(true);
+                reloadPosts();
                 return true;
             }
         });
@@ -576,6 +579,12 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
+    /*
+     * is the search input showing?
+     */
+    private boolean isSearchViewExpanded() {
+        return mSearchView != null && !mSearchView.isIconified();
+    }
     /*
      * called when user taps follow item in popup menu for a post
      */
@@ -1258,9 +1267,7 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) {
-            return;
-        }
+        if (view == null || post == null || !isAdded()) return;
 
         Context context = view.getContext();
         final ListPopupWindow listPopup = new ListPopupWindow(context);
