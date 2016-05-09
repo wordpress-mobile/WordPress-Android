@@ -152,7 +152,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     private void setupRoleContainerForCapability() {
         Blog blog = WordPress.getBlog(mLocalTableBlogID);
         boolean canChangeRole = blog != null && blog.hasCapability(Capability.EDIT_USERS);
-        if (!canChangeRole) {
+        if (canChangeRole) {
             mRoleContainer.setOnClickListener(this);
         } else {
             // Remove the selectableItemBackground if the user can't be edited
