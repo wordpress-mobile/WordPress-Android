@@ -33,6 +33,7 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
     private static final String IAP_ENDPOINT = "/iap/validate";
     protected Context mContext;
     private IabHelper mIabHelper;
+    private boolean mIABSetupDone = false;
 
     public UpdateIAPTask(Context context) {
         mContext = context;
@@ -55,6 +56,7 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
                 @Override
                 public void onIabSetupFinished(IabResult result) {
                     if (result.isSuccess()) {
+                        mIABSetupDone = true;
                         AppLog.d(AppLog.T.PLANS, "IAB started successfully");
                     } else {
                         AppLog.w(AppLog.T.PLANS, "IAB failed with " + result);
@@ -81,7 +83,7 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
     }
 
     private void listIAPs() {
-        if (mIabHelper == null) {
+        if (mIabHelper == null || !mIABSetupDone) {
             return;
         }
         try {

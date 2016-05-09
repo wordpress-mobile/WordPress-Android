@@ -58,6 +58,7 @@ public class PlansActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
 
     private IabHelper mIabHelper;
+    private boolean mIABSetupDone = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,6 +148,9 @@ public class PlansActivity extends AppCompatActivity {
      * @return boolean - true if the current plan could be added to the blog.
      */
     private boolean isBuyButtonAvailable(int position) {
+        if (!mIABSetupDone) {
+            return false;
+        }
         long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
         if (!PlansUtils.isFreePlan(currentPlanProductId)) {
             return false;
@@ -374,7 +378,7 @@ public class PlansActivity extends AppCompatActivity {
                         }
                     }
                 },
-        extraData.toString());
+                extraData.toString());
     }
 
     @Override
@@ -399,6 +403,7 @@ public class PlansActivity extends AppCompatActivity {
                 public void onIabSetupFinished(IabResult result) {
                     if (result.isSuccess()) {
                         AppLog.d(AppLog.T.PLANS, "IAB started successfully");
+                        mIABSetupDone = true;
                     } else {
                         AppLog.w(AppLog.T.PLANS, "IAB failed with " + result);
                     }
