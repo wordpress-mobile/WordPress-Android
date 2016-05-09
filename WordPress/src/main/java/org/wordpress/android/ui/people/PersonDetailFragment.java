@@ -22,6 +22,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
@@ -151,7 +153,9 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
     @SuppressWarnings("deprecation")
     private void setupRoleContainerForCapability() {
         Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        boolean canChangeRole = blog != null && blog.hasCapability(Capability.PROMOTE_USERS);
+        Account account = AccountHelper.getDefaultAccount();
+        boolean isCurrentUser = account.getUserId() == mPersonID;
+        boolean canChangeRole = (blog != null) && !isCurrentUser && blog.hasCapability(Capability.PROMOTE_USERS);
         if (canChangeRole) {
             mRoleContainer.setOnClickListener(this);
         } else {
