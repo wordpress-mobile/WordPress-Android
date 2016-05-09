@@ -215,7 +215,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             }
 
             final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
-            TextView mainText = (TextView) convertView.findViewById(R.id.main_text);
+            TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
             String role = getItem(position);
             mainText.setText(role);
 
