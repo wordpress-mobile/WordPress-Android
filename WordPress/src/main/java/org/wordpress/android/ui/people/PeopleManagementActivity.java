@@ -16,6 +16,7 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
@@ -89,7 +90,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
-                //TODO: show some kind of error to the user
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_people_list,
+                        ToastUtils.Duration.LONG);
             }
         });
     }
@@ -130,7 +133,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
-
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_update_role,
+                        ToastUtils.Duration.LONG);
             }
         });
     }
