@@ -174,14 +174,21 @@ public class PlansActivity extends AppCompatActivity {
             return false;
         }
 
-        final Plan plan = getPageAdapter().getPlan(position);
-
-        // No downgrade!
-        if (PlansUtils.isFreePlan(plan) || currentPlanProductId > plan.getProductID()) {
+        Plan currentPlan = PlansUtils.getPlan(mAvailablePlans, currentPlanProductId);
+        if (currentPlan == null) {
+            // Blog's current plan is not available anymore. Weird, it should be available, but not purchasable.
+            AppLog.w(AppLog.T.PLANS, "Blog's current plan with ID " + currentPlanProductId + "is not available anymore on wpcom!");
             return false;
         }
 
-        return plan.isAvailable() && !plan.isCurrentPlan();
+        final Plan selectedPlan = getPageAdapter().getPlan(position);
+
+        // No downgrade!
+        if (PlansUtils.isGreaterEquals(currentPlan, selectedPlan)) {
+            return false;
+        }
+
+        return selectedPlan.isAvailable() && !selectedPlan.isCurrentPlan();
     }
 
     private void updatePurchaseUI(final int position) {

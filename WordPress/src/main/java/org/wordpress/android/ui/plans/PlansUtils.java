@@ -95,21 +95,41 @@ public class PlansUtils {
     }
 
     public static boolean isFreePlan(Plan plan) {
-        return plan.getProductSlug().equals("free_plan") ||
-               plan.getProductSlug().equals("jetpack_free");
+        return plan.getProductSlug().equals(PlansConstants.FREE_PLAN_SLUG) ||
+               plan.getProductSlug().equals(PlansConstants.JETPACK_FREE_PLAN_SLUG);
     }
 
     /**
      * Weather the plan ID is a free plan.
      *
-     * 2002 = Jetpack free
-     * 1    = WordPress.com free
-     *
      * @param planID - The plan ID
      * @return boolean - true if the current blog is on a free plan.
      */
     public static boolean isFreePlan(long planID) {
-        return planID == 2002 || planID == 1;
+        return planID == PlansConstants.JETPACK_FREE_PLAN_ID || PlansConstants.FREE_PLAN_ID == 1;
+    }
+
+    /*
+     * Weather the plan A is "greater" than or "equal" to the plan B
+     *
+     * TODO: Improve this, since we're assuming that a greater plan ID meant a more expensive plan.
+     */
+    public static boolean isGreaterEquals(Plan planA, Plan planB) {
+        return planA.getProductID() >= planB.getProductID();
+    }
+
+    public static Plan getPlan(Plan[] plans, long planID) {
+        if (plans == null) {
+            AppLog.w(AppLog.T.PLANS, "The passed plans list is null!!");
+            return null;
+        }
+        for (Plan currentPlan: plans) {
+            if (currentPlan.getProductID() == planID) {
+                return currentPlan;
+            }
+        }
+        AppLog.w(AppLog.T.PLANS, "Plan with ID " + planID + "not found in the plans list");
+        return null;
     }
 
     /**
