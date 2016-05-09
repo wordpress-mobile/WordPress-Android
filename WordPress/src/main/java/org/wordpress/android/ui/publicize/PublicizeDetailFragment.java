@@ -134,7 +134,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         if (!isAdded()) return;
 
         mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mConnectBtn.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
 
         if (isEmpty && hasOnPublicizeActionListener()) {
             mConnectBtn.setAction(ConnectAction.CONNECT);
