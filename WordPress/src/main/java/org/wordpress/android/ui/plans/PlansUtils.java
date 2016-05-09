@@ -95,8 +95,7 @@ public class PlansUtils {
     }
 
     public static boolean isFreePlan(Plan plan) {
-        return plan.getProductSlug().equals(PlansConstants.FREE_PLAN_SLUG) ||
-               plan.getProductSlug().equals(PlansConstants.JETPACK_FREE_PLAN_SLUG);
+        return isFreePlan(plan.getProductID());
     }
 
     /**
@@ -106,11 +105,11 @@ public class PlansUtils {
      * @return boolean - true if the current blog is on a free plan.
      */
     public static boolean isFreePlan(long planID) {
-        return planID == PlansConstants.JETPACK_FREE_PLAN_ID || PlansConstants.FREE_PLAN_ID == 1;
+        return planID == PlansConstants.JETPACK_FREE_PLAN_ID || planID == PlansConstants.FREE_PLAN_ID;
     }
 
-    /*
-     * Weather the plan A is "greater" than or "equal" to the plan B
+    /**
+     * Weather the plan A is "greater" than or "equal to" the plan B
      *
      * TODO: Improve this, since we're assuming that a greater plan ID meant a more expensive plan.
      */
@@ -128,7 +127,7 @@ public class PlansUtils {
                 return currentPlan;
             }
         }
-        AppLog.w(AppLog.T.PLANS, "Plan with ID " + planID + "not found in the plans list");
+        AppLog.w(AppLog.T.PLANS, "Plan with ID " + planID + " wasn't found in the plans list");
         return null;
     }
 

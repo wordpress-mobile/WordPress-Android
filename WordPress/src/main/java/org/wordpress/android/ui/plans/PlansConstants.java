@@ -14,8 +14,4 @@ public class PlansConstants {
     public static final long JETPACK_FREE_PLAN_ID = 2002L;
     public static final long JETPACK_PREMIUM_PLAN_ID = 2000L;
     public static final long JETPACK_BUSINESS_PLAN_ID = 2001L;
-
-    public static final String FREE_PLAN_SLUG = "free_plan";
-
-    public static final String JETPACK_FREE_PLAN_SLUG = "jetpack_free";
 }
