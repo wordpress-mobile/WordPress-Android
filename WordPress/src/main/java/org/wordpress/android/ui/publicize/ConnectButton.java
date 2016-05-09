@@ -74,6 +74,12 @@ public class ConnectButton extends FrameLayout {
                 textColorResId = R.color.white;
                 captionResId = R.string.share_btn_reconnect;
                 break;
+            case CONNECT_ANOTHER_ACCOUNT:
+                normalColorResId = R.color.blue_medium;
+                pressedColorResId = R.color.blue_light;
+                textColorResId = R.color.white;
+                captionResId = R.string.share_btn_connect_another_account;
+                break;
             default:
                 return;
         }

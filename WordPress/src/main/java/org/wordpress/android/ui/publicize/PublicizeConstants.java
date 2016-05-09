@@ -8,6 +8,7 @@ public class PublicizeConstants {
     public enum ConnectAction {
         CONNECT,
         DISCONNECT,
-        RECONNECT
+        RECONNECT,
+        CONNECT_ANOTHER_ACCOUNT
     }
 }
