@@ -604,6 +604,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarUploadFinished event) {
+        if (!isAdded()) {
+            return;
+        }
+
         if (event.success) {
             final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
             loadAvatar(avatarUrl, event.filePath);
@@ -622,6 +626,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
+        if (!isAdded()) {
+            return;
+        }
+
         showGravatarProgressBar(false);
 
         if (!event.success) {
