@@ -175,6 +175,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             public void onClick(DialogInterface dialog, int which) {
                 Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
                 if (person != null) {
+                    // reset the selected role since the dialog is cancelled
                     mSelectedRole = person.getRole();
                 }
             }
