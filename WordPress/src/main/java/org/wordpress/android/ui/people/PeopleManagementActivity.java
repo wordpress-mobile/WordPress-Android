@@ -124,7 +124,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID() + "", newRole, localTableBlogId, new PeopleUtils.UpdateUserCallback() {
+        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), newRole, localTableBlogId,
+                new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
                 PeopleTable.save(person);

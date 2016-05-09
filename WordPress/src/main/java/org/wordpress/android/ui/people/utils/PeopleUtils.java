@@ -50,7 +50,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, String userID, String newRole, final int localTableBlogId,
+    public static void updateRole(final String blogId, long userID, String newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -83,7 +83,7 @@ public class PeopleUtils {
 
         Map<String, String> params = new HashMap<>();
         params.put("roles", newRole.toLowerCase());
-        String path = String.format("sites/%s/users/%s", blogId, userID);
+        String path = String.format("sites/%s/users/%d", blogId, userID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
