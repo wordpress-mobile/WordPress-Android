@@ -80,7 +80,8 @@ public class PeopleTable {
     public static List<Person> getPeople(int localTableBlogId) {
         List<Person> people = new ArrayList<>();
         String[] args = { Integer.toString(localTableBlogId) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
+                " WHERE local_blog_id=? ORDER BY display_name, user_name", args);
 
         try {
             while (c.moveToNext()) {
