@@ -110,7 +110,7 @@ public class CommentActions {
                         postID,
                         commentHash};
 
-                int newCommentID = -1;
+                int newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                 String message = null;
                 try {
                    newCommentID = (Integer) client.call(Method.NEW_COMMENT, params);
@@ -178,15 +178,15 @@ public class CommentActions {
                         newCommentID = (Long) newCommentIDObject;
                     } else {
                         AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
-                        newCommentID = -1;
+                        newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                     }
                 } catch (XMLRPCFault e) {
                     AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
-                    newCommentID = -1;
+                    newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                     message = e.getFaultString();
                 } catch (XMLRPCException | IOException | XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
-                    newCommentID = -1;
+                    newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                 }
 
                 final CommentActionResult cr = new CommentActionResult(newCommentID, message);

@@ -5,7 +5,7 @@ public class CommentActionResult {
     public static int COMMENT_ID_ON_ERRORS = -1;
     public static int COMMENT_ID_UNKNOWN = -2;
 
-    long mCommentID;
+    long mCommentID = COMMENT_ID_UNKNOWN;
     String mMessage;
 
     public CommentActionResult(long commentID, String message) {
