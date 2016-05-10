@@ -175,7 +175,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.setEntryValues(sortedValues);
         mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
 
-        mLanguagePreference.setValue(languageCode.toLowerCase());
+        mLanguagePreference.setValue(languageCode);
         mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
     }

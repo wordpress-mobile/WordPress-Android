@@ -273,13 +273,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("menu_item", "site_settings");
                 break;
             case OPENED_ACCOUNT_SETTINGS:
-                eventName = "me_opened_account_settings";
+                eventName = "account_settings_opened";
                 break;
             case OPENED_APP_SETTINGS:
-                eventName = "me_opened_app_settings";
+                eventName = "app_settings_opened";
                 break;
             case OPENED_MY_PROFILE:
-                eventName = "me_opened_my_profile";
+                eventName = "my_profile_opened";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -339,6 +339,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                eventName = "stats_connect_jetpack_selected";
+                break;
             case STATS_WIDGET_ADDED:
                 eventName = "stats_widget_added";
                 break;
@@ -359,6 +362,21 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
                 eventName = "support_reply_to_support_message_sent";
+                break;
+            case LOGIN_MAGIC_LINK_EXITED:
+                eventName = "loagin_magic_link_exited";
+                break;
+            case LOGIN_MAGIC_LINK_FAILED:
+                eventName = "loagin_magic_link_failed";
+                break;
+            case LOGIN_MAGIC_LINK_OPENED:
+                eventName = "loagin_magic_link_opened";
+                break;
+            case LOGIN_MAGIC_LINK_REQUESTED:
+                eventName = "loagin_magic_link_requested";
+                break;
+            case LOGIN_MAGIC_LINK_SUCCEEDED:
+                eventName = "loagin_magic_link_succeeded";
                 break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
@@ -398,6 +416,30 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
+                break;
+            case ME_GRAVATAR_TAPPED:
+                eventName = "me_gravatar_tapped";
+                break;
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
+                eventName = "me_gravatar_tooltip_tapped";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                eventName = "me_gravatar_permissions_denied";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                eventName = "me_gravatar_permissions_accepted";
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                eventName = "me_gravatar_shot_new";
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                eventName = "me_gravatar_gallery_picked";
+                break;
+            case ME_GRAVATAR_CROPPED:
+                eventName = "me_gravatar_cropped";
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                eventName = "me_gravatar_uploaded";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
@@ -491,6 +533,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 eventName = "site_settings_delete_site_response_error";
+                break;
+            case ABTEST_START:
+                eventName = "abtest_start";
                 break;
             default:
                 eventName = null;

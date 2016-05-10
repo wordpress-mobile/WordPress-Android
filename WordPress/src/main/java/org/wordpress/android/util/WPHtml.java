@@ -35,6 +35,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.RelativeSizeSpan;
@@ -852,6 +853,26 @@ class HtmlToSpannedConverter implements ContentHandler {
                     text.append(" />\n");
                 }
             }
+        } else if (src == null) {
+
+            //get regular src value from <img/> tag's src attribute
+            src = attributes.getValue("", "src");
+            Drawable d = null;
+
+            if (img != null) {
+                d = img.getDrawable(src);
+            }
+
+            if (d != null) {
+                int len = text.length();
+                text.append("\uFFFC");
+
+                text.setSpan(new ImageSpan(d, src), len, text.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                // noop - we're not showing a default image here
+            }
+
         }
     }
 

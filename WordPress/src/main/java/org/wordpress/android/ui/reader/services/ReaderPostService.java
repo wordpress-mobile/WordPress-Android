@@ -362,7 +362,7 @@ public class ReaderPostService extends Service {
             return null;
         }
 
-        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagName()));
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagSlug()));
     }
 
     /*

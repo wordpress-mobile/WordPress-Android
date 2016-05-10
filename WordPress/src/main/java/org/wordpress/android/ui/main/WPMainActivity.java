@@ -32,6 +32,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -188,6 +189,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
+                    checkMagicLinkSignIn();
                 }
             } else {
                 ActivityLauncher.showSignInForResult(this);
@@ -312,6 +314,15 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         ProfilingUtils.stop();
     }
 
+    private void checkMagicLinkSignIn() {
+        if (getIntent() !=  null) {
+            if (getIntent().getBooleanExtra(MagicLinkSignInActivity.MAGIC_LOGIN, false)) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                startWithNewAccount();
+            }
+        }
+    }
+
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
             showVisualEditorPromoDialogIfNeeded();
@@ -404,8 +415,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
-                    startService(new Intent(this, GCMRegistrationIntentService.class));
-                    resetFragments();
+                    startWithNewAccount();
                 } else if (!AccountHelper.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
@@ -440,6 +450,11 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 }
                 break;
         }
+    }
+
+    private void startWithNewAccount() {
+        startService(new Intent(this, GCMRegistrationIntentService.class));
+        resetFragments();
     }
 
     /*

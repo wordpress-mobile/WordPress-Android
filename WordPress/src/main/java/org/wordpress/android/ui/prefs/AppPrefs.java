@@ -12,6 +12,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
@@ -80,6 +81,9 @@ public class AppPrefs {
 
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
+
+        // When we need to show the Gravatar Change Promo Tooltip
+        GRAVATAR_CHANGE_PROMO_REQUIRED,
     }
 
     private static SharedPreferences prefs() {
@@ -163,12 +167,12 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
     }
 
     public static void setReaderTag(ReaderTag tag) {
-        if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
-            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
+        if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
+            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
         } else {
             prefs().edit()
@@ -325,10 +329,8 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        // TODO: When we allow users to test the visual editor, we should change this function by:
-        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
-        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE
+                || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
     }
 
     public static boolean isVisualEditorEnabled() {
@@ -341,6 +343,14 @@ public class AppPrefs {
 
     public static void setVisualEditorPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
+    }
+
+    public static boolean isGravatarChangePromoRequired() {
+        return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
+    }
+
+    public static void setGravatarChangePromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, required);
     }
 
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog

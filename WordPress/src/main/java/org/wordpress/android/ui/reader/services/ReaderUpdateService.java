@@ -152,6 +152,7 @@ public class ReaderUpdateService extends Service {
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
+                localTopics.addAll(ReaderTagTable.getCustomListTags());
 
                 if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
@@ -183,7 +184,7 @@ public class ReaderUpdateService extends Service {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType tagType) {
         ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject == null) {
@@ -200,9 +201,21 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagName = JSONUtils.getStringDecoded(jsonTopic, "title");
+                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
+                String tagSlug;
+                if (jsonTopic.has("slug")) {
+                    tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
+                } else {
+                    tagSlug = tagTitle;
+                }
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                topics.add(new ReaderTag(tagName, endpoint, topicType));
+                // if the endpoint contains `read/list` then this is a custom list - these are
+                // included in the response as default tags
+                if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
+                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, ReaderTagType.CUSTOM_LIST));
+                } else {
+                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, tagType));
+                }
             }
         }
 
