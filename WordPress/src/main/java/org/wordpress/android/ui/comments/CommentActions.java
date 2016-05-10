@@ -76,7 +76,7 @@ public class CommentActions {
 
     /*
      * add a comment for the passed post
-     * */
+     */
     public static void addComment(final int accountId,
                                   final String postID,
                                   final String commentText,
