@@ -165,6 +165,8 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
             } else {
                 mRoleContainer.setBackground(null);
             }
+            // Change transparency to give a visual cue to the user that it's disabled
+            mRoleContainer.setAlpha(0.5f);
         }
     }
 
