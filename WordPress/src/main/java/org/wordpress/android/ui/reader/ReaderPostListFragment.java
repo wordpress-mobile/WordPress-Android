@@ -560,7 +560,7 @@ public class ReaderPostListFragment extends Fragment
                     mSearchSuggestionAdapter.populate();
                 }
                 // show empty message letting user know what they're querying
-                setEmptyTitleAndDescription("Search on WordPress.com", "Search for fun posts on WordPress.com");
+                setEmptyTitleAndDescription(getString(R.string.reader_empty_posts_empty_search_title), null);
                 mEmptyViewBoxImages.setVisibility(View.GONE);
                 if (mEmptyView.getVisibility() != View.VISIBLE) {
                     AniUtils.fadeIn(mEmptyView, AniUtils.Duration.LONG);
