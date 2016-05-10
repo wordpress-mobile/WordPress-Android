@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.publicize;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -106,6 +108,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
         if (savedInstanceState == null) {
             mProgress.setVisibility(View.VISIBLE);
+            clearCookies();
             loadConnectUrl();
         } else {
             mWebView.restoreState(savedInstanceState);
@@ -116,6 +119,17 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     public void onResume() {
         super.onResume();
         setNavigationIcon(R.drawable.ic_close_white_24dp);
+    }
+
+    private void clearCookies() {
+        CookieManager cookieManager = CookieManager.getInstance();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.removeAllCookies(null);
+        } else {
+            //noinspection deprecation
+            cookieManager.removeAllCookie();
+        }
     }
 
     /*
