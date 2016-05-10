@@ -38,6 +38,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActionResult;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
@@ -464,8 +465,8 @@ public class NotificationsUtils {
                 CommentActions.moderateCommentForNote(note, status,
                         new CommentActions.CommentActionListener() {
                             @Override
-                            public void onActionResult(boolean succeeded) {
-                                if (!succeeded) {
+                            public void onActionResult(CommentActionResult result) {
+                                if (!result.isSuccess()) {
                                     EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
                                     EventBus.getDefault().postSticky(new NoteModerationFailed());
                                 }
@@ -489,9 +490,9 @@ public class NotificationsUtils {
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
                         @Override
-                        public void onActionResult(boolean succeeded) {
+                        public void onActionResult(CommentActionResult result) {
                             EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
-                            if (!succeeded) {
+                            if (!result.isSuccess()) {
                                 note.setLocalStatus(null);
                                 note.save();
                                 EventBus.getDefault().postSticky(new NoteModerationFailed());
