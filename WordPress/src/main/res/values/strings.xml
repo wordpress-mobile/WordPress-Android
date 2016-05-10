@@ -1025,6 +1025,7 @@
     <string name="error_open_list_from_notification">This post or page was published on another site</string>
     <string name="error_fetch_people_list">Couldn\'t retrieve users for the site</string>
     <string name="error_update_role">Couldn\'t update role of the user</string>
+    <string name="error_remove_user">Couldn\'t remove user</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -1365,7 +1366,7 @@
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
     <string name="role">Role</string>
-    <string name="remove_user">REMOVE %s</string>
+    <string name="person_removed">User removed successfully</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

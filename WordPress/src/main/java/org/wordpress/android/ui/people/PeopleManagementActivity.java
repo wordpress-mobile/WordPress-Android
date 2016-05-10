@@ -25,6 +25,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
+    private Person mSelectedPerson;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
+
+            // navigated back to people list
+            mSelectedPerson = null;
         } else {
             super.onBackPressed();
         }
@@ -75,6 +80,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.remove_person) {
+            removeSelectedPerson();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -102,6 +110,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
                 .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        mSelectedPerson = person;
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
@@ -139,6 +149,30 @@ public class PeopleManagementActivity extends AppCompatActivity
                         ToastUtils.Duration.LONG);
             }
         });
+    }
+
+    private void removeSelectedPerson() {
+        if (mSelectedPerson == null) {
+            return;
+        }
+        PeopleUtils.removePerson(mSelectedPerson.getBlogId(),
+                mSelectedPerson.getPersonID(),
+                mSelectedPerson.getLocalTableBlogId(),
+                new PeopleUtils.RemoveUserCallback() {
+                    @Override
+                    public void onSuccess(long personID, int localTableBlogId) {
+                        ToastUtils.showToast(PeopleManagementActivity.this,
+                                R.string.person_removed,
+                                ToastUtils.Duration.LONG);
+                    }
+
+                    @Override
+                    public void onError() {
+                        ToastUtils.showToast(PeopleManagementActivity.this,
+                                R.string.error_remove_user,
+                                ToastUtils.Duration.LONG);
+                    }
+                });
     }
 
     // This helper method is used after a successful network request
