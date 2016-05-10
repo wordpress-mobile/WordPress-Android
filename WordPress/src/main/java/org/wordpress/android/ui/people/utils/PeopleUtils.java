@@ -50,7 +50,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, long userID, String newRole, final int localTableBlogId,
+    public static void updateRole(final String blogId, long personID, String newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -83,8 +83,39 @@ public class PeopleUtils {
 
         Map<String, String> params = new HashMap<>();
         params.put("roles", newRole.toLowerCase());
-        String path = String.format("sites/%s/users/%d", blogId, userID);
+        String path = String.format("sites/%s/users/%d", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    public static void removePerson(String blogId, final long personID, final int localTableBlogId,
+                                    final RemoveUserCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    // check if the call was successful
+                    boolean success = jsonObject.optBoolean("success");
+                    if (success) {
+                        callback.onSuccess(personID, localTableBlogId);
+                    } else {
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path = String.format("sites/%s/users/%d/delete", blogId, personID);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
     private static List<Person> peopleListFromJSON(JSONArray jsonArray, String blogId, int localTableBlogId)
@@ -107,6 +138,10 @@ public class PeopleUtils {
 
     public interface FetchUsersCallback extends Callback {
         void onSuccess(List<Person> peopleList);
+    }
+
+    public interface RemoveUserCallback extends Callback {
+        void onSuccess(long personID, int localTableBlogId);
     }
 
     public interface UpdateUserCallback extends Callback {
