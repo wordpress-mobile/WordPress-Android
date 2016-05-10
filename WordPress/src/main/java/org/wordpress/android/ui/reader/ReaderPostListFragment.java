@@ -87,6 +87,7 @@ public class ReaderPostListFragment extends Fragment
 
     private View mNewPostsBar;
     private View mEmptyView;
+    private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
 
     private SearchView mSearchView;
@@ -403,7 +404,7 @@ public class ReaderPostListFragment extends Fragment
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_custom_view);
-        mEmptyView.findViewById(R.id.layout_box_images).setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
+        mEmptyViewBoxImages = mEmptyView.findViewById(R.id.layout_box_images);
 
         mRecyclerView.setLogT(AppLog.T.READER);
         mRecyclerView.setCustomEmptyView(mEmptyView);
@@ -558,7 +559,12 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     mSearchSuggestionAdapter.populate();
                 }
-                // TODO: show empty message letting user know what they're querying
+                // show empty message letting user know what they're querying
+                setEmptyTitleAndDescription("Search on WordPress.com", "Search for fun posts on WordPress.com");
+                mEmptyViewBoxImages.setVisibility(View.GONE);
+                if (mEmptyView.getVisibility() != View.VISIBLE) {
+                    AniUtils.fadeIn(mEmptyView, AniUtils.Duration.LONG);
+                }
                 return true;
             }
 
@@ -702,6 +708,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean shouldShowBoxAndPagesAnimation() {
         return getPostListType().isTagType();
     }
+
     private void startBoxAndPagesAnimation() {
         if (!isAdded()) return;
 
@@ -750,6 +757,13 @@ public class ReaderPostListFragment extends Fragment
         } else {
             title = getString(R.string.reader_empty_posts_in_tag);
         }
+
+        setEmptyTitleAndDescription(title, description);
+        mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
+    }
+
+    private void setEmptyTitleAndDescription(@NonNull String title, String description) {
+        if (!isAdded()) return;
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
         titleView.setText(title);
