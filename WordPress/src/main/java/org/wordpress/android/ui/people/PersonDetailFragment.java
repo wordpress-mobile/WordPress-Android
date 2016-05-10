@@ -11,6 +11,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -86,6 +88,12 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         mListener = null;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.person_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     /**
      * Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
      * changes, this method is used instead of FragmentTransaction for the animation.
@@ -111,6 +119,11 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
+
+        Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        if (blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
+            setHasOptionsMenu(true);
+        }
 
         return rootView;
     }
