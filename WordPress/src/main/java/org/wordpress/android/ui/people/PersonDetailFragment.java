@@ -7,16 +7,13 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -32,7 +29,6 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PersonDetailFragment extends Fragment implements View.OnClickListener {
@@ -212,14 +208,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> roleAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
         builder.setAdapter(roleAdapter, null);
 
-        AlertDialog dialog = builder.show();
-        Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-
-        if (negative != null) {
-            Typeface typeface = TypefaceCache.getTypeface(context, TypefaceCache.FAMILY_DEFAULT_LIGHT, Typeface.BOLD);
-            negative.setTypeface(typeface);
-            negative.setTextColor(ContextCompat.getColor(context, R.color.blue_medium));
-        }
+        builder.show();
     }
 
     private class RoleListAdapter extends ArrayAdapter<String> {
