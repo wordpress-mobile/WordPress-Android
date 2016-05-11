@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.people;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -77,7 +79,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.remove_person) {
-            removeSelectedPerson();
+            confirmRemovePerson();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,6 +146,24 @@ public class PeopleManagementActivity extends AppCompatActivity
                         ToastUtils.Duration.LONG);
             }
         });
+    }
+
+    private void confirmRemovePerson() {
+        if (mSelectedPerson == null) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        builder.setTitle(getString(R.string.person_remove_confirmation_title, mSelectedPerson.getDisplayName()));
+        builder.setMessage(getString(R.string.person_remove_confirmation_message, mSelectedPerson.getDisplayName()));
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removeSelectedPerson();
+            }
+        });
+        builder.show();
     }
 
     private void removeSelectedPerson() {
