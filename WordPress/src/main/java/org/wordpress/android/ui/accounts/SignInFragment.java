@@ -705,7 +705,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void deleteCredentialsInSmartLock() {
-        if (isSmartLockAvailable()) {
+        if (!isSmartLockAvailable()) {
             return;
         }
         Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();

@@ -218,6 +218,10 @@ public class ReaderTagTable {
         return getTagsOfType(ReaderTagType.FOLLOWED);
     }
 
+    public static ReaderTagList getCustomListTags() {
+        return getTagsOfType(ReaderTagType.CUSTOM_LIST);
+    }
+
     private static ReaderTagList getTagsOfType(ReaderTagType tagType) {
         String[] args = {Integer.toString(tagType.toInt())};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_type=? ORDER BY tag_slug", args);
