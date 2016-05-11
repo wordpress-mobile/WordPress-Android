@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -153,6 +152,7 @@ public class ReaderUpdateService extends Service {
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
+                localTopics.addAll(ReaderTagTable.getCustomListTags());
 
                 if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
@@ -184,7 +184,7 @@ public class ReaderUpdateService extends Service {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType tagType) {
         ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject == null) {
@@ -205,7 +205,14 @@ public class ReaderUpdateService extends Service {
                 String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
                 String tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
                 String endpoint = JSONUtils.getString(jsonTopic, "URL");
-                topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, topicType));
+
+                // if the endpoint contains `read/list` then this is a custom list - these are
+                // included in the response as default tags
+                if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
+                    topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, ReaderTagType.CUSTOM_LIST));
+                } else {
+                    topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, tagType));
+                }
             }
         }
 
