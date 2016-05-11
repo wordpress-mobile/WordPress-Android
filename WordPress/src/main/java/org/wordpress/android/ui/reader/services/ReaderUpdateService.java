@@ -38,7 +38,7 @@ public class ReaderUpdateService extends Service {
      * on EventBus to notify of changes
      */
 
-    public static enum UpdateTask {
+    public enum UpdateTask {
         TAGS,
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
@@ -241,7 +241,7 @@ public class ReaderUpdateService extends Service {
     /***
      * request the list of blogs the current user is following
      */
-    void updateFollowedBlogs() {
+    private void updateFollowedBlogs() {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -281,7 +281,7 @@ public class ReaderUpdateService extends Service {
     /***
      * request the latest recommended blogs, replaces all local ones
      */
-    void updateRecommendedBlogs() {
+    private void updateRecommendedBlogs() {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

@@ -47,31 +47,31 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public String getEndpoint() {
         return StringUtils.notNullStr(endpoint);
     }
-    void setEndpoint(String endpoint) {
+    private void setEndpoint(String endpoint) {
         this.endpoint = StringUtils.notNullStr(endpoint);
     }
 
     public String getTagTitle() {
         return StringUtils.notNullStr(tagTitle);
     }
-    void setTagTitle(String title) {
+    private void setTagTitle(String title) {
         this.tagTitle = StringUtils.notNullStr(title);
     }
-    boolean hasTagTitle() {
+    private boolean hasTagTitle() {
         return !TextUtils.isEmpty(tagTitle);
     }
 
     public String getTagDisplayName() {
         return StringUtils.notNullStr(tagDisplayName);
     }
-    void setTagDisplayName(String displayName) {
+    private void setTagDisplayName(String displayName) {
         this.tagDisplayName = StringUtils.notNullStr(displayName);
     }
 
     public String getTagSlug() {
         return StringUtils.notNullStr(tagSlug);
     }
-    void setTagSlug(String slug) {
+    private void setTagSlug(String slug) {
         this.tagSlug = StringUtils.notNullStr(slug);
     }
 
@@ -168,9 +168,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * the label is the text displayed in the dropdown filter - use title for the default tags, use
-     * lowercase slugs if a tag slug is alphanumeric (dashes are also permitted), otherwise, use
-     * the title.
+     * the label is the text displayed in the dropdown filter
      */
     @Override
     public String getLabel() {
