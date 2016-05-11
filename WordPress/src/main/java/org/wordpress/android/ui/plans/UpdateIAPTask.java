@@ -16,6 +16,7 @@ import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
 import org.wordpress.android.ui.plans.util.Inventory;
 import org.wordpress.android.ui.plans.util.Purchase;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
@@ -104,6 +105,7 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
                                     if (response != null) {
                                         AppLog.d(AppLog.T.PLANS, "Response from the server: " + response.toString());
                                     }
+                                    AppPrefs.setInAppPurchaseRefreshRequired(false);
                                 }
                             },
                             new RestRequest.ErrorListener() {

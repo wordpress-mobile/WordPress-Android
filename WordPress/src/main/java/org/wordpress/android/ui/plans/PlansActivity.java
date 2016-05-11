@@ -369,7 +369,8 @@ public class PlansActivity extends AppCompatActivity {
                             AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
                             if (result.isSuccess()) {
                                 if (info != null) {
-                                    WordPress.sUpdateIAPsWordPressCom.forceRun(); // refresh purchase on wpcom
+                                    AppPrefs.setInAppPurchaseRefreshRequired(true);
+                                    PlansUtils.synchIAPsWordPressCom();
                                     AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
                                     AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
                                     boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);

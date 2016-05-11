@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -7,6 +8,8 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -139,4 +142,16 @@ public class PlansUtils {
         AppPrefs.setGlobalPlansFeatures(null);
     }
 
+
+    /**
+     * Synch IAPs with wpcom backend. This need to be called to add/remove upgrades on wpcom side.
+     * Those upgrades the user has already bought/cancelled on mobile side (from the Google Store).
+     */
+    public static boolean synchIAPsWordPressCom() {
+            if (AccountHelper.isSignedInWordPressDotCom() && AppPrefs.isInAppPurchaseRefreshRequired()) {
+                new UpdateIAPTask(WordPress.getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
+            }
+            return false;
+    }
 }
