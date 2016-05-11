@@ -157,13 +157,19 @@ public class PeopleManagementActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(long personID, int localTableBlogId) {
                         // remove the person from db, navigate back to list fragment and refresh it
-                        PeopleTable.deletePerson(personID, localTableBlogId);
+                        Person person = PeopleTable.getPerson(personID, localTableBlogId);
+                        String text;
+                        if (person != null) {
+                            PeopleTable.deletePerson(personID, localTableBlogId);
+                            text = getString(R.string.person_removed, person.getUsername());
+                        } else {
+                            text = getString(R.string.person_removed_general);
+                        }
+
+                        ToastUtils.showToast(PeopleManagementActivity.this, text, ToastUtils.Duration.LONG);
+
                         navigateBackToPeopleListFragment();
                         refreshPeopleListFragment();
-
-                        ToastUtils.showToast(PeopleManagementActivity.this,
-                                R.string.person_removed,
-                                ToastUtils.Duration.LONG);
                     }
 
                     @Override

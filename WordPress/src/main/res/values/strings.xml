@@ -1366,7 +1366,8 @@
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
     <string name="role">Role</string>
-    <string name="person_removed">User removed successfully</string>
+    <string name="person_removed">Successfully removed @%s</string>
+    <string name="person_removed_general">User removed successfully</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
