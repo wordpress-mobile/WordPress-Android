@@ -20,7 +20,7 @@ dependencies {
         exclude group: 'commons-logging'
     }
     compile 'com.mcxiaoke.volley:library:1.0.18'
-    compile 'com.android.support:support-v13:23.3.0'
+    compile 'com.android.support:support-v13:23.4.0'
 }
 
 android {
