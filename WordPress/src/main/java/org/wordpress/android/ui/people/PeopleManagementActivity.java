@@ -66,12 +66,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
-            getFragmentManager().popBackStack();
-
-            // navigated back to people list
-            mSelectedPerson = null;
-        } else {
+        if (!navigateBackToPeopleListFragment()) {
             super.onBackPressed();
         }
     }
@@ -161,6 +156,11 @@ public class PeopleManagementActivity extends AppCompatActivity
                 new PeopleUtils.RemoveUserCallback() {
                     @Override
                     public void onSuccess(long personID, int localTableBlogId) {
+                        // remove the person from db, navigate back to list fragment and refresh it
+                        PeopleTable.deletePerson(personID, localTableBlogId);
+                        navigateBackToPeopleListFragment();
+                        refreshPeopleListFragment();
+
                         ToastUtils.showToast(PeopleManagementActivity.this,
                                 R.string.person_removed,
                                 ToastUtils.Duration.LONG);
@@ -178,16 +178,33 @@ public class PeopleManagementActivity extends AppCompatActivity
     // This helper method is used after a successful network request
     private void refreshOnScreenFragmentDetails() {
         FragmentManager fragmentManager = getFragmentManager();
-        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
         PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
                 .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
-        if (peopleListFragment != null) {
-            peopleListFragment.refreshPeopleList();
-        }
         if (personDetailFragment != null) {
             personDetailFragment.refreshPersonDetails();
         }
+
+        refreshPeopleListFragment();
+    }
+
+    private void refreshPeopleListFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        if (peopleListFragment != null) {
+            peopleListFragment.refreshPeopleList();
+        }
+    }
+
+    private boolean navigateBackToPeopleListFragment() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+
+            // navigated back to people list
+            mSelectedPerson = null;
+            return true;
+        }
+        return false;
     }
 }

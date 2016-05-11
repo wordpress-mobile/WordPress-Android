@@ -80,9 +80,14 @@ public class PeopleTable {
         }
     }
 
-    public static int deletePeopleForBlog(int localTableBlogId) {
+    public static void deletePeopleForBlog(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
-        return getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    }
+
+    public static void deletePerson(long personID, int localTableBlogId) {
+        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId)};
+        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=?", args);
     }
 
     public static List<Person> getPeople(int localTableBlogId) {
