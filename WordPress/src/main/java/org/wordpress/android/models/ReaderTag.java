@@ -189,7 +189,9 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * returns true if the passed tag string contains only alpha-numeric characters or hyphens
      */
     private static boolean isTagAlphaNumeric(String tagString) {
-        if (tagString == null) return false;
+        if (TextUtils.isEmpty(tagString)) {
+            return false;
+        }
 
         for (int i=0; i < tagString.length(); i++) {
             char c = tagString.charAt(i);
