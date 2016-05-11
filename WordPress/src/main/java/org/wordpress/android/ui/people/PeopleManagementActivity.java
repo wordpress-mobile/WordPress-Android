@@ -92,7 +92,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList) {
-                PeopleTable.savePeople(peopleList);
+                PeopleTable.savePeople(peopleList, localTableBlogId);
                 refreshOnScreenFragmentDetails();
             }
 
