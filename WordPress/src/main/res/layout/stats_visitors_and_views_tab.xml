@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="0dp"
     android:layout_weight="1"
@@ -28,7 +29,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                android:src="@drawable/ic_like" />
+                app:srcCompat="@drawable/ic_like" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"

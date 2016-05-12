@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/info_button"
-                android:src="@drawable/dashicon_info"
+                app:srcCompat="@drawable/dashicon_info"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
@@ -68,7 +68,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_email"
+                    app:srcCompat="@drawable/dashicon_email"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -98,7 +98,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_admin_users"
+                    app:srcCompat="@drawable/dashicon_admin_users"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -127,7 +127,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_lock"
+                    app:srcCompat="@drawable/dashicon_lock"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -139,7 +139,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_eye_closed"
+                    app:srcCompat="@drawable/dashicon_eye_closed"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="true"
@@ -192,7 +192,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    android:src="@drawable/dashicon_admin_site"
+                    app:srcCompat="@drawable/dashicon_admin_site"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
