@@ -31,7 +31,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PersonDetailFragment extends Fragment implements View.OnClickListener {
+public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
@@ -168,7 +168,12 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         boolean isCurrentUser = account.getUserId() == mPersonID;
         boolean canChangeRole = (blog != null) && !isCurrentUser && blog.hasCapability(Capability.PROMOTE_USERS);
         if (canChangeRole) {
-            mRoleContainer.setOnClickListener(this);
+            mRoleContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showRoleChangeDialog();
+                }
+            });
         } else {
             // Remove the selectableItemBackground if the user can't be edited
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -181,8 +186,7 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    private void showRoleChangeDialog() {
         Context context = getActivity();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
