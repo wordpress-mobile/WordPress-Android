@@ -49,6 +49,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -98,6 +99,7 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtilsVersion1_1;
     private static RestClientUtils mRestClientUtilsVersion1_2;
     private static RestClientUtils mRestClientUtilsVersion1_3;
+    private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -212,6 +214,16 @@ public class WordPress extends Application {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // TODO: remove this after the visual editor is enabled in a release version (5.4 if everything goes well)
+        enableVisualEditorForBetaUsers();
+    }
+
+    private void enableVisualEditorForBetaUsers() {
+        if (BuildConfig.VERSION_NAME.contains("5.4-rc")) {
+            AppPrefs.setVisualEditorAvailable(true);
+            AppPrefs.setVisualEditorEnabled(true);
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -346,6 +358,14 @@ public class WordPress extends Application {
             mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return mRestClientUtilsVersion1_3;
+    }
+
+    public static RestClientUtils getRestClientUtilsV0() {
+        if (mRestClientUtilsVersion0 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion0 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
+        }
+        return mRestClientUtilsVersion0;
     }
 
     /**
@@ -803,6 +823,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
+            PlansUtils.synchIAPsWordPressCom();
         }
 
         @Override

@@ -363,6 +363,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
                 eventName = "support_reply_to_support_message_sent";
                 break;
+            case LOGIN_MAGIC_LINK_EXITED:
+                eventName = "loagin_magic_link_exited";
+                break;
+            case LOGIN_MAGIC_LINK_FAILED:
+                eventName = "loagin_magic_link_failed";
+                break;
+            case LOGIN_MAGIC_LINK_OPENED:
+                eventName = "loagin_magic_link_opened";
+                break;
+            case LOGIN_MAGIC_LINK_REQUESTED:
+                eventName = "loagin_magic_link_requested";
+                break;
+            case LOGIN_MAGIC_LINK_SUCCEEDED:
+                eventName = "loagin_magic_link_succeeded";
+                break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
                 break;
@@ -401,6 +416,30 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
+                break;
+            case ME_GRAVATAR_TAPPED:
+                eventName = "me_gravatar_tapped";
+                break;
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
+                eventName = "me_gravatar_tooltip_tapped";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                eventName = "me_gravatar_permissions_denied";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                eventName = "me_gravatar_permissions_accepted";
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                eventName = "me_gravatar_shot_new";
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                eventName = "me_gravatar_gallery_picked";
+                break;
+            case ME_GRAVATAR_CROPPED:
+                eventName = "me_gravatar_cropped";
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                eventName = "me_gravatar_uploaded";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
@@ -494,6 +533,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 eventName = "site_settings_delete_site_response_error";
+                break;
+            case ABTEST_START:
+                eventName = "abtest_start";
                 break;
             default:
                 eventName = null;

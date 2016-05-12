@@ -21,13 +21,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
+import org.wordpress.android.ui.plans.util.Purchase;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -43,6 +48,7 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
+    private static final int PURCHASE_PLAN_REQUEST = 0;
 
     private int mLocalBlogID = -1;
     private Plan[] mAvailablePlans;
@@ -52,6 +58,7 @@ public class PlansActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
 
     private IabHelper mIabHelper;
+    private boolean mIABSetupDone = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,17 +142,58 @@ public class PlansActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    private void updatePurchaseUI(int position) {
-        Plan plan = getPageAdapter().getPlan(position);
-        boolean showPurchaseButton;
-        if (plan.isCurrentPlan()) {
-            showPurchaseButton = false;
-        } else {
-            // don't show the purchase button unless the plan at this position is "greater" than
-            // the current plan for this site
-            long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
-            showPurchaseButton = plan.isAvailable() && plan.getProductID() > currentPlanProductId;
+    /**
+     * The 'Buy' button should be available if the current plan is free, and the selected plan upgrade is available.
+     * @param position
+     * @return boolean - true if the current plan could be added to the blog.
+     */
+    private boolean isBuyButtonAvailable(int position) {
+        if (!mIABSetupDone) {
+            return false;
         }
+        long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+        if (!PlansUtils.isFreePlan(currentPlanProductId)) {
+            return false;
+        }
+        final Plan plan = getPageAdapter().getPlan(position);
+        return plan.isAvailable() && !plan.isCurrentPlan();
+    }
+
+    /**
+     * The 'Upgrade' button should be available if the current plan is NOT free,
+     * and the selected plan upgrade is available, and the current plan ID < new plan ID.
+     *
+     * Note: Not used now, but will be when we'll implement upgrade of plan within the app.
+     *
+     * @param position
+     * @return boolean - true if the current plan could be upgraded to the blog.
+     */
+    private boolean isUpgradeButtonAvailable(int position) {
+        long currentPlanProductId = WordPress.wpDB.getPlanIdForLocalTableBlogId(mLocalBlogID);
+        if (isBuyButtonAvailable(position) || PlansUtils.isFreePlan(currentPlanProductId)) {
+            return false;
+        }
+
+        Plan currentPlan = PlansUtils.getPlan(mAvailablePlans, currentPlanProductId);
+        if (currentPlan == null) {
+            // Blog's current plan is not available anymore. Weird, it should be available, but not purchasable.
+            AppLog.w(AppLog.T.PLANS, "Blog's current plan with ID " + currentPlanProductId + "is not available anymore on wpcom!");
+            return false;
+        }
+
+        final Plan selectedPlan = getPageAdapter().getPlan(position);
+
+        // No downgrade!
+        if (PlansUtils.isGreaterEquals(currentPlan, selectedPlan)) {
+            return false;
+        }
+
+        return selectedPlan.isAvailable() && !selectedPlan.isCurrentPlan();
+    }
+
+    private void updatePurchaseUI(final int position) {
+        final Plan plan = getPageAdapter().getPlan(position);
+        boolean showPurchaseButton = isBuyButtonAvailable(position);
 
         ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
         ViewGroup containerPurchase = (ViewGroup) findViewById(R.id.purchase_container);
@@ -155,7 +203,7 @@ public class PlansActivity extends AppCompatActivity {
             containerPurchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startPurchaseProcess();
+                    startPurchaseProcess(position);
                 }
             });
         } else {
@@ -170,7 +218,7 @@ public class PlansActivity extends AppCompatActivity {
     }
 
     private void setupPlansUI() {
-        if (mAvailablePlans == null || mAvailablePlans.length == 0)  {
+        if (mAvailablePlans == null || mAvailablePlans.length == 0) {
             // This should never be called with empty plans.
             Toast.makeText(PlansActivity.this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
             finish();
@@ -301,14 +349,57 @@ public class PlansActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startPurchaseProcess() {
-        // TODO: this should start the Google Play purchase process, for now it shows the
-        // post-purchase on-boarding
-        boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
-        Intent intent = new Intent(this, PlanPostPurchaseActivity.class);
-        intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
-        startActivity(intent);
-        finish();
+    private void startPurchaseProcess(int position) {
+        final Plan plan = getPageAdapter().getPlan(position);
+        String sku = plan.getAndroidSKU();
+        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        JSONObject extraData = new JSONObject();
+        try {
+            extraData.put("blog_id", currentBlog.getDotComBlogId());
+            extraData.put("user_id", AccountHelper.getDefaultAccount().getUserId());
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.PLANS, "Can't add extra info to purchase data!", e);
+            return;
+        }
+
+        mIabHelper.launchSubscriptionPurchaseFlow(this, sku, PURCHASE_PLAN_REQUEST,
+                new IabHelper.OnIabPurchaseFinishedListener() {
+                    public void onIabPurchaseFinished(IabResult result, Purchase info) {
+                        if (result != null) {
+                            AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
+                            if (result.isSuccess()) {
+                                if (info != null) {
+                                    /*
+                                        Sync the purchase info with the wpcom backend, and enabled the product on the site.
+                                        We need to use an app setting here for security reasons.
+                                        If something bad happens during this sync, we need to re-sync it later (See onAppComesFromBackground in WordPress.java)
+                                        Without this initial sync the backend doesn't have any info about the purchase, and the product will NOT be enabled
+                                        without a manual action on backend side.
+                                     */
+                                    AppPrefs.setInAppPurchaseRefreshRequired(true);
+                                    PlansUtils.synchIAPsWordPressCom();
+                                    AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
+                                    AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
+                                    boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
+                                    Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
+                                    intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
+                                    startActivity(intent);
+                                }
+                            } else {
+                                AppLog.e(AppLog.T.PLANS, "Purchase failure: " + result.getMessage());
+                                // Not a success. It seems that the buy activity already shows an error.
+                                // Or at least, it shows an error if you try to purchase a subscription you already own.
+                            }
+                        }
+                    }
+                },
+                extraData.toString());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mIabHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     /*
@@ -319,8 +410,7 @@ public class PlansActivity extends AppCompatActivity {
     private void startInAppBillingHelper() {
         mIabHelper = new IabHelper(this, BuildConfig.APP_LICENSE_KEY);
         if (BuildConfig.DEBUG) {
-            String tag = AppLog.TAG + "-" + AppLog.T.PLANS.toString();
-            mIabHelper.enableDebugLogging(true, tag);
+            mIabHelper.enableDebugLogging(true);
         }
         try {
             mIabHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
@@ -328,6 +418,7 @@ public class PlansActivity extends AppCompatActivity {
                 public void onIabSetupFinished(IabResult result) {
                     if (result.isSuccess()) {
                         AppLog.d(AppLog.T.PLANS, "IAB started successfully");
+                        mIABSetupDone = true;
                     } else {
                         AppLog.w(AppLog.T.PLANS, "IAB failed with " + result);
                     }

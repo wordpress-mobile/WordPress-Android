@@ -210,8 +210,6 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
-        private RadioButton mSelectedRadioButton;
-
         public DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -240,12 +238,11 @@ public class DetailListPreference extends ListPreference
             }
 
             if (radioButton != null) {
-                if (mSelectedIndex == position) mSelectedRadioButton = radioButton;
                 radioButton.setChecked(mSelectedIndex == position);
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        changeSelection(radioButton, position);
+                        changeSelection(position);
                     }
                 });
             }
@@ -253,24 +250,16 @@ public class DetailListPreference extends ListPreference
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeSelection(radioButton, position);
+                    changeSelection(position);
                 }
             });
 
             return convertView;
         }
 
-        private void changeSelection(RadioButton radioButton, int position) {
-            CharSequence[] values = getEntryValues();
-
-            if (radioButton != null && values != null && position < values.length) {
-                if (mSelectedRadioButton != null) {
-                    mSelectedRadioButton.setChecked(false);
-                }
-                mSelectedIndex = position;
-                radioButton.setChecked(true);
-                mSelectedRadioButton = radioButton;
-            }
+        private void changeSelection(int position) {
+            mSelectedIndex = position;
+            notifyDataSetChanged();
         }
     }
 }

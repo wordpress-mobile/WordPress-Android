@@ -355,6 +355,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Lib activities-->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.posts.services.PostUploadService"
@@ -462,8 +468,26 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-    </application>
 
-    <!-- Smart Lock for Passwords -->
-    <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+        <activity
+            android:theme="@style/Calypso.NoActionBar"
+            android:name=".ui.accounts.login.MagicLinkSignInActivity"
+            android:label="@string/sign_in"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="magic-login"
+                    android:scheme="wordpress" >
+                </data>
+            </intent-filter>
+
+        </activity>
+
+        <!-- Smart Lock for Passwords -->
+        <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
+    </application>
 </manifest>
