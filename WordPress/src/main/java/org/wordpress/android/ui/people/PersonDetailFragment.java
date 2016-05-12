@@ -161,7 +161,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     // Checks current user's capabilities to decide whether she can change the role or not
-    @SuppressWarnings("deprecation")
     private void setupRoleContainerForCapability() {
         Blog blog = WordPress.getBlog(mLocalTableBlogID);
         Account account = AccountHelper.getDefaultAccount();
@@ -175,14 +174,19 @@ public class PersonDetailFragment extends Fragment {
                 }
             });
         } else {
-            // Remove the selectableItemBackground if the user can't be edited
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                mRoleContainer.setBackgroundDrawable(null);
-            } else {
-                mRoleContainer.setBackground(null);
-            }
+            clearRoleContainerBackground();
             // Change transparency to give a visual cue to the user that it's disabled
             mRoleContainer.setAlpha(0.5f);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    // Remove the selectableItemBackground if the user can't be edited
+    private void clearRoleContainerBackground() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mRoleContainer.setBackgroundDrawable(null);
+        } else {
+            mRoleContainer.setBackground(null);
         }
     }
 
