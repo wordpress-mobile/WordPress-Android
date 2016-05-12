@@ -116,8 +116,10 @@ public class PersonDetailFragment extends Fragment implements View.OnClickListen
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
 
+        Account account = AccountHelper.getDefaultAccount();
+        boolean isCurrentUser = account.getUserId() == mPersonID;
         Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        if (blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
+        if (!isCurrentUser && blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
             setHasOptionsMenu(true);
         }
 
