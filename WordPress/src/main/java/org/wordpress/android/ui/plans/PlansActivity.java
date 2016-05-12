@@ -369,6 +369,13 @@ public class PlansActivity extends AppCompatActivity {
                             AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
                             if (result.isSuccess()) {
                                 if (info != null) {
+                                    /*
+                                        Sync the purchase info with the wpcom backend, and enabled the product on the site.
+                                        We need to use an app setting here for security reasons.
+                                        If something bad happens during this sync, we need to re-sync it later (See onAppComesFromBackground in WordPress.java)
+                                        Without this initial sync the backend doesn't have any info about the purchase, and the product will NOT be enabled
+                                        without a manual action on backend side.
+                                     */
                                     AppPrefs.setInAppPurchaseRefreshRequired(true);
                                     PlansUtils.synchIAPsWordPressCom();
                                     AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
