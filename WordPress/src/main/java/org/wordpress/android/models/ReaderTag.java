@@ -174,8 +174,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public String getLabel() {
         if (tagType == ReaderTagType.DEFAULT) {
             return getTagTitle();
-        } else if (isTagAlphaNumeric(tagDisplayName)) {
-            return tagDisplayName.toLowerCase();
+        } else if (isTagDisplayNameAlphaNumeric()) {
+            return getTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {
             return getTagTitle();
         } else {
@@ -184,15 +184,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * returns true if the passed tag string contains only alpha-numeric characters or hyphens
+     * returns true if the tag display name contains only alpha-numeric characters or hyphens
      */
-    private static boolean isTagAlphaNumeric(String tagString) {
-        if (TextUtils.isEmpty(tagString)) {
+    private boolean isTagDisplayNameAlphaNumeric() {
+        if (TextUtils.isEmpty(tagDisplayName)) {
             return false;
         }
 
-        for (int i=0; i < tagString.length(); i++) {
-            char c = tagString.charAt(i);
+        for (int i=0; i < tagDisplayName.length(); i++) {
+            char c = tagDisplayName.charAt(i);
             if (!Character.isLetterOrDigit(c) && c != '-') {
                 return false;
             }
