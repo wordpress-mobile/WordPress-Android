@@ -57,6 +57,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -561,10 +562,12 @@ public class ReaderPostListFragment extends Fragment
                     mSearchSuggestionAdapter.populate();
                 }
                 // show empty message letting user know what they're querying
-                setEmptyTitleAndDescription(getString(R.string.reader_empty_posts_empty_search_title), null);
-                mEmptyViewBoxImages.setVisibility(View.GONE);
-                if (mEmptyView.getVisibility() != View.VISIBLE) {
-                    AniUtils.fadeIn(mEmptyView, AniUtils.Duration.LONG);
+                if (!DisplayUtils.isLandscape(getActivity())) {
+                    setEmptyTitleAndDescription(getString(R.string.reader_empty_posts_empty_search_title), null);
+                    mEmptyViewBoxImages.setVisibility(View.GONE);
+                    if (mEmptyView.getVisibility() != View.VISIBLE) {
+                        AniUtils.fadeIn(mEmptyView, AniUtils.Duration.LONG);
+                    }
                 }
                 return true;
             }
