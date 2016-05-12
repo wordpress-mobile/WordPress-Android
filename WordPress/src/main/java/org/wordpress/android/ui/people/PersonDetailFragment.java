@@ -136,7 +136,7 @@ public class PersonDetailFragment extends Fragment {
     public void refreshPersonDetails() {
         if (!isAdded()) return;
 
-        Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+        Person person = getCurrentPerson();
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
@@ -194,7 +194,7 @@ public class PersonDetailFragment extends Fragment {
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+                Person person = getCurrentPerson();
                 if (person != null) {
                     // reset the selected role since the dialog is cancelled
                     mSelectedRole = person.getRole();
@@ -257,6 +257,10 @@ public class PersonDetailFragment extends Fragment {
             mSelectedRole = getItem(position);
             notifyDataSetChanged();
         }
+    }
+
+    public Person getCurrentPerson() {
+        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
     }
 
     // Container Activity must implement this interface

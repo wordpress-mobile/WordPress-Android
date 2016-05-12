@@ -27,8 +27,6 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
-    private Person mSelectedPerson;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +106,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
                 .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
-        mSelectedPerson = person;
-
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
         if (personDetailFragment == null) {
@@ -149,13 +145,14 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void confirmRemovePerson() {
-        if (mSelectedPerson == null) {
+        Person person = getCurrentPerson();
+        if (person == null) {
             return;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
-        builder.setTitle(getString(R.string.person_remove_confirmation_title, mSelectedPerson.getDisplayName()));
-        builder.setMessage(getString(R.string.person_remove_confirmation_message, mSelectedPerson.getDisplayName()));
+        builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
+        builder.setMessage(getString(R.string.person_remove_confirmation_message, person.getDisplayName()));
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
@@ -167,12 +164,13 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void removeSelectedPerson() {
-        if (mSelectedPerson == null) {
+        Person person = getCurrentPerson();
+        if (person == null) {
             return;
         }
-        PeopleUtils.removePerson(mSelectedPerson.getBlogId(),
-                mSelectedPerson.getPersonID(),
-                mSelectedPerson.getLocalTableBlogId(),
+        PeopleUtils.removePerson(person.getBlogId(),
+                person.getPersonID(),
+                person.getLocalTableBlogId(),
                 new PeopleUtils.RemoveUserCallback() {
                     @Override
                     public void onSuccess(long personID, int localTableBlogId) {
@@ -226,11 +224,20 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean navigateBackToPeopleListFragment() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
-
-            // navigated back to people list
-            mSelectedPerson = null;
             return true;
         }
         return false;
+    }
+
+    private Person getCurrentPerson() {
+        FragmentManager fragmentManager = getFragmentManager();
+        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (personDetailFragment == null) {
+            return null;
+        }
+
+        return personDetailFragment.getCurrentPerson();
     }
 }
