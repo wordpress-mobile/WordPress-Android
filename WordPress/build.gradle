@@ -151,7 +151,7 @@ task generateCrashlyticsConfig(group: "generate", description: "Generate Crashly
         inputFile.withInputStream { stream ->
             properties.load(stream)
         }
-        def crashlyticsApiKey = properties.getProperty('crashlytics.apikey', '0')
+        def crashlyticsApiKey = properties.getProperty('wp.crashlytics.apikey', '0')
         def writer = new FileWriter(outputFile)
         writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
 apiKey=${crashlyticsApiKey}""")
