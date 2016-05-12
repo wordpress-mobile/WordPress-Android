@@ -116,7 +116,8 @@ public class PeopleTable {
      */
     public static Person getPerson(long personId, int localTableBlogId) {
         String[] args = { Long.toString(personId), Integer.toString(localTableBlogId) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND local_blog_id=?", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
+                " WHERE person_id=? AND local_blog_id=?", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -137,6 +138,7 @@ public class PeopleTable {
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
         String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, blogId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, blogId, localTableBlogId, username,
+                firstName, lastName, displayName, avatarUrl, role);
     }
 }
