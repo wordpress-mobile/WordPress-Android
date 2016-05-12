@@ -69,6 +69,9 @@ import java.util.List;
  *
  */
 public class IabHelper {
+    // Is debug logging enabled?
+    boolean mDebugLog = false;
+    String mDebugTag = "IabHelper";
 
     // Is setup done?
     boolean mSetupDone = false;
@@ -167,8 +170,18 @@ public class IabHelper {
         logDebug("IAB helper created.");
     }
 
+    /**
+     * Enables or disable debug logging through LogCat.
+     */
+    public void enableDebugLogging(boolean enable, String tag) {
+        checkNotDisposed();
+        mDebugLog = enable;
+        mDebugTag = tag;
+    }
+
     public void enableDebugLogging(boolean enable) {
         checkNotDisposed();
+        mDebugLog = enable;
     }
 
     /**
@@ -1025,11 +1038,11 @@ public class IabHelper {
     }
 
     void logDebug(String msg) {
-        AppLog.d(AppLog.T.PLANS, msg);
+        if (mDebugLog) AppLog.d(AppLog.T.PLANS, msg);
     }
 
     void logError(String msg) {
-        AppLog.d(AppLog.T.PLANS, "In-app billing error: " + msg);
+        AppLog.e(AppLog.T.PLANS, "In-app billing error: " + msg);
     }
 
     void logWarn(String msg) {
