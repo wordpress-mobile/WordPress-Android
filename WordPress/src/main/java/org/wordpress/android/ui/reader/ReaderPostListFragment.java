@@ -1017,6 +1017,13 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        // don't show new posts if user is entering a search query - posts will automatically
+        // appear when search is exited
+        if (isSearchViewExpanded()) {
+            AppLog.d(T.READER, "skipping post reload, search view is expanded");
+            return;
+        }
+
         // determine whether to show the "new posts" bar - when this is shown, the newly
         // downloaded posts aren't displayed until the user taps the bar - only appears
         // when there are new posts in a followed tag and the user has scrolled the list
