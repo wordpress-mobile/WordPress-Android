@@ -82,6 +82,9 @@ public class AppPrefs {
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
 
+        // When we need to sync IAP data with the wpcom backend
+        IAP_SYNC_REQUIRED,
+
         // When we need to show the Gravatar Change Promo Tooltip
         GRAVATAR_CHANGE_PROMO_REQUIRED,
     }
@@ -376,5 +379,12 @@ public class AppPrefs {
     }
     public static String getGlobalPlansFeatures() {
         return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
+    }
+
+    public static boolean isInAppPurchaseRefreshRequired() {
+        return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
+    }
+    public static void setInAppPurchaseRefreshRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 }

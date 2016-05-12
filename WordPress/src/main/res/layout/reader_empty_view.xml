@@ -13,7 +13,9 @@
         android:id="@+id/layout_box_images"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/empty_tags_box_bottom"

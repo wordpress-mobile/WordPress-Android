@@ -8,6 +8,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -58,6 +59,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
             if (tag != null && savedInstanceState == null) {
                 showListFragmentForTag(tag, mPostListType);
             }
+        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            String query = getIntent().getStringExtra(ReaderConstants.ARG_SEARCH_QUERY);
+            if (!TextUtils.isEmpty(query) && savedInstanceState == null) {
+                setTitle(String.format(getString(R.string.reader_title_search_results), query));
+                showListFragmentForSearch(query);
+            }
         }
     }
 
@@ -105,7 +112,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.goBackInTagHistory()) {
+        if (fragment == null || !fragment.onActivityBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -152,6 +159,20 @@ public class ReaderPostListActivity extends AppCompatActivity {
             return;
         }
         Fragment fragment = ReaderPostListFragment.newInstanceForFeed(feedId);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
+                .commit();
+    }
+
+    /*
+     * show fragment containing list of posts matching the passed search query
+     */
+    private void showListFragmentForSearch(@NonNull String query) {
+        if (isFinishing()) {
+            return;
+        }
+        Fragment fragment = ReaderPostListFragment.newInstanceForSearch(query);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
