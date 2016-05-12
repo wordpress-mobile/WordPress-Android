@@ -21,6 +21,8 @@ import java.util.Map;
 import static org.wordpress.android.util.VolleyUtils.statusCodeFromVolleyError;
 import static org.wordpress.android.networking.menus.MenusDataModeler.*;
 
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+
 /**
  * Interface for WordPress.com Menus REST API methods.
  *
@@ -87,7 +89,7 @@ public class MenusRestWPCom {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.CREATE_ERROR;
-                if (statusCode == 403) error = REST_ERROR.AUTHENTICATION_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });
@@ -109,7 +111,7 @@ public class MenusRestWPCom {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.UPDATE_ERROR;
-                if (statusCode == 403) error = REST_ERROR.AUTHENTICATION_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });
@@ -134,7 +136,7 @@ public class MenusRestWPCom {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
-                if (statusCode == 403) error = REST_ERROR.AUTHENTICATION_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });
@@ -162,7 +164,7 @@ public class MenusRestWPCom {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
-                if (statusCode == 403) error = REST_ERROR.AUTHENTICATION_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });
@@ -183,7 +185,7 @@ public class MenusRestWPCom {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
-                if (statusCode == 403) error = REST_ERROR.DELETE_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.DELETE_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });
