@@ -76,6 +76,7 @@ public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
+                   WPMainActivity.OnActivityBackPressedListener,
                    WPMainActivity.OnScrollToTopListener {
 
     private ReaderPostAdapter mPostAdapter;
@@ -925,11 +926,27 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * called by the activity when user hits the back button - returns true if the back button
+     * is handled here and should be ignored by the activity
+     */
+    @Override
+    public boolean onActivityBackPressed() {
+        if (isSearchViewExpanded()) {
+            mSearchMenuItem.collapseActionView();
+            return true;
+        } else if (goBackInTagHistory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
     * when previewing posts with a specific tag, a history of previewed tags is retained so
     * the user can navigate back through them - this is faster and requires less memory
     * than creating a new fragment for each previewed tag
     */
-    boolean goBackInTagHistory() {
+    private boolean goBackInTagHistory() {
         if (mTagPreviewHistory.empty()) {
             return false;
         }
