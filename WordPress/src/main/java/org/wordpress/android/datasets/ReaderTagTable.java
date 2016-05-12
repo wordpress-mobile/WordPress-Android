@@ -25,23 +25,23 @@ public class ReaderTagTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_tags ("
-                 + "	tag_slug            TEXT COLLATE NOCASE,"
-                 + "	tag_display_name    TEXT COLLATE NOCASE,"
-                 + "	tag_title           TEXT COLLATE NOCASE,"
-                 + "    tag_type            INTEGER DEFAULT 0,"
-                 + "    endpoint            TEXT,"
-                + " 	date_updated        TEXT,"
-                 + "    PRIMARY KEY (tag_slug, tag_type)"
-                 + ")");
+                + "     tag_slug            TEXT COLLATE NOCASE,"
+                + "     tag_display_name    TEXT COLLATE NOCASE,"
+                + "     tag_title           TEXT COLLATE NOCASE,"
+                + "     tag_type            INTEGER DEFAULT 0,"
+                + "     endpoint            TEXT,"
+                + "     date_updated        TEXT,"
+                + "     PRIMARY KEY (tag_slug, tag_type)"
+                + ")");
 
         db.execSQL("CREATE TABLE tbl_tags_recommended ("
-                 + "	tag_slug	        TEXT COLLATE NOCASE,"
-                 + "	tag_display_name    TEXT COLLATE NOCASE,"
-                 + "	tag_title           TEXT COLLATE NOCASE,"
-                 + "    tag_type            INTEGER DEFAULT 0,"
-                 + "    endpoint            TEXT,"
-                 + "    PRIMARY KEY (tag_slug, tag_type)"
-                 + ")");
+                + "     tag_slug	        TEXT COLLATE NOCASE,"
+                + "     tag_display_name    TEXT COLLATE NOCASE,"
+                + "     tag_title           TEXT COLLATE NOCASE,"
+                + "     tag_type            INTEGER DEFAULT 0,"
+                + "     endpoint            TEXT,"
+                + "     PRIMARY KEY (tag_slug, tag_type)"
+                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
