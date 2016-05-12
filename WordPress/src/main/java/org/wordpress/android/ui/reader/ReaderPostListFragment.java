@@ -551,27 +551,13 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                // hide settings icon and clear post list when search input is expanded
-                mSettingsMenuItem.setVisible(false);
-                getPostAdapter().clear();
-                // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
-                // so the latest suggestions appear
-                if (mSearchSuggestionAdapter == null) {
-                    setupSearchSuggestions();
-                } else {
-                    mSearchSuggestionAdapter.populate();
-                }
-                // show message letting user know what they're querying
-                showSearchExplainer();
+                showSearchUI();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // redisplay settings icon and reload post list when search input is collapsed
-                mSettingsMenuItem.setVisible(true);
-                reloadPosts();
-                hideSearchExplainer();
+                hideSearchUI();
                 return true;
             }
         });
@@ -597,30 +583,57 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
-    /*
-     * called when user initiates a search, shows the explainer message letting them know
-     * what they're searching
-     */
-    private void showSearchExplainer() {
+    private void showSearchUI() {
         if (!isAdded()) return;
 
-        // don't show the message in landscape unless this is a tablet (not enough space with
-        // the virtual keyboard visible)
+        // hide settings icon
+        mSettingsMenuItem.setVisible(false);
+
+        // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
+        // so the latest suggestions appear
+        if (mSearchSuggestionAdapter == null) {
+            setupSearchSuggestions();
+        } else {
+            mSearchSuggestionAdapter.populate();
+        }
+
+        // show message letting user know what they're querying, but only if the user is in
+        // portrait mode or the device is a tablet (since there's not enough space for the
+        // message when the virtual keyboard is visible)
         boolean isLandscape = DisplayUtils.isLandscape(getActivity());
         boolean isTablet = DisplayUtils.isXLarge(getActivity());
-        if (isLandscape && !isTablet) return;
+        if (isTablet || !isLandscape) {
+            TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
+            if (txtSearchExplainer.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(txtSearchExplainer, AniUtils.Duration.LONG);
+            }
+        }
 
-        TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
-        if (txtSearchExplainer.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(txtSearchExplainer, AniUtils.Duration.LONG);
+        // hide the recycler (post list)
+        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
+        if (recycler != null && recycler.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(recycler, AniUtils.Duration.LONG);
         }
     }
 
-    private void hideSearchExplainer() {
+    private void hideSearchUI() {
         if (!isAdded()) return;
 
+        // redisplay settings icon
+        mSettingsMenuItem.setVisible(true);
+
+        // hide the explainer
         TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
+        if (txtSearchExplainer.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(txtSearchExplainer, AniUtils.Duration.LONG);
+        }
         txtSearchExplainer.setVisibility(View.GONE);
+
+        // show the recycler
+        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
+        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(recycler, AniUtils.Duration.LONG);
+        }
     }
 
     /*
