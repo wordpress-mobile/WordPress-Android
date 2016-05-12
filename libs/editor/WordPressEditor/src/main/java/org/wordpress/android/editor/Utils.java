@@ -36,7 +36,7 @@ public class Utils {
             InputStream in = assetManager.open(filename);
             return getStringFromInputStream(in);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, e.getMessage());
+            AppLog.e(AppLog.T.EDITOR, "Unable to load editor HTML (is the assets symlink working?): " + e.getMessage());
             return null;
         }
     }
