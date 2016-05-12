@@ -70,7 +70,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             }
                             @Override public Context getContext() { return mTargetContext; }
                             @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
                         });
@@ -121,7 +120,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public Context getContext() { return mTargetContext; }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                         });
                         Assert.assertTrue(mTestRest.updateMenu(goodMenu));
@@ -157,7 +155,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public Context getContext() { return mTargetContext; }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                         });
                         Assert.assertTrue(mTestRest.updateMenu(badMenu));
@@ -194,7 +191,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                                 countDown();
                             }
                             @Override public Context getContext() { return mTargetContext; }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
@@ -224,13 +220,12 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) {
+                            @Override public void onMenusReceived(int statusCode, List<MenuModel> menu) {
                                 Assert.assertTrue(statusCode == HttpURLConnection.HTTP_OK);
-                                success[0] = menu != null && menu.menuId == expectedId;
+                                success[0] = menu != null && menu.size() > 0 && menu.get(0).menuId == expectedId;
                                 countDown();
                             }
                             @Override public Context getContext() { return mTargetContext; }
-                            @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
@@ -259,12 +254,11 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) {
+                            @Override public void onMenusReceived(int statusCode, List<MenuModel> menu) {
                                 success[0] = menu == null;
                                 countDown();
                             }
                             @Override public Context getContext() { return mTargetContext; }
-                            @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
@@ -307,7 +301,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public Context getContext() { return mTargetContext; }
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                         });
                         Assert.assertTrue(mTestRest.createMenu(goodMenu));
                     }
@@ -343,7 +336,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                             @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
                             @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-                            @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
                         });
                         Assert.assertTrue(mTestRest.deleteMenu(badMenu));
                     }
@@ -399,7 +391,6 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
         @Override public long getSiteId() { return -1; }
         @Override public Context getContext() { return null; }
         @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }
-        @Override public void onMenuReceived(int statusCode, MenuModel menu) { countDown(); }
         @Override public void onMenuCreated(int statusCode, MenuModel menu) { countDown(); }
         @Override public void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted) { countDown(); }
         @Override public void onMenuUpdated(int statusCode, MenuModel menu) { countDown(); }

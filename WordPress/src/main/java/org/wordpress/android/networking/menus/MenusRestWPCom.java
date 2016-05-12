@@ -31,7 +31,6 @@ public class MenusRestWPCom {
     public interface MenusListener {
         Context getContext();
         long getSiteId();
-        void onMenuReceived(int statusCode, MenuModel menu);
         void onMenusReceived(int statusCode, List<MenuModel> menus);
         void onMenuCreated(int statusCode, MenuModel menu);
         void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted);
@@ -103,12 +102,16 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                JSONObject menuObject = response.optJSONObject(MENU_KEY);
-                mDelegate.onMenuReceived(HttpURLConnection.HTTP_OK, menuFromJson(menuObject));
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY));
+                if (result != null) {
+                    List<MenuModel> resultList = new ArrayList<>();
+                    resultList.add(result);
+                    mDelegate.onMenusReceived(HttpURLConnection.HTTP_OK, resultList);
+                }
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuReceived(statusCodeFromVolleyError(error), null);
+                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
             }
         });
     }
