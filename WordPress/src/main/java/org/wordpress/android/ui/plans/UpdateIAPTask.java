@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
     private static final int GET_IAP_BINDER_TIMEOUT = 30000;
     private static final String IAP_ENDPOINT = "/iap/validate";
-    protected Context mContext;
+    private final Context mContext;
     private IabHelper mIabHelper;
     private boolean mIABSetupDone = false;
 
