@@ -3,4 +3,8 @@
     <issue id="InvalidPackage">
         <ignore regexp="robolectric-2.4.jar" />
     </issue>
+
+    <issue id="MissingPrefix">
+        <ignore regexp="Unexpected namespace prefix &quot;app&quot; found for tag `Image.*`" />
+    </issue>
 </lint>

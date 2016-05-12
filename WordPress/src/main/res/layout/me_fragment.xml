@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -92,7 +93,7 @@
             <ImageView
                 android:id="@+id/me_my_profile_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_my_profile"
+                app:srcCompat="@drawable/me_icon_my_profile"
                 android:contentDescription="@string/my_profile"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -111,7 +112,7 @@
             <ImageView
                 android:id="@+id/me_account_settings_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_account_settings"
+                app:srcCompat="@drawable/me_icon_account_settings"
                 android:contentDescription="@string/account_settings"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -130,7 +131,7 @@
             <ImageView
                 android:id="@+id/me_app_settings_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_app_settings"
+                app:srcCompat="@drawable/me_icon_app_settings"
                 android:contentDescription="@string/me_btn_app_settings"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -149,7 +150,7 @@
             <ImageView
                 android:id="@+id/me_notifications_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_notifications"
+                app:srcCompat="@drawable/me_icon_notifications"
                 android:contentDescription="@string/notification_settings"/>
 
             <org.wordpress.android.widgets.WPTextView
@@ -169,7 +170,7 @@
             <ImageView
                 android:id="@+id/me_support_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_support"
+                app:srcCompat="@drawable/me_icon_support"
                 android:contentDescription="@string/me_btn_support"/>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
@@ -188,7 +189,7 @@
             <ImageView
                 android:id="@+id/me_login_logout_icon"
                 style="@style/MeListRowIcon"
-                android:src="@drawable/me_icon_login_logout"
+                app:srcCompat="@drawable/me_icon_login_logout"
                 android:contentDescription="@string/me_btn_login_logout"/>
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
