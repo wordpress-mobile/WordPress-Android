@@ -11,7 +11,7 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
-import org.wordpress.android.networking.menus.MenusRestWPCom.IMenusDelegate;
+import org.wordpress.android.networking.menus.MenusRestWPCom.MenusListener;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.util.CoreEvents;
@@ -59,7 +59,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -109,7 +109,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -146,7 +146,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -185,7 +185,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -220,7 +220,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -255,7 +255,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -291,7 +291,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -331,7 +331,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                 mainLooperHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mTestRest = new MenusRestWPCom(new IMenusDelegate() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
                             @Override public long getSiteId() {
                                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
                             }
@@ -395,7 +395,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
         if (mLatch != null) mLatch.countDown();
     }
 
-    private final IMenusDelegate EMPTY_DELEGATE = new IMenusDelegate() {
+    private final MenusListener EMPTY_DELEGATE = new MenusListener() {
         @Override public long getSiteId() { return -1; }
         @Override public Context getContext() { return null; }
         @Override public void onMenusReceived(int statusCode, List<MenuModel> menus) { countDown(); }

@@ -28,7 +28,7 @@ import static org.wordpress.android.networking.menus.MenusDataModeler.*;
  * ref: https://developer.wordpress.com/docs/api/
  */
 public class MenusRestWPCom {
-    public interface IMenusDelegate {
+    public interface MenusListener {
         Context getContext();
         long getSiteId();
         void onMenuReceived(int statusCode, MenuModel menu);
@@ -51,9 +51,9 @@ public class MenusRestWPCom {
 
     private static final String DELETED_KEY = "deleted";
 
-    private final IMenusDelegate mDelegate;
+    private final MenusListener mDelegate;
 
-    public MenusRestWPCom(IMenusDelegate delegate) {
+    public MenusRestWPCom(MenusListener delegate) {
         if (delegate == null) {
             throw new IllegalArgumentException("IMenusDelegate cannot be null");
         }
