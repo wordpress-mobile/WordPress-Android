@@ -561,14 +561,8 @@ public class ReaderPostListFragment extends Fragment
                 } else {
                     mSearchSuggestionAdapter.populate();
                 }
-                // show empty message letting user know what they're querying
-                if (!DisplayUtils.isLandscape(getActivity())) {
-                    setEmptyTitleAndDescription(getString(R.string.reader_empty_posts_empty_search_title), null);
-                    mEmptyViewBoxImages.setVisibility(View.GONE);
-                    if (mEmptyView.getVisibility() != View.VISIBLE) {
-                        AniUtils.fadeIn(mEmptyView, AniUtils.Duration.LONG);
-                    }
-                }
+                // show message letting user know what they're querying
+                showSearchExplainer();
                 return true;
             }
 
@@ -577,6 +571,7 @@ public class ReaderPostListFragment extends Fragment
                 // redisplay settings icon and reload post list when search input is collapsed
                 mSettingsMenuItem.setVisible(true);
                 reloadPosts();
+                hideSearchExplainer();
                 return true;
             }
         });
@@ -600,6 +595,32 @@ public class ReaderPostListFragment extends Fragment
                }
            }
         );
+    }
+
+    /*
+     * called when user initiates a search, shows the explainer message letting them know
+     * what they're searching
+     */
+    private void showSearchExplainer() {
+        if (!isAdded()) return;
+
+        // don't show the message in landscape unless this is a tablet (not enough space with
+        // the virtual keyboard visible)
+        boolean isLandscape = DisplayUtils.isLandscape(getActivity());
+        boolean isTablet = DisplayUtils.isXLarge(getActivity());
+        if (isLandscape && !isTablet) return;
+
+        TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
+        if (txtSearchExplainer.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(txtSearchExplainer, AniUtils.Duration.LONG);
+        }
+    }
+
+    private void hideSearchExplainer() {
+        if (!isAdded()) return;
+
+        TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
+        txtSearchExplainer.setVisibility(View.GONE);
     }
 
     /*
