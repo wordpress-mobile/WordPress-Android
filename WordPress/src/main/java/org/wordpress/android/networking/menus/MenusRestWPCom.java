@@ -50,13 +50,13 @@ public class MenusRestWPCom {
 
     private static final String DELETED_KEY = "deleted";
 
-    private final MenusListener mDelegate;
+    private final MenusListener mListener;
 
-    public MenusRestWPCom(MenusListener delegate) {
-        if (delegate == null) {
-            throw new IllegalArgumentException("IMenusDelegate cannot be null");
+    public MenusRestWPCom(MenusListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("MenusListener cannot be null");
         }
-        mDelegate = delegate;
+        mListener = listener;
     }
 
     public boolean createMenu(final MenuModel menu) {
@@ -68,12 +68,12 @@ public class MenusRestWPCom {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 menu.menuId = response.optLong(MENU_ID_KEY);
-                mDelegate.onMenuCreated(HttpURLConnection.HTTP_OK, menu);
+                mListener.onMenuCreated(HttpURLConnection.HTTP_OK, menu);
                 // TODO: call updateMenu if the menu has any non-default fields
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuCreated(statusCodeFromVolleyError(error), menu);
+                mListener.onMenuCreated(statusCodeFromVolleyError(error), menu);
             }
         });
         return true;
@@ -87,11 +87,11 @@ public class MenusRestWPCom {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 MenuModel menu = menuFromJson(response.optJSONObject(MENU_KEY));
-                mDelegate.onMenuUpdated(HttpURLConnection.HTTP_OK, menu);
+                mListener.onMenuUpdated(HttpURLConnection.HTTP_OK, menu);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuUpdated(statusCodeFromVolleyError(error), menu);
+                mListener.onMenuUpdated(statusCodeFromVolleyError(error), menu);
             }
         });
         return true;
@@ -106,12 +106,12 @@ public class MenusRestWPCom {
                 if (result != null) {
                     List<MenuModel> resultList = new ArrayList<>();
                     resultList.add(result);
-                    mDelegate.onMenusReceived(HttpURLConnection.HTTP_OK, resultList);
+                    mListener.onMenusReceived(HttpURLConnection.HTTP_OK, resultList);
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
+                mListener.onMenusReceived(statusCodeFromVolleyError(error), null);
             }
         });
     }
@@ -130,11 +130,11 @@ public class MenusRestWPCom {
                 } catch (JSONException exception) {
                     AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");
                 }
-                mDelegate.onMenusReceived(HttpURLConnection.HTTP_OK, menus);
+                mListener.onMenusReceived(HttpURLConnection.HTTP_OK, menus);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
+                mListener.onMenusReceived(statusCodeFromVolleyError(error), null);
             }
         });
     }
@@ -146,11 +146,11 @@ public class MenusRestWPCom {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 boolean deleted = response.optBoolean(DELETED_KEY, false);
-                mDelegate.onMenuDeleted(HttpURLConnection.HTTP_OK, menu, deleted);
+                mListener.onMenuDeleted(HttpURLConnection.HTTP_OK, menu, deleted);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuDeleted(statusCodeFromVolleyError(error), menu, false);
+                mListener.onMenuDeleted(statusCodeFromVolleyError(error), menu, false);
             }
         });
         return true;
@@ -158,8 +158,8 @@ public class MenusRestWPCom {
 
     private String formatPath(String base, String menuId) {
         if (!TextUtils.isEmpty(menuId)) {
-            return String.format(base, String.valueOf(mDelegate.getSiteId()), menuId);
+            return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
-        return String.format(base, String.valueOf(mDelegate.getSiteId()));
+        return String.format(base, String.valueOf(mListener.getSiteId()));
     }
 }
