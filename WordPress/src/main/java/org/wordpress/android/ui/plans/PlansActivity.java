@@ -392,7 +392,7 @@ public class PlansActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        boolean handled = mIabHelper.handleActivityResult(requestCode, resultCode, data);
+        mIabHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     /*
