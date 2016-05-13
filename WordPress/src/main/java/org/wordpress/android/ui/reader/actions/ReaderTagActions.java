@@ -10,6 +10,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -146,7 +147,7 @@ public class ReaderTagActions {
             return null;
         }
 
-        JSONArray jsonTags = jsonObject.optJSONArray("tags");
+        JSONArray jsonTags = jsonObject.optJSONArray(ReaderConstants.JSON_TAG_TAGS_ARRAY);
         if (jsonTags == null || jsonTags.length() == 0) {
             return null;
         }
@@ -154,13 +155,14 @@ public class ReaderTagActions {
         ReaderTagList tags = new ReaderTagList();
         for (int i=0; i < jsonTags.length(); i++) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(i);
-            String tagTitle = JSONUtils.getStringDecoded(jsonThisTag, "title");
-            String tagDisplayName = JSONUtils.getStringDecoded(jsonThisTag, "display_name");
-            String tagSlug = JSONUtils.getStringDecoded(jsonThisTag, "slug");
-            String endpoint = JSONUtils.getString(jsonThisTag, "URL");
+            String tagTitle = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_TITLE);
+            String tagDisplayName = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_DISPLAY_NAME);
+            String tagSlug = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_SLUG);
+            String endpoint = JSONUtils.getString(jsonThisTag, ReaderConstants.JSON_TAG_URL);
             tags.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, ReaderTagType.FOLLOWED));
         }
 
         return tags;
     }
+
 }

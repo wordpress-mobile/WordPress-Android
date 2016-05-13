@@ -201,10 +201,10 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
-                String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, "display_name");
-                String tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
-                String endpoint = JSONUtils.getString(jsonTopic, "URL");
+                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_TITLE);
+                String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_DISPLAY_NAME);
+                String tagSlug = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_SLUG);
+                String endpoint = JSONUtils.getString(jsonTopic, ReaderConstants.JSON_TAG_URL);
 
                 // if the endpoint contains `read/list` then this is a custom list - these are
                 // included in the response as default tags
