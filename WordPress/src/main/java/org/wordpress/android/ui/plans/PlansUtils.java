@@ -102,6 +102,16 @@ public class PlansUtils {
     }
 
     /**
+     * Weather the plan ID is a business plan.
+     *
+     * @param planID - The plan ID
+     * @return boolean - true if the current blog is on a business plan.
+     */
+    public static boolean isBusinessPlan(long planID) {
+        return planID == PlansConstants.JETPACK_BUSINESS_PLAN_ID || planID == PlansConstants.BUSINESS_PLAN_ID;
+    }
+
+    /**
      * Weather the plan ID is a free plan.
      *
      * @param planID - The plan ID

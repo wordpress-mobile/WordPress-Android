@@ -407,7 +407,7 @@ public class PlansActivity extends AppCompatActivity {
                                  */
                                 AppPrefs.setInAppPurchaseRefreshRequired(true);
                                 PlansUtils.synchIAPsWordPressCom();
-                                boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
+                                boolean isBusinessPlan = PlansUtils.isBusinessPlan(plan.getProductID())
                                 Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
                                 intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
                                 startActivity(intent);
