@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
@@ -34,12 +35,14 @@ import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
 import org.wordpress.android.ui.plans.util.Purchase;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -367,24 +370,46 @@ public class PlansActivity extends AppCompatActivity {
                     public void onIabPurchaseFinished(IabResult result, Purchase info) {
                         if (result != null) {
                             AppLog.d(AppLog.T.PLANS, "IabResult: " + result.toString());
+
+                            // bump analytics: user_id and blog_id are already tracked here, no need to add them to props.
+                            HashMap<String, Object> analyticsProperties = new HashMap<>();
+                            if (info != null) {
+                                analyticsProperties.put("sku", info.getSku());
+                                analyticsProperties.put("purchase_time", info.getPurchaseTime());
+                                AppLog.d(AppLog.T.PLANS, "Purchase Info details: " + info.toString());
+                                AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
+                            }
+                            analyticsProperties.put("product_id", plan.getProductID();
+                            analyticsProperties.put("product_name", plan.getProductNameShort());
+                            analyticsProperties.put("product_slug", plan.getProductSlug());
+                            analyticsProperties.put("bill_period", plan.getBillPeriod());
+                            analyticsProperties.put("cost", plan.getCost());
+                            analyticsProperties.put("free_trial", plan.isFreeTrial());
+                            analyticsProperties.put("orig_cost", plan.getOriginal());
+                            analyticsProperties.put("iab_result_message", result.getMessage()); // info returned from Google
+                            if (result.isFailure()) {
+                                analyticsProperties.put("reason", result.getResponse());
+                            }
+
+                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                                    result.isSuccess() ? AnalyticsTracker.Stat.PRODUCT_PURCHASED : AnalyticsTracker.Stat.PRODUCT_PAYMENT_ERROR,
+                                    analyticsProperties
+                            );
+
                             if (result.isSuccess()) {
-                                if (info != null) {
-                                    /*
-                                        Sync the purchase info with the wpcom backend, and enabled the product on the site.
-                                        We need to use an app setting here for security reasons.
-                                        If something bad happens during this sync, we need to re-sync it later (See onAppComesFromBackground in WordPress.java)
-                                        Without this initial sync the backend doesn't have any info about the purchase, and the product will NOT be enabled
-                                        without a manual action on backend side.
-                                     */
-                                    AppPrefs.setInAppPurchaseRefreshRequired(true);
-                                    PlansUtils.synchIAPsWordPressCom();
-                                    AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
-                                    AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
-                                    boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
-                                    Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
-                                    intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
-                                    startActivity(intent);
-                                }
+                                /*
+                                    Sync the purchase info with the wpcom backend, and enabled the product on the site.
+                                    We need to use an app setting here for security reasons.
+                                    If something bad happens during this sync, we need to re-sync it later (See onAppComesFromBackground in WordPress.java)
+                                    Without this initial sync the backend doesn't have any info about the purchase, and the product will NOT be enabled
+                                    without a manual action on backend side.
+                                 */
+                                AppPrefs.setInAppPurchaseRefreshRequired(true);
+                                PlansUtils.synchIAPsWordPressCom();
+                                boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);
+                                Intent intent = new Intent(PlansActivity.this, PlanPostPurchaseActivity.class);
+                                intent.putExtra(PlanPostPurchaseActivity.ARG_IS_BUSINESS_PLAN, isBusinessPlan);
+                                startActivity(intent);
                             } else {
                                 AppLog.e(AppLog.T.PLANS, "Purchase failure: " + result.getMessage());
                                 // Not a success. It seems that the buy activity already shows an error.

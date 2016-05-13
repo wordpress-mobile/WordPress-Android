@@ -252,6 +252,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "pages");
                 break;
+            case OPENED_PLANS:
+                eventName = "plans_view";
+                break;
             case OPENED_COMMENTS:
                 eventName = "site_menu_opened";
                 predefinedEventProperties.put("menu_item", "comments");
@@ -536,6 +539,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ABTEST_START:
                 eventName = "abtest_start";
+                break;
+            case PRODUCT_PURCHASED:
+                eventName = "checkout_product_purchase";
+                break;
+            case PRODUCT_PAYMENT_ERROR:
+                eventName = "checkout_payment_error";
                 break;
             default:
                 eventName = null;

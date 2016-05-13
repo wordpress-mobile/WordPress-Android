@@ -619,6 +619,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Pages");
                 break;
+            case OPENED_PLANS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Site Menu - Opened Plans");
+                break;
             case OPENED_COMMENTS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened Comments");
@@ -1015,6 +1019,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case ABTEST_START:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
+                break;
+            case PRODUCT_PURCHASED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Plans - Product Purchased");
+                break;
+            case PRODUCT_PAYMENT_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Product Payment Error");
                 break;
             default:
                 instructions = null;

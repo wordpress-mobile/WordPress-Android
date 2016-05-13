@@ -103,6 +103,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_FLAGGED_AS_SPAM,
         OPENED_POSTS,
         OPENED_PAGES,
+        OPENED_PLANS,
         OPENED_COMMENTS,
         OPENED_VIEW_SITE,
         OPENED_VIEW_ADMIN,
@@ -171,7 +172,9 @@ public final class AnalyticsTracker {
         SITE_SETTINGS_DELETE_SITE_REQUESTED,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_OK,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR,
-        ABTEST_START
+        ABTEST_START,
+        PRODUCT_PURCHASED,
+        PRODUCT_PAYMENT_ERROR
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
