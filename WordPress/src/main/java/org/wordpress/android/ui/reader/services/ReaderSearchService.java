@@ -17,6 +17,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
@@ -79,6 +80,9 @@ public class ReaderSearchService extends Service {
                 + "&meta=site,likes";
         if (offset > 0) {
             path += "&offset=" + offset;
+        } else {
+            // delete existing posts for this query if there's no offset
+            ReaderPostTable.deletePostsWithTag(getTagForSearchQuery(query));
         }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -116,10 +120,10 @@ public class ReaderSearchService extends Service {
     }
 
     /*
-     * we use a special tag name when storing search results in the reader post table
+     * used when storing search results in the reader post table
      */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String slug = ":search:" + query;
-        return new ReaderTag(slug, query, query, null, ReaderTagType.FOLLOWED);
+        String slug = ReaderUtils.sanitizeWithDashes(query);
+        return new ReaderTag(slug, query, query, null, ReaderTagType.SEARCH);
     }
 }

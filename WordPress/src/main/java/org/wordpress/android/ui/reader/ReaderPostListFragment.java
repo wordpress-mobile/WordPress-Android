@@ -928,6 +928,8 @@ public class ReaderPostListFragment extends Fragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
+            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                mPostAdapter.setCurrentSearchQuery(mCurrentSearchQuery);
             }
         }
         return mPostAdapter;
