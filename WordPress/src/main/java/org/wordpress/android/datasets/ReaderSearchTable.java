@@ -54,9 +54,6 @@ public class ReaderSearchTable {
                 "SELECT counter FROM tbl_search_history WHERE query_string=?", args);
     }
 
-    public static List<String> getQueryStrings() {
-        return getQueryStrings(null);
-    }
     public static List<String> getQueryStrings(String filter) {
         List<String> queries = new ArrayList<>();
         Cursor cursor;

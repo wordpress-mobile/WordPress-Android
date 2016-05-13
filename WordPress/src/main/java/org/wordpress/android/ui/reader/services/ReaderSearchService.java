@@ -76,7 +76,7 @@ public class ReaderSearchService extends Service {
         // TODO: verify that &meta param is honored
         String path = "read/search?q="
                 + UrlUtils.urlEncode(query)
-                + "&number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
+                + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
                 + "&meta=site,likes";
         if (offset > 0) {
             path += "&offset=" + offset;
