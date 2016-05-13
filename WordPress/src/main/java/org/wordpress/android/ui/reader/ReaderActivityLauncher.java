@@ -14,7 +14,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
@@ -23,7 +22,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -142,9 +140,6 @@ public class ReaderActivityLauncher {
 
         // record this search query
         ReaderSearchTable.addOrUpdateQueryString(query);
-
-        // delete existing results for this query
-        ReaderPostTable.deletePostsWithTag(ReaderSearchService.getTagForSearchQuery(query));
 
         // TODO: track analytics
         //AnalyticsTracker.track(AnalyticsTracker.Stat.???);
