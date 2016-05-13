@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -61,8 +60,8 @@ public class ReaderPostListActivity extends AppCompatActivity {
             }
         } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             String query = getIntent().getStringExtra(ReaderConstants.ARG_SEARCH_QUERY);
-            if (!TextUtils.isEmpty(query) && savedInstanceState == null) {
-                setTitle(String.format(getString(R.string.reader_title_search_results), query));
+            setTitle(String.format(getString(R.string.reader_title_search_results), query));
+            if (savedInstanceState == null) {
                 showListFragmentForSearch(query);
             }
         }
