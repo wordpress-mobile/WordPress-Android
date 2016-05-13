@@ -174,6 +174,7 @@ public class PersonDetailFragment extends Fragment {
                 }
             });
         } else {
+            // Remove the selectableItemBackground if the user can't be edited
             clearRoleContainerBackground();
             // Change transparency to give a visual cue to the user that it's disabled
             mRoleContainer.setAlpha(0.5f);
@@ -181,7 +182,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @SuppressWarnings("deprecation")
-    // Remove the selectableItemBackground if the user can't be edited
     private void clearRoleContainerBackground() {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
             mRoleContainer.setBackgroundDrawable(null);
