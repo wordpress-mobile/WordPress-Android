@@ -82,7 +82,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PlansActivity.class);
         intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PLANS);
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_PLANS, WordPress.getBlog(blogLocalTableId));
     }
 
     public static void viewCurrentBlogPosts(Context context) {

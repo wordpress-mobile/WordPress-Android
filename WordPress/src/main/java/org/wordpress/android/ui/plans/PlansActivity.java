@@ -355,7 +355,7 @@ public class PlansActivity extends AppCompatActivity {
     private void startPurchaseProcess(int position) {
         final Plan plan = getPageAdapter().getPlan(position);
         String sku = plan.getAndroidSKU();
-        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         JSONObject extraData = new JSONObject();
         try {
             extraData.put("blog_id", currentBlog.getDotComBlogId());
@@ -391,8 +391,9 @@ public class PlansActivity extends AppCompatActivity {
                                 analyticsProperties.put("reason", result.getResponse());
                             }
 
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
+                            AnalyticsUtils.trackWithBlogDetails(
                                     result.isSuccess() ? AnalyticsTracker.Stat.PRODUCT_PURCHASED : AnalyticsTracker.Stat.PRODUCT_PAYMENT_ERROR,
+                                    currentBlog,
                                     analyticsProperties
                             );
 
