@@ -379,7 +379,7 @@ public class PlansActivity extends AppCompatActivity {
                                 AppLog.d(AppLog.T.PLANS, "Purchase Info details: " + info.toString());
                                 AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
                             }
-                            analyticsProperties.put("product_id", plan.getProductID();
+                            analyticsProperties.put("product_id", plan.getProductID());
                             analyticsProperties.put("product_name", plan.getProductNameShort());
                             analyticsProperties.put("product_slug", plan.getProductSlug());
                             analyticsProperties.put("bill_period", plan.getBillPeriod());
