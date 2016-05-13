@@ -650,7 +650,7 @@ public class ReaderPostListFragment extends Fragment
             public boolean onSuggestionClick(int position) {
                 String query = mSearchSuggestionAdapter.getSuggestion(position);
                 if (!TextUtils.isEmpty(query)) {
-                    mSearchView.setQuery(query, false);
+                    mSearchView.setQuery(query, true);
                 }
                 return true;
             }
@@ -1343,6 +1343,10 @@ public class ReaderPostListFragment extends Fragment
                         getActivity(),
                         post.blogId,
                         post.postId);
+                break;
+            case SEARCH_RESULTS:
+                // TODO: track analytics
+                ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
     }
