@@ -23,7 +23,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -256,8 +255,6 @@ public class ReaderActivityLauncher {
      */
     private static void openUrlExternal(Context context, @NonNull String url) {
         try {
-            // add the GA utm_source param to the URL
-            url = UrlUtils.appendUrlParameter(url, "utm_source", ReaderConstants.HTTP_REFERER_URL);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
