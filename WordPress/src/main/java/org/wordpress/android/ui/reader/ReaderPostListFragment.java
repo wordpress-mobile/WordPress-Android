@@ -48,6 +48,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -336,6 +337,8 @@ public class ReaderPostListFragment extends Fragment
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
+                } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                    ReaderSearchService.startService(getActivity(), mCurrentSearchQuery);
                 }
             }
         }
@@ -563,11 +566,7 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                @Override
                public boolean onQueryTextSubmit(String query) {
-                   if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                       // TODO: reuse existing fragment
-                   } else {
-                       ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
-                   }
+                   ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
                    mSearchMenuItem.collapseActionView();
                    return true;
                }
@@ -664,6 +663,27 @@ public class ReaderPostListFragment extends Fragment
     private boolean isSearchViewExpanded() {
         return mSearchView != null && !mSearchView.isIconified();
     }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
+        if (!isAdded()) return;
+
+        setIsUpdating(true);
+        setEmptyTitleAndDescription(false);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) return;
+
+        setIsUpdating(false);
+        if (event.hasResults()) {
+            getPostAdapter().setSearchResults(event.getResults());
+        } else {
+            setEmptyTitleAndDescription(false);
+        }
+    }
+
     /*
      * called when user taps follow item in popup menu for a post
      */
@@ -895,8 +915,6 @@ public class ReaderPostListFragment extends Fragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
-            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                mPostAdapter.setCurrentSearchQuery(mCurrentSearchQuery);
             }
         }
         return mPostAdapter;
@@ -1162,6 +1180,10 @@ public class ReaderPostListFragment extends Fragment
                 mProgress.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void setIsUpdating(boolean isUpdating) {
+        setIsUpdating(isUpdating, UpdateAction.REQUEST_NEWER);
     }
 
     private void setIsUpdating(boolean isUpdating, UpdateAction updateAction) {

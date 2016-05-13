@@ -47,7 +47,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
-    private String mCurrentSearchQuery;
     private int mGapMarkerPosition = -1;
 
     private final int mPhotonWidth;
@@ -584,12 +583,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    // used when the list type is ReaderPostListType.SEARCH_RESULTS
-    public void setCurrentSearchQuery(@NonNull String query) {
-        if (!query.equals(mCurrentSearchQuery)) {
-            mCurrentSearchQuery = query;
-            reload();
+    public void setSearchResults(ReaderPostList posts) {
+        mPosts.clear();
+        if (posts != null && !posts.isEmpty()) {
+            mPosts.addAll(posts);
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -818,7 +817,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     break;
                 case SEARCH_RESULTS:
                     // TODO: load cached search results
-                    allPosts = new ReaderPostList();
+                    allPosts = mPosts;
                     numExisting = 0;
                     break;
                 default:

@@ -390,6 +390,10 @@
             android:exported="false"
             android:label="Reader Post Service" />
         <service
+            android:name=".ui.reader.services.ReaderSearchService"
+            android:exported="false"
+            android:label="Reader Search Service" />
+        <service
             android:name=".ui.reader.services.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />
