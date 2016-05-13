@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
@@ -586,7 +585,7 @@ public class ReaderPostListFragment extends Fragment
 
         // hide settings icon and show message letting user know what they're searching
         mSettingsMenuItem.setVisible(false);
-        showSearchMessage(R.string.reader_label_post_search_explainer);
+        showSearchMessage();
 
         // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
         // so the latest suggestions appear
@@ -621,7 +620,7 @@ public class ReaderPostListFragment extends Fragment
      * portrait mode or the device is a tablet (since there's not enough space for the
      * message when the virtual keyboard is visible)
      */
-    private void showSearchMessage(@StringRes int stringResId) {
+    private void showSearchMessage() {
         if (!isAdded()) return;
 
         boolean isLandscape = DisplayUtils.isLandscape(getActivity());
@@ -629,7 +628,6 @@ public class ReaderPostListFragment extends Fragment
         if (isLandscape && !isTablet) return;
 
         TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
-        txtSearchMsg.setText(stringResId);
         if (txtSearchMsg.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.LONG);
         }
@@ -680,15 +678,13 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) return;
 
         setIsUpdating(true);
-        showSearchMessage(R.string.reader_label_post_search_running);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
-        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) return;
+        if (!isAdded()) return;
 
         setIsUpdating(false);
-        hideSearchMessage();
 
         if (event.hasResults()) {
             getPostAdapter().setCurrentSearchQuery(event.getQuery());
@@ -801,7 +797,11 @@ public class ReaderPostListFragment extends Fragment
         } else if (requestFailed) {
             title = getString(R.string.reader_empty_posts_request_failed);
         } else if (isUpdating()) {
-            title = getString(R.string.reader_empty_posts_in_tag_updating);
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                title = getString(R.string.reader_label_post_search_running);
+            } else {
+                title = getString(R.string.reader_empty_posts_in_tag_updating);
+            }
         } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             title = getString(R.string.reader_empty_posts_in_blog);
         } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
