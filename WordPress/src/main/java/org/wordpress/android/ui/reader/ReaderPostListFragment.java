@@ -680,7 +680,7 @@ public class ReaderPostListFragment extends Fragment
         if (event.hasResults()) {
             getPostAdapter().setSearchResults(event.getResults());
         } else {
-            setEmptyTitleAndDescription(false);
+            mDataLoadedListener.onDataLoaded(true);
         }
     }
 
