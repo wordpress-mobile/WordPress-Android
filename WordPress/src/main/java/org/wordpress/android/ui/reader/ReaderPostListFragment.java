@@ -550,6 +550,13 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(true);
 
+        // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
+        // after a single character is typed, and there's no less hacky way to do this...
+        View view = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        if (view instanceof AutoCompleteTextView) {
+            ((AutoCompleteTextView) view).setThreshold(1);
+        }
+
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -665,14 +672,6 @@ public class ReaderPostListFragment extends Fragment
                 return true;
             }
         });
-
-        // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
-        // after a single character is typed, and there's no less hacky way to do this...
-        View view = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        if (view instanceof AutoCompleteTextView) {
-            AutoCompleteTextView autoText = (AutoCompleteTextView) view;
-            autoText.setThreshold(1);
-        }
     }
 
     /*
