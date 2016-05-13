@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -592,7 +593,7 @@ public class ReaderPostListFragment extends Fragment
         if (mSearchSuggestionAdapter == null) {
             setupSearchSuggestions();
         } else {
-            mSearchSuggestionAdapter.populate();
+            mSearchSuggestionAdapter.populate(null);
         }
 
         // hide the recycler (post list)
@@ -664,6 +665,14 @@ public class ReaderPostListFragment extends Fragment
                 return true;
             }
         });
+
+        // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
+        // after a single character is typed, and there's no less hacky way to do this...
+        View view = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        if (view instanceof AutoCompleteTextView) {
+            AutoCompleteTextView autoText = (AutoCompleteTextView) view;
+            autoText.setThreshold(1);
+        }
     }
 
     /*

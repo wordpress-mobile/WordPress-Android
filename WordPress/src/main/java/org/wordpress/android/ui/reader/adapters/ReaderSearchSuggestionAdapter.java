@@ -18,13 +18,12 @@ public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
                 new String[]{"query"},
                 new int[]{android.R.id.text1},
                 0);
-        populate();
     }
 
-    public void populate() {
-        populate(null);
-    }
-
+    /*
+     * populates the suggestion list with previous suggestions with the passed filter applied - pass
+     * null for the filter to show all suggestions
+     */
     public void populate(String filter) {
         mSearchSuggestions = ReaderSearchTable.getQueryStrings(filter);
         MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "query"});
