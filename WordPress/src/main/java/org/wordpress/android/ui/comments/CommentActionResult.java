@@ -2,11 +2,11 @@ package org.wordpress.android.ui.comments;
 
 public class CommentActionResult {
 
-    public static int COMMENT_ID_ON_ERRORS = -1;
-    public static int COMMENT_ID_UNKNOWN = -2;
+    public static final int COMMENT_ID_ON_ERRORS = -1;
+    public static final int COMMENT_ID_UNKNOWN = -2;
 
-    long mCommentID = COMMENT_ID_UNKNOWN;
-    String mMessage;
+    private long mCommentID = COMMENT_ID_UNKNOWN;
+    private String mMessage;
 
     public CommentActionResult(long commentID, String message) {
         mCommentID = commentID;
