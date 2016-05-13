@@ -783,10 +783,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * box/pages animation that appears when loading an empty list (only appears for tags)
+     * box/pages animation that appears when loading an empty list
      */
     private boolean shouldShowBoxAndPagesAnimation() {
-        return getPostListType().isTagType();
+        return getPostListType().isTagType() || getPostListType() == ReaderPostListType.SEARCH_RESULTS;
     }
 
     private void startBoxAndPagesAnimation() {
