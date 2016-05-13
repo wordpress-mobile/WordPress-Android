@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="roles" translatable="false">
+    <string-array name="roles" translatable="true">
         <item>
-            Administrator
+            Admin
         </item>
         <item>
             Editor
