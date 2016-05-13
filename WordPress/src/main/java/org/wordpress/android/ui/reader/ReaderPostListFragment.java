@@ -684,9 +684,16 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
         if (!isAdded()) return;
 
+        // make sure this is for the current search
+        if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
+                || !event.getQuery().equals(mCurrentSearchQuery)) {
+            return;
+        }
+
         setIsUpdating(false);
 
         if (event.hasResults()) {
+            // this will load the search results
             getPostAdapter().setCurrentSearchQuery(event.getQuery());
         } else {
             mDataLoadedListener.onDataLoaded(true);

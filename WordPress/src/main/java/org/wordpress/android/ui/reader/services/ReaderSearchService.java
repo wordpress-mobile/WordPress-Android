@@ -80,9 +80,6 @@ public class ReaderSearchService extends Service {
                 + "&meta=site,likes";
         if (offset > 0) {
             path += "&offset=" + offset;
-        } else {
-            // delete existing posts for this query if there's no offset
-            ReaderPostTable.deletePostsWithTag(getTagForSearchQuery(query));
         }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
