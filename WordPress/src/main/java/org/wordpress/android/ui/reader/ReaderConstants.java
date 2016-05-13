@@ -31,4 +31,12 @@ public class ReaderConstants {
     static final String KEY_WAS_PAUSED        = "was_paused";
     static final String KEY_ERROR_MESSAGE     = "error_message";
     static final String KEY_FIRST_LOAD        = "first_load";
+
+    // JSON key names
+    //  tag endpoints
+    public static final String JSON_TAG_TAGS_ARRAY      = "tags";
+    public static final String JSON_TAG_TITLE           = "title";
+    public static final String JSON_TAG_DISPLAY_NAME    = "tag_display_name";
+    public static final String JSON_TAG_SLUG            = "slug";
+    public static final String JSON_TAG_URL             = "URL";
 }
