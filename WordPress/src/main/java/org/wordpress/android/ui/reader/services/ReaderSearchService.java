@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.util.AppLog;
@@ -85,7 +87,7 @@ public class ReaderSearchService extends Service {
                 if (jsonObject != null) {
                     handleSearchResponse(query, jsonObject);
                 } else {
-                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, null));
+                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, 0));
                 }
             }
         };
@@ -93,7 +95,7 @@ public class ReaderSearchService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, null));
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, 0));
             }
         };
 
@@ -107,9 +109,14 @@ public class ReaderSearchService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                ReaderPostTable.addOrUpdatePosts(null, serverPosts);
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, serverPosts));
+                ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, serverPosts.size()));
             }
         }.start();
+    }
+
+    public static ReaderTag getTagForSearchQuery(@NonNull String query) {
+        String slug = "search:" + query;
+        return new ReaderTag(slug, query, query, null, ReaderTagType.FOLLOWED);
     }
 }

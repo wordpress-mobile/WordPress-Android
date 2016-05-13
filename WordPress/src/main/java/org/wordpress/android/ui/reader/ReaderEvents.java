@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -71,23 +70,22 @@ public class ReaderEvents {
         public SearchPostsStarted(@NonNull String query) {
             mQuery = query;
         }
+        public String getQuery() {
+            return mQuery;
+        }
     }
     public static class SearchPostsEnded {
         private final String mQuery;
-        private final ReaderPostList mSearchResults;
-        public SearchPostsEnded(@NonNull String query, ReaderPostList searchResults) {
+        private final int mNumResults;
+        public SearchPostsEnded(@NonNull String query, int numResults) {
             mQuery = query;
-            if (searchResults != null) {
-                mSearchResults = (ReaderPostList) searchResults.clone();
-            } else {
-                mSearchResults = new ReaderPostList();
-            }
+            mNumResults = numResults;
         }
         public boolean hasResults() {
-            return !mSearchResults.isEmpty();
+            return mNumResults > 0;
         }
-        public ReaderPostList getResults() {
-            return mSearchResults;
+        public String getQuery() {
+            return mQuery;
         }
     }
 

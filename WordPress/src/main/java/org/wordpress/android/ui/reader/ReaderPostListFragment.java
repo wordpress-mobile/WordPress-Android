@@ -691,7 +691,7 @@ public class ReaderPostListFragment extends Fragment
         hideSearchMessage();
 
         if (event.hasResults()) {
-            getPostAdapter().setSearchResults(event.getResults());
+            getPostAdapter().setCurrentSearchQuery(event.getQuery());
         } else {
             mDataLoadedListener.onDataLoaded(true);
         }

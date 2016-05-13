@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -47,6 +49,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private long mCurrentBlogId;
     private long mCurrentFeedId;
     private int mGapMarkerPosition = -1;
+    private String mCurrentSearchQuery;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -580,12 +583,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void setSearchResults(ReaderPostList posts) {
-        mPosts.clear();
-        if (posts != null && !posts.isEmpty()) {
-            mPosts.addAll(posts);
+    public void setCurrentSearchQuery(@NonNull String query) {
+        if (!query.equals(mCurrentSearchQuery)) {
+            mCurrentSearchQuery = query;
+            reload();
         }
-        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -813,9 +815,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     break;
                 case SEARCH_RESULTS:
-                    // TODO: load cached search results
-                    allPosts = mPosts;
-                    numExisting = 0;
+                    ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                    allPosts = ReaderPostTable.getPostsWithTag(searchTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    numExisting = ReaderPostTable.getNumPostsWithTag(searchTag);
                     break;
                 default:
                     return false;
