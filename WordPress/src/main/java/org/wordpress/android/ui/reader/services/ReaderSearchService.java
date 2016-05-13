@@ -115,8 +115,11 @@ public class ReaderSearchService extends Service {
         }.start();
     }
 
+    /*
+     * we use a special tag name when storing search results in the reader post table
+     */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String slug = "search:" + query;
+        String slug = ":search:" + query;
         return new ReaderTag(slug, query, query, null, ReaderTagType.FOLLOWED);
     }
 }
