@@ -29,9 +29,6 @@ public class ReaderSearchService extends Service {
     private static final String ARG_QUERY   = "query";
     private static final String ARG_OFFSET  = "offset";
 
-    /*
-     * search for posts matching the passed query
-     */
     public static void startService(Context context, @NonNull String query) {
         startService(context, query, 0);
     }
@@ -100,7 +97,8 @@ public class ReaderSearchService extends Service {
             }
         };
 
-        AppLog.d(AppLog.T.READER, "starting search for " + query);
+        AppLog.d(AppLog.T.READER, "reader search service > starting search for " + query);
+        EventBus.getDefault().post(new ReaderEvents.SearchPostsStarted(query));
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 

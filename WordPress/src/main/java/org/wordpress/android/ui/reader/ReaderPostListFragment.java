@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
@@ -583,8 +584,9 @@ public class ReaderPostListFragment extends Fragment
     private void showSearchUI() {
         if (!isAdded()) return;
 
-        // hide settings icon
+        // hide settings icon and show message letting user know what they're searching
         mSettingsMenuItem.setVisible(false);
+        showSearchMessage(R.string.reader_label_post_search_explainer);
 
         // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
         // so the latest suggestions appear
@@ -592,18 +594,6 @@ public class ReaderPostListFragment extends Fragment
             setupSearchSuggestions();
         } else {
             mSearchSuggestionAdapter.populate();
-        }
-
-        // show message letting user know what they're querying, but only if the user is in
-        // portrait mode or the device is a tablet (since there's not enough space for the
-        // message when the virtual keyboard is visible)
-        boolean isLandscape = DisplayUtils.isLandscape(getActivity());
-        boolean isTablet = DisplayUtils.isXLarge(getActivity());
-        if (isTablet || !isLandscape) {
-            TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
-            if (txtSearchExplainer.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(txtSearchExplainer, AniUtils.Duration.LONG);
-            }
         }
 
         // hide the recycler (post list)
@@ -616,20 +606,41 @@ public class ReaderPostListFragment extends Fragment
     private void hideSearchUI() {
         if (!isAdded()) return;
 
-        // redisplay settings icon
         mSettingsMenuItem.setVisible(true);
+        hideSearchMessage();
 
-        // hide the explainer
-        TextView txtSearchExplainer = (TextView) getView().findViewById(R.id.text_search_explainer);
-        if (txtSearchExplainer.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(txtSearchExplainer, AniUtils.Duration.LONG);
-        }
-        txtSearchExplainer.setVisibility(View.GONE);
-
-        // show the recycler
+        // show the recycler again
         RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
         if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(recycler, AniUtils.Duration.LONG);
+        }
+    }
+
+    /*
+     * show message letting user know what they're querying, but only if the user is in
+     * portrait mode or the device is a tablet (since there's not enough space for the
+     * message when the virtual keyboard is visible)
+     */
+    private void showSearchMessage(@StringRes int stringResId) {
+        if (!isAdded()) return;
+
+        boolean isLandscape = DisplayUtils.isLandscape(getActivity());
+        boolean isTablet = DisplayUtils.isXLarge(getActivity());
+        if (isLandscape && !isTablet) return;
+
+        TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
+        txtSearchMsg.setText(stringResId);
+        if (txtSearchMsg.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.LONG);
+        }
+    }
+
+    private void hideSearchMessage() {
+        if (!isAdded()) return;
+
+        TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
+        if (txtSearchMsg.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(txtSearchMsg, AniUtils.Duration.LONG);
         }
     }
 
@@ -669,7 +680,7 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) return;
 
         setIsUpdating(true);
-        setEmptyTitleAndDescription(false);
+        showSearchMessage(R.string.reader_label_post_search_running);
     }
 
     @SuppressWarnings("unused")
@@ -677,6 +688,8 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) return;
 
         setIsUpdating(false);
+        hideSearchMessage();
+
         if (event.hasResults()) {
             getPostAdapter().setSearchResults(event.getResults());
         } else {
