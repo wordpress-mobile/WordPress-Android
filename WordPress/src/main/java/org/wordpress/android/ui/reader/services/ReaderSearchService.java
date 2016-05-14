@@ -32,9 +32,6 @@ public class ReaderSearchService extends Service {
     private static final String ARG_QUERY   = "query";
     private static final String ARG_OFFSET  = "offset";
 
-    public static void startService(Context context, @NonNull String query) {
-        startService(context, query, 0);
-    }
     public static void startService(Context context, @NonNull String query, int offset) {
         Intent intent = new Intent(context, ReaderSearchService.class);
         intent.putExtra(ARG_QUERY, query);

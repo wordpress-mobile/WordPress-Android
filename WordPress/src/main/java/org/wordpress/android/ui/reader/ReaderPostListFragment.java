@@ -339,7 +339,7 @@ public class ReaderPostListFragment extends Fragment
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
                 } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                    ReaderSearchService.startService(getActivity(), mCurrentSearchQuery);
+                    updatePostsInCurrentSearch(0);
                 }
             }
         }
@@ -585,6 +585,10 @@ public class ReaderPostListFragment extends Fragment
                }
            }
         );
+    }
+
+    private void updatePostsInCurrentSearch(int offset) {
+        ReaderSearchService.startService(getActivity(), mCurrentSearchQuery, offset);
     }
 
     private void submitSearchQuery(@NonNull String query) {
@@ -925,6 +929,15 @@ public class ReaderPostListFragment extends Fragment
                     }
                     if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                    }
+                    break;
+
+                case SEARCH_RESULTS:
+                    ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                    int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
+                    if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                        updatePostsInCurrentSearch(offset);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
