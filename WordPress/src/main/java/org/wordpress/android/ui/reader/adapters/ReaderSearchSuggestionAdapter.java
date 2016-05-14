@@ -11,6 +11,7 @@ import java.util.List;
 
 public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
     private List<String> mSearchSuggestions;
+    private static final int MAX_SUGGESTIONS = 5;
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context,
@@ -26,7 +27,7 @@ public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
      * null for the filter to show all suggestions
      */
     public void populate(String filter) {
-        mSearchSuggestions = ReaderSearchTable.getQueryStrings(filter);
+        mSearchSuggestions = ReaderSearchTable.getQueryStrings(filter, MAX_SUGGESTIONS);
         MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "query"});
 
         int id = 0;

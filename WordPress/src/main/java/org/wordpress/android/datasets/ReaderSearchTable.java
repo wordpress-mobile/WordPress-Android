@@ -54,19 +54,25 @@ public class ReaderSearchTable {
                 "SELECT counter FROM tbl_search_history WHERE query_string=?", args);
     }
 
-    public static List<String> getQueryStrings(String filter) {
-        List<String> queries = new ArrayList<>();
-        Cursor cursor;
+    public static List<String> getQueryStrings(String filter, int max) {
+        String sql;
+        String[] args;
         if (TextUtils.isEmpty(filter)) {
-            cursor = ReaderDatabase.getReadableDb().rawQuery(
-                    "SELECT query_string FROM tbl_search_history ORDER BY date_used DESC", null);
+            sql = "SELECT query_string FROM tbl_search_history ORDER BY date_used DESC";
+            args = null;
         } else {
+            sql = "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ? ORDER BY date_used DESC";
             String likeFilter = filter + "%";
-            cursor = ReaderDatabase.getReadableDb().rawQuery(
-                    "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ? ORDER BY date_used DESC", new String[]{likeFilter});
+            args = new String[]{likeFilter};
         }
 
+        if (max > 0) {
+            sql += " LIMIT " + max;
+        }
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
+            List<String> queries = new ArrayList<>();
             while (cursor.moveToNext()) {
                 queries.add(cursor.getString(0));
             }

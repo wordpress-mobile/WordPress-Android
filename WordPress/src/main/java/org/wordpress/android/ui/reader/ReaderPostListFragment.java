@@ -574,8 +574,7 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                @Override
                public boolean onQueryTextSubmit(String query) {
-                   ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
-                   mSearchMenuItem.collapseActionView();
+                   submitSearchQuery(query);
                    return true;
                }
 
@@ -586,6 +585,13 @@ public class ReaderPostListFragment extends Fragment
                }
            }
         );
+    }
+
+    private void submitSearchQuery(@NonNull String query) {
+        if (!isAdded()) return;
+
+        ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
+        mSearchMenuItem.collapseActionView();
     }
 
     private void showSearchUI() {
