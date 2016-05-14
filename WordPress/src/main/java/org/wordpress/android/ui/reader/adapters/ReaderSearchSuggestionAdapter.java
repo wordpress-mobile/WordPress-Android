@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.MatrixCursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 
+import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderSearchTable;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context,
-                android.R.layout.simple_list_item_1,
+                R.layout.reader_listitem_suggestion,
                 null,
                 new String[]{"query"},
                 new int[]{android.R.id.text1},
@@ -21,7 +22,7 @@ public class ReaderSearchSuggestionAdapter extends SimpleCursorAdapter {
     }
 
     /*
-     * populates the suggestion list with previous suggestions with the passed filter applied - pass
+     * populates the suggestion list from previous suggestions with the passed filter applied - pass
      * null for the filter to show all suggestions
      */
     public void populate(String filter) {
