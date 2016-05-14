@@ -54,17 +54,23 @@ public class ReaderSearchTable {
                 "SELECT counter FROM tbl_search_history WHERE query_string=?", args);
     }
 
+    /**
+     * Returns a list of query strings previously typed by the user
+     * @param filter - filters the list using LIKE syntax (pass null for no filter)
+     * @param max - limit the list to this many items (pass zero for no limit)
+     */
     public static List<String> getQueryStrings(String filter, int max) {
         String sql;
         String[] args;
         if (TextUtils.isEmpty(filter)) {
-            sql = "SELECT query_string FROM tbl_search_history ORDER BY date_used DESC";
+            sql = "SELECT query_string FROM tbl_search_history";
             args = null;
         } else {
-            sql = "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ? ORDER BY date_used DESC";
-            String likeFilter = filter + "%";
-            args = new String[]{likeFilter};
+            sql = "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ?";
+            args = new String[]{filter + "%"};
         }
+
+        sql += " ORDER BY date_used DESC";
 
         if (max > 0) {
             sql += " LIMIT " + max;
