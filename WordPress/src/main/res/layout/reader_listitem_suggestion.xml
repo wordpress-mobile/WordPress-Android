@@ -8,7 +8,7 @@
     android:paddingStart="?android:attr/listPreferredItemPaddingStart">
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/text_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/image_delete"

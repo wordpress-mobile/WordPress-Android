@@ -28,14 +28,18 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     public String getSuggestion(int position) {
         Cursor cursor = (Cursor) getItem(position);
-        return cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        if (cursor != null) {
+            return cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        } else {
+            return null;
+        }
     }
 
     private class SuggestionViewHolder {
-        private final TextView textView;
+        private final TextView txtSuggestion;
         private final ImageView imgDelete;
         SuggestionViewHolder(View view) {
-            textView = (TextView) view.findViewById(android.R.id.text1);
+            txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
             imgDelete = (ImageView) view.findViewById(R.id.image_delete);
         }
     }
@@ -52,7 +56,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         SuggestionViewHolder holder = (SuggestionViewHolder) view.getTag();
         final String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
 
-        holder.textView.setText(query);
+        holder.txtSuggestion.setText(query);
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
