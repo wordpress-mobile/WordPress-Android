@@ -573,6 +573,7 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 return true;
             }
@@ -585,7 +586,7 @@ public class ReaderPostListFragment extends Fragment
                 mCurrentSearchQuery = null;
                 mSettingsMenuItem.setVisible(true);
 
-                // return to showing the followed tag that was showing prior to searching
+                // return to the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
 
                 return true;
@@ -644,11 +645,11 @@ public class ReaderPostListFragment extends Fragment
 
         boolean isLandscape = DisplayUtils.isLandscape(getActivity());
         boolean isTablet = DisplayUtils.isXLarge(getActivity());
-        if (isLandscape && !isTablet) return;
-
-        TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
-        if (txtSearchMsg.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.MEDIUM);
+        if (!isLandscape || isTablet) {
+            TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
+            if (txtSearchMsg.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.MEDIUM);
+            }
         }
 
         // hide the recycler (post list) so only the above message is visible
