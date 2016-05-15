@@ -629,6 +629,9 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
+        mPostAdapter.setCurrentTag(searchTag);
+
         mCurrentSearchQuery = query;
         updatePostsInCurrentSearch(0);
     }
@@ -724,8 +727,7 @@ public class ReaderPostListFragment extends Fragment
         setIsUpdating(false, updateAction);
 
         // load the results, or show empty message if there aren't any
-        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
-        mPostAdapter.setCurrentTag(searchTag);
+        mPostAdapter.refresh();
     }
 
     /*
@@ -1151,10 +1153,10 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // don't show new posts if user is entering a search query - posts will automatically
+        // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
-        if (isSearchViewExpanded()) {
-            AppLog.d(T.READER, "skipping post reload, search view is expanded");
+        if (isSearchViewExpanded()
+                || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
