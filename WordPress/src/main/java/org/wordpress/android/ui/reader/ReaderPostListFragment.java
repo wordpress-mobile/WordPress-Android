@@ -339,8 +339,6 @@ public class ReaderPostListFragment extends Fragment
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
-                } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                    updatePostsInCurrentSearch(0);
                 }
             }
         }
@@ -353,8 +351,7 @@ public class ReaderPostListFragment extends Fragment
         mPostListType = postListType;
         mPostAdapter = null;
         mRecyclerView.setAdapter(null);
-        mHasUpdatedPosts = false;
-        checkPostAdapter();
+        mRecyclerView.setAdapter(getPostAdapter());
     }
 
     @SuppressWarnings("unused")
@@ -630,51 +627,36 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
-        // start the search
         mCurrentSearchQuery = query;
         resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
+
+        // start the search
+        updatePostsInCurrentSearch(0);
     }
 
     /*
-     * show message letting user know what they're querying, but only if the user is in
-     * portrait mode or the device is a tablet (since there's not enough space for the
-     * message when the virtual keyboard is visible)
+     * reuse "empty" view to let user know what they're querying
      */
     private void showSearchMessage() {
         if (!isAdded()) return;
 
+        // clear posts so only the empty view is visible
+        getPostAdapter().clear();
+
+        // note that we only show the message in portrait unless the device is a tablet since
+        // there isn't enough room for it in landscape when the soft keyboard is showing
         boolean isLandscape = DisplayUtils.isLandscape(getActivity());
         boolean isTablet = DisplayUtils.isXLarge(getActivity());
         if (!isLandscape || isTablet) {
-            TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
-            if (txtSearchMsg.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.MEDIUM);
-            }
+            setEmptyTitleAndDescription(getString(R.string.reader_label_post_search_explainer), null);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
-
-        // hide the recycler (post list) so only the above message is visible
-        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
-        if (recycler != null && recycler.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(recycler, AniUtils.Duration.MEDIUM);
-        }
-
-        // make sure the empty view isn't showing
-        mEmptyView.setVisibility(View.GONE);
     }
 
     private void hideSearchMessage() {
         if (!isAdded()) return;
 
-        TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
-        if (txtSearchMsg.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(txtSearchMsg, AniUtils.Duration.MEDIUM);
-        }
-
-        // make sure the recycler is showing again
-        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
-        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(recycler, AniUtils.Duration.MEDIUM);
-        }
+        mEmptyView.setVisibility(View.GONE);
     }
 
     /*
@@ -726,6 +708,7 @@ public class ReaderPostListFragment extends Fragment
 
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
+        setEmptyTitleAndDescription(false);
     }
 
     @SuppressWarnings("unused")
@@ -823,7 +806,7 @@ public class ReaderPostListFragment extends Fragment
      * box/pages animation that appears when loading an empty list
      */
     private boolean shouldShowBoxAndPagesAnimation() {
-        return getPostListType().isTagType() || getPostListType() == ReaderPostListType.SEARCH_RESULTS;
+        return getPostListType().isTagType();
     }
 
     private void startBoxAndPagesAnimation() {
@@ -1129,7 +1112,6 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.refreshFilterCriteriaOptions();
         }
     }
-
 
     /*
      * get posts for the current blog from the server
