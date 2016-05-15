@@ -39,7 +39,7 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    public long timestamp;        // used for sorting
+    public double timestamp;        // used for sorting
     private String published;
 
     private String url;
@@ -119,8 +119,7 @@ public class ReaderPost {
         // a post's timestamp determines its sort order
         if (json.has("score")) {
             // search results include a "score" that should be used for sorting
-            double score = json.optDouble("score");
-            post.timestamp = Math.round(score);
+            post.timestamp = json.optDouble("score");
         } else {
             // liked posts should be sorted by the date they were liked, otherwise sort by the
             // published date
