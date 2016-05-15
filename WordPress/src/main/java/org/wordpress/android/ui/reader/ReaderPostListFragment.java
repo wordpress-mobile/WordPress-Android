@@ -839,39 +839,47 @@ public class ReaderPostListFragment extends Fragment
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             title = getString(R.string.reader_empty_posts_request_failed);
-        } else if (isUpdating()) {
-            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                title = getString(R.string.reader_label_post_search_running);
-            } else {
-                title = getString(R.string.reader_empty_posts_in_tag_updating);
-            }
-        } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            title = getString(R.string.reader_empty_posts_in_blog);
-        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
-            if (getCurrentTag().isFollowedSites()) {
-                if (ReaderBlogTable.hasFollowedBlogs()) {
-                    title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
-                    description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
-                } else {
-                    title = getString(R.string.reader_empty_followed_blogs_title);
-                    description = getString(R.string.reader_empty_followed_blogs_description);
-                }
-            } else if (getCurrentTag().isPostsILike()) {
-                title = getString(R.string.reader_empty_posts_liked);
-            } else if (getCurrentTag().tagType == ReaderTagType.CUSTOM_LIST) {
-                title = getString(R.string.reader_empty_posts_in_custom_list);
-            } else {
-                title = getString(R.string.reader_empty_posts_in_tag);
-            }
-        } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-            if (TextUtils.isEmpty(mCurrentSearchQuery)) {
-                title = getString(R.string.reader_label_post_search_explainer);
-            } else {
-                title = getString(R.string.reader_empty_posts_in_search_title);
-                description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
-            }
+        } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+            title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
-            title = getString(R.string.reader_empty_posts_in_tag);
+            switch (getPostListType()) {
+                case TAG_FOLLOWED:
+                    if (getCurrentTag().isFollowedSites()) {
+                        if (ReaderBlogTable.hasFollowedBlogs()) {
+                            title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
+                            description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
+                        } else {
+                            title = getString(R.string.reader_empty_followed_blogs_title);
+                            description = getString(R.string.reader_empty_followed_blogs_description);
+                        }
+                    } else if (getCurrentTag().isPostsILike()) {
+                        title = getString(R.string.reader_empty_posts_liked);
+                    } else if (getCurrentTag().isListTopic()) {
+                        title = getString(R.string.reader_empty_posts_in_custom_list);
+                    } else {
+                        title = getString(R.string.reader_empty_posts_in_tag);
+                    }
+                    break;
+
+                case BLOG_PREVIEW:
+                    title = getString(R.string.reader_empty_posts_in_blog);
+                    break;
+
+                case SEARCH_RESULTS:
+                    if (TextUtils.isEmpty(mCurrentSearchQuery)) {
+                        title = getString(R.string.reader_label_post_search_explainer);
+                    } else if (isUpdating()) {
+                        title = getString(R.string.reader_label_post_search_running);
+                    } else {
+                        title = getString(R.string.reader_empty_posts_in_search_title);
+                        description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
+                    }
+                    break;
+
+                default:
+                    title = getString(R.string.reader_empty_posts_in_tag);
+                    break;
+            }
         }
 
         setEmptyTitleAndDescription(title, description);
