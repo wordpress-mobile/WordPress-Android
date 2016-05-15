@@ -9,20 +9,22 @@ import android.text.TextUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * user's reader search history
  */
 public class ReaderSearchTable {
 
+    public static final String COL_QUERY = "query_string";
+
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_search_history ("
-                 + "	query_string   TEXT NOT NULL COLLATE NOCASE PRIMARY KEY,"
+                 + "    _id            INTEGER PRIMARY KEY AUTOINCREMENT,"
+                 + "	query_string   TEXT NOT NULL COLLATE NOCASE,"
                  + "    date_used      TEXT,"
                  + "    counter        INTEGER DEFAULT 1)");
+        db.execSQL("CREATE UNIQUE INDEX idx_search_query ON tbl_search_history(query_string)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -55,18 +57,18 @@ public class ReaderSearchTable {
     }
 
     /**
-     * Returns a list of query strings previously typed by the user
+     * Returns a cursor containing query strings previously typed by the user
      * @param filter - filters the list using LIKE syntax (pass null for no filter)
      * @param max - limit the list to this many items (pass zero for no limit)
      */
-    public static List<String> getQueryStrings(String filter, int max) {
+    public static Cursor getQueryStringCursor(String filter, int max) {
         String sql;
         String[] args;
         if (TextUtils.isEmpty(filter)) {
-            sql = "SELECT query_string FROM tbl_search_history";
+            sql = "SELECT * FROM tbl_search_history";
             args = null;
         } else {
-            sql = "SELECT query_string FROM tbl_search_history WHERE query_string LIKE ?";
+            sql = "SELECT * FROM tbl_search_history WHERE query_string LIKE ?";
             args = new String[]{filter + "%"};
         }
 
@@ -76,15 +78,6 @@ public class ReaderSearchTable {
             sql += " LIMIT " + max;
         }
 
-        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
-        try {
-            List<String> queries = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                queries.add(cursor.getString(0));
-            }
-            return queries;
-        } finally {
-            SqlUtils.closeCursor(cursor);
-        }
+        return ReaderDatabase.getReadableDb().rawQuery(sql, args);
     }
 }
