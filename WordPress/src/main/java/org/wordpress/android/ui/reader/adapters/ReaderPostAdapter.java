@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
@@ -49,7 +47,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private long mCurrentBlogId;
     private long mCurrentFeedId;
     private int mGapMarkerPosition = -1;
-    private String mCurrentSearchQuery;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -527,10 +524,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
     }
 
-    private boolean isSearchResults() {
-        return getPostListType() == ReaderTypes.ReaderPostListType.SEARCH_RESULTS;
-    }
-
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
@@ -579,13 +572,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (blogId != mCurrentBlogId || feedId != mCurrentFeedId) {
             mCurrentBlogId = blogId;
             mCurrentFeedId = feedId;
-            reload();
-        }
-    }
-
-    public void setCurrentSearchQuery(@NonNull String query) {
-        if (!query.equals(mCurrentSearchQuery)) {
-            mCurrentSearchQuery = query;
             reload();
         }
     }
@@ -802,6 +788,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
+                case SEARCH_RESULTS:
                     allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
@@ -813,11 +800,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
-                    break;
-                case SEARCH_RESULTS:
-                    ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
-                    allPosts = ReaderPostTable.getPostsWithTag(searchTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                    numExisting = ReaderPostTable.getNumPostsWithTag(searchTag);
                     break;
                 default:
                     return false;

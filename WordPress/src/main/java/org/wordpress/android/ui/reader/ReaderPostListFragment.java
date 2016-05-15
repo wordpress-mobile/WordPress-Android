@@ -570,6 +570,7 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 return true;
@@ -600,6 +601,7 @@ public class ReaderPostListFragment extends Fragment
                @Override
                public boolean onQueryTextChange(String newText) {
                    if (TextUtils.isEmpty(newText)) {
+                       mCurrentSearchQuery = null;
                        showSearchMessage();
                    } else {
                        populateSearchSuggestionAdapter(newText);
@@ -628,9 +630,6 @@ public class ReaderPostListFragment extends Fragment
         hideSearchMessage();
 
         mCurrentSearchQuery = query;
-        resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
-
-        // start the search
         updatePostsInCurrentSearch(0);
     }
 
@@ -648,7 +647,7 @@ public class ReaderPostListFragment extends Fragment
         boolean isLandscape = DisplayUtils.isLandscape(getActivity());
         boolean isTablet = DisplayUtils.isXLarge(getActivity());
         if (!isLandscape || isTablet) {
-            setEmptyTitleAndDescription(getString(R.string.reader_label_post_search_explainer), null);
+            setEmptyTitleAndDescription(false);
             mEmptyView.setVisibility(View.VISIBLE);
         }
     }
@@ -725,7 +724,8 @@ public class ReaderPostListFragment extends Fragment
         setIsUpdating(false, updateAction);
 
         // load the results, or show empty message if there aren't any
-        getPostAdapter().refresh();
+        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+        mPostAdapter.setCurrentTag(searchTag);
     }
 
     /*
@@ -856,14 +856,17 @@ public class ReaderPostListFragment extends Fragment
                 title = getString(R.string.reader_empty_posts_in_tag);
             }
         } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-            title = getString(R.string.reader_empty_posts_in_search_title);
-            description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
+            if (TextUtils.isEmpty(mCurrentSearchQuery)) {
+                title = getString(R.string.reader_label_post_search_explainer);
+            } else {
+                title = getString(R.string.reader_empty_posts_in_search_title);
+                description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
+            }
         } else {
             title = getString(R.string.reader_empty_posts_in_tag);
         }
 
         setEmptyTitleAndDescription(title, description);
-        mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
     }
 
     private void setEmptyTitleAndDescription(@NonNull String title, String description) {
@@ -879,6 +882,8 @@ public class ReaderPostListFragment extends Fragment
             descriptionView.setText(description);
             descriptionView.setVisibility(View.VISIBLE);
         }
+
+        mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
     }
 
     /*
@@ -973,7 +978,8 @@ public class ReaderPostListFragment extends Fragment
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
-                mPostAdapter.setCurrentSearchQuery(mCurrentSearchQuery);
+                ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                mPostAdapter.setCurrentTag(searchTag);
             }
         }
         return mPostAdapter;
