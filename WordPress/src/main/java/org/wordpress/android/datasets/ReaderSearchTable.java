@@ -50,6 +50,11 @@ public class ReaderSearchTable {
         }
     }
 
+    public static void deleteQueryString(@NonNull String query) {
+        String[] args = new String[]{query};
+        ReaderDatabase.getWritableDb().delete("tbl_search_history", "query_string=?", args);
+    }
+
     private static int getCounterForQueryString(@NonNull String query) {
         String[] args = {query};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
