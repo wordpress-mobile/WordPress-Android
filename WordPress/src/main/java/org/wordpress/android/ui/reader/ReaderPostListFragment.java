@@ -695,7 +695,8 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
         if (!isAdded()) return;
 
-        setIsUpdating(true);
+        UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
+        setIsUpdating(true, updateAction);
     }
 
     @SuppressWarnings("unused")
@@ -708,7 +709,8 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        setIsUpdating(false);
+        UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
+        setIsUpdating(false, updateAction);
 
         if (event.hasResults()) {
             // this will load the search results
@@ -1229,10 +1231,6 @@ public class ReaderPostListFragment extends Fragment
                 mProgress.setVisibility(View.GONE);
             }
         }
-    }
-
-    private void setIsUpdating(boolean isUpdating) {
-        setIsUpdating(isUpdating, UpdateAction.REQUEST_NEWER);
     }
 
     private void setIsUpdating(boolean isUpdating, UpdateAction updateAction) {

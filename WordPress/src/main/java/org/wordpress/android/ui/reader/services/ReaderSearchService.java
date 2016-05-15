@@ -69,8 +69,7 @@ public class ReaderSearchService extends Service {
         return START_NOT_STICKY;
     }
 
-    private void startSearch(final String query, int offset) {
-        // TODO: verify that &meta param is honored
+    private void startSearch(final String query, final int offset) {
         String path = "read/search?q="
                 + UrlUtils.urlEncode(query)
                 + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
@@ -83,9 +82,9 @@ public class ReaderSearchService extends Service {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null) {
-                    handleSearchResponse(query, jsonObject);
+                    handleSearchResponse(query, offset, jsonObject);
                 } else {
-                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, false));
+                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, false));
                 }
             }
         };
@@ -93,16 +92,16 @@ public class ReaderSearchService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, false));
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, false));
             }
         };
 
         AppLog.d(AppLog.T.READER, "reader search service > starting search for " + query);
-        EventBus.getDefault().post(new ReaderEvents.SearchPostsStarted(query));
+        EventBus.getDefault().post(new ReaderEvents.SearchPostsStarted(query, offset));
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleSearchResponse(final String query, final JSONObject jsonObject) {
+    private static void handleSearchResponse(final String query, final int offset, final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
@@ -111,7 +110,7 @@ public class ReaderSearchService extends Service {
                 if (hasResults) {
                     ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
                 }
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, hasResults));
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, hasResults));
             }
         }.start();
     }

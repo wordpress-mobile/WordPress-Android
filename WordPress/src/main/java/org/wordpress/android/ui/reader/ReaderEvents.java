@@ -67,18 +67,25 @@ public class ReaderEvents {
 
     public static class SearchPostsStarted {
         private final String mQuery;
-        public SearchPostsStarted(@NonNull String query) {
+        private final int mOffset;
+        public SearchPostsStarted(@NonNull String query, int offset) {
             mQuery = query;
+            mOffset = offset;
         }
         public String getQuery() {
             return mQuery;
+        }
+        public int getOffset() {
+            return mOffset;
         }
     }
     public static class SearchPostsEnded {
         private final String mQuery;
         private final boolean mHasResults;
-        public SearchPostsEnded(@NonNull String query, boolean hasResults) {
+        private final int mOffset;
+        public SearchPostsEnded(@NonNull String query, int offset, boolean hasResults) {
             mQuery = query;
+            mOffset = offset;
             mHasResults = hasResults;
         }
         public boolean hasResults() {
@@ -86,6 +93,9 @@ public class ReaderEvents {
         }
         public String getQuery() {
             return mQuery;
+        }
+        public int getOffset() {
+            return mOffset;
         }
     }
 
