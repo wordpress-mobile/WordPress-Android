@@ -274,10 +274,16 @@ public class ReaderPostListFragment extends Fragment
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-            if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+            if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
             } else {
                 refreshPosts();
+            }
+
+            // if the user was searching, make sure the filter toolbar is showing
+            // so the user can see the search keyword they entered
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                mRecyclerView.showToolbar();
             }
         }
     }
