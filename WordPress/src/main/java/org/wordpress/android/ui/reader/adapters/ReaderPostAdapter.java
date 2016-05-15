@@ -585,7 +585,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setCurrentSearchQuery(@NonNull String query) {
         mCurrentSearchQuery = query;
-        reload();
     }
 
     public void clear() {

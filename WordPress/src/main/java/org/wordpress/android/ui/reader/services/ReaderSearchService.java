@@ -73,10 +73,8 @@ public class ReaderSearchService extends Service {
         String path = "read/search?q="
                 + UrlUtils.urlEncode(query)
                 + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
+                + "&offset=" + offset
                 + "&meta=site,likes";
-        if (offset > 0) {
-            path += "&offset=" + offset;
-        }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

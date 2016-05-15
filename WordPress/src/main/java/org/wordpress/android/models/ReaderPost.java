@@ -126,6 +126,12 @@ public class ReaderPost {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
+        // search results include a "score" that should be used for sorting
+        if (json.has("score")) {
+            double score = json.optDouble("score");
+            post.timestamp = Math.round(score);
+        }
+
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
             post.title = extractTitle(post.excerpt, 50);

@@ -713,8 +713,7 @@ public class ReaderPostListFragment extends Fragment
         setIsUpdating(false, updateAction);
 
         if (event.hasResults()) {
-            // this will load the search results
-            getPostAdapter().setCurrentSearchQuery(event.getQuery());
+            getPostAdapter().refresh();
         } else {
             mDataLoadedListener.onDataLoaded(true);
         }
