@@ -116,20 +116,20 @@ public class ReaderPost {
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
         post.published = JSONUtils.getString(json, "date");
 
-        // the date a post was liked is only returned by the read/liked/ endpoint - if this exists,
-        // set it as the timestamp so posts are sorted by the date they were liked rather than the
-        // date they were published (the timestamp is used to sort posts when querying)
-        String likeDate = JSONUtils.getString(json, "date_liked");
-        if (!TextUtils.isEmpty(likeDate)) {
-            post.timestamp = DateTimeUtils.iso8601ToTimestamp(likeDate);
-        } else {
-            post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
-        }
-
-        // search results include a "score" that should be used for sorting
+        // a post's timestamp determines its sort order
         if (json.has("score")) {
+            // search results include a "score" that should be used for sorting
             double score = json.optDouble("score");
             post.timestamp = Math.round(score);
+        } else {
+            // liked posts should be sorted by the date they were liked, otherwise sort by the
+            // published date
+            String likeDate = JSONUtils.getString(json, "date_liked");
+            if (!TextUtils.isEmpty(likeDate)) {
+                post.timestamp = DateTimeUtils.iso8601ToTimestamp(likeDate);
+            } else {
+                post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
+            }
         }
 
         // if the post is untitled, make up a title from the excerpt
