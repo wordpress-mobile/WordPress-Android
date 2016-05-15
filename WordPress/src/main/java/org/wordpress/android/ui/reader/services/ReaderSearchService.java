@@ -70,6 +70,10 @@ public class ReaderSearchService extends Service {
     }
 
     private void startSearch(final String query, final int offset) {
+        if (offset == 0) {
+            ReaderPostTable.deletePostsWithTag(getTagForSearchQuery(query));
+        }
+
         String path = "read/search?q="
                 + UrlUtils.urlEncode(query)
                 + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST

@@ -60,6 +60,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -268,7 +269,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        checkAdapter();
+        checkPostAdapter();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
@@ -328,7 +329,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
-    private void checkAdapter()  {
+    private void checkPostAdapter()  {
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
 
@@ -343,6 +344,14 @@ public class ReaderPostListFragment extends Fragment
                 }
             }
         }
+    }
+
+    private void resetPostAdapter(ReaderPostListType postListType) {
+        mPostListType = postListType;
+        mPostAdapter = null;
+        mRecyclerView.setAdapter(null);
+        mHasUpdatedPosts = false;
+        checkPostAdapter();
     }
 
     @SuppressWarnings("unused")
@@ -505,7 +514,8 @@ public class ReaderPostListFragment extends Fragment
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
         // add a menu to the filtered recycler's toolbar
-        if (!ReaderUtils.isLoggedOutReader() && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        if (!ReaderUtils.isLoggedOutReader()
+                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
             setupRecyclerToolbar();
         }
 
@@ -581,6 +591,9 @@ public class ReaderPostListFragment extends Fragment
                @Override
                public boolean onQueryTextChange(String newText) {
                    mSearchSuggestionAdapter.populate(newText);
+                   if (TextUtils.isEmpty(newText)) {
+                       getPostAdapter().clear();
+                   }
                    return true;
                }
            }
@@ -594,8 +607,18 @@ public class ReaderPostListFragment extends Fragment
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) return;
 
-        ReaderActivityLauncher.showReaderSearchResults(getActivity(), query);
-        mSearchMenuItem.collapseActionView();
+        //mSearchMenuItem.collapseActionView();
+        EditTextUtils.hideSoftInput(mSearchView);
+        hideSearchMessage();
+
+        // make sure the recycler is showing again
+        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
+        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(recycler, AniUtils.Duration.LONG);
+        }
+
+        mCurrentSearchQuery = query;
+        resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
     }
 
     private void showSearchUI() {
@@ -625,6 +648,9 @@ public class ReaderPostListFragment extends Fragment
 
         mSettingsMenuItem.setVisible(true);
         hideSearchMessage();
+
+        mCurrentSearchQuery = null;
+        resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
 
         // show the recycler again
         RecyclerView recycler = mRecyclerView.getInternalRecyclerView();

@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class EditTextUtils {
     /**
      * hide the soft keyboard for the passed EditText
      */
-    public static void hideSoftInput(EditText edit) {
+    public static void hideSoftInput(View edit) {
         if (edit == null) {
             return;
         }
@@ -68,7 +69,7 @@ public class EditTextUtils {
         }
     }
 
-    private static InputMethodManager getInputMethodManager(EditText edit) {
+    private static InputMethodManager getInputMethodManager(View edit) {
         Context context = edit.getContext();
         return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
