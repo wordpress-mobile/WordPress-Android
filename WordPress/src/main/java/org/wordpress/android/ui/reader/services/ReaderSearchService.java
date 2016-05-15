@@ -85,7 +85,7 @@ public class ReaderSearchService extends Service {
                 if (jsonObject != null) {
                     handleSearchResponse(query, jsonObject);
                 } else {
-                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, 0));
+                    EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, false));
                 }
             }
         };
@@ -93,7 +93,7 @@ public class ReaderSearchService extends Service {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.READER, volleyError);
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, 0));
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, false));
             }
         };
 
@@ -107,8 +107,11 @@ public class ReaderSearchService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, serverPosts.size()));
+                boolean hasResults = ReaderPostTable.comparePosts(serverPosts).isNewOrChanged();
+                if (hasResults) {
+                    ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
+                }
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, hasResults));
             }
         }.start();
     }

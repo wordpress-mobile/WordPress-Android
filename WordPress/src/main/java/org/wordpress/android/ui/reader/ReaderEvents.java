@@ -76,13 +76,13 @@ public class ReaderEvents {
     }
     public static class SearchPostsEnded {
         private final String mQuery;
-        private final int mNumResults;
-        public SearchPostsEnded(@NonNull String query, int numResults) {
+        private final boolean mHasResults;
+        public SearchPostsEnded(@NonNull String query, boolean hasResults) {
             mQuery = query;
-            mNumResults = numResults;
+            mHasResults = hasResults;
         }
         public boolean hasResults() {
-            return mNumResults > 0;
+            return mHasResults;
         }
         public String getQuery() {
             return mQuery;
