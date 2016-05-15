@@ -70,6 +70,7 @@ public class ReaderSearchService extends Service {
     }
 
     private void startSearch(final String query, final int offset) {
+        // delete existing results if this is the initial search
         if (offset == 0) {
             ReaderPostTable.deletePostsWithTag(getTagForSearchQuery(query));
         }

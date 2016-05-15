@@ -60,7 +60,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -570,13 +569,20 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                showSearchUI();
+                mSettingsMenuItem.setVisible(false);
+                setupSearchSuggestions();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                hideSearchUI();
+                mSettingsMenuItem.setVisible(true);
+                hideSearchMessage();
+
+                mCurrentSearchQuery = null;
+                mSearchSuggestionAdapter = null;
+                resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
+
                 return true;
             }
         });
@@ -592,7 +598,7 @@ public class ReaderPostListFragment extends Fragment
                public boolean onQueryTextChange(String newText) {
                    mSearchSuggestionAdapter.populate(newText);
                    if (TextUtils.isEmpty(newText)) {
-                       getPostAdapter().clear();
+                       showSearchMessage();
                    }
                    return true;
                }
@@ -607,56 +613,13 @@ public class ReaderPostListFragment extends Fragment
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) return;
 
-        //mSearchMenuItem.collapseActionView();
-        EditTextUtils.hideSoftInput(mSearchView);
+        // clearing the focus will hide suggestions and the virtual keyboard
+        mSearchView.clearFocus();
         hideSearchMessage();
 
-        // make sure the recycler is showing again
-        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
-        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(recycler, AniUtils.Duration.LONG);
-        }
-
+        // this will start the search
         mCurrentSearchQuery = query;
         resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
-    }
-
-    private void showSearchUI() {
-        if (!isAdded()) return;
-
-        // hide settings icon and show message letting user know what they're searching
-        mSettingsMenuItem.setVisible(false);
-        showSearchMessage();
-
-        // create the suggestion adapter if it doesn't already exist, otherwise repopulate it
-        // so the latest suggestions appear
-        if (mSearchSuggestionAdapter == null) {
-            setupSearchSuggestions();
-        } else {
-            mSearchSuggestionAdapter.populate(null);
-        }
-
-        // hide the recycler (post list)
-        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
-        if (recycler != null && recycler.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(recycler, AniUtils.Duration.LONG);
-        }
-    }
-
-    private void hideSearchUI() {
-        if (!isAdded()) return;
-
-        mSettingsMenuItem.setVisible(true);
-        hideSearchMessage();
-
-        mCurrentSearchQuery = null;
-        resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-
-        // show the recycler again
-        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
-        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(recycler, AniUtils.Duration.LONG);
-        }
     }
 
     /*
@@ -673,8 +636,17 @@ public class ReaderPostListFragment extends Fragment
 
         TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
         if (txtSearchMsg.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.LONG);
+            AniUtils.fadeIn(txtSearchMsg, AniUtils.Duration.MEDIUM);
         }
+
+        // hide the recycler (post list) so only the above message is visible
+        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
+        if (recycler != null && recycler.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(recycler, AniUtils.Duration.MEDIUM);
+        }
+
+        // make sure the empty view isn't showing
+        mEmptyView.setVisibility(View.GONE);
     }
 
     private void hideSearchMessage() {
@@ -682,7 +654,13 @@ public class ReaderPostListFragment extends Fragment
 
         TextView txtSearchMsg = (TextView) getView().findViewById(R.id.text_search_message);
         if (txtSearchMsg.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(txtSearchMsg, AniUtils.Duration.LONG);
+            AniUtils.fadeOut(txtSearchMsg, AniUtils.Duration.MEDIUM);
+        }
+
+        // make sure the recycler is showing again
+        RecyclerView recycler = mRecyclerView.getInternalRecyclerView();
+        if (recycler != null && recycler.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(recycler, AniUtils.Duration.MEDIUM);
         }
     }
 
