@@ -248,14 +248,14 @@ public class CommentsActivity extends AppCompatActivity
             CommentActions.moderateComment(accountId, comment, newStatus,
                     new CommentActions.CommentActionListener() {
                 @Override
-                public void onActionResult(boolean succeeded) {
+                public void onActionResult(CommentActionResult result) {
                     if (isFinishing() || !hasListFragment()) {
                         return;
                     }
 
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
-                    if (succeeded) {
+                    if (result.isSuccess()) {
                         reloadCommentList();
                     } else {
                         getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
@@ -299,12 +299,12 @@ public class CommentsActivity extends AppCompatActivity
 
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
-                        public void onActionResult(boolean succeeded) {
+                        public void onActionResult(CommentActionResult result) {
                             if (isFinishing() || !hasListFragment()) {
                                 return;
                             }
                             getListFragment().setCommentIsModerating(comment.commentID, false);
-                            if (!succeeded) {
+                            if (!result.isSuccess()) {
                                 // show comment again upon error
                                 getListFragment().loadComments();
                                 ToastUtils.showToast(CommentsActivity.this,
