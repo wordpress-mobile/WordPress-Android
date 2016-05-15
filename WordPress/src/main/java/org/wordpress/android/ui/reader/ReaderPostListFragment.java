@@ -29,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
@@ -345,6 +346,9 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    /*
+     * reset the post adapter to initial state and create it again using the passed list type
+     */
     private void resetPostAdapter(ReaderPostListType postListType) {
         mPostListType = postListType;
         mPostAdapter = null;
@@ -570,17 +574,18 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 mSettingsMenuItem.setVisible(false);
-                setupSearchSuggestions();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                mSettingsMenuItem.setVisible(true);
                 hideSearchMessage();
+                resetSearchSuggestionAdapter();
 
                 mCurrentSearchQuery = null;
-                mSearchSuggestionAdapter = null;
+                mSettingsMenuItem.setVisible(true);
+
+                // return to showing the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
 
                 return true;
@@ -596,9 +601,10 @@ public class ReaderPostListFragment extends Fragment
 
                @Override
                public boolean onQueryTextChange(String newText) {
-                   mSearchSuggestionAdapter.populate(newText);
                    if (TextUtils.isEmpty(newText)) {
                        showSearchMessage();
+                   } else {
+                       populateSearchSuggestionAdapter(newText);
                    }
                    return true;
                }
@@ -606,6 +612,10 @@ public class ReaderPostListFragment extends Fragment
         );
     }
 
+    /*
+     * start the search service to search for posts matching the current query - the passed
+     * offset is used during infinite scroll, pass zero for initial search
+     */
     private void updatePostsInCurrentSearch(int offset) {
         ReaderSearchService.startService(getActivity(), mCurrentSearchQuery, offset);
     }
@@ -613,11 +623,13 @@ public class ReaderPostListFragment extends Fragment
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) return;
 
-        // clearing the focus will hide suggestions and the virtual keyboard
-        mSearchView.clearFocus();
+        // remember this query for future suggestions
+        ReaderSearchTable.addOrUpdateQueryString(query);
+
+        mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
-        // this will start the search
+        // start the search
         mCurrentSearchQuery = query;
         resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
     }
@@ -667,7 +679,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * create and assign the suggestion adapter for the search view
      */
-    private void setupSearchSuggestions() {
+    private void createSearchSuggestionAdapter() {
         mSearchSuggestionAdapter = new ReaderSearchSuggestionAdapter(getActivity());
         mSearchView.setSuggestionsAdapter(mSearchSuggestionAdapter);
 
@@ -686,6 +698,18 @@ public class ReaderPostListFragment extends Fragment
                 return true;
             }
         });
+    }
+
+    private void populateSearchSuggestionAdapter(String query) {
+        if (mSearchSuggestionAdapter == null) {
+            createSearchSuggestionAdapter();
+        }
+        mSearchSuggestionAdapter.populate(query);
+    }
+
+    private void resetSearchSuggestionAdapter() {
+        mSearchView.setSuggestionsAdapter(null);
+        mSearchSuggestionAdapter = null;
     }
 
     /*
@@ -716,11 +740,8 @@ public class ReaderPostListFragment extends Fragment
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(false, updateAction);
 
-        if (event.hasResults()) {
-            getPostAdapter().refresh();
-        } else {
-            mDataLoadedListener.onDataLoaded(true);
-        }
+        // load the results, or show empty message if there aren't any
+        getPostAdapter().refresh();
     }
 
     /*
