@@ -39,6 +39,13 @@ public class ReaderSearchService extends Service {
         context.startService(intent);
     }
 
+    public static void stopService(Context context) {
+        if (context == null) return;
+
+        Intent intent = new Intent(context, ReaderSearchService.class);
+        context.stopService(intent);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

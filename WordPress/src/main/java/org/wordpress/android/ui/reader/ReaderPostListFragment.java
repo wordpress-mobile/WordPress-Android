@@ -573,6 +573,7 @@ public class ReaderPostListFragment extends Fragment
                 hideSearchMessage();
                 resetSearchSuggestionAdapter();
                 mSettingsMenuItem.setVisible(true);
+                mCurrentSearchQuery = null;
 
                 // return to the followed tag that was showing prior to searching
                 resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
@@ -618,7 +619,9 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        // delete existing results before setting this as the current search
         ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
+        ReaderPostTable.deletePostsWithTag(searchTag);
         mPostAdapter.setCurrentTag(searchTag);
 
         mCurrentSearchQuery = query;
