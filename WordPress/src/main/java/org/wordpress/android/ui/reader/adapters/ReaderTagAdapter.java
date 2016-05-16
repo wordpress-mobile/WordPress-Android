@@ -17,7 +17,6 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -90,7 +89,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
-        holder.txtTagName.setText(tag.getTagDisplayName());
+        holder.txtTagName.setText(tag.getLabel());
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +114,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         };
 
-        boolean success = ReaderTagActions.performTagAction(tag, TagAction.DELETE, actionListener);
+        boolean success = ReaderTagActions.deleteTag(tag, actionListener);
 
         if (success) {
             int index = mTags.indexOfTagName(tag.getTagSlug());

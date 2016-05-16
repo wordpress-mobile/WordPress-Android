@@ -198,8 +198,15 @@ public class ReaderUtils {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
+        } else {
+            return createTagFromTagName(tagName, tagType);
         }
-        return new ReaderTag(tagName, null, null, tagType);
+    }
+
+    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+        String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
+        String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
+        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
     }
 
     /*
