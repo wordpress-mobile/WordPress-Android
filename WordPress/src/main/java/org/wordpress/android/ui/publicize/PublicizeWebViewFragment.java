@@ -116,7 +116,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        WebViewUtils.clearCookiesAsync();
     }
 
     @Override
@@ -181,6 +180,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
                     // call the endpoint to make the actual connection
                     PublicizeActions.connect(mSiteId, mServiceId);
+                    WebViewUtils.clearCookiesAsync();
                 }
             }
         }
