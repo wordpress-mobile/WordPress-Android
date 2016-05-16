@@ -762,6 +762,20 @@ public class WordPress extends Application {
             }
         }
 
+        /**
+         * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
+         * are used to track when the app goes to background.
+         *
+         * Our implementation uses `onActivityPaused` and `onActivityResumed` of ApplicationLifecycleMonitor
+         * to start and stop the timer that detects when the app goes to background.
+         *
+         * So when the user is simply navigating between the activities, the onActivityPaused() calls `startActivityTransitionTimer`
+         * and starts the timer, but almost immediately the new activity being entered, the ApplicationLifecycleMonitor cancels the timer
+         * in its onActivityResumed method, that in order calls `stopActivityTransitionTimer`.
+         * And so mIsInBackground would be false.
+         *
+         * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all the background logic is run.
+         */
         private void startActivityTransitionTimer() {
             this.mActivityTransitionTimer = new Timer();
             this.mActivityTransitionTimerTask = new TimerTask() {
