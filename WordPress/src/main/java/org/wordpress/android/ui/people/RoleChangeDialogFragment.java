@@ -23,6 +23,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
     private RoleListAdapter mRoleListAdapter;
     private OnChangeListener mListener;
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String role = mRoleListAdapter.getSelectedRole();
+        if (role != null) {
+            outState.putString(ROLE_TAG, role);
+        }
+    }
+
     public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, String role) {
         RoleChangeDialogFragment roleChangeDialogFragment = new RoleChangeDialogFragment();
         Bundle args = new Bundle();
@@ -89,10 +98,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
             final String[] roles = getResources().getStringArray(R.array.roles);
             mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, roles);
         }
-        Bundle args = getArguments();
-        if (args != null) {
-            String role = args.getString(ROLE_TAG);
-            mRoleListAdapter.setSelectedRole(role);
+        if (savedInstanceState != null) {
+            String savedRole = savedInstanceState.getString(ROLE_TAG);
+            mRoleListAdapter.setSelectedRole(savedRole);
+        } else {
+            Bundle args = getArguments();
+            if (args != null) {
+                String role = args.getString(ROLE_TAG);
+                mRoleListAdapter.setSelectedRole(role);
+            }
         }
         builder.setAdapter(mRoleListAdapter, null);
 
