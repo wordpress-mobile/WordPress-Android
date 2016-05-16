@@ -44,7 +44,7 @@ public class PersonDetailFragment extends Fragment {
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
 
-    private String mSelectedRole;
+    private RoleListAdapter mRoleListAdapter;
     private OnChangeListener mListener;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
@@ -147,7 +147,6 @@ public class PersonDetailFragment extends Fragment {
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
             setupRoleContainerForCapability();
-            mSelectedRole = person.getRole();
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -195,33 +194,33 @@ public class PersonDetailFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Person person = loadPerson();
-                if (person != null) {
-                    // reset the selected role since the dialog is cancelled
-                    mSelectedRole = person.getRole();
-                }
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (mListener != null) {
-                    mListener.onRoleChanged(mPersonID, mLocalTableBlogID, mSelectedRole);
+                    String role = mRoleListAdapter.getSelectedRole();
+                    mListener.onRoleChanged(mPersonID, mLocalTableBlogID, role);
                 }
             }
         });
 
-        final String[] roles = getResources().getStringArray(R.array.roles);
-        ArrayAdapter<String> roleAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
-        builder.setAdapter(roleAdapter, null);
+        if (mRoleListAdapter == null) {
+            final String[] roles = getResources().getStringArray(R.array.roles);
+            mRoleListAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
+        }
+        Person person = loadPerson();
+        if (person != null) {
+            mRoleListAdapter.setSelectedRole(person.getRole());
+        }
+        builder.setAdapter(mRoleListAdapter, null);
 
         builder.show();
     }
 
     private class RoleListAdapter extends ArrayAdapter<String> {
+        private String mSelectedRole;
+
         public RoleListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
@@ -260,6 +259,14 @@ public class PersonDetailFragment extends Fragment {
         private void changeSelection(int position) {
             mSelectedRole = getItem(position);
             notifyDataSetChanged();
+        }
+
+        public String getSelectedRole() {
+            return mSelectedRole;
+        }
+
+        public void setSelectedRole(String role) {
+            mSelectedRole = role;
         }
     }
 
