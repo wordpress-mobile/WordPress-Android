@@ -126,11 +126,9 @@ public class MenusRestWPCom {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY));
-                if (result != null) {
-                    List<MenuModel> resultList = new ArrayList<>();
-                    resultList.add(result);
-                    mListener.onMenusReceived(requestId, resultList);
-                }
+                List<MenuModel> resultList = new ArrayList<>();
+                if (result != null) resultList.add(result);
+                mListener.onMenusReceived(requestId, resultList);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError volleyError) {
