@@ -71,7 +71,6 @@ public class ReaderTagInfoView extends LinearLayout {
         }
 
         final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagSlug());
-        ReaderTagActions.TagAction action = isAskingToFollow ? ReaderTagActions.TagAction.ADD : ReaderTagActions.TagAction.DELETE;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -90,7 +89,14 @@ public class ReaderTagInfoView extends LinearLayout {
 
         mFollowButton.setEnabled(false);
 
-        if (ReaderTagActions.performTagAction(mCurrentTag, action, listener)) {
+        boolean success;
+        if (isAskingToFollow) {
+            success = ReaderTagActions.addTag(mCurrentTag, listener);
+        } else {
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+        }
+
+        if (success) {
             mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }

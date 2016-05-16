@@ -25,21 +25,23 @@ public class ReaderTagTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_tags ("
-                 + "	tag_slug     TEXT COLLATE NOCASE,"
-                 + "	tag_title    TEXT COLLATE NOCASE,"
-                 + "    tag_type     INTEGER DEFAULT 0,"
-                 + "    endpoint     TEXT,"
-                + " 	date_updated TEXT,"
-                 + "    PRIMARY KEY (tag_slug, tag_type)"
-                 + ")");
+                + "     tag_slug            TEXT COLLATE NOCASE,"
+                + "     tag_display_name    TEXT COLLATE NOCASE,"
+                + "     tag_title           TEXT COLLATE NOCASE,"
+                + "     tag_type            INTEGER DEFAULT 0,"
+                + "     endpoint            TEXT,"
+                + "     date_updated        TEXT,"
+                + "     PRIMARY KEY (tag_slug, tag_type)"
+                + ")");
 
         db.execSQL("CREATE TABLE tbl_tags_recommended ("
-                 + "	tag_slug	TEXT COLLATE NOCASE,"
-                 + "	tag_title   TEXT COLLATE NOCASE,"
-                 + "    tag_type    INTEGER DEFAULT 0,"
-                 + "    endpoint    TEXT,"
-                 + "    PRIMARY KEY (tag_slug, tag_type)"
-                 + ")");
+                + "     tag_slug	        TEXT COLLATE NOCASE,"
+                + "     tag_display_name    TEXT COLLATE NOCASE,"
+                + "     tag_title           TEXT COLLATE NOCASE,"
+                + "     tag_type            INTEGER DEFAULT 0,"
+                + "     endpoint            TEXT,"
+                + "     PRIMARY KEY (tag_slug, tag_type)"
+                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -78,6 +80,31 @@ public class ReaderTagTable {
         }
     }
 
+    /*
+     * similar to the above but only replaces followed tags
+     */
+    public static void replaceFollowedTags(ReaderTagList tags) {
+        if (tags == null || tags.size() == 0) {
+            return;
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            try {
+                // first delete all existing followed tags, then insert the passed ones
+                String[] args = {Integer.toString(ReaderTagType.FOLLOWED.toInt())};
+                db.execSQL("DELETE FROM tbl_tags WHERE tag_type=?", args);
+                addOrUpdateTags(tags);
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                AppLog.e(T.READER, e);
+            }
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public static void addOrUpdateTag(ReaderTag tag) {
         if (tag == null) {
             return;
@@ -94,14 +121,15 @@ public class ReaderTagTable {
         SQLiteStatement stmt = null;
         try {
             stmt = ReaderDatabase.getWritableDb().compileStatement(
-                    "INSERT OR REPLACE INTO tbl_tags (tag_slug, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4)"
+                    "INSERT OR REPLACE INTO tbl_tags (tag_slug, tag_display_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)"
             );
 
             for (ReaderTag tag: tagList) {
                 stmt.bindString(1, tag.getTagSlug());
-                stmt.bindString(2, tag.getTagTitle());
-                stmt.bindLong  (3, tag.tagType.toInt());
-                stmt.bindString(4, tag.getEndpoint());
+                stmt.bindString(2, tag.getTagDisplayName());
+                stmt.bindString(3, tag.getTagTitle());
+                stmt.bindLong  (4, tag.tagType.toInt());
+                stmt.bindString(5, tag.getEndpoint());
                 stmt.execute();
             }
 
@@ -147,11 +175,12 @@ public class ReaderTagTable {
         }
 
         String tagSlug = c.getString(c.getColumnIndex("tag_slug"));
+        String tagDisplayName = c.getString(c.getColumnIndex("tag_display_name"));
         String tagTitle = c.getString(c.getColumnIndex("tag_title"));
         String endpoint = c.getString(c.getColumnIndex("endpoint"));
         ReaderTagType tagType = ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
 
-        return new ReaderTag(tagSlug, tagTitle, endpoint, tagType);
+        return new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, tagType);
     }
 
     public static ReaderTag getTag(String tagSlug, ReaderTagType tagType) {
@@ -322,7 +351,7 @@ public class ReaderTagTable {
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement
-                ("INSERT INTO tbl_tags_recommended (tag_slug, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4)");
+                ("INSERT INTO tbl_tags_recommended (tag_slug, tag_display_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)");
         db.beginTransaction();
         try {
             try {
@@ -332,9 +361,10 @@ public class ReaderTagTable {
                 // then insert the passed ones
                 for (ReaderTag tag: tagList) {
                     stmt.bindString(1, tag.getTagSlug());
-                    stmt.bindString(2, tag.getTagTitle());
-                    stmt.bindLong  (3, tag.tagType.toInt());
-                    stmt.bindString(4, tag.getEndpoint());
+                    stmt.bindString(2, tag.getTagDisplayName());
+                    stmt.bindString(3, tag.getTagTitle());
+                    stmt.bindLong  (4, tag.tagType.toInt());
+                    stmt.bindString(5, tag.getEndpoint());
                     stmt.execute();
                 }
 
