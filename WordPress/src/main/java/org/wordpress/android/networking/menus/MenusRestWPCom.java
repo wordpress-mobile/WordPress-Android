@@ -21,6 +21,7 @@ import java.util.Map;
 import static org.wordpress.android.util.VolleyUtils.statusCodeFromVolleyError;
 import static org.wordpress.android.networking.menus.MenusDataModeler.*;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 
 /**
@@ -32,6 +33,7 @@ public class MenusRestWPCom {
     public enum REST_ERROR {
         UNKNOWN_ERROR,
         AUTHENTICATION_ERROR,
+        RESERVED_ID_ERROR,
         CREATE_ERROR,
         DELETE_ERROR,
         UPDATE_ERROR,
@@ -119,7 +121,7 @@ public class MenusRestWPCom {
     }
 
     public int fetchMenu(long menuId) {
-        if (menuId <= 0) return -1;
+        if (menuId < 0) return -1;
         final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menuId));
         Map<String, String> params = new HashMap<>();
@@ -135,6 +137,7 @@ public class MenusRestWPCom {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
+                else if (statusCode == HTTP_BAD_REQUEST) error = REST_ERROR.RESERVED_ID_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });

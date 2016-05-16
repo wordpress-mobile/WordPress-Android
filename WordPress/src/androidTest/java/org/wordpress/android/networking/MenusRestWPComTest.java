@@ -276,6 +276,40 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
         Assert.assertTrue(success[0]);
     }
 
+    public void testFetchMenuId0() throws InterruptedException {
+        final boolean[] success = { false };
+        TestUtils.loginWPCom(TEST_WPCOM_USERNAME_TEST1, TEST_WPCOM_PASSWORD_TEST1, loginAndUpdateBlogs);
+        mLatch = new CountDownLatch(1);
+        mBlogListHandler = new OnBlogListChanged() {
+            @Override
+            public void eventRecieved(CoreEvents.BlogListChanged event) {
+                Handler mainLooperHandler = new Handler(mTargetContext.getMainLooper());
+                mainLooperHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTestRest = new MenusRestWPCom(new MenusListener() {
+                            @Override public long getSiteId() {
+                                return Long.valueOf(WordPress.getCurrentRemoteBlogId());
+                            }
+                            @Override public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
+                                success[0] = requestId == mTestRequest && error == MenusRestWPCom.REST_ERROR.RESERVED_ID_ERROR;
+                                countDown();
+                            }
+                            @Override public Context getContext() { return mTargetContext; }
+                            @Override public void onMenusReceived(int requestId, List<MenuModel> menu) { countDown(); }
+                            @Override public void onMenuCreated(int requestId, MenuModel menu) { countDown(); }
+                            @Override public void onMenuDeleted(int requestId, MenuModel menu, boolean deleted) { countDown(); }
+                            @Override public void onMenuUpdated(int requestId, MenuModel menu) { countDown(); }
+                        });
+                        mTestRequest = mTestRest.fetchMenu(0L);
+                    }
+                });
+            }
+        };
+        mLatch.await(60, TimeUnit.SECONDS);
+        Assert.assertTrue(success[0]);
+    }
+
     public void testDeleteGoodMenu() throws InterruptedException {
         final boolean[] success = { false };
         final String testName = "MenusTest-" + System.currentTimeMillis();
