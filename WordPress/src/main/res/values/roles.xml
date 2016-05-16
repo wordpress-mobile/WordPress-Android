@@ -2,7 +2,7 @@
 <resources>
     <string-array name="roles" translatable="true">
         <item>
-            Admin
+            Administrator
         </item>
         <item>
             Editor
