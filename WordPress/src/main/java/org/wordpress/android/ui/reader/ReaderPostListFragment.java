@@ -74,7 +74,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostAdapter mPostAdapter;
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
-    private ReaderTagList mTags = new ReaderTagList();
+    private final ReaderTagList mTags = new ReaderTagList();
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -405,8 +405,6 @@ public class ReaderPostListFragment extends Fragment
                     */
                     mRecyclerView.setRefreshing(false);
                     mFirstLoad = false;
-                    return;
-
                 } else {
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
@@ -1259,7 +1257,7 @@ public class ReaderPostListFragment extends Fragment
 
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
 
-        private FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
         public LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener){
             mFilterCriteriaLoaderListener = listener;
