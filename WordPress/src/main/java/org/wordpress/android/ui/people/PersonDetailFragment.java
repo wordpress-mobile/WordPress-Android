@@ -2,7 +2,6 @@ package org.wordpress.android.ui.people;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -44,9 +43,6 @@ public class PersonDetailFragment extends Fragment {
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
 
-    private RoleListAdapter mRoleListAdapter;
-    private OnChangeListener mListener;
-
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
@@ -54,34 +50,6 @@ public class PersonDetailFragment extends Fragment {
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (OnChangeListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnChangeListener");
-        }
-    }
-
-    // We need to override this for devices pre API 23
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnChangeListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnChangeListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -180,6 +148,15 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
+    private void showRoleChangeDialog() {
+        Person person = loadPerson();
+        if (person == null) {
+            return;
+        }
+        RoleChangeDialogFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId(), person.getRole())
+                .show(getFragmentManager(), null);
+    }
+
     @SuppressWarnings("deprecation")
     private void clearRoleContainerBackground() {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
@@ -189,93 +166,7 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
-    private void showRoleChangeDialog() {
-        Context context = getActivity();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.role);
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mListener != null) {
-                    String role = mRoleListAdapter.getSelectedRole();
-                    mListener.onRoleChanged(mPersonID, mLocalTableBlogID, role);
-                }
-            }
-        });
-
-        if (mRoleListAdapter == null) {
-            final String[] roles = getResources().getStringArray(R.array.roles);
-            mRoleListAdapter = new RoleListAdapter(context, R.layout.role_list_row, roles);
-        }
-        Person person = loadPerson();
-        if (person != null) {
-            mRoleListAdapter.setSelectedRole(person.getRole());
-        }
-        builder.setAdapter(mRoleListAdapter, null);
-
-        builder.show();
-    }
-
-    private class RoleListAdapter extends ArrayAdapter<String> {
-        private String mSelectedRole;
-
-        public RoleListAdapter(Context context, int resource, String[] objects) {
-            super(context, resource, objects);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = View.inflate(getContext(), R.layout.role_list_row, null);
-            }
-
-            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
-            TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
-            String role = getItem(position);
-            mainText.setText(role);
-
-            if (radioButton != null) {
-                radioButton.setChecked(mSelectedRole.equalsIgnoreCase(role));
-                radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        changeSelection(position);
-                    }
-                });
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeSelection(position);
-                }
-            });
-
-            return convertView;
-        }
-
-        private void changeSelection(int position) {
-            mSelectedRole = getItem(position);
-            notifyDataSetChanged();
-        }
-
-        public String getSelectedRole() {
-            return mSelectedRole;
-        }
-
-        public void setSelectedRole(String role) {
-            mSelectedRole = role;
-        }
-    }
-
     public Person loadPerson() {
         return PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
-    }
-
-    // Container Activity must implement this interface
-    public interface OnChangeListener {
-        void onRoleChanged(long personID, int localTableBlogId, String newRole);
     }
 }

@@ -23,7 +23,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 
 public class PeopleManagementActivity extends AppCompatActivity
-        implements PeopleListFragment.OnPersonSelectedListener, PersonDetailFragment.OnChangeListener {
+        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
