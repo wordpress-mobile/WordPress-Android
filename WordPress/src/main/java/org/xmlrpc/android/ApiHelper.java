@@ -194,7 +194,7 @@ public class ApiHelper {
 
         // Software version
         if (!currentBlog.isDotcomFlag()) {
-            Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
+            Map<?, ?> sv = (Map<?, ?>) blogOptions.get("software_version");
             String wpVersion = MapUtils.getMapStr(sv, "value");
             if (wpVersion.length() > 0) {
                 isModified |= currentBlog.bsetWpVersion(wpVersion);
@@ -202,7 +202,7 @@ public class ApiHelper {
         }
 
         // Featured image support
-        Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
+        Map<?, ?> featuredImageHash = (Map<?, ?>) blogOptions.get("post_thumbnail");
         if (featuredImageHash != null) {
             boolean featuredImageCapable = MapUtils.getMapBool(featuredImageHash, "value");
             isModified |= currentBlog.bsetFeaturedImageCapable(featuredImageCapable);
@@ -211,7 +211,7 @@ public class ApiHelper {
         }
 
         // Blog name
-        Map<?, ?> blogNameHash = (HashMap<?, ?>) blogOptions.get("blog_title");
+        Map<?, ?> blogNameHash = (Map<?, ?>) blogOptions.get("blog_title");
         if (blogNameHash != null) {
             String blogName = MapUtils.getMapStr(blogNameHash, "value");
             if (blogName != null && !blogName.equals(currentBlog.getBlogName())) {

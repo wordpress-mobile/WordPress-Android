@@ -34,7 +34,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -332,26 +331,26 @@ public class ReaderSubsActivity extends AppCompatActivity
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (succeeded) {
-                    // update tags when one is added
-                    performUpdate(EnumSet.of(UpdateTask.TAGS));
-                } else if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshFollowedTagFragment();
+                if (isFinishing()) return;
+
+                getPageAdapter().refreshFollowedTagFragment();
+
+                if (!succeeded) {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
-        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
+        if (ReaderTagActions.addTag(tag, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
             mLastAddedTagName = tag.getTagSlug();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
             String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getTagDisplayName()));
+            showInfoToast(String.format(labelAddedTag, tag.getLabel()));
         }
     }
 
@@ -464,7 +463,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoToast(String.format(labelRemovedTag, tag.getTagDisplayName()));
+        showInfoToast(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*
