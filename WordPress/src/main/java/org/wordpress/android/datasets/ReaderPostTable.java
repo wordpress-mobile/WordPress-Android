@@ -180,6 +180,9 @@ public class ReaderPostTable {
             numDeleted += purgePostsForTag(db, tag);
         }
 
+        // delete search results
+        numDeleted += purgeSearchResults(db);
+
         // delete posts in tbl_posts that no longer exist in tbl_post_tags
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
@@ -209,6 +212,14 @@ public class ReaderPostTable {
         int numDeleted = db.delete("tbl_post_tags", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
         return numDeleted;
+    }
+
+    /*
+     * purge all posts that were retained from previous searches
+     */
+    private static int purgeSearchResults(SQLiteDatabase db) {
+        String[] args = {Integer.toString(ReaderTagType.SEARCH.toInt())};
+        return db.delete("tbl_post_tags", "tag_type=?", args);
     }
 
     public static int getNumPostsInBlog(long blogId) {

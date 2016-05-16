@@ -619,9 +619,7 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
-        // delete existing results before setting this as the current search
         ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
-        ReaderPostTable.deletePostsWithTag(searchTag);
         mPostAdapter.setCurrentTag(searchTag);
 
         mCurrentSearchQuery = query;
