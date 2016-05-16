@@ -657,14 +657,12 @@ public class ReaderPostListFragment extends Fragment
         boolean isTablet = DisplayUtils.isXLarge(getActivity());
         if (!isLandscape || isTablet) {
             setEmptyTitleAndDescription(false);
-            mEmptyView.setVisibility(View.VISIBLE);
+            showEmptyView();
         }
     }
 
     private void hideSearchMessage() {
-        if (!isAdded()) return;
-
-        mEmptyView.setVisibility(View.GONE);
+        hideEmptyView();
     }
 
     /*
@@ -733,7 +731,7 @@ public class ReaderPostListFragment extends Fragment
         setIsUpdating(false, updateAction);
 
         // load the results, or show empty message if there aren't any
-        mPostAdapter.refresh();
+        refreshPosts();
     }
 
     /*
@@ -902,6 +900,18 @@ public class ReaderPostListFragment extends Fragment
         mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
     }
 
+    private void showEmptyView() {
+        if (isAdded()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideEmptyView() {
+        if (isAdded()) {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
     /*
      * called by post adapter when data has been loaded
      */
@@ -914,12 +924,12 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setRefreshing(false);
             if (isEmpty) {
                 setEmptyTitleAndDescription(false);
-                mEmptyView.setVisibility(View.VISIBLE);
+                showEmptyView();
                 if (shouldShowBoxAndPagesAnimation()) {
                     startBoxAndPagesAnimation();
                 }
             } else {
-                mEmptyView.setVisibility(View.GONE);
+                hideEmptyView();
                 if (mRestorePosition > 0) {
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
