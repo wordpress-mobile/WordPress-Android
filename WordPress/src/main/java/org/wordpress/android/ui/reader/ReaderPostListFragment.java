@@ -194,19 +194,6 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
-    public static ReaderPostListFragment newInstanceForSearch(@NonNull String query) {
-        AppLog.d(T.READER, "reader post list > newInstance (search)");
-
-        Bundle args = new Bundle();
-        args.putString(ReaderConstants.ARG_SEARCH_QUERY, query);
-        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
-
-        ReaderPostListFragment fragment = new ReaderPostListFragment();
-        fragment.setArguments(args);
-
-        return fragment;
-    }
-
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
