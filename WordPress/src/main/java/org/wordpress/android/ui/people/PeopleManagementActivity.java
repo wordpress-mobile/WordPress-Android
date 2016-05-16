@@ -238,6 +238,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             return null;
         }
 
-        return personDetailFragment.getCurrentPerson();
+        return personDetailFragment.loadPerson();
     }
 }
