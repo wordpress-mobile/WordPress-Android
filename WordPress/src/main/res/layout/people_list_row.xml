@@ -14,7 +14,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/people_list_row_role_margin_top"
         android:ellipsize="end"
         android:gravity="end"
         android:maxLines="1"
