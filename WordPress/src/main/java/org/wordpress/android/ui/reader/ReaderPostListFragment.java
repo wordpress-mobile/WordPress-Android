@@ -60,7 +60,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -573,8 +572,6 @@ public class ReaderPostListFragment extends Fragment
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
                 resetSearchSuggestionAdapter();
-
-                mCurrentSearchQuery = null;
                 mSettingsMenuItem.setVisible(true);
 
                 // return to the followed tag that was showing prior to searching
@@ -594,7 +591,6 @@ public class ReaderPostListFragment extends Fragment
                @Override
                public boolean onQueryTextChange(String newText) {
                    if (TextUtils.isEmpty(newText)) {
-                       mCurrentSearchQuery = null;
                        showSearchMessage();
                    } else {
                        populateSearchSuggestionAdapter(newText);
@@ -638,14 +634,8 @@ public class ReaderPostListFragment extends Fragment
         // clear posts so only the empty view is visible
         getPostAdapter().clear();
 
-        // note that we only show the message in portrait unless the device is a tablet since
-        // there isn't enough room for it in landscape when the soft keyboard is showing
-        boolean isLandscape = DisplayUtils.isLandscape(getActivity());
-        boolean isTablet = DisplayUtils.isXLarge(getActivity());
-        if (!isLandscape || isTablet) {
-            setEmptyTitleAndDescription(false);
-            showEmptyView();
-        }
+        setEmptyTitleAndDescription(false);
+        showEmptyView();
     }
 
     private void hideSearchMessage() {
@@ -693,6 +683,10 @@ public class ReaderPostListFragment extends Fragment
      */
     private boolean isSearchViewExpanded() {
         return mSearchView != null && !mSearchView.isIconified();
+    }
+
+    private boolean isSearchViewEmpty() {
+        return mSearchView != null && mSearchView.getQuery().length() == 0;
     }
 
     @SuppressWarnings("unused")
@@ -851,7 +845,7 @@ public class ReaderPostListFragment extends Fragment
                     break;
 
                 case SEARCH_RESULTS:
-                    if (TextUtils.isEmpty(mCurrentSearchQuery)) {
+                    if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
                     } else if (isUpdating()) {
                         title = getString(R.string.reader_label_post_search_running);
