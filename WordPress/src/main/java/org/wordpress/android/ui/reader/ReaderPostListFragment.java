@@ -619,9 +619,12 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        // remove cached results for this search - search results are ephemeral so each search
+        // should be treated as a "fresh" one
         ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
-        mPostAdapter.setCurrentTag(searchTag);
+        ReaderPostTable.deletePostsWithTag(searchTag);
 
+        mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = query;
         updatePostsInCurrentSearch(0);
     }
