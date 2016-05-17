@@ -83,8 +83,12 @@ public class PublicizeActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
-                connectStepTwo(siteId, keyringConnectionId);
+                if (hasMoreThanOneConnectedAccount(jsonObject)) {
+
+                } else {
+                    int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
+                    connectStepTwo(siteId, keyringConnectionId);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -125,6 +129,11 @@ public class PublicizeActions {
         params.put("keyring_connection_ID", Integer.toString(keyringConnectionId));
         String path = String.format("/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    private static boolean hasMoreThanOneConnectedAccount(JSONObject jsonObject) {
+        JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
+        return jsonConnectionList != null && jsonConnectionList.length() > 1;
     }
 
     /*
