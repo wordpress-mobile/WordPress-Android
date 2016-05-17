@@ -26,27 +26,34 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context, null, false);
-        mClearAllText = context.getString(R.string.reader_label_clear_suggestions);
+        mClearAllText = context.getString(R.string.label_clear_saved_searches);
         mClearAllBgColor = context.getResources().getColor(R.color.grey_lighten_30);
     }
 
     public void populate(String filter) {
+        // get db cursor containing matching query strings
         Cursor sqlCursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
+
+        // create a MatrixCursor which will be the actual cursor behind this adapter
         MatrixCursor matrixCursor = new MatrixCursor(
                 new String[]{
                         ReaderSearchTable.COL_ID,
                         ReaderSearchTable.COL_QUERY});
+
         if (sqlCursor.moveToFirst()) {
+            // first populate the matrix from the db cursor...
             do {
                 long id = sqlCursor.getLong(sqlCursor.getColumnIndex(ReaderSearchTable.COL_ID));
                 String query = sqlCursor.getString(sqlCursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
                 matrixCursor.addRow(new Object[]{id, query});
             } while (sqlCursor.moveToNext());
+
+            // ...then add our custom item
             matrixCursor.addRow(new Object[]{CLEAR_ALL_ROW_ID, mClearAllText});
         }
 
-        swapCursor(matrixCursor);
         mCurrentFilter = filter;
+        swapCursor(matrixCursor);
     }
 
     public String getSuggestion(int position) {
@@ -59,13 +66,11 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private class SuggestionViewHolder {
-        private final ViewGroup container;
         private final ImageView imgSuggestion;
         private final TextView txtSuggestion;
         private final ImageView imgDelete;
 
         SuggestionViewHolder(View view) {
-            container = (ViewGroup) view.findViewById(R.id.layout_container);
             imgSuggestion = (ImageView) view.findViewById(R.id.image_suggestion);
             txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
             imgDelete = (ImageView) view.findViewById(R.id.image_delete);
@@ -83,7 +88,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    confirmClearAllSuggestions(v.getContext());
+                    confirmClearSavedSearches(v.getContext());
                 }
             });
         }
@@ -117,24 +122,24 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         }
     }
 
-    private void confirmClearAllSuggestions(Context context) {
+    private void confirmClearSavedSearches(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(R.string.dlg_confirm_trash_comments);
-        builder.setTitle(R.string.trash);
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.trash_yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                clearAllSuggestions();
-            }
-        });
-        builder.setNegativeButton(R.string.trash_no, null);
+        builder.setTitle(R.string.dlg_title_confirm_clear_saved_searches)
+               .setMessage(R.string.dlg_text_confirm_clear_saved_searches)
+               .setCancelable(true)
+               .setNegativeButton(R.string.no, null)
+               .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int id) {
+                       clearSavedSearches();
+                   }
+               });
         AlertDialog alert = builder.create();
         alert.show();
-        clearAllSuggestions();
     }
 
-    private void clearAllSuggestions() {
+    private void clearSavedSearches() {
         ReaderSearchTable.deleteAllQueries();
+        swapCursor(null);
     }
 }

@@ -1118,7 +1118,6 @@
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
-    <string name="reader_label_clear_suggestions">Remove all</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1184,7 +1183,9 @@
     <string name="reader_empty_posts_in_search_title">No Results</string>
     <string name="reader_empty_posts_in_search_description">No posts found for \"%s\" for your language</string>
 
-    <string name="reader_dlg_title_clear_suggestions">Remove Suggestions</string>
+    <string name="dlg_title_confirm_clear_saved_searches">Clear</string>
+    <string name="dlg_text_confirm_clear_saved_searches">Clear saved searches?</string>
+    <string name="label_clear_saved_searches">Clear saved searches</string>
 
     <!-- attribution line for Discover posts, ex: "Originally posted by [AuthorName] on [BlogName] -->
     <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
