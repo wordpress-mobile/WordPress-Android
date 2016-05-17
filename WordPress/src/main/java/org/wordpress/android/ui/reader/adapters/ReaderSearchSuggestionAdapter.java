@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,16 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     public void populate(String filter) {
-        Cursor cursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
-        swapCursor(cursor);
+        Cursor sqlCursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
+        MatrixCursor matrixCursor = new MatrixCursor(
+                new String[]{ReaderSearchTable.COL_ID, ReaderSearchTable.COL_QUERY});
+        while (sqlCursor.moveToNext()) {
+            long id = sqlCursor.getLong(sqlCursor.getColumnIndex(ReaderSearchTable.COL_ID));
+            String query = sqlCursor.getString(sqlCursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+            matrixCursor.addRow(new Object[] {id, query});
+        }
+
+        swapCursor(matrixCursor);
         mCurrentFilter = filter;
     }
 

@@ -16,6 +16,7 @@ import java.util.Date;
  */
 public class ReaderSearchTable {
 
+    public static final String COL_ID    = "_id";
     public static final String COL_QUERY = "query_string";
 
     protected static void createTables(SQLiteDatabase db) {
