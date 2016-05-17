@@ -53,6 +53,10 @@ public class ReaderSearchTable {
         ReaderDatabase.getWritableDb().delete("tbl_search_suggestions", "query_string=?", args);
     }
 
+    public static void deleteAllQueries() {
+        SqlUtils.deleteAllRowsInTable(ReaderDatabase.getWritableDb(), "tbl_search_suggestions");
+    }
+
     /**
      * Returns a cursor containing query strings previously typed by the user
      * @param filter - filters the list using LIKE syntax (pass null for no filter)
