@@ -703,17 +703,17 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
         if (!isAdded()) return;
 
-        // make sure this is for the current search
-        if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
-                || !event.getQuery().equals(mCurrentSearchQuery)) {
-            return;
-        }
-
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(false, updateAction);
 
-        // load the results, or show empty message if there aren't any
-        refreshPosts();
+        // load the results if the search succeeded and it's the current search - note that success
+        // means the search didn't fail, not necessarily that is has results - which is fine because
+        // if there aren't results then refreshing will show the empty message
+        if (event.didSucceed()
+                && getPostListType() == ReaderPostListType.SEARCH_RESULTS
+                && event.getQuery().equals(mCurrentSearchQuery)) {
+            refreshPosts();
+        }
     }
 
     /*

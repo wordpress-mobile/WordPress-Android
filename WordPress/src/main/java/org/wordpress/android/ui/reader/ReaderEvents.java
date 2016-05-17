@@ -81,15 +81,15 @@ public class ReaderEvents {
     }
     public static class SearchPostsEnded {
         private final String mQuery;
-        private final boolean mHasResults;
+        private final boolean mDidSucceed;
         private final int mOffset;
-        public SearchPostsEnded(@NonNull String query, int offset, boolean hasResults) {
+        public SearchPostsEnded(@NonNull String query, int offset, boolean didSucceed) {
             mQuery = query;
             mOffset = offset;
-            mHasResults = hasResults;
+            mDidSucceed = didSucceed;
         }
-        public boolean hasResults() {
-            return mHasResults;
+        public boolean didSucceed() {
+            return mDidSucceed;
         }
         public String getQuery() {
             return mQuery;

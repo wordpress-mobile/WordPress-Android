@@ -111,11 +111,10 @@ public class ReaderSearchService extends Service {
             @Override
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                boolean hasResults = ReaderPostTable.comparePosts(serverPosts).isNewOrChanged();
-                if (hasResults) {
+                if (ReaderPostTable.comparePosts(serverPosts).isNewOrChanged()) {
                     ReaderPostTable.addOrUpdatePosts(getTagForSearchQuery(query), serverPosts);
                 }
-                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, hasResults));
+                EventBus.getDefault().post(new ReaderEvents.SearchPostsEnded(query, offset, true));
             }
         }.start();
     }
