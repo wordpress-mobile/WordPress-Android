@@ -31,7 +31,7 @@ public class MenuItemModel {
     public String type;
     public String typeFamily;
     public String typeLabel;
-    public List<Long> children;
+    public List<MenuItemModel> children;
 
     @Override
     public boolean equals(Object other) {
@@ -55,27 +55,5 @@ public class MenuItemModel {
 
     public boolean hasChildren() {
         return children != null && children.size() > 0;
-    }
-
-    /**
-     * Removes any existing children before adding children from given string list.
-     *
-     * @param childList
-     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
-     */
-    public void setChildrenFromStringList(String childList) {
-        if (children != null) children.clear();
-        addChildrenFromStringList(childList);
-    }
-
-    /**
-     * Adds children from given string list, maintaining existing children.
-     *
-     * @param childList
-     *  comma (',') separated {@link MenuItemModel#itemId}'s to be added as children to this item
-     */
-    public void addChildrenFromStringList(String childList) {
-        if (children == null) children = new ArrayList<>();
-        CollectionUtils.addLongsFromStringListToArrayList(children, childList);
     }
 }

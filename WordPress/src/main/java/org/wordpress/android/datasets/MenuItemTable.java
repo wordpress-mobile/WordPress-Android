@@ -3,6 +3,7 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
@@ -52,9 +53,6 @@ public class MenuItemTable {
                     TYPE_LABEL_COLUMN + " TEXT, " +
                     CHILDREN_COLUMN + " TEXT" +
                     ");";
-
-    public static final String DROP_MENU_ITEMS_TABLE_SQL =
-            "DROP TABLE " + MENU_ITEMS_TABLE_NAME + ";";
 
     /** Well-formed WHERE clause for identifying a row using PRIMARY KEY constraints */
     public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
@@ -118,7 +116,15 @@ public class MenuItemTable {
         item.type = getStringFromCursor(cursor, TYPE_COLUMN);
         item.typeFamily = getStringFromCursor(cursor, TYPE_FAMILY_COLUMN);
         item.typeLabel = getStringFromCursor(cursor, TYPE_LABEL_COLUMN);
-        item.setChildrenFromStringList(getStringFromCursor(cursor, CHILDREN_COLUMN));
+        String children = getStringFromCursor(cursor, CHILDREN_COLUMN);
+        if (!TextUtils.isEmpty(children)) {
+            item.children = new ArrayList<>();
+            for (String childId : children.split(",")) {
+                MenuItemModel child = MenuItemTable.getMenuItem(Long.valueOf(childId));
+                if (child == null) continue;
+                item.children.add(child);
+            }
+        }
         return item;
     }
 
@@ -136,7 +142,13 @@ public class MenuItemTable {
         values.put(TYPE_COLUMN, item.type);
         values.put(TYPE_FAMILY_COLUMN, item.typeFamily);
         values.put(TYPE_LABEL_COLUMN, item.typeLabel);
-        values.put(CHILDREN_COLUMN, separatedStringList(item.children, ","));
+        if (item.hasChildren()) {
+            String childIds = "";
+            for (MenuItemModel child : item.children) {
+                childIds += child.itemId + ",";
+            }
+            values.put(CHILDREN_COLUMN, childIds.substring(0, childIds.length() - 1));
+        }
         return values;
     }
 }

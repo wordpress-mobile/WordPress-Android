@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.helpshift.support.util.ListUtils;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
@@ -57,25 +59,39 @@ public class MenuTable {
         values.put(ID_COLUMN, menu.menuId);
         values.put(NAME_COLUMN, menu.name);
         values.put(DETAILS_COLUMN, menu.details);
-        values.put(LOCATIONS_COLUMN, separatedStringList(menu.locations, ","));
-        values.put(ITEMS_COLUMN, separatedStringList(menu.menuItems, ","));
+        if (!ListUtils.isEmpty(menu.locations)) {
+            String locationIds = "";
+            for (MenuLocationModel location : menu.locations) {
+                MenuLocationTable.saveMenuLocation(location);
+                locationIds += location.name + ",";
+            }
+            values.put(LOCATIONS_COLUMN, locationIds.substring(0, locationIds.length() - 1));
+        }
+        if (!ListUtils.isEmpty(menu.menuItems)) {
+            String itemIds = "";
+            for (MenuItemModel item : menu.menuItems) {
+                MenuItemTable.saveMenuItem(item);
+                itemIds += item.itemId + ",";
+            }
+            values.put(ITEMS_COLUMN, itemIds.substring(0, itemIds.length() - 1));
+        }
         return values;
     }
 
-    public static List<Long> deserializeLocations(Cursor cursor) {
+    public static List<MenuLocationModel> deserializeLocations(Cursor cursor) {
         String locationNames = getStringFromCursor(cursor, LOCATIONS_COLUMN);
-        List<Long> locations = new ArrayList<>();
+        List<MenuLocationModel> locations = new ArrayList<>();
         for (String name : locationNames.split(",")) {
-            locations.add(Long.valueOf(name));
+            locations.add(MenuLocationTable.getMenuLocationForCurrentSite(name));
         }
         return locations;
     }
 
-    public static List<Long> deserializeItems(Cursor cursor) {
+    public static List<MenuItemModel> deserializeItems(Cursor cursor) {
         String itemIds = getStringFromCursor(cursor, ITEMS_COLUMN);
-        List<Long> items = new ArrayList<>();
+        List<MenuItemModel> items = new ArrayList<>();
         for (String id : itemIds.split(",")) {
-            items.add(Long.valueOf(id));
+            items.add(MenuItemTable.getMenuItem(Long.valueOf(id)));
         }
         return items;
     }

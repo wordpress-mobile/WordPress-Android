@@ -172,6 +172,13 @@ android.buildTypes.all { buildType ->
                     "\"${property.value}\""
         }
     }
+
+    // Load test properties and add them to BuildConfig
+    Properties testProperties = new Properties()
+    testProperties.load(new FileInputStream("WordPress/test.properties"))
+    testProperties.any { property ->
+        buildType.buildConfigField "String", property.key.replace(".", "_").toUpperCase(), "\"${property.value}\""
+    }
 }
 
 // For app signing

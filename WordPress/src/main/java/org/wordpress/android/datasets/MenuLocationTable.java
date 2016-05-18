@@ -43,9 +43,6 @@ public class MenuLocationTable {
                     PRIMARY_KEY + " (" + SITE_ID_COLUMN + "," + NAME_COLUMN + ")" +
                     ");";
 
-    public static final String DROP_MENU_LOCATIONS_TABLE_SQL =
-            "DROP TABLE " + MENU_LOCATIONS_TABLE_NAME + ";";
-
     /** Well-formed WHERE clause for identifying a row using PRIMARY KEY constraints */
     public static final String UNIQUE_WHERE_SQL =
             "WHERE (" + SITE_ID_COLUMN + "=?) AND (" + NAME_COLUMN + "=?)";
