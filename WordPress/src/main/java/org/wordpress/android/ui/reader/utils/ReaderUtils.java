@@ -15,6 +15,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -29,10 +30,12 @@ public class ReaderUtils {
                                             int height,
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
+
+        final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
         if (isPrivate) {
-            return getPrivateImageForDisplay(imageUrl, width, height);
+            return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
-            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height, quality);
+            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality);
         }
     }
 
@@ -195,8 +198,15 @@ public class ReaderUtils {
         ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
         if (tag != null) {
             return tag;
+        } else {
+            return createTagFromTagName(tagName, tagType);
         }
-        return new ReaderTag(tagName, null, null, tagType);
+    }
+
+    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+        String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
+        String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
+        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
     }
 
     /*

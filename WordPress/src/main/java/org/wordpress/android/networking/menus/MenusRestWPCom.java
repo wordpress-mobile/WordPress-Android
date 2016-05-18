@@ -13,7 +13,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.util.AppLog;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +21,33 @@ import java.util.Map;
 import static org.wordpress.android.util.VolleyUtils.statusCodeFromVolleyError;
 import static org.wordpress.android.networking.menus.MenusDataModeler.*;
 
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+
 /**
  * Interface for WordPress.com Menus REST API methods.
  *
  * ref: https://developer.wordpress.com/docs/api/
  */
 public class MenusRestWPCom {
-    public interface IMenusDelegate {
+    public enum REST_ERROR {
+        UNKNOWN_ERROR,
+        AUTHENTICATION_ERROR,
+        RESERVED_ID_ERROR,
+        CREATE_ERROR,
+        DELETE_ERROR,
+        UPDATE_ERROR,
+        FETCH_ERROR
+    }
+
+    public interface MenusListener {
         Context getContext();
         long getSiteId();
-        void onMenuReceived(int statusCode, MenuModel menu);
-        void onMenusReceived(int statusCode, List<MenuModel> menus);
-        void onMenuCreated(int statusCode, MenuModel menu);
-        void onMenuDeleted(int statusCode, MenuModel menu, boolean deleted);
-        void onMenuUpdated(int statusCode, MenuModel menu);
+        void onMenusReceived(int requestId, List<MenuModel> menus);
+        void onMenuCreated(int requestId, MenuModel menu);
+        void onMenuDeleted(int requestId, MenuModel menu, boolean deleted);
+        void onMenuUpdated(int requestId, MenuModel menu);
+        void onErrorResponse(int requestId, REST_ERROR error);
     }
 
     private static final String MENU_REST_PATH = "/sites/%s/menus/%s";
@@ -51,69 +63,89 @@ public class MenusRestWPCom {
 
     private static final String DELETED_KEY = "deleted";
 
-    private final IMenusDelegate mDelegate;
+    private final MenusListener mListener;
 
-    public MenusRestWPCom(IMenusDelegate delegate) {
-        if (delegate == null) {
-            throw new IllegalArgumentException("IMenusDelegate cannot be null");
+    private int mRequestCounter = 0;
+
+    public MenusRestWPCom(MenusListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("MenusListener cannot be null");
         }
-        mDelegate = delegate;
+        mListener = listener;
     }
 
-    public boolean createMenu(final MenuModel menu) {
+    public int createMenu(final MenuModel menu) {
         // a name string is required for the REST call
-        if (menu == null || TextUtils.isEmpty(menu.name)) return false;
+        if (menu == null || TextUtils.isEmpty(menu.name)) return -1;
+        final int requestId = ++mRequestCounter;
         String path = formatPath(CREATE_MENU_REST_PATH, null);
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 menu.menuId = response.optLong(MENU_ID_KEY);
-                mDelegate.onMenuCreated(HttpURLConnection.HTTP_OK, menu);
+                mListener.onMenuCreated(requestId, menu);
                 // TODO: call updateMenu if the menu has any non-default fields
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuCreated(statusCodeFromVolleyError(error), menu);
+            @Override public void onErrorResponse(VolleyError volleyError) {
+                int statusCode = statusCodeFromVolleyError(volleyError);
+                REST_ERROR error = REST_ERROR.CREATE_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
+                mListener.onErrorResponse(requestId, error);
             }
         });
-        return true;
+        return requestId;
     }
 
-    public boolean updateMenu(final MenuModel menu) {
-        if (menu == null) return false;
+    public int updateMenu(final MenuModel menu) {
+        if (menu == null) return -1;
+        final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 MenuModel menu = menuFromJson(response.optJSONObject(MENU_KEY));
-                mDelegate.onMenuUpdated(HttpURLConnection.HTTP_OK, menu);
+                mListener.onMenuUpdated(requestId, menu);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuUpdated(statusCodeFromVolleyError(error), menu);
+            @Override public void onErrorResponse(VolleyError volleyError) {
+                int statusCode = statusCodeFromVolleyError(volleyError);
+                REST_ERROR error = REST_ERROR.UPDATE_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
+                mListener.onErrorResponse(requestId, error);
             }
         });
-        return true;
+        return requestId;
     }
 
-    public void fetchMenu(long menuId) {
+    public int fetchMenu(long menuId) {
+        if (menuId < 0) return -1;
+        final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                JSONObject menuObject = response.optJSONObject(MENU_KEY);
-                mDelegate.onMenuReceived(HttpURLConnection.HTTP_OK, menuFromJson(menuObject));
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY));
+                List<MenuModel> resultList = new ArrayList<>();
+                if (result != null) resultList.add(result);
+                mListener.onMenusReceived(requestId, resultList);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuReceived(statusCodeFromVolleyError(error), null);
+            @Override public void onErrorResponse(VolleyError volleyError) {
+                int statusCode = statusCodeFromVolleyError(volleyError);
+                REST_ERROR error = REST_ERROR.FETCH_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
+                else if (statusCode == HTTP_BAD_REQUEST) error = REST_ERROR.RESERVED_ID_ERROR;
+                mListener.onErrorResponse(requestId, error);
             }
         });
+        return requestId;
     }
 
-    public void fetchAllMenus() {
+    public int fetchAllMenus() {
+        final int requestId = ++mRequestCounter;
         String path = formatPath(MENUS_REST_PATH, null);
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
@@ -127,36 +159,44 @@ public class MenusRestWPCom {
                 } catch (JSONException exception) {
                     AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");
                 }
-                mDelegate.onMenusReceived(HttpURLConnection.HTTP_OK, menus);
+                mListener.onMenusReceived(requestId, menus);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenusReceived(statusCodeFromVolleyError(error), null);
+            @Override public void onErrorResponse(VolleyError volleyError) {
+                int statusCode = statusCodeFromVolleyError(volleyError);
+                REST_ERROR error = REST_ERROR.FETCH_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
+                mListener.onErrorResponse(requestId, error);
             }
         });
+        return requestId;
     }
 
-    public boolean deleteMenu(final MenuModel menu) {
-        if (menu == null) return false;
+    public int deleteMenu(final MenuModel menu) {
+        if (menu == null) return -1;
+        final int requestId = ++mRequestCounter;
         String path = formatPath(DELETE_MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 boolean deleted = response.optBoolean(DELETED_KEY, false);
-                mDelegate.onMenuDeleted(HttpURLConnection.HTTP_OK, menu, deleted);
+                mListener.onMenuDeleted(requestId, menu, deleted);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError error) {
-                mDelegate.onMenuDeleted(statusCodeFromVolleyError(error), menu, false);
+            @Override public void onErrorResponse(VolleyError volleyError) {
+                int statusCode = statusCodeFromVolleyError(volleyError);
+                REST_ERROR error = REST_ERROR.FETCH_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.DELETE_ERROR;
+                mListener.onErrorResponse(requestId, error);
             }
         });
-        return true;
+        return requestId;
     }
 
     private String formatPath(String base, String menuId) {
         if (!TextUtils.isEmpty(menuId)) {
-            return String.format(base, String.valueOf(mDelegate.getSiteId()), menuId);
+            return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
-        return String.format(base, String.valueOf(mDelegate.getSiteId()));
+        return String.format(base, String.valueOf(mListener.getSiteId()));
     }
 }

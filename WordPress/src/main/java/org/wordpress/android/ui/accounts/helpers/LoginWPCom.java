@@ -74,27 +74,7 @@ public class LoginWPCom extends LoginAbstract {
             @SuppressLint("CommitPrefEdits")
             @Override
             public void onResponse(final Oauth.Token token) {
-                if (mJetpackBlog != null) {
-                    // Store token in blog object for Jetpack sites
-                    mJetpackBlog.setApi_key(token.toString());
-                    mJetpackBlog.setDotcom_username(mUsername);
-                    WordPress.wpDB.saveBlog(mJetpackBlog);
-                }
-
-                Account account = AccountHelper.getDefaultAccount();
-
-                if (mJetpackBlog == null) {
-                    // Store token in global account
-                    account.setAccessToken(token.toString());
-                    account.setUserName(mUsername);
-                    account.save();
-                    account.fetchAccountDetails();
-                }
-
-                // Once we have a token, start up Simperium
-                SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
-
-                mCallback.onSuccess();
+                configureAccountOnSuccess(token);
             }
         }, new Oauth.ErrorListener() {
             @Override
@@ -104,5 +84,29 @@ public class LoginWPCom extends LoginAbstract {
                 mCallback.onError(errorMsgId, errorMsgId == R.string.account_two_step_auth_enabled, false, false);
             }
         }));
+    }
+
+    private void configureAccountOnSuccess(Oauth.Token token) {
+        if (mJetpackBlog != null) {
+            // Store token in blog object for Jetpack sites
+            mJetpackBlog.setApi_key(token.toString());
+            mJetpackBlog.setDotcom_username(mUsername);
+            WordPress.wpDB.saveBlog(mJetpackBlog);
+        }
+
+        Account account = AccountHelper.getDefaultAccount();
+
+        if (mJetpackBlog == null) {
+            // Store token in global account
+            account.setAccessToken(token.toString());
+            account.setUserName(mUsername);
+            account.save();
+            account.fetchAccountDetails();
+        }
+
+        // Once we have a token, start up Simperium
+        SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
+
+        mCallback.onSuccess();
     }
 }

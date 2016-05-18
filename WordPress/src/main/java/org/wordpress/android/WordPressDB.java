@@ -736,6 +736,8 @@ public class WordPressDB {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
         }
 
+        updateCurrentBlog(blog);
+
         return (returnValue);
     }
 
@@ -2055,5 +2057,12 @@ public class WordPressDB {
 
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+    }
+    
+    private void updateCurrentBlog(Blog blog) {
+        Blog currentBlog = WordPress.currentBlog;
+        if (currentBlog != null && blog.getLocalTableBlogId() == currentBlog.getLocalTableBlogId()) {
+            WordPress.currentBlog = blog;
+        }
     }
 }
