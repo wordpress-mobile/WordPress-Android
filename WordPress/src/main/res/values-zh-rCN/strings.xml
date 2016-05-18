@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">要选择或拍摄照片，请获取权限</string>
+	<string name="error_updating_gravatar">更新 Gravatar 时出错</string>
+	<string name="error_locating_image">查找已裁剪的图像时出错</string>
+	<string name="error_refreshing_gravatar">重新加载 Gravatar 时出错</string>
+	<string name="gravatar_tip">新功能！轻点 Gravatar 即可进行更改！</string>
+	<string name="error_cropping_image">裁剪图像时出错</string>
+	<string name="launch_your_email_app">启动电子邮件应用程序</string>
+	<string name="checking_email">检查电子邮件地址</string>
+	<string name="not_on_wordpress_com">尚未登录 WordPress.com？</string>
+	<string name="magic_link_unavailable_error_message">目前不可用。请输入密码</string>
+	<string name="check_your_email">检查电子邮件</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">获取电子邮件中收到的链接，立即登录</string>
+	<string name="logging_in">正在登录</string>
+	<string name="enter_your_password_instead">改为输入密码</string>
+	<string name="web_address_dialog_hint">公开显示您的评论。</string>
+	<string name="jetpack_not_connected_message">已安装 Jetpack 插件，但未连接至 WordPress.com。要连接 Jetpack 吗？</string>
+	<string name="username_email">电子邮件或用户名</string>
+	<string name="jetpack_not_connected">未连接 Jetpack 插件</string>
+	<string name="new_editor_reflection_error">可视化编辑器与您的设备不兼容。已\n自动停用。</string>
+	<string name="stats_insights_latest_post_no_title">（无标题）</string>
+	<string name="capture_or_pick_photo">拍摄或选择照片</string>
 	<string name="plans_post_purchase_text_themes">您现在获得了对高级套餐主题的无限制访问权限。预览站点上的任意主题即可开始使用。</string>
 	<string name="plans_post_purchase_button_themes">浏览主题</string>
 	<string name="plans_post_purchase_title_themes">查找出色的高级套餐主题</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">如果您想留下某个站点，但不想保留其中现有的任何文章和页面，我们的支持团队可以为您删除相关文章、页面、媒体以及评论。\n\n这不会影响您站点和 URL 的有效性，还能让您重新开始创建内容。联系我们即可清除当前所有内容。</string>
 	<string name="site_settings_start_over_hint">从头开始构建您的站点</string>
 	<string name="let_us_help">让我们助您一臂之力</string>
-	<string name="me_btn_account_settings">帐户设置</string>
 	<string name="me_btn_app_settings">应用程序设置</string>
 	<string name="start_over">从头开始</string>
 	<string name="editor_remove_failed_uploads">删除上传失败的内容</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">单击发送给 %1$s 的电子邮件中的验证链接以确认您的新地址</string>
 	<string name="primary_site">主站点</string>
 	<string name="web_address">网页地址</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">您目前正在上传媒体。请等待，直到此任务完成。</string>
 	<string name="error_refresh_comments_showing_older">目前无法刷新评论 – 显示的是旧评论</string>
 	<string name="editor_post_settings_set_featured_image">设置推荐图像</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">从 WordPress.com 断开连接</string>
 	<string name="me_connect_to_wordpress_com">连接至 WordPress.com</string>
 	<string name="me_btn_login_logout">登录/注销</string>
+	<string name="account_settings">帐户设置</string>
 	<string name="me_btn_support">帮助与支持</string>
 	<string name="site_picker_cant_hide_current_site">“%s”未隐藏，因为它是当前站点</string>
 	<string name="site_picker_create_dotcom">创建 WordPress.com 站点</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">不能删除这个标签</string>
 	<string name="required_field">必填字段</string>
 	<string name="email_hint">邮件地址</string>
-	<string name="username_email">用户名或邮箱</string>
 	<string name="site_address">你的博客地址</string>
 	<string name="email_cant_be_used_to_signup">你不能使用该电子邮件地址来注册。它们会阻止我们的电子邮件。请使用其他电子邮件提供商。</string>
 	<string name="email_reserved">该电子邮件地址已经被使用。检查你的收件箱里的激活邮件。如果你没有激活可以在几天后再次尝试。</string>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="error_updating_gravatar">Gwall wrth ddiweddaru eich Gravatar</string>
+	<string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
+	<string name="error_refreshing_gravatar">Gwall wrth ail-lwytho eich Gravatar</string>
+	<string name="gravatar_tip">Newydd! Tapiwch eich Gravatar i\'w newid!</string>
 	<string name="plans_post_purchase_text_themes">Mae gennych nawr fynediad diderfyn i themâu Premiwm. Er mwyn cychwyn arni, gallwch gael rhagolwg o unrhyw thema ar eich gwefan.</string>
 	<string name="plans_post_purchase_button_themes">Pori\'r Themâu</string>
 	<string name="plans_post_purchase_title_themes">Canfod y thema Premiwm perffaith</string>
@@ -44,7 +48,6 @@
 	<string name="start_over_text">Os ydych eisiau gwefan ond dim o\'r cofnodion a thudalennau sydd gennych ar hyn o bryd gall ein tîm cymorth ddileu eich cofnodion, tudalennau, cyfryngau, a sylwadau ar eich cyfer.\n\nBydd hyn yn cadw eich gwefan ac URL byw, ond yn rhoi dechrau newydd i\'ch creu cynnwys. Cysylltwch â ni i ni gael clirio eich cynnwys cyfredol.</string>
 	<string name="site_settings_start_over_hint">Cychwyn eich gwefan eto</string>
 	<string name="let_us_help">Gadewch i ni Helpu</string>
-	<string name="me_btn_account_settings">Gosodiadau Cyfrif</string>
 	<string name="me_btn_app_settings">Gosodiadau Apiau</string>
 	<string name="start_over">Cychwyn Eto</string>
 	<string name="editor_remove_failed_uploads">Tynnu llwythi sydd wedi methu</string>
@@ -110,7 +113,6 @@
 	<string name="pending_email_change_snackbar">Cliciwch ar y ddolen dilysu yn yr e-bost a anfonwyd at i%1$s i gadarnhau eich cyfeiriad newydd</string>
 	<string name="primary_site">Prif wefan</string>
 	<string name="web_address">Cyfeiriad Gwe</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Rydych wrthi\'n llwytho cyfryngau. Arhoswch nes i hyn orffen.</string>
 	<string name="error_refresh_comments_showing_older">Nid oes modd adnewyddu sylwadau ar hyn o bryd - yn dangos sylwadau hŷn</string>
 	<string name="editor_post_settings_set_featured_image">Gosod Delwedd Nodwedd</string>
@@ -814,7 +816,6 @@
 	<string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
 	<string name="required_field">Maes angenrheidiol</string>
 	<string name="email_hint">Cyfeiriad e-bost</string>
-	<string name="username_email">Enw defnyddiwr neu e-bost</string>
 	<string name="site_address">Eich cyfeiriad hunan-letya (URL)</string>
 	<string name="email_cant_be_used_to_signup">Nid oes modd i chi ddefnyddio\'r cyfeiriad e-bost yna i ymuno. Mae gennym anhawster ohonynt yn rhwystro rhai o\'n e-byst. Defnyddiwch darparwr e-bost arall.</string>
 	<string name="email_reserved">Mae\'r cyfeiriad e-bost hwnnw eisoes wedi cael ei ddefnyddio. Gwiriwch eich blwch derbyn ar gyfer e-bost cychwyn. Os nad ydych yn cychwyn yn fuan gallwch roi cynnig arall ymhen ychydig ddyddiau.</string>

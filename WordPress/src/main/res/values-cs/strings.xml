@@ -48,7 +48,6 @@
 	<string name="filter_draft_posts">Koncepty</string>
 	<string name="filter_scheduled_posts">Naplánováno</string>
 	<string name="web_address">Webová adresa</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="new_editor_promo_title">Zburusu nový editor</string>
 	<string name="new_editor_promo_button_label">Skvělé, díky!</string>
 	<string name="editor_page_title_placeholder">Název stránky</string>
@@ -741,7 +740,6 @@
 	<string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
 	<string name="required_field">Povinné pole</string>
 	<string name="email_hint">E-mail</string>
-	<string name="username_email">Uživatelské jméno nebo e-mail</string>
 	<string name="site_address">Vaše vlastní adresa (URL)</string>
 	<string name="email_cant_be_used_to_signup">Tuto e-mailovou adresu pro registraci nemůžete použít. Tento poskytovatel blokuje některé z našich -mailů. Použijte jiného e-mailového poskytovatele.</string>
 	<string name="email_reserved">Tato e-mailová adresa již byla použita. Zkontrolujte prosím, zda nemáte v doručené poště aktivační e-mail. Pokud aktivaci neprovedete hned, můžete zkusit znovu za pár dní.</string>
