@@ -16,12 +16,14 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.VolleyUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.Method;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,32 +45,32 @@ public class CommentActions {
      * listener when a comment action is performed
      */
     public interface CommentActionListener {
-        public void onActionResult(boolean succeeded);
+        void onActionResult(CommentActionResult result);
     }
 
     /*
      * listener when comments are moderated or deleted
      */
     public interface OnCommentsModeratedListener {
-        public void onCommentsModerated(final CommentList moderatedComments);
+        void onCommentsModerated(final CommentList moderatedComments);
     }
 
     /*
      * used by comment fragments to alert container activity of a change to one or more
      * comments (moderated, deleted, added, etc.)
      */
-    public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
-    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
-    public static interface OnCommentChangeListener {
-        public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
+    public enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
+    public enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
+    public interface OnCommentChangeListener {
+        void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
     }
 
-    public static interface OnCommentActionListener {
-        public void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
+    public interface OnCommentActionListener {
+        void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
     }
 
-    public static interface OnNoteCommentActionListener {
-        public void onModerateCommentForNote(Note note, CommentStatus newStatus);
+    public interface OnNoteCommentActionListener {
+        void onModerateCommentForNote(Note note, CommentStatus newStatus);
     }
 
 
@@ -81,8 +83,9 @@ public class CommentActions {
                                   final CommentActionListener actionListener) {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || TextUtils.isEmpty(commentText)) {
-            if (actionListener != null)
-                actionListener.onActionResult(false);
+            if (actionListener != null) {
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS   , null));
+            }
             return;
         }
 
@@ -107,27 +110,20 @@ public class CommentActions {
                         postID,
                         commentHash};
 
-                int newCommentID;
+                int newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
+                String message = null;
                 try {
-                    newCommentID = (Integer) client.call(Method.NEW_COMMENT, params);
-                } catch (XMLRPCException e) {
+                   newCommentID = (Integer) client.call(Method.NEW_COMMENT, params);
+                } catch (IOException | XmlPullParserException | XMLRPCException e) {
                     AppLog.e(T.COMMENTS, "Error while sending new comment", e);
-                    newCommentID = -1;
-                } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
-                    newCommentID = -1;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
-                    newCommentID = -1;
+                    message = e.getMessage();
                 }
-
-                final boolean succeeded = (newCommentID >= 0);
-
+                final CommentActionResult cr = new CommentActionResult(newCommentID, message);
                 if (actionListener != null) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            actionListener.onActionResult(succeeded);
+                            actionListener.onActionResult(cr);
                         }
                     });
                 }
@@ -144,8 +140,9 @@ public class CommentActions {
                                      final CommentActionListener actionListener) {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
-            if (actionListener != null)
-                actionListener.onActionResult(false);
+            if (actionListener != null) {
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
+            }
             return;
         }
 
@@ -171,8 +168,8 @@ public class CommentActions {
                         Long.toString(comment.postID),
                         replyHash };
 
-
                 long newCommentID;
+                String message = null;
                 try {
                     Object newCommentIDObject = client.call(Method.NEW_COMMENT, params);
                     if (newCommentIDObject instanceof Integer) {
@@ -181,26 +178,24 @@ public class CommentActions {
                         newCommentID = (Long) newCommentIDObject;
                     } else {
                         AppLog.e(T.COMMENTS, "wp.newComment returned the wrong data type");
-                        newCommentID = -1;
+                        newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                     }
-                } catch (XMLRPCException e) {
+                } catch (XMLRPCFault e) {
                     AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
-                    newCommentID = -1;
-                } catch (IOException e) {
+                    newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
+                    message = e.getFaultString();
+                } catch (XMLRPCException | IOException | XmlPullParserException e) {
                     AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
-                    newCommentID = -1;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS, "Error while sending the new comment", e);
-                    newCommentID = -1;
+                    newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
                 }
 
-                final boolean succeeded = (newCommentID >= 0);
+                final CommentActionResult cr = new CommentActionResult(newCommentID, message);
 
                 if (actionListener != null) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            actionListener.onActionResult(succeeded);
+                            actionListener.onActionResult(cr);
                         }
                     });
                 }
@@ -218,7 +213,8 @@ public class CommentActions {
                                          final CommentActionListener actionListener) {
         if (note == null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
-                actionListener.onActionResult(false);
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
+
             return;
         }
 
@@ -226,7 +222,7 @@ public class CommentActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (actionListener != null)
-                    actionListener.onActionResult(true);
+                    actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_UNKNOWN, null));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -234,8 +230,11 @@ public class CommentActions {
             public void onErrorResponse(VolleyError volleyError) {
                 if (volleyError != null)
                     AppLog.e(T.COMMENTS, volleyError.getMessage(), volleyError);
-                if (actionListener != null)
-                    actionListener.onActionResult(false);
+                if (actionListener != null) {
+                    actionListener.onActionResult(
+                            new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, VolleyUtils.messageStringFromVolleyError(volleyError))
+                    );
+                }
             }
         };
 
@@ -251,7 +250,7 @@ public class CommentActions {
                                                    final CommentActionListener actionListener) {
         if (TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
-                actionListener.onActionResult(false);
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             return;
         }
 
@@ -259,7 +258,7 @@ public class CommentActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (actionListener != null)
-                    actionListener.onActionResult(true);
+                    actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_UNKNOWN, null));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -268,7 +267,9 @@ public class CommentActions {
                 if (volleyError != null)
                     AppLog.e(T.COMMENTS, volleyError.getMessage(), volleyError);
                 if (actionListener != null)
-                    actionListener.onActionResult(false);
+                    actionListener.onActionResult(
+                            new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, VolleyUtils.messageStringFromVolleyError(volleyError))
+                    );
             }
         };
 
@@ -279,7 +280,7 @@ public class CommentActions {
      * Moderate a comment from a WPCOM notification
      */
     public static void moderateCommentRestApi(long siteId,
-                                              long commentId,
+                                              final long commentId,
                                               CommentStatus newStatus,
                                               final CommentActionListener actionListener) {
 
@@ -291,14 +292,14 @@ public class CommentActions {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (actionListener != null) {
-                            actionListener.onActionResult(true);
+                            actionListener.onActionResult(new CommentActionResult(commentId, null));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (actionListener != null) {
-                            actionListener.onActionResult(false);
+                            actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
                         }
                     }
                 }
@@ -308,7 +309,7 @@ public class CommentActions {
     /**
      * Moderate a comment from a WPCOM notification
      */
-    public static void moderateCommentForNote(Note note, CommentStatus newStatus,
+    public static void moderateCommentForNote(final Note note, CommentStatus newStatus,
                                               final CommentActionListener actionListener) {
         WordPress.getRestClientUtils().moderateComment(
                 String.valueOf(note.getSiteId()),
@@ -318,14 +319,14 @@ public class CommentActions {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (actionListener != null) {
-                            actionListener.onActionResult(true);
+                            actionListener.onActionResult(new CommentActionResult(note.getCommentId(), null));
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (actionListener != null) {
-                            actionListener.onActionResult(false);
+                            actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
                         }
                     }
                 }
@@ -349,7 +350,7 @@ public class CommentActions {
 
         if (blog==null || comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
             if (actionListener != null)
-                actionListener.onActionResult(false);
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             return;
         }
 
@@ -372,7 +373,7 @@ public class CommentActions {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            actionListener.onActionResult(success);
+                            actionListener.onActionResult(new CommentActionResult(comment.commentID, null));
                         }
                     });
                 }
@@ -442,7 +443,7 @@ public class CommentActions {
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null) {
             if (actionListener != null)
-                actionListener.onActionResult(false);
+                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             return;
         }
 
@@ -492,7 +493,7 @@ public class CommentActions {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            actionListener.onActionResult(success);
+                            actionListener.onActionResult(new CommentActionResult(comment.commentID, null));
                         }
                     });
                 }

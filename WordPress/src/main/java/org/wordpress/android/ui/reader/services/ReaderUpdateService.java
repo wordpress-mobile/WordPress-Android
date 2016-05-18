@@ -38,7 +38,7 @@ public class ReaderUpdateService extends Service {
      * on EventBus to notify of changes
      */
 
-    public static enum UpdateTask {
+    public enum UpdateTask {
         TAGS,
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
@@ -201,20 +201,17 @@ public class ReaderUpdateService extends Service {
             String internalName = it.next();
             JSONObject jsonTopic = jsonTopics.optJSONObject(internalName);
             if (jsonTopic != null) {
-                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, "title");
-                String tagSlug;
-                if (jsonTopic.has("slug")) {
-                    tagSlug = JSONUtils.getStringDecoded(jsonTopic, "slug");
-                } else {
-                    tagSlug = tagTitle;
-                }
-                String endpoint = JSONUtils.getString(jsonTopic, "URL");
+                String tagTitle = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_TITLE);
+                String tagDisplayName = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_DISPLAY_NAME);
+                String tagSlug = JSONUtils.getStringDecoded(jsonTopic, ReaderConstants.JSON_TAG_SLUG);
+                String endpoint = JSONUtils.getString(jsonTopic, ReaderConstants.JSON_TAG_URL);
+
                 // if the endpoint contains `read/list` then this is a custom list - these are
                 // included in the response as default tags
                 if (tagType == ReaderTagType.DEFAULT && endpoint.contains("/read/list/")) {
-                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, ReaderTagType.CUSTOM_LIST));
+                    topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, ReaderTagType.CUSTOM_LIST));
                 } else {
-                    topics.add(new ReaderTag(tagSlug, tagTitle, endpoint, tagType));
+                    topics.add(new ReaderTag(tagSlug, tagDisplayName, tagTitle, endpoint, tagType));
                 }
             }
         }
@@ -244,7 +241,7 @@ public class ReaderUpdateService extends Service {
     /***
      * request the list of blogs the current user is following
      */
-    void updateFollowedBlogs() {
+    private void updateFollowedBlogs() {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -284,7 +281,7 @@ public class ReaderUpdateService extends Service {
     /***
      * request the latest recommended blogs, replaces all local ones
      */
-    void updateRecommendedBlogs() {
+    private void updateRecommendedBlogs() {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
