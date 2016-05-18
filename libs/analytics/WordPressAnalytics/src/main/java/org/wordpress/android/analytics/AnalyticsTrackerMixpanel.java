@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -47,11 +46,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 .setTicker(message).setWhen(System.currentTimeMillis()).setContentTitle(title).setContentText(message)
                 .setContentIntent(intent);
         Notification notification;
-        if (Build.VERSION.SDK_INT < 16) {
-            notification = builder.getNotification();
-        } else {
-            notification = builder.build();
-        }
+        notification = builder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         nm.notify(0, notification);
     }
