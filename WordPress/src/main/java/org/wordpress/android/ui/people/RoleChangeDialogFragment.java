@@ -27,9 +27,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         String role = mRoleListAdapter.getSelectedRole();
-        if (role != null) {
-            outState.putString(ROLE_TAG, role);
-        }
+        outState.putString(ROLE_TAG, role);
     }
 
     public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, String role) {
