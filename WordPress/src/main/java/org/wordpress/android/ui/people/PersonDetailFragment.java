@@ -2,16 +2,19 @@ package org.wordpress.android.ui.people;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -80,13 +83,6 @@ public class PersonDetailFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-
-        // set the background color here since we are including a layout
-        RelativeLayout detailsLayout = (RelativeLayout) rootView.findViewById(R.id.person_details);
-        detailsLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.color_primary));
-
-        mDisplayNameTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mUsernameTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
 
         Account account = AccountHelper.getDefaultAccount();
         boolean isCurrentUser = account.getUserId() == mPersonID;
