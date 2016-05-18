@@ -49,7 +49,7 @@
             android:maxLines="1"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="@string/role_admin"/>
+            tools:text="@string/role"/>
 
     </LinearLayout>
 
