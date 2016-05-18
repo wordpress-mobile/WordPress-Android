@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/content_margin"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            >
+
+            <LinearLayout
+                android:id="@+id/menu_title_inactive_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/menu_title_tv"
+                    style="@style/MenuNameInactiveText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableRight="@drawable/icon_menus_edit"
+                    android:drawableTint="@color/grey_darken_20"
+                    tools:text="Title" />
+
+                <View style="@style/MenusDividerView" />
+
+            </LinearLayout>
+
+            <org.wordpress.android.widgets.WPEditText
+                android:id="@+id/menu_title_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/MenuNameActiveText"
+                android:visibility="gone"
+                tools:text="Title"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/menu_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/content_margin"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/content_margin"
+                android:drawableRight="@drawable/ic_action_trash"
+                android:drawableTint="@color/grey_darken_20"
+                android:padding="@dimen/content_margin"
+                android:background="@drawable/calypso_grey_button"/>
+
+            <Button
+                android:id="@+id/menu_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/media_blue_button_selector"
+                android:layout_marginTop="@dimen/content_margin"
+                android:layout_marginLeft="@dimen/content_margin"
+                android:layout_marginBottom="@dimen/content_margin"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:enabled="false"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View style="@style/MenusDividerView" />
+
+</LinearLayout>
+
