@@ -473,7 +473,6 @@
 	<string name="reader_toast_err_remove_tag">Није могуће уклонити ову ознаку</string>
 	<string name="required_field">Неопходно поље</string>
 	<string name="email_hint">Адреса е-поште</string>
-	<string name="username_email">Корисничко име или е-пошта</string>
 	<string name="site_address">Адреса блога (URL)</string>
 	<string name="email_cant_be_used_to_signup">Не можете користити ту адресу е-поште да бисте отворили налог. Имамо проблема са тим добављачем јер блокирају неку нашу е-пошту. Употребите адресу е-поште другог добављача.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>
