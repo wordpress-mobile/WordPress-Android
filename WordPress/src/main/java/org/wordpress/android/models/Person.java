@@ -50,7 +50,7 @@ public class Person {
             String username = json.optString("login");
             String firstName = json.optString("first_name");
             String lastName = json.optString("last_name");
-            String displayName = json.optString("nice_name");
+            String displayName = json.optString("name");
             String avatarUrl = json.optString("avatar_URL");
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);

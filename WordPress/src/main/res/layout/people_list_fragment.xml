@@ -2,15 +2,14 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <ListView
         android:id="@android:id/list"
-        style="@style/WordPress.BorderedBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_extra_large"
-        android:divider="@color/grey_lighten_20"
-        android:dividerHeight="@dimen/people_list_divider_height"/>
+        android:layout_marginTop="@dimen/margin_medium"
+        android:divider="@drawable/people_list_divider" />
 
 </FrameLayout>

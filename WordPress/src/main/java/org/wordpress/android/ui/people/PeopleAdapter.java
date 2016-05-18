@@ -88,10 +88,10 @@ public class PeopleAdapter extends BaseAdapter {
         private final TextView txtRole;
 
         PeopleViewHolder(View row) {
-            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.people_list_row_avatar);
-            txtDisplayName = (TextView) row.findViewById(R.id.people_list_row_display_name);
-            txtUsername = (TextView) row.findViewById(R.id.people_list_row_username);
-            txtRole = (TextView) row.findViewById(R.id.people_list_row_role);
+            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.person_avatar);
+            txtDisplayName = (TextView) row.findViewById(R.id.person_display_name);
+            txtUsername = (TextView) row.findViewById(R.id.person_username);
+            txtRole = (TextView) row.findViewById(R.id.person_role);
         }
     }
 }

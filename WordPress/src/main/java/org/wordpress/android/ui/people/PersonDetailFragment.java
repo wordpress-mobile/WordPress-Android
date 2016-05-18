@@ -2,15 +2,28 @@ package org.wordpress.android.ui.people;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
@@ -27,8 +40,8 @@ public class PersonDetailFragment extends Fragment {
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
+    private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
-    private TextView mRemoveTextView;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -39,9 +52,15 @@ public class PersonDetailFragment extends Fragment {
         return personDetailFragment;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.person_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     /**
-     *  Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
-     *  changes, this method is used instead of FragmentTransaction for the animation.
+     * Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
+     * changes, this method is used instead of FragmentTransaction for the animation.
      */
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
@@ -62,8 +81,15 @@ public class PersonDetailFragment extends Fragment {
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
+        mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-        mRemoveTextView = (TextView) rootView.findViewById(R.id.person_remove);
+
+        Account account = AccountHelper.getDefaultAccount();
+        boolean isCurrentUser = account.getUserId() == mPersonID;
+        Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        if (!isCurrentUser && blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
+            setHasOptionsMenu(true);
+        }
 
         return rootView;
     }
@@ -78,7 +104,7 @@ public class PersonDetailFragment extends Fragment {
     public void refreshPersonDetails() {
         if (!isAdded()) return;
 
-        Person person = PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+        Person person = loadPerson();
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
@@ -87,14 +113,8 @@ public class PersonDetailFragment extends Fragment {
             mDisplayNameTextView.setText(person.getDisplayName());
             mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
-            mRemoveTextView.setText(String.format(getString(R.string.remove_user), person.getFirstName().toUpperCase()));
 
-            mRemoveTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: remove user
-                }
-            });
+            setupRoleContainerForCapability();
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -105,5 +125,48 @@ public class PersonDetailFragment extends Fragment {
         mPersonID = personID;
         mLocalTableBlogID = localTableBlogID;
         refreshPersonDetails();
+    }
+
+    // Checks current user's capabilities to decide whether she can change the role or not
+    private void setupRoleContainerForCapability() {
+        Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        Account account = AccountHelper.getDefaultAccount();
+        boolean isCurrentUser = account.getUserId() == mPersonID;
+        boolean canChangeRole = (blog != null) && !isCurrentUser && blog.hasCapability(Capability.PROMOTE_USERS);
+        if (canChangeRole) {
+            mRoleContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showRoleChangeDialog();
+                }
+            });
+        } else {
+            // Remove the selectableItemBackground if the user can't be edited
+            clearRoleContainerBackground();
+            // Change transparency to give a visual cue to the user that it's disabled
+            mRoleContainer.setAlpha(0.5f);
+        }
+    }
+
+    private void showRoleChangeDialog() {
+        Person person = loadPerson();
+        if (person == null) {
+            return;
+        }
+        RoleChangeDialogFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId(), person.getRole())
+                .show(getFragmentManager(), null);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void clearRoleContainerBackground() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            mRoleContainer.setBackgroundDrawable(null);
+        } else {
+            mRoleContainer.setBackground(null);
+        }
+    }
+
+    public Person loadPerson() {
+        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
     }
 }

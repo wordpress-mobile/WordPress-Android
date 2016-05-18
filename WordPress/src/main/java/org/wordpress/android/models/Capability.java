@@ -5,9 +5,9 @@ package org.wordpress.android.models;
  * A list of capabilities can be found in: https://codex.wordpress.org/Roles_and_Capabilities#Capabilities
  */
 public enum Capability {
-    EDIT_USERS("edit_users"), // Check if user can change another user's role
     LIST_USERS("list_users"), // Check if user can visit People page
-    PROMOTE_USERS("promote_users"); // Check if user can invite another user
+    PROMOTE_USERS("promote_users"), // Check if user can change another user's role
+    REMOVE_USERS("remove_users"); // Check if user can remove another user
 
     private final String label;
 

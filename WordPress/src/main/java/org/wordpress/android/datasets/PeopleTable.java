@@ -65,9 +65,12 @@ public class PeopleTable {
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static void savePeople(List<Person> peopleList) {
+    public static void savePeople(List<Person> peopleList, int localTableBlogId) {
         getWritableDb().beginTransaction();
         try {
+            //We have a fresh list, remove the previous list of people in case it was deleted on remote
+            PeopleTable.deletePeopleForBlog(localTableBlogId);
+
             for (Person person : peopleList) {
                 PeopleTable.save(person);
             }
@@ -77,10 +80,21 @@ public class PeopleTable {
         }
     }
 
+    public static void deletePeopleForBlog(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId)};
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    }
+
+    public static void deletePerson(long personID, int localTableBlogId) {
+        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId)};
+        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=?", args);
+    }
+
     public static List<Person> getPeople(int localTableBlogId) {
         List<Person> people = new ArrayList<>();
         String[] args = { Integer.toString(localTableBlogId) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
+                " WHERE local_blog_id=? ORDER BY display_name, user_name", args);
 
         try {
             while (c.moveToNext()) {
@@ -102,7 +116,8 @@ public class PeopleTable {
      */
     public static Person getPerson(long personId, int localTableBlogId) {
         String[] args = { Long.toString(personId), Integer.toString(localTableBlogId) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " WHERE person_id=? AND local_blog_id=?", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
+                " WHERE person_id=? AND local_blog_id=?", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -123,6 +138,7 @@ public class PeopleTable {
         String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
         String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, blogId, localTableBlogId, username, firstName, lastName, displayName, avatarUrl, role);
+        return new Person(personId, blogId, localTableBlogId, username,
+                firstName, lastName, displayName, avatarUrl, role);
     }
 }
