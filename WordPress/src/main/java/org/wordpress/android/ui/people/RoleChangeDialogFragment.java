@@ -132,9 +132,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
             mainText.setText(role);
 
             if (radioButton != null) {
-                if (mSelectedRole != null) {
-                    radioButton.setChecked(mSelectedRole.equalsIgnoreCase(role));
-                }
+                radioButton.setChecked(role.equalsIgnoreCase(mSelectedRole));
                 radioButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
