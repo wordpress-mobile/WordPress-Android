@@ -15,9 +15,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
@@ -55,6 +57,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPOptimizelyEventListener;
 import org.wordpress.android.widgets.WPViewPager;
 
 import de.greenrobot.event.EventBus;
@@ -177,6 +180,7 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
+                startOptimizely(true);
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -192,8 +196,18 @@ public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
                     checkMagicLinkSignIn();
                 }
             } else {
+                startOptimizely(false);
                 ActivityLauncher.showSignInForResult(this);
             }
+        }
+    }
+
+    private void startOptimizely(boolean isAsync) {
+        Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
+        if (isAsync) {
+            Optimizely.startOptimizelyAsync(BuildConfig.OPTIMIZELY_TOKEN, getApplication(), null);
+        } else {
+            Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
         }
     }
 
