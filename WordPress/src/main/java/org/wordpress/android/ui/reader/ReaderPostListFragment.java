@@ -1416,7 +1416,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
-                // TODO: track analytics
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
