@@ -534,17 +534,28 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     };
 
+    private void refreshAndSelectSite(Map<String, Object> site) {
+        Map<String, Object> primaryBlog = site;
+        refreshBlogContent(primaryBlog);
+        WordPress.setCurrentBlog((Integer) primaryBlog.get("id"));
+    }
+
     private void setPrimaryBlog(JSONObject jsonObject) {
         try {
-            String primaryBlogId = jsonObject.getString("primary_blog");
-            // Look for a visible blog with this id in the DB
-            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primaryBlogId,
+            String primarySiteId = jsonObject.getString("primary_blog");
+            // Look for a visible site that is not a Jetpack site with this id in the DB
+            // TODO: when we support Jetpack sites by wpcom login, we should change that
+            List<Map<String, Object>> sites = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primarySiteId,
                     null, 1, true);
-            if (blogs != null && !blogs.isEmpty()) {
-                Map<String, Object> primaryBlog = blogs.get(0);
-                // Ask for a refresh and select it
-                refreshBlogContent(primaryBlog);
-                WordPress.setCurrentBlog((Integer) primaryBlog.get("id"));
+            if (sites != null && !sites.isEmpty()) {
+                refreshAndSelectSite(sites.get(0));
+            } else {
+                // Primary blog not found or hidden (can happen if it's a Jetpack site)
+                // Select the first visible site if it exists
+                sites = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, true);
+                if (sites != null && !sites.isEmpty()) {
+                    refreshAndSelectSite(sites.get(0));
+                }
             }
         } catch (JSONException e) {
             AppLog.e(T.NUX, e);
