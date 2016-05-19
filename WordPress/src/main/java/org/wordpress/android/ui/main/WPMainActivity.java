@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -62,7 +62,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends Activity implements Bucket.Listener<Note> {
+public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;

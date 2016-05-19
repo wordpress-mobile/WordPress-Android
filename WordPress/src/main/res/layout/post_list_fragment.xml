@@ -23,7 +23,7 @@
             android:layout_width="112dp"
             android:layout_height="86dp"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:src="@drawable/penandink" />
+            app:srcCompat="@drawable/penandink" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title_empty"
@@ -64,7 +64,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
-            android:src="@drawable/gridicon_create_light"
+            app:srcCompat="@drawable/gridicon_create_light"
             android:contentDescription="@string/new_post"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />

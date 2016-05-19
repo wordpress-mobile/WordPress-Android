@@ -1,7 +1,7 @@
 package org.wordpress.android.editor;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
-public class MockActivity extends Activity {
+public class MockActivity extends AppCompatActivity {
 
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/main_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/nux_background"
-            android:fillViewport="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nux_background"
+    android:fillViewport="true">
 
     <org.wordpress.android.widgets.WPLinearLayoutSizeBound
         app:maxWidth="@dimen/nux_width"
@@ -27,7 +26,7 @@
                 android:id="@+id/nux_fragment_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/nux_icon_wp"
+                app:srcCompat="@drawable/nux_icon_wp"
                 android:layout_marginTop="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
