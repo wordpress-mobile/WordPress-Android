@@ -26,6 +26,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
+    private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,20 @@ public class PeopleManagementActivity extends AppCompatActivity
         } else if (item.getItemId() == R.id.remove_person) {
             confirmRemovePerson();
             return true;
+        } else if (item.getItemId() == R.id.invite) {
+            FragmentManager fragmentManager = getFragmentManager();
+            PeopleInviteFragment peopleInviteFragment = (PeopleInviteFragment) fragmentManager
+                    .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+            if (peopleInviteFragment == null) {
+                peopleInviteFragment = PeopleInviteFragment.newInstance();
+            }
+            if (!peopleInviteFragment.isAdded()) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

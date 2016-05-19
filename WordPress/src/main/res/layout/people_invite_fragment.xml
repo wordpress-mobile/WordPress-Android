@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SlidingRelativeLayout is used for animating the slide in-out between fragments
+    Background color is set so the fragment below it, PeopleListFragment, won't be visible
+-->
+<org.wordpress.android.ui.SlidingRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/usernames_title"
+        style="@style/WordPressSubHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="@string/invite_names_title"/>
+
+    <org.wordpress.android.widgets.FlowLayout
+        android:id="@+id/usernames"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usernames_title"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:animateLayoutChanges="true" >
+
+        <org.wordpress.android.widgets.WPEditText
+            android:id="@+id/invite_usernames"
+            style="@style/WordPress.NUXEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/invite_names_hint"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:minWidth="40dp" />
+    </org.wordpress.android.widgets.FlowLayout>
+</org.wordpress.android.ui.SlidingRelativeLayout>
+
