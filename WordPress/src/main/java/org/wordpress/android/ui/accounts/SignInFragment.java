@@ -535,24 +535,24 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     };
 
     private void refreshAndSelectSite(Map<String, Object> site) {
-        Map<String, Object> primaryBlog = site;
-        refreshBlogContent(primaryBlog);
-        WordPress.setCurrentBlog((Integer) primaryBlog.get("id"));
+        refreshBlogContent(site);
+        WordPress.setCurrentBlog((Integer) site.get("id"));
     }
 
     private void setPrimaryBlog(JSONObject jsonObject) {
         try {
             String primarySiteId = jsonObject.getString("primary_blog");
-            // Look for a visible site that is not a Jetpack site with this id in the DB
+            boolean hideJetpackWithoutCredentials = true;
+            // Look for a visible site that is not a "non active" Jetpack site with this id in the DB
             // TODO: when we support Jetpack sites by wpcom login, we should change that
             List<Map<String, Object>> sites = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primarySiteId,
-                    null, 1, true);
+                    null, 1, hideJetpackWithoutCredentials);
             if (sites != null && !sites.isEmpty()) {
                 refreshAndSelectSite(sites.get(0));
             } else {
-                // Primary blog not found or hidden (can happen if it's a Jetpack site)
+                // Primary blog not found or hidden (can happen if it's a "non active" Jetpack site)
                 // Select the first visible site if it exists
-                sites = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, true);
+                sites = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, hideJetpackWithoutCredentials);
                 if (sites != null && !sites.isEmpty()) {
                     refreshAndSelectSite(sites.get(0));
                 }
