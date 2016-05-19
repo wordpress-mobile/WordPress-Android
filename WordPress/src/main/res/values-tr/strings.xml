@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Bir fotoğraf seçmek ya da yakalamak için izinler gereklidir</string>
+	<string name="error_updating_gravatar">Gravatar\'ınızı güncellerken hata oluştu</string>
+	<string name="error_locating_image">Kırpılmış görseli konumlandırırken hata oluştu</string>
+	<string name="error_refreshing_gravatar">Gravatar\'ınız yenilenirken hata oluştu</string>
+	<string name="gravatar_tip">Yeni! Değiştirmek için Gravatar\'ınıza dokunun!</string>
+	<string name="error_cropping_image">Görsel kırpılırken hata oluştu</string>
+	<string name="launch_your_email_app">E-posta uygulamanızı başlatın</string>
+	<string name="checking_email">E-posta kontrol ediliyor</string>
+	<string name="not_on_wordpress_com">WordPress.com\'da değil mi?</string>
+	<string name="magic_link_unavailable_error_message">Şu an uygun değil. Lütfen parolanızı girin</string>
+	<string name="check_your_email">E-postanızı kontrol edin</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e-postanıza gönderilen bağlantıyı edinin</string>
+	<string name="logging_in">Giriş yapılıyor</string>
+	<string name="enter_your_password_instead">Bunun yerine parola gir</string>
+	<string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
+	<string name="jetpack_not_connected_message">Jetpack eklentisi yüklenmiş fakat WordPress.com\'a bağlanmamış. Jetpack\'i bağlamak ister misiniz?</string>
+	<string name="username_email">E-posta ya da kullanıcı adı</string>
+	<string name="jetpack_not_connected">Jetpack eklentisi bağlanmamış</string>
+	<string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
+	<string name="stats_insights_latest_post_no_title">(başlıksız)</string>
+	<string name="capture_or_pick_photo">Fotoğraf seç ya da yakala</string>
 	<string name="plans_post_purchase_text_themes">Artık premium temalara sınırsız erişiminiz var. Başlamak için istediğiniz temayla sitenizde önizleme yapın.</string>
 	<string name="plans_post_purchase_button_themes">Temalara göz at</string>
 	<string name="plans_post_purchase_title_themes">Mükemmel Premium temayı bulun</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Eğer bir site istiyor fakat içindeki yazı ve sayfaları istemiyorsanız, destek ekibimiz sizin için yazıları, sayfaları, ortam dosyalarını ve yorumları silebilir\n\nBu sitenizi ve alan adınızı etkin tutar ve size içeriğinizi oluşturabilmeniz için yeni bir başlangıç imkanı verir. Mevcut içeriğinizin temizlenmesi için bize ulaşmanız yeterli.</string>
 	<string name="site_settings_start_over_hint">Sitenize baştan başlayın</string>
 	<string name="let_us_help">Yardım edelim</string>
-	<string name="me_btn_account_settings">Hesap ayarları</string>
 	<string name="me_btn_app_settings">Uygulama ayarları</string>
 	<string name="start_over">Baştan başla</string>
 	<string name="editor_remove_failed_uploads">Başarısız yüklemeleri kaldır</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Yeni adresinizin onaylanması için %1$s adresine gönderilen e-postadaki doğrulama bağlantısına tıklayın.</string>
 	<string name="primary_site">Birincil site</string>
 	<string name="web_address">Web Adresi</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
 	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">WordPress.com Bağlantısını Kes</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com\'a bağlan</string>
 	<string name="me_btn_login_logout">Giriş/Çıkış</string>
+	<string name="account_settings">Hesap ayarları</string>
 	<string name="me_btn_support">Yardım &amp; Destek</string>
 	<string name="site_picker_cant_hide_current_site">"%s" şu anki site olduğundan gizlenmedi</string>
 	<string name="site_picker_create_dotcom">WordPress.com site oluştur</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Bu etiket kaldırılamıyor</string>
 	<string name="required_field">Gerekli alan</string>
 	<string name="email_hint">Email adresi</string>
-	<string name="username_email">Kullanıcı adı veya email</string>
 	<string name="site_address">Kendi sunucunuzda barınan blog adresiniz</string>
 	<string name="email_cant_be_used_to_signup">Bu e-posta adresini kayıt olmak için kullanamazsınız. Bazı e-postalarımızın engellenmesiyle ilgili problem yaşıyoruz. Farklı bir e-posta sağlayıcısı kullanın.</string>
 	<string name="email_reserved">Bu email adresi zaten kullanılmış. Gelen kutunuzu aktivasyon emaili için kontrol edin. Eğer aktivasyon yapmazsanız birkaç gün içinde  tekrar deneyebilirsiniz.</string>

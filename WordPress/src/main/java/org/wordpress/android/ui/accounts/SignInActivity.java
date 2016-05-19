@@ -2,8 +2,8 @@ package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -17,7 +17,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-public class SignInActivity extends FragmentActivity {
+public class SignInActivity extends AppCompatActivity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;

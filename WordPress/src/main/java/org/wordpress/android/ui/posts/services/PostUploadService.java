@@ -147,7 +147,7 @@ public class PostUploadService extends Service {
                 if (mPostsList.size() > 0) {
                     mCurrentUploadingPost = mPostsList.remove(0);
                     mCurrentTask = new UploadPostTask();
-                    mCurrentTask.execute(mCurrentUploadingPost);
+                    mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
                 } else {
                     stopSelf();
                 }

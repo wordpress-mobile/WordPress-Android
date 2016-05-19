@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="are_you_sure">Ziur zaude?</string>
-	<string name="me_btn_account_settings">Kontuaren ezarpenak</string>
 	<string name="me_btn_app_settings">App-aren ezarpenak</string>
 	<string name="button_done">Eginda</string>
 	<string name="post_format_status">Egoera</string>
@@ -368,7 +367,6 @@
 	<string name="reader_toast_err_remove_tag">Ezin izna da etiketa hau kendu</string>
 	<string name="required_field">Beharrezko eremua</string>
 	<string name="email_hint">E-posta helbidea</string>
-	<string name="username_email">Erabiltzaile-izena edo e-posta</string>
 	<string name="site_address">Zuk ostatatutako helbidea (URL)</string>
 	<string name="email_cant_be_used_to_signup">Ezin duzu e-posta helbide hori erabili izena emateko. Hornitzaile honekin arazoak edukitzen ari gara gure e-posta batzuk blokeatzen dituelako. Erabili beste hornitzaile bat.</string>
 	<string name="email_reserved">E-posta helbide hori dagoeneko erabilia izan da. Begiratu zure sarrera ontzia gaitze e-posta bilatzeko. Ez baduzu gaitzen egun batzuk barru berriz saia zaitezke.</string>
