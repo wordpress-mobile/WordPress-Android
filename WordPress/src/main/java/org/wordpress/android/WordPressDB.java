@@ -542,12 +542,12 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
-                                                int limit, boolean shouldHideJetpack) {
+                                                int limit, boolean hideJetpackWithoutCredentials) {
         if (db == null) {
             return new Vector<>();
         }
 
-        if (shouldHideJetpack) {
+        if (hideJetpackWithoutCredentials) {
             // Hide Jetpack blogs that were added in FetchBlogListWPCom
             // They will have a false dotcomFlag and an empty (but encrypted) password
             String hideJetpackArgs = String.format("NOT(dotcomFlag=0 AND password='%s')", encryptPassword(""));
@@ -2052,7 +2052,7 @@ public class WordPressDB {
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
     }
-    
+
     private void updateCurrentBlog(Blog blog) {
         Blog currentBlog = WordPress.currentBlog;
         if (currentBlog != null && blog.getLocalTableBlogId() == currentBlog.getLocalTableBlogId()) {

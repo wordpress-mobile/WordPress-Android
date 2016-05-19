@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">דרושות הרשאות לבחירה או לכידה של תמונה</string>
+	<string name="error_updating_gravatar">שגיאה בעדכון ה-gravatar שלך</string>
+	<string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
+	<string name="error_refreshing_gravatar">שגיאה בטעינה מחדש של ה-gravatar שלך</string>
+	<string name="gravatar_tip">חדש! יש להקיש על ה-gravatar כדי לשנות אותו!</string>
+	<string name="error_cropping_image">שגיאה בחיתוך בתמונה</string>
+	<string name="launch_your_email_app">הפעלת אפליקציית האימייל</string>
+	<string name="checking_email">בודק אימייל</string>
+	<string name="not_on_wordpress_com">אינך ב-WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">לא זמין כרגע. יש להזין סיסמה</string>
+	<string name="check_your_email">יש לבדוק אימייל</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">קבלת קישור להתחברות מיידית באימייל</string>
+	<string name="logging_in">נכנס</string>
+	<string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
+	<string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
+	<string name="jetpack_not_connected_message">תוסף Jetpack מותקן אבל לא מחובר ל-WordPress.com. האם ברצונך לחבר את Jetpack?</string>
+	<string name="username_email">אימייל או שם משתמש</string>
+	<string name="jetpack_not_connected">תוסף Jetpack לא מחובר</string>
+	<string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
+	<string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
+	<string name="capture_or_pick_photo">בחירה או לכידה של תמונה</string>
 	<string name="plans_post_purchase_text_themes">כעת יש לך גישה בלתי מוגלת לערכות פרימיום. בתור התחלה, אפשר להציג כל אחת מהן בתצוגה מקדימה.</string>
 	<string name="plans_post_purchase_button_themes">חיפוש ערכות עיצוב</string>
 	<string name="plans_post_purchase_title_themes">מציאת ערכת פרימיום מושלמת</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">אם ברצונך להשתמש באתר בלי הפוסטים והעמודים שהוא מכיל, צוות התמיכה שלנו יכול למחוק את הפוסטים, העמודים, המדיה והתגובות עבורך.\n\nכך האתר וכתובת ה-URL שלך יישארו פעילים אבל תהיה לך אפשרות להתחיל ליצור תוכן מחדש. נותר לך רק לפנות אלינו כדי למחוק את התוכן הקיים.</string>
 	<string name="site_settings_start_over_hint">הקמת האתר מחדש</string>
 	<string name="let_us_help">נשמח לעזור</string>
-	<string name="me_btn_account_settings">הגדרות חשבון</string>
 	<string name="me_btn_app_settings">הגדרות יישום</string>
 	<string name="start_over">להתחיל מחדש</string>
 	<string name="editor_remove_failed_uploads">הסרת העלאות שנכשלו</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
 	<string name="primary_site">אתר ראשי</string>
 	<string name="web_address">כתובת URL</string>
-	<string name="account_settings">‎@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
 	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
 	<string name="me_connect_to_wordpress_com">התחברת לוורדפרס.קום</string>
 	<string name="me_btn_login_logout">כניסה/יציאה</string>
+	<string name="account_settings">הגדרות חשבון</string>
 	<string name="me_btn_support">עזרה ותמיכה</string>
 	<string name="site_picker_cant_hide_current_site">"%s" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
 	<string name="site_picker_create_dotcom">יצירת אתר וורדפרס.קום</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">לא ניתן להסיר תגית זו</string>
 	<string name="required_field">שדה חובה</string>
 	<string name="email_hint">כתובת אימייל</string>
-	<string name="username_email">שם משתמש או כתובת אימייל</string>
 	<string name="site_address">כתובת האחסון העצמי שלך (URL)</string>
 	<string name="email_cant_be_used_to_signup">אינך רשאי להשתמש בכתובת אימייל זו בהרשמה. יש לנו בעיה מכיוון שהם חוסמים חלק מהודעות האימייל שלנו. השתמש בספק אימייל אחר.</string>
 	<string name="email_reserved">כתובת אימייל זו כבר הייתה בשימוש. חפש בתיבת הדואר הנכנס שלך אימייל להפעלה. אם לא תפעיל עכשיו תוכל לנסות שנית בעוד כמה ימים.</string>

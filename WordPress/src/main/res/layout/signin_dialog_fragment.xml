@@ -20,7 +20,7 @@
             android:id="@+id/nux_dialog_image"
             android:layout_width="50dp"
             android:layout_height="52dp"
-            android:src="@drawable/nux_icon_wp"
+            app:srcCompat="@drawable/nux_icon_wp"
             android:tint="@color/white"
             android:layout_marginBottom="16dp"/>
 

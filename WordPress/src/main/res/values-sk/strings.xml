@@ -6,7 +6,6 @@
 	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
 	<string name="are_you_sure">Ste si istý?</string>
 	<string name="keep_your_content">Ponechať Váš obsah</string>
-	<string name="me_btn_account_settings">Nastavenia účtu</string>
 	<string name="me_btn_app_settings">Nastavenia aplikácie</string>
 	<string name="comments_empty_list_filtered_trashed">Žiadne komentáre zahodené</string>
 	<string name="comments_empty_list_filtered_approved">Žiadne komentáre schválené</string>
@@ -592,7 +591,6 @@
 	<string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
 	<string name="required_field">Povinné pole</string>
 	<string name="email_hint">Emailová adresa</string>
-	<string name="username_email">Používateľské meno alebo heslo</string>
 	<string name="site_address">URL adresa vašej stránky</string>
 	<string name="email_cant_be_used_to_signup">Nemôžete použiť túto emailovú adresu na prihlásenie. Vyskytol sa problém s blokovanám niektorých našich emailov. Použite iného poskytovateľa emailu.</string>
 	<string name="email_reserved">Emailová adresa už bola použitá. Skontrolujte si, či ste dostali email s aktivačným odkazom. Ak sa vám to nepodarí teraz, môžete skúsiť o pár dní.</string>

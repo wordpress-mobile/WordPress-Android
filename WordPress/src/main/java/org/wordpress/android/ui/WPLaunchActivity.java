@@ -1,8 +1,8 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.optimizely.Optimizely;
 
@@ -14,7 +14,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPOptimizelyEventListener;
 
-public class WPLaunchActivity extends Activity {
+public class WPLaunchActivity extends AppCompatActivity {
 
     /*
      * this the main (default) activity, which does nothing more than launch the
