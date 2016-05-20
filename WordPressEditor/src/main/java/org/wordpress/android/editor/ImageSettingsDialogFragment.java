@@ -255,6 +255,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
         }
 
+        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
         restorePreviousActionBar();
         getFragmentManager().popBackStack();
     }
@@ -281,6 +282,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
         builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
                 restorePreviousActionBar();
                 getFragmentManager().popBackStack();
             }
