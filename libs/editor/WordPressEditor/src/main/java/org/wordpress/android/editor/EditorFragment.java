@@ -409,6 +409,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void checkForFailedUploadAndSwitchToHtmlMode(final ToggleButton toggleButton) {
+        if (!isAdded()) {
+            return;
+        }
+
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -432,15 +436,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     private void toggleHtmlMode(final ToggleButton toggleButton) {
+        if (!isAdded()) {
+            return;
+        }
+
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMedia.isEmpty()) {
             toggleButton.setChecked(false);
 
-            if (isAdded()) {
-                ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
-            }
+            ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
             return;
         }
 
@@ -451,6 +457,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    if (!isAdded()) {
+                        return;
+                    }
+
                     // Update mTitle and mContentHtml with the latest state from the ZSSEditor
                     getTitle();
                     getContent();
@@ -525,6 +535,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    if (!isAdded()) {
+                        return;
+                    }
+
                     mGetSelectedTextCountDownLatch = new CountDownLatch(1);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -553,6 +567,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        if (!isAdded()) {
+            return;
+        }
+
         int id = v.getId();
         if (id == R.id.format_bar_button_html) {
             checkForFailedUploadAndSwitchToHtmlMode((ToggleButton) v);
@@ -564,9 +582,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
             } else {
                 mEditorFragmentListener.onAddMediaClicked();
-                if (isAdded()) {
-                    getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
-                }
+                getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
             }
         } else if (id == R.id.format_bar_button_link) {
             if (!((ToggleButton) v).isChecked()) {
@@ -668,6 +684,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             }
         } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             if (data == null) {
+                mWebView.execJavaScriptFromString("ZSSEditor.clearCurrentEditingImage();");
                 return;
             }
 
@@ -676,7 +693,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 return;
             }
 
-            final String imageMeta = extras.getString("imageMeta");
+            final String imageMeta = Utils.escapeQuotes(StringUtils.notNullStr(extras.getString("imageMeta")));
             final int imageRemoteId = extras.getInt("imageRemoteId");
             final boolean isFeaturedImage = extras.getBoolean("isFeatured");
 
@@ -1106,7 +1123,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
-        if (mediaType == null) {
+        if (mediaType == null || !isAdded()) {
             return;
         }
 
@@ -1190,7 +1207,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Request and add an authorization header for HTTPS images
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
                 // If an auth header is returned, force https:// for the actual HTTP request.
-                HashMap<String, String> headerMap = new HashMap<>(mCustomHttpHeaders);
+                HashMap<String, String> headerMap = new HashMap<>();
+                if (mCustomHttpHeaders != null) {
+                    headerMap.putAll(mCustomHttpHeaders);
+                }
+
                 try {
                     final String imageSrc = meta.getString("src");
                     String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));

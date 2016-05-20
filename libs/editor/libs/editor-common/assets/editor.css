@@ -133,32 +133,38 @@ span.img_container.failed::before {
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    left:0%;
-    text-align: center;
-    color: white;
-    width:100%;
-    height:85px;
-    opacity:1;
-    z-index:10;
+    content:"";
+    left: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/retry-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
     -webkit-user-select: none;
     pointer-events: none;
-    content:"";
-    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 124 124"><circle fill="none" stroke="#FFFFFF" stroke-width="4"  cx="62" cy="62" r="60"/><path d="M79.0637899,40.93125 C74.1838649,36.0375 67.4465291,33 59.9831144,33 C45.0562852,33 33,45.0825 33,60 C33,74.9175 45.0562852,87 59.9831144,87 C72.5628518,87 83.0994371,78.39375 86.0881801,66.75 L79.0637899,66.75 C76.2776735,74.61375 68.8142589,80.25 59.9831144,80.25 C48.7879925,80.25 39.7204503,71.188125 39.7204503,60 C39.7204503,48.811875 48.7879925,39.75 59.9831144,39.75 C65.5722326,39.75 70.587242,42.07875 74.2514071,45.740625 L63.3602251,56.625 L87,56.625 L87,33 L79.0637899,40.93125 L79.0637899,40.93125 Z" fill="#FFFFFF"/></svg>') no-repeat center top;
 }
 
 span.img_container.failed.largeFail::before {
-    height:170px;
-    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="124" height="124" viewBox="0 0 124 124"><circle fill="none" stroke="#FFFFFF" stroke-width="4"  cx="62" cy="62" r="60"></circle><path d="M79.0637899,40.93125 C74.1838649,36.0375 67.4465291,33 59.9831144,33 C45.0562852,33 33,45.0825 33,60 C33,74.9175 45.0562852,87 59.9831144,87 C72.5628518,87 83.0994371,78.39375 86.0881801,66.75 L79.0637899,66.75 C76.2776735,74.61375 68.8142589,80.25 59.9831144,80.25 C48.7879925,80.25 39.7204503,71.188125 39.7204503,60 C39.7204503,48.811875 48.7879925,39.75 59.9831144,39.75 C65.5722326,39.75 70.587242,42.07875 74.2514071,45.740625 L63.3602251,56.625 L87,56.625 L87,33 L79.0637899,40.93125 L79.0637899,40.93125 Z" fill="#FFFFFF" ></path></svg>') no-repeat center top;
+    height: 120px;
+    width: 120px;
+    border: 4px solid #FFFFFF;
+    background: url('svg/retry-image-large.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 span.img_container.failed::after {
     position: absolute;
-    padding:27px 0 0 0;
+    padding: 37px 0 0 0;
     top:50%;
     left:0%;
     font-family: sans-serif;
     font-size:20px;
-    font-weight:600;
+    font-weight: 500;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0,0,0,.06);
     background:clear;
@@ -171,7 +177,7 @@ span.img_container.failed::after {
 }
 
 span.img_container.failed.largeFail::after {
-    padding:62px 0 0 0;
+    padding: 72px 0 0 0;
 }
 
 span.img_container.failed.smallFail::after {
@@ -207,32 +213,38 @@ span.video_container.failed::before {
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    left:0%;
-    text-align: center;
-    color: white;
-    width:100%;
-    height:85px;
-    opacity:1;
-    z-index:10;
+    content:"";
+    left: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/retry-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
     -webkit-user-select: none;
     pointer-events: none;
-    content:"";
-    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="54" height="54" viewBox="0 0 124 124"><circle fill="none" stroke="#FFFFFF" stroke-width="4"  cx="62" cy="62" r="60"/><path d="M79.0637899,40.93125 C74.1838649,36.0375 67.4465291,33 59.9831144,33 C45.0562852,33 33,45.0825 33,60 C33,74.9175 45.0562852,87 59.9831144,87 C72.5628518,87 83.0994371,78.39375 86.0881801,66.75 L79.0637899,66.75 C76.2776735,74.61375 68.8142589,80.25 59.9831144,80.25 C48.7879925,80.25 39.7204503,71.188125 39.7204503,60 C39.7204503,48.811875 48.7879925,39.75 59.9831144,39.75 C65.5722326,39.75 70.587242,42.07875 74.2514071,45.740625 L63.3602251,56.625 L87,56.625 L87,33 L79.0637899,40.93125 L79.0637899,40.93125 Z" fill="#FFFFFF"/></svg>') no-repeat center top;
 }
 
 span.video_container.failed.largeFail::before {
-    height:170px;
-    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="124" height="124" viewBox="0 0 124 124"><circle fill="none" stroke="#FFFFFF" stroke-width="4"  cx="62" cy="62" r="60"></circle><path d="M79.0637899,40.93125 C74.1838649,36.0375 67.4465291,33 59.9831144,33 C45.0562852,33 33,45.0825 33,60 C33,74.9175 45.0562852,87 59.9831144,87 C72.5628518,87 83.0994371,78.39375 86.0881801,66.75 L79.0637899,66.75 C76.2776735,74.61375 68.8142589,80.25 59.9831144,80.25 C48.7879925,80.25 39.7204503,71.188125 39.7204503,60 C39.7204503,48.811875 48.7879925,39.75 59.9831144,39.75 C65.5722326,39.75 70.587242,42.07875 74.2514071,45.740625 L63.3602251,56.625 L87,56.625 L87,33 L79.0637899,40.93125 L79.0637899,40.93125 Z" fill="#FFFFFF" ></path></svg>') no-repeat center top;
+    height: 120px;
+    width: 120px;
+    border: 4px solid #FFFFFF;
+    background: url('svg/retry-image-large.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 span.video_container.failed::after {
     position: absolute;
-    padding:27px 0 0 0;
+    padding: 37px 0 0 0;
     top:50%;
     left:0%;
     font-family: sans-serif;
     font-size:20px;
-    font-weight:600;
+    font-weight: 500;
     text-align: center;
     text-shadow: 0 1px 2px rgba(0,0,0,.06);
     background:clear;
@@ -245,7 +257,7 @@ span.video_container.failed::after {
 }
 
 span.video_container.failed.largeFail::after {
-    padding:62px 0 0 0;
+    padding: 72px 0 0 0;
 }
 
 span.video_container.failed.smallFail::after {
@@ -277,23 +289,57 @@ span.video_container.failed.smallFail::after {
 /* default. use when images are > 100px w/h */
 .edit-container .edit-overlay {
     position: absolute;
-    width:100%;
+    width: 100%;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    width:100%;
     z-index: 100;
-    height:95px;
-    background:url('data:image/svg+xml;utf8,<svg width="60px" height="60px" viewBox="0 0 120 120" version="1.1" opacity="0.9" xmlns="http://www.w3.org/2000/svg"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(2.000000, 2.000000)"><circle stroke="#FFFFFF" stroke-width="4" cx="58" cy="58" r="58"></circle><path d="M31.28125,85.4375 L49.28125,85.4375 L85.28125,49.4375 L67.28125,31.4375 L31.28125,67.4375 L31.28125,85.4375 Z M71.1383929,43.0089286 L47.2321429,66.9151786 L43.375,63.0580357 L67.28125,39.1517857 L71.1383929,43.0089286 Z M53.6607143,73.34375 L49.8035714,69.4866071 L73.7098214,45.5803571 L77.5669643,49.4375 L53.6607143,73.34375 Z M36.4241071,72.0089286 L41.5669643,66.8660714 L51.8526786,77.1517857 L46.7098214,82.2946429 L36.4241071,72.0089286 Z" fill="#FFFFFF"></path></g></g></svg>') no-repeat center top;
-    min-height: 95px;
+    height:90px;
+    min-height: 90px;
     min-width: 60px;
 }
 
 /* use when the image is < 100px w/h */
 .edit-container.small .edit-overlay {
-    height:27px;
-    min-height: 27px;
-    min-width: 27px;
-    background:url('data:image/svg+xml;utf8,<svg width="27px" height="27px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" opacity="0.9"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g fill="#FFFFFF"><path d="M0,54 L18,54 L54,18 L36,0 L0,36 L0,54 Z M39.8571429,11.5714286 L15.9508929,35.4776786 L12.09375,31.6205357 L36,7.71428571 L39.8571429,11.5714286 Z M22.3794643,41.90625 L18.5223214,38.0491071 L42.4285714,14.1428571 L46.2857143,18 L22.3794643,41.90625 Z M5.14285714,40.5714286 L10.2857143,35.4285714 L20.5714286,45.7142857 L15.4285714,50.8571429 L5.14285714,40.5714286 Z"></path></g></g></svg>') no-repeat center top;
+    height: 32px;
+    min-height: 32px;
+    min-width: 32px;
+}
+
+.edit-container .edit-icon {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/edit-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.edit-container.small .edit-icon {
+    height: 32px;
+    min-height: 32px;
+    min-width: 32px;
+    border: none;
+    border-radius: 0%;
+    background-color: initial;
+}
+
+.edit-container .delete-overlay {
+    position: absolute;
+    z-index: 100;
+    right: 0%;
+    height: 24px;
+    width: 24px;
+    min-height: 24px;
+    min-width: 24px;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background:url('svg/delete-image.svg') no-repeat center;
+    background-color: rgba(0,0,0,0.1);
+    margin-top: 12px;
+    margin-right: 12px;
 }
 
 .edit-container.small .edit-content {
@@ -303,7 +349,7 @@ span.video_container.failed.smallFail::after {
 .edit-container .edit-content {
     font-family: sans-serif;
     font-size:20px;
-    font-weight:600;
+    font-weight:500;
     text-align: center;
     text-shadow: 0px 1px 2px rgba(0,0,0,.06);
     color: white;
