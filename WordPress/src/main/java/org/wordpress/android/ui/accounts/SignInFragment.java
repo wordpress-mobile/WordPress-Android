@@ -334,9 +334,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     /*
-     * autofill the username and password from BuildConfig/gradle.properties (developer feature)
+     * autofill the username and password from BuildConfig/gradle.properties (developer feature,
+     * only enabled for DEBUG releases)
      */
     private void autofillFromBuildConfig() {
+        if (!BuildConfig.DEBUG) return;
+
         String userName = BuildConfig.DOTCOM_LOGIN_USERNAME;
         String password = BuildConfig.DOTCOM_LOGIN_PASSWORD;
         if (!TextUtils.isEmpty(userName)) {
