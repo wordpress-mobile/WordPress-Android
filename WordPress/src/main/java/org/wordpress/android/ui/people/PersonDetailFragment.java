@@ -148,8 +148,11 @@ public class PersonDetailFragment extends Fragment {
         if (person == null) {
             return;
         }
-        RoleChangeDialogFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId(), person.getRole())
-                .show(getFragmentManager(), null);
+
+        RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
+                person.getLocalTableBlogId(), person.getRole());
+        dialog.setOnChangeListener((PeopleManagementActivity) getActivity());
+        dialog.show(getFragmentManager(), null);
     }
 
     @SuppressWarnings("deprecation")
