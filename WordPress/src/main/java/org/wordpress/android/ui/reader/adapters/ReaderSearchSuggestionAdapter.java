@@ -47,7 +47,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         if (TextUtils.isEmpty(filter) && TextUtils.isEmpty(mCurrentFilter)) {
             return true;
         }
-        return filter.equalsIgnoreCase(mCurrentFilter);
+        return filter != null && filter.equalsIgnoreCase(mCurrentFilter);
     }
 
     public String getSuggestion(int position) {
