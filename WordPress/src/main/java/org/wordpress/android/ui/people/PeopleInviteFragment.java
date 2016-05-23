@@ -68,7 +68,8 @@ public class PeopleInviteFragment extends Fragment {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_UP && event
+                        .getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     addUsername(editText, inflater, usernames);
                 }
                 return true;
