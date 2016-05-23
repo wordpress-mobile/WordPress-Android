@@ -710,15 +710,14 @@ public class WordPress extends Application {
     /**
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
-     * source: https://code.google.com/p/android/issues/detail?id=52962#c38
-     * @param context       Used to find the correct file
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     * @param application   Used to find the correct file
      * @param fieldName     The name of the field-to-access
      * @return              The value of the field, or {@code null} if the field is not found.
      */
-    public static Object getBuildConfigValue(Context context, String fieldName) {
+    public static Object getBuildConfigValue(Application application, String fieldName) {
         try {
-            // we must convert org.wordpress.android.beta to org.wordpress.android here
-            String packageName = context.getPackageName().replace(".beta", "");
+            String packageName = application.getClass().getPackage().getName();
             Class<?> clazz = Class.forName(packageName + ".BuildConfig");
             Field field = clazz.getField(fieldName);
             return field.get(null);
