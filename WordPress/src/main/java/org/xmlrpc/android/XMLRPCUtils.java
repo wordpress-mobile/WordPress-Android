@@ -150,7 +150,7 @@ public class XMLRPCUtils {
         return URLUtil.isValidUrl(newUrl) ? newUrl : url;
     }
 
-    public static String sanitizeSiteUrl(String siteUrl) throws XMLRPCUtilsException {
+    public static String sanitizeSiteUrl(String siteUrl, boolean isHttps) throws XMLRPCUtilsException {
         // remove padding whitespace
         String url = siteUrl.trim();
 
@@ -163,12 +163,12 @@ public class XMLRPCUtils {
         url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        url = UrlUtils.addUrlSchemeIfNeeded(url, false);
+        url = UrlUtils.addUrlSchemeIfNeeded(url, isHttps);
 
         // strip url from known usual trailing paths
         url = XMLRPCUtils.stripKnownPaths(url);
 
-        if (!URLUtil.isValidUrl(url)) {
+        if (!(URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url))) {
             throw new XMLRPCUtilsException(Kind.INVALID_URL, R.string.invalid_site_url_message, url, null);
         }
 
@@ -266,7 +266,7 @@ public class XMLRPCUtils {
 
     private static String verifyXmlrpcUrl(final String siteUrl, final String httpUsername, final String httpPassword)
             throws XMLRPCUtilsException {
-        final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl);
+        final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
 
         // Array of Strings that contains the URLs we want to try. No discovery ;)
         final List<String> urlsToTry = new ArrayList<>();
@@ -286,9 +286,15 @@ public class XMLRPCUtils {
 
         AppLog.i(AppLog.T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
-            if (XMLRPCUtils.checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
-                // Endpoint found and works fine.
-                return url;
+            try {
+                if (XMLRPCUtils.checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
+                    // Endpoint found and works fine.
+                    return url;
+                }
+            } catch (RuntimeException re) {
+                // depending how corrupt the user entered URL is, it can generate several kind of runtime exceptions,
+                // ignore them
+                continue;
             }
         }
 
@@ -307,13 +313,25 @@ public class XMLRPCUtils {
         // add the url as provided by the user
         urlsToTry.add(siteUrl);
 
-        // add a sanitized version of the url
-        final String sanitizedURL = sanitizeSiteUrl(siteUrl);
-        if (!urlsToTry.contains(sanitizedURL)) {
-            urlsToTry.add(sanitizedURL);
+        // add a sanitized version of the http url
+        final String sanitizedHttpsURL = sanitizeSiteUrl(siteUrl, true);
+        if (!urlsToTry.contains(sanitizedHttpsURL)) {
+            urlsToTry.add(sanitizedHttpsURL);
         }
 
-        String appendedXmlrpcUrl = appendXMLRPCPath(sanitizedURL);
+        String appendedXmlrpcUrl = appendXMLRPCPath(sanitizedHttpsURL);
+        if (!urlsToTry.contains(appendedXmlrpcUrl)) {
+            appendedXmlrpcUrl += "?rsd";
+            urlsToTry.add(appendedXmlrpcUrl);
+        }
+
+        // add a sanitized version of the https url
+        final String sanitizedHttpURL = sanitizeSiteUrl(siteUrl, false);
+        if (!urlsToTry.contains(sanitizedHttpURL)) {
+            urlsToTry.add(sanitizedHttpURL);
+        }
+
+        appendedXmlrpcUrl = appendXMLRPCPath(sanitizedHttpURL);
         if (!urlsToTry.contains(appendedXmlrpcUrl)) {
             appendedXmlrpcUrl += "?rsd";
             urlsToTry.add(appendedXmlrpcUrl);
