@@ -69,7 +69,7 @@ public class PeopleTable {
         getWritableDb().beginTransaction();
         try {
             //We have a fresh list, remove the previous list of people in case it was deleted on remote
-            PeopleTable.deletePeopleForBlog(localTableBlogId);
+            PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
 
             for (Person person : peopleList) {
                 PeopleTable.save(person);
@@ -80,7 +80,7 @@ public class PeopleTable {
         }
     }
 
-    public static void deletePeopleForBlog(int localTableBlogId) {
+    public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
     }
