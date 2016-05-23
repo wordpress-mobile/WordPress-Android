@@ -1,5 +1,10 @@
 package org.xmlrpc.android;
 
+import android.support.annotation.StringRes;
+import android.text.TextUtils;
+import android.util.Xml;
+import android.webkit.URLUtil;
+
 import com.android.volley.TimeoutError;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -11,13 +16,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
 import org.xmlrpc.android.XMLRPCUtils.XMLRPCUtilsException.Kind;
-
-import android.support.annotation.StringRes;
-import android.text.TextUtils;
-import android.util.Xml;
-import android.webkit.URLUtil;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -152,11 +151,6 @@ public class XMLRPCUtils {
     }
 
     public static String sanitizeSiteUrl(String siteUrl) throws XMLRPCUtilsException {
-        if (TextUtils.isEmpty(siteUrl)) {
-            throw new XMLRPCUtilsException(XMLRPCUtilsException.Kind.SITE_URL_CANNOT_BE_EMPTY, R.string
-                    .invalid_site_url_message, siteUrl, null);
-        }
-
         // remove padding whitespace
         String url = siteUrl.trim();
 
