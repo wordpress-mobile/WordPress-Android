@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
@@ -60,6 +62,40 @@ public class ReaderEvents {
         }
         public ReaderPostService.UpdateAction getAction() {
             return mAction;
+        }
+    }
+
+    public static class SearchPostsStarted {
+        private final String mQuery;
+        private final int mOffset;
+        public SearchPostsStarted(@NonNull String query, int offset) {
+            mQuery = query;
+            mOffset = offset;
+        }
+        public String getQuery() {
+            return mQuery;
+        }
+        public int getOffset() {
+            return mOffset;
+        }
+    }
+    public static class SearchPostsEnded {
+        private final String mQuery;
+        private final boolean mDidSucceed;
+        private final int mOffset;
+        public SearchPostsEnded(@NonNull String query, int offset, boolean didSucceed) {
+            mQuery = query;
+            mOffset = offset;
+            mDidSucceed = didSucceed;
+        }
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
+        public String getQuery() {
+            return mQuery;
+        }
+        public int getOffset() {
+            return mOffset;
         }
     }
 

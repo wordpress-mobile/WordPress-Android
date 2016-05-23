@@ -122,7 +122,7 @@ public class ReaderPostTable {
                 + " featured_image      TEXT,"
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
-                + " timestamp           INTEGER DEFAULT 0,"
+                + " timestamp           REAL DEFAULT 0,"
                 + " published           TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
@@ -180,6 +180,9 @@ public class ReaderPostTable {
             numDeleted += purgePostsForTag(db, tag);
         }
 
+        // delete search results
+        numDeleted += purgeSearchResults(db);
+
         // delete posts in tbl_posts that no longer exist in tbl_post_tags
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
@@ -209,6 +212,14 @@ public class ReaderPostTable {
         int numDeleted = db.delete("tbl_post_tags", where, args);
         AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
         return numDeleted;
+    }
+
+    /*
+     * purge all posts that were retained from previous searches
+     */
+    private static int purgeSearchResults(SQLiteDatabase db) {
+        String[] args = {Integer.toString(ReaderTagType.SEARCH.toInt())};
+        return db.delete("tbl_post_tags", "tag_type=?", args);
     }
 
     public static int getNumPostsInBlog(long blogId) {
@@ -624,7 +635,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(16, post.getFeaturedImage());
                 stmtPosts.bindString(17, post.getFeaturedVideo());
                 stmtPosts.bindString(18, post.getPostAvatar());
-                stmtPosts.bindLong  (19, post.timestamp);
+                stmtPosts.bindDouble(19, post.timestamp);
                 stmtPosts.bindString(20, post.getPublished());
                 stmtPosts.bindLong  (21, post.numReplies);
                 stmtPosts.bindLong  (22, post.numLikes);
@@ -839,7 +850,7 @@ public class ReaderPostTable {
         post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        post.timestamp = c.getDouble(c.getColumnIndex("timestamp"));
         post.setPublished(c.getString(c.getColumnIndex("published")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));

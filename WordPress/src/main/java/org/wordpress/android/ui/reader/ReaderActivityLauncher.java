@@ -14,7 +14,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -133,22 +132,6 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
     }
-
-    public static void showReaderSearchResults(Context context, String query) {
-        if (TextUtils.isEmpty(query)) return;
-
-        // record this search query
-        ReaderSearchTable.addOrUpdateQueryString(query);
-
-        // TODO: track analytics
-        //AnalyticsTracker.track(AnalyticsTracker.Stat.???);
-
-        Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_SEARCH_QUERY, query);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
-        context.startActivity(intent);
-    }
-
 
     /*
      * show comments for the passed Ids

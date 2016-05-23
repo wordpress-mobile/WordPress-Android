@@ -57,14 +57,4 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_search_explainer"
-        style="@style/WordPress.EmptyList.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/reader_label_post_search_explainer"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
 </RelativeLayout>

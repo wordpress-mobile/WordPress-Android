@@ -1117,6 +1117,7 @@
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
+    <string name="reader_label_post_search_running">Searching…</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

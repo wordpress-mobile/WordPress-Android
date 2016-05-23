@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -47,14 +46,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
-    private String mCurrentSearchQuery;
     private int mGapMarkerPosition = -1;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
-    private final int mAvatarSzExtraSmall;
     private final int mMarginLarge;
 
     private final String mWordCountFmtStr;
@@ -501,7 +498,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mAvatarSzExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
@@ -526,10 +522,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isTagPreview() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
-    }
-
-    private boolean isSearchResults() {
-        return getPostListType() == ReaderTypes.ReaderPostListType.SEARCH_RESULTS;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -584,17 +576,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    // used when the list type is ReaderPostListType.SEARCH_RESULTS
-    public void setCurrentSearchQuery(@NonNull String query) {
-        if (!query.equals(mCurrentSearchQuery)) {
-            mCurrentSearchQuery = query;
-            reload();
-        }
-    }
-
     public void clear() {
-        mPosts.clear();
-        notifyDataSetChanged();
+        if (!mPosts.isEmpty()) {
+            mPosts.clear();
+            notifyDataSetChanged();
+        }
     }
 
     public void refresh() {
@@ -804,6 +790,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
+                case SEARCH_RESULTS:
                     allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
@@ -815,11 +802,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
-                    break;
-                case SEARCH_RESULTS:
-                    // TODO: load cached search results
-                    allPosts = new ReaderPostList();
-                    numExisting = 0;
                     break;
                 default:
                     return false;
