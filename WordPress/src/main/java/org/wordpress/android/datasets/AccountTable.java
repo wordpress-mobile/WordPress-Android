@@ -92,7 +92,7 @@ public class AccountTable {
 
     private static Account getAccountByLocalId(long localId) {
         Account account = new Account();
-
+        
         String[] args = {Long.toString(localId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + ACCOUNT_TABLE + " WHERE local_id=?", args);
 
@@ -114,6 +114,7 @@ public class AccountTable {
                 account.setNewEmail(c.getString(c.getColumnIndex("new_email")));
                 account.setPendingEmailChange(c.getInt(c.getColumnIndex("pending_email_change")) > 0);
                 account.setWebAddress(c.getString(c.getColumnIndex("web_address")));
+                account.setDateCreated(DateTimeUtils.iso8601ToJavaDate(c.getString(c.getColumnIndex("date"))));
             }
             return account;
         } finally {
