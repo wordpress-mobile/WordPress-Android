@@ -674,7 +674,7 @@ public class ReaderPostListFragment extends Fragment
         if (mSearchSuggestionAdapter == null) {
             createSearchSuggestionAdapter();
         }
-        mSearchSuggestionAdapter.populate(query);
+        mSearchSuggestionAdapter.setFilter(query);
     }
 
     private void resetSearchSuggestionAdapter() {

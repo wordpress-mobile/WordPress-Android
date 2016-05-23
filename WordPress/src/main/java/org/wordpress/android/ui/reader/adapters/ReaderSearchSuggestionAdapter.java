@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,33 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         super(context, null, false);
     }
 
-    public void populate(String filter) {
+    /*
+     * populate the adapter using a cursor containing past searches that match the filter
+     */
+    public void setFilter(String filter) {
+        // skip if unchanged
+        if (isCurrentFilter(filter) && getCursor() != null) {
+            return;
+        }
         Cursor cursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
         swapCursor(cursor);
         mCurrentFilter = filter;
+    }
+
+    /*
+     * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
+     */
+    private void reload() {
+        String newFilter = mCurrentFilter;
+        mCurrentFilter = null;
+        setFilter(newFilter);
+    }
+
+    private boolean isCurrentFilter(String filter) {
+        if (TextUtils.isEmpty(filter) && TextUtils.isEmpty(mCurrentFilter)) {
+            return true;
+        }
+        return filter.equalsIgnoreCase(mCurrentFilter);
     }
 
     public String getSuggestion(int position) {
@@ -38,6 +62,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private class SuggestionViewHolder {
         private final TextView txtSuggestion;
         private final ImageView imgDelete;
+
         SuggestionViewHolder(View view) {
             txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
             imgDelete = (ImageView) view.findViewById(R.id.image_delete);
@@ -61,7 +86,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 ReaderSearchTable.deleteQueryString(query);
-                populate(mCurrentFilter);
+                reload();
             }
         });
     }
