@@ -92,7 +92,7 @@ public class AccountTable {
 
     private static Account getAccountByLocalId(long localId) {
         Account account = new Account();
-        
+
         String[] args = {Long.toString(localId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + ACCOUNT_TABLE + " WHERE local_id=?", args);
 
