@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -82,8 +83,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return true;
         } else if (item.getItemId() == R.id.invite) {
             FragmentManager fragmentManager = getFragmentManager();
-            PeopleInviteFragment peopleInviteFragment = (PeopleInviteFragment) fragmentManager
-                    .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
             if (peopleInviteFragment == null) {
                 peopleInviteFragment = PeopleInviteFragment.newInstance();
