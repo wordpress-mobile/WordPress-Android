@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 public class Person {
     private long personID;
@@ -69,7 +70,7 @@ public class Person {
     }
 
     public String getBlogId() {
-        return blogId;
+        return StringUtils.notNullStr(blogId);
     }
 
     public int getLocalTableBlogId() {
@@ -77,7 +78,7 @@ public class Person {
     }
 
     public String getUsername() {
-        return username;
+        return StringUtils.notNullStr(username);
     }
 
     public void setUsername(String username) {
@@ -85,7 +86,7 @@ public class Person {
     }
 
     public String getFirstName() {
-        return firstName;
+        return StringUtils.notNullStr(firstName);
     }
 
     public void setFirstName(String firstName) {
@@ -93,7 +94,7 @@ public class Person {
     }
 
     public String getLastName() {
-        return lastName;
+        return StringUtils.notNullStr(lastName);
     }
 
     public void setLastName(String lastName) {
@@ -101,7 +102,7 @@ public class Person {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return StringUtils.notNullStr(displayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -109,7 +110,7 @@ public class Person {
     }
 
     public String getRole() {
-        return role;
+        return StringUtils.notNullStr(role);
     }
 
     public void setRole(String role) {
@@ -117,7 +118,7 @@ public class Person {
     }
 
     public String getAvatarUrl() {
-        return avatarUrl;
+        return StringUtils.notNullStr(avatarUrl);
     }
 
     public void setAvatarUrl(String avatarUrl) {
