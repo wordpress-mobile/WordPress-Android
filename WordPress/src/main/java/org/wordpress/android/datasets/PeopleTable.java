@@ -94,7 +94,7 @@ public class PeopleTable {
         List<Person> people = new ArrayList<>();
         String[] args = { Integer.toString(localTableBlogId) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE local_blog_id=? ORDER BY display_name, user_name", args);
+                " WHERE local_blog_id=? ORDER BY lower(display_name), lower(user_name)", args);
 
         try {
             while (c.moveToNext()) {
