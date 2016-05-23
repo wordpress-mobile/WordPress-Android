@@ -155,6 +155,11 @@ public class PersonDetailFragment extends Fragment {
         dialog.show(getFragmentManager(), null);
     }
 
+    // used to optimistically update the role
+    public void changeRole(String newRole) {
+        mRoleTextView.setText(newRole);
+    }
+
     @SuppressWarnings("deprecation")
     private void clearRoleContainerBackground() {
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {

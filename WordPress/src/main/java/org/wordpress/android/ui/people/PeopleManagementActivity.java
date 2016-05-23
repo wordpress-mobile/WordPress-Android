@@ -125,10 +125,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        Person person = PeopleTable.getPerson(personID, localTableBlogId);
+        final Person person = PeopleTable.getPerson(personID, localTableBlogId);
         if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        final PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (personDetailFragment != null) {
+            // optimistically update the role
+            personDetailFragment.changeRole(newRole);
+        }
+
         PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), newRole, localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
@@ -139,6 +149,10 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
+                // change the role back to it's original value
+                if (personDetailFragment != null) {
+                    personDetailFragment.refreshPersonDetails();
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_update_role,
                         ToastUtils.Duration.LONG);
