@@ -340,8 +340,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private void autofillFromBuildConfig() {
         if (!BuildConfig.DEBUG) return;
 
-        String userName = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), "DOTCOM_LOGIN_USERNAME");
-        String password = (String) WordPress.getBuildConfigValue(getActivity().getApplication(), "DOTCOM_LOGIN_PASSWORD");
+        String userName = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_USERNAME");
+        String password = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_PASSWORD");
         if (!TextUtils.isEmpty(userName)) {
             mUsernameEditText.setText(userName);
             AppLog.d(T.NUX, "Autofilled username from build config");
