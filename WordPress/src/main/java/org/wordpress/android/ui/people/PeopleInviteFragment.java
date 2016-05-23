@@ -18,7 +18,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class PeopleInviteFragment extends Fragment {
+    public static final String KEY_USERNAMES = "KEY_USERNAMES";
+
+    private ArrayList<String> mUsernames = new ArrayList<>();
 
     public static PeopleInviteFragment newInstance() {
         PeopleInviteFragment personDetailFragment = new PeopleInviteFragment();
@@ -41,11 +46,25 @@ public class PeopleInviteFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mUsernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
+        }
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_invite_fragment, container, false);
 
-        final ViewGroup usernames = (ViewGroup) rootView.findViewById(R.id.usernames);
+        final ViewGroup usernamesView = (ViewGroup) rootView.findViewById(R.id.usernames);
 
+        if (mUsernames != null) {
+            for (String username : mUsernames) {
+                buttonizeUsername(username, inflater, usernamesView);
+            }
+        }
         final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -56,7 +75,7 @@ public class PeopleInviteFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (editText.getText().toString().endsWith(" ")) {
-                    addUsername(editText, inflater, usernames);
+                    addUsername(editText, inflater, usernamesView);
                 }
             }
 
@@ -70,7 +89,7 @@ public class PeopleInviteFragment extends Fragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_UP && event
                         .getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    addUsername(editText, inflater, usernames);
+                    addUsername(editText, inflater, usernamesView);
                 }
                 return true;
             }
@@ -79,19 +98,32 @@ public class PeopleInviteFragment extends Fragment {
         return rootView;
     }
 
-    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernames) {
-        String uname = editText.getText().toString().trim();
+    private void buttonizeUsername(String username, LayoutInflater inflater, final ViewGroup usernames) {
         final AppCompatButton usernameButton = (AppCompatButton) inflater.inflate(R.layout.invite_username_button,
                 null);
-        usernameButton.setText(uname);
+        usernameButton.setText(username);
         usernames.addView(usernameButton, usernames.getChildCount() - 1);
-        editText.setText("");
-
         usernameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 usernames.removeView(usernameButton);
             }
         });
+    }
+
+    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernamesView) {
+        String username = editText.getText().toString().trim();
+        editText.setText("");
+
+        mUsernames.add(username);
+
+        buttonizeUsername(username, inflater, usernamesView);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(KEY_USERNAMES, mUsernames);
+
+        super.onSaveInstanceState(outState);
     }
 }
