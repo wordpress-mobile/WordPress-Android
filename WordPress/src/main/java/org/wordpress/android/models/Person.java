@@ -19,24 +19,10 @@ public class Person {
     private String avatarUrl;
     private String role;
 
-    public Person(long personID,
-                  String blogId,
-                  int localTableBlogId,
-                  String username,
-                  String firstName,
-                  String lastName,
-                  String displayName,
-                  String avatarUrl,
-                  String role) {
+    public Person(long personID, String blogId, int localTableBlogId) {
         this.personID = personID;
         this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.displayName = displayName;
-        this.avatarUrl = avatarUrl;
-        this.role = role;
     }
 
     @Nullable
@@ -48,16 +34,17 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            String username = json.optString("login");
-            String firstName = json.optString("first_name");
-            String lastName = json.optString("last_name");
-            String displayName = json.optString("name");
-            String avatarUrl = json.optString("avatar_URL");
+            Person person = new Person(personID, blogId, localTableBlogId);
+            person.setUsername(json.optString("login"));
+            person.setFirstName(json.optString("first_name"));
+            person.setLastName(json.optString("last_name"));
+            person.setDisplayName(json.optString("name"));
+            person.setAvatarUrl(json.optString("avatar_URL"));
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
+            person.setRole(role);
 
-            return new Person(personID, blogId, localTableBlogId, username,
-                    firstName, lastName, displayName, avatarUrl, role);
+            return person;
         } catch (NumberFormatException e) {
             AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
         }

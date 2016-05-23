@@ -131,14 +131,15 @@ public class PeopleTable {
     private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
         String blogId = c.getString(c.getColumnIndex("blog_id"));
-        String username = c.getString(c.getColumnIndex("user_name"));
-        String firstName = c.getString(c.getColumnIndex("first_name"));
-        String lastName = c.getString(c.getColumnIndex("last_name"));
-        String displayName = c.getString(c.getColumnIndex("display_name"));
-        String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
-        String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, blogId, localTableBlogId, username,
-                firstName, lastName, displayName, avatarUrl, role);
+        Person person = new Person(personId, blogId, localTableBlogId);
+        person.setUsername(c.getString(c.getColumnIndex("user_name")));
+        person.setFirstName(c.getString(c.getColumnIndex("first_name")));
+        person.setLastName(c.getString(c.getColumnIndex("last_name")));
+        person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
+        person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
+        person.setRole(c.getString(c.getColumnIndex("role")));
+
+        return person;
     }
 }
