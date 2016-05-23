@@ -51,7 +51,7 @@ public class PeopleAdapter extends BaseAdapter {
     public long getItemId(int position) {
         Person person = getItem(position);
         if (person == null) {
-            return 0;
+            return -1;
         }
         return person.getPersonID();
     }
