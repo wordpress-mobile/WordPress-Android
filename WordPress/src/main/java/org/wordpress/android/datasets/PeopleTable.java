@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleTable {
-    public static final String PEOPLE_TABLE = "people";
+    private static final String PEOPLE_TABLE = "people";
 
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
