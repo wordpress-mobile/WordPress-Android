@@ -50,6 +50,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
+            peopleListFragment.setOnPersonSelectedListener(this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
