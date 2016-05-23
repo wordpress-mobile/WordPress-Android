@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.people;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -21,15 +24,20 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class PeopleInviteFragment extends Fragment {
-    public static final String KEY_USERNAMES = "KEY_USERNAMES";
+    private static final String KEY_USERNAMES = "KEY_USERNAMES";
+
+    private static final String ARG_BLOGID = "ARG_BLOGID";
 
     private ArrayList<String> mUsernames = new ArrayList<>();
 
-    public static PeopleInviteFragment newInstance() {
-        PeopleInviteFragment personDetailFragment = new PeopleInviteFragment();
+    public static PeopleInviteFragment newInstance(String dotComBlogId) {
+        PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
+
         Bundle bundle = new Bundle();
-        personDetailFragment.setArguments(bundle);
-        return personDetailFragment;
+        bundle.putString(ARG_BLOGID, dotComBlogId);
+
+        peopleInviteFragment.setArguments(bundle);
+        return peopleInviteFragment;
     }
 
     /**
@@ -107,6 +115,35 @@ public class PeopleInviteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 usernames.removeView(usernameButton);
+            }
+        });
+
+        String dotComBlogId = getArguments().getString(ARG_BLOGID);
+
+        PeopleUtils.validateUsername(username, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+            @Override
+            public void onUsernameNotFound(String username) {
+                // properly style the button
+            }
+
+            @Override
+            public void onUsernameFound(String username) {
+                // properly style the button
+            }
+
+            @Override
+            public void onUsernameAlreadyMember(String username) {
+                // properly style the button
+            }
+
+            @Override
+            public void onInvalidEmail(String username) {
+                // properly style the button
+            }
+
+            @Override
+            public void onError() {
+                // properly style the button
             }
         });
     }

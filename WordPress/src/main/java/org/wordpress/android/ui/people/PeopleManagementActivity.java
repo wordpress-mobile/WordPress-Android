@@ -86,7 +86,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
             if (peopleInviteFragment == null) {
-                peopleInviteFragment = PeopleInviteFragment.newInstance();
+                Blog blog = WordPress.getCurrentBlog();
+                peopleInviteFragment = PeopleInviteFragment.newInstance(blog.getDotComBlogId());
             }
             if (!peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

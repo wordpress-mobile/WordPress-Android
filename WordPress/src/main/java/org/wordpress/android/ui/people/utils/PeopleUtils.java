@@ -151,4 +151,83 @@ public class PeopleUtils {
     public interface Callback {
         void onError();
     }
+
+    public static void validateUsername(final String username, String dotComBlogId, final ValidateUsernameCallback
+            callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    JSONObject error = jsonObject.optJSONObject("errors");
+
+                    if (error != null) {
+                        JSONObject userError = error.optJSONObject(username);
+
+                        if (userError == null) {
+                            callback.onError();
+                            return;
+                        }
+
+                        switch (userError.optString("code")) {
+                            case "invalid_input":
+                                switch (userError.optString("message")) {
+                                    case "User not found":
+                                        callback.onUsernameNotFound(username);
+                                        return;
+                                    case "Invalid email":
+                                        callback.onInvalidEmail(username);
+                                        return;
+                                }
+                                break;
+                            case "invalid_input_has_role":
+                                callback.onUsernameAlreadyMember(username);
+                                return;
+                        }
+
+                        callback.onError();
+                        return;
+                    }
+
+                    JSONArray succeededUsernames = jsonObject.optJSONArray("success");
+                    if (succeededUsernames == null) {
+                        callback.onError();
+                        return;
+                    }
+
+                    for (int i = 0; i < succeededUsernames.length(); i++) {
+                        if (username.equals(succeededUsernames.optString(i))) {
+                            callback.onUsernameFound(username);
+                            return;
+                        }
+                    }
+
+                    callback.onError();
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path = String.format("sites/%s/invites/validate", dotComBlogId);
+        Map<String, String> params = new HashMap<>();
+        params.put("invitees", username);
+        params.put("role", "follower"); // the specific role is not important, just needs to be a valid one
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    public interface ValidateUsernameCallback {
+        void onUsernameNotFound(String username);
+        void onUsernameFound(String username);
+        void onUsernameAlreadyMember(String username);
+        void onInvalidEmail(String username);
+        void onError();
+    }
 }
