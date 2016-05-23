@@ -16,7 +16,6 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -42,20 +41,22 @@ public class PeopleManagementActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-        Blog blog = WordPress.getBlog(localBlogId);
+        Blog blog = WordPress.getCurrentBlog();
+        if (blog == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+            return;
+        }
 
         if (savedInstanceState == null) {
-            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(localBlogId);
+            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         }
 
-        if (blog != null) {
-            refreshUsersList(blog.getDotComBlogId(), localBlogId);
-        }
+        refreshUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
     }
 
     @Override
