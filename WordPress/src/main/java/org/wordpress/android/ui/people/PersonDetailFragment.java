@@ -101,7 +101,7 @@ public class PersonDetailFragment extends Fragment {
 
         Person person = loadPerson();
         if (person != null) {
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
