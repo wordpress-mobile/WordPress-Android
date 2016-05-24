@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class PeopleUtils {
 
-    public static void fetchUsers(final String blogId, final int localTableBlogId, final FetchUsersCallback callback) {
+    public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -26,7 +26,9 @@ public class PeopleUtils {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
                         List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId);
-                        callback.onSuccess(people);
+                        int numberOfUsers = jsonObject.optInt("found");
+                        boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
+                        callback.onSuccess(people, isEndOfList);
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
@@ -46,8 +48,10 @@ public class PeopleUtils {
             }
         };
 
+        Map<String, String> params = new HashMap<>();
+        params.put("offset", Integer.toString(offset));
         String path = String.format("sites/%s/users", blogId);
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
     public static void updateRole(final String blogId, long personID, String newRole, final int localTableBlogId,
@@ -137,7 +141,7 @@ public class PeopleUtils {
     }
 
     public interface FetchUsersCallback extends Callback {
-        void onSuccess(List<Person> peopleList);
+        void onSuccess(List<Person> peopleList, boolean isEndOfList);
     }
 
     public interface RemoveUserCallback extends Callback {
