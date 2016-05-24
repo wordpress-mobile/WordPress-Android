@@ -65,11 +65,13 @@ public class PeopleTable {
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static void savePeople(List<Person> peopleList, int localTableBlogId) {
+    public static void savePeople(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
             //We have a fresh list, remove the previous list of people in case it was deleted on remote
-            PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
+            if (isFreshList) {
+                PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
+            }
 
             for (Person person : peopleList) {
                 PeopleTable.save(person);

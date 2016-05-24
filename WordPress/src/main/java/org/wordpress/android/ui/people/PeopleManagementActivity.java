@@ -57,7 +57,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     .commit();
         }
 
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
     }
 
     @Override
@@ -85,11 +85,12 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchUsersList(String dotComBlogId, final int localTableBlogId) {
-        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
+    private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList) {
-                PeopleTable.savePeople(peopleList, localTableBlogId);
+            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+                boolean isFreshList = (offset == 0);
+                PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
             }
 
