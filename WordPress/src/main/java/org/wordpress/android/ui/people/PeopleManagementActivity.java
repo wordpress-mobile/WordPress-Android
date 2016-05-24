@@ -57,7 +57,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     .commit();
         }
 
-        refreshUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
     }
 
     @Override
@@ -85,7 +85,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUsersList(String dotComBlogId, final int localTableBlogId) {
+    private void fetchUsersList(String dotComBlogId, final int localTableBlogId) {
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList) {
