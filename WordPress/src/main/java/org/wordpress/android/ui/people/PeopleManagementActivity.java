@@ -59,9 +59,17 @@ public class PeopleManagementActivity extends AppCompatActivity
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
-        }
 
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+        } else {
+            FragmentManager fragmentManager = getFragmentManager();
+            PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                    .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+            if (peopleListFragment != null) {
+                peopleListFragment.setOnPersonSelectedListener(this);
+                peopleListFragment.setOnFetchMorePeopleListener(this);
+            }
+        }
     }
 
     @Override
