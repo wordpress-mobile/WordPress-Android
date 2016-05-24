@@ -82,6 +82,12 @@ public class PeopleTable {
         }
     }
 
+    public static int getPeopleCountForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId)};
+        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?";
+        return SqlUtils.intForQuery(getReadableDb(), sql, args);
+    }
+
     public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);

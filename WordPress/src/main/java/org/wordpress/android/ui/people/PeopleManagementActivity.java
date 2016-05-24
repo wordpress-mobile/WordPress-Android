@@ -263,6 +263,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public void onFetchMorePeople() {
         Blog blog = WordPress.getCurrentBlog();
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 20);
+        int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
     }
 }
