@@ -434,19 +434,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
+    public boolean isActionInProgress() {
+        return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
     private void toggleHtmlMode(final ToggleButton toggleButton) {
         if (!isAdded()) return;
 
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
-        if (System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS) {
-            toggleButton.setChecked(false);
-            ToastUtils.showToast(getActivity(), R.string.alert_html_mode_not_ready, ToastUtils.Duration.LONG);
-            return;
-        }
-
         // Don't switch to HTML mode if currently uploading media
-        if (!mUploadingMedia.isEmpty()) {
+        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
             toggleButton.setChecked(false);
             ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
             return;

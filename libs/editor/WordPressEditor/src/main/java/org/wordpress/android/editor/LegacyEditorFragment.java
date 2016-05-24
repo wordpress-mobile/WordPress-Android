@@ -1164,11 +1164,14 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void setTitlePlaceholder(CharSequence text) {
-
     }
 
     @Override
     public void setContentPlaceholder(CharSequence text) {
+    }
 
+    @Override
+    public boolean isActionInProgress() {
+        return false;
     }
 }
