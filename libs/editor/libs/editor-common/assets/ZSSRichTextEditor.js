@@ -1193,6 +1193,7 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**
@@ -1504,6 +1505,7 @@ ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**

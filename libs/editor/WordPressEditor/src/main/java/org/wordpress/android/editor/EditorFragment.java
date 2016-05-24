@@ -71,6 +71,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
+    public static final int MAX_ACTION_TIME_MS = 2000;
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -105,6 +106,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private CountDownLatch mGetSelectedTextCountDownLatch;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
+
+    private long mActionStartedAt = -1;
 
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
@@ -432,15 +435,20 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     private void toggleHtmlMode(final ToggleButton toggleButton) {
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+        if (!isAdded()) return;
+
+            mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+
+        if (System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS) {
+            toggleButton.setChecked(false);
+            ToastUtils.showToast(getActivity(), R.string.alert_html_mode_not_ready, ToastUtils.Duration.LONG);
+            return;
+        }
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMedia.isEmpty()) {
             toggleButton.setChecked(false);
-
-            if (isAdded()) {
-                ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
-            }
+            ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
             return;
         }
 
@@ -826,6 +834,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + safeMediaUrl + "', '" + mediaId +
                                 "');");
                     }
+                    mActionStartedAt = System.currentTimeMillis();
                 } else {
                     String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
@@ -1449,5 +1458,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             content.insert(selectionEnd, endTag);
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
         }
+    }
+
+    @Override
+    public void onActionFinished() {
+        mActionStartedAt = -1;
     }
 }

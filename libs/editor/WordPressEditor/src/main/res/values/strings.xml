@@ -16,6 +16,7 @@
 
     <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
     <string name="alert_html_toggle_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_html_mode_not_ready">HTML mode not ready, try again.</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
     <string name="stop_upload_button">Stop Upload</string>
