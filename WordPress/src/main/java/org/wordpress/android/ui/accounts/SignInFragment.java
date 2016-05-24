@@ -47,6 +47,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -228,6 +229,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initInfoButtons(rootView);
         moveBottomButtons();
 
+        autofillFromBuildConfig();
+
         return rootView;
     }
 
@@ -328,6 +331,27 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mInfoButtonSecondary = (ImageView) rootView.findViewById(R.id.info_button_secondary);
         mInfoButton.setOnClickListener(infoButtonListener);
         mInfoButtonSecondary.setOnClickListener(infoButtonListener);
+    }
+
+    /*
+     * autofill the username and password from BuildConfig/gradle.properties (developer feature,
+     * only enabled for DEBUG releases)
+     */
+    private void autofillFromBuildConfig() {
+        if (!BuildConfig.DEBUG) return;
+
+        String userName = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_USERNAME");
+        String password = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_PASSWORD");
+        if (!TextUtils.isEmpty(userName)) {
+            mUsernameEditText.setText(userName);
+            AppLog.d(T.NUX, "Autofilled username from build config");
+        }
+        if (!TextUtils.isEmpty(password)) {
+            mPasswordEditText.setText(password);
+            AppLog.d(T.NUX, "Autofilled password from build config");
+        }
     }
 
     private void initSmartLockForPasswords() {
