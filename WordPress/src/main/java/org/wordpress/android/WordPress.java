@@ -202,7 +202,7 @@ public class WordPress extends Application {
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+            AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
@@ -540,7 +540,7 @@ public class WordPress extends Application {
         AnalyticsTracker.clearAllData();
 
         // disable passcode lock
-        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+        AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
         if (appLock != null) {
             appLock.setPassword(null);
         }
