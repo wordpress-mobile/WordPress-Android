@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -26,6 +27,8 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
     private int mLocalTableBlogID;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchMorePeopleListener mOnFetchMorePeopleListener;
+
+    private ProgressBar mProgress;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -52,7 +55,13 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.people_list_fragment, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
+
+        // progress bar that appears when loading more people
+        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
+        mProgress.setVisibility(View.GONE);
+
+        return rootView;
     }
 
     @Override
@@ -81,6 +90,20 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
             setListAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
+        }
+    }
+
+    /*
+    * show/hide progress bar which appears at the bottom of the activity when loading more people
+    */
+    public void showLoadingProgress(boolean showProgress) {
+        if (isAdded() && mProgress != null) {
+            if (showProgress) {
+                mProgress.bringToFront();
+                mProgress.setVisibility(View.VISIBLE);
+            } else {
+                mProgress.setVisibility(View.GONE);
+            }
         }
     }
 

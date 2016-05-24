@@ -114,6 +114,14 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (mPeopleEndOfListReached) {
             return;
         }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        final PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        if (peopleListFragment != null && offset > 0) {
+            peopleListFragment.showLoadingProgress(true);
+        }
+
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
@@ -121,10 +129,17 @@ public class PeopleManagementActivity extends AppCompatActivity
                 mPeopleEndOfListReached = isEndOfList;
                 PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
+
+                if (peopleListFragment != null) {
+                    peopleListFragment.showLoadingProgress(false);
+                }
             }
 
             @Override
             public void onError() {
+                if (peopleListFragment != null) {
+                    peopleListFragment.showLoadingProgress(false);
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_people_list,
                         ToastUtils.Duration.LONG);
