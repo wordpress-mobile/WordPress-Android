@@ -26,8 +26,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener, PeopleListFragment.OnFetchMorePeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
+    private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
 
-    private boolean mPeopleEndOfListReached = false;
+    private boolean mPeopleEndOfListReached;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,12 +57,16 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchMorePeopleListener(this);
 
+            mPeopleEndOfListReached = false;
+
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
 
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         } else {
+            mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
+
             FragmentManager fragmentManager = getFragmentManager();
             PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
                     .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
@@ -70,6 +75,12 @@ public class PeopleManagementActivity extends AppCompatActivity
                 peopleListFragment.setOnFetchMorePeopleListener(this);
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
     }
 
     @Override
