@@ -50,6 +50,8 @@ public class PeopleUtils {
 
         Map<String, String> params = new HashMap<>();
         params.put("offset", Integer.toString(offset));
+        params.put("order_by", "display_name");
+        params.put("order", "ASC");
         String path = String.format("sites/%s/users", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
