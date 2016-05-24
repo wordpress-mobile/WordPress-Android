@@ -40,6 +40,8 @@ public class JsCallbackReceiver {
 
     private static final String CALLBACK_RESPONSE_STRING = "callback-response-string";
 
+    private static final String CALLBACK_ACTION_FINISHED = "callback-action-finished";
+
     private final OnJsEditorStateChangedListener mListener;
 
     private Set<String> mPreviousStyleSet = new HashSet<>();
@@ -223,6 +225,9 @@ public class JsCallbackReceiver {
                     responseDataSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
                 }
                 mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseDataSet));
+                break;
+            case CALLBACK_ACTION_FINISHED:
+                mListener.onActionFinished();
                 break;
             default:
                 AppLog.d(AppLog.T.EDITOR, "Unhandled callback: " + callbackId + ":" + params);
