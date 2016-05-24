@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -78,7 +77,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     @Override
     public long getItemId(int position) {
-        return mTags.get(position).getTagName().hashCode();
+        return mTags.get(position).getTagSlug().hashCode();
     }
 
     @Override
@@ -90,17 +89,17 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
-        holder.txtTagName.setText(tag.getCapitalizedTagName());
+        holder.txtTagName.setText(tag.getLabel());
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performDeleteTag(tag.getTagName());
+                performDeleteTag(tag);
 
             }
         });
     }
 
-    private void performDeleteTag(String tagName) {
+    private void performDeleteTag(@NonNull ReaderTag tag) {
         if (!NetworkUtils.checkConnection(getContext())) {
             return;
         }
@@ -115,11 +114,10 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         };
 
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        boolean success = ReaderTagActions.performTagAction(tag, TagAction.DELETE, actionListener);
+        boolean success = ReaderTagActions.deleteTag(tag, actionListener);
 
         if (success) {
-            int index = mTags.indexOfTagName(tagName);
+            int index = mTags.indexOfTagName(tag.getTagSlug());
             if (index > -1) {
                 mTags.remove(index);
                 notifyItemRemoved(index);

@@ -23,10 +23,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HTTPUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,7 @@ public abstract class EditorWebViewAbstract extends WebView {
     private AuthHeaderRequestListener mAuthHeaderRequestListener;
     private ErrorListener mErrorListener;
     private JsCallbackReceiver mJsCallbackReceiver;
+    private boolean mDebugModeEnabled;
 
     private Map<String, String> mHeaderMap = new HashMap<>();
 
@@ -58,7 +61,8 @@ public abstract class EditorWebViewAbstract extends WebView {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith("callback") && mJsCallbackReceiver != null) {
-                    String[] split = url.split(":", 2);
+                    String data = URLDecoder.decode(url);
+                    String[] split = data.split(":", 2);
                     String callbackId = split[0];
                     String params = (split.length > 1 ? split[1] : "");
                     mJsCallbackReceiver.executeCallback(callbackId, params);
@@ -175,6 +179,10 @@ public abstract class EditorWebViewAbstract extends WebView {
         super.setVisibility(visibility);
     }
 
+    public void setDebugModeEnabled(boolean enabled) {
+        mDebugModeEnabled = enabled;
+    }
+
     /**
      * Handles events that should be triggered when the WebView is hidden or is shown to the user
      *
@@ -213,6 +221,13 @@ public abstract class EditorWebViewAbstract extends WebView {
             if (mOnImeBackListener != null) {
                 mOnImeBackListener.onImeBack();
             }
+        }
+        if (mDebugModeEnabled && event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_UP
+            && event.getAction() == KeyEvent.ACTION_DOWN) {
+            // Log the raw html
+            execJavaScriptFromString("console.log(document.body.innerHTML);");
+            ToastUtils.showToast(getContext(), "Debug: Raw HTML has been logged");
+            return true;
         }
         return super.onKeyPreIme(keyCode, event);
     }

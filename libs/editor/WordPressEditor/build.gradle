@@ -3,12 +3,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -20,11 +19,11 @@ android {
     publishNonDefault true
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
-        versionCode 6
-        versionName "0.6"
+        versionCode 10
+        versionName "1.0"
         minSdkVersion 14
         targetSdkVersion 23
     }
@@ -48,6 +47,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:design:23.1.1'
     compile 'org.wordpress:utils:1.9.0'
 
     // Test libraries
@@ -118,43 +118,10 @@ uploadArchives {
 }
 
 //
-// Testing and code coverage
+// Testing
 //
 
 android.testOptions.unitTests.all {
     include '**/*Test.class'
     exclude '**/ApplicationTest.class'
-}
-
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
-
-// Use these to define which classes to include and exclude from code coverage analysis
-def coverageSourceDirs = [ 'src/main/java' ]
-def coverageExclusions = [ '**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*',
-                           '**/Legacy**.class',
-                           '**/legacy/**/*.class' ]
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: coverageExclusions
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebug.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
 }

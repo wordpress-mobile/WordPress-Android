@@ -273,10 +273,13 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("menu_item", "site_settings");
                 break;
             case OPENED_ACCOUNT_SETTINGS:
-                eventName = "me_opened_account_settings";
+                eventName = "account_settings_opened";
+                break;
+            case OPENED_APP_SETTINGS:
+                eventName = "app_settings_opened";
                 break;
             case OPENED_MY_PROFILE:
-                eventName = "me_opened_my_profile";
+                eventName = "my_profile_opened";
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
@@ -336,6 +339,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 eventName = "stats_install_jetpack_selected";
                 break;
+            case STATS_SELECTED_CONNECT_JETPACK:
+                eventName = "stats_connect_jetpack_selected";
+                break;
             case STATS_WIDGET_ADDED:
                 eventName = "stats_widget_added";
                 break;
@@ -357,11 +363,35 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
                 eventName = "support_reply_to_support_message_sent";
                 break;
+            case LOGIN_MAGIC_LINK_EXITED:
+                eventName = "loagin_magic_link_exited";
+                break;
+            case LOGIN_MAGIC_LINK_FAILED:
+                eventName = "loagin_magic_link_failed";
+                break;
+            case LOGIN_MAGIC_LINK_OPENED:
+                eventName = "loagin_magic_link_opened";
+                break;
+            case LOGIN_MAGIC_LINK_REQUESTED:
+                eventName = "loagin_magic_link_requested";
+                break;
+            case LOGIN_MAGIC_LINK_SUCCEEDED:
+                eventName = "loagin_magic_link_succeeded";
+                break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
                 break;
             case LOGIN_FAILED_TO_GUESS_XMLRPC:
                 eventName = "login_failed_to_guess_xmlrpc";
+                break;
+            case LOGIN_INSERTED_INVALID_URL:
+                eventName = "login_inserted_invalid_url";
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                eventName = "login_autofill_credentials_filled";
+                break;
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                eventName = "login_autofill_credentials_updated";
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";
@@ -386,6 +416,30 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
+                break;
+            case ME_GRAVATAR_TAPPED:
+                eventName = "me_gravatar_tapped";
+                break;
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
+                eventName = "me_gravatar_tooltip_tapped";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                eventName = "me_gravatar_permissions_denied";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                eventName = "me_gravatar_permissions_accepted";
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                eventName = "me_gravatar_shot_new";
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                eventName = "me_gravatar_gallery_picked";
+                break;
+            case ME_GRAVATAR_CROPPED:
+                eventName = "me_gravatar_cropped";
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                eventName = "me_gravatar_uploaded";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
@@ -440,6 +494,48 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case SITE_SETTINGS_SAVED_REMOTELY:
                 eventName = "site_settings_saved_remotely";
+                break;
+            case SITE_SETTINGS_START_OVER_ACCESSED:
+                eventName = "site_settings_start_over_accessed";
+                break;
+            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
+                eventName = "site_settings_start_over_contact_support_clicked";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
+                eventName = "site_settings_export_site_accessed";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
+                eventName = "site_settings_export_site_requested";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
+                eventName = "site_settings_export_site_response_ok";
+                break;
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
+                eventName = "site_settings_export_site_response_error";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
+                eventName = "site_settings_delete_site_accessed";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
+                eventName = "site_settings_delete_site_purchases_requested";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
+                eventName = "site_settings_delete_site_purchases_shown";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
+                eventName = "site_settings_delete_site_purchases_show_clicked";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
+                eventName = "site_settings_delete_site_requested";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
+                eventName = "site_settings_delete_site_response_ok";
+                break;
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
+                eventName = "site_settings_delete_site_response_error";
+                break;
+            case ABTEST_START:
+                eventName = "abtest_start";
                 break;
             default:
                 eventName = null;

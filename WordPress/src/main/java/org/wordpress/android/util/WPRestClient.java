@@ -26,7 +26,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class WPRestClient {
@@ -408,7 +407,7 @@ public class WPRestClient {
         }
 
         public void sendWithAccessToken(String token){
-            mRequest.setAccessToken(token.toString());
+            mRequest.setAccessToken(token);
             mRestClient.send(mRequest);
         }
 

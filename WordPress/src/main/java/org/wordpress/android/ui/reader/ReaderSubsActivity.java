@@ -34,11 +34,11 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -188,15 +188,18 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     private void performUpdate() {
+        performUpdate(EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS,
+                UpdateTask.RECOMMENDED_BLOGS));
+    }
+
+    private void performUpdate(EnumSet<UpdateTask> tasks) {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS,
-                           UpdateTask.RECOMMENDED_BLOGS));
-
+        ReaderUpdateService.startService(this, tasks);
         mHasPerformedUpdate = true;
     }
 
@@ -328,23 +331,26 @@ public class ReaderSubsActivity extends AppCompatActivity
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshFollowedTagFragment();
+                if (isFinishing()) return;
+
+                getPageAdapter().refreshFollowedTagFragment();
+
+                if (!succeeded) {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
 
-        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
+        if (ReaderTagActions.addTag(tag, actionListener)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagName();
+            mLastAddedTagName = tag.getTagSlug();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
             String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getCapitalizedTagName()));
+            showInfoToast(String.format(labelAddedTag, tag.getLabel()));
         }
     }
 
@@ -453,11 +459,11 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onTagDeleted(ReaderTag tag) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
-        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
+        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoToast(String.format(labelRemovedTag, tag.getCapitalizedTagName()));
+        showInfoToast(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*

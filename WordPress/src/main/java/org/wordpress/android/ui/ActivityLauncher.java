@@ -7,6 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 
+import com.optimizely.Optimizely;
+import com.optimizely.Variable.LiveVariable;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -18,16 +21,19 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewAccountActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.menus.MenusActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -47,7 +53,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-
+    private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
@@ -71,6 +77,12 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        slideInFromRight(context, intent);
+    }
+
+    public static void viewBlogPlans(Context context, int blogLocalTableId) {
+        Intent intent = new Intent(context, PlansActivity.class);
+        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
         slideInFromRight(context, intent);
     }
 
@@ -190,10 +202,16 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewAccountSettings(Activity activity) {
-        Intent intent = new Intent(activity, AccountSettingsActivity.class);
+    public static void viewAccountSettings(Context context) {
+        Intent intent = new Intent(context, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
-        slideInFromRightForResult(activity, intent, RequestCodes.ACCOUNT_SETTINGS);
+        slideInFromRight(context, intent);
+    }
+
+    public static void viewAppSettings(Activity activity) {
+        Intent intent = new Intent(activity, AppSettingsActivity.class);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
+        slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewNotificationsSettings(Activity activity) {
@@ -234,8 +252,13 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        if (isMagicLinkEnabledVariable.get()) {
+            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        } else {
+            Intent intent = new Intent(activity, SignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+        }
     }
 
     public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
@@ -265,7 +288,7 @@ public class ActivityLauncher {
 
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
-        intent.putExtra(SignInActivity.START_FRAGMENT_KEY, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

@@ -1,9 +1,12 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.util.Patterns;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HTTPUtils;
@@ -33,7 +36,7 @@ public class Utils {
             InputStream in = assetManager.open(filename);
             return getStringFromInputStream(in);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, e.getMessage());
+            AppLog.e(AppLog.T.EDITOR, "Unable to load editor HTML (is the assets symlink working?): " + e.getMessage());
             return null;
         }
     }
@@ -221,5 +224,19 @@ public class Utils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Checks the Clipboard for text that matches the {@link Patterns#WEB_URL} pattern.
+     *
+     * @return the URL text in the clipboard, if it exists; otherwise null
+     */
+    public static String getUrlFromClipboard(Context context) {
+        if (context == null) return null;
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = clipboard != null ? clipboard.getPrimaryClip() : null;
+        if (data == null || data.getItemCount() <= 0) return null;
+        String clipText = String.valueOf(data.getItemAt(0).getText());
+        return Patterns.WEB_URL.matcher(clipText).matches() ? clipText : null;
     }
 }

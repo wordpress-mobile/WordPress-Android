@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
-import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 
 public class MenusActivity extends AppCompatActivity {
@@ -18,9 +17,8 @@ public class MenusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setCustomView(R.layout.preferences_actionbar);
         }
 
         FragmentManager fragmentManager = getFragmentManager();

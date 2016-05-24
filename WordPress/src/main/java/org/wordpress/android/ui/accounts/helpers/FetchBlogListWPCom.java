@@ -43,6 +43,11 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
                     site.put("blogid", jsonSite.get("ID"));
                     site.put("isAdmin", jsonSite.get("user_can_manage"));
                     site.put("isVisible", jsonSite.get("visible"));
+
+                    JSONObject plan = jsonSite.getJSONObject("plan");
+                    site.put("planID", plan.get("product_id"));
+                    site.put("plan_product_name_short", plan.get("product_name_short"));
+
                     JSONObject jsonLinks = JSONUtils.getJSONChild(jsonSite, "meta/links");
                     if (jsonLinks != null) {
                         site.put("xmlrpc", jsonLinks.getString("xmlrpc"));
@@ -59,7 +64,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
     }
 
     private void getUsersBlogsRequestREST(final FetchBlogListAbstract.Callback callback) {
-        WordPress.getRestClientUtils().get("me/sites", new RestRequest.Listener() {
+        WordPress.getRestClientUtils().get("me/sites", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {

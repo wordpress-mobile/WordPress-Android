@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -13,14 +12,13 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -246,6 +245,10 @@ public class StatsActivity extends AppCompatActivity
                     // nop
                 }
             });
+
+            Toolbar spinnerToolbar = (Toolbar) findViewById(R.id.toolbar_filter);
+            spinnerToolbar.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+
         }
 
         selectCurrentTimeframeInActionBar();
@@ -517,9 +520,9 @@ public class StatsActivity extends AppCompatActivity
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.ARG_JETPACK_SITE_AUTH, mLocalBlogID);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mLocalBlogID);
         signInIntent.putExtra(
-                SignInActivity.ARG_JETPACK_MESSAGE_AUTH,
+                SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
                 getString(R.string.stats_sign_in_jetpack_different_com_account)
         );
         startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
@@ -610,6 +613,60 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void showJetpackNonConnectedAlert() {
+        if (isFinishing()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        if (currentBlog.isAdmin()) {
+            builder.setMessage(getString(R.string.jetpack_not_connected_message))
+                    .setTitle(getString(R.string.jetpack_not_connected));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String stringToLoad = currentBlog.getAdminUrl();
+                    String jetpackConnectPageAdminPath = "admin.php?page=jetpack";
+                    stringToLoad = stringToLoad.endsWith("/") ? stringToLoad + jetpackConnectPageAdminPath :
+                            stringToLoad + "/" + jetpackConnectPageAdminPath;
+                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
+                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
+                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog. Hide Stats.
+                    finish();
+                }
+            });
+        } else {
+            builder.setMessage(getString(R.string.jetpack_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_not_found));
+            builder.setPositiveButton(R.string.yes, null);
+        }
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
     private void showJetpackMissingAlert() {
         if (isFinishing()) {
             return;
@@ -619,6 +676,7 @@ public class StatsActivity extends AppCompatActivity
         if (currentBlog == null) {
             AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         if (currentBlog.isAdmin()) {
@@ -650,9 +708,17 @@ public class StatsActivity extends AppCompatActivity
                     .setTitle(getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, null);
         }
-        builder.create().show();
-    }
 
+        AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // User pressed the back key Hide Stats.
+                finish();
+            }
+        });
+        dialog.show();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -748,51 +814,7 @@ public class StatsActivity extends AppCompatActivity
             }
         }
 
-        // check again that we've valid credentials for a Jetpack site
-        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials() &&
-                !AccountHelper.isSignedInWordPressDotCom()) {
-            mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
-            return false;
-        }
-
         return true;
-    }
-
-    public static class StatsWidgetPromoDialogFragment extends DialogFragment {
-
-        public static StatsWidgetPromoDialogFragment newInstance() {
-            return new StatsWidgetPromoDialogFragment();
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Dialog dialog = super.onCreateDialog(savedInstanceState);
-            // request a window without the title
-            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            return dialog;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.stats_widget_promote_dialog, container);
-        }
-
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            Button btn = (Button)view.findViewById(R.id.stats_widget_promo_got_it_btn);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getDialog().cancel();
-                }
-            });
-        }
     }
 
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
@@ -810,9 +832,11 @@ public class StatsActivity extends AppCompatActivity
         AppPrefs.bumpAnalyticsForStatsWidgetPromo();
 
         // Should we display the widget promo?
-        int counter =  AppPrefs.getAnalyticsForStatsWidgetPromo();
+        int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         if (counter == 3 || counter == 1000 || counter == 10000) {
-            DialogFragment newFragment = StatsWidgetPromoDialogFragment.newInstance();
+            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.stats_widget_promo_header,
+                    R.string.stats_widget_promo_title, R.string.stats_widget_promo_desc,
+                    R.string.stats_widget_promo_ok_btn_label);
             newFragment.show(getFragmentManager(), "promote_widget_dialog");
         }
     }
@@ -841,16 +865,25 @@ public class StatsActivity extends AppCompatActivity
         if (!event.isError) {
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (currentBlog == null) {
+                AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+                Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+                finish();
                 return;
             }
             if (currentBlog.getDotComBlogId() == null) {
-                // Blog has not returned a jetpack_client_id
-                showJetpackMissingAlert();
+                if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
+                    // jetpack_version option is available, but not the jetpack_client_id ----> Jetpack available but not connected.
+                    showJetpackNonConnectedAlert();
+                } else {
+                    // Blog has not returned jetpack_version/jetpack_client_id.
+                    showJetpackMissingAlert();
+                }
             } else {
                 checkCredentials();
             }
         } else {
             Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 

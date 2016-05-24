@@ -5,6 +5,9 @@
 
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
+    <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
@@ -81,6 +84,10 @@
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
 
+    <string name="button_skip">Skip</string>
+    <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
+
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
@@ -125,6 +132,7 @@
     <string name="media_gallery_edit">Edit gallery</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
@@ -234,11 +242,15 @@
     <string name="button_revert">Revert</string>
 
     <!-- dropdown filter above post cards -->
-    <string-array name="post_filters_array">
-        <item>Published</item>
-        <item>Drafts</item>
-        <item>Scheduled</item>
-        <item>Trashed</item>
+    <string name="filter_published_posts">Published</string>
+    <string name="filter_draft_posts">Drafts</string>
+    <string name="filter_scheduled_posts">Scheduled</string>
+    <string name="filter_trashed_posts">Trashed</string>
+    <string-array name="post_filters_array" translatable="false">
+        <item>@string/filter_published_posts</item>
+        <item>@string/filter_draft_posts</item>
+        <item>@string/filter_scheduled_posts</item>
+        <item>@string/filter_trashed_posts</item>
     </string-array>
 
     <!-- post view -->
@@ -278,7 +290,10 @@
     <string name="comment_status_all">All</string>
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
-    <string name="comments_empty_list_filtered">No %s comments</string>
+    <string name="comments_empty_list_filtered_approved">No Approved comments</string>
+    <string name="comments_empty_list_filtered_pending">No Pending comments</string>
+    <string name="comments_empty_list_filtered_spam">No Spam comments</string>
+    <string name="comments_empty_list_filtered_trashed">No Trashed comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -419,10 +434,8 @@
     <string name="close_after">Close after</string>
     <string name="oldest_first">Oldest first</string>
     <string name="newest_first">Newest first</string>
-    <plurals name="days_quantity">
-        <item quantity="one">1 day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
+    <string name="days_quantity_one">1 day</string>
+    <string name="days_quantity_other">%d days</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -432,6 +445,7 @@
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_this_device_header">This device</string>
+    <string name="site_settings_advanced_header">Advanced</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -472,30 +486,39 @@
     <string name="site_settings_whitelist_all_summary">Comments from all users</string>
     <string name="site_settings_whitelist_known_summary">Comments from known users</string>
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
-    <string-array name="site_settings_auto_approve_details">
-        <item>Require manual approval for everyone\'s comments.</item>
-        <item>Automatically approve if the user has a previously approved comment.</item>
-        <item>Automatically approve everyone\'s comments.</item>
+
+    <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
+    <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
+    <string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
+    <string-array name="site_settings_auto_approve_details" translatable="false">
+        <item>@string/detail_approve_manual</item>
+        <item>@string/detail_approve_auto_if_previously_approved</item>
+        <item>@string/detail_approve_auto</item>
     </string-array>
-    <plurals name="site_settings_multiple_links_summary">
-        <item quantity="one">Require approval for more than 1 link</item>
-        <item quantity="other">Require approval for more than %d links</item>
-    </plurals>
-    <plurals name="site_settings_paging_summary">
-        <item quantity="one">1 comment per page</item>
-        <item quantity="other">%d comments per page</item>
-    </plurals>
-    <string-array name="privacy_details">
-        <item>Your site is visible to everyone and may be indexed by search engines</item>
-        <item>Your site is visible to everyone but asks search engines not to index it</item>
-        <item>Your site is visible only to you and users you approve</item>
+
+    <string name="site_settings_multiple_links_summary_zero">Require approval for more than 0 links</string>
+    <string name="site_settings_multiple_links_summary_one">Require approval for more than 1 link</string>
+    <string name="site_settings_multiple_links_summary_other">Require approval for more than %d links</string>
+    <string name="site_settings_paging_summary_one">1 comment per page</string>
+    <string name="site_settings_paging_summary_other">%d comments per page</string>
+
+    <string name="privacy_public">Your site is visible to everyone and may be indexed by search engines</string>
+    <string name="privacy_public_not_indexed">Your site is visible to everyone but asks search engines not to index it</string>
+    <string name="privacy_private">Your site is visible only to you and users you approve</string>
+    <string-array name="privacy_details" translatable="false">
+        <item>@string/privacy_public</item>
+        <item>@string/privacy_public_not_indexed</item>
+        <item>@string/privacy_private</item>
     </string-array>
 
     <!-- Preference Entries -->
-    <string-array name="site_settings_auto_approve_entries">
-        <item>No comments</item>
-        <item>Known users\' comments</item>
-        <item>All users</item>
+    <string name="approve_manual">No comments</string>
+    <string name="approve_auto_if_previously_approved">Known users\' comments</string>
+    <string name="approve_auto">All users</string>
+    <string-array name="site_settings_auto_approve_entries" translatable="false">
+        <item>@string/approve_manual</item>
+        <item>@string/approve_auto_if_previously_approved</item>
+        <item>@string/approve_auto</item>
     </string-array>
 
     <string-array name="site_settings_privacy_entries" translatable="false">
@@ -559,10 +582,9 @@
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
     <!-- List Editors (Blacklist, Hold for Moderation) -->
-    <plurals name="site_settings_list_editor_summary">
-        <item quantity="one">1 item</item>
-        <item quantity="other">%d items</item>
-    </plurals>
+    <string name="site_settings_list_editor_summary_one">1 item</string>
+    <string name="site_settings_list_editor_summary_other">%d items</string>
+
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
@@ -750,6 +772,7 @@
     <string name="stats_insights">Insights</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
+    <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
     <string name="stats_insights_popular">Most popular day and hour</string>
@@ -841,27 +864,44 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
-    <string-array name="notifications_blog_settings">
-        <item>Comments on my site</item>
-        <item>Likes on my comments</item>
-        <item>Likes on my posts</item>
-        <item>Site follows</item>
-        <item>Site achievements</item>
-        <item>Username mentions</item>
+
+    <string name="comments_on_my_site">Comments on my site</string>
+    <string name="likes_on_my_comments">Likes on my comments</string>
+    <string name="likes_on_my_posts">Likes on my posts</string>
+    <string name="site_follows">Site follows</string>
+    <string name="site_achievements">Site achievements</string>
+    <string name="username_mentions">Username mentions</string>
+    <string-array name="notifications_blog_settings" translatable="false">
+        <item>@string/comments_on_my_site</item>
+        <item>@string/likes_on_my_comments</item>
+        <item>@string/likes_on_my_posts</item>
+        <item>@string/site_follows</item>
+        <item>@string/site_achievements</item>
+        <item>@string/username_mentions</item>
     </string-array>
-    <string-array name="notifications_other_settings">
-        <item>Replies to my comments</item>
-        <item>Likes on my comments</item>
+
+    <string name="replies_to_my_comments">Replies to my comments</string>
+    <string-array name="notifications_other_settings" translatable="false">
+        <item>@string/replies_to_my_comments</item>
+        <item>@string/likes_on_my_comments</item>
     </string-array>
-    <string-array name="notifications_wpcom_settings">
-        <item>Suggestions</item>
-        <item>Research</item>
-        <item>Community</item>
+
+    <string name="notif_suggestions">Suggestions</string>
+    <string name="notif_research">Research</string>
+    <string name="notif_community">Community</string>
+    <string-array name="notifications_wpcom_settings" translatable="false">
+        <item>@string/notif_suggestions</item>
+        <item>@string/notif_research</item>
+        <item>@string/notif_community</item>
     </string-array>
-    <string-array name="notifications_wpcom_settings_summaries">
-        <item>Tips for getting the most out of WordPress.com.</item>
-        <item>Opportunities to participate in WordPress.com research &amp; surveys.</item>
-        <item>Information on WordPress.com courses and events (online &amp; in-person).</item>
+
+    <string name="notif_tips">Tips for getting the most out of WordPress.com.</string>
+    <string name="notif_surveys">Opportunities to participate in WordPress.com research &amp; surveys.</string>
+    <string name="notif_events">Information on WordPress.com courses and events (online &amp; in-person).</string>
+    <string-array name="notifications_wpcom_settings_summaries" translatable="false">
+        <item>@string/notif_tips</item>
+        <item>@string/notif_surveys</item>
+        <item>@string/notif_events</item>
     </string-array>
 
     <!-- reader -->
@@ -872,6 +912,12 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="new_editor_promo_button_label">Great, thanks!</string>
+    <string name="new_editor_promo_title">Brand new editor</string>
+    <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
+    editor. Try it out by creating a new post.</string>
+    <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
+        automatically disabled.</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
@@ -879,17 +925,27 @@
 
 
     <!-- Post Formats -->
-    <string-array name="post_formats_array">
-        <item>Aside</item>
-        <item>Audio</item>
-        <item>Chat</item>
-        <item>Gallery</item>
-        <item>Image</item>
-        <item>Link</item>
-        <item>Quote</item>
-        <item>Standard</item>
-        <item>Status</item>
-        <item>Video</item>
+    <string name="post_format_aside">Aside</string>
+    <string name="post_format_audio">Audio</string>
+    <string name="post_format_chat">Chat</string>
+    <string name="post_format_gallery">Gallery</string>
+    <string name="post_format_image">Image</string>
+    <string name="post_format_link">Link</string>
+    <string name="post_format_quote">Quote</string>
+    <string name="post_format_standard">Standard</string>
+    <string name="post_format_status">Status</string>
+    <string name="post_format_video">Video</string>
+    <string-array name="post_formats_array" translatable="false">
+        <item>@string/post_format_aside</item>
+        <item>@string/post_format_audio</item>
+        <item>@string/post_format_chat</item>
+        <item>@string/post_format_gallery</item>
+        <item>@string/post_format_image</item>
+        <item>@string/post_format_link</item>
+        <item>@string/post_format_quote</item>
+        <item>@string/post_format_standard</item>
+        <item>@string/post_format_status</item>
+        <item>@string/post_format_video</item>
     </string-array>
 
     <!-- Menu Buttons -->
@@ -901,11 +957,15 @@
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
 
-    <string-array name="alignment_array">
-        <item>None</item>
-        <item>Left</item>
-        <item>Center</item>
-        <item>Right</item>
+    <string name="align_none">None</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
+    <string-array name="alignment_array" translatable="false">
+        <item>@string/align_none</item>
+        <item>@string/align_left</item>
+        <item>@string/align_center</item>
+        <item>@string/align_right</item>
     </string-array>
 
     <!-- About View -->
@@ -930,6 +990,7 @@
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
+    <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -983,9 +1044,15 @@
     <string name="passcode_turn_on">Turn PIN lock on</string>
     <string name="passcodelock_prompt_message">Enter your PIN</string>
     <string name="passcodelock_hint"></string>
+
+    <!--
+      Jetpack strings
+    -->
     <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
+    <string name="jetpack_not_connected">Jetpack plugin not connected</string>
+    <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
 
     <!--
       reader strings
@@ -1086,7 +1153,9 @@
     <string name="editor_toast_invalid_path">Invalid file path</string>
     <string name="editor_toast_changes_saved">Changes saved</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. Please retry them or delete them.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
+        your post in this state. Would you like to remove all failed media?</string>
+    <string name="editor_remove_failed_uploads">Remove failed uploads</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
@@ -1098,6 +1167,7 @@
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
+    <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
@@ -1133,7 +1203,7 @@
     <string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
     <string name="email_hint">Email address</string>
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
-    <string name="username_email">Username or email</string>
+    <string name="username_email">Email or username</string>
     <string name="site_address">Your self-hosted address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
@@ -1230,7 +1300,7 @@
     <string name="hs__invalid_email_error">Enter a valid email address</string>
 
     <!--Me-->
-    <string name="me_btn_settings">Account Settings</string>
+    <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
@@ -1254,6 +1324,7 @@
     <string name="bullet" translatable="false">\u2022</string>
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
+    <string name="vertical_line" translatable="false">\u007C</string>
 
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
@@ -1266,10 +1337,13 @@
     <string name="support">Support</string>
     <string name="active">Active</string>
 
-    <string-array name="themes_filter_array">
-        <item>Free</item>
-        <item>All</item>
-        <item>Premium</item>
+    <string name="theme_free">Free</string>
+    <string name="theme_all">All</string>
+    <string name="theme_premium">Premium</string>
+    <string-array name="themes_filter_array" translatable="false">
+        <item>@string/theme_free</item>
+        <item>@string/theme_all</item>
+        <item>@string/theme_premium</item>
     </string-array>
 
     <string name="title_activity_theme_support">Themes</string>
@@ -1294,9 +1368,35 @@
     <string name="public_display_name_hint">Display name will default to your username if it is not set</string>
     <string name="about_me">About me</string>
     <string name="about_me_hint">A few words about you…</string>
+    <string name="start_over">Start Over</string>
+    <string name="site_settings_start_over_hint">Start your site over</string>
+    <string name="let_us_help">Let Us Help</string>
+    <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
+    <string name="contact_support">Contact support</string>
+    <string name="confirm_delete_site">Confirm Delete Site</string>
+    <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
+    <string name="site_settings_export_content_title">Export content</string>
+    <string name="error_deleting_site">Error deleting site</string>
+    <string name="error_deleting_site_summary">There was an error in deleting your site. Please contact support for more assistance</string>
+    <string name="primary_domain">Primary Domain</string>
+    <string name="domain_removal">Domain Removal</string>
+    <string name="domain_removal_summary">Be careful! Deleting your site will also remove your domain(s) listed below.</string>
+    <string name="domain_removal_hint">The domains that will not work once you remove your site</string>
+    <string name="keep_your_content">Keep Your Content</string>
+    <string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
+    <string name="export_site_hint">Export your site to an XML file</string>
+    <string name="are_you_sure">Are You Sure?</string>
+    <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
+    <string name="delete_site_hint">Delete site</string>
+    <string name="delete_site_progress">Deleting site…</string>
+    <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
+    <string name="premium_upgrades_title">Premium Upgrades</string>
+    <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
+    <string name="show_purchases">Show purchases</string>
+    <string name="checking_purchases">Checking purchases</string>
 
     <!--Account Settings-->
-    <string name="account_settings">@string/me_btn_settings</string>
+    <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
@@ -1304,4 +1404,44 @@
     <string name="location_menu_spinner_title">%d menu areas in this theme</string>
     <string name="menus_spinner_title">%d menus available</string>
 
+    <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
+    <string name="exporting_content_progress">Exporting content…</string>
+    <string name="export_email_sent">Export email sent!</string>
+    <string name="export_your_content">Export your content</string>
+    <string name="export_your_content_message">Your posts, pages, and settings will be emailed to you at %s.</string>
+
+    <!-- Plans -->
+    <string name="plan">Plan</string>
+    <string name="plans">Plans</string>
+    <string name="plans_loading_error">Unable to load plans</string>
+    <string name="plan_purchase_now">Purchase Now</string>
+    <string name="enter_your_password_instead">Enter your password instead</string>
+
+    <!-- Plans business post-purchase -->
+    <string name="plans_post_purchase_title_intro">It\'s all yours, way to go!</string>
+    <string name="plans_post_purchase_text_intro">Your site is doing somersaults in excitement! Now explore your site\'s new features and choose where you\'d like to begin.</string>
+    <string name="plans_post_purchase_title_customize">Customize Fonts &amp; Colors</string>
+    <string name="plans_post_purchase_text_customize">You now have access to custom fonts, custom colors, and custom CSS editing capabilities.</string>
+    <string name="plans_post_purchase_button_customize">Customize my Site</string>
+    <string name="plans_post_purchase_title_video">Bring posts to life with video</string>
+    <string name="plans_post_purchase_text_video">You can upload and host videos on your site with VideoPress and your expanded media storage.</string>
+    <string name="plans_post_purchase_button_video">Start new post</string>
+    <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
+    <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
+    <string name="plans_post_purchase_button_themes">Browse Themes</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="logging_in">Logging in</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="launch_your_email_app">Launch your email app</string>
+    <string name="checking_email">Checking email</string>
+    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
+
+    <!-- gravatar -->
+    <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
+    <string name="error_cropping_image">Error cropping the image</string>
+    <string name="error_locating_image">Error locating the cropped image</string>
+    <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
+    <string name="error_updating_gravatar">Error updating your Gravatar</string>
+    <string name="gravatar_camera_and_media_permission_required">Permissions required in order to select or capture a photo</string>
 </resources>

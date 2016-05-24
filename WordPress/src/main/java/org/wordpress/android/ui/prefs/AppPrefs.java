@@ -12,6 +12,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 public class AppPrefs {
@@ -59,7 +60,6 @@ public class AppPrefs {
 
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
-
     }
 
     /**
@@ -75,6 +75,18 @@ public class AppPrefs {
 
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
+
+        // When we need to show the Visual Editor Promo Dialog
+        VISUAL_EDITOR_PROMO_REQUIRED,
+
+        // Global plans features
+        GLOBAL_PLANS_PLANS_FEATURES,
+
+        // When we need to sync IAP data with the wpcom backend
+        IAP_SYNC_REQUIRED,
+
+        // When we need to show the Gravatar Change Promo Tooltip
+        GRAVATAR_CHANGE_PROMO_REQUIRED,
     }
 
     private static SharedPreferences prefs() {
@@ -158,12 +170,12 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
     }
 
     public static void setReaderTag(ReaderTag tag) {
-        if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
-            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagName());
+        if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
+            setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
         } else {
             prefs().edit()
@@ -320,14 +332,28 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        // TODO: When we allow users to test the visual editor, we should change this function by:
-        // return BuildConfig.VISUAL_EDITOR_AVAILABLE
-        //        || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE;
+        return BuildConfig.VISUAL_EDITOR_AVAILABLE
+                || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
     }
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+    }
+
+    public static boolean isVisualEditorPromoRequired() {
+        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, true);
+    }
+
+    public static void setVisualEditorPromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
+    }
+
+    public static boolean isGravatarChangePromoRequired() {
+        return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
+    }
+
+    public static void setGravatarChangePromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, required);
     }
 
     // Store the number of times Stats are loaded successfully before showing the Promo Dialog
@@ -338,5 +364,27 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
+    }
+
+    public static boolean isInAppBillingAvailable() {
+        return BuildConfig.IN_APP_BILLING_AVAILABLE;
+    }
+
+    public static void setGlobalPlansFeatures(String jsonOfFeatures) {
+        if (jsonOfFeatures != null) {
+            setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
+        } else {
+            remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
+        }
+    }
+    public static String getGlobalPlansFeatures() {
+        return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
+    }
+
+    public static boolean isInAppPurchaseRefreshRequired() {
+        return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
+    }
+    public static void setInAppPurchaseRefreshRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 }
