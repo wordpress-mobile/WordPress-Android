@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.people;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 
 import android.animation.Animator;
@@ -73,6 +71,7 @@ public class PeopleInviteFragment extends Fragment {
                 buttonizeUsername(username, inflater, usernamesView);
             }
         }
+
         final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
