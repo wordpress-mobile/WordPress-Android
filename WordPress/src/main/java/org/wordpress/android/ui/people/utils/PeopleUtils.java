@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PeopleUtils {
+    public static int FETCH_USERS_LIMIT = 20;
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -49,6 +50,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
+        params.put("number", Integer.toString(PeopleUtils.FETCH_USERS_LIMIT));
         params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");

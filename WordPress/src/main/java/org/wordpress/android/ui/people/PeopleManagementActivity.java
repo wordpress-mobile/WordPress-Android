@@ -53,6 +53,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
+            PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchMorePeopleListener(this);

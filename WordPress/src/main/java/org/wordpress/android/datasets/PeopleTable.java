@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -91,6 +92,17 @@ public class PeopleTable {
     public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    }
+
+    public static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
+        int size = getPeopleCountForLocalBlogId(localTableBlogId);
+        int fetchLimit = PeopleUtils.FETCH_USERS_LIMIT;
+        if (size > fetchLimit) {
+            int deleteCount = size - fetchLimit;
+            String[] args = new String[]{Integer.toString(deleteCount), Integer.toString(localTableBlogId)};
+            getWritableDb().delete(PEOPLE_TABLE, "person_id " +
+                    "IN (SELECT person_id FROM people ORDER BY display_name DESC LIMIT ?) AND local_blog_id=?", args);
+        }
     }
 
     public static void deletePerson(long personID, int localTableBlogId) {
