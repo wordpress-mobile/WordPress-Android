@@ -580,7 +580,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
         final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
 
-        txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
+        txtName.setText(mComment.hasAuthorName() ? HtmlUtils.fastUnescapeHtml(mComment.getAuthorName()) : getString(R.string.anonymous));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
