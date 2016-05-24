@@ -13,6 +13,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -181,21 +182,25 @@ public class PeopleInviteFragment extends Fragment {
     }
 
     private void styleButton(String username, Button button, ValidationResult validationResult) {
+        if (!isAdded()) {
+            return;
+        }
+
         switch (validationResult) {
             case USER_NOT_FOUND:
                 setupConfirmationDialog(button, username, R.string.invite_username_not_found_title, R.string
                         .invite_username_not_found);
-                // properly style the button
+                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case ALREADY_MEMBER:
                 setupConfirmationDialog(button, username, R.string.invite_already_a_member_title, R.string
                         .invite_already_a_member);
-                // properly style the button
+                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case INVALID_EMAIL:
                 setupConfirmationDialog(button, username, R.string.invite_invalid_email_title, R.string
                         .invite_invalid_email);
-                // properly style the button
+                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case USER_FOUND:
                 // properly style the button
