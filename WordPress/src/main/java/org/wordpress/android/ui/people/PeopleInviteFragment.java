@@ -6,8 +6,13 @@ import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallbac
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,15 +28,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Hashtable;
+import java.util.List;
 
 public class PeopleInviteFragment extends Fragment {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
-    private ArrayList<String> mUsernames = new ArrayList<>();
+    private Hashtable<String, Button> mUsernameButtons = new Hashtable<>();
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -57,21 +62,15 @@ public class PeopleInviteFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mUsernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
-        }
-    }
-
-    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_invite_fragment, container, false);
 
         final ViewGroup usernamesView = (ViewGroup) rootView.findViewById(R.id.usernames);
 
-        populateUsernameButtons(inflater, usernamesView);
+        if (savedInstanceState != null) {
+            ArrayList<String> usernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
+            populateUsernameButtons(usernames, inflater, usernamesView);
+        }
 
         final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
         editText.addTextChangedListener(new TextWatcher() {
@@ -106,23 +105,22 @@ public class PeopleInviteFragment extends Fragment {
         return rootView;
     }
 
-    private void populateUsernameButtons(LayoutInflater inflater, ViewGroup usernamesView) {
-        if (mUsernames != null && mUsernames.size() > 0) {
-            final Map<String, Button> buttons = new HashMap<>();
+    private void populateUsernameButtons(List<String> usernames, LayoutInflater inflater, ViewGroup usernamesView) {
+        if (usernames != null && usernames.size() > 0) {
 
-            for (String username : mUsernames) {
-                buttons.put(username, buttonizeUsername(username, inflater, usernamesView));
+            for (String username : usernames) {
+                mUsernameButtons.put(username, buttonizeUsername(username, inflater, usernamesView));
             }
 
             String dotComBlogId = getArguments().getString(ARG_BLOGID);
-            PeopleUtils.validateUsernames(mUsernames, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+            PeopleUtils.validateUsernames(usernames, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
                     if (!isAdded()) {
                         return;
                     }
 
-                    styleButton(buttons.get(username), validationResult);
+                    styleButton(username, mUsernameButtons.get(username), validationResult);
                 }
 
                 @Override
@@ -152,9 +150,9 @@ public class PeopleInviteFragment extends Fragment {
         String username = editText.getText().toString().trim();
         editText.setText("");
 
-        mUsernames.add(username);
-
         final Button usernameButton = buttonizeUsername(username, inflater, usernamesView);
+
+        mUsernameButtons.put(username, usernameButton);
 
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
         PeopleUtils.validateUsernames(Arrays.asList(new String[]{ username }), dotComBlogId,
@@ -165,7 +163,7 @@ public class PeopleInviteFragment extends Fragment {
                     return;
                 }
 
-                styleButton(usernameButton, validationResult);
+                styleButton(username, usernameButton, validationResult);
             }
 
             @Override
@@ -175,15 +173,28 @@ public class PeopleInviteFragment extends Fragment {
         });
     }
 
-    private void styleButton(Button button, ValidationResult validationResult) {
+    private void removeUsername(String username) {
+        Button removedButton = mUsernameButtons.remove(username);
+
+        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
+        usernamesView.removeView(removedButton);
+    }
+
+    private void styleButton(String username, Button button, ValidationResult validationResult) {
         switch (validationResult) {
             case USER_NOT_FOUND:
+                setupConfirmationDialog(button, username, R.string.invite_username_not_found_title, R.string
+                        .invite_username_not_found);
                 // properly style the button
                 break;
             case ALREADY_MEMBER:
+                setupConfirmationDialog(button, username, R.string.invite_already_a_member_title, R.string
+                        .invite_already_a_member);
                 // properly style the button
                 break;
             case INVALID_EMAIL:
+                setupConfirmationDialog(button, username, R.string.invite_invalid_email_title, R.string
+                        .invite_invalid_email);
                 // properly style the button
                 break;
             case USER_FOUND:
@@ -192,10 +203,60 @@ public class PeopleInviteFragment extends Fragment {
         }
     }
 
+    private void setupConfirmationDialog(Button button, final String username, final @StringRes int titleId, final
+            @StringRes int messageId) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsernameRemoveDialogFragment usernameRemoveDialogFragment = UsernameRemoveDialogFragment.newInstance
+                        (username, titleId, messageId);
+                usernameRemoveDialogFragment.setTargetFragment(PeopleInviteFragment.this, 0);
+                usernameRemoveDialogFragment.show(getFragmentManager(), null);
+            }
+        });
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(KEY_USERNAMES, mUsernames);
+        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
 
         super.onSaveInstanceState(outState);
+    }
+
+    public static class UsernameRemoveDialogFragment extends DialogFragment {
+        private static final String ARG_USERNAME = "ARG_USERNAME";
+        private static final String ARG_TITLE = "ARG_TITLE";
+        private static final String ARG_MESSAGE = "ARG_MESSAGE";
+
+        public static UsernameRemoveDialogFragment newInstance(String username, @StringRes int titleId, @StringRes
+                int messageId) {
+            UsernameRemoveDialogFragment usernameRemoveDialogFragment = new UsernameRemoveDialogFragment();
+            Bundle args = new Bundle();
+
+            args.putString(ARG_USERNAME, username);
+            args.putInt(ARG_TITLE, titleId);
+            args.putInt(ARG_MESSAGE, messageId);
+
+            usernameRemoveDialogFragment.setArguments(args);
+            return usernameRemoveDialogFragment;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+            builder.setTitle(getArguments().getInt(ARG_TITLE));
+            builder.setMessage(getString(getArguments().getInt(ARG_MESSAGE), getArguments().getString(ARG_USERNAME)));
+            builder.setNegativeButton(R.string.cancel, null);
+            builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (getTargetFragment() instanceof PeopleInviteFragment) {
+                        PeopleInviteFragment peopleInviteFragment = (PeopleInviteFragment) getTargetFragment();
+                        peopleInviteFragment.removeUsername(getArguments().getString(ARG_USERNAME));
+                    }
+                }
+            });
+            return builder.create();
+        }
     }
 }

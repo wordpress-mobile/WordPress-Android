@@ -1375,6 +1375,12 @@
     <string name="invite_names_hint">Type an email address or username...</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
+    <string name="invite_username_not_found_title">Not found!</string>
+    <string name="invite_username_not_found">No user was found for username \'%s\'.</string>
+    <string name="invite_already_a_member_title">Already a member</string>
+    <string name="invite_already_a_member">There\'s already a member with username \'%s\'.</string>
+    <string name="invite_invalid_email_title">Invalid email!</string>
+    <string name="invite_invalid_email">The email address \'%s\'is invalid.</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
