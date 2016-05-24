@@ -2,6 +2,7 @@ package org.wordpress.android.ui.people;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -16,10 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
@@ -66,11 +71,7 @@ public class PeopleInviteFragment extends Fragment {
 
         final ViewGroup usernamesView = (ViewGroup) rootView.findViewById(R.id.usernames);
 
-        if (mUsernames != null) {
-            for (String username : mUsernames) {
-                buttonizeUsername(username, inflater, usernamesView);
-            }
-        }
+        populateUsernameButtons(inflater, usernamesView);
 
         final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
         editText.addTextChangedListener(new TextWatcher() {
@@ -105,7 +106,34 @@ public class PeopleInviteFragment extends Fragment {
         return rootView;
     }
 
-    private void buttonizeUsername(String username, LayoutInflater inflater, final ViewGroup usernames) {
+    private void populateUsernameButtons(LayoutInflater inflater, ViewGroup usernamesView) {
+        if (mUsernames != null && mUsernames.size() > 0) {
+            final Map<String, Button> buttons = new HashMap<>();
+
+            for (String username : mUsernames) {
+                buttons.put(username, buttonizeUsername(username, inflater, usernamesView));
+            }
+
+            String dotComBlogId = getArguments().getString(ARG_BLOGID);
+            PeopleUtils.validateUsernames(mUsernames, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+                @Override
+                public void onUsernameValidation(String username, ValidationResult validationResult) {
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    styleButton(buttons.get(username), validationResult);
+                }
+
+                @Override
+                public void onError() {
+                    // properly style the button
+                }
+            });
+        }
+    }
+
+    private Button buttonizeUsername(String username, LayoutInflater inflater, final ViewGroup usernames) {
         final AppCompatButton usernameButton = (AppCompatButton) inflater.inflate(R.layout.invite_username_button,
                 null);
         usernameButton.setText(username);
@@ -117,27 +145,27 @@ public class PeopleInviteFragment extends Fragment {
             }
         });
 
+        return usernameButton;
+    }
+
+    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernamesView) {
+        String username = editText.getText().toString().trim();
+        editText.setText("");
+
+        mUsernames.add(username);
+
+        final Button usernameButton = buttonizeUsername(username, inflater, usernamesView);
+
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
-
-        PeopleUtils.validateUsername(username, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
+        PeopleUtils.validateUsernames(Arrays.asList(new String[]{ username }), dotComBlogId,
+                new PeopleUtils.ValidateUsernameCallback() {
             @Override
-            public void onUsernameNotFound(String username) {
-                // properly style the button
-            }
+            public void onUsernameValidation(String username, ValidationResult validationResult) {
+                if (!isAdded()) {
+                    return;
+                }
 
-            @Override
-            public void onUsernameFound(String username) {
-                // properly style the button
-            }
-
-            @Override
-            public void onUsernameAlreadyMember(String username) {
-                // properly style the button
-            }
-
-            @Override
-            public void onInvalidEmail(String username) {
-                // properly style the button
+                styleButton(usernameButton, validationResult);
             }
 
             @Override
@@ -147,13 +175,21 @@ public class PeopleInviteFragment extends Fragment {
         });
     }
 
-    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernamesView) {
-        String username = editText.getText().toString().trim();
-        editText.setText("");
-
-        mUsernames.add(username);
-
-        buttonizeUsername(username, inflater, usernamesView);
+    private void styleButton(Button button, ValidationResult validationResult) {
+        switch (validationResult) {
+            case USER_NOT_FOUND:
+                // properly style the button
+                break;
+            case ALREADY_MEMBER:
+                // properly style the button
+                break;
+            case INVALID_EMAIL:
+                // properly style the button
+                break;
+            case USER_FOUND:
+                // properly style the button
+                break;
+        }
     }
 
     @Override

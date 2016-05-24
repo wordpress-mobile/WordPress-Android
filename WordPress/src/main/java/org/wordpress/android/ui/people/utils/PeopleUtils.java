@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -152,40 +153,45 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsername(final String username, String dotComBlogId, final ValidateUsernameCallback
-            callback) {
+    public static void validateUsernames(final List<String> usernames, String dotComBlogId, final
+            ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
-                    JSONObject error = jsonObject.optJSONObject("errors");
+                    JSONObject errors = jsonObject.optJSONObject("errors");
 
-                    if (error != null) {
-                        JSONObject userError = error.optJSONObject(username);
+                    int errorredUsernameCount = 0;
 
-                        if (userError == null) {
+                    if (errors != null) {
+                        for (String username : usernames) {
+                            JSONObject userError = errors.optJSONObject(username);
+
+                            if (userError == null) {
+                                continue;
+                            }
+
+                            errorredUsernameCount++;
+
+                            switch (userError.optString("code")) {
+                                case "invalid_input":
+                                    switch (userError.optString("message")) {
+                                        case "User not found":
+                                            callback.onUsernameValidation(username, ValidationResult.USER_NOT_FOUND);
+                                            continue;
+                                        case "Invalid email":
+                                            callback.onUsernameValidation(username, ValidationResult.INVALID_EMAIL);
+                                            continue;
+                                    }
+                                    break;
+                                case "invalid_input_has_role":
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
+                                    continue;
+                            }
+
                             callback.onError();
                             return;
                         }
-
-                        switch (userError.optString("code")) {
-                            case "invalid_input":
-                                switch (userError.optString("message")) {
-                                    case "User not found":
-                                        callback.onUsernameNotFound(username);
-                                        return;
-                                    case "Invalid email":
-                                        callback.onInvalidEmail(username);
-                                        return;
-                                }
-                                break;
-                            case "invalid_input_has_role":
-                                callback.onUsernameAlreadyMember(username);
-                                return;
-                        }
-
-                        callback.onError();
-                        return;
                     }
 
                     JSONArray succeededUsernames = jsonObject.optJSONArray("success");
@@ -194,14 +200,19 @@ public class PeopleUtils {
                         return;
                     }
 
+                    int succeededUsernameCount = 0;
+
                     for (int i = 0; i < succeededUsernames.length(); i++) {
-                        if (username.equals(succeededUsernames.optString(i))) {
-                            callback.onUsernameFound(username);
-                            return;
+                        String username = succeededUsernames.optString(i);
+                        if (usernames.contains(username)) {
+                            succeededUsernameCount++;
+                            callback.onUsernameValidation(username, ValidationResult.USER_FOUND);
                         }
                     }
 
-                    callback.onError();
+                    if (errorredUsernameCount + succeededUsernameCount != usernames.size()) {
+                        callback.onError();
+                    }
                 }
             }
         };
@@ -218,16 +229,22 @@ public class PeopleUtils {
 
         String path = String.format("sites/%s/invites/validate", dotComBlogId);
         Map<String, String> params = new HashMap<>();
-        params.put("invitees", username);
+        for (String username : usernames) {
+            params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
+        }
         params.put("role", "follower"); // the specific role is not important, just needs to be a valid one
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
     public interface ValidateUsernameCallback {
-        void onUsernameNotFound(String username);
-        void onUsernameFound(String username);
-        void onUsernameAlreadyMember(String username);
-        void onInvalidEmail(String username);
+        enum ValidationResult {
+            USER_NOT_FOUND,
+            ALREADY_MEMBER,
+            INVALID_EMAIL,
+            USER_FOUND
+        }
+
+        void onUsernameValidation(String username, ValidationResult validationResult);
         void onError();
     }
 }
