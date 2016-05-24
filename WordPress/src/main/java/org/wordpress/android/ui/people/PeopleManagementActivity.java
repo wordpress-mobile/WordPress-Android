@@ -21,8 +21,9 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
+
 public class PeopleManagementActivity extends AppCompatActivity
-        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener {
+        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener, PeopleListFragment.OnFetchMorePeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
@@ -51,6 +52,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
+            peopleListFragment.setOnFetchMorePeopleListener(this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
@@ -256,5 +258,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         return personDetailFragment.loadPerson();
+    }
+
+    @Override
+    public void onFetchMorePeople() {
+        Blog blog = WordPress.getCurrentBlog();
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 20);
     }
 }
