@@ -27,6 +27,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
 
+    private boolean mPeopleEndOfListReached = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,10 +90,14 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        if (mPeopleEndOfListReached) {
+            return;
+        }
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
+                mPeopleEndOfListReached = isEndOfList;
                 PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
             }
@@ -262,6 +268,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onFetchMorePeople() {
+        if (mPeopleEndOfListReached) {
+            return;
+        }
         Blog blog = WordPress.getCurrentBlog();
         int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
         fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
