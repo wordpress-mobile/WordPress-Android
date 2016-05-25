@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -370,7 +369,6 @@ public class WordPress extends Application {
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void enableStrictMode() {
         // return if the build is not a debug build
         if (!BuildConfig.DEBUG) {
