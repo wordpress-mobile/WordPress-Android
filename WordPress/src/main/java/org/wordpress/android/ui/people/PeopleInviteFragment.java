@@ -29,12 +29,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PeopleInviteFragment extends Fragment implements UsernameRemoveDialogFragment.UsernameRemover {
+public class PeopleInviteFragment extends Fragment implements UsernameRemoveDialogFragment.UsernameRemover,
+        RoleChangeDialogFragment.OnChangeListener {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
+    private static final String KEY_ROLE = "KEY_ROLE";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
+    private TextView mRoleTextView;
+
     private Map<String, Button> mUsernameButtons = new LinkedHashMap<>();
+    private String mRole;
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -68,6 +73,13 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         if (savedInstanceState != null) {
             ArrayList<String> usernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
             populateUsernameButtons(usernames, inflater, usernamesView);
+
+            mRole = savedInstanceState.getString(KEY_ROLE);
+        }
+
+        if (mRole == null) {
+            final String[] roles = getResources().getStringArray(R.array.roles);
+            mRole = roles[roles.length - 1];
         }
 
         final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
@@ -99,6 +111,16 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
                 return true;
             }
         });
+
+        View roleContainer = rootView.findViewById(R.id.role_container);
+        roleContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RoleChangeDialogFragment.show(PeopleInviteFragment.this, 0, 0, mRole, 0);
+            }
+        });
+        mRoleTextView = (TextView) rootView.findViewById(R.id.role);
+        mRoleTextView.setText(mRole);
 
         return rootView;
     }
@@ -179,6 +201,14 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         usernamesView.removeView(removedButton);
     }
 
+    @Override
+    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
+        // ignore personID, localTableBlogId as we don't need them here
+
+        mRole = newRole;
+        mRoleTextView.setText(newRole);
+    }
+
     private void styleButton(String username, Button button, ValidationResult validationResult) {
         if (!isAdded()) {
             return;
@@ -219,6 +249,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
+        outState.putString(KEY_ROLE, mRole);
 
         super.onSaveInstanceState(outState);
     }

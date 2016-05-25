@@ -38,5 +38,43 @@
             android:imeOptions="actionDone"
             android:minWidth="40dp" />
     </org.wordpress.android.widgets.FlowLayout>
+
+    <LinearLayout
+            android:id="@+id/role_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/usernames"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="?android:selectableItemBackground"
+            android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="@string/role"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="@string/role"/>
+
+        <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="@string/role"/>
+
+    </LinearLayout>
+
 </org.wordpress.android.ui.SlidingRelativeLayout>
 
