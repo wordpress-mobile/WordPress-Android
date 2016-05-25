@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -26,7 +24,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
-public class PeopleListFragment extends Fragment implements OnItemClickListener {
+public class PeopleListFragment extends Fragment {
     private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
     private int mLocalTableBlogID;
@@ -118,14 +116,6 @@ public class PeopleListFragment extends Fragment implements OnItemClickListener 
         }
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mOnPersonSelectedListener != null) {
-            Person person = (Person) parent.getItemAtPosition(position);
-            mOnPersonSelectedListener.onPersonSelected(person);
-        }
-    }
-
     // Container Activity must implement this interface
     public interface OnPersonSelectedListener {
         void onPersonSelected(Person person);
@@ -175,7 +165,7 @@ public class PeopleListFragment extends Fragment implements OnItemClickListener 
 
         @Override
         public void onBindViewHolder(PeopleAdapter.PeopleViewHolder holder, int position) {
-            Person person = getPerson(position);
+            final Person person = getPerson(position);
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
@@ -189,6 +179,15 @@ public class PeopleListFragment extends Fragment implements OnItemClickListener 
             if (mOnFetchMorePeopleListener != null && position == getItemCount() - 1) {
                 mOnFetchMorePeopleListener.onFetchMorePeople();
             }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnPersonSelectedListener != null) {
+                        mOnPersonSelectedListener.onPersonSelected(person);
+                    }
+                }
+            });
         }
 
         public class PeopleViewHolder extends RecyclerView.ViewHolder {
