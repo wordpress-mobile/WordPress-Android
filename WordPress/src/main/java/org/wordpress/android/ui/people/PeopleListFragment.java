@@ -1,14 +1,16 @@
 package org.wordpress.android.ui.people;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,13 +23,14 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
-public class PeopleListFragment extends ListFragment implements OnItemClickListener {
+public class PeopleListFragment extends Fragment implements OnItemClickListener {
     private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
     private int mLocalTableBlogID;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchMorePeopleListener mOnFetchMorePeopleListener;
 
+    private RecyclerView mRecyclerView;
     private ProgressBar mProgress;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
@@ -57,6 +60,10 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         // progress bar that appears when loading more people
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
@@ -69,7 +76,7 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
         super.onActivityCreated(savedInstanceState);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        getListView().setOnItemClickListener(this);
+        // set on item click listener
     }
 
     @Override
@@ -84,10 +91,10 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
 
         List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
 
-        PeopleAdapter peopleAdapter = (PeopleAdapter) getListAdapter();
+        PeopleAdapter peopleAdapter = (PeopleAdapter) mRecyclerView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
-            setListAdapter(peopleAdapter);
+            mRecyclerView.setAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
         }
@@ -124,7 +131,7 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
         void onFetchMorePeople();
     }
 
-    public class PeopleAdapter extends BaseAdapter {
+    public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder> {
         private final LayoutInflater mInflater;
         private List<Person> mPeopleList;
         private int mAvatarSz;
@@ -140,16 +147,7 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
             notifyDataSetChanged();
         }
 
-        @Override
-        public int getCount() {
-            if (mPeopleList == null) {
-                return 0;
-            }
-            return mPeopleList.size();
-        }
-
-        @Override
-        public Person getItem(int position) {
+        public Person getPerson(int position) {
             if (mPeopleList == null) {
                 return null;
             }
@@ -157,27 +155,23 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
         }
 
         @Override
-        public long getItemId(int position) {
-            Person person = getItem(position);
-            if (person == null) {
-                return -1;
+        public int getItemCount() {
+            if (mPeopleList == null) {
+                return 0;
             }
-            return person.getPersonID();
+            return mPeopleList.size();
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final PeopleViewHolder holder;
+        public PeopleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = mInflater.inflate(R.layout.people_list_row, parent, false);
 
-            if (convertView == null || convertView.getTag() == null) {
-                convertView = mInflater.inflate(R.layout.people_list_row, parent, false);
-                holder = new PeopleViewHolder(convertView);
-                convertView.setTag(holder);
-            } else {
-                holder = (PeopleViewHolder) convertView.getTag();
-            }
+            return new PeopleViewHolder(view);
+        }
 
-            Person person = getItem(position);
+        @Override
+        public void onBindViewHolder(PeopleAdapter.PeopleViewHolder holder, int position) {
+            Person person = getPerson(position);
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
@@ -188,24 +182,23 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
             }
 
             // end of list is reached
-            if (mOnFetchMorePeopleListener != null && position == getCount() - 1) {
+            if (mOnFetchMorePeopleListener != null && position == getItemCount() - 1) {
                 mOnFetchMorePeopleListener.onFetchMorePeople();
             }
-
-            return convertView;
         }
 
-        private class PeopleViewHolder {
+        public class PeopleViewHolder extends RecyclerView.ViewHolder {
             private final WPNetworkImageView imgAvatar;
             private final TextView txtDisplayName;
             private final TextView txtUsername;
             private final TextView txtRole;
 
-            PeopleViewHolder(View row) {
-                imgAvatar = (WPNetworkImageView) row.findViewById(R.id.person_avatar);
-                txtDisplayName = (TextView) row.findViewById(R.id.person_display_name);
-                txtUsername = (TextView) row.findViewById(R.id.person_username);
-                txtRole = (TextView) row.findViewById(R.id.person_role);
+            public PeopleViewHolder(View view) {
+                super(view);
+                imgAvatar = (WPNetworkImageView) view.findViewById(R.id.person_avatar);
+                txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
+                txtUsername = (TextView) view.findViewById(R.id.person_username);
+                txtRole = (TextView) view.findViewById(R.id.person_role);
             }
         }
     }
