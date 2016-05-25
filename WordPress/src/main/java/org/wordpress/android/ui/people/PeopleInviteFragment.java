@@ -29,15 +29,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
-    private Hashtable<String, Button> mUsernameButtons = new Hashtable<>();
+    private Map<String, Button> mUsernameButtons = new LinkedHashMap<>();
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
