@@ -78,7 +78,6 @@ public class PeopleListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        // set on item click listener
     }
 
     @Override
@@ -92,6 +91,7 @@ public class PeopleListFragment extends Fragment {
         if (!isAdded()) return;
 
         List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
+        showLoadingProgress(peopleList.isEmpty());
 
         PeopleAdapter peopleAdapter = (PeopleAdapter) mRecyclerView.getAdapter();
         if (peopleAdapter == null) {
