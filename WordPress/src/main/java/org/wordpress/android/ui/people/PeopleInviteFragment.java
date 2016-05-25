@@ -122,6 +122,25 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         mRoleTextView = (TextView) rootView.findViewById(R.id.role);
         mRoleTextView.setText(mRole);
 
+        final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
+        final TextView remainingCharsTextView = (TextView) rootView.findViewById(R.id.message_remaining);
+        final EditText messageEditText = (EditText) rootView.findViewById(R.id.message);
+        messageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                remainingCharsTextView.setText(getString(R.string.invite_message_remaining, MAX_CHARS - messageEditText
+                        .getText().toString().length()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        remainingCharsTextView.setText(getString(R.string.invite_message_remaining, MAX_CHARS - messageEditText
+                .getText().toString().length()));
+
         return rootView;
     }
 

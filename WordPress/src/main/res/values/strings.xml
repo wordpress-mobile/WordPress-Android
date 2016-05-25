@@ -1381,6 +1381,9 @@
     <string name="invite_already_a_member">There\'s already a member with username \'%s\'.</string>
     <string name="invite_invalid_email_title">Invalid email!</string>
     <string name="invite_invalid_email">The email address \'%s\'is invalid.</string>
+    <string name="invite_message_title">Custom Message</string>
+    <string name="invite_message_remaining">%d characters remaining</string>
+    <string name="invite_message_info">(Optional) You can enter a custom message of up to 500 characters that will be included in the invitation to the user(s).</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
