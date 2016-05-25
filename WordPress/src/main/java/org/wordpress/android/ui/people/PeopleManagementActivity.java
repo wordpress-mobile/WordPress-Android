@@ -27,8 +27,10 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
+    private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
 
     private boolean mPeopleEndOfListReached;
+    private boolean mFetchRequestInProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.setOnFetchMorePeopleListener(this);
 
             mPeopleEndOfListReached = false;
+            mFetchRequestInProgress = false;
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
@@ -68,6 +71,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         } else {
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
+            mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
 
             FragmentManager fragmentManager = getFragmentManager();
             PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
@@ -83,6 +87,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
+        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
     }
 
     @Override
@@ -111,7 +116,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
-        if (mPeopleEndOfListReached) {
+        if (mPeopleEndOfListReached || mFetchRequestInProgress) {
             return;
         }
 
@@ -122,6 +127,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.showLoadingProgress(true);
         }
 
+        mFetchRequestInProgress = true;
+
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
@@ -130,6 +137,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
 
+                mFetchRequestInProgress = false;
                 if (peopleListFragment != null) {
                     peopleListFragment.showLoadingProgress(false);
                 }
@@ -137,6 +145,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
+                mFetchRequestInProgress = false;
                 if (peopleListFragment != null) {
                     peopleListFragment.showLoadingProgress(false);
                 }

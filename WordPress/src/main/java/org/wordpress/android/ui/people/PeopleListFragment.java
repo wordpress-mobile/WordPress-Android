@@ -22,7 +22,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.List;
 
 public class PeopleListFragment extends ListFragment implements OnItemClickListener {
-    private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
 
     private int mLocalTableBlogID;
     private OnPersonSelectedListener mOnPersonSelectedListener;
