@@ -523,7 +523,7 @@ public class Blog {
     }
 
     public String getCapabilities() {
-        return capabilities;
+        return StringUtils.notNullStr(capabilities);
     }
 
     public void setCapabilities(String capabilities) {
@@ -532,7 +532,7 @@ public class Blog {
 
     public boolean hasCapability(Capability capability) {
         // If a capability is missing it means the user don't have it.
-        if (capabilities == null || capabilities.isEmpty() || capability == null) {
+        if (capabilities.isEmpty() || capability == null) {
             return false;
         }
         try {

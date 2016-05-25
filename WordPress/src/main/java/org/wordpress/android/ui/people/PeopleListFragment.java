@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.people;
 
-import android.app.Activity;
 import android.app.ListFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,26 +30,8 @@ public class PeopleListFragment extends ListFragment implements OnItemClickListe
         return peopleListFragment;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (OnPersonSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnPersonSelectedListener");
-        }
-    }
-
-    // We need to override this for devices pre API 23
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnPersonSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnPersonSelectedListener");
-        }
+    public void setOnPersonSelectedListener(OnPersonSelectedListener listener) {
+        mListener = listener;
     }
 
     @Override

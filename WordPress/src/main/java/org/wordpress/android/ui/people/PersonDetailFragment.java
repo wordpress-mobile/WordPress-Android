@@ -101,7 +101,7 @@ public class PersonDetailFragment extends Fragment {
 
         Person person = loadPerson();
         if (person != null) {
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+            int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
@@ -148,8 +148,16 @@ public class PersonDetailFragment extends Fragment {
         if (person == null) {
             return;
         }
-        RoleChangeDialogFragment.newInstance(person.getPersonID(), person.getLocalTableBlogId(), person.getRole())
-                .show(getFragmentManager(), null);
+
+        RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
+                person.getLocalTableBlogId(), person.getRole());
+        dialog.setOnChangeListener((PeopleManagementActivity) getActivity());
+        dialog.show(getFragmentManager(), null);
+    }
+
+    // used to optimistically update the role
+    public void changeRole(String newRole) {
+        mRoleTextView.setText(newRole);
     }
 
     @SuppressWarnings("deprecation")

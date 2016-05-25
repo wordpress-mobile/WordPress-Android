@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleTable {
-    public static final String PEOPLE_TABLE = "people";
+    private static final String PEOPLE_TABLE = "people";
 
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
@@ -69,7 +69,7 @@ public class PeopleTable {
         getWritableDb().beginTransaction();
         try {
             //We have a fresh list, remove the previous list of people in case it was deleted on remote
-            PeopleTable.deletePeopleForBlog(localTableBlogId);
+            PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
 
             for (Person person : peopleList) {
                 PeopleTable.save(person);
@@ -80,7 +80,7 @@ public class PeopleTable {
         }
     }
 
-    public static void deletePeopleForBlog(int localTableBlogId) {
+    public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
     }
@@ -94,7 +94,7 @@ public class PeopleTable {
         List<Person> people = new ArrayList<>();
         String[] args = { Integer.toString(localTableBlogId) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE local_blog_id=? ORDER BY display_name, user_name", args);
+                " WHERE local_blog_id=? ORDER BY lower(display_name), lower(user_name)", args);
 
         try {
             while (c.moveToNext()) {
@@ -131,14 +131,15 @@ public class PeopleTable {
     private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
         String blogId = c.getString(c.getColumnIndex("blog_id"));
-        String username = c.getString(c.getColumnIndex("user_name"));
-        String firstName = c.getString(c.getColumnIndex("first_name"));
-        String lastName = c.getString(c.getColumnIndex("last_name"));
-        String displayName = c.getString(c.getColumnIndex("display_name"));
-        String avatarUrl = c.getString(c.getColumnIndex("avatar_url"));
-        String role = c.getString(c.getColumnIndex("role"));
 
-        return new Person(personId, blogId, localTableBlogId, username,
-                firstName, lastName, displayName, avatarUrl, role);
+        Person person = new Person(personId, blogId, localTableBlogId);
+        person.setUsername(c.getString(c.getColumnIndex("user_name")));
+        person.setFirstName(c.getString(c.getColumnIndex("first_name")));
+        person.setLastName(c.getString(c.getColumnIndex("last_name")));
+        person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
+        person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
+        person.setRole(c.getString(c.getColumnIndex("role")));
+
+        return person;
     }
 }

@@ -17,7 +17,6 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -44,20 +43,23 @@ public class PeopleManagementActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        int localBlogId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-        Blog blog = WordPress.getBlog(localBlogId);
+        Blog blog = WordPress.getCurrentBlog();
+        if (blog == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+            return;
+        }
 
         if (savedInstanceState == null) {
-            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(localBlogId);
+            PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
+            peopleListFragment.setOnPersonSelectedListener(this);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         }
 
-        if (blog != null) {
-            refreshUsersList(blog.getDotComBlogId(), localBlogId);
-        }
+        refreshUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
     }
 
     @Override
@@ -139,10 +141,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        Person person = PeopleTable.getPerson(personID, localTableBlogId);
+        final Person person = PeopleTable.getPerson(personID, localTableBlogId);
         if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        final PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+        if (personDetailFragment != null) {
+            // optimistically update the role
+            personDetailFragment.changeRole(newRole);
+        }
+
         PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), newRole, localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
@@ -153,6 +165,10 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
+                // change the role back to it's original value
+                if (personDetailFragment != null) {
+                    personDetailFragment.refreshPersonDetails();
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_update_role,
                         ToastUtils.Duration.LONG);

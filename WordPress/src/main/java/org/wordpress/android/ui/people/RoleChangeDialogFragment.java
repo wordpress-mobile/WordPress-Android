@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -44,26 +43,8 @@ public class RoleChangeDialogFragment extends DialogFragment {
         return roleChangeDialogFragment;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (OnChangeListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnChangeListener");
-        }
-    }
-
-    // We need to override this for devices pre API 23
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnChangeListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnChangeListener");
-        }
+    public void setOnChangeListener(OnChangeListener listener) {
+        mListener = listener;
     }
 
     @Override

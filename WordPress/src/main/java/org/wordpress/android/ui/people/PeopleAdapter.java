@@ -21,7 +21,7 @@ public class PeopleAdapter extends BaseAdapter {
     private int mAvatarSz;
 
     public PeopleAdapter(Context context, List<Person> peopleList) {
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
         mInflater = LayoutInflater.from(context);
         mPeopleList = peopleList;
     }
@@ -51,7 +51,7 @@ public class PeopleAdapter extends BaseAdapter {
     public long getItemId(int position) {
         Person person = getItem(position);
         if (person == null) {
-            return 0;
+            return -1;
         }
         return person.getPersonID();
     }

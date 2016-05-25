@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 public class Person {
     private long personID;
@@ -18,24 +19,10 @@ public class Person {
     private String avatarUrl;
     private String role;
 
-    public Person(long personID,
-                  String blogId,
-                  int localTableBlogId,
-                  String username,
-                  String firstName,
-                  String lastName,
-                  String displayName,
-                  String avatarUrl,
-                  String role) {
+    public Person(long personID, String blogId, int localTableBlogId) {
         this.personID = personID;
         this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.displayName = displayName;
-        this.avatarUrl = avatarUrl;
-        this.role = role;
     }
 
     @Nullable
@@ -47,16 +34,17 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            String username = json.optString("login");
-            String firstName = json.optString("first_name");
-            String lastName = json.optString("last_name");
-            String displayName = json.optString("name");
-            String avatarUrl = json.optString("avatar_URL");
+            Person person = new Person(personID, blogId, localTableBlogId);
+            person.setUsername(json.optString("login"));
+            person.setFirstName(json.optString("first_name"));
+            person.setLastName(json.optString("last_name"));
+            person.setDisplayName(json.optString("name"));
+            person.setAvatarUrl(json.optString("avatar_URL"));
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
+            person.setRole(role);
 
-            return new Person(personID, blogId, localTableBlogId, username,
-                    firstName, lastName, displayName, avatarUrl, role);
+            return person;
         } catch (NumberFormatException e) {
             AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
         }
@@ -69,7 +57,7 @@ public class Person {
     }
 
     public String getBlogId() {
-        return blogId;
+        return StringUtils.notNullStr(blogId);
     }
 
     public int getLocalTableBlogId() {
@@ -77,7 +65,7 @@ public class Person {
     }
 
     public String getUsername() {
-        return username;
+        return StringUtils.notNullStr(username);
     }
 
     public void setUsername(String username) {
@@ -85,7 +73,7 @@ public class Person {
     }
 
     public String getFirstName() {
-        return firstName;
+        return StringUtils.notNullStr(firstName);
     }
 
     public void setFirstName(String firstName) {
@@ -93,7 +81,7 @@ public class Person {
     }
 
     public String getLastName() {
-        return lastName;
+        return StringUtils.notNullStr(lastName);
     }
 
     public void setLastName(String lastName) {
@@ -101,7 +89,7 @@ public class Person {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return StringUtils.notNullStr(displayName);
     }
 
     public void setDisplayName(String displayName) {
@@ -109,7 +97,7 @@ public class Person {
     }
 
     public String getRole() {
-        return role;
+        return StringUtils.notNullStr(role);
     }
 
     public void setRole(String role) {
@@ -117,7 +105,7 @@ public class Person {
     }
 
     public String getAvatarUrl() {
-        return avatarUrl;
+        return StringUtils.notNullStr(avatarUrl);
     }
 
     public void setAvatarUrl(String avatarUrl) {
