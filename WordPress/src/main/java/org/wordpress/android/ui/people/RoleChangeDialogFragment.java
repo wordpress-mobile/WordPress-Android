@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.people;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,7 +22,6 @@ public class RoleChangeDialogFragment extends DialogFragment {
     private static final String ROLE_TAG = "role";
 
     private RoleListAdapter mRoleListAdapter;
-    private OnChangeListener mListener;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -29,7 +30,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
         outState.putString(ROLE_TAG, role);
     }
 
-    public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, String role) {
+    protected static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, String role) {
         RoleChangeDialogFragment roleChangeDialogFragment = new RoleChangeDialogFragment();
         Bundle args = new Bundle();
 
@@ -43,16 +44,6 @@ public class RoleChangeDialogFragment extends DialogFragment {
         return roleChangeDialogFragment;
     }
 
-    public void setOnChangeListener(OnChangeListener listener) {
-        mListener = listener;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
@@ -61,14 +52,24 @@ public class RoleChangeDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mListener != null) {
-                    String role = mRoleListAdapter.getSelectedRole();
-                    Bundle args = getArguments();
-                    if (args != null) {
-                        long personID = args.getLong(PERSON_ID_TAG);
-                        int localTableBlogId = args.getInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG);
-                        mListener.onRoleChanged(personID, localTableBlogId, role);
-                    }
+                if (!isAdded()) {
+                    return;
+                }
+
+                if (getTargetFragment() instanceof OnChangeListener) {
+                    launchListener(((OnChangeListener) getTargetFragment()));
+                } else if (getActivity() instanceof OnChangeListener) {
+                    launchListener(((OnChangeListener) getActivity()));
+                }
+            }
+
+            private void launchListener(OnChangeListener onChangeListener) {
+                String role = mRoleListAdapter.getSelectedRole();
+                Bundle args = getArguments();
+                if (args != null) {
+                    long personID = args.getLong(PERSON_ID_TAG);
+                    int localTableBlogId = args.getInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG);
+                    onChangeListener.onRoleChanged(personID, localTableBlogId, role);
                 }
             }
         });
@@ -142,6 +143,21 @@ public class RoleChangeDialogFragment extends DialogFragment {
         public void setSelectedRole(String role) {
             mSelectedRole = role;
         }
+    }
+
+    public static <T extends Fragment & OnChangeListener> void show(T parentFragment, long personID, int
+            localTableBlogId, String role, int requestCode) {
+        RoleChangeDialogFragment roleChangeDialogFragment = RoleChangeDialogFragment.newInstance(personID,
+                localTableBlogId, role);
+        roleChangeDialogFragment.setTargetFragment(parentFragment, requestCode);
+        roleChangeDialogFragment.show(parentFragment.getFragmentManager(), null);
+    }
+
+    public static <T extends Activity & OnChangeListener> void show(T parentActivity, long personID, int
+            localTableBlogId, String role) {
+        RoleChangeDialogFragment roleChangeDialogFragment = RoleChangeDialogFragment.newInstance(personID,
+                localTableBlogId, role);
+        roleChangeDialogFragment.show(parentActivity.getFragmentManager(), null);
     }
 
     // Container Activity must implement this interface
