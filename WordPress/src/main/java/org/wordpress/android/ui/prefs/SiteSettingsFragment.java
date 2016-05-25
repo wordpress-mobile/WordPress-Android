@@ -189,6 +189,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private boolean mEditingEnabled = true;
 
+    // Reference to the state of the fragment
+    private boolean mIsFragmentPaused = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,11 +226,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onPause() {
         super.onPause();
         WordPress.wpDB.saveBlog(mBlog);
+        mIsFragmentPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        // Fragment#onResume() is called after FragmentActivity#onPostResume().
+        // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
+        mIsFragmentPaused = false;
 
         // always load cached settings
         mSiteSettings.init(false);
@@ -825,6 +833,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
+        if (mIsFragmentPaused) return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
+        // DialogFragment internally uses commit(), and not commitAllowingStateLoss, crashing the app in case like that.
         Bundle args = new Bundle();
         args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mBlog.getHomeURL()));
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
