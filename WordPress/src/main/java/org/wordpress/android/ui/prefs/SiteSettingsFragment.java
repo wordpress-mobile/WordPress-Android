@@ -740,6 +740,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                 AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED);
     }
 
+    private void dismissProgressDialog(ProgressDialog progressDialog) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            try {
+                progressDialog.dismiss();
+            } catch (IllegalArgumentException e) {
+                // dialog doesn't exist
+            }
+        }
+    }
+
     private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
@@ -748,7 +758,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                progressDialog.dismiss();
+                dismissProgressDialog(progressDialog);
                 if (isAdded()) {
                     showPurchasesOrDeleteSiteDialog(response, currentBlog);
                 }
@@ -756,7 +766,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
+                dismissProgressDialog(progressDialog);
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
                     AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
@@ -1241,7 +1251,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             if (isAdded()) {
                                 AnalyticsUtils.trackWithCurrentBlogDetails(
                                         AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK);
-                                progressDialog.dismiss();
+                                dismissProgressDialog(progressDialog);
                                 Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                             }
                         }
@@ -1253,7 +1263,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                 errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
                                 AnalyticsUtils.trackWithCurrentBlogDetails(
                                         AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR, errorProperty);
-                                progressDialog.dismiss();
+                                dismissProgressDialog(progressDialog);
                             }
                         }
                     });
@@ -1281,7 +1291,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, errorProperty);
-                            progressDialog.dismiss();
+                            dismissProgressDialog(progressDialog);
                             handleDeleteSiteError();
                         }
                     });
