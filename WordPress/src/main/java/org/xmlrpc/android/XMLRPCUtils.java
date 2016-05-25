@@ -150,7 +150,7 @@ public class XMLRPCUtils {
         return URLUtil.isValidUrl(newUrl) ? newUrl : url;
     }
 
-    public static String sanitizeSiteUrl(String siteUrl, boolean isHttps) throws XMLRPCUtilsException {
+    public static String sanitizeSiteUrl(String siteUrl, boolean addHttps) throws XMLRPCUtilsException {
         // remove padding whitespace
         String url = siteUrl.trim();
 
@@ -163,7 +163,7 @@ public class XMLRPCUtils {
         url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        url = UrlUtils.addUrlSchemeIfNeeded(url, isHttps);
+        url = UrlUtils.addUrlSchemeIfNeeded(url, addHttps);
 
         // strip url from known usual trailing paths
         url = XMLRPCUtils.stripKnownPaths(url);
@@ -313,7 +313,7 @@ public class XMLRPCUtils {
         // add the url as provided by the user
         urlsToTry.add(siteUrl);
 
-        // add a sanitized version of the http url
+        // add a sanitized version of the http url (if the user didn't specify it)
         final String sanitizedHttpsURL = sanitizeSiteUrl(siteUrl, true);
         if (!urlsToTry.contains(sanitizedHttpsURL)) {
             urlsToTry.add(sanitizedHttpsURL);
@@ -325,7 +325,7 @@ public class XMLRPCUtils {
             urlsToTry.add(appendedXmlrpcUrl);
         }
 
-        // add a sanitized version of the https url
+        // add a sanitized version of the https url (if the user didn't specify it)
         final String sanitizedHttpURL = sanitizeSiteUrl(siteUrl, false);
         if (!urlsToTry.contains(sanitizedHttpURL)) {
             urlsToTry.add(sanitizedHttpURL);
