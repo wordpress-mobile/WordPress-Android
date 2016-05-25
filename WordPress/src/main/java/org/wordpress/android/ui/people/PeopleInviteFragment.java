@@ -6,11 +6,7 @@ import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallbac
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
@@ -33,7 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PeopleInviteFragment extends Fragment {
+public class PeopleInviteFragment extends Fragment implements UsernameRemoveDialogFragment.UsernameRemover {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
@@ -175,7 +171,8 @@ public class PeopleInviteFragment extends Fragment {
         });
     }
 
-    private void removeUsername(String username) {
+    @Override
+    public void removeUsername(String username) {
         Button removedButton = mUsernameButtons.remove(username);
 
         final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
@@ -214,10 +211,7 @@ public class PeopleInviteFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UsernameRemoveDialogFragment usernameRemoveDialogFragment = UsernameRemoveDialogFragment.newInstance
-                        (username, titleId, messageId);
-                usernameRemoveDialogFragment.setTargetFragment(PeopleInviteFragment.this, 0);
-                usernameRemoveDialogFragment.show(getFragmentManager(), null);
+                UsernameRemoveDialogFragment.show(username, titleId, messageId, PeopleInviteFragment.this, 0);
             }
         });
     }
@@ -227,42 +221,5 @@ public class PeopleInviteFragment extends Fragment {
         outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
 
         super.onSaveInstanceState(outState);
-    }
-
-    public static class UsernameRemoveDialogFragment extends DialogFragment {
-        private static final String ARG_USERNAME = "ARG_USERNAME";
-        private static final String ARG_TITLE = "ARG_TITLE";
-        private static final String ARG_MESSAGE = "ARG_MESSAGE";
-
-        public static UsernameRemoveDialogFragment newInstance(String username, @StringRes int titleId, @StringRes
-                int messageId) {
-            UsernameRemoveDialogFragment usernameRemoveDialogFragment = new UsernameRemoveDialogFragment();
-            Bundle args = new Bundle();
-
-            args.putString(ARG_USERNAME, username);
-            args.putInt(ARG_TITLE, titleId);
-            args.putInt(ARG_MESSAGE, messageId);
-
-            usernameRemoveDialogFragment.setArguments(args);
-            return usernameRemoveDialogFragment;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-            builder.setTitle(getArguments().getInt(ARG_TITLE));
-            builder.setMessage(getString(getArguments().getInt(ARG_MESSAGE), getArguments().getString(ARG_USERNAME)));
-            builder.setNegativeButton(R.string.cancel, null);
-            builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (getTargetFragment() instanceof PeopleInviteFragment) {
-                        PeopleInviteFragment peopleInviteFragment = (PeopleInviteFragment) getTargetFragment();
-                        peopleInviteFragment.removeUsername(getArguments().getString(ARG_USERNAME));
-                    }
-                }
-            });
-            return builder.create();
-        }
     }
 }
