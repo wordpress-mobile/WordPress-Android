@@ -99,9 +99,14 @@ public class PeopleTable {
         int fetchLimit = PeopleUtils.FETCH_USERS_LIMIT;
         if (size > fetchLimit) {
             int deleteCount = size - fetchLimit;
-            String[] args = new String[]{Integer.toString(deleteCount), Integer.toString(localTableBlogId)};
-            getWritableDb().delete(PEOPLE_TABLE, "person_id " +
-                    "IN (SELECT person_id FROM people ORDER BY display_name DESC LIMIT ?) AND local_blog_id=?", args);
+            String[] args = new String[] {
+                    Integer.toString(localTableBlogId),
+                    Integer.toString(localTableBlogId),
+                    Integer.toString(deleteCount)
+            };
+            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND person_id " +
+                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=? " +
+                    "ORDER BY display_name DESC LIMIT ?)", args);
         }
     }
 
