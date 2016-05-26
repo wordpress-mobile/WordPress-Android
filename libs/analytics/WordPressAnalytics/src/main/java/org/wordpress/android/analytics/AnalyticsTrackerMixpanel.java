@@ -651,7 +651,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
-            case OPENED_PEOPLE:
+            case OPENED_PEOPLE_MANAGEMENT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("People Management - Accessed List");
                 break;

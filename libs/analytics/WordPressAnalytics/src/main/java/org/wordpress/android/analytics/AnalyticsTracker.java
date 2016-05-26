@@ -111,7 +111,7 @@ public final class AnalyticsTracker {
         OPENED_ACCOUNT_SETTINGS,
         OPENED_APP_SETTINGS,
         OPENED_MY_PROFILE,
-        OPENED_PEOPLE,
+        OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
         CREATED_ACCOUNT,
         ACCOUNT_LOGOUT,

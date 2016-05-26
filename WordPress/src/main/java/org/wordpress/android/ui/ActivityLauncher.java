@@ -120,7 +120,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPeople(Context context) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, Blog blog) {

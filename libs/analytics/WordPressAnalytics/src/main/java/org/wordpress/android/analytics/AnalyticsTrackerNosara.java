@@ -281,7 +281,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_MY_PROFILE:
                 eventName = "my_profile_opened";
                 break;
-            case OPENED_PEOPLE:
+            case OPENED_PEOPLE_MANAGEMENT:
                 eventName = "people_management_list_opened";
                 break;
             case OPENED_PERSON:
