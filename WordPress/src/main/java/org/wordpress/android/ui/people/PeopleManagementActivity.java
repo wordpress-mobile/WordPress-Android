@@ -17,6 +17,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
@@ -55,7 +56,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+            // only delete cached people if there is a connection
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+            }
 
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
@@ -114,7 +118,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
-        if (mPeopleEndOfListReached || mFetchRequestInProgress) {
+        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
@@ -177,6 +181,11 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
+        if(!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_update_role, ToastUtils.Duration.LONG);
+            return;
+        }
+
         final Person person = PeopleTable.getPerson(personID, localTableBlogId);
         if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
             return;
@@ -232,6 +241,11 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void removeSelectedPerson() {
+        if(!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_remove_user, ToastUtils.Duration.LONG);
+            return;
+        }
+
         Person person = getCurrentPerson();
         if (person == null) {
             return;
