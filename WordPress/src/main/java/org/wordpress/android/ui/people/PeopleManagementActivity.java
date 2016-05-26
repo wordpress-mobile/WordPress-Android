@@ -12,11 +12,13 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
@@ -116,6 +118,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
         if (!personDetailFragment.isAdded()) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
@@ -143,6 +146,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
                 PeopleTable.save(person);
                 refreshOnScreenFragmentDetails();
             }
@@ -190,6 +194,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 new PeopleUtils.RemoveUserCallback() {
                     @Override
                     public void onSuccess(long personID, int localTableBlogId) {
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                         // remove the person from db, navigate back to list fragment and refresh it
                         Person person = PeopleTable.getPerson(personID, localTableBlogId);
                         String text;
