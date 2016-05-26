@@ -23,8 +23,10 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -268,21 +270,17 @@ public class XMLRPCUtils {
             throws XMLRPCUtilsException {
         final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
 
-        // Array of Strings that contains the URLs we want to try. No discovery ;)
-        final List<String> urlsToTry = new ArrayList<>();
+        // Ordered set of Strings that contains the URLs we want to try. No discovery ;)
+        final Set<String> urlsToTry = new LinkedHashSet<>();
 
         // start by adding the url with 'xmlrpc.php'. This will be the first url to try.
         urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrl));
 
         // add the sanitized URL without the '/xmlrpc.php' suffix added to it
-        if (!urlsToTry.contains(sanitizedSiteUrl)) {
-            urlsToTry.add(sanitizedSiteUrl);
-        }
+        urlsToTry.add(sanitizedSiteUrl);
 
         // add the user provided URL as well
-        if (!urlsToTry.contains(siteUrl)) {
-            urlsToTry.add(siteUrl);
-        }
+        urlsToTry.add(siteUrl);
 
         AppLog.i(AppLog.T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
@@ -308,34 +306,16 @@ public class XMLRPCUtils {
     private static String discoverSelfHostedXmlrpcUrl(String siteUrl, String httpUsername, String httpPassword) throws
             XMLRPCUtilsException {
         // Array of Strings that contains the URLs we want to try
-        final List<String> urlsToTry = new ArrayList<>();
+        final Set<String> urlsToTry = new LinkedHashSet<>();
 
         // add the url as provided by the user
         urlsToTry.add(siteUrl);
 
-        // add a sanitized version of the http url (if the user didn't specify it)
-        final String sanitizedHttpsURL = sanitizeSiteUrl(siteUrl, true);
-        if (!urlsToTry.contains(sanitizedHttpsURL)) {
-            urlsToTry.add(sanitizedHttpsURL);
-        }
-
-        String appendedXmlrpcUrl = appendXMLRPCPath(sanitizedHttpsURL);
-        if (!urlsToTry.contains(appendedXmlrpcUrl)) {
-            appendedXmlrpcUrl += "?rsd";
-            urlsToTry.add(appendedXmlrpcUrl);
-        }
-
         // add a sanitized version of the https url (if the user didn't specify it)
-        final String sanitizedHttpURL = sanitizeSiteUrl(siteUrl, false);
-        if (!urlsToTry.contains(sanitizedHttpURL)) {
-            urlsToTry.add(sanitizedHttpURL);
-        }
+        urlsToTry.add(sanitizeSiteUrl(siteUrl, true));
 
-        appendedXmlrpcUrl = appendXMLRPCPath(sanitizedHttpURL);
-        if (!urlsToTry.contains(appendedXmlrpcUrl)) {
-            appendedXmlrpcUrl += "?rsd";
-            urlsToTry.add(appendedXmlrpcUrl);
-        }
+        // add a sanitized version of the http url (if the user didn't specify it)
+        urlsToTry.add(sanitizeSiteUrl(siteUrl, false));
 
         AppLog.i(AppLog.T.NUX, "The app will call the RSD discovery process on the following URLs: " + urlsToTry);
 
