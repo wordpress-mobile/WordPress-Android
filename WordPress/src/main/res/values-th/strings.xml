@@ -625,7 +625,6 @@
 	<string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
 	<string name="required_field">ช่องที่ต้องการ</string>
 	<string name="email_hint">ที่อยู่อีเมล</string>
-	<string name="username_email">ชื่อผู้ใช้หรืออีเมล</string>
 	<string name="site_address">ที่อยู่เว็บแบบติดตั้งบนโฮสท์เองของคุณ (URL)</string>
 	<string name="email_cant_be_used_to_signup">คุณไม่สามารถใช้อีเมลนั้นในการลงทะเบียนได้  เรากำลังมีปัญหาเรื่องการที่ผู้ให้บริการปิดกั้นอีเมลบางส่วนของเรา  กรุณาใช้ผู้ให้บริการอีเมลรายอื่น</string>
 	<string name="email_reserved">มีการใช้อีเมลนั้นแล้ว  โปรดตรวจสอบกล่องเมลเข้าของคุณสำหรับเมลเปิดการใช้งาน  ถ้าคุณไม่เปิดใช้งาน คุณสามารถลองอีกครั้งในอีกสองสามวันภายหลัง</string>

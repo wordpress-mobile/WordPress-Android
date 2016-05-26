@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
@@ -78,7 +79,7 @@
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
                 android:contentDescription="@string/more"
-                android:src="@drawable/ic_action_more_grey" />
+                app:srcCompat="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
 

@@ -257,6 +257,18 @@ ZSSEditor.onMutationObserved = function(mutations) {
                     ZSSEditor.setRange(parentRange);
                 }
                 ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (mutation.target.className == "edit-container") {
+                // A media item wrapped in an edit container was deleted manually - remove its container
+                // No callback in this case since it's not an uploading or failed media item
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+
+                mutation.target.remove();
+
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
+
+                ZSSEditor.getFocusedField().emptyFieldIfNoContents();
             }
         }
     });
@@ -1538,7 +1550,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var videoContainerEnd = '</span>';
 
     if (posterURL == '') {
-       posterURL = "wpposter.svg";
+       posterURL = "svg/wpposter.svg";
     }
 
     var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
@@ -1788,7 +1800,7 @@ ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
         return match.content;
     }
     var videopressID = match.attrs.numeric[0];
-    var posterSVG = '"wpposter.svg"';
+    var posterSVG = '"svg/wpposter.svg"';
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
     var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster='
@@ -1875,6 +1887,10 @@ ZSSEditor.pauseAllVideos = function () {
     });
 }
 
+ZSSEditor.clearCurrentEditingImage = function() {
+    ZSSEditor.currentEditingImage = null;
+};
+
 /**
  *  @brief      Updates the currently selected image, replacing its markup with
  *  new markup based on the specified meta data string.
@@ -1905,13 +1921,15 @@ ZSSEditor.updateCurrentImageMeta = function( imageMetaString ) {
 ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     var node = ZSSEditor.findImageCaptionNode( imageNode );
 
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-icon"></span>'
+                  + '<span class="edit-content">' + nativeState.localizedStringEdit + '</span></span>';
+
     var sizeClass = "";
     if ( imageNode.width < 100 || imageNode.height < 100 ) {
         sizeClass = " small";
+    } else {
+        overlay = '<span class="delete-overlay" contenteditable="false"></span>' + overlay;
     }
-
-    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
-                  + nativeState.localizedStringEdit + '</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -1923,6 +1941,8 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
    	node.insertAdjacentHTML( 'beforebegin', html );
     var selectionNode = node.previousSibling;
     selectionNode.appendChild( node );
+
+    this.trackNodeForMutation($(selectionNode));
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
@@ -3236,14 +3256,8 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.nodeName.toLowerCase() == 'a') {
             var arguments = ['url=' + encodeURIComponent(targetNode.href),
                              'title=' + encodeURIComponent(targetNode.innerHTML)];
-
             var joinedArguments = arguments.join(defaultCallbackSeparator);
-
-            var thisObj = this;
-
-            // WORKAROUND: force the event to become sort of "after-tap" through setTimeout()
-            //
-            setTimeout(function() { thisObj.callback('callback-link-tap', joinedArguments);}, 500);
+            this.callback('callback-link-tap', joinedArguments);
         }
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
@@ -3278,8 +3292,10 @@ ZSSField.prototype.handleTapEvent = function(e) {
             return;
         }
 
-        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1) {
+        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1
+            || targetNode.className.indexOf('edit-icon') != -1) {
             ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+
             this.sendImageTappedCallback( ZSSEditor.currentEditingImage );
             return;
         }
@@ -3290,6 +3306,26 @@ ZSSField.prototype.handleTapEvent = function(e) {
             var imageNode = targetNode.parentNode.getElementsByTagName('img')[0];
 
             this.sendImageTappedCallback( imageNode );
+            return;
+        }
+
+        if (targetNode.className.indexOf('delete-overlay') != -1) {
+            var parentEditContainer = targetNode.parentElement;
+            var parentDiv = parentEditContainer.parentElement;
+
+            if (parentDiv && parentDiv.nodeName == NodeName.DIV && parentDiv.parentElement.nodeName != NodeName.BODY) {
+                // Remove the parent div with all its contents, unless it's the contenteditable div itself rather than
+                // a paragraph
+                parentDiv.parentElement.removeChild(parentDiv);
+            } else if (parentEditContainer.classList.contains('edit-container')) {
+                parentEditContainer.parentElement.removeChild(parentEditContainer);
+            } else {
+                parentEditContainer.removeChild(targetNode);
+            }
+
+            this.emptyFieldIfNoContents();
+
+            ZSSEditor.currentEditingImage = null;
             return;
         }
 
