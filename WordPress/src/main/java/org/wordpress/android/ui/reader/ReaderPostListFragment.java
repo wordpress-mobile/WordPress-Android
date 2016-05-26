@@ -536,8 +536,8 @@ public class ReaderPostListFragment extends Fragment
      */
     private void setupRecyclerToolbar() {
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
-        mSettingsMenuItem = menu.findItem(R.id.menu_settings);
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
+        mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
 
         mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
