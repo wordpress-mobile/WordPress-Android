@@ -188,18 +188,9 @@ public class PeopleListFragment extends Fragment {
             if (mOnFetchMorePeopleListener != null && position == getItemCount() - 1) {
                 mOnFetchMorePeopleListener.onFetchMorePeople();
             }
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnPersonSelectedListener != null) {
-                        mOnPersonSelectedListener.onPersonSelected(person);
-                    }
-                }
-            });
         }
 
-        public class PeopleViewHolder extends RecyclerView.ViewHolder {
+        public class PeopleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private final WPNetworkImageView imgAvatar;
             private final TextView txtDisplayName;
             private final TextView txtUsername;
@@ -211,6 +202,16 @@ public class PeopleListFragment extends Fragment {
                 txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
                 txtUsername = (TextView) view.findViewById(R.id.person_username);
                 txtRole = (TextView) view.findViewById(R.id.person_role);
+
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (mOnPersonSelectedListener != null) {
+                    Person person = getPerson(getAdapterPosition());
+                    mOnPersonSelectedListener.onPersonSelected(person);
+                }
             }
         }
     }
