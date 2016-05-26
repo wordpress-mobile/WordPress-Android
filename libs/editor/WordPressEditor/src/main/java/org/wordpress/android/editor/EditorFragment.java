@@ -452,7 +452,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
             toggleButton.setChecked(false);
-            ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
 
@@ -583,6 +583,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
+
+            if (isActionInProgress()) {
+                ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+                return;
+            }
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
