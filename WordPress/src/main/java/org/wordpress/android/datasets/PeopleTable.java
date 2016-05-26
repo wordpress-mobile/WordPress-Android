@@ -101,12 +101,11 @@ public class PeopleTable {
             int deleteCount = size - fetchLimit;
             String[] args = new String[] {
                     Integer.toString(localTableBlogId),
-                    Integer.toString(localTableBlogId),
                     Integer.toString(deleteCount)
             };
-            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND person_id " +
-                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=? " +
-                    "ORDER BY display_name DESC LIMIT ?)", args);
+            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND person_id " +
+                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?1 " +
+                    "ORDER BY display_name DESC LIMIT ?2)", args);
         }
     }
 
