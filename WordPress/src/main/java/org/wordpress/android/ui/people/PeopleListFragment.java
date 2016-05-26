@@ -157,6 +157,15 @@ public class PeopleListFragment extends Fragment {
         }
 
         @Override
+        public long getItemId(int position) {
+            Person person = getPerson(position);
+            if (person == null) {
+                return -1;
+            }
+            return person.getPersonID();
+        }
+
+        @Override
         public PeopleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = mInflater.inflate(R.layout.people_list_row, parent, false);
 
