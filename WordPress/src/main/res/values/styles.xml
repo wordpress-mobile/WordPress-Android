@@ -391,7 +391,10 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="MyProfileDividerView">
+    <style name="MyProfileDividerView" parent="GenericDividerView">
+    </style>
+
+    <style name="GenericDividerView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/me_divider</item>
@@ -400,4 +403,19 @@
 
     <!-- Plans Styles -->
     <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />
+
+    <!-- Menu Add/remove styles -->
+    <style name="MenuNameInactiveText">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="MenuNameActiveText" parent="WordPress.NUXEditText">
+        <item name="android:background">@drawable/calypso_edit_text_selected</item>
+        <item name="android:layout_marginLeft">0dp</item>
+    </style>
+
+    <style name="MenusDividerView" parent="GenericDividerView">
+    </style>
+
 </resources>

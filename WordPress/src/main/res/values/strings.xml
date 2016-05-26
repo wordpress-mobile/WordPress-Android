@@ -1429,6 +1429,21 @@
     <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
     <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
+
+    <!-- Calypso menus -->
+    <string name="menus_menu_deleted">Menu deleted</string>
+
+    <!-- FIXME delete these test strings -->
+    <string name="menus_test_test">Test</string>
+    <string name="menus_test_get_all_menus">Get all menus</string>
+    <string name="menus_test_get_last_menu">get last menu</string>
+    <string name="menus_test_get_inexistent_menu">get inexistent menu</string>
+    <string name="menus_test_get_id_zero">Get id=0 menu</string>
+    <string name="menus_test_set_menu">Set menu</string>
+    <string name="menus_test_set_default">Set default menu</string>
+    <string name="menus_test_reset">Reset</string>
+    <string name="menus_test_start_label">Add / Edit / Remove component starts below</string>
+    
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>

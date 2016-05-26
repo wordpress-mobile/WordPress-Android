@@ -7,7 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.ui.ActivityLauncher;
 
+import android.content.Intent;
+
+import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.util.AppLog;
+
 public class MenusActivity extends AppCompatActivity {
+
     private static final String MENUS_FRAGMENT_KEY = "menusFragment";
 
     private MenusFragment mMenusFragment;
@@ -15,6 +22,9 @@ public class MenusActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.menu_activity);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -34,13 +44,9 @@ public class MenusActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+        ActivityId.trackLastActivity(ActivityId.MENUS);
     }
 
     @Override
@@ -48,4 +54,20 @@ public class MenusActivity extends AppCompatActivity {
         super.finish();
         ActivityLauncher.slideOutToRight(this);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        AppLog.d(AppLog.T.MENUS, "menus activity new intent");
+    }
+
 }
