@@ -3,6 +3,7 @@ package org.wordpress.android.ui.people;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.util.StringUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -33,6 +34,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         RoleChangeDialogFragment.OnChangeListener {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
     private static final String KEY_ROLE = "KEY_ROLE";
+    private static final String KEY_CUSTOM_MESSAGE = "KEY_CUSTOM_MESSAGE";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
@@ -40,6 +42,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
     private Map<String, Button> mUsernameButtons = new LinkedHashMap<>();
     private String mRole;
+    private String mCustomMessage = "";
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -62,6 +65,15 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         } else {
             return AnimatorInflater.loadAnimator(getActivity(), R.animator.fragment_slide_out_to_right);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
+        outState.putString(KEY_ROLE, mRole);
+        outState.putString(KEY_CUSTOM_MESSAGE, mCustomMessage);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -112,6 +124,14 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
             }
         });
 
+        View usernamesContainer = rootView.findViewById(R.id.usernames);
+        usernamesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editText.requestFocus();
+            }
+        });
+
         View roleContainer = rootView.findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +144,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) rootView.findViewById(R.id.message_remaining);
+
         final EditText messageEditText = (EditText) rootView.findViewById(R.id.message);
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,17 +152,23 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                remainingCharsTextView.setText(getString(R.string.invite_message_remaining, MAX_CHARS - messageEditText
-                        .getText().toString().length()));
+                mCustomMessage = messageEditText.getText().toString();
+                updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
-        remainingCharsTextView.setText(getString(R.string.invite_message_remaining, MAX_CHARS - messageEditText
-                .getText().toString().length()));
+        updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
 
         return rootView;
+    }
+
+    private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
+        remainingCharsTextView.setText(StringUtils.getQuantityString(getActivity(),
+                R.string.invite_message_remaining_zero,
+                R.string.invite_message_remaining_one,
+                R.string.invite_message_remaining_other, limit - (currentString == null ? 0 : currentString.length())));
     }
 
     private void populateUsernameButtons(List<String> usernames, LayoutInflater inflater, ViewGroup usernamesView) {
@@ -266,10 +293,6 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
-        outState.putString(KEY_ROLE, mRole);
 
-        super.onSaveInstanceState(outState);
     }
 }
