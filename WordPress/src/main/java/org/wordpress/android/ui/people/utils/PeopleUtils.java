@@ -190,6 +190,7 @@ public class PeopleUtils {
                             }
 
                             callback.onError();
+                            callback.onValidationFinished();
                             return;
                         }
                     }
@@ -197,6 +198,7 @@ public class PeopleUtils {
                     JSONArray succeededUsernames = jsonObject.optJSONArray("success");
                     if (succeededUsernames == null) {
                         callback.onError();
+                        callback.onValidationFinished();
                         return;
                     }
 
@@ -212,7 +214,10 @@ public class PeopleUtils {
 
                     if (errorredUsernameCount + succeededUsernameCount != usernames.size()) {
                         callback.onError();
+                        callback.onValidationFinished();
                     }
+
+                    callback.onValidationFinished();
                 }
             }
         };
@@ -245,6 +250,81 @@ public class PeopleUtils {
         }
 
         void onUsernameValidation(String username, ValidationResult validationResult);
+        void onValidationFinished();
+        void onError();
+    }
+
+    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId, final
+            InvitationsSendCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (callback == null) {
+                    return;
+                }
+
+                if (jsonObject == null) {
+                    callback.onError();
+                    return;
+                }
+
+                List<String> failedUsernames = new ArrayList<>();
+
+                JSONObject errors = jsonObject.optJSONObject("errors");
+                if (errors != null) {
+                    for (String username : usernames) {
+                        JSONObject userError = errors.optJSONObject(username);
+
+                        if (userError != null) {
+                            failedUsernames.add(username);
+                        }
+                    }
+                }
+
+                List<String> succeededUsernames = new ArrayList<>();
+                JSONArray succeededUsernamesJson = jsonObject.optJSONArray("sent");
+                if (succeededUsernamesJson == null) {
+                    callback.onError();
+                    return;
+                }
+
+                for (int i = 0; i < succeededUsernamesJson.length(); i++) {
+                    String username = succeededUsernamesJson.optString(i);
+                    if (usernames.contains(username)) {
+                        succeededUsernames.add(username);
+                    }
+                }
+
+                if (failedUsernames.size() + succeededUsernames.size() != usernames.size()) {
+                    callback.onError();
+                }
+
+                callback.onSent(succeededUsernames, failedUsernames);
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path = String.format("sites/%s/invites/new", dotComBlogId);
+        Map<String, String> params = new HashMap<>();
+        for (String username : usernames) {
+            params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
+        }
+        params.put("role", role);
+        params.put("message", message);
+        WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    public interface InvitationsSendCallback {
+        void onSent(List<String> succeededUsernames, List<String> failedUsernames);
         void onError();
     }
 }

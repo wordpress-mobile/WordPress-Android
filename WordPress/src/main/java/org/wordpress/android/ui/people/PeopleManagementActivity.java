@@ -97,6 +97,12 @@ public class PeopleManagementActivity extends AppCompatActivity
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
+        } else if (item.getItemId() == R.id.send_invitation) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
+            if (peopleInviteFragment != null) {
+                ((InvitationSender) peopleInviteFragment).send();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -271,5 +277,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         return personDetailFragment.loadPerson();
+    }
+
+    public interface InvitationSender {
+        void send();
     }
 }

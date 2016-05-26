@@ -4,6 +4,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -17,6 +18,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -26,21 +29,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PeopleInviteFragment extends Fragment implements UsernameRemoveDialogFragment.UsernameRemover,
-        RoleChangeDialogFragment.OnChangeListener {
+public class PeopleInviteFragment extends Fragment implements
+        UsernameRemoveDialogFragment.UsernameRemover,
+        RoleChangeDialogFragment.OnChangeListener,
+        PeopleManagementActivity.InvitationSender {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
     private static final String KEY_ROLE = "KEY_ROLE";
     private static final String KEY_CUSTOM_MESSAGE = "KEY_CUSTOM_MESSAGE";
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
+    private ViewGroup mUsernamesContainer;
+    private EditText mUsernameEditText;
     private TextView mRoleTextView;
+    private EditText mCustomMessageEditText;
 
     private Map<String, Button> mUsernameButtons = new LinkedHashMap<>();
+    private Map<String, ValidationResult> mUsernameResults = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
 
@@ -52,6 +62,12 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
         peopleInviteFragment.setArguments(bundle);
         return peopleInviteFragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.people_invite, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     /**
@@ -78,24 +94,26 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_invite_fragment, container, false);
 
-        final ViewGroup usernamesView = (ViewGroup) rootView.findViewById(R.id.usernames);
+        mUsernamesContainer = (ViewGroup) rootView.findViewById(R.id.usernames);
 
+        String role = null;
         if (savedInstanceState != null) {
             ArrayList<String> usernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
-            populateUsernameButtons(usernames, inflater, usernamesView);
+            populateUsernameButtons(usernames, inflater, mUsernamesContainer);
 
-            mRole = savedInstanceState.getString(KEY_ROLE);
+            role = savedInstanceState.getString(KEY_ROLE);
         }
 
-        if (mRole == null) {
-            final String[] roles = getResources().getStringArray(R.array.roles);
-            mRole = roles[roles.length - 1];
+        if (role == null) {
+            role = loadDefaultRole();
         }
 
-        final EditText editText = (EditText) rootView.findViewById(R.id.invite_usernames);
-        editText.addTextChangedListener(new TextWatcher() {
+        mUsernameEditText = (EditText) rootView.findViewById(R.id.invite_usernames);
+        mUsernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 Log.d("INVITE", "beforeTextChanged: " + count + " char(s): " + s.toString());
@@ -103,8 +121,8 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (editText.getText().toString().endsWith(" ")) {
-                    addUsername(editText, inflater, usernamesView);
+                if (mUsernameEditText.getText().toString().endsWith(" ")) {
+                    addUsername(mUsernameEditText, inflater, mUsernamesContainer, null);
                 }
             }
 
@@ -113,14 +131,22 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
             }
         });
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_UP && event
                         .getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    addUsername(editText, inflater, usernamesView);
+                    addUsername(mUsernameEditText, inflater, mUsernamesContainer, null);
                 }
                 return true;
+            }
+        });
+        mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus && mUsernameEditText.getText().toString().length() > 0) {
+                    addUsername(mUsernameEditText, inflater, mUsernamesContainer, null);
+                }
             }
         });
 
@@ -128,7 +154,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         usernamesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editText.requestFocus();
+                mUsernameEditText.requestFocus();
             }
         });
 
@@ -140,19 +166,20 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
             }
         });
         mRoleTextView = (TextView) rootView.findViewById(R.id.role);
-        mRoleTextView.setText(mRole);
+
+        setRole(role);
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) rootView.findViewById(R.id.message_remaining);
 
-        final EditText messageEditText = (EditText) rootView.findViewById(R.id.message);
-        messageEditText.addTextChangedListener(new TextWatcher() {
+        mCustomMessageEditText = (EditText) rootView.findViewById(R.id.message);
+        mCustomMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mCustomMessage = messageEditText.getText().toString();
+                mCustomMessage = mCustomMessageEditText.getText().toString();
                 updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
             }
 
@@ -162,6 +189,11 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
 
         return rootView;
+    }
+
+    private String loadDefaultRole() {
+        final String[] roles = getResources().getStringArray(R.array.roles);
+        return roles[roles.length - 1];
     }
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
@@ -178,22 +210,7 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
                 mUsernameButtons.put(username, buttonizeUsername(username, inflater, usernamesView));
             }
 
-            String dotComBlogId = getArguments().getString(ARG_BLOGID);
-            PeopleUtils.validateUsernames(usernames, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
-                @Override
-                public void onUsernameValidation(String username, ValidationResult validationResult) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    styleButton(username, mUsernameButtons.get(username), validationResult);
-                }
-
-                @Override
-                public void onError() {
-                    // properly style the button
-                }
-            });
+            validateAndStyleUsername(usernames, null);
         }
     }
 
@@ -212,7 +229,8 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         return usernameButton;
     }
 
-    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernamesView) {
+    private void addUsername(EditText editText, LayoutInflater inflater, final ViewGroup usernamesView,
+                             ValidationEndListener validationEndListener) {
         String username = editText.getText().toString().trim();
         editText.setText("");
 
@@ -220,16 +238,48 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
 
         mUsernameButtons.put(username, usernameButton);
 
+        validateAndStyleUsername(Arrays.asList(new String[]{ username }), validationEndListener);
+    }
+
+    @Override
+    public void removeUsername(String username) {
+        Button removedButton = mUsernameButtons.remove(username);
+        mUsernameResults.remove(username);
+
+        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
+        usernamesView.removeView(removedButton);
+    }
+
+    @Override
+    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
+        // ignore personID, localTableBlogId as we don't need them here
+        setRole(newRole);
+    }
+
+    private void setRole(String newRole) {
+        mRole = newRole;
+        mRoleTextView.setText(newRole);
+    }
+
+    private void validateAndStyleUsername(List<String> usernames, final ValidationEndListener validationEndListener) {
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
-        PeopleUtils.validateUsernames(Arrays.asList(new String[]{ username }), dotComBlogId,
-                new PeopleUtils.ValidateUsernameCallback() {
+        PeopleUtils.validateUsernames(usernames, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
             @Override
             public void onUsernameValidation(String username, ValidationResult validationResult) {
                 if (!isAdded()) {
                     return;
                 }
 
-                styleButton(username, usernameButton, validationResult);
+                mUsernameResults.put(username, validationResult);
+
+                styleButton(username, mUsernameButtons.get(username), validationResult);
+            }
+
+            @Override
+            public void onValidationFinished() {
+                if (validationEndListener != null) {
+                    validationEndListener.onValidationEnd();
+                }
             }
 
             @Override
@@ -239,20 +289,8 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         });
     }
 
-    @Override
-    public void removeUsername(String username) {
-        Button removedButton = mUsernameButtons.remove(username);
-
-        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
-        usernamesView.removeView(removedButton);
-    }
-
-    @Override
-    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        // ignore personID, localTableBlogId as we don't need them here
-
-        mRole = newRole;
-        mRoleTextView.setText(newRole);
+    public interface ValidationEndListener {
+        void onValidationEnd();
     }
 
     private void styleButton(String username, Button button, ValidationResult validationResult) {
@@ -292,7 +330,87 @@ public class PeopleInviteFragment extends Fragment implements UsernameRemoveDial
         });
     }
 
-    @Override
+    private void clearUsernames(List<String> usernames) {
+        for (String username : usernames) {
+            removeUsername(username);
+        }
 
+        if (mUsernameButtons.size() == 0) {
+            setRole(loadDefaultRole());
+
+            mCustomMessageEditText.setText("");
+        }
+    }
+
+    @Override
+    public void send() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (mUsernameEditText.getText().toString().length() > 0) {
+            addUsername(mUsernameEditText, LayoutInflater.from(getActivity()), mUsernamesContainer, new ValidationEndListener() {
+                @Override
+                public void onValidationEnd() {
+                    checkAndSend();
+                }
+            });
+        }
+    }
+
+    private void checkAndSend() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (mUsernameButtons.size() == 0) {
+            ToastUtils.showToast(getActivity(), R.string.invite_error_no_usenames);
+            return;
+        }
+
+        if (mUsernameEditText.getText().toString().length() > 0) {
+
+        }
+        int invalidCount = 0;
+        for (ValidationResult validationResult : mUsernameResults.values()) {
+            if (validationResult != ValidationResult.USER_FOUND) {
+                invalidCount++;
+            }
+        }
+
+        if (invalidCount > 0) {
+            ToastUtils.showToast(getActivity(), StringUtils.getQuantityString(getActivity(), 0,
+                    R.string.invite_error_invalid_usenames_one,
+                    R.string.invite_error_invalid_usenames_multiple, invalidCount));
+            return;
+        }
+
+        String dotComBlogId = getArguments().getString(ARG_BLOGID);
+        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
+                new PeopleUtils.InvitationsSendCallback() {
+                    @Override
+                    public void onSent(List<String> succeededUsernames, List<String> failedUsernames) {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        clearUsernames(succeededUsernames);
+
+                        if (failedUsernames.size() != 0) {
+                            ToastUtils.showToast(getActivity(), R.string.invite_error_some_failed);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
+                        }
+                    }
+
+                    @Override
+                    public void onError() {
+                        if (!isAdded()) {
+                            return;
+                        }
+
+                        ToastUtils.showToast(getActivity(), R.string.invite_error_sending);
+                    }
+                });
     }
 }
