@@ -60,6 +60,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -551,6 +552,11 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(true);
+
+        // force the search view to take up as much horizontal space as possible (without this
+        // it looks truncated on landscape)
+        int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+        mSearchView.setMaxWidth(maxWidth);
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
