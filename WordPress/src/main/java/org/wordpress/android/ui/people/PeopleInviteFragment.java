@@ -355,6 +355,8 @@ public class PeopleInviteFragment extends Fragment implements
                     checkAndSend();
                 }
             });
+        } else {
+            checkAndSend();
         }
     }
 
