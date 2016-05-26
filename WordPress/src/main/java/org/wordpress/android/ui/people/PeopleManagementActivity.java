@@ -120,7 +120,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
-        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.isNetworkAvailable(this)) {
+        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return;
         }
 
@@ -184,8 +184,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        if(!NetworkUtils.isNetworkAvailable(this)) {
-            ToastUtils.showToast(this, R.string.error_update_role, ToastUtils.Duration.LONG);
+        if(!NetworkUtils.checkConnection(this)) {
             return;
         }
 
@@ -245,8 +244,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void removeSelectedPerson() {
-        if(!NetworkUtils.isNetworkAvailable(this)) {
-            ToastUtils.showToast(this, R.string.error_remove_user, ToastUtils.Duration.LONG);
+        if(!NetworkUtils.checkConnection(this)) {
             return;
         }
 
