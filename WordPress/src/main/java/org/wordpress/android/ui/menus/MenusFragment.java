@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.MenuLocationTable;
+import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
@@ -151,8 +153,14 @@ public class MenusFragment extends Fragment {
 
         MenusSpinner menuLocationsSpinner = (MenusSpinner) view.findViewById(R.id.menu_locations_spinner);
         MenusSpinner selectedMenuSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
-        menuLocationsSpinner.setItems(new String[]{"Primary Menu", "Social Links"});
-        selectedMenuSpinner.setItems(new String[]{"Main Menu", "Social Menu", "Professional Menu", "Test Menu", "New Menu"});
+//        menuLocationsSpinner.setItems(new String[]{"Primary Menu", "Social Links"});
+//        selectedMenuSpinner.setItems(new String[]{"Main Menu", "Social Menu", "Professional Menu", "Test Menu", "New Menu"});
+        List<MenuLocationModel> menuLocations  = MenuLocationTable.getAllMenuLocationsForCurrentSite();
+        if (menuLocations == null) {
+            //TODO show an error dialog here and dismiss this activity as we can't possibly show the user anything else
+        } else {
+            menuLocationsSpinner.setItems(menuLocations);
+        }
 
 
 
@@ -204,7 +212,6 @@ public class MenusFragment extends Fragment {
         fetchGoodMenuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mRestWPCom.fetchMenu(483627674);
                 if (mMenus.size() > 0) {
                     if (!mRequestBeingProcessed) {
                         mRequestBeingProcessed = true;

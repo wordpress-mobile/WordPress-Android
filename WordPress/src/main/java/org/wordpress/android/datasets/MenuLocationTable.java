@@ -54,7 +54,7 @@ public class MenuLocationTable {
 
     /** Well-formed SELECT query for selecting rows for a given site ID */
     public static final String SELECT_SITE_LOCATIONS_SQL =
-            "SELECT * FROM " + MENU_LOCATIONS_TABLE_NAME + "WHERE " + SITE_ID_COLUMN + "=?;";
+            "SELECT * FROM " + MENU_LOCATIONS_TABLE_NAME + " WHERE " + SITE_ID_COLUMN + "=?;";
 
     public static boolean saveMenuLocation(MenuLocationModel location) {
         if (location == null || location.siteId < 0) return false;
@@ -80,7 +80,7 @@ public class MenuLocationTable {
 
     public static void deleteAllLocationsForSite(long siteId) {
         if (siteId < 0) return;
-        String params = "WHERE " + SITE_ID_COLUMN + "=?";
+        String params = SITE_ID_COLUMN + "=?";
         String[] args = {String.valueOf(siteId)};
         WordPress.wpDB.getDatabase().delete(MENU_LOCATIONS_TABLE_NAME, params, args);
     }
