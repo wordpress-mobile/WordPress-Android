@@ -138,6 +138,7 @@ public class PeopleListFragment extends Fragment {
             mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             mInflater = LayoutInflater.from(context);
             mPeopleList = peopleList;
+            setHasStableIds(true);
         }
 
         public void setPeopleList(List<Person> peopleList) {
