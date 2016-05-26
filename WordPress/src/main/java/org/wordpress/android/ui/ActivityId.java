@@ -18,6 +18,7 @@ public enum ActivityId {
     COMMENT_EDITOR("Comment Editor"),
     SITE_PICKER("Site Picker"),
     THEMES("Themes"),
+    MENUS("Menus"),
     STATS("Stats"),
     STATS_VIEW_ALL("Stats View All"),
     STATS_POST_DETAILS("Stats Post Details"),

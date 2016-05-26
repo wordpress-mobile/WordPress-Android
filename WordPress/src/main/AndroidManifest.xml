@@ -314,7 +314,8 @@
             android:name=".ui.ViewSiteActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.menus.MenusActivity" />
+            android:name=".ui.menus.MenusActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <activity
             android:name=".ui.main.SitePickerActivity"
