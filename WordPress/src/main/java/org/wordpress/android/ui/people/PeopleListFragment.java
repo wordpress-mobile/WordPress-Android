@@ -29,7 +29,7 @@ public class PeopleListFragment extends Fragment {
 
     private int mLocalTableBlogID;
     private OnPersonSelectedListener mOnPersonSelectedListener;
-    private OnFetchMorePeopleListener mOnFetchMorePeopleListener;
+    private OnFetchPeopleListener mOnFetchPeopleListener;
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgress;
@@ -46,15 +46,15 @@ public class PeopleListFragment extends Fragment {
         mOnPersonSelectedListener = listener;
     }
 
-    public void setOnFetchMorePeopleListener(OnFetchMorePeopleListener listener) {
-        mOnFetchMorePeopleListener = listener;
+    public void setOnFetchPeopleListener(OnFetchPeopleListener listener) {
+        mOnFetchPeopleListener = listener;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mOnPersonSelectedListener = null;
-        mOnFetchMorePeopleListener = null;
+        mOnFetchPeopleListener = null;
     }
 
     @Override
@@ -78,6 +78,11 @@ public class PeopleListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+
+        // refresh the first page to serve fresh data
+        if (mOnFetchPeopleListener != null) {
+            mOnFetchPeopleListener.onFetchFirstPage();
+        }
     }
 
     @Override
@@ -91,8 +96,6 @@ public class PeopleListFragment extends Fragment {
         if (!isAdded()) return;
 
         List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
-        showLoadingProgress(peopleList.isEmpty());
-
         PeopleAdapter peopleAdapter = (PeopleAdapter) mRecyclerView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
@@ -121,7 +124,8 @@ public class PeopleListFragment extends Fragment {
         void onPersonSelected(Person person);
     }
 
-    public interface OnFetchMorePeopleListener {
+    public interface OnFetchPeopleListener {
+        void onFetchFirstPage();
         void onFetchMorePeople();
     }
 
@@ -185,8 +189,8 @@ public class PeopleListFragment extends Fragment {
             }
 
             // end of list is reached
-            if (mOnFetchMorePeopleListener != null && position == getItemCount() - 1) {
-                mOnFetchMorePeopleListener.onFetchMorePeople();
+            if (mOnFetchPeopleListener != null && position == getItemCount() - 1) {
+                mOnFetchPeopleListener.onFetchMorePeople();
             }
         }
 

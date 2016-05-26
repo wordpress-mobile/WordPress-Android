@@ -23,7 +23,7 @@ import java.util.List;
 
 
 public class PeopleManagementActivity extends AppCompatActivity
-        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener, PeopleListFragment.OnFetchMorePeopleListener {
+        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
@@ -59,7 +59,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
-            peopleListFragment.setOnFetchMorePeopleListener(this);
+            peopleListFragment.setOnFetchPeopleListener(this);
 
             mPeopleEndOfListReached = false;
             mFetchRequestInProgress = false;
@@ -67,8 +67,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
-
-            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         } else {
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
             mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
@@ -78,7 +76,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
             if (peopleListFragment != null) {
                 peopleListFragment.setOnPersonSelectedListener(this);
-                peopleListFragment.setOnFetchMorePeopleListener(this);
+                peopleListFragment.setOnFetchPeopleListener(this);
             }
         }
     }
@@ -123,7 +121,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         final PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
                 .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
-        if (peopleListFragment != null && offset > 0) {
+        if (peopleListFragment != null) {
             peopleListFragment.showLoadingProgress(true);
         }
 
@@ -309,6 +307,12 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         return personDetailFragment.loadPerson();
+    }
+
+    @Override
+    public void onFetchFirstPage() {
+        Blog blog = WordPress.getCurrentBlog();
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
     }
 
     @Override
