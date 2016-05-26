@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Behörigheter krävs för att välja eller ta ett foto</string>
+	<string name="error_updating_gravatar">Det gick inte att uppdatera din Gravatar</string>
+	<string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
+	<string name="error_refreshing_gravatar">Det gick inte att ladda om din Gravatar</string>
+	<string name="gravatar_tip">Nyhet! Tryck på din Gravatar för att ändra den!</string>
+	<string name="error_cropping_image">Det gick inte att beskära bilden</string>
+	<string name="launch_your_email_app">Starta din e‑postapp</string>
+	<string name="checking_email">Kontrollerar e-post</string>
+	<string name="not_on_wordpress_com">Inte på WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">Inte tillgänglig för närvarande. Ange ditt lösenord</string>
+	<string name="check_your_email">Kolla din e-post</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Få en länk skickad till din e-post för att omedelbart logga in</string>
+	<string name="logging_in">Loggar in</string>
+	<string name="enter_your_password_instead">Ange ditt lösenord istället</string>
+	<string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
+	<string name="jetpack_not_connected_message">Jetpack-tillägget är installerat men inte anslutet till WordPress.com. Vill du ansluta Jetpack?</string>
+	<string name="username_email">E-post eller användarnamn</string>
+	<string name="jetpack_not_connected">Jetpack-tillägget är inte anslutet</string>
+	<string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
+	<string name="stats_insights_latest_post_no_title">(ingen rubrik)</string>
+	<string name="capture_or_pick_photo">Ta eller välj ett foto</string>
 	<string name="plans_post_purchase_text_themes">Du har nu obegränsad tillgång till Premium-teman. Förhandsgranska valfritt tema på din webbplats för att komma igång.</string>
 	<string name="plans_post_purchase_button_themes">Visa teman</string>
 	<string name="plans_post_purchase_title_themes">Hitta ett perfekt premium-tema</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Om du vill ha en webbplats, men inte vill ha någon av inläggen eller sidorna du har nu, kan vårt supportteam ta bort dina inlägg, sidor, mediaobjekt och kommentarer åt dig.\n\nDetta låter dig behålla din webbplats och URL men ger dig möjligheten att börja om på nytt i ditt skapande. Kontakta oss för att ta bort allt ditt nuvarande innehåll.</string>
 	<string name="site_settings_start_over_hint">Börja om med webbplatsen</string>
 	<string name="let_us_help">Låt oss hjälpa</string>
-	<string name="me_btn_account_settings">Kontoinställningar</string>
 	<string name="me_btn_app_settings">Appinställningar</string>
 	<string name="start_over">Börja om</string>
 	<string name="editor_remove_failed_uploads">Ta bort misslyckade uppladdningar</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Klicka på verifieringslänken i e-postmeddelandet som skickades till %1$s för att bekräfta din nya adress</string>
 	<string name="primary_site">Primär webbplats</string>
 	<string name="web_address">Webbadress</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Mediefiler laddas upp för tillfället. Vänta tills de är färdiguppladdade.</string>
 	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
 	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Koppla från WordPress.com </string>
 	<string name="me_connect_to_wordpress_com">Anslut till WordPress.com</string>
 	<string name="me_btn_login_logout">Logga in/Logga ut</string>
+	<string name="account_settings">Kontoinställningar</string>
 	<string name="me_btn_support">Hjälp &amp; support</string>
 	<string name="site_picker_cant_hide_current_site">"%s" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
 	<string name="site_picker_create_dotcom">Skapa en webbplats på WordPress.com</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Kunde inte ta bort etiketten</string>
 	<string name="required_field">Obligatoriskt fält</string>
 	<string name="email_hint">Epostadress</string>
-	<string name="username_email">Användarnamn eller epost</string>
 	<string name="site_address">Adress till din WordPress-installation (URL)</string>
 	<string name="email_cant_be_used_to_signup">Du kan inte använda den e-postadressen för att registrera dig. Vi har problem med att de blockerar viss av våra e-post. Använd en annan e-postleverantör.</string>
 	<string name="email_reserved">E-postadressen har redan använts. Kolla efter ett aktiveringsmail i din inbox. Om du inte aktiverar kan du försöka igen om några dagar.</string>
