@@ -34,7 +34,7 @@ android {
         applicationId "org.wordpress.android"
         versionName "alpha-9"
         versionCode 262
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
 
         vectorDrawables.useSupportLibrary = true
