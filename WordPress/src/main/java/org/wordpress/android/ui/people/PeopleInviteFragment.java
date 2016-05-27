@@ -233,6 +233,13 @@ public class PeopleInviteFragment extends Fragment implements
         String username = editText.getText().toString().trim();
         editText.setText("");
 
+        if (mUsernameButtons.keySet().contains(username)) {
+            if (validationEndListener != null) {
+                validationEndListener.onValidationEnd();
+            }
+            return;
+        }
+
         final ViewGroup usernameButton = buttonizeUsername(username, inflater, usernamesView);
 
         mUsernameButtons.put(username, usernameButton);
