@@ -421,7 +421,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case EDITOR_TOGGLED_OFF:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Toggled New Editor Off");
-                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                instructions.setPeoplePropertyToValue("enabled_new_editor", false);
                 break;
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
