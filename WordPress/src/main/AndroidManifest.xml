@@ -123,6 +123,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".networking.SSLCertsViewActivity"
