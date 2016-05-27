@@ -18,15 +18,17 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 
 public class PeopleManagementActivity extends AppCompatActivity
-        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener, PeopleListFragment.OnFetchPeopleListener {
+        implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
@@ -92,6 +94,18 @@ public class PeopleManagementActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
         outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -182,14 +196,13 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
+    public void onEventMainThread(RoleChangeDialogFragment.RoleChangeEvent event) {
         if(!NetworkUtils.checkConnection(this)) {
             return;
         }
 
-        final Person person = PeopleTable.getPerson(personID, localTableBlogId);
-        if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
+        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId);
+        if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
 
@@ -199,10 +212,10 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         if (personDetailFragment != null) {
             // optimistically update the role
-            personDetailFragment.changeRole(newRole);
+            personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), newRole, localTableBlogId,
+        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {

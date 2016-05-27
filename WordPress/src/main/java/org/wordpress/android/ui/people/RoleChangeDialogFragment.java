@@ -14,13 +14,14 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 
+import de.greenrobot.event.EventBus;
+
 public class RoleChangeDialogFragment extends DialogFragment {
     private static final String PERSON_ID_TAG = "person_id";
     private static final String PERSON_LOCAL_TABLE_BLOG_ID_TAG = "local_table_blog_id";
     private static final String ROLE_TAG = "role";
 
     private RoleListAdapter mRoleListAdapter;
-    private OnChangeListener mListener;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -43,16 +44,6 @@ public class RoleChangeDialogFragment extends DialogFragment {
         return roleChangeDialogFragment;
     }
 
-    public void setOnChangeListener(OnChangeListener listener) {
-        mListener = listener;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
@@ -61,14 +52,12 @@ public class RoleChangeDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mListener != null) {
-                    String role = mRoleListAdapter.getSelectedRole();
-                    Bundle args = getArguments();
-                    if (args != null) {
-                        long personID = args.getLong(PERSON_ID_TAG);
-                        int localTableBlogId = args.getInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG);
-                        mListener.onRoleChanged(personID, localTableBlogId, role);
-                    }
+                String role = mRoleListAdapter.getSelectedRole();
+                Bundle args = getArguments();
+                if (args != null) {
+                    long personID = args.getLong(PERSON_ID_TAG);
+                    int localTableBlogId = args.getInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG);
+                    EventBus.getDefault().post(new RoleChangeEvent(personID, localTableBlogId, role));
                 }
             }
         });
@@ -144,8 +133,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
         }
     }
 
-    // Container Activity must implement this interface
-    public interface OnChangeListener {
-        void onRoleChanged(long personID, int localTableBlogId, String newRole);
+    public static class RoleChangeEvent {
+        public final long personID;
+        public final int localTableBlogId;
+        public final String newRole;
+
+        public RoleChangeEvent(long personID, int localTableBlogId, String newRole) {
+            this.personID = personID;
+            this.localTableBlogId = localTableBlogId;
+            this.newRole = newRole;
+        }
     }
 }
