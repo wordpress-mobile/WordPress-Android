@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class PeopleInviteFragment extends Fragment implements
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
-    private Map<String, Button> mUsernameButtons = new LinkedHashMap<>();
+    private Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
     private Map<String, ValidationResult> mUsernameResults = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
@@ -210,15 +211,17 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
-    private Button buttonizeUsername(String username, LayoutInflater inflater, final ViewGroup usernames) {
-        final AppCompatButton usernameButton = (AppCompatButton) inflater.inflate(R.layout.invite_username_button,
-                null);
-        usernameButton.setText(username);
+    private ViewGroup buttonizeUsername(final String username, LayoutInflater inflater, final ViewGroup usernames) {
+        final ViewGroup usernameButton = (ViewGroup) inflater.inflate(R.layout.invite_username_button, null);
+        final TextView usernameTextView = (TextView) usernameButton.findViewById(R.id.username);
+        usernameTextView.setText(username);
         usernames.addView(usernameButton, usernames.getChildCount() - 1);
-        usernameButton.setOnClickListener(new View.OnClickListener() {
+
+        final ImageButton delete = (ImageButton) usernameButton.findViewById(R.id.username_delete);
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                usernames.removeView(usernameButton);
+                removeUsername(username);
             }
         });
 
@@ -230,7 +233,7 @@ public class PeopleInviteFragment extends Fragment implements
         String username = editText.getText().toString().trim();
         editText.setText("");
 
-        final Button usernameButton = buttonizeUsername(username, inflater, usernamesView);
+        final ViewGroup usernameButton = buttonizeUsername(username, inflater, usernamesView);
 
         mUsernameButtons.put(username, usernameButton);
 
@@ -239,7 +242,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     @Override
     public void removeUsername(String username) {
-        Button removedButton = mUsernameButtons.remove(username);
+        ViewGroup removedButton = mUsernameButtons.remove(username);
         mUsernameResults.remove(username);
 
         final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
@@ -289,34 +292,37 @@ public class PeopleInviteFragment extends Fragment implements
         void onValidationEnd();
     }
 
-    private void styleButton(String username, Button button, ValidationResult validationResult) {
+    private void styleButton(String username, ViewGroup button, ValidationResult validationResult) {
         if (!isAdded()) {
             return;
         }
 
+        TextView textView = (TextView) button.findViewById(R.id.username);
+
         switch (validationResult) {
             case USER_NOT_FOUND:
-                setupConfirmationDialog(button, username, R.string.invite_username_not_found_title, R.string
+                setupConfirmationDialog(textView, username, R.string.invite_username_not_found_title, R.string
                         .invite_username_not_found);
-                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
+                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case ALREADY_MEMBER:
-                setupConfirmationDialog(button, username, R.string.invite_already_a_member_title, R.string
+                setupConfirmationDialog(textView, username, R.string.invite_already_a_member_title, R.string
                         .invite_already_a_member);
-                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
+                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case INVALID_EMAIL:
-                setupConfirmationDialog(button, username, R.string.invite_invalid_email_title, R.string
+                setupConfirmationDialog(textView, username, R.string.invite_invalid_email_title, R.string
                         .invite_invalid_email);
-                button.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
+                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case USER_FOUND:
                 // properly style the button
+                textView.setBackgroundDrawable(null);
                 break;
         }
     }
 
-    private void setupConfirmationDialog(Button button, final String username, final @StringRes int titleId, final
+    private void setupConfirmationDialog(TextView button, final String username, final @StringRes int titleId, final
             @StringRes int messageId) {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
