@@ -48,7 +48,7 @@ public class MenusFragment extends Fragment {
                 mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
-            @Override public void onMenusReceived(int requestId, List<MenuModel> menus) {
+            @Override public void onMenusReceived(int requestId, List<MenuModel> menus, List<MenuLocationModel> locations) {
                 mMenus = menus;
                 if (mMenus != null) {
 
@@ -230,7 +230,7 @@ public class MenusFragment extends Fragment {
             public void onClick(View v) {
                 if (!mRequestBeingProcessed) {
                     mRequestBeingProcessed = true;
-                    mCurrentRequestId = mRestWPCom.fetchMenu(4836); //fake number
+                    mCurrentRequestId = mRestWPCom.fetchMenu(483627664); //fake number
                 }
             }
         });

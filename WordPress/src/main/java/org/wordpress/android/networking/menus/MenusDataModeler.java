@@ -71,7 +71,7 @@ public class MenusDataModeler {
         return menu != null;
     }
 
-    public static MenuModel menuFromJson(JSONObject json) {
+    public static MenuModel menuFromJson(JSONObject json, List<MenuLocationModel> locations) {
         if (!isValidMenuJson(json)) return null;
 
         MenuModel menu = new MenuModel();
@@ -79,7 +79,34 @@ public class MenusDataModeler {
         menu.name = json.optString(MENU_NAME_KEY);
         menu.details = json.optString(MENU_DESCRIPTION_KEY);
         menu.menuItems = menuItemsFromJson(json.optJSONArray(MENU_ITEMS_KEY));
-        menu.locations = menuLocationsFromJson(json.optJSONArray(MENU_LOCATIONS_KEY));
+        List<String> locationNames = new ArrayList<>();
+
+        try {
+            JSONArray locationStrings = json.optJSONArray(MENU_LOCATIONS_KEY);
+            if (locationStrings != null) {
+                for (int i=0; i < locationStrings.length(); i++){
+                    locationNames.add(locationStrings.getString(i));
+                }
+            }
+        } catch (JSONException exception) {
+            AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");
+        }
+
+        if (locations != null) {
+            //now that we have the possible available Menu Location names, we populate the MenuModel.locations
+            //attribute with each full blown MenuLocationModel instance for ease of use later on.
+            List<MenuLocationModel> locationModels = new ArrayList<>();
+            for (MenuLocationModel locationModel : locations){
+                for (String locationName : locationNames){
+                    if (locationModel.getName().equals(locationName)) {
+                        locationModels.add(locationModel);
+                        break;
+                    }
+                }
+            }
+            menu.locations = locationModels;
+        }
+
         return menu;
     }
 

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.util.AppLog;
 
@@ -43,7 +44,7 @@ public class MenusRestWPCom {
     public interface MenusListener {
         Context getContext();
         long getSiteId();
-        void onMenusReceived(int requestId, List<MenuModel> menus);
+        void onMenusReceived(int requestId, List<MenuModel> menus, List<MenuLocationModel> locations);
         void onMenuCreated(int requestId, MenuModel menu);
         void onMenuDeleted(int requestId, MenuModel menu, boolean deleted);
         void onMenuUpdated(int requestId, MenuModel menu);
@@ -60,6 +61,7 @@ public class MenusRestWPCom {
     //
     public static final String MENU_KEY = "menu";
     public static final String ALL_MENUS_MENUS_KEY = "menus";
+    public static final String ALL_MENUS_LOCATIONS_KEY = "locations";
 
     private static final String DELETED_KEY = "deleted";
 
@@ -106,8 +108,8 @@ public class MenusRestWPCom {
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                MenuModel menu = menuFromJson(response.optJSONObject(MENU_KEY));
-                mListener.onMenuUpdated(requestId, menu);
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), menu.locations);
+                mListener.onMenuUpdated(requestId, result);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError volleyError) {
@@ -127,10 +129,10 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY));
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), null);
                 List<MenuModel> resultList = new ArrayList<>();
                 if (result != null) resultList.add(result);
-                mListener.onMenusReceived(requestId, resultList);
+                mListener.onMenusReceived(requestId, resultList, null);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError volleyError) {
@@ -150,16 +152,22 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
+                /* first we get all locations */
+                JSONArray locationsJson = response.optJSONArray(ALL_MENUS_LOCATIONS_KEY);
+                List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson);
+
+                /* now we get all menus */
                 JSONArray menusJson = response.optJSONArray(ALL_MENUS_MENUS_KEY);
                 List<MenuModel> menus = new ArrayList<>();
                 try {
                     for (int i = 0; i < menusJson.length(); ++i) {
-                        menus.add(menuFromJson(menusJson.getJSONObject(i)));
+                        menus.add(menuFromJson(menusJson.getJSONObject(i), locations));
                     }
                 } catch (JSONException exception) {
                     AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");
                 }
-                mListener.onMenusReceived(requestId, menus);
+
+                mListener.onMenusReceived(requestId, menus, locations);
             }
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError volleyError) {
