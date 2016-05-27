@@ -115,9 +115,7 @@ public class PeopleInviteFragment extends Fragment implements
         mUsernameEditText = (EditText) rootView.findViewById(R.id.invite_usernames);
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("INVITE", "beforeTextChanged: " + count + " char(s): " + s.toString());
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -127,9 +125,7 @@ public class PeopleInviteFragment extends Fragment implements
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
