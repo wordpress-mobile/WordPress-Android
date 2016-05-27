@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
-import org.wordpress.android.models.NameInterface;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 
