@@ -82,6 +82,7 @@
     <string name="unknown">Unknown</string>
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
+    <string name="send">Send</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
