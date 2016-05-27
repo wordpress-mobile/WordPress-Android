@@ -54,7 +54,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH)) {
+            if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH) && isAdded()) {
                 mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
                 configureSearchView();
             }

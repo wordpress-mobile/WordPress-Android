@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -47,11 +46,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 .setTicker(message).setWhen(System.currentTimeMillis()).setContentTitle(title).setContentText(message)
                 .setContentIntent(intent);
         Notification notification;
-        if (Build.VERSION.SDK_INT < 16) {
-            notification = builder.getNotification();
-        } else {
-            notification = builder.build();
-        }
+        notification = builder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         nm.notify(0, notification);
     }
@@ -651,6 +646,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Opened My Profile");
                 break;
+            case OPENED_PEOPLE_MANAGEMENT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("People Management - Accessed List");
+                break;
+            case OPENED_PERSON:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("People Management - Accessed Details");
+                break;
             case CREATED_ACCOUNT:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");
@@ -821,6 +824,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Auto Fill Credentials Updated");
+                break;
+            case PERSON_REMOVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("People Management - Removed Person");
+                break;
+            case PERSON_UPDATED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("People Management - Updated Person");
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

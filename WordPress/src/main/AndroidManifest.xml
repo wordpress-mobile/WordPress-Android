@@ -123,6 +123,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".networking.SSLCertsViewActivity"
@@ -333,6 +334,12 @@
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden" />
+
+        <!--People Management-->
+        <activity
+            android:name=".ui.people.PeopleManagementActivity"
+            android:label="@string/people"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
         <activity
