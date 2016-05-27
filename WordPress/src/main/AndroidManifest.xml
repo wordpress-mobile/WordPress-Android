@@ -333,6 +333,12 @@
             android:theme="@style/CalypsoTheme"
             android:windowSoftInputMode="stateHidden" />
 
+        <!--People Management-->
+        <activity
+            android:name=".ui.people.PeopleManagementActivity"
+            android:label="@string/people"
+            android:theme="@style/Calypso.NoActionBar"/>
+
         <!-- Me activities -->
         <activity
             android:name=".ui.prefs.MyProfileActivity"
