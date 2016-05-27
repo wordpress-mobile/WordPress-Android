@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.models.NameInterface;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 
@@ -155,7 +156,7 @@ public class MenusFragment extends Fragment {
         MenusSpinner selectedMenuSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
 //        menuLocationsSpinner.setItems(new String[]{"Primary Menu", "Social Links"});
 //        selectedMenuSpinner.setItems(new String[]{"Main Menu", "Social Menu", "Professional Menu", "Test Menu", "New Menu"});
-        List<MenuLocationModel> menuLocations  = MenuLocationTable.getAllMenuLocationsForCurrentSite();
+        List menuLocations  = MenuLocationTable.getAllMenuLocationsForCurrentSite();
         if (menuLocations == null) {
             //TODO show an error dialog here and dismiss this activity as we can't possibly show the user anything else
         } else {

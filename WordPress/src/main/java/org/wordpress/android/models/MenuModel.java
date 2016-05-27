@@ -12,7 +12,7 @@ import java.util.List;
  * the former being ordered.
  */
 
-public class MenuModel {
+public class MenuModel implements NameInterface {
     public long menuId;
     public String name;
     public String details;
@@ -29,5 +29,10 @@ public class MenuModel {
                 StringUtils.equals(details, otherModel.details) &&
                 CollectionUtils.areListsEqual(locations, otherModel.locations) &&
                 CollectionUtils.areListsEqual(menuItems, otherModel.menuItems);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

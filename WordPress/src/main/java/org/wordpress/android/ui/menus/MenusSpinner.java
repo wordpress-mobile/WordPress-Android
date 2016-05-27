@@ -12,8 +12,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.MenuLocationModel;
-import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.models.NameInterface;
 
 import java.util.List;
 
@@ -36,31 +35,32 @@ public class MenusSpinner extends Spinner {
         array.recycle();
     }
 
-    public void setItems(List<?> items) {
+    public void setItems(List<NameInterface> items) {
         if (items != null && items.size() > 0) {
-            if (items.get(0) instanceof MenuLocationModel) {
-                setAdapter(new MenuLocationsSpinnerAdapter((List<MenuLocationModel>)items));
-            }
-            else if (items.get(0) instanceof MenuModel) {
-                setAdapter(new MenusSpinnerAdapter((List<MenuModel>)items));
-            }
-            else {
-                setAdapter(null);
-            }
+            setAdapter(new MenusSpinnerAdapter(items));
         } else {
             setAdapter(null);
         }
     }
 
-    public interface MenusSpinnerAdapterInterface extends SpinnerAdapter {
-        public boolean hasItems();
-        public boolean isValidPosition(int position);
-        public String getItemDisplayName(int position);
-    }
+    private class MenusSpinnerAdapter implements SpinnerAdapter {
+        private static final int EMPTY_VIEW_TYPE = 0;
+        private static final int NORMAL_VIEW_TYPE = 1;
 
-    private abstract class MenuBaseSpinnerAdapter implements MenusSpinnerAdapterInterface {
-        public static final int EMPTY_VIEW_TYPE = 0;
-        public static final int NORMAL_VIEW_TYPE = 1;
+        private final List<NameInterface> mItems;
+
+        public MenusSpinnerAdapter(List<NameInterface> items) {
+            super();
+            mItems = items;
+        }
+
+        public boolean hasItems() {
+            return mItems != null && mItems.size() > 0;
+        }
+
+        public boolean isValidPosition(int position) {
+            return mItems != null && position >= 0 && position < mItems.size();
+        }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -71,12 +71,41 @@ public class MenusSpinner extends Spinner {
             if (!isValidPosition(position)) return convertView;
 
             TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_item_name);
-            nameView.setText(getItemDisplayName(position));
+            nameView.setText(mItems.get(position).getName());
 
             ImageView iconView = (ImageView) convertView.findViewById(R.id.menu_spinner_item_icon);
             iconView.setVisibility(position == getSelectedItemPosition() ? VISIBLE : INVISIBLE);
 
             return convertView;
+        }
+
+        @Override
+        public void registerDataSetObserver(DataSetObserver observer) {
+        }
+
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver observer) {
+        }
+
+        @Override
+        public int getCount() {
+            return hasItems() ? mItems.size() : 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (!isValidPosition(position)) return null;
+            return mItems.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
         }
 
         @Override
@@ -94,7 +123,7 @@ public class MenusSpinner extends Spinner {
             titleView.setText(String.format(mTitle, getCount()));
 
             TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
-            nameView.setText(getItemDisplayName(position));
+            nameView.setText(mItems.get(position).getName());
 
             return convertView;
         }
@@ -113,133 +142,5 @@ public class MenusSpinner extends Spinner {
         public boolean isEmpty() {
             return !hasItems();
         }
-
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
     }
-
-
-    private class MenuLocationsSpinnerAdapter extends MenuBaseSpinnerAdapter {
-
-        private final List<MenuLocationModel> mMenuLocationItems;
-
-        public MenuLocationsSpinnerAdapter(List<MenuLocationModel> items) {
-            super();
-            mMenuLocationItems = items;
-        }
-
-        @Override
-        public boolean hasItems() {
-            return mMenuLocationItems != null && mMenuLocationItems.size() > 0;
-        }
-
-        public boolean isValidPosition(int position) {
-            return mMenuLocationItems != null && position >= 0 && position < mMenuLocationItems.size();
-        }
-
-        @Override
-        public String getItemDisplayName(int position) {
-            MenuLocationModel item =  (MenuLocationModel) getItem(position);
-            if (item != null && item.name != null) {
-                return item.name;
-            } else {
-                return ""; //empty name set on purpose
-            }
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-        }
-
-        @Override
-        public int getCount() {
-            return hasItems() ? mMenuLocationItems.size() : 1;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            if (!isValidPosition(position)) return null;
-            return mMenuLocationItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return !hasItems();
-        }
-    }
-
-
-    private class MenusSpinnerAdapter extends MenuBaseSpinnerAdapter {
-
-        private final List<MenuModel> mMenuItems;
-
-        public MenusSpinnerAdapter(List<MenuModel> items) {
-            super();
-            mMenuItems = items;
-        }
-
-        @Override
-        public boolean hasItems() {
-            return mMenuItems != null && mMenuItems.size() > 0;
-        }
-
-        public boolean isValidPosition(int position) {
-            return mMenuItems != null && position >= 0 && position < mMenuItems.size();
-        }
-
-        @Override
-        public String getItemDisplayName(int position) {
-            MenuLocationModel item =  (MenuLocationModel) getItem(position);
-            if (item != null && item.name != null) {
-                return item.name;
-            } else {
-                return ""; //empty name set on purpose
-            }
-        }
-
-        @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
-        }
-
-        @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
-        }
-
-        @Override
-        public int getCount() {
-            return hasItems() ? mMenuItems.size() : 1;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            if (!isValidPosition(position)) return null;
-            return mMenuItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return !hasItems();
-        }
-    }
-
-
-
 }

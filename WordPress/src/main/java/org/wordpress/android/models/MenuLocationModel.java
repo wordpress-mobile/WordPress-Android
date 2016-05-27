@@ -11,7 +11,7 @@ import org.wordpress.android.util.StringUtils;
  * guarantees a unique primary key for each Menu Location because a site can only have one Theme.
  */
 
-public class MenuLocationModel {
+public class MenuLocationModel implements NameInterface {
     //
     // Primary key attributes (cannot be null)
     //
@@ -44,5 +44,10 @@ public class MenuLocationModel {
                 StringUtils.equals(details, otherLocation.details) &&
                 StringUtils.equals(defaultState, otherLocation.defaultState) &&
                 menuId == otherLocation.menuId;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
