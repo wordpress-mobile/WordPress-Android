@@ -19,6 +19,7 @@ import java.util.List;
 public class MenusSpinner extends Spinner {
     private String mTitle;
     private int mIconResource;
+    private MenusSpinnerAdapter mAdapter;
 
     public MenusSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,10 +38,17 @@ public class MenusSpinner extends Spinner {
 
     public void setItems(List<NameInterface> items) {
         if (items != null && items.size() > 0) {
-            setAdapter(new MenusSpinnerAdapter(items));
+            mAdapter = new MenusSpinnerAdapter(items);
+            setAdapter(mAdapter);
         } else {
             setAdapter(null);
         }
+    }
+
+    public List getItems(){
+        if (mAdapter != null)
+            return mAdapter.getItems();
+        return null;
     }
 
     private class MenusSpinnerAdapter implements SpinnerAdapter {
@@ -142,5 +150,10 @@ public class MenusSpinner extends Spinner {
         public boolean isEmpty() {
             return !hasItems();
         }
+
+        public List getItems(){
+            return mItems;
+        }
+
     }
 }

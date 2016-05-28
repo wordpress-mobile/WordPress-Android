@@ -2,7 +2,9 @@ package org.wordpress.android.ui.menus;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,19 @@ import android.widget.Toast;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
+import org.wordpress.android.datasets.MenuTable;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.models.NameInterface;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CollectionUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPHtml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +44,9 @@ public class MenusFragment extends Fragment {
     private TextView mAllMenuNamesTextView;
     private boolean mRequestBeingProcessed;
     private int mCurrentRequestId;
+    private boolean mIsUpdatingMenus;
+    private MenusSpinner mMenuLocationsSpinner;
+    private MenusSpinner mMenusSpinner;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -48,28 +62,27 @@ public class MenusFragment extends Fragment {
             }
             @Override public Context getContext() { return getActivity(); }
             @Override public void onMenusReceived(int requestId, List<MenuModel> menus, List<MenuLocationModel> locations) {
+                //TODO delete mMenus properties once development is done
                 mMenus = menus;
-                if (mMenus != null) {
 
-                    if (mMenus.size() > 0){
-                        Toast.makeText(getActivity(), "menus successfully retrieved", Toast.LENGTH_SHORT).show();
+                if (locations != null) {
+                    if (CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
+                        // no op
                     } else {
-                        Toast.makeText(getActivity(), "menus came empty", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (mMenus.size() == 1){
-                        mAddEditRemoveControl.setMenu(mMenus.get(0), false);
-                    } else {
-                        String menuNames = "";
-                        for (MenuModel menu : mMenus){
-                            if (menu.name != null){
-                                menuNames = menuNames + menu.name + "\n";
-                            }
-                        }
-                        mAllMenuNamesTextView.setText(menuNames);
+                        // update Menu Locations spinner
+                        mMenuLocationsSpinner.setItems((List)locations);
                     }
                 }
-                mRequestBeingProcessed = false;
+
+                if (menus != null) {
+                    if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
+                        // no op
+                    } else {
+                        // update Menus spinner
+                        mMenusSpinner.setItems((List)menus);
+                    }
+                }
+
             }
 
             @Override public void onMenuDeleted(int requestId, MenuModel menu, boolean deleted) {
@@ -151,17 +164,12 @@ public class MenusFragment extends Fragment {
         });
 
 
-        MenusSpinner menuLocationsSpinner = (MenusSpinner) view.findViewById(R.id.menu_locations_spinner);
-        MenusSpinner selectedMenuSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
+        mMenuLocationsSpinner = (MenusSpinner) view.findViewById(R.id.menu_locations_spinner);
+        mMenusSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
 //        menuLocationsSpinner.setItems(new String[]{"Primary Menu", "Social Links"});
 //        selectedMenuSpinner.setItems(new String[]{"Main Menu", "Social Menu", "Professional Menu", "Test Menu", "New Menu"});
-        List menuLocations  = MenuLocationTable.getAllMenuLocationsForCurrentSite();
-        if (menuLocations == null) {
-            //TODO show an error dialog here and dismiss this activity as we can't possibly show the user anything else
-        } else {
-            menuLocationsSpinner.setItems(menuLocations);
-        }
 
+        updateMenus();
 
 
         //FIXME: start - delete all this test code!
@@ -250,6 +258,7 @@ public class MenusFragment extends Fragment {
         return view;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -259,4 +268,72 @@ public class MenusFragment extends Fragment {
     public void onPause() {
         super.onPause();
     }
+
+    private void updateMenus() {
+        if (mIsUpdatingMenus) {
+            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
+            return;
+        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            //we're offline, load/refresh whatever we have in our local db
+            loadMenus();
+            return;
+        }
+
+        //immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
+        loadMenus();
+
+        //updateEmptyView(EmptyViewMessageType.LOADING);
+
+        //fetch latest menus from the server
+        mCurrentRequestId = mRestWPCom.fetchAllMenus();
+
+    }
+
+
+    /*
+     * load menus using an AsyncTask
+     */
+    public void loadMenus() {
+        if (mIsLoadTaskRunning) {
+            AppLog.w(AppLog.T.MENUS, "load menus task already active");
+        } else {
+            new LoadMenusTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    /*
+     * AsyncTask to load menus from SQLite
+     */
+    private boolean mIsLoadTaskRunning = false;
+    private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
+        List<MenuModel> tmpMenus;
+        List<MenuLocationModel> tmpMenuLocations;
+
+        @Override
+        protected void onPreExecute() {
+            mIsLoadTaskRunning = true;
+        }
+        @Override
+        protected void onCancelled() {
+            mIsLoadTaskRunning = false;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            tmpMenus = MenuTable.getAllMenusForCurrentSite();
+            tmpMenuLocations = MenuLocationTable.getAllMenuLocationsForCurrentSite();
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
+                mMenusSpinner.setItems((List)tmpMenus);
+            }
+
+            mIsLoadTaskRunning = false;
+        }
+    }
+
+
 }
+

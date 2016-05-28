@@ -21,6 +21,7 @@ public class MenuTable {
     // Menu database table column names
     //
     public static final String ID_COLUMN = "menuId";
+    public static final String SITE_ID_COLUMN = "siteId";
     public static final String NAME_COLUMN = "menuName";
     public static final String DETAILS_COLUMN = "menuDetails";
     public static final String LOCATIONS_COLUMN = "menuLocations";
@@ -33,6 +34,7 @@ public class MenuTable {
     public static final String CREATE_MENU_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
                     MENU_TABLE_NAME + " (" +
+                    SITE_ID_COLUMN + " INTEGER NOT NULL," +
                     ID_COLUMN + " INTEGER PRIMARY KEY, " +
                     NAME_COLUMN + " TEXT, " +
                     DETAILS_COLUMN + " TEXT, " +
@@ -41,6 +43,10 @@ public class MenuTable {
                     ");";
 
     public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
+
+    /** Well-formed SELECT query for selecting rows for a given site ID */
+    public static final String SELECT_SITE_MENUS_SQL =
+            "SELECT * FROM " + MENU_TABLE_NAME + " WHERE " + SITE_ID_COLUMN + "=?;";
 
     public static MenuModel deserializeFromDatabase(Cursor cursor) {
         if (cursor == null || cursor.isBeforeFirst() || cursor.isAfterLast()) return null;
@@ -126,4 +132,26 @@ public class MenuTable {
         cursor.close();
         return menu;
     }
+
+    public static List<MenuModel> getAllMenusForCurrentSite() {
+        return getAllMenusForSite(WordPress.currentBlog.getRemoteBlogId());
+    }
+
+    public static List<MenuModel> getAllMenusForSite(long siteId) {
+        if (siteId < 0) return null;
+
+        List<MenuModel> menus = new ArrayList<>();
+        String[] args = {String.valueOf(siteId)};
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(SELECT_SITE_MENUS_SQL, args);
+        if (cursor.moveToFirst()) {
+            do {
+                MenuModel menu = deserializeFromDatabase(cursor);
+                if (menu != null) menus.add(menu);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return menus;
+    }
+
 }
