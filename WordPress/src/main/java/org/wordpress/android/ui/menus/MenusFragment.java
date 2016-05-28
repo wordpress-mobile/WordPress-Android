@@ -101,6 +101,7 @@ public class MenusFragment extends Fragment {
             @Override
             public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
                 Toast.makeText(getActivity(), "could not retrieve menus", Toast.LENGTH_SHORT).show();
+                //TODO show error message and go back to previous Activity
                 mRequestBeingProcessed = false;
             }
         });
@@ -168,9 +169,6 @@ public class MenusFragment extends Fragment {
         mMenusSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
 //        menuLocationsSpinner.setItems(new String[]{"Primary Menu", "Social Links"});
 //        selectedMenuSpinner.setItems(new String[]{"Main Menu", "Social Menu", "Professional Menu", "Test Menu", "New Menu"});
-
-        updateMenus();
-
 
         //FIXME: start - delete all this test code!
         Button setMenuBtn = (Button) view.findViewById(R.id.menu_test_set_menu);
@@ -269,6 +267,12 @@ public class MenusFragment extends Fragment {
         super.onPause();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        updateMenus();
+    }
+
     private void updateMenus() {
         if (mIsUpdatingMenus) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
@@ -328,6 +332,11 @@ public class MenusFragment extends Fragment {
             if (result) {
                 mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
                 mMenusSpinner.setItems((List)tmpMenus);
+            }
+
+            if ( (!result || tmpMenuLocations == null || tmpMenuLocations.size() == 0)
+                    || tmpMenus == null || tmpMenus.size() == 0 ) {
+                //TODO show error message and go back to previous Activity
             }
 
             mIsLoadTaskRunning = false;
