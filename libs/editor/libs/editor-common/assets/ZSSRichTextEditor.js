@@ -417,6 +417,19 @@ ZSSEditor.giveFocusToElement = function(element, offset) {
     selection.addRange(range);
 };
 
+ZSSEditor.setFocusAfterElement = function(element) {
+    var selection = window.getSelection();
+
+    if (selection.rangeCount) {
+        var range = document.createRange();
+
+        range.setStartAfter(element);
+        range.setEndAfter(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+};
+
 ZSSEditor.getSelectedText = function() {
 	var selection = window.getSelection();
 	return selection.toString();
@@ -2427,6 +2440,9 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
     str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoPressFormattingCallback );
     str = wp.shortcode.replace( 'video', str, ZSSEditor.applyVideoFormattingCallback );
 
+    // More tag
+    str = str.replace(/<!--more(.*?)-->/igm, "<hr class=\"more-tag\" wp-more-data=\"$1\">")
+    str = str.replace(/<!--nextpage-->/igm, "<hr class=\"nextpage-tag\">")
     return str;
 }
 
@@ -2444,6 +2460,10 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
     str = ZSSEditor.replaceVideosForShortcode( str );
+
+    // More tag
+    str = str.replace(/<hr class="more-tag" wp-more-data="(.*?)">/igm, "<!--more$1-->")
+    str = str.replace(/<hr class="nextpage-tag">/igm, "<!--nextpage-->")
     return str;
 };
 
@@ -3265,7 +3285,7 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
             if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
-                this.sendImageTappedCallback( targetNode );
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
@@ -3277,19 +3297,21 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
             // Is the tapped image the image we're editing?
             if ( targetNode == ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( targetNode );
-                this.sendImageTappedCallback( targetNode );
+                ZSSEditor.removeImageSelectionFormatting(targetNode);
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
             // If there is a selected image, deselect it. A different image was tapped.
             if ( ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+                ZSSEditor.removeImageSelectionFormatting(ZSSEditor.currentEditingImage);
             }
 
             // Format and flag the image as selected.
             ZSSEditor.currentEditingImage = targetNode;
-            ZSSEditor.applyImageSelectionFormatting( targetNode );
+            ZSSEditor.applyImageSelectionFormatting(targetNode);
+
+            ZSSEditor.setFocusAfterElement(targetNode);
 
             return;
         }
