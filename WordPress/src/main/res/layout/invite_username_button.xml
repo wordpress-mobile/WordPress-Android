@@ -13,8 +13,7 @@
         android:paddingTop="@dimen/margin_large"
         android:gravity="center_vertical"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_medium"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:textSize="@dimen/text_sz_medium"/>
 
     <ImageButton
         android:id="@+id/username_delete"
