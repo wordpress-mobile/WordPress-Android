@@ -286,7 +286,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isSmartLockAvailable() {
-        return (isAdded() && isGooglePlayServicesAvailable()) && mCredentialsClient != null && mCredentialsClient.isConnected();
+        return isGooglePlayServicesAvailable() && mCredentialsClient != null && mCredentialsClient.isConnected();
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
@@ -309,7 +309,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isGooglePlayServicesAvailable() {
-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS;
+        return isAdded() && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())
+                == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -355,6 +356,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 new ResultCallback<CredentialRequestResult>() {
                     @Override
                     public void onResult(CredentialRequestResult result) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         Status status = result.getStatus();
                         if (status.isSuccess()) {
                             Credential credential = result.getCredential();
@@ -365,8 +369,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                                     // Prompt the user to choose a saved credential
                                     status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_READ);
                                 } catch (IntentSender.SendIntentException e) {
-                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential " +
-                                            "request");
+                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
                                 }
                             } else {
                                 // The user must create an account or sign in manually.
@@ -683,7 +686,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (isAdded() && !hasHardwareKeyboard()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
@@ -703,6 +706,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (!status.isSuccess() && status.hasResolution()) {
                             try {
                                 // This prompt the user to resolve the save request
