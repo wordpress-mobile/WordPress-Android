@@ -218,6 +218,14 @@ public class MenusFragment extends Fragment {
             @Override
             public void onMenuDelete(final MenuModel menu) {
 
+                //delete menu from Spinner here
+                if (mMenusSpinner.getItems() != null) {
+                    if (mMenusSpinner.getItems().remove(menu)) {
+                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        mMenusSpinner.setSelection(-1, true);
+                    }
+                }
+
                 View.OnClickListener undoListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -264,13 +272,6 @@ public class MenusFragment extends Fragment {
 
                 snackbar.show();
 
-                //delete menu from Spinner here
-                if (mMenusSpinner.getItems() != null) {
-                    if (mMenusSpinner.getItems().remove(menu)) {
-                        mMenusSpinner.setItems(mMenusSpinner.getItems());
-                        mMenusSpinner.setSelection(-1);
-                    }
-                }
             }
 
             @Override
