@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -56,6 +55,9 @@
 
     </LinearLayout>
 
+    <View style="@style/MenusDividerView"
+        android:layout_marginTop="@dimen/content_margin"
+        android:layout_marginBottom="@dimen/content_margin"/>
 
     <org.wordpress.android.ui.menus.views.MenuAddEditRemoveView
         android:id="@+id/menu_add_edit_remove_view"

@@ -292,10 +292,7 @@ public class MenusFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (mMenusSpinner.getItems().size() == (position + 1)) {
                     //clicked on "add new menu"
-//                    MenuModel newMenu = new MenuModel();
-//                    newMenu.name = getString(R.string.menus_new_menu_name) + " " + (mMenusSpinner.getItems().size()-1);
-//                    mCurrentCreateRequestId = mRestWPCom.createMenu(newMenu);
-//                    mAddEditRemoveControl.setMenu(newMenu, false);
+
                     //for new menus, given we might be off line, it' best to not try creating a default menu right away
                     // (as opposed to how the calypso web does this)
                     //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
