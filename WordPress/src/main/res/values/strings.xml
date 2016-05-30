@@ -1434,6 +1434,7 @@
     <string name="menus_spinner_title">%d menus available</string>
     <string name="menus_spinner_empty">No menus loaded for this site</string>
     <string name="menus_default_menu_name">Default Menu</string>
+    <string name="menus_add_menu_name">+ Add new menu</string>
     <string name="could_not_load_menus">Could not load menus for this site</string>
     <string name="could_not_refresh_menus">Could not refresh menus for this site - showing local pre-saved menus</string>
 

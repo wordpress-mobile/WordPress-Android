@@ -85,7 +85,7 @@ public class MenusFragment extends Fragment {
                         // no op
                     } else {
                         //insert first Default Menu
-                        insertDefaultMenu(menus);
+                        prepareMenuList(menus);
 
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus);
@@ -242,9 +242,14 @@ public class MenusFragment extends Fragment {
         mMenusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
-                //TODO: check when to tell this is a default menu or not
-                mAddEditRemoveControl.setMenu(model, false);
+                if (mMenusSpinner.getItems().size() == (position + 1)) {
+                    //clicked on "add new menu"
+                    mAddEditRemoveControl.setMenu(null, false);
+                } else {
+                    MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
+                    //TODO: check when to tell this is a default menu or not
+                    mAddEditRemoveControl.setMenu(model, false);
+                }
             }
 
             @Override
@@ -350,11 +355,24 @@ public class MenusFragment extends Fragment {
         }
     }
 
+    private void prepareMenuList(List<MenuModel> menus) {
+        insertDefaultMenu(menus);
+        insertAddMenuOption(menus);
+    }
+
     private void insertDefaultMenu(List<MenuModel> menus) {
         if (menus != null) {
             MenuModel defaultMenu = new MenuModel();
             defaultMenu.name = getString(R.string.menus_default_menu_name);
             menus.add(0, defaultMenu);
+        }
+    }
+
+    private void insertAddMenuOption(List<MenuModel> menus) {
+        if (menus != null) {
+            MenuModel addMenuOption = new MenuModel();
+            addMenuOption.name = getString(R.string.menus_add_menu_name);
+            menus.add(addMenuOption);
         }
     }
 
@@ -396,7 +414,7 @@ public class MenusFragment extends Fragment {
             if (result) {
                 mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
                 //insert first Default Menu
-                insertDefaultMenu(tmpMenus);
+                prepareMenuList(tmpMenus);
                 mMenusSpinner.setItems((List)tmpMenus);
             }
 
@@ -436,7 +454,7 @@ public class MenusFragment extends Fragment {
             if (result) {
                 mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
                 //insert first Default Menu
-                insertDefaultMenu(tmpMenus);
+                prepareMenuList(tmpMenus);
                 mMenusSpinner.setItems((List)tmpMenus);
             }
 
