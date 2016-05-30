@@ -11,7 +11,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment implements
-        UsernameRemoveDialogFragment.UsernameRemover,
         RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
@@ -50,6 +49,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     private Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
     private Map<String, ValidationResult> mUsernameResults = new Hashtable<>();
+    private Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
 
@@ -247,13 +247,16 @@ public class PeopleInviteFragment extends Fragment implements
         validateAndStyleUsername(Arrays.asList(new String[]{ username }), validationEndListener);
     }
 
-    @Override
-    public void removeUsername(String username) {
+    private void removeUsername(String username) {
+        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
+
         ViewGroup removedButton = mUsernameButtons.remove(username);
         mUsernameResults.remove(username);
-
-        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
         usernamesView.removeView(removedButton);
+
+        final ViewGroup usernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames_container);
+        View removedErrorView = mUsernameErrorViews.remove(username);
+        usernamesContainer.removeView(removedErrorView);
     }
 
     @Override
@@ -277,7 +280,10 @@ public class PeopleInviteFragment extends Fragment implements
 
                 mUsernameResults.put(username, validationResult);
 
-                styleButton(username, mUsernameButtons.get(username), validationResult);
+                styleButton(mUsernameButtons.get(username), validationResult);
+                if (validationResult != ValidationResult.USER_FOUND) {
+                    appendError(username, validationResult);
+                }
             }
 
             @Override
@@ -298,7 +304,7 @@ public class PeopleInviteFragment extends Fragment implements
         void onValidationEnd();
     }
 
-    private void styleButton(String username, ViewGroup button, ValidationResult validationResult) {
+    private void styleButton(ViewGroup button, ValidationResult validationResult) {
         if (!isAdded()) {
             return;
         }
@@ -307,35 +313,47 @@ public class PeopleInviteFragment extends Fragment implements
 
         switch (validationResult) {
             case USER_NOT_FOUND:
-                setupConfirmationDialog(textView, username, R.string.invite_username_not_found_title, R.string
-                        .invite_username_not_found);
-                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
-                break;
             case ALREADY_MEMBER:
-                setupConfirmationDialog(textView, username, R.string.invite_already_a_member_title, R.string
-                        .invite_already_a_member);
-                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
-                break;
             case INVALID_EMAIL:
-                setupConfirmationDialog(textView, username, R.string.invite_invalid_email_title, R.string
-                        .invite_invalid_email);
                 textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.alert_red));
                 break;
             case USER_FOUND:
                 // properly style the button
-                textView.setBackgroundDrawable(null);
                 break;
         }
     }
 
-    private void setupConfirmationDialog(TextView button, final String username, final @StringRes int titleId, final
-            @StringRes int messageId) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UsernameRemoveDialogFragment.show(username, titleId, messageId, PeopleInviteFragment.this, 0);
-            }
-        });
+    private @Nullable String getErrorString(String username, ValidationResult validationResult) {
+        switch (validationResult) {
+            case USER_NOT_FOUND:
+                return getString(R.string.invite_username_not_found, username);
+            case ALREADY_MEMBER:
+                return getString(R.string.invite_already_a_member, username);
+            case INVALID_EMAIL:
+                return getString(R.string.invite_invalid_email, username);
+            case USER_FOUND:
+                return null;
+        }
+
+        return null;
+    }
+
+    private void appendError(String username, ValidationResult validationResult) {
+        if (!isAdded()) {
+            return;
+        }
+
+        final String error = getErrorString(username, validationResult);
+        if (error == null) {
+            return;
+        }
+
+        final ViewGroup usernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames_container);
+        final TextView usernameError = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout
+                .people_invite_error_view, null);
+        usernameError.setText(error);
+        usernamesContainer.addView(usernameError);
+        mUsernameErrorViews.put(username, usernameError);
     }
 
     private void clearUsernames(List<String> usernames) {
