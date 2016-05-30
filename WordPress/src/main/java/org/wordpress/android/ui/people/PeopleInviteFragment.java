@@ -129,11 +129,13 @@ public class PeopleInviteFragment extends Fragment implements
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_UP && event
-                        .getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent
+                        .KEYCODE_ENTER)) {
                     addUsername(mUsernameEditText, inflater, mUsernamesContainer, null);
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
             }
         });
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
