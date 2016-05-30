@@ -36,7 +36,10 @@ public class MenusFragment extends Fragment {
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
     private boolean mRequestBeingProcessed;
-    private int mCurrentRequestId;
+    private int mCurrentLoadRequestId;
+    private int mCurrentCreateRequestId;
+    private int mCurrentUpdateRequestId;
+    private int mCurrentDeleteRequestId;
     private boolean mIsUpdatingMenus;
     private TextView mEmptyView;
     private LinearLayout mSpinnersLayout;
@@ -64,11 +67,17 @@ public class MenusFragment extends Fragment {
                 if (mMenusSpinner.getItems() != null) {
                     //remove "add menu option" item (which is the last one)
                     mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+
                     //add the newly created menu
                     mMenusSpinner.getItems().add(menu);
+
                     //re-add the "add menu option" item
                     insertAddMenuOption(mMenusSpinner.getItems());
                     mMenusSpinner.setItems(mMenusSpinner.getItems());
+
+                    //set this newly created menu
+                    mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
+
                 }
                 mRequestBeingProcessed = false;
             }
@@ -124,8 +133,9 @@ public class MenusFragment extends Fragment {
 
                 //delete menu from Spinner here
                 if (mMenusSpinner.getItems() != null) {
-                    mMenusSpinner.getItems().remove(menu);
-                    mMenusSpinner.setItems(mMenusSpinner.getItems());
+                    if (mMenusSpinner.getItems().remove(menu)) {
+                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                    }
                 }
 
                 mRequestBeingProcessed = false;
@@ -169,14 +179,25 @@ public class MenusFragment extends Fragment {
 
             @Override
             public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
-                if (mMenuLocationsSpinner.getCount() == 0 || mMenusSpinner.getCount() == 0) {
-                    Toast.makeText(getActivity(), getString(R.string.could_not_load_menus), Toast.LENGTH_SHORT).show();
-                    updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                } else {
-                    Toast.makeText(getActivity(), getString(R.string.could_not_refresh_menus), Toast.LENGTH_SHORT).show();
+                // load menus
+                if (error == MenusRestWPCom.REST_ERROR.FETCH_ERROR) {
+                    if (mMenuLocationsSpinner.getCount() == 0 || mMenusSpinner.getCount() == 0) {
+                        Toast.makeText(getActivity(), getString(R.string.could_not_load_menus), Toast.LENGTH_SHORT).show();
+                        updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.could_not_refresh_menus), Toast.LENGTH_SHORT).show();
+                    }
+                    mIsUpdatingMenus = false;
+                }
+                else
+                if (error == MenusRestWPCom.REST_ERROR.CREATE_ERROR) {
+                    Toast.makeText(getActivity(), getString(R.string.could_not_create_menu), Toast.LENGTH_SHORT).show();
+                }
+                else
+                if (error == MenusRestWPCom.REST_ERROR.UPDATE_ERROR) {
+                    Toast.makeText(getActivity(), getString(R.string.could_not_update_menu), Toast.LENGTH_SHORT).show();
                 }
                 mRequestBeingProcessed = false;
-                mIsUpdatingMenus = false;
             }
         });
 
@@ -191,18 +212,33 @@ public class MenusFragment extends Fragment {
 
             @Override
             public void onMenuCreate(MenuModel menu) {
-                mRestWPCom.createMenu(menu);
+                mCurrentCreateRequestId = mRestWPCom.createMenu(menu);
             }
 
             @Override
-            public void onMenuDelete(final MenuModel menu, final boolean isDefault) {
+            public void onMenuDelete(final MenuModel menu) {
 
                 View.OnClickListener undoListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mUndoPressed = true;
                         // user undid the trash action, so reset the control to whatever it had
-                        mAddEditRemoveControl.setMenu(menu, isDefault);
+                        mAddEditRemoveControl.setMenu(menu, false);
+                        //restore the menu item in the spinner list
+                        if (mMenusSpinner.getItems() != null) {
+                            //remove "add menu option" item (which is the last one)
+                            mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+
+                            //add the newly created menu
+                            mMenusSpinner.getItems().add(menu);
+
+                            //re-add the "add menu option" item
+                            insertAddMenuOption(mMenusSpinner.getItems());
+                            mMenusSpinner.setItems(mMenusSpinner.getItems());
+
+                            //set this newly created menu
+                            mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
+                        }
                     }
                 };
 
@@ -221,23 +257,30 @@ public class MenusFragment extends Fragment {
 
                         if (!mRequestBeingProcessed) {
                             mRequestBeingProcessed = true;
-                            mCurrentRequestId = mRestWPCom.deleteMenu(menu);
+                            mCurrentDeleteRequestId = mRestWPCom.deleteMenu(menu);
                         }
                     }
                 });
 
                 snackbar.show();
+
+                //delete menu from Spinner here
+                if (mMenusSpinner.getItems() != null) {
+                    if (mMenusSpinner.getItems().remove(menu)) {
+                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        mMenusSpinner.setSelection(-1);
+                    }
+                }
             }
 
             @Override
             public void onMenuUpdate(MenuModel menu) {
                 if (!mRequestBeingProcessed) {
                     mRequestBeingProcessed = true;
-                    mCurrentRequestId = mRestWPCom.updateMenu(menu);
+                    mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
                 }
             }
         });
-
 
         mMenuLocationsSpinner = (MenusSpinner) view.findViewById(R.id.menu_locations_spinner);
         mMenusSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
@@ -249,11 +292,19 @@ public class MenusFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (mMenusSpinner.getItems().size() == (position + 1)) {
                     //clicked on "add new menu"
+//                    MenuModel newMenu = new MenuModel();
+//                    newMenu.name = getString(R.string.menus_new_menu_name) + " " + (mMenusSpinner.getItems().size()-1);
+//                    mCurrentCreateRequestId = mRestWPCom.createMenu(newMenu);
+//                    mAddEditRemoveControl.setMenu(newMenu, false);
+                    //for new menus, given we might be off line, it' best to not try creating a default menu right away
+                    // (as opposed to how the calypso web does this)
+                    //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
+                    //that's why we set the menu within the control to null
                     mAddEditRemoveControl.setMenu(null, false);
                 } else {
                     MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
                     //TODO: check when to tell this is a default menu or not
-                    mAddEditRemoveControl.setMenu(model, false);
+                    mAddEditRemoveControl.setMenu(model, (position == 0));
                 }
             }
 
@@ -320,7 +371,7 @@ public class MenusFragment extends Fragment {
 
         //also fetch latest menus from the server
         mIsUpdatingMenus = true;
-        mCurrentRequestId = mRestWPCom.fetchAllMenus();
+        mCurrentLoadRequestId = mRestWPCom.fetchAllMenus();
 
     }
 

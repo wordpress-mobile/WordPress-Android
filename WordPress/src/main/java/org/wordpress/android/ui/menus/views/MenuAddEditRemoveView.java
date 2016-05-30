@@ -34,7 +34,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
     public interface MenuAddEditRemoveActionListener {
         void onMenuCreate(MenuModel menu);
-        void onMenuDelete(MenuModel menu, boolean isDefault);
+        void onMenuDelete(MenuModel menu);
         void onMenuUpdate(MenuModel menu);
     }
 
@@ -122,7 +122,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 setActive(false);
                 if (mActionListener != null) {
                     if (mCurrentMenu != null) {
-                        mActionListener.onMenuDelete(mCurrentMenu, isCurrentMenuDefault());
+                        mActionListener.onMenuDelete(mCurrentMenu);
                         setMenu(null, false);
                     } else {
                         // in case this is a new menu (i.e. not really editing) we don't call the listener
@@ -147,7 +147,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
                     mMenuInactiveTitleText.setText(menuTitle);
                     setActive(false);
                     if (mActionListener != null){
-                        if (mCurrentMenu == null){
+                        if (mCurrentMenu == null || mCurrentMenu.menuId == 0){
                             MenuModel menu = new MenuModel();
                             menu.name = menuTitle;
                             mActionListener.onMenuCreate(menu);
