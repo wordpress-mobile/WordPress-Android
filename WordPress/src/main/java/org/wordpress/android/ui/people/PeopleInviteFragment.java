@@ -3,6 +3,7 @@ package org.wordpress.android.ui.people;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -148,7 +149,7 @@ public class PeopleInviteFragment extends Fragment implements
         usernamesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUsernameEditText.requestFocus();
+                EditTextUtils.showSoftInput(mUsernameEditText);
             }
         });
 
