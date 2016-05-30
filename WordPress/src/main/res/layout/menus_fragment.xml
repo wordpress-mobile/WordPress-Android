@@ -1,115 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_light"
     android:padding="@dimen/content_margin">
 
-    <org.wordpress.android.ui.menus.MenusSpinner
-        android:id="@+id/menu_locations_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
-        app:spinnerTitle="@string/location_menu_spinner_title"
-        app:spinnerIcon="@drawable/gridicon_layout" />
 
     <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/empty_view"
+        style="@style/WordPress.EmptyList.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/uses" />
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:gravity="center"
+        android:text="@string/empty_list_default"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
-    <org.wordpress.android.ui.menus.MenusSpinner
-        android:id="@+id/selected_menu_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:spinnerTitle="@string/menus_spinner_title"
-        app:spinnerIcon="@drawable/gridicon_menus" />
-
-
-    <!--//FIXME: start - delete all this!-->
-
-    <org.wordpress.android.widgets.WPTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/content_margin"
-        android:text="@string/menus_test_test"/>
-
-    <Button
-        android:id="@+id/menu_test_fetch_all"
-        android:layout_margin="@dimen/content_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/menus_test_get_all_menus"
-        />
-
-    <TextView
-        android:id="@+id/test_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/spinner_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/content_margin"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/menu_test_fetch_good_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menus_test_get_last_menu"
-            />
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/menu_test_fetch_bad_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menus_test_get_inexistent_menu"
-            />
 
-        <Button
-            android:id="@+id/menu_test_fetch_zero_menu"
+        <org.wordpress.android.ui.menus.MenusSpinner
+            android:id="@+id/menu_locations_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            app:spinnerTitle="@string/location_menu_spinner_title"
+            app:spinnerIcon="@drawable/gridicon_layout" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/menus_test_get_id_zero"
-            />
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/uses" />
+
+        <org.wordpress.android.ui.menus.MenusSpinner
+            android:id="@+id/selected_menu_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:spinnerTitle="@string/menus_spinner_title"
+            app:spinnerIcon="@drawable/gridicon_menus" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/content_margin"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/menu_test_set_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menus_test_set_menu"
-            />
-
-        <Button
-            android:id="@+id/menu_test_set_menu_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menus_test_set_default"
-            />
-
-        <Button
-            android:id="@+id/menu_test_reset_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menus_test_reset"
-            />
-    </LinearLayout>
-
-    <View style="@style/MenusDividerView" />
-   <!--//FIXME: end - delete all this!-->
 
     <org.wordpress.android.ui.menus.views.MenuAddEditRemoveView
         android:id="@+id/menu_add_edit_remove_view"

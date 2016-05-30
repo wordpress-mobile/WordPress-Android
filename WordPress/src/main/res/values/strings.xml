@@ -1403,6 +1403,11 @@
     <string name="uses">uses</string>
     <string name="location_menu_spinner_title">%d menu areas in this theme</string>
     <string name="menus_spinner_title">%d menus available</string>
+    <string name="menus_spinner_empty">No menus loaded for this site</string>
+    <string name="could_not_load_menus">Could not load menus for this site</string>
+    <string name="could_not_refresh_menus">Could not refresh menus for this site - showing local pre-saved menus</string>
+
+
 
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="exporting_content_progress">Exporting content…</string>
