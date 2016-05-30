@@ -12,10 +12,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -37,7 +34,7 @@ import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment implements
         UsernameRemoveDialogFragment.UsernameRemover,
-        RoleChangeDialogFragment.OnChangeListener,
+        RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
     private static final String KEY_USERNAMES = "KEY_USERNAMES";
     private static final String KEY_ROLE = "KEY_ROLE";
@@ -159,7 +156,7 @@ public class PeopleInviteFragment extends Fragment implements
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoleChangeDialogFragment.show(PeopleInviteFragment.this, 0, 0, mRole, 0);
+                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0);
             }
         });
         mRoleTextView = (TextView) rootView.findViewById(R.id.role);
@@ -257,8 +254,7 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
-    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        // ignore personID, localTableBlogId as we don't need them here
+    public void onRoleSelected(String newRole) {
         setRole(newRole);
     }
 
