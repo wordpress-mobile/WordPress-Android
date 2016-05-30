@@ -231,7 +231,7 @@ public class PeopleInviteFragment extends Fragment implements
         String username = editText.getText().toString().trim();
         editText.setText("");
 
-        if (mUsernameButtons.keySet().contains(username)) {
+        if (username.isEmpty() || mUsernameButtons.keySet().contains(username)) {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();
             }
