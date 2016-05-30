@@ -15,8 +15,6 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
         android:gravity="center_vertical"
-        android:textAllCaps="false"
-        android:text="asdfsadff"
         android:textColor="@color/grey_dark"
         android:background="?attr/selectableItemBackgroundBorderless"/>
 
