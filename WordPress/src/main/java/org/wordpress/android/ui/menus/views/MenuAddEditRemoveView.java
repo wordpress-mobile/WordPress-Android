@@ -29,11 +29,12 @@ public class MenuAddEditRemoveView extends LinearLayout {
     private boolean mIsActive;
 
     private MenuModel mCurrentMenu;
+    private boolean mCurrentMenuIsDefault;
     private MenuAddEditRemoveActionListener mActionListener;
 
     public interface MenuAddEditRemoveActionListener {
         void onMenuCreate(MenuModel menu);
-        void onMenuDelete(MenuModel menu);
+        void onMenuDelete(MenuModel menu, boolean isDefault);
         void onMenuUpdate(MenuModel menu);
     }
 
@@ -121,7 +122,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 setActive(false);
                 if (mActionListener != null) {
                     if (mCurrentMenu != null) {
-                        mActionListener.onMenuDelete(mCurrentMenu);
+                        mActionListener.onMenuDelete(mCurrentMenu, isCurrentMenuDefault());
                         setMenu(null, false);
                     } else {
                         // in case this is a new menu (i.e. not really editing) we don't call the listener
@@ -218,6 +219,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
             mMenuSave.setEnabled(false);
         }
 
+        this.mCurrentMenuIsDefault = isDefault;
         if (isDefault){
             mMenuRemove.setVisibility(View.GONE);
         } else {
@@ -229,6 +231,10 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
     public MenuModel getMenu() {
         return this.mCurrentMenu;
+    }
+
+    public boolean isCurrentMenuDefault() {
+        return this.mCurrentMenuIsDefault;
     }
 
     //set a listener to listen for SAVE and REMOVE buttons

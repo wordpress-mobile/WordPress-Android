@@ -48,6 +48,6 @@ public class MenuLocationModel implements NameInterface {
 
     @Override
     public String getName() {
-        return name;
+        return details;
     }
 }
