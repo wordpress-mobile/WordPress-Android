@@ -84,6 +84,9 @@ public class MenusFragment extends Fragment {
                     if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         // no op
                     } else {
+                        //insert first Default Menu
+                        insertDefaultMenu(menus);
+
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus);
                         bSpinnersUpdated = true;
@@ -133,12 +136,26 @@ public class MenusFragment extends Fragment {
                 Toast.makeText(getActivity(), "menu: " + menu.name + " updated", Toast.LENGTH_SHORT).show();
 
                 //update menu in Spinner here
-                for (MenuModel item : (List<MenuModel>) mMenusSpinner.getItems()) {
-                    if (item != null && item.menuId == menu.menuId) {
-                        item.name = menu.name;
-                        item.details = menu.details;
-                        item.locations = menu.locations;
-                        item.menuItems = menu.menuItems;
+                if (mMenusSpinner.getItems() != null) {
+                    int selectedPos = -1;
+                    for (int i=0; i < mMenusSpinner.getItems().size(); i++) {
+                        MenuModel item = (MenuModel) mMenusSpinner.getItems().get(i);
+                        if (item != null && item.menuId == menu.menuId) {
+                            selectedPos = i;
+                            item.name = menu.name;
+                            item.details = menu.details;
+                            item.locations = menu.locations;
+                            item.menuItems = menu.menuItems;
+                            break;
+                        }
+                    }
+
+                    //I have to re-set items on the Spinner so not only the adapter will change but also the textview
+                    //within the Spinner control - note that if a menu has been updated, it is currently being shown and
+                    //selected within the Spinner control view, so it needs to change to reflect the update as well.
+                    if (selectedPos >= 0) {
+                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        mMenusSpinner.setSelection(selectedPos);
                     }
                 }
 
@@ -240,17 +257,20 @@ public class MenusFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //auto-select the first available menu for this location
-                List <MenuModel> menus = mMenusSpinner.getItems();
-                if (menus != null && menus.size() > 0) {
+                List<MenuModel> menus = mMenusSpinner.getItems();
+                if (menus != null && menus.size() > 0 && mMenuLocationsSpinner.getItems() != null &&
+                        mMenuLocationsSpinner.getItems().size() > 0) {
                     MenuLocationModel menuLocationSelected = (MenuLocationModel)
                             mMenuLocationsSpinner.getItems().get(position);
-                    for (int i=0; i < menus.size(); i++) {
+                    for (int i = 0; i < menus.size(); i++) {
                         MenuModel menu = menus.get(i);
-                        for (MenuLocationModel menuLocation : menu.locations) {
-                            if (menuLocationSelected.equals(menuLocation)) {
-                                //set this one and break;
-                                mMenusSpinner.setSelection(i);
-                                return;
+                        if (menu.locations != null) {
+                            for (MenuLocationModel menuLocation : menu.locations) {
+                                if (menuLocationSelected.equals(menuLocation)) {
+                                    //set this one and break;
+                                    mMenusSpinner.setSelection(i);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -330,6 +350,13 @@ public class MenusFragment extends Fragment {
         }
     }
 
+    private void insertDefaultMenu(List<MenuModel> menus) {
+        if (menus != null) {
+            MenuModel defaultMenu = new MenuModel();
+            defaultMenu.name = getString(R.string.menus_default_menu_name);
+            menus.add(0, defaultMenu);
+        }
+    }
 
     /*
      * load menus using an AsyncTask
@@ -368,6 +395,8 @@ public class MenusFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
+                //insert first Default Menu
+                insertDefaultMenu(tmpMenus);
                 mMenusSpinner.setItems((List)tmpMenus);
             }
 
@@ -379,6 +408,46 @@ public class MenusFragment extends Fragment {
             }
 
             mIsLoadTaskRunning = false;
+        }
+    }
+
+
+    private boolean mIsSaveTaskRunning = false;
+    private class SaveMenusTask extends AsyncTask<Void, Void, Boolean> {
+        List<MenuModel> tmpMenus;
+        List<MenuLocationModel> tmpMenuLocations;
+
+        @Override
+        protected void onPreExecute() {
+            mIsSaveTaskRunning = true;
+        }
+        @Override
+        protected void onCancelled() {
+            mIsSaveTaskRunning = false;
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            tmpMenus = MenuTable.getAllMenusForCurrentSite();
+            tmpMenuLocations = MenuLocationTable.getAllMenuLocationsForCurrentSite();
+            return true;
+        }
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
+                //insert first Default Menu
+                insertDefaultMenu(tmpMenus);
+                mMenusSpinner.setItems((List)tmpMenus);
+            }
+
+            if ( (!result || tmpMenuLocations == null || tmpMenuLocations.size() == 0)
+                    || tmpMenus == null || tmpMenus.size() == 0 ) {
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            } else {
+                hideEmptyView();
+            }
+
+            mIsSaveTaskRunning = false;
         }
     }
 
