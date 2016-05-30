@@ -151,7 +151,6 @@ public class PersonDetailFragment extends Fragment {
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
                 person.getLocalTableBlogId(), person.getRole());
-        dialog.setOnChangeListener((PeopleManagementActivity) getActivity());
         dialog.show(getFragmentManager(), null);
     }
 

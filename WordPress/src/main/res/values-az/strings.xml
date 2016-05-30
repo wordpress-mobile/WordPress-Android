@@ -447,7 +447,6 @@
 	<string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
 	<string name="required_field">Gərəkli sahə</string>
 	<string name="email_hint">E-poçt ünvanı</string>
-	<string name="username_email">İstifadəçi adı və ya e-poçt</string>
 	<string name="site_address">Öz serverinizdə mövcud olan bloq ünvanınız(URL)</string>
 	<string name="email_cant_be_used_to_signup">Bu e-poçt ünvanından qeydiyyat üçün istifadə edə bilməzsiniz. Bəzi e-poçtlarımızın qadağan olması ilə əlaqədar problemlə qarşılaşırıq. Başqa bir e-poçt provayderindən istifadə edin.</string>
 	<string name="email_reserved">Bu e-poçt ünvanından artıq istifadə edilmişdir. Daxil olan poçt qutunuzu aktivasiya e-poçtu üçün yoxlayın. Əgər aktivasiya etməsəniz, bir neçə gün ərzində təkrar yoxlaya bilərsiniz.</string>

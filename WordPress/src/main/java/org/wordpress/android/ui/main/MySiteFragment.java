@@ -353,7 +353,7 @@ public class MySiteFragment extends Fragment
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
-        toggleAdminVisibility();
+        toggleAdminVisibility(blog);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
@@ -398,17 +398,21 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void toggleAdminVisibility() {
-        if (shouldHideWPAdmin()) {
+    private void toggleAdminVisibility(@Nullable final Blog blog) {
+        if (blog == null) {
+            return;
+        }
+        if (shouldHideWPAdmin(blog)) {
             mAdminView.setVisibility(View.GONE);
         } else {
             mAdminView.setVisibility(View.VISIBLE);
         }
     }
 
-    private boolean shouldHideWPAdmin() {
-        Blog blog = WordPress.getCurrentBlog();
-
+    private boolean shouldHideWPAdmin(@Nullable final Blog blog) {
+        if (blog == null) {
+            return false;
+        }
         if (!blog.isDotcomFlag()) {
             return false;
         } else {

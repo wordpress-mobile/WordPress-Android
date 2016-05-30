@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -65,11 +66,13 @@ public class PeopleTable {
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static void savePeople(List<Person> peopleList, int localTableBlogId) {
+    public static void savePeople(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
             //We have a fresh list, remove the previous list of people in case it was deleted on remote
-            PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
+            if (isFreshList) {
+                PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
+            }
 
             for (Person person : peopleList) {
                 PeopleTable.save(person);
@@ -80,9 +83,30 @@ public class PeopleTable {
         }
     }
 
+    public static int getPeopleCountForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId)};
+        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?";
+        return SqlUtils.intForQuery(getReadableDb(), sql, args);
+    }
+
     public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    }
+
+    public static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
+        int size = getPeopleCountForLocalBlogId(localTableBlogId);
+        int fetchLimit = PeopleUtils.FETCH_USERS_LIMIT;
+        if (size > fetchLimit) {
+            int deleteCount = size - fetchLimit;
+            String[] args = new String[] {
+                    Integer.toString(localTableBlogId),
+                    Integer.toString(deleteCount)
+            };
+            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND person_id " +
+                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?1 " +
+                    "ORDER BY display_name DESC LIMIT ?2)", args);
+        }
     }
 
     public static void deletePerson(long personID, int localTableBlogId) {

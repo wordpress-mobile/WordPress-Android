@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -206,15 +205,10 @@ public class ReaderActivityLauncher {
         }
 
         if (context instanceof Activity) {
-            // use built-in scale animation on jb+, fall back to default animation on pre-jb
             Activity activity = (Activity) context;
-            if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
-                ActivityCompat.startActivity(activity, intent, options.toBundle());
-            } else {
-                activity.startActivity(intent);
-            }
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
         } else {
             context.startActivity(intent);
         }

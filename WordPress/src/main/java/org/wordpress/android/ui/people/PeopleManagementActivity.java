@@ -13,20 +13,31 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
+
 public class PeopleManagementActivity extends AppCompatActivity
-        implements PeopleListFragment.OnPersonSelectedListener, RoleChangeDialogFragment.OnChangeListener {
+        implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
+    private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
+    private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
+
+    private boolean mPeopleEndOfListReached;
+    private boolean mFetchRequestInProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,15 +62,52 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
+            // only delete cached people if there is a connection
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+            }
+
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
+            peopleListFragment.setOnFetchPeopleListener(this);
+
+            mPeopleEndOfListReached = false;
+            mFetchRequestInProgress = false;
 
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
-        }
+        } else {
+            mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
+            mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
 
-        refreshUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId());
+            FragmentManager fragmentManager = getFragmentManager();
+            PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                    .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+            if (peopleListFragment != null) {
+                peopleListFragment.setOnPersonSelectedListener(this);
+                peopleListFragment.setOnFetchPeopleListener(this);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
+        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -107,16 +155,40 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshUsersList(String dotComBlogId, final int localTableBlogId) {
-        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, new PeopleUtils.FetchUsersCallback() {
+    private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        final PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
+                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        if (peopleListFragment != null) {
+            peopleListFragment.showLoadingProgress(true);
+        }
+
+        mFetchRequestInProgress = true;
+
+        PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList) {
-                PeopleTable.savePeople(peopleList, localTableBlogId);
+            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+                boolean isFreshList = (offset == 0);
+                mPeopleEndOfListReached = isEndOfList;
+                PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
+
+                mFetchRequestInProgress = false;
+                if (peopleListFragment != null) {
+                    peopleListFragment.showLoadingProgress(false);
+                }
             }
 
             @Override
             public void onError() {
+                mFetchRequestInProgress = false;
+                if (peopleListFragment != null) {
+                    peopleListFragment.showLoadingProgress(false);
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_people_list,
                         ToastUtils.Duration.LONG);
@@ -138,6 +210,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
         if (!personDetailFragment.isAdded()) {
+            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
@@ -145,10 +218,13 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onRoleChanged(long personID, int localTableBlogId, String newRole) {
-        final Person person = PeopleTable.getPerson(personID, localTableBlogId);
-        if (person == null || newRole == null || newRole.equalsIgnoreCase(person.getRole())) {
+    public void onEventMainThread(RoleChangeDialogFragment.RoleChangeEvent event) {
+        if(!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId);
+        if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
 
@@ -158,13 +234,14 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         if (personDetailFragment != null) {
             // optimistically update the role
-            personDetailFragment.changeRole(newRole);
+            personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), newRole, localTableBlogId,
+        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
                 PeopleTable.save(person);
                 refreshOnScreenFragmentDetails();
             }
@@ -202,6 +279,10 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void removeSelectedPerson() {
+        if(!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
         Person person = getCurrentPerson();
         if (person == null) {
             return;
@@ -212,6 +293,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 new PeopleUtils.RemoveUserCallback() {
                     @Override
                     public void onSuccess(long personID, int localTableBlogId) {
+                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                         // remove the person from db, navigate back to list fragment and refresh it
                         Person person = PeopleTable.getPerson(personID, localTableBlogId);
                         String text;
@@ -277,6 +359,22 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         return personDetailFragment.loadPerson();
+    }
+
+    @Override
+    public void onFetchFirstPage() {
+        Blog blog = WordPress.getCurrentBlog();
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+    }
+
+    @Override
+    public void onFetchMorePeople() {
+        if (mPeopleEndOfListReached) {
+            return;
+        }
+        Blog blog = WordPress.getCurrentBlog();
+        int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
+        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
     }
 
     public interface InvitationSender {

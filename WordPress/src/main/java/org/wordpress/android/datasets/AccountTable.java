@@ -111,6 +111,7 @@ public class AccountTable {
                 account.setFirstName(c.getString(c.getColumnIndex("first_name")));
                 account.setLastName(c.getString(c.getColumnIndex("last_name")));
                 account.setAboutMe(c.getString(c.getColumnIndex("about_me")));
+                account.setDateCreated(DateTimeUtils.iso8601ToJavaDate(c.getString(c.getColumnIndex("date"))));
                 account.setNewEmail(c.getString(c.getColumnIndex("new_email")));
                 account.setPendingEmailChange(c.getInt(c.getColumnIndex("pending_email_change")) > 0);
                 account.setWebAddress(c.getString(c.getColumnIndex("web_address")));

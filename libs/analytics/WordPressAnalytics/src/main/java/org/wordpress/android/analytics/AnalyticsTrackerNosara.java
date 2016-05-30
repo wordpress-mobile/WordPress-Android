@@ -281,6 +281,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_MY_PROFILE:
                 eventName = "my_profile_opened";
                 break;
+            case OPENED_PEOPLE_MANAGEMENT:
+                eventName = "people_management_list_opened";
+                break;
+            case OPENED_PERSON:
+                eventName = "people_management_details_opened";
+                break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
                 break;
@@ -392,6 +398,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 eventName = "login_autofill_credentials_updated";
+                break;
+            case PERSON_REMOVED:
+                eventName = "people_management_person_removed";
+                break;
+            case PERSON_UPDATED:
+                eventName = "people_management_person_updated";
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";

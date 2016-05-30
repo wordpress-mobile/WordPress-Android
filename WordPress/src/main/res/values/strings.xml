@@ -1024,8 +1024,8 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_open_list_from_notification">This post or page was published on another site</string>
-    <string name="error_fetch_people_list">Couldn\'t retrieve users for the site</string>
-    <string name="error_update_role">Couldn\'t update role of the user</string>
+    <string name="error_fetch_people_list">Couldn\'t retrieve site users</string>
+    <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
 
     <!-- Image Descriptions for Accessibility -->

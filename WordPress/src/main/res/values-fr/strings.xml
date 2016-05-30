@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="plans_post_purchase_text_themes">Vous avez maintenant un accès illimité aux thèmes premium. Visualisez n&amp;rsquo;importe quel thème sur votre thème pour commencer.</string>
+	<string name="gravatar_camera_and_media_permission_required">Des permissions sont requises pour sélectionner une photo ou en prendre une</string>
+	<string name="error_updating_gravatar">Erreur lors de la mise à jour de votre Gravatar</string>
+	<string name="error_locating_image">Erreur de la localisation de l\'image recadrée</string>
+	<string name="error_refreshing_gravatar">Erreur lors de la mise en ligne de votre Gravatar</string>
+	<string name="gravatar_tip">Nouveau ! Tapez sur votre Gravatar pour le modifier !</string>
+	<string name="error_cropping_image">Erreur lors du recadrage de l\'image</string>
+	<string name="launch_your_email_app">Lancez votre application d\'e-mail</string>
+	<string name="checking_email">Vérification des e-mails</string>
+	<string name="not_on_wordpress_com">Pas de compte WordPress.com ?</string>
+	<string name="magic_link_unavailable_error_message">Actuellement indisponible. Veuillez saisir votre mot de passe</string>
+	<string name="check_your_email">Vérifiez vos e-mails</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Faites-vous envoyer par e-mail un lien pour vous connecter instantanément</string>
+	<string name="logging_in">Connexion</string>
+	<string name="enter_your_password_instead">Saisissez votre mot de passe à la place</string>
+	<string name="web_address_dialog_hint">Affiché publiquement quand vous commentez.</string>
+	<string name="jetpack_not_connected_message">L\'extension Jetpack est installée, mais pas connecté à WordPress.com. Voulez-vous connecter Jetpack ?</string>
+	<string name="username_email">Adresse e-mail ou identifiant</string>
+	<string name="jetpack_not_connected">L\'extension Jetpack n\'est pas connectée</string>
+	<string name="new_editor_reflection_error">L\'éditeur visuel n\'est pas compatible avec votre appareil.\nIl a été automatiquement désactivé.</string>
+	<string name="stats_insights_latest_post_no_title">(pas de titre)</string>
+	<string name="capture_or_pick_photo">Prenez une photo ou choisissez-en une</string>
+	<string name="plans_post_purchase_text_themes">Vous avez maintenant un accès illimité aux thèmes premium. Visualisez n\'importe quel thème sur votre thème pour commencer.</string>
 	<string name="plans_post_purchase_button_themes">Parcourez les thèmes</string>
 	<string name="plans_post_purchase_title_themes">Trouvez un thème premium parfait</string>
 	<string name="plans_post_purchase_button_video">Commencez un nouvel article</string>
@@ -13,9 +34,9 @@
 	<string name="plan_purchase_now">Acheter maintenant</string>
 	<string name="plans_post_purchase_title_intro">Félicitations ! À vous de jouer !</string>
 	<string name="export_your_content_message">Vos articles, pages, et réglages vont vous être envoyés par e-mail à l\'adresse %s.</string>
-	<string name="plan">Offre</string>
-	<string name="plans">Offres</string>
-	<string name="plans_loading_error">Impossible de charger les offres</string>
+	<string name="plan">Plan</string>
+	<string name="plans">Plans</string>
+	<string name="plans_loading_error">Impossible de charger les plans</string>
 	<string name="export_your_content">Exporter votre contenu</string>
 	<string name="exporting_content_progress">Export en cours...</string>
 	<string name="export_email_sent">Message d’export envoyé !</string>
@@ -32,7 +53,7 @@
 	<string name="export_site_summary">Si vous êtes sur, veuillez vous assurer de prendre le temps d\'exporter votre contenu maintenant. Il ne pourras pas être récupéré plus tard.</string>
 	<string name="keep_your_content">Gardez votre contenu</string>
 	<string name="domain_removal_hint">Les domaines qui ne fonctionneront plus une fois que vous aurez supprimé votre site.</string>
-	<string name="domain_removal_summary">Soyez prudents&amp;nbsp;! La suppression de votre site supprimera aussi le(s) domaine(s) listés ci-dessous.</string>
+	<string name="domain_removal_summary">Soyez prudents ! La suppression de votre site supprimera aussi le(s) domaine(s) listés ci-dessous.</string>
 	<string name="primary_domain">Domaine principal</string>
 	<string name="domain_removal">Retrait de domaine</string>
 	<string name="error_deleting_site_summary">Il y a eu une erreur durant la suppression de votre site. Veuillez contacter le support pour de l\'assistance.</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Si vous voulez un site mais ne voulez plus aucun de vos articles ou vos pages, notre équipe de support peut supprimer vos articles, pages, médias et commentaires pour vous.\n\nCeci gardera votre site et votre URL actifs, mais vous donnera un nouveau départ pour votre création de contenu. Contactez nous pour avoir votre contenu nettoyé.</string>
 	<string name="site_settings_start_over_hint">Recommencez votre site</string>
 	<string name="let_us_help">Laissez nous vous aider</string>
-	<string name="me_btn_account_settings">Réglages du compte</string>
 	<string name="me_btn_app_settings">Réglages de l’app</string>
 	<string name="start_over">Recommencer</string>
 	<string name="editor_remove_failed_uploads">Retirer les mise en ligne ayant échoué</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Cliquez sur le lien de vérification de l\'e-mail envoyé à %1$s pour confirmer votre nouvelle adresse.</string>
 	<string name="primary_site">Site principal</string>
 	<string name="web_address">Adresse web</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Vous êtes actuellement en train de mettre en ligne un média. Veuillez patienter jusqu\'à ce que soit terminé.</string>
 	<string name="error_refresh_comments_showing_older">Les commentaires ne peuvent pas être actualisés en ce moment - affichage des commentaires plus anciens</string>
 	<string name="editor_post_settings_set_featured_image">Définir une image mise à la une</string>
@@ -195,9 +214,9 @@
 	<string name="site_settings_blacklist_hint">Les commentaires qui correspondent à un filtrer son marqués comme indésirables</string>
 	<string name="site_settings_moderation_hold_hint">Les commentaires qui correspondent à un filtre sont mis dans la file d\'attente de modération</string>
 	<string name="site_settings_multiple_links_hint">Ignore la limite de liens pour les utilisateurs connus</string>
-	<string name="site_settings_whitelist_hint">L&amp;rsquo;auteur d&amp;rsquo;un commentaire doit avoir déjà au moins un commentaire approuvé</string>
+	<string name="site_settings_whitelist_hint">L\'auteur d\'un commentaire doit avoir déjà au moins un commentaire approuvé</string>
 	<string name="site_settings_user_account_required_hint">Les utilisateurs doivent être enregistrés et connectés pour commenter</string>
-	<string name="site_settings_identity_required_hint">L&amp;rsquo;auteur d&amp;rsquo;un commentaire doit renseigner son nom et son adresse de messagerie</string>
+	<string name="site_settings_identity_required_hint">L\'auteur d\'un commentaire doit renseigner son nom et son adresse de messagerie</string>
 	<string name="site_settings_manual_approval_hint">Les commentaires doivent être approuvés manuellement</string>
 	<string name="site_settings_paging_hint">Afficher les commentaires en morceaux d\'une taille spécifiée.</string>
 	<string name="site_settings_threading_hint">Permettre les commentaires imbriqués à un certain niveau</string>
@@ -211,7 +230,7 @@
 	<string name="site_settings_related_posts_hint">Afficher ou cacher les articles similaires dans le lecteur</string>
 	<string name="site_settings_upload_and_link_image_hint">Activez pour toujours mettre en ligne l\'image en pleine grandeur</string>
 	<string name="site_settings_image_width_hint">Redimensionner les images dans les articles dans cette largeur. </string>
-	<string name="site_settings_format_hint">Configure le nouveau format d&amp;rsquo;article</string>
+	<string name="site_settings_format_hint">Configure le nouveau format d\'article</string>
 	<string name="site_settings_category_hint">Configure la nouvelle catégorie d\'articles</string>
 	<string name="site_settings_location_hint">Automatiquement ajouter les données de localisation pour vos articles.</string>
 	<string name="site_settings_password_hint">Changez votre mot de passe</string>
@@ -220,7 +239,7 @@
 	<string name="site_settings_privacy_hint">Contrôler qui peut voir votre site.</string>
 	<string name="site_settings_address_hint">Changer votre adresse n\'est actuellement pas supporté.</string>
 	<string name="site_settings_tagline_hint">Une brève description ou une phrase accrocheuse pour décrire votre blog</string>
-	<string name="site_settings_title_hint">En quelques mots, décrivez la raison d&amp;rsquo;être de ce site.</string>
+	<string name="site_settings_title_hint">En quelques mots, décrivez la raison d\'être de ce site.</string>
 	<string name="site_settings_whitelist_known_summary">Commentaires des utilisateurs anonymes</string>
 	<string name="site_settings_whitelist_all_summary">Commentaires de tous les utilisateurs</string>
 	<string name="site_settings_threading_summary">%d niveaux</string>
@@ -258,7 +277,7 @@
 	<string name="comments">Commentaires</string>
 	<string name="close_after">Fermer après</string>
 	<string name="oldest_first"> Anciens en Premier</string>
-	<string name="media_error_no_permission_upload">Vous n&amp;rsquo;avez pas l&amp;rsquo;autorisation de mettre en ligne des fichiers média sur ce site</string>
+	<string name="media_error_no_permission_upload">Vous n\'avez pas l\'autorisation de mettre en ligne des fichiers média sur ce site</string>
 	<string name="never">Jamais</string>
 	<string name="unknown">Inconnu</string>
 	<string name="reader_err_get_post_not_found">Cet article n’existe plus</string>
@@ -275,7 +294,7 @@
 	<string name="media_details_label_date_added">Ajouté</string>
 	<string name="selected_theme">Thème sélectionné</string>
 	<string name="could_not_load_theme">Impossible de charger le thème</string>
-	<string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d&amp;rsquo;activer le thème.</string>
+	<string name="theme_activation_error">Quelque chose s\'est mal passé. Impossible d\'activer le thème.</string>
 	<string name="theme_by_author_prompt_append">par %1$s</string>
 	<string name="theme_prompt">Merci d\'avoir choisi %1$s</string>
 	<string name="theme_try_and_customize">Essayer et personnaliser</string>
@@ -297,18 +316,18 @@
 	<string name="stats_referrers_marking_not_spam">Retirer l\'état d\'indésirable</string>
 	<string name="stats_referrers_unspam">Pas un indésirable</string>
 	<string name="stats_referrers_marking_spam">Marquer comme indésirable</string>
-	<string name="theme_auth_error_authenticate">Impossible de récupérer les thèmes&amp;nbsp;: échec de l&amp;rsquo;authentification de l&amp;rsquo;utilisateur</string>
+	<string name="theme_auth_error_authenticate">Impossible de récupérer les thèmes : échec de l\'authentification de l\'utilisateur</string>
 	<string name="post_published">Article publié</string>
 	<string name="page_published">Page publiée</string>
 	<string name="post_updated">Article mis à jour</string>
 	<string name="page_updated">Page mise à jour</string>
 	<string name="stats_referrers_spam">Indésirable</string>
 	<string name="theme_no_search_result_found">Désolé, pas de thème trouvé.</string>
-	<string name="media_file_name">Nom du fichier&amp;nbsp;: %s</string>
-	<string name="media_uploaded_on">Mis en ligne le&amp;nbsp;: %s</string>
-	<string name="media_dimensions">Dimensions&amp;nbsp;: %s</string>
-	<string name="upload_queued">En file d&amp;rsquo;attente</string>
-	<string name="media_file_type">Type du fichier&amp;nbsp;: %s</string>
+	<string name="media_file_name">Nom du fichier : %s</string>
+	<string name="media_uploaded_on">Mis en ligne le : %s</string>
+	<string name="media_dimensions">Dimensions : %s</string>
+	<string name="upload_queued">En file d\'attente</string>
+	<string name="media_file_type">Type du fichier : %s</string>
 	<string name="reader_label_gap_marker">Charger plus d\'artilces</string>
 	<string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
 	<string name="search_sites">Rechercher les sites</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Se connecter à WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
+	<string name="account_settings">Paramètres du compte</string>
 	<string name="me_btn_support">Aide &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">"%s" n\'a pas été caché, c\'est le site selectionné</string>
 	<string name="site_picker_create_dotcom">Créer un site WordPress.com</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Impossible de supprimer ce mot-clé </string>
 	<string name="required_field">Champs requis</string>
 	<string name="email_hint">Adresse e-mail</string>
-	<string name="username_email">Identifiant ou e-mail</string>
 	<string name="site_address">Votre adresse auto-hébergée (URL)</string>
 	<string name="email_cant_be_used_to_signup">Vous ne pouvez pas utiliser cette adresse de messagerie pour vous inscrire. Nous avons des problèmes avec ce fournisseur de messagerie. Utilisez un autre fournisseur de messagerie.</string>
 	<string name="email_reserved">Cette adresse de messagerie a déjà été utilisée. Vérifiez dans votre boite de réception si un message d\'activation s\'y trouve. Si vous n\'activez pas, vous pouvez essayer de nouveau dans quelques jours.</string>
