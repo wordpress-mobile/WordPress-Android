@@ -52,6 +52,7 @@ public class MenusFragment extends Fragment {
             }
             @Override public void onMenuCreated(int requestId, MenuModel menu) {
                 Toast.makeText(getActivity(), "menu: " + menu.name + " created", Toast.LENGTH_SHORT).show();
+                //TODO:  add this newly created menu to the spinner
                 mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
@@ -74,6 +75,8 @@ public class MenusFragment extends Fragment {
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus);
                         bSpinnersUpdated = true;
+
+                        //TODO save menus to local DB here
                     }
                 }
 
@@ -137,7 +140,7 @@ public class MenusFragment extends Fragment {
                 Snackbar snackbar = Snackbar.make(getView(), getString(R.string.menus_menu_deleted), Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo, undoListener);
 
-                // wait for the undo snackbar to disappear before actually deleting the post
+                // wait for the undo snackbar to disappear before actually deleting the menu
                 snackbar.setCallback(new Snackbar.Callback() {
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
@@ -183,7 +186,7 @@ public class MenusFragment extends Fragment {
 
     private void updateMenus() {
         if (mIsUpdatingMenus) {
-            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
+            AppLog.w(AppLog.T.MENUS, "update menus task already running");
             return;
         }
 
