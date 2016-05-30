@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
@@ -52,7 +54,12 @@ public class MenusFragment extends Fragment {
             }
             @Override public void onMenuCreated(int requestId, MenuModel menu) {
                 Toast.makeText(getActivity(), "menu: " + menu.name + " created", Toast.LENGTH_SHORT).show();
-                //TODO:  add this newly created menu to the spinner
+                // add this newly created menu to the spinner
+                if (mMenusSpinner.getItems() != null) {
+                    mMenusSpinner.getItems().add(menu);
+                    mMenusSpinner.setItems(mMenusSpinner.getItems());
+                }
+                //TODO save new menu to local DB here
                 mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
@@ -92,10 +99,22 @@ public class MenusFragment extends Fragment {
                 else
                     Toast.makeText(getActivity(), "menu: " + menu.name + " delete request NOT DELETED", Toast.LENGTH_SHORT).show();
 
+                //delete menu from Spinner here
+                if (mMenusSpinner.getItems() != null) {
+                    mMenusSpinner.getItems().remove(menu);
+                    mMenusSpinner.setItems(mMenusSpinner.getItems());
+                }
+
+                //TODO delete menus from local DB here
                 mRequestBeingProcessed = false;
             }
             @Override public void onMenuUpdated(int requestId, MenuModel menu) {
                 Toast.makeText(getActivity(), "menu: " + menu.name + " updated", Toast.LENGTH_SHORT).show();
+                //TODO update menu in Spinner here
+
+
+                //TODO update menu in local DB here
+
                 mRequestBeingProcessed = false;
             }
 
@@ -174,6 +193,47 @@ public class MenusFragment extends Fragment {
         mMenusSpinner = (MenusSpinner) view.findViewById(R.id.selected_menu_spinner);
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
         mSpinnersLayout = (LinearLayout) view.findViewById(R.id.spinner_group);
+
+        //TODO add onSelectionChanged listener for mMenuLocationsSpiner (whichn needs to re-read the
+        //menus subset) and mMenusSPinner (which should populate the Add/remove menu control view)
+
+        mMenusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position); //new MenuModel();
+                mAddEditRemoveControl.setMenu(model, false); //TODO: check when to tell this is a default menu or not
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        mMenuLocationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //auto-select the first available menu for this location
+                List <MenuModel> menus = mMenusSpinner.getItems();
+                MenuLocationModel menuLocationSelected = (MenuLocationModel) mMenuLocationsSpinner.getItems().get(position);
+                for (int i=0; i < menus.size(); i++) {
+                    MenuModel menu = menus.get(i);
+                    for (MenuLocationModel menuLocation : menu.locations) {
+                        if (menuLocationSelected.equals(menuLocation)) {
+                            //set this one and break;
+                            mMenusSpinner.setSelection(i);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return view;
     }
