@@ -1428,7 +1428,6 @@
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
 
     <!-- Calypso menus -->
-    <string name="menus_menu_deleted">Menu deleted</string>
     <string name="uses">uses</string>
     <string name="location_menu_spinner_title">%d menu areas in this theme</string>
     <string name="menus_spinner_title">%d menus available</string>
@@ -1439,7 +1438,11 @@
     <string name="could_not_refresh_menus">Could not refresh menus for this site - showing local pre-saved menus</string>
     <string name="could_not_create_menu">Could not create menu</string>
     <string name="could_not_update_menu">Could not update menu</string>
+    <string name="could_not_delete_menu">Could not delete menu</string>
     <string name="menus_new_menu_name">Menu</string>
+    <string name="menus_menu_created">Menu created</string>
+    <string name="menus_menu_deleted">Menu deleted</string>
+    <string name="menus_menu_updated">Menu updated</string>
 
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>

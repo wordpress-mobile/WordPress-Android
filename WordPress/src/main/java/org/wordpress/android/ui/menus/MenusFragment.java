@@ -62,7 +62,7 @@ public class MenusFragment extends Fragment {
                     return;
                 }
 
-                Toast.makeText(getActivity(), "menu: " + menu.name + " created", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
                 // add this newly created menu to the spinner
                 if (mMenusSpinner.getItems() != null) {
                     //remove "add menu option" item (which is the last one)
@@ -126,16 +126,17 @@ public class MenusFragment extends Fragment {
                     return;
                 }
 
-                if (deleted)
-                    Toast.makeText(getActivity(), "menu: " + menu.name + " deleted", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getActivity(), "menu: " + menu.name + " delete request NOT DELETED", Toast.LENGTH_SHORT).show();
-
-                //delete menu from Spinner here
-                if (mMenusSpinner.getItems() != null) {
-                    if (mMenusSpinner.getItems().remove(menu)) {
-                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                if (deleted) {
+                    Toast.makeText(getActivity(), getString(R.string.menus_menu_deleted), Toast.LENGTH_SHORT).show();
+                    //delete menu from Spinner here
+                    if (mMenusSpinner.getItems() != null) {
+                        if (mMenusSpinner.getItems().remove(menu)) {
+                            mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        }
                     }
+                }
+                else {
+                    Toast.makeText(getActivity(), getString(R.string.could_not_delete_menu), Toast.LENGTH_SHORT).show();
                 }
 
                 mRequestBeingProcessed = false;
@@ -148,7 +149,7 @@ public class MenusFragment extends Fragment {
                     return;
                 }
 
-                Toast.makeText(getActivity(), "menu: " + menu.name + " updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.menus_menu_updated), Toast.LENGTH_SHORT).show();
 
                 //update menu in Spinner here
                 if (mMenusSpinner.getItems() != null) {
