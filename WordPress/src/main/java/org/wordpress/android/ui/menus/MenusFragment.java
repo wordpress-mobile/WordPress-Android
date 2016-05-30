@@ -62,7 +62,12 @@ public class MenusFragment extends Fragment {
                 Toast.makeText(getActivity(), "menu: " + menu.name + " created", Toast.LENGTH_SHORT).show();
                 // add this newly created menu to the spinner
                 if (mMenusSpinner.getItems() != null) {
+                    //remove "add menu option" item (which is the last one)
+                    mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+                    //add the newly created menu
                     mMenusSpinner.getItems().add(menu);
+                    //re-add the "add menu option" item
+                    insertAddMenuOption(mMenusSpinner.getItems());
                     mMenusSpinner.setItems(mMenusSpinner.getItems());
                 }
                 mRequestBeingProcessed = false;

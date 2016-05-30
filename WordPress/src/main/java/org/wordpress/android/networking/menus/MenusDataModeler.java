@@ -98,9 +98,11 @@ public class MenusDataModeler {
             List<MenuLocationModel> locationModels = new ArrayList<>();
             for (MenuLocationModel locationModel : locations){
                 for (String locationName : locationNames){
-                    if (locationModel.getName().equals(locationName)) {
-                        locationModels.add(locationModel);
-                        break;
+                    if (locationModel.name != null) {
+                        if (locationModel.name.equals(locationName)) {
+                            locationModels.add(locationModel);
+                            break;
+                        }
                     }
                 }
             }
