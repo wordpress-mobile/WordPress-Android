@@ -149,8 +149,10 @@ public class PersonDetailFragment extends Fragment {
             return;
         }
 
-        RoleChangeDialogFragment.show((PeopleManagementActivity) getActivity(), person.getPersonID(), person
-                .getLocalTableBlogId(), person.getRole());
+        RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
+                person.getLocalTableBlogId(), person.getRole());
+        dialog.setOnChangeListener((PeopleManagementActivity) getActivity());
+        dialog.show(getFragmentManager(), null);
     }
 
     // used to optimistically update the role
