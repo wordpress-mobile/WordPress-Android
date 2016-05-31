@@ -24,7 +24,7 @@ android {
     defaultConfig {
         versionCode 10
         versionName "1.0"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
     }
     buildTypes {
@@ -45,9 +45,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:design:23.4.0'
     compile 'org.wordpress:utils:1.9.0'
 
     // Test libraries

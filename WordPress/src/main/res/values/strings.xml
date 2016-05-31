@@ -1023,6 +1023,9 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_open_list_from_notification">This post or page was published on another site</string>
+    <string name="error_fetch_people_list">Couldn\'t retrieve site users</string>
+    <string name="error_update_role">Couldn\'t update user role</string>
+    <string name="error_remove_user">Couldn\'t remove user</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -1368,6 +1371,15 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
+    
+    <!--People Management-->
+    <string name="people">People</string>
+    <string name="edit_user">Edit User</string>
+    <string name="role">Role</string>
+    <string name="person_remove_confirmation_title">Remove %1$s</string>
+    <string name="person_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
+    <string name="person_removed">Successfully removed @%1$s</string>
+    <string name="person_removed_general">User removed successfully</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

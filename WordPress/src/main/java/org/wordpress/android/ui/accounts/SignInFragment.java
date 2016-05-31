@@ -47,6 +47,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -228,6 +229,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initInfoButtons(rootView);
         moveBottomButtons();
 
+        autofillFromBuildConfig();
+
         return rootView;
     }
 
@@ -286,7 +289,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isSmartLockAvailable() {
-        return (isAdded() && isGooglePlayServicesAvailable()) && mCredentialsClient != null && mCredentialsClient.isConnected();
+        return isGooglePlayServicesAvailable() && mCredentialsClient != null && mCredentialsClient.isConnected();
     }
 
     protected void track(Stat stat, Map<String, Boolean> properties) {
@@ -309,7 +312,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isGooglePlayServicesAvailable() {
-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity()) == ConnectionResult.SUCCESS;
+        return isAdded() && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())
+                == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -328,6 +332,27 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mInfoButtonSecondary = (ImageView) rootView.findViewById(R.id.info_button_secondary);
         mInfoButton.setOnClickListener(infoButtonListener);
         mInfoButtonSecondary.setOnClickListener(infoButtonListener);
+    }
+
+    /*
+     * autofill the username and password from BuildConfig/gradle.properties (developer feature,
+     * only enabled for DEBUG releases)
+     */
+    private void autofillFromBuildConfig() {
+        if (!BuildConfig.DEBUG) return;
+
+        String userName = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_USERNAME");
+        String password = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
+                "DEBUG_DOTCOM_LOGIN_PASSWORD");
+        if (!TextUtils.isEmpty(userName)) {
+            mUsernameEditText.setText(userName);
+            AppLog.d(T.NUX, "Autofilled username from build config");
+        }
+        if (!TextUtils.isEmpty(password)) {
+            mPasswordEditText.setText(password);
+            AppLog.d(T.NUX, "Autofilled password from build config");
+        }
     }
 
     private void initSmartLockForPasswords() {
@@ -355,6 +380,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 new ResultCallback<CredentialRequestResult>() {
                     @Override
                     public void onResult(CredentialRequestResult result) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         Status status = result.getStatus();
                         if (status.isSuccess()) {
                             Credential credential = result.getCredential();
@@ -365,8 +393,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                                     // Prompt the user to choose a saved credential
                                     status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_READ);
                                 } catch (IntentSender.SendIntentException e) {
-                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential " +
-                                            "request");
+                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
                                 }
                             } else {
                                 // The user must create an account or sign in manually.
@@ -534,17 +561,28 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     };
 
+    private void refreshAndSelectSite(Map<String, Object> site) {
+        refreshBlogContent(site);
+        WordPress.setCurrentBlog((Integer) site.get("id"));
+    }
+
     private void setPrimaryBlog(JSONObject jsonObject) {
         try {
-            String primaryBlogId = jsonObject.getString("primary_blog");
-            // Look for a visible blog with this id in the DB
-            List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primaryBlogId,
-                    null, 1, true);
-            if (blogs != null && !blogs.isEmpty()) {
-                Map<String, Object> primaryBlog = blogs.get(0);
-                // Ask for a refresh and select it
-                refreshBlogContent(primaryBlog);
-                WordPress.setCurrentBlog((Integer) primaryBlog.get("id"));
+            String primarySiteId = jsonObject.getString("primary_blog");
+            boolean hideJetpackWithoutCredentials = true;
+            // Look for a visible site that is not a "non active" Jetpack site with this id in the DB
+            // TODO: when we support Jetpack sites by wpcom login, we should change that
+            List<Map<String, Object>> sites = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primarySiteId,
+                    null, 1, hideJetpackWithoutCredentials);
+            if (sites != null && !sites.isEmpty()) {
+                refreshAndSelectSite(sites.get(0));
+            } else {
+                // Primary blog not found or hidden (can happen if it's a "non active" Jetpack site)
+                // Select the first visible site if it exists
+                sites = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, hideJetpackWithoutCredentials);
+                if (sites != null && !sites.isEmpty()) {
+                    refreshAndSelectSite(sites.get(0));
+                }
             }
         } catch (JSONException e) {
             AppLog.e(T.NUX, e);
@@ -672,7 +710,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (isAdded() && !hasHardwareKeyboard()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
@@ -692,6 +730,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (!status.isSuccess() && status.hasResolution()) {
                             try {
                                 // This prompt the user to resolve the save request

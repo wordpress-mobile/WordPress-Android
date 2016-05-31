@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="roles" translatable="true">
+        <item>
+            Administrator
+        </item>
+        <item>
+            Editor
+        </item>
+        <item>
+            Author
+        </item>
+        <item>
+            Contributor
+        </item>
+    </string-array>
+</resources>

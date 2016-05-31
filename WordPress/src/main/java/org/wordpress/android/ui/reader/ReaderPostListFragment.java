@@ -60,6 +60,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -535,8 +536,8 @@ public class ReaderPostListFragment extends Fragment
      */
     private void setupRecyclerToolbar() {
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
-        mSettingsMenuItem = menu.findItem(R.id.menu_settings);
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
+        mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
 
         mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -551,6 +552,11 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(true);
+
+        // force the search view to take up as much horizontal space as possible (without this
+        // it looks truncated on landscape)
+        int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+        mSearchView.setMaxWidth(maxWidth);
 
         // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
         // after a single character is typed, and there's no less hacky way to do this...
@@ -619,9 +625,12 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        // remove cached results for this search - search results are ephemeral so each search
+        // should be treated as a "fresh" one
         ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
-        mPostAdapter.setCurrentTag(searchTag);
+        ReaderPostTable.deletePostsWithTag(searchTag);
 
+        mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = query;
         updatePostsInCurrentSearch(0);
     }
@@ -671,7 +680,7 @@ public class ReaderPostListFragment extends Fragment
         if (mSearchSuggestionAdapter == null) {
             createSearchSuggestionAdapter();
         }
-        mSearchSuggestionAdapter.populate(query);
+        mSearchSuggestionAdapter.setFilter(query);
     }
 
     private void resetSearchSuggestionAdapter() {
@@ -1413,7 +1422,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
-                // TODO: track analytics
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }

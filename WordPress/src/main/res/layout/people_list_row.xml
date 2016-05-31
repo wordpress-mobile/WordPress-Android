@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/people_list_row_role_margin_top"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="1"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="role"/>
+
+    <include
+        layout="@layout/person_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/person_role"
+        android:layout_toStartOf="@id/person_role"/>
+
+</RelativeLayout>
