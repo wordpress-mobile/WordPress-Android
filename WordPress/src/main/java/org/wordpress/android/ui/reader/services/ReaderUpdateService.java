@@ -76,6 +76,7 @@ public class ReaderUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && intent.hasExtra(ARG_UPDATE_TASKS)) {
+            @SuppressWarnings("unchecked")
             EnumSet<UpdateTask> tasks = (EnumSet<UpdateTask>) intent.getSerializableExtra(ARG_UPDATE_TASKS);
             performTasks(tasks);
         }
