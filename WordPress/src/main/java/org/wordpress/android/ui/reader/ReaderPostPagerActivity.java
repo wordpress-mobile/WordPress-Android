@@ -105,7 +105,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
