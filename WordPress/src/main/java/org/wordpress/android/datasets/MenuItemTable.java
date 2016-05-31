@@ -55,9 +55,9 @@ public class MenuItemTable {
                     ");";
 
     /** Well-formed WHERE clause for identifying a row using PRIMARY KEY constraints */
-    public static final String UNIQUE_WHERE_SQL = " WHERE " + ID_COLUMN + "=?";
+    public static final String UNIQUE_WHERE_SQL = ID_COLUMN + "=?";
 
-    public static final String UNIQUE_WHERE_SQL_MENU_ID = " WHERE " + MENU_ID_COLUMN + "=?";
+    public static final String UNIQUE_WHERE_SQL_MENU_ID = MENU_ID_COLUMN + "=?";
 
     public static void saveMenuItem(MenuItemModel item) {
         if (item == null || item.itemId < 0) return;
