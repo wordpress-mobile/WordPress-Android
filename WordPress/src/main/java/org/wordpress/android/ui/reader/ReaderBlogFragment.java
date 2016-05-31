@@ -60,11 +60,12 @@ public class ReaderBlogFragment extends Fragment
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) {
-            return;
-        }
-        boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
+        if (!isAdded()) return;
+
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
+        if (emptyView == null) return;
+
+        boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
         if (isEmpty) {
             switch (getBlogType()) {
                 case RECOMMENDED:

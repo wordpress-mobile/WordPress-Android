@@ -80,7 +80,8 @@ public class ReaderHtmlUtils {
      * if the url is invalid, or the param doesn't exist, or the param value could not be
      * converted to an int
      */
-    public static int getIntQueryParam(final String url, final String param) {
+    public static int getIntQueryParam(final String url,
+                                       @SuppressWarnings("SameParameterValue") final String param) {
         if (url == null
                 || param == null
                 || !url.startsWith("http")
