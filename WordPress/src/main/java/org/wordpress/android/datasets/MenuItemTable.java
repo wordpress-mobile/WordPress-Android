@@ -87,7 +87,7 @@ public class MenuItemTable {
         if (itemId < 0) return null;
 
         String[] args = {String.valueOf(itemId)};
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + UNIQUE_WHERE_SQL + ";", args);
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + " WHERE " + UNIQUE_WHERE_SQL + ";", args);
         cursor.moveToFirst();
         MenuItemModel item = deserializeFromDatabase(cursor);
         cursor.close();
@@ -97,7 +97,7 @@ public class MenuItemTable {
     public static List<MenuItemModel> getMenuItemsForMenu(long menuId) {
         List<MenuItemModel> items = new ArrayList<>();
         String[] args = {String.valueOf(menuId)};
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + UNIQUE_WHERE_SQL_MENU_ID + ";", args);
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + " WHERE " + UNIQUE_WHERE_SQL_MENU_ID + ";", args);
         if (cursor.moveToFirst()) {
             do {
                 MenuItemModel item = deserializeFromDatabase(cursor);

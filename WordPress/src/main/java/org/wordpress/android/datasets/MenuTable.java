@@ -44,7 +44,7 @@ public class MenuTable {
                     ITEMS_COLUMN + " TEXT" +
                     ");";
 
-    public static final String UNIQUE_WHERE_SQL = " WHERE " + ID_COLUMN + "=?";
+    public static final String UNIQUE_WHERE_SQL = ID_COLUMN + "=?";
 
     /** Well-formed SELECT query for selecting rows for a given site ID */
     public static final String SELECT_SITE_MENUS_SQL =
@@ -161,7 +161,7 @@ public class MenuTable {
      */
     public static MenuModel getMenuFromId(long id) {
         String[] args = {String.valueOf(id)};
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(UNIQUE_WHERE_SQL, args);
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(" WHERE " + UNIQUE_WHERE_SQL, args);
         cursor.moveToFirst();
         MenuModel menu = deserializeFromDatabase(cursor);
         cursor.close();
