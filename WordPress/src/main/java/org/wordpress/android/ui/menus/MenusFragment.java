@@ -82,7 +82,7 @@ public class MenusFragment extends Fragment {
                 mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
-            @Override public void onMenusReceived(int requestId, List<MenuModel> menus, List<MenuLocationModel> locations) {
+            @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, List<MenuLocationModel> locations) {
                 boolean bSpinnersUpdated = false;
                 if (locations != null) {
                     if (CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
@@ -98,6 +98,21 @@ public class MenusFragment extends Fragment {
                     if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         // no op
                     } else {
+                        //TODO save menus to local DB here
+                        new AsyncTask<Void, Void, Boolean>() {
+                            @Override
+                            protected Boolean doInBackground(Void... params) {
+                                //MenuTable.saveMenu()
+
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Boolean result) {
+                            };
+
+                        }.execute();
+
                         //insert first Default Menu
                         prepareMenuList(menus);
 
@@ -105,7 +120,6 @@ public class MenusFragment extends Fragment {
                         mMenusSpinner.setItems((List)menus);
                         bSpinnersUpdated = true;
 
-                        //TODO save menus to local DB here
                     }
                 }
 
@@ -317,22 +331,39 @@ public class MenusFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //auto-select the first available menu for this location
+                boolean bFound = false;
                 List<MenuModel> menus = mMenusSpinner.getItems();
                 if (menus != null && menus.size() > 0 && mMenuLocationsSpinner.getItems() != null &&
                         mMenuLocationsSpinner.getItems().size() > 0) {
                     MenuLocationModel menuLocationSelected = (MenuLocationModel)
                             mMenuLocationsSpinner.getItems().get(position);
-                    for (int i = 0; i < menus.size(); i++) {
+
+                    //check if this is the Primary location and defaultState == "default"
+                    if (menuLocationSelected.defaultState != null &&
+                            MenuLocationModel.LOCATION_DEFAULT.equals(menuLocationSelected.defaultState)) {
+                        insertDefaultMenu(menus);
+                    } else {
+                        menus.remove(0);
+                    }
+
+                    for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
                         if (menu.locations != null) {
                             for (MenuLocationModel menuLocation : menu.locations) {
                                 if (menuLocationSelected.equals(menuLocation)) {
                                     //set this one and break;
                                     mMenusSpinner.setSelection(i);
-                                    return;
+                                    bFound = true;
+                                    break;
                                 }
                             }
                         }
+                    }
+
+                    if (!bFound) {
+                        //select the latest menu in the list, taking into account the latest position
+                        // holds the "+ add new menu" option
+                        mMenusSpinner.setSelection(mMenusSpinner.getCount() - 2);
                     }
                 }
             }
@@ -417,9 +448,21 @@ public class MenusFragment extends Fragment {
 
     private void insertDefaultMenu(List<MenuModel> menus) {
         if (menus != null) {
-            MenuModel defaultMenu = new MenuModel();
-            defaultMenu.name = getString(R.string.menus_default_menu_name);
-            menus.add(0, defaultMenu);
+            boolean bDoInsert = true;
+            //check if first item has or does not have a default menu
+            if (menus.size() > 0) {
+                MenuModel firstItem = menus.get(0);
+                if (firstItem != null) {
+                    bDoInsert = !firstItem.isDefault;
+                }
+            }
+
+            if (bDoInsert) {
+                MenuModel defaultMenu = new MenuModel();
+                defaultMenu.name = getString(R.string.menus_default_menu_name);
+                defaultMenu.isDefault = true;
+                menus.add(0, defaultMenu);
+            }
         }
     }
 
@@ -483,47 +526,6 @@ public class MenusFragment extends Fragment {
             mIsLoadTaskRunning = false;
         }
     }
-
-
-    private boolean mIsSaveTaskRunning = false;
-    private class SaveMenusTask extends AsyncTask<Void, Void, Boolean> {
-        List<MenuModel> tmpMenus;
-        List<MenuLocationModel> tmpMenuLocations;
-
-        @Override
-        protected void onPreExecute() {
-            mIsSaveTaskRunning = true;
-        }
-        @Override
-        protected void onCancelled() {
-            mIsSaveTaskRunning = false;
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            tmpMenus = MenuTable.getAllMenusForCurrentSite();
-            tmpMenuLocations = MenuLocationTable.getAllMenuLocationsForCurrentSite();
-            return true;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
-                //insert first Default Menu
-                prepareMenuList(tmpMenus);
-                mMenusSpinner.setItems((List)tmpMenus);
-            }
-
-            if ( (!result || tmpMenuLocations == null || tmpMenuLocations.size() == 0)
-                    || tmpMenus == null || tmpMenus.size() == 0 ) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                hideEmptyView();
-            }
-
-            mIsSaveTaskRunning = false;
-        }
-    }
-
 
 }
 

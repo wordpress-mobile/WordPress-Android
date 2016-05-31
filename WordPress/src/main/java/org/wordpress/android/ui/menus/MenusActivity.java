@@ -18,8 +18,6 @@ public class MenusActivity extends AppCompatActivity {
 
     private static final String MENUS_FRAGMENT_KEY = "menusFragment";
 
-    private MenusFragment mMenusFragment;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
