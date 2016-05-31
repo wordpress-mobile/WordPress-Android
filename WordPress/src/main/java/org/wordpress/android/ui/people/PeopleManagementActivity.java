@@ -192,6 +192,12 @@ public class PeopleManagementActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
+
+            // remove the toolbar elevation for larger toolbar look
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setElevation(0);
+            }
             fragmentTransaction.commit();
         }
     }
@@ -322,6 +328,12 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean navigateBackToPeopleListFragment() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
+
+            // reset the toolbar elevation
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
+            }
             return true;
         }
         return false;
