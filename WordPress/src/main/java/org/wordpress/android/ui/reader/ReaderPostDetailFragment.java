@@ -275,7 +275,8 @@ public class ReaderPostDetailFragment extends Fragment
         likeCount.setSelected(isAskingToLike);
         ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(mPost, isAskingToLike)) {
+        boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+        if (!success) {
             likeCount.setSelected(!isAskingToLike);
             return;
         }

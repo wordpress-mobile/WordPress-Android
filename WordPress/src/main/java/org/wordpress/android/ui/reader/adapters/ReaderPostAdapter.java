@@ -730,7 +730,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+        boolean success = ReaderPostActions.performLikeAction(post, isAskingToLike);
+        if (!success) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
