@@ -206,9 +206,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        CommentHolder commentHolder = (CommentHolder) holder;
         final ReaderComment comment = getItem(position);
+        if (comment == null) {
+            return;
+        }
 
+        CommentHolder commentHolder = (CommentHolder) holder;
         commentHolder.txtAuthor.setText(comment.getAuthorName());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
