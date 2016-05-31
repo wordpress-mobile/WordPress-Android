@@ -9,6 +9,11 @@ import org.wordpress.android.util.StringUtils;
  * Reader-related EventBus event classes
  */
 public class ReaderEvents {
+
+    private ReaderEvents() {
+        throw new AssertionError();
+    }
+
     public static class FollowedTagsChanged {}
     public static class RecommendedTagsChanged{}
 

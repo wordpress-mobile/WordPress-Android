@@ -6,6 +6,10 @@ import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
 
+    private ReaderInterfaces() {
+        throw new AssertionError();
+    }
+
     public interface OnPostSelectedListener {
         void onPostSelected(ReaderPost post);
     }

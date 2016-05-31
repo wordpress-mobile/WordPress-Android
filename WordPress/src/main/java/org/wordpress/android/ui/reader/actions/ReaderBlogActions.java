@@ -116,18 +116,19 @@ public class ReaderBlogActions {
         return true;
     }
 
-    public static boolean followFeedByUrl(final String feedUrl,
-                                          final ActionListener actionListener) {
+    public static void followFeedByUrl(final String feedUrl,
+                                       final ActionListener actionListener) {
         if (TextUtils.isEmpty(feedUrl)) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
             }
-            return false;
+            return;
         }
 
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
-            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
+            internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
+            return;
         }
 
         updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
@@ -144,8 +145,6 @@ public class ReaderBlogActions {
                 }
             }
         });
-
-        return true;
     }
 
     private static boolean internalFollowFeed(
