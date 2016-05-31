@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_light"
-    android:padding="@dimen/content_margin">
+    >
 
 
     <org.wordpress.android.widgets.WPTextView
@@ -30,14 +30,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View style="@style/MenusDividerView" />
 
         <org.wordpress.android.ui.menus.MenusSpinner
             android:id="@+id/menu_locations_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_small"
+            android:background="@color/white"
             app:spinnerTitle="@string/location_menu_spinner_title"
-            app:spinnerIcon="@drawable/gridicon_layout" />
+            app:spinnerIcon="@drawable/gridicon_layout"
+            />
+
+        <View style="@style/MenusDividerView" />
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
@@ -46,18 +50,20 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:text="@string/uses" />
 
+        <View style="@style/MenusDividerView" />
+
         <org.wordpress.android.ui.menus.MenusSpinner
             android:id="@+id/selected_menu_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             app:spinnerTitle="@string/menus_spinner_title"
             app:spinnerIcon="@drawable/gridicon_menus" />
 
+        <View style="@style/MenusDividerView" />
+
     </LinearLayout>
 
-    <View style="@style/MenusDividerView"
-        android:layout_marginTop="@dimen/content_margin"
-        android:layout_marginBottom="@dimen/content_margin"/>
 
     <org.wordpress.android.ui.menus.views.MenuAddEditRemoveView
         android:id="@+id/menu_add_edit_remove_view"

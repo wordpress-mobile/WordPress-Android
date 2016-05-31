@@ -124,7 +124,7 @@ public class MenusSpinner extends Spinner {
 
             if (mIconResource > 0) {
                 ImageView iconView = (ImageView) convertView.findViewById(R.id.menu_spinner_icon);
-                iconView.setBackgroundResource(mIconResource);
+                iconView.setImageResource(mIconResource);
             }
 
             TextView titleView = (TextView) convertView.findViewById(R.id.menu_spinner_title);

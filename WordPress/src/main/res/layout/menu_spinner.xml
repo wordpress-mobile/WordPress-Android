@@ -7,12 +7,20 @@
     android:layout_height="match_parent"
     android:padding="@dimen/margin_extra_large">
 
-    <ImageView
-        android:id="@+id/menu_spinner_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_extra_large"
-        android:tint="@color/wp_blue_dark" />
+
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        >
+        <ImageView
+            android:id="@+id/menu_spinner_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:tint="@color/grey" />
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"
