@@ -21,20 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/image_delete"
         android:layout_toRightOf="@+id/image_suggestion"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         tools:text="Suggestion" />
-
-    <ImageView
-        android:id="@+id/image_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="?android:selectableItemBackground"
-        android:padding="@dimen/margin_medium"
-        android:src="@drawable/ic_close_grey600_24dp" />
 </RelativeLayout>

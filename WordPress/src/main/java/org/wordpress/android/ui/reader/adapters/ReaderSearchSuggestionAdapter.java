@@ -68,12 +68,10 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private class SuggestionViewHolder {
         private final ImageView imgSuggestion;
         private final TextView txtSuggestion;
-        private final ImageView imgDelete;
 
         SuggestionViewHolder(View view) {
             imgSuggestion = (ImageView) view.findViewById(R.id.image_suggestion);
             txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
-            imgDelete = (ImageView) view.findViewById(R.id.image_delete);
         }
     }
 
@@ -106,19 +104,9 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         if (id == CLEAR_ALL_ROW_ID) {
             holder.imgSuggestion.setVisibility(View.GONE);
             holder.txtSuggestion.setText(query);
-            holder.imgDelete.setVisibility(View.GONE);
-            holder.imgDelete.setOnClickListener(null);
         } else {
             holder.imgSuggestion.setVisibility(View.VISIBLE);
             holder.txtSuggestion.setText(query);
-            holder.imgDelete.setVisibility(View.VISIBLE);
-            holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderSearchTable.deleteQueryString(query);
-                    setFilter(mCurrentFilter);
-                }
-            });
         }
     }
 
