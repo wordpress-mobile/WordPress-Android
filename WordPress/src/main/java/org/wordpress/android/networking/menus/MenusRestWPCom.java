@@ -193,8 +193,8 @@ public class MenusRestWPCom {
         }, new RestRequest.ErrorListener() {
             @Override public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
-                REST_ERROR error = REST_ERROR.FETCH_ERROR;
-                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.DELETE_ERROR;
+                REST_ERROR error = REST_ERROR.DELETE_ERROR;
+                if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 mListener.onErrorResponse(requestId, error);
             }
         });

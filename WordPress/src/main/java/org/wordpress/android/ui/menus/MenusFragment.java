@@ -55,30 +55,44 @@ public class MenusFragment extends Fragment {
             @Override public long getSiteId() {
                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
             }
-            @Override public void onMenuCreated(int requestId, MenuModel menu) {
-
-                //TODO save new menu to local DB here
-
+            @Override public void onMenuCreated(int requestId, final MenuModel menu) {
                 if (!isAdded()) {
                     return;
                 }
 
-                Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
-                // add this newly created menu to the spinner
-                if (mMenusSpinner.getItems() != null) {
-                    //remove "add menu option" item (which is the last one)
-                    mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+                if (menu != null) {
+                    //save new menu to local DB here
+                    new AsyncTask<Void, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            MenuTable.saveMenu(menu);
+                            return null;
+                        }
 
-                    //add the newly created menu
-                    mMenusSpinner.getItems().add(menu);
+                        @Override
+                        protected void onPostExecute(Boolean result) {
+                        };
 
-                    //re-add the "add menu option" item
-                    insertAddMenuOption(mMenusSpinner.getItems());
-                    mMenusSpinner.setItems(mMenusSpinner.getItems());
+                    }.execute();
 
-                    //set this newly created menu
-                    mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
 
+                    Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
+                    // add this newly created menu to the spinner
+                    if (mMenusSpinner.getItems() != null) {
+                        //remove "add menu option" item (which is the last one)
+                        mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+
+                        //add the newly created menu
+                        mMenusSpinner.getItems().add(menu);
+
+                        //re-add the "add menu option" item
+                        insertAddMenuOption(mMenusSpinner.getItems());
+                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+
+                        //set this newly created menu
+                        mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
+
+                    }
                 }
                 mRequestBeingProcessed = false;
             }
@@ -99,13 +113,13 @@ public class MenusFragment extends Fragment {
                     if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         // no op
                     } else {
+                        //make a copy of the menu array and strip off the default and add menu "menus"
                         final List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
 
                         //save menus to local DB here
                         new AsyncTask<Void, Void, Boolean>() {
                             @Override
                             protected Boolean doInBackground(Void... params) {
-                                //make a copy of the menu array and strip off the default and add menu "menus"
                                 MenuTable.saveMenus(userMenusOnly);
                                 MenuLocationTable.saveMenuLocations(locations);
                                 return null;
@@ -137,11 +151,25 @@ public class MenusFragment extends Fragment {
             }
 
             @Override public void onMenuDeleted(int requestId, MenuModel menu, boolean deleted) {
-                //TODO delete menus from local DB here
+                //delete menu from local DB here
+                final long menuId = menu.menuId;
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Void... params) {
+                        MenuTable.deleteMenu(menuId);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                    };
+
+                }.execute();
 
                 if (!isAdded()) {
                     return;
                 }
+
 
                 if (deleted) {
                     Toast.makeText(getActivity(), getString(R.string.menus_menu_deleted), Toast.LENGTH_SHORT).show();
@@ -158,9 +186,21 @@ public class MenusFragment extends Fragment {
 
                 mRequestBeingProcessed = false;
             }
-            @Override public void onMenuUpdated(int requestId, MenuModel menu) {
+            @Override public void onMenuUpdated(int requestId, final MenuModel menu) {
 
-                //TODO update menu in local DB here
+                //update menu in local DB here
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Void... params) {
+                        MenuTable.saveMenu(menu);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean result) {
+                    };
+
+                }.execute();
 
                 if (!isAdded()) {
                     return;

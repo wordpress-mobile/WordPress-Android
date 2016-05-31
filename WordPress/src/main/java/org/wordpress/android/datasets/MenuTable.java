@@ -44,14 +44,7 @@ public class MenuTable {
                     ITEMS_COLUMN + " TEXT" +
                     ");";
 
-    public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
-    public static final String COLUMN_NAMES =
-            SITE_ID_COLUMN + "," +
-            ID_COLUMN + "," +
-            NAME_COLUMN + "," +
-            DETAILS_COLUMN + "," +
-            LOCATIONS_COLUMN + "," +
-            ITEMS_COLUMN;
+    public static final String UNIQUE_WHERE_SQL = " WHERE " + ID_COLUMN + "=?";
 
     /** Well-formed SELECT query for selecting rows for a given site ID */
     public static final String SELECT_SITE_MENUS_SQL =
@@ -195,5 +188,30 @@ public class MenuTable {
 
         return menus;
     }
+
+    public static void deleteMenu(long menuId) {
+        if (menuId < 0) return;
+        String[] args = {String.valueOf(menuId)};
+
+        SQLiteDatabase db = WordPress.wpDB.getDatabase();
+
+        db.beginTransaction();
+        try {
+            //delete menu items for this menu first
+            MenuItemTable.deleteMenuItemForMenuId(menuId);
+            //now delete menu
+            db.delete(MENU_TABLE_NAME, UNIQUE_WHERE_SQL, args);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    public static void deleteAllMenus() {
+        MenuItemTable.deleteAllMenuItems();
+        WordPress.wpDB.getDatabase().delete(MENU_TABLE_NAME, null, null);
+    }
+
 
 }
