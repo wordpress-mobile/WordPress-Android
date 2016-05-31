@@ -34,7 +34,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
     public interface MenuAddEditRemoveActionListener {
         void onMenuCreate(MenuModel menu);
-        void onMenuDelete(MenuModel menu);
+        boolean onMenuDelete(MenuModel menu); //return true if you want the MenuAddEditRemove control to reset itself afterwards
         void onMenuUpdate(MenuModel menu);
     }
 
@@ -122,8 +122,9 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 setActive(false);
                 if (mActionListener != null) {
                     if (mCurrentMenu != null) {
-                        mActionListener.onMenuDelete(mCurrentMenu);
-                        setMenu(null, false);
+                        if (mActionListener.onMenuDelete(mCurrentMenu)) {
+                            setMenu(null, false);
+                        }
                     } else {
                         // in case this is a new menu (i.e. not really editing) we don't call the listener
                         // - we just clear the text and set inactive

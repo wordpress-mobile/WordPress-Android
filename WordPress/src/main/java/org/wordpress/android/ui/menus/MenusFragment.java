@@ -36,11 +36,11 @@ public class MenusFragment extends Fragment {
     private boolean mUndoPressed = false;
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
-    private boolean mRequestBeingProcessed;
     private int mCurrentLoadRequestId;
     private int mCurrentCreateRequestId;
     private int mCurrentUpdateRequestId;
     private int mCurrentDeleteRequestId;
+    private MenuModel mMenuDeletedHolder;
     private boolean mIsUpdatingMenus;
     private TextView mEmptyView;
     private LinearLayout mSpinnersLayout;
@@ -94,7 +94,6 @@ public class MenusFragment extends Fragment {
 
                     }
                 }
-                mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
             @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, final List<MenuLocationModel> locations) {
@@ -184,7 +183,6 @@ public class MenusFragment extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.could_not_delete_menu), Toast.LENGTH_SHORT).show();
                 }
 
-                mRequestBeingProcessed = false;
             }
             @Override public void onMenuUpdated(int requestId, final MenuModel menu) {
 
@@ -232,7 +230,6 @@ public class MenusFragment extends Fragment {
                     }
                 }
 
-                mRequestBeingProcessed = false;
             }
 
             @Override
@@ -255,7 +252,14 @@ public class MenusFragment extends Fragment {
                 if (error == MenusRestWPCom.REST_ERROR.UPDATE_ERROR) {
                     Toast.makeText(getActivity(), getString(R.string.could_not_update_menu), Toast.LENGTH_SHORT).show();
                 }
-                mRequestBeingProcessed = false;
+                else
+                if (error == MenusRestWPCom.REST_ERROR.DELETE_ERROR) {
+                    Toast.makeText(getActivity(), getString(R.string.could_not_delete_menu), Toast.LENGTH_SHORT).show();
+                    if (requestId == mCurrentDeleteRequestId && mMenuDeletedHolder != null) {
+                        //restore the menu item in the spinner list
+                        restoreMenuInSpinner(mMenuDeletedHolder);
+                    }
+                }
             }
         });
 
@@ -270,11 +274,21 @@ public class MenusFragment extends Fragment {
 
             @Override
             public void onMenuCreate(MenuModel menu) {
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
+                    return;
+                }
+
                 mCurrentCreateRequestId = mRestWPCom.createMenu(menu);
             }
 
             @Override
-            public void onMenuDelete(final MenuModel menu) {
+            public boolean onMenuDelete(final MenuModel menu) {
+
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
+                    //restore the Add/Edit/Remove control
+                    mAddEditRemoveControl.setMenu(menu, false);
+                    return false;
+                }
 
                 //delete menu from Spinner here
                 if (mMenusSpinner.getItems() != null) {
@@ -291,20 +305,7 @@ public class MenusFragment extends Fragment {
                         // user undid the trash action, so reset the control to whatever it had
                         mAddEditRemoveControl.setMenu(menu, false);
                         //restore the menu item in the spinner list
-                        if (mMenusSpinner.getItems() != null) {
-                            //remove "add menu option" item (which is the last one)
-                            mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
-
-                            //add the newly created menu
-                            mMenusSpinner.getItems().add(menu);
-
-                            //re-add the "add menu option" item
-                            insertAddMenuOption(mMenusSpinner.getItems());
-                            mMenusSpinner.setItems(mMenusSpinner.getItems());
-
-                            //set this newly created menu
-                            mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
-                        }
+                        restoreMenuInSpinner(menu);
                     }
                 };
 
@@ -321,23 +322,22 @@ public class MenusFragment extends Fragment {
                             return;
                         }
 
-                        if (!mRequestBeingProcessed) {
-                            mRequestBeingProcessed = true;
-                            mCurrentDeleteRequestId = mRestWPCom.deleteMenu(menu);
-                        }
+                        mMenuDeletedHolder = menu;
+                        mCurrentDeleteRequestId = mRestWPCom.deleteMenu(menu);
                     }
                 });
 
                 snackbar.show();
 
+                return true;
             }
 
             @Override
             public void onMenuUpdate(MenuModel menu) {
-                if (!mRequestBeingProcessed) {
-                    mRequestBeingProcessed = true;
-                    mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
+                    return;
                 }
+                mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
             }
         });
 
@@ -525,6 +525,25 @@ public class MenusFragment extends Fragment {
             }
         }
         return tmpMenus;
+    }
+
+
+    private void restoreMenuInSpinner(MenuModel menu) {
+        //restore the menu item in the spinner list
+        if (mMenusSpinner.getItems() != null) {
+            //remove "add menu option" item (which is the last one)
+            mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+
+            //add the newly created menu
+            mMenusSpinner.getItems().add(menu);
+
+            //re-add the "add menu option" item
+            insertAddMenuOption(mMenusSpinner.getItems());
+            mMenusSpinner.setItems(mMenusSpinner.getItems());
+
+            //set this newly created menu
+            mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
+        }
     }
 
     /*
