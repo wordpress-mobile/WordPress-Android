@@ -568,15 +568,6 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private boolean mIsPostTaskRunning = false;
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
-        TextView txtTitle;
-        TextView txtAuthor;
-        TextView txtBlogName;
-        TextView txtDateLine;
-        TextView txtTag;
-        ReaderFollowButton followButton;
-        ViewGroup layoutHeader;
-        WPNetworkImageView imgAvatar;
-
         @Override
         protected void onPreExecute() {
             mIsPostTaskRunning = true;
@@ -589,11 +580,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            final View container = getView();
-            if (container == null) {
-                return false;
-            }
-
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
@@ -614,19 +600,6 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 }
             }
-
-            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
-            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
-
-            txtTitle = (TextView) container.findViewById(R.id.text_title);
-            txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtAuthor = (TextView) container.findViewById(R.id.text_author);
-            txtDateLine = (TextView) container.findViewById(R.id.text_dateline);
-            txtTag = (TextView) container.findViewById(R.id.text_tag);
-
-            layoutHeader = (ViewGroup) container.findViewById(R.id.layout_post_detail_header);
-            followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-            imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
 
             return true;
         }
@@ -653,6 +626,19 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 return;
             }
+
+            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
+            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
+
+            TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
+            TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
+            TextView txtAuthor = (TextView) getView().findViewById(R.id.text_author);
+            TextView txtDateLine = (TextView) getView().findViewById(R.id.text_dateline);
+            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
+
+            ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
+            ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
 
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
