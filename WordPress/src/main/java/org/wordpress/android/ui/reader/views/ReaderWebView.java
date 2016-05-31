@@ -206,13 +206,10 @@ public class ReaderWebView extends WebView {
             // loaded (is visible) - have seen some posts containing iframes
             // automatically try to open urls (without being clicked)
             // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE
+            return view.getVisibility() == View.VISIBLE
                     && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)) {
-                return mReaderWebView.getUrlClickListener().onUrlClick(url);
-            } else {
-                return false;
-            }
+                    && isValidClickedUrl(url)
+                    && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
         @Override

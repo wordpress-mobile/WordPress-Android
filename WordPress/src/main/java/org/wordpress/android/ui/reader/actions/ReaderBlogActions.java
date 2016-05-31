@@ -252,17 +252,14 @@ public class ReaderBlogActions {
             return false;
         }
 
-        final boolean isSubscribed;
+        boolean isSubscribed;
         if (json.has("subscribed")) {
             // read/follows/
             isSubscribed = json.optBoolean("subscribed", false);
-        } else if (json.has("is_following")) {
-            // site/$site/follows/
-            isSubscribed = json.optBoolean("is_following", false);
         } else {
-            isSubscribed = false;
+            // site/$site/follows/
+            isSubscribed = json.has("is_following") && json.optBoolean("is_following", false);
         }
-
         return (isSubscribed == isAskingToFollow);
     }
 
