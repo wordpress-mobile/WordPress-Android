@@ -1277,6 +1277,7 @@ public class ReaderPostListFragment extends Fragment
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)
+                    //noinspection unchecked
                     mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List)mTags);
             }
         }
