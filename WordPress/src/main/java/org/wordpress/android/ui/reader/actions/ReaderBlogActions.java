@@ -117,8 +117,7 @@ public class ReaderBlogActions {
     }
 
     public static boolean followFeedByUrl(final String feedUrl,
-                                           final boolean isAskingToFollow,
-                                           final ActionListener actionListener) {
+                                          final ActionListener actionListener) {
         if (TextUtils.isEmpty(feedUrl)) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
@@ -128,7 +127,7 @@ public class ReaderBlogActions {
 
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
-            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
         }
 
         updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
@@ -138,7 +137,7 @@ public class ReaderBlogActions {
                     internalFollowFeed(
                             blogInfo.feedId,
                             blogInfo.getFeedUrl(),
-                            isAskingToFollow,
+                            true,
                             actionListener);
                 } else if (actionListener != null) {
                     actionListener.onActionResult(false);

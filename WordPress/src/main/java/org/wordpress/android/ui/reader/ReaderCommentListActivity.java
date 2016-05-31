@@ -280,7 +280,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
             // Enable post title click if we came from notifications with a commentId
             if (mCommentId > 0) {
-                mCommentAdapter.setHeaderClickEnabled(true);
+                mCommentAdapter.enableHeaderClicks();
             }
 
             // adapter calls this when data has been loaded & displayed

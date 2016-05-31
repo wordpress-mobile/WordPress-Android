@@ -50,7 +50,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
-    private boolean mHeaderClickEnabled;
+    private boolean mIsHeaderClickEnabled;
 
     private final int mColorAuthor;
     private final int mColorNotAuthor;
@@ -152,8 +152,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mDataRequestedListener = dataRequestedListener;
     }
 
-    public void setHeaderClickEnabled(boolean headerClickEnabled) {
-        mHeaderClickEnabled = headerClickEnabled;
+    public void enableHeaderClicks() {
+        mIsHeaderClickEnabled = true;
     }
 
     @Override
@@ -195,7 +195,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
             headerHolder.mHeaderView.setPost(mPost);
-            if (mHeaderClickEnabled) {
+            if (mIsHeaderClickEnabled) {
                 headerHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
