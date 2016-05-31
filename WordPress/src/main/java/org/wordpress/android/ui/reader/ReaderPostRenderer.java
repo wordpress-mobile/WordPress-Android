@@ -89,7 +89,7 @@ class ReaderPostRenderer {
     /*
      * scan the content for images and make sure they're correctly sized for the device
      */
-    void resizeImages() {
+    private void resizeImages() {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl) {
@@ -109,7 +109,7 @@ class ReaderPostRenderer {
     /*
      * scan the content for iframes and make sure they're correctly sized for the device
      */
-    void resizeIframes() {
+    private void resizeIframes() {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String tag, String src) {
@@ -292,11 +292,10 @@ class ReaderPostRenderer {
             newHeight = mResourceVars.videoHeightPx;
         }
 
-        String newTag = new StringBuilder("<iframe src='").append(src).append("'")
-                .append(" frameborder='0' allowfullscreen='true' allowtransparency='true'")
-                .append(" width='").append(pxToDp(newWidth)).append("'")
-                .append(" height='").append(pxToDp(newHeight)).append("' />")
-                .toString();
+        String newTag = "<iframe src='" + src + "'" +
+                " frameborder='0' allowfullscreen='true' allowtransparency='true'" +
+                " width='" + pxToDp(newWidth) + "'" +
+                " height='" + pxToDp(newHeight) + "' />";
 
         int start = mRenderBuilder.indexOf(tag);
         if (start == -1) {
@@ -311,6 +310,7 @@ class ReaderPostRenderer {
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
     private String formatPostContentForWebView(final String content) {
+        @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't necessary, but it's invalid html5 without one
