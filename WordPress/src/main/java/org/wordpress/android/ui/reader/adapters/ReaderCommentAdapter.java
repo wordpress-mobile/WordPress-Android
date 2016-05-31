@@ -34,6 +34,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -133,9 +134,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = ReaderUtils.getColorResource(context, R.color.blue_medium);
-        mColorNotAuthor = ReaderUtils.getColorResource(context, R.color.grey_dark);
-        mColorHighlight = ReaderUtils.getColorResource(context, R.color.grey_lighten_30);
+        mColorAuthor = ResourceUtils.getColorResource(context, R.color.blue_medium);
+        mColorNotAuthor = ResourceUtils.getColorResource(context, R.color.grey_dark);
+        mColorHighlight = ResourceUtils.getColorResource(context, R.color.grey_lighten_30);
 
         setHasStableIds(true);
     }
