@@ -89,8 +89,8 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        int normalColor = getResources().getColor(R.color.blue_light);
-        int selectedColor = getResources().getColor(R.color.white);
+        int normalColor = ReaderUtils.getColorResource(this, R.color.blue_light);
+        int selectedColor = ReaderUtils.getColorResource(this, R.color.white);
         tabLayout.setTabTextColors(normalColor, selectedColor);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);

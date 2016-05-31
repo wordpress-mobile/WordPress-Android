@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,10 +53,10 @@ public class ReaderIconCountView extends LinearLayout {
                 mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (mIconType) {
                     case ICON_LIKE :
-                        mImageView.setImageDrawable(getDrawableResource(context, R.drawable.reader_button_like));
+                        mImageView.setImageDrawable(ReaderUtils.getDrawableResource(context, R.drawable.reader_button_like));
                         break;
                     case ICON_COMMENT :
-                        mImageView.setImageDrawable(getDrawableResource(context, R.drawable.reader_button_comment));
+                        mImageView.setImageDrawable(ReaderUtils.getDrawableResource(context, R.drawable.reader_button_comment));
                         break;
                 }
 
@@ -68,11 +66,6 @@ public class ReaderIconCountView extends LinearLayout {
         }
 
         ReaderUtils.setBackgroundToRoundRipple(mImageView);
-    }
-
-    @SuppressWarnings("deprecation")
-    private Drawable getDrawableResource(Context context, @DrawableRes int drawableResId) {
-        return context.getResources().getDrawable(drawableResId);
     }
 
     public ImageView getImageView() {

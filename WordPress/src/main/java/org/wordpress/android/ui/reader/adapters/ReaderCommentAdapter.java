@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,16 +133,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = getColorResource(context, R.color.blue_medium);
-        mColorNotAuthor = getColorResource(context, R.color.grey_dark);
-        mColorHighlight = getColorResource(context, R.color.grey_lighten_30);
+        mColorAuthor = ReaderUtils.getColorResource(context, R.color.blue_medium);
+        mColorNotAuthor = ReaderUtils.getColorResource(context, R.color.grey_dark);
+        mColorHighlight = ReaderUtils.getColorResource(context, R.color.grey_lighten_30);
 
         setHasStableIds(true);
-    }
-
-    @SuppressWarnings("deprecation")
-    private int getColorResource(Context context, @ColorRes int colorResId) {
-        return context.getResources().getColor(colorResId);
     }
 
     public void setReplyListener(RequestReplyListener replyListener) {
