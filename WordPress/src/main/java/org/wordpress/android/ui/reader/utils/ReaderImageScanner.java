@@ -31,7 +31,6 @@ public class ReaderImageScanner {
         }
 
         if (!mContentContainsImages) {
-            listener.onScanCompleted();
             return;
         }
 
@@ -43,8 +42,6 @@ public class ReaderImageScanner {
                 listener.onTagFound(imageTag, imageUrl);
             }
         }
-
-        listener.onScanCompleted();
     }
 
     /*

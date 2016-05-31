@@ -11,7 +11,6 @@ public class ReaderHtmlUtils {
 
     public interface HtmlScannerListener {
         void onTagFound(String tag, String src);
-        void onScanCompleted();
     }
 
     // regex for matching width attributes in tags

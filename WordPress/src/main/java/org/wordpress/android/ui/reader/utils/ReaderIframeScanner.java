@@ -30,7 +30,5 @@ public class ReaderIframeScanner {
                 listener.onTagFound(tag, src);
             }
         }
-
-        listener.onScanCompleted();
     }
 }

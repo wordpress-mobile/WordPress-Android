@@ -59,7 +59,7 @@ public class ReaderBlogFragment extends Fragment
         return view;
     }
 
-    void checkEmptyView() {
+    private void checkEmptyView() {
         if (!isAdded()) {
             return;
         }

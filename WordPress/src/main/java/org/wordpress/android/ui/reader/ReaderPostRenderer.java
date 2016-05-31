@@ -97,10 +97,6 @@ class ReaderPostRenderer {
                     replaceImageTag(imageTag, imageUrl);
                 }
             }
-            @Override
-            public void onScanCompleted() {
-                // nop
-            }
         };
         ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
         scanner.beginScan(imageListener);
@@ -114,10 +110,6 @@ class ReaderPostRenderer {
             @Override
             public void onTagFound(String tag, String src) {
                 replaceIframeTag(tag, src);
-            }
-            @Override
-            public void onScanCompleted() {
-                // nop
             }
         };
         ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
