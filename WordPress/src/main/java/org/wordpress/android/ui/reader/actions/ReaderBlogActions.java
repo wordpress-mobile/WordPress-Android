@@ -8,7 +8,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -24,6 +23,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
+
+import java.net.HttpURLConnection;
 
 public class ReaderBlogActions {
 
@@ -291,7 +292,7 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 // authentication error may indicate that API access has been disabled for this blog
                 int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                boolean isAuthErr = (statusCode == HttpStatus.SC_FORBIDDEN);
+                boolean isAuthErr = (statusCode == HttpURLConnection.HTTP_FORBIDDEN);
                 // if we failed to get the blog info using the id and this isn't an authentication
                 // error, try again using just the domain
                 if (!isAuthErr && hasBlogId && hasBlogUrl) {
