@@ -212,6 +212,7 @@ public class ReaderWebView extends WebView {
                     && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             URL imageUrl  = null;
