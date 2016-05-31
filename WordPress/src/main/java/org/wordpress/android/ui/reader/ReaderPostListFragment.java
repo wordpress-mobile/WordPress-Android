@@ -1096,15 +1096,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         ReaderPostListType type = getPostListType();
-        Map<String, Object> analyticsProperties = new HashMap<>();
 
         switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
-                String key = (type == ReaderPostListType.TAG_PREVIEW ?
-                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
-                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1113,8 +1108,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case BLOG_PREVIEW:
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
-                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         post.blogId,

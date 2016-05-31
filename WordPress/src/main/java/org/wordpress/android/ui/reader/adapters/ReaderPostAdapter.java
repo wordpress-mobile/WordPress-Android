@@ -84,7 +84,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_INFO    = 3;
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
-    private static final long ITEM_ID_CUSTOM_VIEW = -1L;
+    private static final long ITEM_ID_CUSTOM_VIEW  = -1L;
+    private static final long ITEM_ID_INVALID_VIEW = -2L;
 
     /*
      * cross-post
@@ -204,7 +205,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return VIEW_TYPE_TAG_INFO;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
-        } else if (getItem(position).isXpost()) {
+        } else if (isXpostAtPosition(position)) {
             return VIEW_TYPE_XPOST;
         } else {
             return VIEW_TYPE_POST;
@@ -255,6 +256,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+        if (post == null) return;
 
         if (post.hasPostAvatar()) {
             holder.imgAvatar.setImageUrl(
@@ -287,6 +289,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void renderPost(final int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
+        if (post == null) return;
+
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
         holder.txtTitle.setText(post.getTitle());
@@ -633,6 +637,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mPosts.get(arrayPos);
     }
 
+    private boolean isXpostAtPosition(int position) {
+        ReaderPost post = getItem(position);
+        return post != null && post.isXpost();
+    }
+
     @Override
     public int getItemCount() {
         if (hasCustomFirstItem()) {
@@ -648,7 +657,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public long getItemId(int position) {
         if (getItemViewType(position) == VIEW_TYPE_POST) {
-            return getItem(position).getStableId();
+            ReaderPost post = getItem(position);
+            return post != null ? post.getStableId() : ITEM_ID_INVALID_VIEW;
         } else {
             return ITEM_ID_CUSTOM_VIEW;
         }
