@@ -31,7 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ReaderPhotoView extends RelativeLayout {
 
-    public static interface PhotoViewListener {
+    public interface PhotoViewListener {
         void onTapPhotoView();
     }
 

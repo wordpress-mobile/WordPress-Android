@@ -34,7 +34,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
     public interface BlogClickListener {
-        public void onBlogClicked(Object blog);
+        void onBlogClicked(Object blog);
     }
 
     private final ReaderBlogType mBlogType;

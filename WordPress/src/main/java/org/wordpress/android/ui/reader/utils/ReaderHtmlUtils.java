@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 
 public class ReaderHtmlUtils {
 
-    public static interface HtmlScannerListener {
-        public void onTagFound(String tag, String src, int start, int end);
-        public void onScanCompleted();
+    public interface HtmlScannerListener {
+        void onTagFound(String tag, String src, int start, int end);
+        void onScanCompleted();
     }
 
     // regex for matching width attributes in tags

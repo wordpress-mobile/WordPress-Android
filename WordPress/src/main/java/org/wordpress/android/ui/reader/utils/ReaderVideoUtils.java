@@ -168,7 +168,7 @@ public class ReaderVideoUtils {
         WordPress.requestQueue.add(request);
     }
 
-    public static interface VideoThumbnailListener {
-        public void onResponse(boolean successful, String thumbnailUrl);
+    public interface VideoThumbnailListener {
+        void onResponse(boolean successful, String thumbnailUrl);
     }
 }
