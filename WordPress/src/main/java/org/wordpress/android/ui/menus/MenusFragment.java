@@ -28,6 +28,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenusFragment extends Fragment {
@@ -82,7 +83,7 @@ public class MenusFragment extends Fragment {
                 mRequestBeingProcessed = false;
             }
             @Override public Context getContext() { return getActivity(); }
-            @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, List<MenuLocationModel> locations) {
+            @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, final List<MenuLocationModel> locations) {
                 boolean bSpinnersUpdated = false;
                 if (locations != null) {
                     if (CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
@@ -98,12 +99,15 @@ public class MenusFragment extends Fragment {
                     if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         // no op
                     } else {
-                        //TODO save menus to local DB here
+                        final List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
+
+                        //save menus to local DB here
                         new AsyncTask<Void, Void, Boolean>() {
                             @Override
                             protected Boolean doInBackground(Void... params) {
-                                //MenuTable.saveMenu()
-
+                                //make a copy of the menu array and strip off the default and add menu "menus"
+                                MenuTable.saveMenus(userMenusOnly);
+                                MenuLocationTable.saveMenuLocations(locations);
                                 return null;
                             }
 
@@ -119,7 +123,6 @@ public class MenusFragment extends Fragment {
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus);
                         bSpinnersUpdated = true;
-
                     }
                 }
 
@@ -472,6 +475,16 @@ public class MenusFragment extends Fragment {
             addMenuOption.name = getString(R.string.menus_add_menu_name);
             menus.add(addMenuOption);
         }
+    }
+
+    private List<MenuModel> getUserMenusOnly(List<MenuModel> menus){
+        ArrayList<MenuModel> tmpMenus = new ArrayList();
+        for (MenuModel menu : menus) {
+            if (menu.siteId > 0) {
+                tmpMenus.add(menu);
+            }
+        }
+        return tmpMenus;
     }
 
     /*

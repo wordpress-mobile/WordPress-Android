@@ -13,6 +13,7 @@ import java.util.List;
  */
 
 public class MenuModel implements NameInterface {
+    public long siteId;
     public long menuId;
     public String name;
     public String details;

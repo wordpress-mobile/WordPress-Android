@@ -3,6 +3,7 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 import com.helpshift.support.util.ListUtils;
 
@@ -10,6 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,13 @@ public class MenuTable {
                     ");";
 
     public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
+    public static final String COLUMN_NAMES =
+            SITE_ID_COLUMN + "," +
+            ID_COLUMN + "," +
+            NAME_COLUMN + "," +
+            DETAILS_COLUMN + "," +
+            LOCATIONS_COLUMN + "," +
+            ITEMS_COLUMN;
 
     /** Well-formed SELECT query for selecting rows for a given site ID */
     public static final String SELECT_SITE_MENUS_SQL =
@@ -52,6 +61,7 @@ public class MenuTable {
         if (cursor == null || cursor.isBeforeFirst() || cursor.isAfterLast()) return null;
 
         MenuModel menu = new MenuModel();
+        menu.siteId = getLongFromCursor(cursor, SITE_ID_COLUMN);
         menu.menuId = getLongFromCursor(cursor, ID_COLUMN);
         menu.name = getStringFromCursor(cursor, NAME_COLUMN);
         menu.details = getStringFromCursor(cursor, DETAILS_COLUMN);
@@ -62,6 +72,7 @@ public class MenuTable {
 
     public static ContentValues serializeToDatabase(MenuModel menu) {
         ContentValues values = new ContentValues();
+        values.put(SITE_ID_COLUMN, menu.siteId);
         values.put(ID_COLUMN, menu.menuId);
         values.put(NAME_COLUMN, menu.name);
         values.put(DETAILS_COLUMN, menu.details);
@@ -86,18 +97,24 @@ public class MenuTable {
 
     public static List<MenuLocationModel> deserializeLocations(Cursor cursor) {
         String locationNames = getStringFromCursor(cursor, LOCATIONS_COLUMN);
-        List<MenuLocationModel> locations = new ArrayList<>();
-        for (String name : locationNames.split(",")) {
-            locations.add(MenuLocationTable.getMenuLocationForCurrentSite(name));
+        List<MenuLocationModel> locations = null;
+        if (locationNames != null) {
+            locations = new ArrayList<>();
+            for (String name : locationNames.split(",")) {
+                locations.add(MenuLocationTable.getMenuLocationForCurrentSite(name));
+            }
         }
         return locations;
     }
 
     public static List<MenuItemModel> deserializeItems(Cursor cursor) {
         String itemIds = getStringFromCursor(cursor, ITEMS_COLUMN);
-        List<MenuItemModel> items = new ArrayList<>();
-        for (String id : itemIds.split(",")) {
-            items.add(MenuItemTable.getMenuItem(Long.valueOf(id)));
+        List<MenuItemModel> items = null;
+        if (itemIds != null) {
+            items = new ArrayList<>();
+            for (String id : itemIds.split(",")) {
+                items.add(MenuItemTable.getMenuItem(Long.valueOf(id)));
+            }
         }
         return items;
     }
@@ -116,6 +133,31 @@ public class MenuTable {
         return db.insertWithOnConflict(
                 MENU_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }
+
+    public static void saveMenus(List<MenuModel> menus) {
+        saveMenus(WordPress.wpDB.getDatabase(), menus);
+    }
+
+    /**
+     * Attempts to save a list of {@link MenuModel} to a database. Child {@link MenuItemModel}'s and
+     * {@link MenuLocationModel}'s are stored as a comma-separated string list of IDs.
+     */
+    public static void saveMenus(SQLiteDatabase db, List<MenuModel> menus) {
+        if (menus == null || menus.size() == 0) return;
+
+        db.beginTransaction();
+        try {
+            for (MenuModel menu: menus) {
+                ContentValues values = serializeToDatabase(menu);
+                db.insertWithOnConflict(
+                        MENU_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     /**
      * Attempts to load a {@link MenuModel} from a database.
      *

@@ -108,7 +108,7 @@ public class MenusRestWPCom {
         params.put(MENU_NAME_KEY, menu.name);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), menu.locations);
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), menu.locations, mListener.getSiteId());
                 mListener.onMenuUpdated(requestId, result);
             }
         }, new RestRequest.ErrorListener() {
@@ -129,7 +129,7 @@ public class MenusRestWPCom {
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
-                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), null);
+                MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), null, mListener.getSiteId());
                 List<MenuModel> resultList = new ArrayList<>();
                 if (result != null) resultList.add(result);
                 mListener.onMenusReceived(requestId, resultList, null);
@@ -154,14 +154,14 @@ public class MenusRestWPCom {
             @Override public void onResponse(JSONObject response) {
                 /* first we get all locations */
                 JSONArray locationsJson = response.optJSONArray(ALL_MENUS_LOCATIONS_KEY);
-                List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson);
+                List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson, mListener.getSiteId());
 
                 /* now we get all menus */
                 JSONArray menusJson = response.optJSONArray(ALL_MENUS_MENUS_KEY);
                 List<MenuModel> menus = new ArrayList<>();
                 try {
                     for (int i = 0; i < menusJson.length(); ++i) {
-                        menus.add(menuFromJson(menusJson.getJSONObject(i), locations));
+                        menus.add(menuFromJson(menusJson.getJSONObject(i), locations, mListener.getSiteId()));
                     }
                 } catch (JSONException exception) {
                     AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");

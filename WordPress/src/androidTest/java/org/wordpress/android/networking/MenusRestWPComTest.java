@@ -9,6 +9,7 @@ import junit.framework.Assert;
 
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.networking.menus.MenusRestWPCom.MenusListener;
@@ -69,7 +70,7 @@ public class MenusRestWPComTest extends InstrumentationTestCase {
                                 countDown();
                             }
                             @Override public Context getContext() { return mTargetContext; }
-                            @Override public void onMenusReceived(int requestId, List<MenuModel> menus) { countDown(); }
+                            @Override public void onMenusReceived(int requestId, List<MenuModel> menus, List<MenuLocationModel> locations) { countDown(); }
                             @Override public void onMenuDeleted(int requestId, MenuModel menu, boolean deleted) { countDown(); }
                             @Override public void onMenuUpdated(int requestId, MenuModel menu) { countDown(); }
                             @Override public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) { countDown(); }
