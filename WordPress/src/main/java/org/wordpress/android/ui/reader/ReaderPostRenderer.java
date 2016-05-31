@@ -180,16 +180,14 @@ class ReaderPostRenderer {
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
         String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
         if (height > 0) {
-            return new StringBuilder("<img class='").append(imageClass).append("'")
-                    .append(" src='").append(newImageUrl).append("'")
-                    .append(" width='").append(pxToDp(width)).append("'")
-                    .append(" height='").append(pxToDp(height)).append("' />")
-                    .toString();
+            return "<img class='" + imageClass + "'" +
+                    " src='" + newImageUrl + "'" +
+                    " width='" + pxToDp(width) + "'" +
+                    " height='" + pxToDp(height) + "' />";
         } else {
-            return new StringBuilder("<img class='").append(imageClass).append("'")
-                    .append( "src='").append(newImageUrl).append("'")
-                    .append(" width='").append(pxToDp(width)).append("' />")
-                    .toString();
+            return "<img class='" + imageClass + "'" +
+                    "src='" + newImageUrl + "'" +
+                    " width='" + pxToDp(width) + "' />";
         }
     }
 
