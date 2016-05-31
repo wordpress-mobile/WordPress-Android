@@ -33,6 +33,7 @@ import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceive
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -444,6 +445,7 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
+            properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
             AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }
 
