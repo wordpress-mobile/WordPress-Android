@@ -9,7 +9,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -66,11 +65,9 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private class SuggestionViewHolder {
-        private final ImageView imgSuggestion;
         private final TextView txtSuggestion;
 
         SuggestionViewHolder(View view) {
-            imgSuggestion = (ImageView) view.findViewById(R.id.image_suggestion);
             txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
         }
     }
@@ -98,16 +95,8 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         SuggestionViewHolder holder = (SuggestionViewHolder) view.getTag();
 
-        long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
-        final String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
-
-        if (id == CLEAR_ALL_ROW_ID) {
-            holder.imgSuggestion.setVisibility(View.GONE);
-            holder.txtSuggestion.setText(query);
-        } else {
-            holder.imgSuggestion.setVisibility(View.VISIBLE);
-            holder.txtSuggestion.setText(query);
-        }
+        String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        holder.txtSuggestion.setText(query);
     }
 
     private void confirmClearSavedSearches(Context context) {
