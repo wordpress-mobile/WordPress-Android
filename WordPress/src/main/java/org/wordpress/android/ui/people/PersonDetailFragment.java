@@ -3,6 +3,7 @@ package org.wordpress.android.ui.people;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -81,9 +82,12 @@ public class PersonDetailFragment extends Fragment {
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
 
-        // set the background color here since we are including a layout
+        // set the background color & elevation here since we are including a layout
         RelativeLayout detailsLayout = (RelativeLayout) rootView.findViewById(R.id.person_details);
         detailsLayout.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.color_primary));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            detailsLayout.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
+        }
 
         mDisplayNameTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         mUsernameTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
