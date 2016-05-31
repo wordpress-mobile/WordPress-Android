@@ -30,7 +30,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         mClearAllBgColor = context.getResources().getColor(R.color.grey_lighten_30);
     }
 
-    public void populate(String filter) {
+    public void setFilter(String filter) {
         // get db cursor containing matching query strings
         Cursor sqlCursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
 
@@ -116,7 +116,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
                 @Override
                 public void onClick(View v) {
                     ReaderSearchTable.deleteQueryString(query);
-                    populate(mCurrentFilter);
+                    setFilter(mCurrentFilter);
                 }
             });
         }
