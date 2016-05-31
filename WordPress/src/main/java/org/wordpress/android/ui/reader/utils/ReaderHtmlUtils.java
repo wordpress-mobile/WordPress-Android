@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class ReaderHtmlUtils {
 
     public interface HtmlScannerListener {
-        void onTagFound(String tag, String src, int start, int end);
+        void onTagFound(String tag, String src);
         void onScanCompleted();
     }
 

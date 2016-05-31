@@ -40,7 +40,7 @@ public class ReaderImageScanner {
             String imageTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
             String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imageTag);
             if (!TextUtils.isEmpty(imageUrl)) {
-                listener.onTagFound(imageTag, imageUrl, imgMatcher.start(), imgMatcher.end());
+                listener.onTagFound(imageTag, imageUrl);
             }
         }
 

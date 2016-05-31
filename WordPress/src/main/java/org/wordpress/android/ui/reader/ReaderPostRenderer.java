@@ -92,7 +92,7 @@ class ReaderPostRenderer {
     void resizeImages() {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
-            public void onTagFound(String imageTag, String imageUrl, int start, int end) {
+            public void onTagFound(String imageTag, String imageUrl) {
                 if (!imageUrl.contains("wpcom-smileys")) {
                     replaceImageTag(imageTag, imageUrl);
                 }
@@ -112,7 +112,7 @@ class ReaderPostRenderer {
     void resizeIframes() {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
-            public void onTagFound(String tag, String src, int start, int end) {
+            public void onTagFound(String tag, String src) {
                 replaceIframeTag(tag, src);
             }
             @Override
