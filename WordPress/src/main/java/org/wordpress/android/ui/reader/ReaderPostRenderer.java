@@ -188,6 +188,7 @@ class ReaderPostRenderer {
         int newHeight;
         if (width > 0 && height > 0) {
             if (height > width) {
+                //noinspection SuspiciousNameCombination
                 newHeight = mResourceVars.fullSizeImageWidthPx;
                 float ratio = ((float) width / (float) height);
                 newWidth = (int) (newHeight * ratio);

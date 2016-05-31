@@ -33,6 +33,7 @@ import java.net.URL;
 public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
+        @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
