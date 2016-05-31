@@ -329,9 +329,14 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
 
-            // reset the toolbar elevation
+            // We need to reset the toolbar elevation if the user is navigation back from PersonDetailFragment
+            FragmentManager fragmentManager = getFragmentManager();
+            PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
+                    .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+            boolean shouldResetToolbarElevation = (personDetailFragment != null);
+
             ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
+            if (shouldResetToolbarElevation && actionBar != null) {
                 actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
             }
             return true;
