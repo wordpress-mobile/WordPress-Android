@@ -879,7 +879,7 @@ public class PostUploadService extends Service {
             if (icon != null) {
                 mNotificationBuilder.setLargeIcon(icon);
             }
-            doNotifyManager(mNotificationId, mNotificationBuilder.build());
+            doNotify(mNotificationId, mNotificationBuilder.build());
         }
 
         public void cancelNotification() {
@@ -936,7 +936,7 @@ public class PostUploadService extends Service {
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            doNotifyManager(notificationId, notificationBuilder.build());
+            doNotify(notificationId, notificationBuilder.build());
         }
 
         private int getNotificationIdForPost(Post post) {
@@ -976,7 +976,7 @@ public class PostUploadService extends Service {
             if (mNotificationErrorId == 0) {
                 mNotificationErrorId = mNotificationId + (new Random()).nextInt();
             }
-            doNotifyManager(mNotificationErrorId, notificationBuilder.build());
+            doNotify(mNotificationErrorId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
@@ -993,10 +993,10 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            doNotifyManager(mNotificationId, mNotificationBuilder.build());
+            doNotify(mNotificationId, mNotificationBuilder.build());
         }
 
-        private void doNotifyManager(int id, Notification notification) {
+        private synchronized void doNotify(int id, Notification notification) {
             try {
                 mNotificationManager.notify(id, notification);
             } catch (RuntimeException runtimeException) {
