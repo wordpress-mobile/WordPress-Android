@@ -408,14 +408,8 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call(Method.DELETE_COMMENT, params);
-                } catch (final XMLRPCException e) {
+                } catch (final XMLRPCException | XmlPullParserException | IOException e) {
                     AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    result = null;
-                } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    result = null;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS,"Error while deleting comment", e);
                     result = null;
                 }
 
@@ -484,11 +478,7 @@ public class CommentActions {
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);
-                    } catch (XMLRPCException e) {
-                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    } catch (IOException e) {
-                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    } catch (XmlPullParserException e) {
+                    } catch (XMLRPCException | XmlPullParserException | IOException e) {
                         AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     }
                 }
