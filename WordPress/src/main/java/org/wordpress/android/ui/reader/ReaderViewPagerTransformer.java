@@ -12,7 +12,7 @@ import android.view.View;
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
 class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
-    static enum TransformType {
+    enum TransformType {
         FLOW,
         DEPTH,
         ZOOM,

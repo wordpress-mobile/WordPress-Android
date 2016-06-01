@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import org.wordpress.android.util.NetworkUtils;
  */
 public class ReaderGapMarkerView extends RelativeLayout {
     private TextView mText;
-    private ImageView mImage;
     private ProgressBar mProgress;
     private ReaderTag mCurrentTag;
 
@@ -42,7 +40,6 @@ public class ReaderGapMarkerView extends RelativeLayout {
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_gap_marker_view, this);
         mText = (TextView) view.findViewById(R.id.text_gap_marker);
-        mImage = (ImageView) view.findViewById(R.id.image_gap_marker);
         mProgress = (ProgressBar) view.findViewById(R.id.progress_gap_marker);
 
         mText.setOnClickListener(new OnClickListener() {
