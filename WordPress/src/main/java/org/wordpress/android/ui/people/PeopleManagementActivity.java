@@ -59,6 +59,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
+
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
@@ -72,14 +74,13 @@ public class PeopleManagementActivity extends AppCompatActivity
             mPeopleEndOfListReached = false;
             mFetchRequestInProgress = false;
 
-            getFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
             mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
 
-            FragmentManager fragmentManager = getFragmentManager();
             PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
                     .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
             if (peopleListFragment != null) {
@@ -189,7 +190,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         if (!personDetailFragment.isAdded()) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
 
@@ -326,11 +327,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private boolean navigateBackToPeopleListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-
-            // We need to reset the toolbar elevation if the user is navigation back from PersonDetailFragment
-            FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
             PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
                     .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
             boolean shouldResetToolbarElevation = (personDetailFragment != null);
@@ -339,6 +338,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (shouldResetToolbarElevation && actionBar != null) {
                 actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
             }
+
+            fragmentManager.popBackStack();
             return true;
         }
         return false;
