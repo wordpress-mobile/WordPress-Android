@@ -139,7 +139,7 @@ public class ReaderPostActions {
             public void run() {
                 ReaderPost serverPost = ReaderPost.fromJson(jsonObject);
 
-                // TODO: this temporary fix was added 25-Apr-2016 as a workound for the fact that
+                // TODO: this temporary fix was added 25-Apr-2016 as a workaround for the fact that
                 // the read/sites/{blogId}/posts/{postId} endpoint doesn't contain the feedId or
                 // feedItemId of the post. because of this, we need to copy them from the local post
                 // before calling isSamePost (since the difference in those IDs causes it to return false)

@@ -1,5 +1,10 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.test.InstrumentationTestCase;
+
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -13,11 +18,6 @@ import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 import org.xmlrpc.android.LoggedInputStream;
 import org.xmlrpc.android.XMLRPCUtils;
-
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.test.InstrumentationTestCase;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -98,7 +98,7 @@ public class HealthCheckTest extends InstrumentationTestCase {
 
         String canonicalizedUrl = null;
         try {
-            canonicalizedUrl = XMLRPCUtils.sanitizeSiteUrl(inputUrl);
+            canonicalizedUrl = XMLRPCUtils.sanitizeSiteUrl(inputUrl, true);
 
             // if we reached this point, it means that no error occurred
             assertNull(testCaseMessage("Testcase defines an error but no error occurred!", testCaseComment), error);

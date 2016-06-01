@@ -105,7 +105,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -165,6 +165,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean hasPagerAdapter() {
         return (mViewPager != null && mViewPager.getAdapter() != null);
     }
@@ -188,15 +189,29 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         }
 
-        if (hasPagerAdapter()) {
-            ReaderBlogIdPostId id = getPagerAdapter().getCurrentBlogIdPostId();
-            if (id != null) {
-                outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
-                outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
-            }
+        ReaderBlogIdPostId id = getAdapterCurrentBlogIdPostId();
+        if (id != null) {
+            outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
+            outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
 
         super.onSaveInstanceState(outState);
+    }
+
+    private ReaderBlogIdPostId getAdapterCurrentBlogIdPostId() {
+        PostPagerAdapter adapter = getPagerAdapter();
+        if (adapter == null) {
+            return null;
+        }
+        return adapter.getCurrentBlogIdPostId();
+    }
+
+    private ReaderBlogIdPostId getAdapterBlogIdPostIdAtPosition(int position) {
+        PostPagerAdapter adapter = getPagerAdapter();
+        if (adapter == null) {
+            return null;
+        }
+        return adapter.getBlogIdPostIdAtPosition(position);
     }
 
     @Override
@@ -217,7 +232,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private void trackPostAtPositionIfNeeded(int position) {
         if (!hasPagerAdapter() || mTrackedPositions.contains(position)) return;
 
-        ReaderBlogIdPostId idPair = getPagerAdapter().getBlogIdPostIdAtPosition(position);
+        ReaderBlogIdPostId idPair = getAdapterBlogIdPostIdAtPosition(position);
         if (idPair == null) return;
 
         AppLog.d(AppLog.T.READER, "reader pager > tracking post at position " + position);
@@ -296,11 +311,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     private Fragment getActivePagerFragment() {
-        if (hasPagerAdapter()) {
-            return getPagerAdapter().getActiveFragment();
-        } else {
+        PostPagerAdapter adapter = getPagerAdapter();
+        if (adapter == null) {
             return null;
         }
+        return adapter.getActiveFragment();
     }
 
     private ReaderPostDetailFragment getActiveDetailFragment() {
@@ -313,11 +328,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     private Fragment getPagerFragmentAtPosition(int position) {
-        if (hasPagerAdapter()) {
-            return getPagerAdapter().getFragmentAtPosition(position);
-        } else {
+        PostPagerAdapter adapter = getPagerAdapter();
+        if (adapter == null) {
             return null;
         }
+        return adapter.getFragmentAtPosition(position);
     }
 
     private ReaderPostDetailFragment getDetailFragmentAtPosition(int position) {
@@ -365,9 +380,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.UpdatePostsEnded event) {
-        if (isFinishing() || !hasPagerAdapter()) {
-            return;
-        }
+        if (isFinishing()) return;
+
+        PostPagerAdapter adapter = getPagerAdapter();
+        if (adapter == null) return;
 
         mIsRequestingMorePosts = false;
         mProgress.setVisibility(View.GONE);
@@ -375,13 +391,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW) {
             AppLog.d(AppLog.T.READER, "reader pager > older posts received");
             // remember which post to keep active
-            ReaderBlogIdPostId id = getPagerAdapter().getCurrentBlogIdPostId();
+            ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
             long blogId = (id != null ? id.getBlogId() : 0);
             long postId = (id != null ? id.getPostId() : 0);
             loadPosts(blogId, postId);
         } else {
             AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
-            getPagerAdapter().mAllPostsLoaded = true;
+            adapter.mAllPostsLoaded = true;
         }
     }
 

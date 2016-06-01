@@ -43,6 +43,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
     /*
      * override MovementMethod.getInstance() to ensure our getInstance(false) is used
      */
+    @SuppressWarnings("unused")
     public static ReaderLinkMovementMethod getInstance() {
         return getInstance(false);
     }

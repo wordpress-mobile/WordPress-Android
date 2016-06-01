@@ -46,6 +46,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -79,13 +80,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         setContentView(R.layout.reader_activity_comment_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -117,8 +120,10 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d", AccountHelper
-                .getCurrentUsernameForBlog(null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(
+                String.format(Locale.getDefault(),
+                        "%s%d%d",
+                        AccountHelper.getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
@@ -215,19 +220,24 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    private void showCommentsClosedMessage(boolean show) {
+        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        if (txtCommentsClosed != null) {
+            txtCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
     private boolean loadPost() {
         mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
         if (mPost == null) {
             return false;
         }
 
-        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
         if (ReaderUtils.isLoggedOutReader()) {
             mCommentBox.setVisibility(View.GONE);
-            txtCommentsClosed.setVisibility(View.GONE);
+            showCommentsClosedMessage(false);
         } else if (mPost.isCommentsOpen) {
             mCommentBox.setVisibility(View.VISIBLE);
-            txtCommentsClosed.setVisibility(View.GONE);
+            showCommentsClosedMessage(false);
 
             mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -248,7 +258,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             mCommentBox.setVisibility(View.GONE);
             mEditComment.setEnabled(false);
-            txtCommentsClosed.setVisibility(View.VISIBLE);
+            showCommentsClosedMessage(true);
         }
 
         return true;
@@ -280,7 +290,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
             // Enable post title click if we came from notifications with a commentId
             if (mCommentId > 0) {
-                mCommentAdapter.setHeaderClickEnabled(true);
+                mCommentAdapter.enableHeaderClicks();
             }
 
             // adapter calls this when data has been loaded & displayed
@@ -324,12 +334,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private void showProgress() {
         ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
-        progress.setVisibility(View.VISIBLE);
+        if (progress != null) {
+            progress.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideProgress() {
         ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
-        progress.setVisibility(View.GONE);
+        if (progress != null) {
+            progress.setVisibility(View.GONE);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -374,6 +388,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private void checkEmptyView() {
         TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+        if (txtEmpty == null) return;
+
         boolean isEmpty = hasCommentAdapter()
                 && getCommentAdapter().isEmpty()
                 && !mIsSubmittingComment;

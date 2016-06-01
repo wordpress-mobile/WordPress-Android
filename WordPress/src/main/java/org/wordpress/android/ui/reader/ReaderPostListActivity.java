@@ -65,13 +65,13 @@ public class ReaderPostListActivity extends AppCompatActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
         //this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
-        disableFilteredRecylerViewToolbar();
+        disableFilteredRecyclerViewToolbar();
     }
 
     /*
     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
     * */
-    private void disableFilteredRecylerViewToolbar(){
+    private void disableFilteredRecyclerViewToolbar(){
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);

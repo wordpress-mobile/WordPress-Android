@@ -62,6 +62,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -499,8 +500,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
-        mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ResourceUtils.getColorResource(context, R.color.blue_medium));
+        mRecyclerView.setToolbarSpinnerTextColor(ResourceUtils.getColorResource(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
@@ -1398,15 +1399,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         ReaderPostListType type = getPostListType();
-        Map<String, Object> analyticsProperties = new HashMap<>();
 
         switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
-                String key = (type == ReaderPostListType.TAG_PREVIEW ?
-                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
-                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1415,8 +1411,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case BLOG_PREVIEW:
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
-                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         post.blogId,
@@ -1580,6 +1574,7 @@ public class ReaderPostListFragment extends Fragment
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)
+                    //noinspection unchecked
                     mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List)mTags);
             }
         }
