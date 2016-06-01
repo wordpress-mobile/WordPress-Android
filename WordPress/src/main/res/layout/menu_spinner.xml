@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_extra_large">
+    android:padding="@dimen/margin_medium">
 
     <ImageView
         android:id="@+id/menu_spinner_icon"
@@ -25,7 +25,7 @@
             android:id="@+id/menu_spinner_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_sz_medium"
+            android:textSize="@dimen/text_sz_large"
             android:textColor="@color/grey_lighten_10"
             tools:text="2 menu areas in this theme"/>
 
