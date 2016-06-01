@@ -59,17 +59,16 @@ public class CommentUtils {
         }
 
         // remove extra \n\n added by Html.convert()
-        CharSequence source = html;
         int start = 0;
-        int end = source.length();
-        while (start < end && Character.isWhitespace(source.charAt(start))) {
+        int end = html.length();
+        while (start < end && Character.isWhitespace(html.charAt(start))) {
             start++;
         }
-        while (end > start && Character.isWhitespace(source.charAt(end - 1))) {
+        while (end > start && Character.isWhitespace(html.charAt(end - 1))) {
             end--;
         }
 
-        textView.setText(source.subSequence(start, end));
+        textView.setText(html.subSequence(start, end));
     }
 
     // Assumes all lines after first line will not be indented

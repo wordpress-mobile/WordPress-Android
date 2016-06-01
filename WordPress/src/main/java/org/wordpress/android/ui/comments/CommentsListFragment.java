@@ -567,7 +567,7 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                CommentList comments = ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                return ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
                         int localBlogId = blog.getLocalTableBlogId();
@@ -575,7 +575,6 @@ public class CommentsListFragment extends Fragment {
                         CommentTable.saveComments(localBlogId, (CommentList)list);
                     }
                 });
-                return comments;
             } catch (XMLRPCFault xmlrpcFault) {
                 mErrorType = ErrorType.UNKNOWN_ERROR;
                 if (xmlrpcFault.getFaultCode() == 401) {
