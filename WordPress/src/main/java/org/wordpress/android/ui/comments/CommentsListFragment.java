@@ -201,6 +201,7 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
+                @SuppressWarnings("unchecked")
                 ArrayList<FilterCriteria> criterias = new ArrayList();
                 for (CommentStatus criteria : commentStatuses) {
                     criterias.add(criteria);
