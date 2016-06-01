@@ -33,6 +33,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
     private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
+    private static final String KEY_TITLE = "page-title";
 
     private boolean mPeopleEndOfListReached;
     private boolean mFetchRequestInProgress;
@@ -47,7 +48,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(R.string.people);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -67,6 +67,10 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
+            if (actionBar != null) {
+                actionBar.setTitle(R.string.people);
+            }
+
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchPeopleListener(this);
@@ -80,6 +84,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         } else {
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
             mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
+            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+
+            if (actionBar != null && title != null) {
+                actionBar.setTitle(title);
+            }
 
             PeopleListFragment peopleListFragment = getListFragment();
             if (peopleListFragment != null) {
@@ -99,6 +108,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
         outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
+        }
     }
 
     @Override
