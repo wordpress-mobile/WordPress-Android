@@ -38,7 +38,7 @@ public class CommentsActivity extends AppCompatActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
-    static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
+    private static final String SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type";
     private long mSelectedCommentId;
     private final CommentList mTrashedComments = new CommentList();
 
@@ -198,7 +198,7 @@ public class CommentsActivity extends AppCompatActivity
     /*
      * tell the comment list to get recent comments from server
      */
-    void updateCommentList() {
+    private void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
             //listFragment.setRefreshing(true);

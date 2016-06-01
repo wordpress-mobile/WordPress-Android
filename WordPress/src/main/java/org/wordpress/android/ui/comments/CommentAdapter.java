@@ -249,7 +249,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mComments.size();
     }
 
-    boolean isEmpty() {
+    private boolean isEmpty() {
         return getItemCount() == 0;
     }
 

@@ -346,7 +346,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
-    void setComment(int localBlogId, long commentId) {
+    private void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
 
@@ -369,7 +369,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mShouldFocusReplyField = shouldFocusReplyField;
     }
 
-    void setShouldRequestCommentFromNote(boolean shouldRequestComment) {
+    private void setShouldRequestCommentFromNote(boolean shouldRequestComment) {
         mShouldRequestCommentFromNote = shouldRequestComment;
     }
 
@@ -481,7 +481,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mComment != null);
     }
 
-    long getCommentId() {
+    private long getCommentId() {
         return (mComment != null ? mComment.commentID : 0);
     }
 
@@ -500,7 +500,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * reload the current comment from the local database
      */
-    void reloadComment() {
+    private void reloadComment() {
         if (!hasComment())
             return;
         Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
