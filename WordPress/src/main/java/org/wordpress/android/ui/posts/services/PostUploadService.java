@@ -863,7 +863,6 @@ public class PostUploadService extends Service {
             // add the uploader to the notification bar
             mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                     Context.NOTIFICATION_SERVICE);
-            new Notification.Builder(getApplicationContext());
             mNotificationBuilder = new Notification.Builder(getApplicationContext());
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
             if (title != null) {
@@ -880,7 +879,7 @@ public class PostUploadService extends Service {
             if (icon != null) {
                 mNotificationBuilder.setLargeIcon(icon);
             }
-            notifyManager(mNotificationId, mNotificationBuilder.build());
+            doNotifyManager(mNotificationId, mNotificationBuilder.build());
         }
 
         public void cancelNotification() {
@@ -937,7 +936,7 @@ public class PostUploadService extends Service {
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            notifyManager(notificationId, notificationBuilder.build());
+            doNotifyManager(notificationId, notificationBuilder.build());
         }
 
         private int getNotificationIdForPost(Post post) {
@@ -977,7 +976,7 @@ public class PostUploadService extends Service {
             if (mNotificationErrorId == 0) {
                 mNotificationErrorId = mNotificationId + (new Random()).nextInt();
             }
-            notifyManager(mNotificationErrorId, notificationBuilder.build());
+            doNotifyManager(mNotificationErrorId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
@@ -994,10 +993,10 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
-            notifyManager(mNotificationId, mNotificationBuilder.build());
+            doNotifyManager(mNotificationId, mNotificationBuilder.build());
         }
 
-        private void notifyManager(int id, Notification notification) {
+        private void doNotifyManager(int id, Notification notification) {
             try {
                 mNotificationManager.notify(id, notification);
             } catch (RuntimeException runtimeException) {
