@@ -364,19 +364,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                 eventName = "support_reply_to_support_message_sent";
                 break;
             case LOGIN_MAGIC_LINK_EXITED:
-                eventName = "loagin_magic_link_exited";
+                eventName = "login_magic_link_exited";
                 break;
             case LOGIN_MAGIC_LINK_FAILED:
-                eventName = "loagin_magic_link_failed";
+                eventName = "login_magic_link_failed";
                 break;
             case LOGIN_MAGIC_LINK_OPENED:
-                eventName = "loagin_magic_link_opened";
+                eventName = "login_magic_link_opened";
                 break;
             case LOGIN_MAGIC_LINK_REQUESTED:
-                eventName = "loagin_magic_link_requested";
+                eventName = "login_magic_link_requested";
                 break;
             case LOGIN_MAGIC_LINK_SUCCEEDED:
-                eventName = "loagin_magic_link_succeeded";
+                eventName = "login_magic_link_succeeded";
                 break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
