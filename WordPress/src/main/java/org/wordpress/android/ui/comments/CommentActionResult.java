@@ -13,7 +13,6 @@ public class CommentActionResult {
         mMessage = message;
     }
 
-    public long getCommentID() { return mCommentID; }
     public String getMessage() { return mMessage; }
     public boolean isSuccess() { return mCommentID != COMMENT_ID_ON_ERRORS; }
 }

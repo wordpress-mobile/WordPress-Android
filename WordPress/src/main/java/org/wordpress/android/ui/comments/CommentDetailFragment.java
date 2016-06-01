@@ -493,10 +493,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return mRemoteBlogId;
     }
 
-    public void setRestoredReplyText(String restoredReplyText) {
-        mRestoredReplyText = restoredReplyText;
-    }
-
     /*
      * reload the current comment from the local database
      */
@@ -505,14 +501,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         Comment updatedComment = CommentTable.getComment(mLocalBlogId, getCommentId());
         setComment(mLocalBlogId, updatedComment);
-    }
-
-    /*
-     * resets to no comment
-     */
-    void clear() {
-        setNote(null);
-        setComment(0, null);
     }
 
     /*
@@ -1136,12 +1124,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnLikeIcon.setImageDrawable(ResourceUtils.getDrawableResource(getActivity(), R.drawable.ic_action_like));
             mBtnLikeComment.setActivated(false);
         }
-    }
-
-    public String getReplyText() {
-        if (mEditReply == null) return null;
-
-        return mEditReply.getText().toString();
     }
 
     /*
