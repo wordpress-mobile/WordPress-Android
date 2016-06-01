@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderSearchTable;
+import org.wordpress.android.util.ResourceUtils;
 
 public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private static final int MAX_SUGGESTIONS = 5;
@@ -27,7 +28,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         super(context, null, false);
         String clearAllText = context.getString(R.string.label_clear_saved_searches);
         mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
-        mClearAllBgColor = context.getResources().getColor(R.color.grey_lighten_30);
+        mClearAllBgColor = ResourceUtils.getColorResource(context, R.color.grey_lighten_30);
     }
 
     public void setFilter(String filter) {
