@@ -21,9 +21,12 @@
         android:tint="@color/grey" />
 
     <LinearLayout
+        android:id="@+id/menu_spinner_texts"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/menu_spinner_icon">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/menu_spinner_title"
@@ -45,5 +48,14 @@
             tools:text="this is the menu title"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/menu_chevron"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/gallery_arrow_dropdown_open"
+        android:layout_alignParentRight="true"
+        android:tint="@color/grey" />
 
 </LinearLayout>
