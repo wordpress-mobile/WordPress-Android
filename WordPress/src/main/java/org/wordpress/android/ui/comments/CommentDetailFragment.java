@@ -653,7 +653,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     + "</font>";
             txtTitle.setText(Html.fromHtml(html));
         } else {
-            txtTitle.setText(getString(R.string.on) + " " + postTitle.trim());
+            String text = getString(R.string.on) + " " + postTitle.trim();
+            txtTitle.setText(text);
         }
     }
 
