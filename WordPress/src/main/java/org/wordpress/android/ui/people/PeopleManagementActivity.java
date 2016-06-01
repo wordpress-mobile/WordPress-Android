@@ -194,6 +194,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
 
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(person.getDisplayName());
+            }
             // remove the toolbar elevation for larger toolbar look
             removeToolbarElevation();
 
@@ -323,6 +327,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(R.string.people);
+            }
 
             // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
             PersonDetailFragment personDetailFragment = getDetailFragment();
