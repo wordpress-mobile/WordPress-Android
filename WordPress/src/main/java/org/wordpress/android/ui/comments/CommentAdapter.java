@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.comments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -24,14 +20,11 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
