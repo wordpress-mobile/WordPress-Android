@@ -123,7 +123,8 @@ public class ReaderSearchService extends Service {
      * used when storing search results in the reader post table
      */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String slug = ReaderUtils.sanitizeWithDashes(query);
-        return new ReaderTag(slug, query, query, null, ReaderTagType.SEARCH);
+        String trimQuery = query.trim();
+        String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
+        return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
     }
 }

@@ -619,19 +619,20 @@ public class ReaderPostListFragment extends Fragment
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) return;
 
-        // remember this query for future suggestions
-        ReaderSearchTable.addOrUpdateQueryString(query);
-
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        // remember this query for future suggestions
+        String trimQuery = query.trim();
+        ReaderSearchTable.addOrUpdateQueryString(trimQuery);
+
         // remove cached results for this search - search results are ephemeral so each search
         // should be treated as a "fresh" one
-        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
+        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(trimQuery);
         ReaderPostTable.deletePostsWithTag(searchTag);
 
         mPostAdapter.setCurrentTag(searchTag);
-        mCurrentSearchQuery = query;
+        mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
     }
 
