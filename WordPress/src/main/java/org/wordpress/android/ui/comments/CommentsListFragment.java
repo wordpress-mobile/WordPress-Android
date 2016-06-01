@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
@@ -28,7 +29,6 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -282,8 +282,8 @@ public class CommentsListFragment extends Fragment {
         });
 
         // the following will change the look and feel of the toolbar to match the current design
-        mFilteredCommentsView.setToolbarBackgroundColor(ResourceUtils.getColorResource(getActivity(), R.color.blue_medium));
-        mFilteredCommentsView.setToolbarSpinnerTextColor(ResourceUtils.getColorResource(getActivity(), R.color.white));
+        mFilteredCommentsView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
