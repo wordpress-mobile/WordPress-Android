@@ -51,8 +51,8 @@
 
     <ImageView
         android:id="@+id/menu_chevron"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/gallery_arrow_dropdown_open"
         android:layout_alignParentRight="true"
