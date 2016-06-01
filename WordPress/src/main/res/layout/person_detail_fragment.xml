@@ -5,15 +5,62 @@
 -->
 <org.wordpress.android.ui.SlidingRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true">
 
-    <include
+    <android.support.v7.widget.CardView
         android:id="@+id/person_details"
-        layout="@layout/person_detail"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="@dimen/card_elevation">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_primary">
+
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/person_avatar"
+                android:layout_width="@dimen/people_avatar_sz"
+                android:layout_height="@dimen/people_avatar_sz"
+                android:layout_margin="@dimen/margin_extra_large"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/person_display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/person_avatar"
+                android:layout_toEndOf="@id/person_avatar"
+                android:layout_toRightOf="@id/person_avatar"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_extra_large"
+                android:textStyle="bold"
+                tools:text="display_name"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/person_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/person_display_name"
+                android:layout_alignStart="@id/person_display_name"
+                android:layout_below="@id/person_display_name"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="username"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:id="@+id/person_role_container"
@@ -23,13 +70,13 @@
         android:layout_alignParentStart="true"
         android:layout_below="@id/person_details"
         android:layout_marginBottom="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_role_label"
@@ -45,8 +92,8 @@
             android:id="@+id/person_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/reader_dropdown_arrow"
             android:drawableEnd="@drawable/reader_dropdown_arrow"
+            android:drawableRight="@drawable/reader_dropdown_arrow"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"

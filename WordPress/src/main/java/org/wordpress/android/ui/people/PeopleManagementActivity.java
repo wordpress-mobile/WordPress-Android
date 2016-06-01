@@ -196,7 +196,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(person.getDisplayName());
+                actionBar.setTitle("");
             }
             // remove the toolbar elevation for larger toolbar look
             removeToolbarElevation();
