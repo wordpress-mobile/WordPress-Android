@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import de.greenrobot.event.EventBus;
@@ -123,7 +124,7 @@ public class ReaderSearchService extends Service {
      * used when storing search results in the reader post table
      */
     public static ReaderTag getTagForSearchQuery(@NonNull String query) {
-        String trimQuery = query.trim();
+        String trimQuery = query != null ? query.trim() : "";
         String slug = ReaderUtils.sanitizeWithDashes(trimQuery);
         return new ReaderTag(slug, trimQuery, trimQuery, null, ReaderTagType.SEARCH);
     }

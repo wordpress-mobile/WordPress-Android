@@ -63,6 +63,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ResourceUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -624,7 +625,7 @@ public class ReaderPostListFragment extends Fragment
         hideSearchMessage();
 
         // remember this query for future suggestions
-        String trimQuery = query.trim();
+        String trimQuery = query != null ? query.trim() : "";
         ReaderSearchTable.addOrUpdateQueryString(trimQuery);
 
         // remove cached results for this search - search results are ephemeral so each search
