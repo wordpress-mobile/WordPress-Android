@@ -20,13 +20,13 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private static final int CLEAR_ALL_ROW_ID = -1;
 
     private String mCurrentFilter;
-
-    private final String mClearAllText;
+    private final Object[] mClearAllRow;
     private final int mClearAllBgColor;
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context, null, false);
-        mClearAllText = context.getString(R.string.label_clear_saved_searches);
+        String clearAllText = context.getString(R.string.label_clear_saved_searches);
+        mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
         mClearAllBgColor = context.getResources().getColor(R.color.grey_lighten_30);
     }
 
@@ -54,7 +54,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
             } while (sqlCursor.moveToNext());
 
             // ...then add our custom item
-            matrixCursor.addRow(new Object[]{CLEAR_ALL_ROW_ID, mClearAllText});
+            matrixCursor.addRow(mClearAllRow);
         }
 
         mCurrentFilter = filter;
