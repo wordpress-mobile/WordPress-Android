@@ -1958,6 +1958,8 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     selectionNode.appendChild( node );
 
     this.trackNodeForMutation($(selectionNode));
+
+    return selectionNode;
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
@@ -3309,9 +3311,9 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
             // Format and flag the image as selected.
             ZSSEditor.currentEditingImage = targetNode;
-            ZSSEditor.applyImageSelectionFormatting(targetNode);
+            var containerNode = ZSSEditor.applyImageSelectionFormatting(targetNode);
 
-            ZSSEditor.setFocusAfterElement(targetNode);
+            ZSSEditor.setFocusAfterElement(containerNode);
 
             return;
         }
