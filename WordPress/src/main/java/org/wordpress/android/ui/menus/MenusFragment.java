@@ -386,8 +386,9 @@ public class MenusFragment extends Fragment {
                             MenuLocationModel.LOCATION_DEFAULT.equals(menuLocationSelected.defaultState)) {
                         insertDefaultMenu(menus);
                     } else {
-                        menus.remove(0);
+                        removeDefaultMenu(menus);
                     }
+
 
                     for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
@@ -395,6 +396,7 @@ public class MenusFragment extends Fragment {
                             for (MenuLocationModel menuLocation : menu.locations) {
                                 if (menuLocationSelected.equals(menuLocation)) {
                                     //set this one and break;
+                                    mMenusSpinner.setItems((List)menus);
                                     mMenusSpinner.setSelection(i);
                                     bFound = true;
                                     break;
@@ -406,7 +408,11 @@ public class MenusFragment extends Fragment {
                     if (!bFound) {
                         //select the latest menu in the list, taking into account the latest position
                         // holds the "+ add new menu" option
-                        mMenusSpinner.setSelection(mMenusSpinner.getCount() - 2);
+                        mMenusSpinner.setItems((List)menus);
+                        if (menus.size() >= 2)
+                            mMenusSpinner.setSelection(menus.size()-2);
+                        else
+                            mMenusSpinner.setSelection(0);
                     }
                 }
             }
@@ -445,7 +451,6 @@ public class MenusFragment extends Fragment {
         //also fetch latest menus from the server
         mIsUpdatingMenus = true;
         mCurrentLoadRequestId = mRestWPCom.fetchAllMenus();
-
     }
 
 
@@ -517,16 +522,34 @@ public class MenusFragment extends Fragment {
         }
     }
 
+    private void removeDefaultMenu(List<MenuModel> menus){
+        if (menus != null) {
+            int defaultMenuPos = -1;
+            for (int i=0; i < menus.size(); i++) {
+                MenuModel menu = menus.get(i);
+                if (menu.isDefault) {
+                    defaultMenuPos = i;
+                    break;
+                }
+            }
+
+            if (defaultMenuPos >= 0) {
+                menus.remove(defaultMenuPos);
+            }
+        }
+    }
+
     private List<MenuModel> getUserMenusOnly(List<MenuModel> menus){
         ArrayList<MenuModel> tmpMenus = new ArrayList();
-        for (MenuModel menu : menus) {
-            if (menu.siteId > 0) {
-                tmpMenus.add(menu);
+        if (menus != null) {
+            for (MenuModel menu : menus) {
+                if (menu.siteId > 0) {
+                    tmpMenus.add(menu);
+                }
             }
         }
         return tmpMenus;
     }
-
 
     private void restoreMenuInSpinner(MenuModel menu) {
         //restore the menu item in the spinner list
