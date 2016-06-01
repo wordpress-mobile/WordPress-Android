@@ -81,8 +81,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
             mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
 
-            PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                    .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+            PeopleListFragment peopleListFragment = getListFragment();
             if (peopleListFragment != null) {
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
@@ -139,9 +138,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        final PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        final PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
             peopleListFragment.showLoadingProgress(true);
         }
@@ -177,9 +174,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onPersonSelected(Person person) {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        PersonDetailFragment personDetailFragment = getDetailFragment();
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
@@ -190,7 +185,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         if (!personDetailFragment.isAdded()) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
 
@@ -213,10 +208,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        final PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
+        final PersonDetailFragment personDetailFragment = getDetailFragment();
         if (personDetailFragment != null) {
             // optimistically update the role
             personDetailFragment.changeRole(event.newRole);
@@ -306,23 +298,21 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     // This helper method is used after a successful network request
     private void refreshOnScreenFragmentDetails() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-        if (personDetailFragment != null) {
-            personDetailFragment.refreshPersonDetails();
-        }
-
         refreshPeopleListFragment();
+        refreshDetailFragment();
     }
 
     private void refreshPeopleListFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
             peopleListFragment.refreshPeopleList();
+        }
+    }
+
+    private void refreshDetailFragment() {
+        PersonDetailFragment personDetailFragment = getDetailFragment();
+        if (personDetailFragment != null) {
+            personDetailFragment.refreshPersonDetails();
         }
     }
 
@@ -330,8 +320,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
-            PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                    .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+            PersonDetailFragment personDetailFragment = getDetailFragment();
             boolean shouldResetToolbarElevation = (personDetailFragment != null);
 
             ActionBar actionBar = getSupportActionBar();
@@ -346,9 +335,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private Person getCurrentPerson() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        PersonDetailFragment personDetailFragment = getDetailFragment();
 
         if (personDetailFragment == null) {
             return null;
@@ -371,5 +358,13 @@ public class PeopleManagementActivity extends AppCompatActivity
         Blog blog = WordPress.getCurrentBlog();
         int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
         fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+    }
+
+    private PeopleListFragment getListFragment() {
+        return (PeopleListFragment) getFragmentManager().findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+    }
+
+    private PersonDetailFragment getDetailFragment() {
+        return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
     }
 }
