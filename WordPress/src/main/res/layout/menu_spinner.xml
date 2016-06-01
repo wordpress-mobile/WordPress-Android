@@ -5,7 +5,11 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_medium">
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    >
 
     <ImageView
         android:id="@+id/menu_spinner_icon"
