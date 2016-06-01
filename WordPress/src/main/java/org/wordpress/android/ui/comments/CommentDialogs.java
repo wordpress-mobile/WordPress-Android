@@ -9,7 +9,7 @@ import org.wordpress.android.R;
 /**
  * Dialogs related to comment moderation displayed from CommentsActivity and NotificationsActivity
  */
-public class CommentDialogs {
+class CommentDialogs {
     public static final int ID_COMMENT_DLG_APPROVING = 100;
     public static final int ID_COMMENT_DLG_UNAPPROVING = 101;
     public static final int ID_COMMENT_DLG_SPAMMING = 102;
