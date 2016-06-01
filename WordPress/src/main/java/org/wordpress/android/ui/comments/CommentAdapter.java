@@ -25,6 +25,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -125,11 +126,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         mLocalBlogId = localBlogId;
 
-        mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
-        mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
+        mStatusColorSpam = ResourceUtils.getColorResource(context, R.color.comment_status_spam);
+        mStatusColorUnapproved = ResourceUtils.getColorResource(context, R.color.comment_status_unapproved);
 
-        mUnselectedColor = context.getResources().getColor(R.color.white);
-        mSelectedColor = context.getResources().getColor(R.color.translucent_grey_lighten_20);
+        mUnselectedColor = ResourceUtils.getColorResource(context, R.color.white);
+        mSelectedColor = ResourceUtils.getColorResource(context, R.color.translucent_grey_lighten_20);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);

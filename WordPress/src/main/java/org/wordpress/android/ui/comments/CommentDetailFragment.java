@@ -67,6 +67,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -609,9 +610,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             };
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
-            txtName.setTextColor(getResources().getColor(R.color.reader_hyperlink));
+            txtName.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.reader_hyperlink));
         } else {
-            txtName.setTextColor(getResources().getColor(R.color.grey_darken_30));
+            txtName.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.grey_darken_30));
         }
 
         showPostTitle(getRemoteBlogId(), mComment.postID);
@@ -878,20 +879,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (mComment.getStatusEnum()) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = getActivity().getResources().getColor(R.color.notification_status_unapproved_dark);
+                statusColor = ResourceUtils.getColorResource(getActivity(), R.color.notification_status_unapproved_dark);
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = getActivity().getResources().getColor(R.color.notification_status_unapproved_dark);
+                statusColor = ResourceUtils.getColorResource(getActivity(), R.color.notification_status_unapproved_dark);
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
+                statusColor = ResourceUtils.getColorResource(getActivity(), R.color.comment_status_spam);
                 break;
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
+                statusColor = ResourceUtils.getColorResource(getActivity(), R.color.comment_status_spam);
                 break;
         }
 
@@ -973,11 +974,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (status == CommentStatus.APPROVED) {
             mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve_active);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
-            mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.notification_status_unapproved_dark));
+            mBtnModerateTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.notification_status_unapproved_dark));
         } else {
             mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
-            mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.grey));
+            mBtnModerateTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.grey));
         }
     }
 
@@ -1125,12 +1126,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void toggleLikeButton(boolean isLiked) {
         if (isLiked) {
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
-            mBtnLikeTextView.setTextColor(getResources().getColor(R.color.orange_jazzy));
+            mBtnLikeTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.orange_jazzy));
             mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
             mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
-            mBtnLikeTextView.setTextColor(getResources().getColor(R.color.grey));
+            mBtnLikeTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.grey));
             mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like));
             mBtnLikeComment.setActivated(false);
         }
