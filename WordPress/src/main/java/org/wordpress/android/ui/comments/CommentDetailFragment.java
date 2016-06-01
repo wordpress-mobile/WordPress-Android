@@ -861,7 +861,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * sets the drawable for moderation buttons
      */
     private void setTextDrawable(final TextView view, int resId) {
-        view.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable(resId), null, null);
+        view.setCompoundDrawablesWithIntrinsicBounds(null, ResourceUtils.getDrawableResource(getActivity(), resId), null, null);
     }
 
     /*
@@ -1127,12 +1127,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (isLiked) {
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.orange_jazzy));
-            mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
+            mBtnLikeIcon.setImageDrawable(ResourceUtils.getDrawableResource(getActivity(), R.drawable.ic_action_like_active));
             mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeTextView.setTextColor(ResourceUtils.getColorResource(getActivity(), R.color.grey));
-            mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like));
+            mBtnLikeIcon.setImageDrawable(ResourceUtils.getDrawableResource(getActivity(), R.drawable.ic_action_like));
             mBtnLikeComment.setActivated(false);
         }
     }

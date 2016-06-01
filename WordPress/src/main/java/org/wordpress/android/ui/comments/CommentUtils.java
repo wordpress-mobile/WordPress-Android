@@ -14,6 +14,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 public class CommentUtils {
@@ -47,9 +48,10 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            Drawable loading = textView.getContext().getResources().getDrawable(
-                org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
-            Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.noticon_warning_big_grey);
+            Drawable loading = ResourceUtils.getDrawableResource(textView.getContext(),
+                    R.drawable.legacy_dashicon_format_image_big_grey);
+            Drawable failed = ResourceUtils.getDrawableResource(textView.getContext(),
+                    R.drawable.noticon_warning_big_grey);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
                     failed));
         } else {
