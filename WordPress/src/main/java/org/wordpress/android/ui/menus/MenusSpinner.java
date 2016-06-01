@@ -130,8 +130,10 @@ public class MenusSpinner extends Spinner {
             TextView titleView = (TextView) convertView.findViewById(R.id.menu_spinner_title);
             titleView.setText(String.format(mTitle, getCount()));
 
-            TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
-            nameView.setText(mItems.get(position).getName());
+            if (hasItems() && position < mItems.size()) {
+                TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
+                nameView.setText(mItems.get(position).getName());
+            }
 
             return convertView;
         }
