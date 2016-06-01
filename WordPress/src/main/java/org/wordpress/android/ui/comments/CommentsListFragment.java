@@ -35,6 +35,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,9 +204,7 @@ public class CommentsListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 @SuppressWarnings("unchecked")
                 ArrayList<FilterCriteria> criterias = new ArrayList();
-                for (CommentStatus criteria : commentStatuses) {
-                    criterias.add(criteria);
-                }
+                Collections.addAll(criterias, commentStatuses);
                 return criterias;
             }
 
