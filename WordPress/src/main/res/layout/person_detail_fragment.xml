@@ -25,20 +25,15 @@
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/person_avatar"
-                android:layout_width="@dimen/people_avatar_sz"
-                android:layout_height="@dimen/people_avatar_sz"
-                android:layout_margin="@dimen/margin_extra_large"/>
+                style="@style/PersonAvatar"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/person_display_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/PersonUsernameAndDisplayName"
                 android:layout_alignTop="@id/person_avatar"
                 android:layout_toEndOf="@id/person_avatar"
                 android:layout_toRightOf="@id/person_avatar"
-                android:ellipsize="end"
                 android:fontFamily="sans-serif-light"
-                android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_extra_large"
                 android:textStyle="bold"
@@ -46,14 +41,11 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/person_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/PersonUsernameAndDisplayName"
                 android:layout_alignLeft="@id/person_display_name"
                 android:layout_alignStart="@id/person_display_name"
                 android:layout_below="@id/person_display_name"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="username"/>
