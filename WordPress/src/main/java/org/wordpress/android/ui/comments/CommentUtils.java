@@ -81,8 +81,8 @@ public class CommentUtils {
     }
 
     private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {
-        private int margin;
-        private int lines;
+        private final int margin;
+        private final int lines;
 
         public TextWrappingLeadingMarginSpan(int lines, int margin) {
             this.margin = margin;

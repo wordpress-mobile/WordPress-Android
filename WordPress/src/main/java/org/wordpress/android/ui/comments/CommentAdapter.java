@@ -400,7 +400,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean mIsLoadTaskRunning = false;
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
-        CommentStatus mStatusFilter;
+        final CommentStatus mStatusFilter;
 
         public LoadCommentsTask (CommentStatus statusFilter){
             mStatusFilter = statusFilter;
