@@ -400,6 +400,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
     }
 
+    @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof OnCommentChangeListener)
