@@ -3313,7 +3313,12 @@ ZSSField.prototype.handleTapEvent = function(e) {
             ZSSEditor.currentEditingImage = targetNode;
             var containerNode = ZSSEditor.applyImageSelectionFormatting(targetNode);
 
-            ZSSEditor.setFocusAfterElement(containerNode);
+            // Move the cursor to the tapped image, to prevent scrolling to the bottom of the document when the
+            // keyboard comes up. On API 19 and below does not work properly, with the image sometimes getting removed
+            // from the post instead of the edit overlay being displayed
+            if (nativeState.androidApiLevel > 19) {
+                ZSSEditor.setFocusAfterElement(containerNode);
+            }
 
             return;
         }
