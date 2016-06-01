@@ -75,6 +75,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
@@ -230,7 +231,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%d",
+        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.getDefault(), "%s%d%d",
                 AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                 getRemoteBlogId(), getCommentId()));
 
