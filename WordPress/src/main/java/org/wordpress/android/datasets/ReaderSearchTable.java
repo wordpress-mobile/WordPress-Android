@@ -16,6 +16,7 @@ import java.util.Date;
  */
 public class ReaderSearchTable {
 
+    public static final String COL_ID    = "_id";
     public static final String COL_QUERY = "query_string";
 
     protected static void createTables(SQLiteDatabase db) {
@@ -47,9 +48,8 @@ public class ReaderSearchTable {
         }
     }
 
-    public static void deleteQueryString(@NonNull String query) {
-        String[] args = new String[]{query};
-        ReaderDatabase.getWritableDb().delete("tbl_search_suggestions", "query_string=?", args);
+    public static void deleteAllQueries() {
+        SqlUtils.deleteAllRowsInTable(ReaderDatabase.getWritableDb(), "tbl_search_suggestions");
     }
 
     /**
