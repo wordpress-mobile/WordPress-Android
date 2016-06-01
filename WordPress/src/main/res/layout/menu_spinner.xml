@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/margin_extra_large">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/menu_spinner_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginRight="@dimen/margin_extra_large"
-
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        >
-        <ImageView
-            android:id="@+id/menu_spinner_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:tint="@color/grey" />
-    </RelativeLayout>
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/gridicon_menus"
+        android:tint="@color/grey" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/menu_spinner_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_medium"
-            android:textColor="@color/grey_lighten_10" />
+            android:textColor="@color/grey_lighten_10"
+            tools:text="2 menu areas in this theme"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/menu_spinner_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textSize="@dimen/text_sz_extra_large"
-            android:textColor="@color/grey_dark" />
+            android:textColor="@color/grey_dark"
+            tools:text="this is the menu title"/>
 
     </LinearLayout>
 
