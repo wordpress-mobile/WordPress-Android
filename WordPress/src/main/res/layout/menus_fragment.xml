@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_small"
+            android:textAllCaps="true"
             android:text="@string/uses" />
 
         <View style="@style/MenusDividerView" />
