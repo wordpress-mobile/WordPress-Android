@@ -1963,6 +1963,11 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
+    if (!$('#zss_field_content')[0].contains(imageNode)) {
+        // The image node has already been removed from the document
+        return;
+    }
+
     var node = ZSSEditor.findImageCaptionNode( imageNode );
     if ( !node.parentNode || node.parentNode.className.indexOf( "edit-container" ) == -1 ) {
         return;
