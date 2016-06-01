@@ -86,6 +86,11 @@ public class PeopleManagementActivity extends AppCompatActivity
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
             }
+
+            PersonDetailFragment personDetailFragment = getDetailFragment();
+            if (personDetailFragment != null && personDetailFragment.isAdded()) {
+                removeToolbarElevation();
+            }
         }
     }
 
@@ -190,10 +195,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
 
             // remove the toolbar elevation for larger toolbar look
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setElevation(0);
-            }
+            removeToolbarElevation();
+
             fragmentTransaction.commit();
         }
     }
@@ -319,16 +322,14 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean navigateBackToPeopleListFragment() {
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+
             // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
             PersonDetailFragment personDetailFragment = getDetailFragment();
-            boolean shouldResetToolbarElevation = (personDetailFragment != null);
+            if (personDetailFragment != null && personDetailFragment.isAdded()) {
+                resetToolbarElevation();
 
-            ActionBar actionBar = getSupportActionBar();
-            if (shouldResetToolbarElevation && actionBar != null) {
-                actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
             }
-
-            fragmentManager.popBackStack();
             return true;
         }
         return false;
@@ -366,5 +367,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     private PersonDetailFragment getDetailFragment() {
         return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+    }
+
+    // Toolbar elevation is removed in detail fragment for larger toolbar look
+    private void removeToolbarElevation() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+        }
+    }
+
+    private void resetToolbarElevation() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
+        }
     }
 }
