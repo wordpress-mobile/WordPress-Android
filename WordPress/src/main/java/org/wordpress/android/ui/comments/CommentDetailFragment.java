@@ -975,10 +975,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * does user have permission to moderate/reply/spam this comment?
      */
     private boolean canModerate() {
-        if (mEnabledActions == null)
-            return false;
-        return (mEnabledActions.contains(EnabledActions.ACTION_APPROVE)
-             || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
+        return mEnabledActions != null && (mEnabledActions.contains(EnabledActions.ACTION_APPROVE) || mEnabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
     }
     private boolean canMarkAsSpam() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_SPAM));
