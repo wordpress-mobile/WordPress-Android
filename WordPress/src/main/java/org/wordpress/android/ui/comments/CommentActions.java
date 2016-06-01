@@ -97,7 +97,7 @@ public class CommentActions {
                 XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
-                Map<String, Object> replyHash = new HashMap<String, Object>();
+                Map<String, Object> replyHash = new HashMap<>();
                 replyHash.put("comment_parent", Long.toString(comment.commentID));
                 replyHash.put("content", replyText);
                 replyHash.put("author", "");
