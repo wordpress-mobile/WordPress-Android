@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,11 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     public void setFilter(String filter) {
+        // skip if unchanged
+        if (isCurrentFilter(filter) && getCursor() != null) {
+            return;
+        }
+
         // get db cursor containing matching query strings
         Cursor sqlCursor = ReaderSearchTable.getQueryStringCursor(filter, MAX_SUGGESTIONS);
 
@@ -53,6 +59,13 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
         mCurrentFilter = filter;
         swapCursor(matrixCursor);
+    }
+
+    private boolean isCurrentFilter(String filter) {
+        if (TextUtils.isEmpty(filter) && TextUtils.isEmpty(mCurrentFilter)) {
+            return true;
+        }
+        return filter != null && filter.equalsIgnoreCase(mCurrentFilter);
     }
 
     public String getSuggestion(int position) {
