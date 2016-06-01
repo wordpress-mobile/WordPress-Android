@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/menu_spinner_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_gravity="center_vertical"
         android:src="@drawable/gridicon_menus"
