@@ -14,9 +14,5 @@ public class ReaderTypes {
         public boolean isTagType() {
             return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
         }
-
-        public boolean isPreviewType() {
-            return this.equals(TAG_PREVIEW) || this.equals(BLOG_PREVIEW);
-        }
     }
 }

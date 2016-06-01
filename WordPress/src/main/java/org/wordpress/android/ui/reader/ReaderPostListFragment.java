@@ -62,6 +62,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ResourceUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -499,8 +501,8 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
-        mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ResourceUtils.getColorResource(context, R.color.blue_medium));
+        mRecyclerView.setToolbarSpinnerTextColor(ResourceUtils.getColorResource(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
@@ -619,19 +621,20 @@ public class ReaderPostListFragment extends Fragment
     private void submitSearchQuery(@NonNull String query) {
         if (!isAdded()) return;
 
-        // remember this query for future suggestions
-        ReaderSearchTable.addOrUpdateQueryString(query);
-
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
 
+        // remember this query for future suggestions
+        String trimQuery = query != null ? query.trim() : "";
+        ReaderSearchTable.addOrUpdateQueryString(trimQuery);
+
         // remove cached results for this search - search results are ephemeral so each search
         // should be treated as a "fresh" one
-        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(query);
+        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(trimQuery);
         ReaderPostTable.deletePostsWithTag(searchTag);
 
         mPostAdapter.setCurrentTag(searchTag);
-        mCurrentSearchQuery = query;
+        mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
     }
 
@@ -1397,15 +1400,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         ReaderPostListType type = getPostListType();
-        Map<String, Object> analyticsProperties = new HashMap<>();
 
         switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
-                String key = (type == ReaderPostListType.TAG_PREVIEW ?
-                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
-                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1414,8 +1412,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case BLOG_PREVIEW:
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
-                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         post.blogId,
@@ -1579,6 +1575,7 @@ public class ReaderPostListFragment extends Fragment
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)
+                    //noinspection unchecked
                     mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List)mTags);
             }
         }

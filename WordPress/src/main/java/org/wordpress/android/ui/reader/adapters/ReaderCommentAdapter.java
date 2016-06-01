@@ -34,6 +34,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ResourceUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -50,7 +51,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mShowProgressForHighlightedComment = false;
     private final boolean mIsPrivatePost;
     private final boolean mIsLoggedOutReader;
-    private boolean mHeaderClickEnabled;
+    private boolean mIsHeaderClickEnabled;
 
     private final int mColorAuthor;
     private final int mColorNotAuthor;
@@ -133,9 +134,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = context.getResources().getColor(R.color.blue_medium);
-        mColorNotAuthor = context.getResources().getColor(R.color.grey_dark);
-        mColorHighlight = context.getResources().getColor(R.color.grey_lighten_30);
+        mColorAuthor = ResourceUtils.getColorResource(context, R.color.blue_medium);
+        mColorNotAuthor = ResourceUtils.getColorResource(context, R.color.grey_dark);
+        mColorHighlight = ResourceUtils.getColorResource(context, R.color.grey_lighten_30);
 
         setHasStableIds(true);
     }
@@ -152,8 +153,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mDataRequestedListener = dataRequestedListener;
     }
 
-    public void setHeaderClickEnabled(boolean headerClickEnabled) {
-        mHeaderClickEnabled = headerClickEnabled;
+    public void enableHeaderClicks() {
+        mIsHeaderClickEnabled = true;
     }
 
     @Override
@@ -195,7 +196,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
             headerHolder.mHeaderView.setPost(mPost);
-            if (mHeaderClickEnabled) {
+            if (mIsHeaderClickEnabled) {
                 headerHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -206,9 +207,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        CommentHolder commentHolder = (CommentHolder) holder;
         final ReaderComment comment = getItem(position);
+        if (comment == null) {
+            return;
+        }
 
+        CommentHolder commentHolder = (CommentHolder) holder;
         commentHolder.txtAuthor.setText(comment.getAuthorName());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
