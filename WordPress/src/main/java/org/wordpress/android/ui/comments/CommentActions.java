@@ -301,9 +301,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                @SuppressWarnings("UnusedAssignment")
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
+                XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
 
                 final boolean success = ApiHelper.editComment(blog, comment, newStatus);
 
