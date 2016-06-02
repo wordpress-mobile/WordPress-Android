@@ -116,17 +116,18 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
                 String htmlPage = "<html>" +
                         "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                         "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                         "<script type=\"text/javascript\">" +
-                            "google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});" +
-                            "google.setOnLoadCallback(drawRegionsMap);" +
+                            "google.charts.load('current', {'packages':['geochart']});" +
+                            "google.charts.setOnLoadCallback(drawRegionsMap);" +
                             "function drawRegionsMap() {" +
                                 "var data = google.visualization.arrayToDataTable(" +
                                 "[" +
                                 "['Country', '" + label + "']," +
                                         dataToLoad +
                                 "]);" +
-                                "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
+                                "var options = {keepAspectRatio: true, region: 'world', legend: 'none', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
                                 "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                                 "chart.draw(data, options);" +
                             "}" +
