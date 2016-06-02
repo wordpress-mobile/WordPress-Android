@@ -826,7 +826,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return -1;
             }
 
-            ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerForTag(mCurrentTag);
+            ReaderBlogIdPostId gapMarkerIds = ReaderPostTable.getGapMarkerIdsForTag(mCurrentTag);
             if (gapMarkerIds == null) {
                 return -1;
             }
