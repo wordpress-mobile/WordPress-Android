@@ -301,8 +301,6 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
-
                 final boolean success = ApiHelper.editComment(blog, comment, newStatus);
 
                 if (success) {
