@@ -45,7 +45,6 @@ import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
-import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
@@ -167,7 +166,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
         CommentDetailFragment fragment = newInstance(noteId);
-        fragment.setShouldRequestCommentFromNote(true);
+        fragment.setShouldRequestCommentFromNote();
         return fragment;
     }
 
@@ -365,12 +364,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    private void setShouldFocusReplyField(boolean shouldFocusReplyField) {
-        mShouldFocusReplyField = shouldFocusReplyField;
+    private void setShouldFocusReplyField() {
+        mShouldFocusReplyField = false;
     }
 
-    private void setShouldRequestCommentFromNote(boolean shouldRequestComment) {
-        mShouldRequestCommentFromNote = shouldRequestComment;
+    private void setShouldRequestCommentFromNote() {
+        mShouldRequestCommentFromNote = true;
     }
 
     @Override
@@ -453,7 +452,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
             // tell the host to reload the comment list
             if (mOnCommentChangeListener != null)
-                mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
+                mOnCommentChangeListener.onCommentChanged(ChangeType.EDITED);
         }
     }
 
@@ -611,7 +610,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
                 mEditReply.requestFocus();
-                setShouldFocusReplyField(false);
+                setShouldFocusReplyField();
             }
         }
 
@@ -811,7 +810,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onActionResult(CommentActionResult result) {
                 mIsSubmittingReply = false;
                 if (result.isSuccess() && mOnCommentChangeListener != null)
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
+                    mOnCommentChangeListener.onCommentChanged(ChangeType.REPLIED);
                 if (isAdded()) {
                     mEditReply.setEnabled(true);
                     mSubmitReplyBtn.setVisibility(View.VISIBLE);

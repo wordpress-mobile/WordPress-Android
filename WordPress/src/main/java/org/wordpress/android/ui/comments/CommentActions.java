@@ -62,7 +62,7 @@ public class CommentActions {
     public enum ChangedFrom {COMMENT_DETAIL}
     public enum ChangeType {EDITED, REPLIED}
     public interface OnCommentChangeListener {
-        void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
+        void onCommentChanged(ChangeType changeType);
     }
 
     public interface OnCommentActionListener {

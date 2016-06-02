@@ -22,7 +22,6 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -244,7 +243,7 @@ public class CommentsActivity extends AppCompatActivity
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().setCommentIsModerating(comment.commentID, true);
-            getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            getListFragment().updateEmptyView();
             CommentActions.moderateComment(accountId, comment, newStatus,
                     new CommentActions.CommentActionListener() {
                 @Override
@@ -258,7 +257,7 @@ public class CommentsActivity extends AppCompatActivity
                     if (result.isSuccess()) {
                         reloadCommentList();
                     } else {
-                        getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                        getListFragment().updateEmptyView();
                         ToastUtils.showToast(CommentsActivity.this,
                                 R.string.error_moderate_comment,
                                 ToastUtils.Duration.LONG
@@ -270,7 +269,7 @@ public class CommentsActivity extends AppCompatActivity
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
-            getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            getListFragment().updateEmptyView();
 
             String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently)  );
             View.OnClickListener undoListener = new View.OnClickListener() {
@@ -312,7 +311,7 @@ public class CommentsActivity extends AppCompatActivity
                                         ToastUtils.Duration.LONG
                                 );
                             } else {
-                                getListFragment().updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                                getListFragment().updateEmptyView();
                             }
                         }
                     });
@@ -324,7 +323,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+    public void onCommentChanged(CommentActions.ChangeType changeType) {
         if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
             switch (changeType) {
                 case EDITED:

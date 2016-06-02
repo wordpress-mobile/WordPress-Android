@@ -76,7 +76,7 @@ public class CommentUtils {
         if (textView == null || textOffsetX < 0) return;
 
         SpannableString text = new SpannableString(textView.getText());
-        text.setSpan(new TextWrappingLeadingMarginSpan(1, textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new TextWrappingLeadingMarginSpan(textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(text);
     }
 
@@ -84,9 +84,9 @@ public class CommentUtils {
         private final int margin;
         private final int lines;
 
-        public TextWrappingLeadingMarginSpan(int lines, int margin) {
+        public TextWrappingLeadingMarginSpan(int margin) {
             this.margin = margin;
-            this.lines = lines;
+            this.lines = 1;
         }
 
         @Override
