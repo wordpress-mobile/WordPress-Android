@@ -324,15 +324,13 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onCommentChanged(CommentActions.ChangeType changeType) {
-        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
-            switch (changeType) {
-                case EDITED:
-                    reloadCommentList();
-                    break;
-                case REPLIED:
-                    updateCommentList();
-                    break;
-            }
+        switch (changeType) {
+            case EDITED:
+                reloadCommentList();
+                break;
+            case REPLIED:
+                updateCommentList();
+                break;
         }
     }
 
