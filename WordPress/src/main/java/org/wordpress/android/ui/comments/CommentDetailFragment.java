@@ -166,7 +166,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstanceForRemoteNoteComment(final String noteId) {
         CommentDetailFragment fragment = newInstance(noteId);
-        fragment.setShouldRequestCommentFromNote();
+        fragment.enableShouldRequestCommentFromNote();
         return fragment;
     }
 
@@ -364,11 +364,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    private void setShouldFocusReplyField() {
+    private void disableShouldFocusReplyField() {
         mShouldFocusReplyField = false;
     }
 
-    private void setShouldRequestCommentFromNote() {
+    private void enableShouldRequestCommentFromNote() {
         mShouldRequestCommentFromNote = true;
     }
 
@@ -610,7 +610,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             AniUtils.animateBottomBar(mLayoutReply, true);
             if (mEditReply != null && mShouldFocusReplyField) {
                 mEditReply.requestFocus();
-                setShouldFocusReplyField();
+                disableShouldFocusReplyField();
             }
         }
 
