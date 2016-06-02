@@ -302,6 +302,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
+                @SuppressWarnings("UnusedAssignment")
                 XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
