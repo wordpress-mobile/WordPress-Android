@@ -45,7 +45,7 @@ public class ReaderPostTable {
           + "featured_image,"       // 16
           + "featured_video,"       // 17
           + "post_avatar,"          // 18
-          + "timestamp,"            // 19
+          + "sort_order,"           // 19
           + "published,"            // 20
           + "num_replies,"          // 21
           + "num_likes,"            // 22
@@ -83,7 +83,7 @@ public class ReaderPostTable {
           + "tbl_posts.url,"                  // 15
           + "tbl_posts.short_url,"            // 16
           + "tbl_posts.post_avatar,"          // 17
-          + "tbl_posts.timestamp,"            // 18
+          + "tbl_posts.sort_order,"           // 18
           + "tbl_posts.published,"            // 19
           + "tbl_posts.num_replies,"          // 20
           + "tbl_posts.num_likes,"            // 21
@@ -122,7 +122,7 @@ public class ReaderPostTable {
                 + " featured_image      TEXT,"
                 + " featured_video      TEXT,"
                 + " post_avatar         TEXT,"
-                + " timestamp           REAL DEFAULT 0,"
+                + " sort_order          REAL DEFAULT 0,"
                 + " published           TEXT,"
                 + " num_replies         INTEGER DEFAULT 0,"
                 + " num_likes           INTEGER DEFAULT 0,"
@@ -142,7 +142,7 @@ public class ReaderPostTable {
                 + " xpost_blog_id       INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
-        db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
+        db.execSQL("CREATE INDEX idx_posts_sort_order ON tbl_posts(sort_order)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
                 + "   post_id           INTEGER DEFAULT 0,"
@@ -206,7 +206,7 @@ public class ReaderPostTable {
                 + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + "  AND tbl_post_tags.tag_name=?"
                 + "  AND tbl_post_tags.tag_type=?"
-                + "  ORDER BY tbl_posts.timestamp"
+                + "  ORDER BY tbl_posts.sort_order"
                 + "  LIMIT ?"
                 + ")";
         int numDeleted = db.delete("tbl_post_tags", where, args);
@@ -509,7 +509,7 @@ public class ReaderPostTable {
         }
 
         String[] args = {Long.toString(ids.getBlogId()), Long.toString(ids.getPostId())};
-        String sql = "SELECT timestamp FROM tbl_posts WHERE blog_id=? AND post_id=?";
+        String sql = "SELECT sort_order FROM tbl_posts WHERE blog_id=? AND post_id=?";
         return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
@@ -524,7 +524,7 @@ public class ReaderPostTable {
 
         String[] args = {Long.toString(timestamp), tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String where = "pseudo_id IN (SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                + " WHERE tbl_posts.timestamp < ?"
+                + " WHERE tbl_posts.sort_order < ?"
                 + " AND tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
                 + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?)";
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags", where, args);
@@ -702,7 +702,7 @@ public class ReaderPostTable {
             }
         }
 
-        sql += " ORDER BY tbl_posts.timestamp DESC";
+        sql += " ORDER BY tbl_posts.sort_order DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -719,7 +719,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_order DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -735,7 +735,7 @@ public class ReaderPostTable {
 
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "tbl_posts.*");
-        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.timestamp DESC";
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE feed_id = ? ORDER BY tbl_posts.sort_order DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -772,7 +772,7 @@ public class ReaderPostTable {
             }
         }
 
-        sql += " ORDER BY tbl_posts.timestamp DESC";
+        sql += " ORDER BY tbl_posts.sort_order DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -796,7 +796,7 @@ public class ReaderPostTable {
      * same as getPostsInBlog() but only returns the blogId/postId pairs
      */
     public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.sort_order DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -850,7 +850,7 @@ public class ReaderPostTable {
         post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.sortOrder = c.getDouble(c.getColumnIndex("timestamp"));
+        post.sortOrder = c.getDouble(c.getColumnIndex("sort_order"));
         post.setPublished(c.getString(c.getColumnIndex("published")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
