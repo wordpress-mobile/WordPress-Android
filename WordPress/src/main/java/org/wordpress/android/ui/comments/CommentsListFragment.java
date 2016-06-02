@@ -203,14 +203,13 @@ public class CommentsListFragment extends Fragment {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 @SuppressWarnings("unchecked")
-                ArrayList<FilterCriteria> criterias = new ArrayList();
-                Collections.addAll(criterias, commentStatuses);
-                return criterias;
+                ArrayList<FilterCriteria> criteria = new ArrayList();
+                Collections.addAll(criteria, commentStatuses);
+                return criteria;
             }
 
             @Override
             public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                //noop
             }
 
             @Override
@@ -276,7 +275,6 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-                //noop
             }
         });
 
@@ -303,8 +301,8 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    public void setCommentStatusFilter(CommentStatus statusfilter) {
-        mCommentStatusFilter = statusfilter;
+    public void setCommentStatusFilter(CommentStatus statusFilter) {
+        mCommentStatusFilter = statusFilter;
     }
 
     private void dismissDialog(int id) {
@@ -336,7 +334,7 @@ public class CommentsListFragment extends Fragment {
                 dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
                 break;
             case UNAPPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_DISAPPROVING;
                 break;
             case SPAM:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
@@ -377,8 +375,8 @@ public class CommentsListFragment extends Fragment {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
-            int resid = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
-            dialogBuilder.setMessage(getResources().getText(resid));
+            int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
+            dialogBuilder.setMessage(getResources().getText(resId));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -511,9 +509,9 @@ public class CommentsListFragment extends Fragment {
         final boolean mIsLoadingMore;
         final CommentStatus mStatusFilter;
 
-        private UpdateCommentsTask(boolean loadMore, CommentStatus statusfilter) {
+        private UpdateCommentsTask(boolean loadMore, CommentStatus statusFilter) {
             mIsLoadingMore = loadMore;
-            mStatusFilter = statusfilter;
+            mStatusFilter = statusFilter;
         }
 
         @Override

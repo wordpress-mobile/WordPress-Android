@@ -709,7 +709,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
                             @Override
                             public void onFailure(int statusCode) {
-                                // noop
                             }
                         });
             }
@@ -747,7 +746,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * approve, unapprove, spam, or trash the current comment
+     * approve, disapprove, spam, or trash the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
         if (!isAdded() || !hasComment())
