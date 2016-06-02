@@ -20,6 +20,10 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private static final int MAX_SUGGESTIONS = 5;
     private static final int CLEAR_ALL_ROW_ID = -1;
 
+    private static final int NUM_VIEW_TYPES  = 2;
+    private static final int VIEW_TYPE_QUERY = 0;
+    private static final int VIEW_TYPE_CLEAR = 1;
+
     private String mCurrentFilter;
     private final Object[] mClearAllRow;
     private final int mClearAllBgColor;
@@ -76,6 +80,21 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // use a different view type for the "clear" row so it doesn't get recycled and used
+        // as a query row
+        if (getItemId(position) == CLEAR_ALL_ROW_ID) {
+            return VIEW_TYPE_CLEAR;
+        }
+        return VIEW_TYPE_QUERY;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return NUM_VIEW_TYPES;
     }
 
     private class SuggestionViewHolder {
