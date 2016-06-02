@@ -235,6 +235,11 @@ ZSSEditor.onMutationObserved = function(mutations) {
     mutations.forEach(function(mutation) {
         for (var i = 0; i < mutation.removedNodes.length; i++) {
             var removedNode = mutation.removedNodes[i];
+            if (!removedNode.attributes) {
+                // Fix for https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/394
+                // If removedNode doesn't have an attributes property, it's not of type Node and we shouldn't proceed
+                continue;
+            }
             if (ZSSEditor.isMediaContainerNode(removedNode)) {
                 // An uploading or failed container node was deleted manually - notify native
                 var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
