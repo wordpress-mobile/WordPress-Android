@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,6 @@ public class MenusFragment extends Fragment {
                         mMenusSpinner.getItems().add(menu);
 
                         //re-add the "add menu option" item
-                        insertAddMenuOption(mMenusSpinner.getItems());
                         mMenusSpinner.setItems(mMenusSpinner.getItems());
 
                         //set this newly created menu
@@ -130,9 +130,7 @@ public class MenusFragment extends Fragment {
 
                         }.execute();
 
-                        //insert first Default Menu
-                        prepareMenuList(menus);
-
+                        addSpecialMenus(locations.get(0), menus);
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus);
                         bSpinnersUpdated = true;
@@ -381,14 +379,7 @@ public class MenusFragment extends Fragment {
                     MenuLocationModel menuLocationSelected = (MenuLocationModel)
                             mMenuLocationsSpinner.getItems().get(position);
 
-                    //check if this is the Primary location and defaultState == "default"
-                    if (menuLocationSelected.defaultState != null &&
-                            MenuLocationModel.LOCATION_DEFAULT.equals(menuLocationSelected.defaultState)) {
-                        insertDefaultMenu(menus);
-                    } else {
-                        removeDefaultMenu(menus);
-                    }
-
+                    addSpecialMenus(menuLocationSelected, menus);
 
                     for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
@@ -406,13 +397,8 @@ public class MenusFragment extends Fragment {
                     }
 
                     if (!bFound) {
-                        //select the latest menu in the list, taking into account the latest position
-                        // holds the "+ add new menu" option
-                        mMenusSpinner.setItems((List)menus);
-                        if (menus.size() >= 2)
-                            mMenusSpinner.setSelection(menus.size()-2);
-                        else
-                            mMenusSpinner.setSelection(0);
+                        // select the Default Menu
+                        mMenusSpinner.setSelection(0);
                     }
                 }
             }
@@ -489,56 +475,6 @@ public class MenusFragment extends Fragment {
         }
     }
 
-    private void prepareMenuList(List<MenuModel> menus) {
-        insertDefaultMenu(menus);
-        insertAddMenuOption(menus);
-    }
-
-    private void insertDefaultMenu(List<MenuModel> menus) {
-        if (menus != null) {
-            boolean bDoInsert = true;
-            //check if first item has or does not have a default menu
-            if (menus.size() > 0) {
-                MenuModel firstItem = menus.get(0);
-                if (firstItem != null) {
-                    bDoInsert = !firstItem.isDefault;
-                }
-            }
-
-            if (bDoInsert) {
-                MenuModel defaultMenu = new MenuModel();
-                defaultMenu.name = getString(R.string.menus_default_menu_name);
-                defaultMenu.isDefault = true;
-                menus.add(0, defaultMenu);
-            }
-        }
-    }
-
-    private void insertAddMenuOption(List<MenuModel> menus) {
-        if (menus != null) {
-            MenuModel addMenuOption = new MenuModel();
-            addMenuOption.name = getString(R.string.menus_add_menu_name);
-            menus.add(addMenuOption);
-        }
-    }
-
-    private void removeDefaultMenu(List<MenuModel> menus){
-        if (menus != null) {
-            int defaultMenuPos = -1;
-            for (int i=0; i < menus.size(); i++) {
-                MenuModel menu = menus.get(i);
-                if (menu.isDefault) {
-                    defaultMenuPos = i;
-                    break;
-                }
-            }
-
-            if (defaultMenuPos >= 0) {
-                menus.remove(defaultMenuPos);
-            }
-        }
-    }
-
     private List<MenuModel> getUserMenusOnly(List<MenuModel> menus){
         ArrayList<MenuModel> tmpMenus = new ArrayList();
         if (menus != null) {
@@ -560,8 +496,6 @@ public class MenusFragment extends Fragment {
             //add the newly created menu
             mMenusSpinner.getItems().add(menu);
 
-            //re-add the "add menu option" item
-            insertAddMenuOption(mMenusSpinner.getItems());
             mMenusSpinner.setItems(mMenusSpinner.getItems());
 
             //set this newly created menu
@@ -606,8 +540,9 @@ public class MenusFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
-                //insert first Default Menu
-                prepareMenuList(tmpMenus);
+                if (tmpMenuLocations != null && tmpMenuLocations.size() > 0) {
+                    addSpecialMenus(tmpMenuLocations.get(0), tmpMenus);
+                }
                 mMenusSpinner.setItems((List)tmpMenus);
             }
 
@@ -622,5 +557,52 @@ public class MenusFragment extends Fragment {
         }
     }
 
-}
+    @NonNull private MenuModel getSpecialMenu(long id, String name) {
+        MenuModel specialMenu = new MenuModel();
+        specialMenu.menuId = id;
+        specialMenu.name = name;
+        return specialMenu;
+    }
 
+    private void insertSpecialMenu(@NonNull List<MenuModel> menus, int pos, MenuModel specialMenu) {
+        // make sure not to duplicate menu entry
+        for (MenuModel menu : menus) {
+            if (menu != null && menu.menuId == specialMenu.menuId) return;
+        }
+        menus.add(pos, specialMenu);
+    }
+
+    private void removeSpecialMenus(List<MenuModel> menus) {
+        List<MenuModel> toRemove = new ArrayList<>();
+        for (int i = 0; i < menus.size(); ++i) {
+            long id = menus.get(i).menuId;
+            if (id == MenuLocationModel.ADD_MENU_ID ||
+                    id == MenuLocationModel.DEFAULT_MENU_ID ||
+                    id == MenuLocationModel.NO_MENU_ID) {
+                toRemove.add(menus.get(0));
+            }
+        }
+
+        for (MenuModel menu : toRemove) {
+            menus.remove(menu);
+        }
+    }
+
+    private void addSpecialMenus(MenuLocationModel location, List<MenuModel> menus) {
+        removeSpecialMenus(menus);
+        if (MenuLocationModel.LOCATION_DEFAULT.equals(location.defaultState)) {
+            MenuModel defaultMenu = getSpecialMenu(MenuLocationModel.DEFAULT_MENU_ID,
+                    getString(R.string.menus_default_menu_name));
+            insertSpecialMenu(menus, 0, defaultMenu);
+        } else if (MenuLocationModel.LOCATION_EMPTY.equals(location.defaultState)) {
+            MenuModel noMenu = getSpecialMenu(MenuLocationModel.NO_MENU_ID,
+                    getString(R.string.menus_no_menu_name));
+            insertSpecialMenu(menus, 0, noMenu);
+        }
+
+        MenuModel addMenu = new MenuModel();
+        addMenu.menuId = MenuLocationModel.ADD_MENU_ID;
+        addMenu.name = getString(R.string.menus_add_menu_name);
+        insertSpecialMenu(menus, menus.size(), addMenu);
+    }
+}

@@ -12,9 +12,12 @@ import org.wordpress.android.util.StringUtils;
  */
 
 public class MenuLocationModel implements NameInterface {
-
-
     public static final String LOCATION_DEFAULT = "default";
+    public static final String LOCATION_EMPTY   = "empty";
+
+    public static final long ADD_MENU_ID = -1;
+    public static final long DEFAULT_MENU_ID = -2;
+    public static final long NO_MENU_ID = -3;
 
     //
     // Primary key attributes (cannot be null)
