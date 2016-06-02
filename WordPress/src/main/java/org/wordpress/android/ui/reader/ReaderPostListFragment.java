@@ -636,9 +636,11 @@ public class ReaderPostListFragment extends Fragment
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
 
-        // track that the user performed a search, but do NOT track the search query
+        // track that the user performed a search
         if (!trimQuery.equals("")) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_RESULTS_LOADED);
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("query", trimQuery);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED, properties);
         }
     }
 

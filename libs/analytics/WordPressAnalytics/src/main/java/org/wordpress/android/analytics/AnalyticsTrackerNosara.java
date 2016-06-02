@@ -111,8 +111,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_TAG_PREVIEWED:
                 eventName = "reader_tag_previewed";
                 break;
-            case READER_SEARCH_RESULTS_LOADED:
-                eventName = "reader_search_results_loaded";
+            case READER_SEARCH_LOADED:
+                eventName = "reader_search_loaded";
                 break;
             case READER_TAG_UNFOLLOWED:
                 eventName = "reader_reader_tag_unfollowed";
