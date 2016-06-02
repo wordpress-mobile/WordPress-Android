@@ -39,7 +39,7 @@ public class ReaderPost {
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
-    public double sortOrder;
+    public double sortIndex;
     private String published;
 
     private String url;
@@ -116,15 +116,15 @@ public class ReaderPost {
         post.blogName = JSONUtils.getStringDecoded(json, "site_name");
         post.published = JSONUtils.getString(json, "date");
 
-        // sort order is "score" for search results, liked posts should be sorted by the date
-        // they were liked, otherwise sort by the published date
+        // sort index determines how posts are sorted - this is a "score" for search results,
+        // liked date for liked posts, and published date for all others
         if (json.has("score")) {
-            post.sortOrder = json.optDouble("score");
+            post.sortIndex = json.optDouble("score");
         } else if (json.has("date_liked")) {
             String likeDate = JSONUtils.getString(json, "date_liked");
-            post.sortOrder = DateTimeUtils.iso8601ToTimestamp(likeDate);
+            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(likeDate);
         } else {
-            post.sortOrder = DateTimeUtils.iso8601ToTimestamp(post.published);
+            post.sortIndex = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
         // if the post is untitled, make up a title from the excerpt

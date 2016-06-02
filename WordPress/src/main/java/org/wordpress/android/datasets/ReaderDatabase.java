@@ -70,7 +70,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  116 - added tag_display_name to tag tables
      *  117 - changed tbl_posts.timestamp from INTEGER to REAL
      *  118 - renamed tbl_search_history to tbl_search_suggestions
-     *  119 - renamed tbl_posts.timestamp to sort_order
+     *  119 - renamed tbl_posts.timestamp to sort_index
      */
 
     /*
