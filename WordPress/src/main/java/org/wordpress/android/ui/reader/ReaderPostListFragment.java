@@ -635,6 +635,11 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
+
+        // track that the user performed a search, but do NOT track the search query
+        if (!trimQuery.equals("")) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_RESULTS_LOADED);
+        }
     }
 
     /*
