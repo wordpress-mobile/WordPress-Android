@@ -635,7 +635,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(16, post.getFeaturedImage());
                 stmtPosts.bindString(17, post.getFeaturedVideo());
                 stmtPosts.bindString(18, post.getPostAvatar());
-                stmtPosts.bindDouble(19, post.timestamp);
+                stmtPosts.bindDouble(19, post.sortOrder);
                 stmtPosts.bindString(20, post.getPublished());
                 stmtPosts.bindLong  (21, post.numReplies);
                 stmtPosts.bindLong  (22, post.numLikes);
@@ -850,7 +850,7 @@ public class ReaderPostTable {
         post.setShortUrl(c.getString(c.getColumnIndex("short_url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.timestamp = c.getDouble(c.getColumnIndex("timestamp"));
+        post.sortOrder = c.getDouble(c.getColumnIndex("timestamp"));
         post.setPublished(c.getString(c.getColumnIndex("published")));
 
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
