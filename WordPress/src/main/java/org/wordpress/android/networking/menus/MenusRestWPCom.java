@@ -104,7 +104,7 @@ public class MenusRestWPCom {
     }
 
     public int updateMenu(final MenuModel menu) {
-        if (menu == null) return -1;
+        if (menu == null || isSpecialMenu(menu)) return -1;
         final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
         JSONObject params = new JSONObject();
@@ -214,6 +214,10 @@ public class MenusRestWPCom {
             return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
         return String.format(base, String.valueOf(mListener.getSiteId()));
+    }
+
+    private boolean isSpecialMenu(@NonNull MenuModel menu) {
+        return menu.menuId == MenuLocationModel.NO_MENU_ID || menu.menuId == MenuLocationModel.DEFAULT_MENU_ID;
     }
 
     @NonNull
