@@ -78,22 +78,9 @@ public class MenusFragment extends Fragment {
 
                     Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
                     // add this newly created menu to the spinner
-                    if (mMenusSpinner.getItems() != null) {
-                        List<MenuModel> menuItems = mMenusSpinner.getItems();
-                        // remove special menus in order to add new menu to end of list
-                        removeSpecialMenus(menuItems);
-                        //add the newly created menu
-                        menuItems.add(menu);
-                        // add the special menus back
-                        addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
-                        // update the spinner items
-                        mMenusSpinner.setItems((List)menuItems);
-                        // enable the action UI elements
-                        mAddEditRemoveControl.setActive(true);
-
-                        //set this newly created menu
-                        mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
-                    }
+                    addMenuToCurrentList(menu);
+                    // enable the action UI elements
+                    mAddEditRemoveControl.setActive(true);
                 }
             }
             @Override public Context getContext() { return getActivity(); }
@@ -264,7 +251,7 @@ public class MenusFragment extends Fragment {
                     Toast.makeText(getActivity(), getString(R.string.could_not_delete_menu), Toast.LENGTH_SHORT).show();
                     if (requestId == mCurrentDeleteRequestId && mMenuDeletedHolder != null) {
                         //restore the menu item in the spinner list
-                        restoreMenuInSpinner(mMenuDeletedHolder);
+                        addMenuToCurrentList(mMenuDeletedHolder);
                     }
                 }
             }
@@ -311,7 +298,7 @@ public class MenusFragment extends Fragment {
                         // user undid the trash action, so reset the control to whatever it had
                         mAddEditRemoveControl.setMenu(menu);
                         //restore the menu item in the spinner list
-                        restoreMenuInSpinner(menu);
+                        addMenuToCurrentList(menu);
                     }
                 };
 
@@ -539,17 +526,19 @@ public class MenusFragment extends Fragment {
         return tmpMenus;
     }
 
-    private void restoreMenuInSpinner(MenuModel menu) {
-        //restore the menu item in the spinner list
-        if (mMenusSpinner.getItems() != null) {
-            //remove "add menu option" item (which is the last one)
-            mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
+    private void addMenuToCurrentList(MenuModel menu) {
+        if (!isAdded()) return;
+        List<MenuModel> menuItems = mMenusSpinner.getItems();
 
+        if (menuItems != null) {
+            // remove special menus in order to add new menu to end of list
+            removeSpecialMenus(menuItems);
             //add the newly created menu
-            mMenusSpinner.getItems().add(menu);
-
-            mMenusSpinner.setItems(mMenusSpinner.getItems());
-
+            menuItems.add(menu);
+            // add the special menus back
+            addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
+            // update the spinner items
+            mMenusSpinner.setItems((List)menuItems);
             //set this newly created menu
             mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
         }
