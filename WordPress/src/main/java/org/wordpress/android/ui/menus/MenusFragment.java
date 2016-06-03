@@ -34,6 +34,8 @@ import java.util.List;
 
 public class MenusFragment extends Fragment {
 
+    private static final int BASE_DISPLAY_COUNT_MENU_LOCATIONS = -2;
+
     private boolean mUndoPressed = false;
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
@@ -91,7 +93,7 @@ public class MenusFragment extends Fragment {
                         // no op
                     } else {
                         // update Menu Locations spinner
-                        mMenuLocationsSpinner.setItems((List)locations);
+                        mMenuLocationsSpinner.setItems((List)locations, BASE_DISPLAY_COUNT_MENU_LOCATIONS);
                         bSpinnersUpdated = true;
                     }
                 }
@@ -120,7 +122,7 @@ public class MenusFragment extends Fragment {
 
                         addSpecialMenus(locations.get(0), menus);
                         // update Menus spinner
-                        mMenusSpinner.setItems((List)menus);
+                        mMenusSpinner.setItems((List)menus, 0);
                         bSpinnersUpdated = true;
                     }
                 }
@@ -161,7 +163,7 @@ public class MenusFragment extends Fragment {
                     //delete menu from Spinner here
                     if (mMenusSpinner.getItems() != null) {
                         if (mMenusSpinner.getItems().remove(menu)) {
-                            mMenusSpinner.setItems(mMenusSpinner.getItems());
+                            mMenusSpinner.setItems(mMenusSpinner.getItems(), 0);
                         }
                     }
                 }
@@ -217,7 +219,7 @@ public class MenusFragment extends Fragment {
                         //within the Spinner control - note that if a menu has been updated, it is currently being shown and
                         //selected within the Spinner control view, so it needs to change to reflect the update as well.
                         if (selectedPos >= 0) {
-                            mMenusSpinner.setItems(mMenusSpinner.getItems());
+                            mMenusSpinner.setItems(mMenusSpinner.getItems(), 0);
                             mMenusSpinner.setSelection(selectedPos);
                         }
                     }
@@ -286,7 +288,7 @@ public class MenusFragment extends Fragment {
                 //delete menu from Spinner here
                 if (mMenusSpinner.getItems() != null) {
                     if (mMenusSpinner.getItems().remove(menu)) {
-                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        mMenusSpinner.setItems(mMenusSpinner.getItems(), 0);
                         mMenusSpinner.setSelection(-1, true);
                     }
                 }
@@ -417,7 +419,7 @@ public class MenusFragment extends Fragment {
                     addSpecialMenus(menuLocationSelected, menus);
                     //we need to re-set (re-create) the spinner adapter in order to make the selection be re-drawn
                     //otherwise if items have changed but the selection remains the same, changes don' get rendered
-                    mMenusSpinner.setItems((List) menus);
+                    mMenusSpinner.setItems((List) menus, 0);
 
                     for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
@@ -538,7 +540,7 @@ public class MenusFragment extends Fragment {
             // add the special menus back
             addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
             // update the spinner items
-            mMenusSpinner.setItems((List)menuItems);
+            mMenusSpinner.setItems((List)menuItems, 0);
             //set this newly created menu
             mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
         }
@@ -580,11 +582,11 @@ public class MenusFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mMenuLocationsSpinner.setItems((List)tmpMenuLocations);
+                mMenuLocationsSpinner.setItems((List)tmpMenuLocations, BASE_DISPLAY_COUNT_MENU_LOCATIONS);
                 if (tmpMenuLocations != null && tmpMenuLocations.size() > 0) {
                     addSpecialMenus(tmpMenuLocations.get(0), tmpMenus);
                 }
-                mMenusSpinner.setItems((List)tmpMenus);
+                mMenusSpinner.setItems((List)tmpMenus, 0);
             }
 
             if ( (!result || tmpMenuLocations == null || tmpMenuLocations.size() == 0)
@@ -646,4 +648,5 @@ public class MenusFragment extends Fragment {
         addMenu.name = getString(R.string.menus_add_menu_name);
         insertSpecialMenu(menus, menus.size(), addMenu);
     }
+
 }

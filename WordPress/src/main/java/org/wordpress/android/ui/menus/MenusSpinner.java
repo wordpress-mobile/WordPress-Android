@@ -36,9 +36,9 @@ public class MenusSpinner extends Spinner {
         array.recycle();
     }
 
-    public void setItems(List<NameInterface> items) {
+    public void setItems(List<NameInterface> items, int displayBaseCount) {
         if (items != null && items.size() > 0) {
-            mAdapter = new MenusSpinnerAdapter(items);
+            mAdapter = new MenusSpinnerAdapter(items, displayBaseCount);
             setAdapter(mAdapter);
         } else {
             setAdapter(null);
@@ -56,10 +56,12 @@ public class MenusSpinner extends Spinner {
         private static final int NORMAL_VIEW_TYPE = 1;
 
         private final List<NameInterface> mItems;
+        private int mDisplayBaseCount; //count starts from this value
 
-        public MenusSpinnerAdapter(List<NameInterface> items) {
+        public MenusSpinnerAdapter(List<NameInterface> items, int displayBaseCount) {
             super();
             mItems = items;
+            mDisplayBaseCount = displayBaseCount;
         }
 
         public boolean hasItems() {
@@ -128,7 +130,7 @@ public class MenusSpinner extends Spinner {
             }
 
             TextView titleView = (TextView) convertView.findViewById(R.id.menu_spinner_title);
-            titleView.setText(String.format(mTitle, getCount() - 2));
+            titleView.setText(String.format(mTitle, getCount() + mDisplayBaseCount));
 
             if (hasItems() && position < mItems.size()) {
                 TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
