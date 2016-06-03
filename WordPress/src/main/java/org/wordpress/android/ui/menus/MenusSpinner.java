@@ -128,7 +128,7 @@ public class MenusSpinner extends Spinner {
             }
 
             TextView titleView = (TextView) convertView.findViewById(R.id.menu_spinner_title);
-            titleView.setText(String.format(mTitle, getCount()));
+            titleView.setText(String.format(mTitle, getCount() - 2));
 
             if (hasItems() && position < mItems.size()) {
                 TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
