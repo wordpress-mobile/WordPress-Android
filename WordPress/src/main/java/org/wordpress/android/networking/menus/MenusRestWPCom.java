@@ -1,6 +1,7 @@
 package org.wordpress.android.networking.menus;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -110,13 +111,7 @@ public class MenusRestWPCom {
         try {
             params.put(MENU_NAME_KEY, menu.name);
             params.put(MENU_DESCRIPTION_KEY, menu.details);
-            JSONArray locationsArray = new JSONArray();
-            if (menu.locations != null && menu.locations.size() > 0) {
-                for (MenuLocationModel locationModel : menu.locations) {
-                    if (locationModel != null) locationsArray.put(locationModel.name);
-                }
-            }
-            params.put(MENU_LOCATIONS_KEY, locationsArray);
+            params.put(MENU_LOCATIONS_KEY, serializeLocations(menu.locations));
         } catch (JSONException e) {
         }
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
@@ -219,5 +214,16 @@ public class MenusRestWPCom {
             return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
         return String.format(base, String.valueOf(mListener.getSiteId()));
+    }
+
+    @NonNull
+    private JSONArray serializeLocations(List<MenuLocationModel> locations) {
+        JSONArray locationsArray = new JSONArray();
+        if (locations != null && locations.size() > 0) {
+            for (MenuLocationModel location : locations) {
+                if (location != null) locationsArray.put(location.name);
+            }
+        }
+        return locationsArray;
     }
 }
