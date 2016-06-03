@@ -632,7 +632,7 @@ public class MenusFragment extends Fragment {
             if (id == MenuModel.ADD_MENU_ID ||
                     id == MenuModel.DEFAULT_MENU_ID ||
                     id == MenuModel.NO_MENU_ID) {
-                toRemove.add(menus.get(0));
+                toRemove.add(menus.get(i));
             }
         }
 
