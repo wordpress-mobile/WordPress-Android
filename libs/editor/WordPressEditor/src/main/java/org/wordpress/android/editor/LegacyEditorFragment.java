@@ -486,6 +486,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
         mediaFile.setWidth(MediaUtils.getMaximumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        imageSpan.setMediaFile(mediaFile);
         return imageSpan;
     }
 
