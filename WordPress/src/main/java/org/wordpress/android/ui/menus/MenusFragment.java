@@ -284,7 +284,7 @@ public class MenusFragment extends Fragment {
 
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
                     //restore the Add/Edit/Remove control
-                    mAddEditRemoveControl.setMenu(menu, false);
+                    mAddEditRemoveControl.setMenu(menu);
                     return false;
                 }
 
@@ -301,7 +301,7 @@ public class MenusFragment extends Fragment {
                     public void onClick(View v) {
                         mUndoPressed = true;
                         // user undid the trash action, so reset the control to whatever it had
-                        mAddEditRemoveControl.setMenu(menu, false);
+                        mAddEditRemoveControl.setMenu(menu);
                         //restore the menu item in the spinner list
                         restoreMenuInSpinner(menu);
                     }
@@ -354,11 +354,10 @@ public class MenusFragment extends Fragment {
                     // (as opposed to how the calypso web does this)
                     //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
                     //that's why we set the menu within the control to null
-                    mAddEditRemoveControl.setMenu(null, false);
+                    mAddEditRemoveControl.setMenu(null);
                 } else {
                     MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
-                    //TODO: check when to tell this is a default menu or not
-                    mAddEditRemoveControl.setMenu(model, (position == 0));
+                    mAddEditRemoveControl.setMenu(model);
                 }
             }
 
