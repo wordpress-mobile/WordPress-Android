@@ -13,7 +13,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPHtml;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,8 @@ public class MenusRestWPCom {
         UPDATE_ERROR,
         FETCH_ERROR
     }
+
+    private static final String ENCODING_UTF8 = "UTF-8";
 
     public interface MenusListener {
         Context getContext();
@@ -106,6 +111,23 @@ public class MenusRestWPCom {
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         params.put(MENU_NAME_KEY, menu.name);
+        try {
+
+            if (menu.locations != null && menu.locations.size() > 0) {
+                String commaSeparatedLocations = "";
+                for (MenuLocationModel location : menu.locations) {
+                    commaSeparatedLocations = commaSeparatedLocations + URLEncoder.encode(location.name, ENCODING_UTF8) + ",";
+                }
+
+                //strip off last comma
+                if (commaSeparatedLocations.endsWith(",")) {
+                    commaSeparatedLocations.substring(0, commaSeparatedLocations.length()-2);
+                }
+                params.put(MENU_LOCATIONS_KEY, commaSeparatedLocations);
+            }
+        } catch (UnsupportedEncodingException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
                 MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), menu.locations, mListener.getSiteId());

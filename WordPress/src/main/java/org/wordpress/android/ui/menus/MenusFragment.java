@@ -275,7 +275,6 @@ public class MenusFragment extends Fragment {
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
                     return;
                 }
-
                 mCurrentCreateRequestId = mRestWPCom.createMenu(menu);
             }
 
@@ -335,6 +334,30 @@ public class MenusFragment extends Fragment {
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
                     return;
                 }
+
+                //set the menu's current configuration now
+                if (menu != null) {
+                    MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
+                    if (location != null) {
+                        if (menu.locations == null) {
+                            menu.locations = new ArrayList<MenuLocationModel>();
+                        }
+
+                        if (menu.locations.size() > 0) {
+                            //now add location if not existing there yet
+                            for (MenuLocationModel existingLocs : menu.locations) {
+                                if (!existingLocs.equals(location)) {
+                                    menu.locations.add(location);
+                                    break;
+                                }
+                            }
+                        } else {
+                            //no menu locations yet, just add it
+                            menu.locations.add(location);
+                        }
+                    }
+                }
+
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
             }
         });
