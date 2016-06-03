@@ -3,7 +3,6 @@ package org.wordpress.android.networking.menus;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
