@@ -13,10 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPHtml;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -109,24 +106,18 @@ public class MenusRestWPCom {
         if (menu == null) return -1;
         final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
-        Map<String, String> params = new HashMap<>();
-        params.put(MENU_NAME_KEY, menu.name);
+        JSONObject params = new JSONObject();
         try {
-
+            params.put(MENU_NAME_KEY, menu.name);
+            params.put(MENU_DESCRIPTION_KEY, menu.details);
+            JSONArray locationsArray = new JSONArray();
             if (menu.locations != null && menu.locations.size() > 0) {
-                String commaSeparatedLocations = "";
-                for (MenuLocationModel location : menu.locations) {
-                    commaSeparatedLocations = commaSeparatedLocations + URLEncoder.encode(location.name, ENCODING_UTF8) + ",";
+                for (MenuLocationModel locationModel : menu.locations) {
+                    if (locationModel != null) locationsArray.put(locationModel.name);
                 }
-
-                //strip off last comma
-                if (commaSeparatedLocations.endsWith(",")) {
-                    commaSeparatedLocations.substring(0, commaSeparatedLocations.length()-2);
-                }
-                params.put(MENU_LOCATIONS_KEY, commaSeparatedLocations);
             }
-        } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.UTILS, e);
+            params.put(MENU_LOCATIONS_KEY, locationsArray);
+        } catch (JSONException e) {
         }
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override public void onResponse(JSONObject response) {
