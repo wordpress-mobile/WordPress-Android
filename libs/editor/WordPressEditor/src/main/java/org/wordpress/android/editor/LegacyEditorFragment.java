@@ -483,7 +483,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             }
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
-        mediaFile.setWidth(MediaUtils.getMinimumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        mediaFile.setWidth(MediaUtils.getMaximumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
         return imageSpan;
     }
 
@@ -757,7 +757,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(),
+                        final int maxWidth = MediaUtils.getMaximumImageWidth(getActivity(),
                                 imageSpan.getImageSource(), mBlogSettingMaxImageWidth);
                         seekBar.setMax(maxWidth / 10);
                         if (mediaFile.getWidth() != 0) {
