@@ -380,6 +380,9 @@ public class MenusFragment extends Fragment {
                             mMenuLocationsSpinner.getItems().get(position);
 
                     addSpecialMenus(menuLocationSelected, menus);
+                    //we need to re-set (re-create) the spinner adapter in order to make the selection be re-drawn
+                    //otherwise if items have changed but the selection remains the same, changes don' get rendered
+                    mMenusSpinner.setItems((List) menus);
 
                     for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
@@ -387,7 +390,6 @@ public class MenusFragment extends Fragment {
                             for (MenuLocationModel menuLocation : menu.locations) {
                                 if (menuLocationSelected.equals(menuLocation)) {
                                     //set this one and break;
-                                    mMenusSpinner.setItems((List)menus);
                                     mMenusSpinner.setSelection(i);
                                     bFound = true;
                                     break;
