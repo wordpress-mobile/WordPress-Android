@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -75,25 +74,25 @@ public class MenusFragment extends Fragment {
                         @Override
                         protected void onPostExecute(Boolean result) {
                         };
-
                     }.execute();
-
 
                     Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
                     // add this newly created menu to the spinner
                     if (mMenusSpinner.getItems() != null) {
-                        //remove "add menu option" item (which is the last one)
-                        mMenusSpinner.getItems().remove(mMenusSpinner.getItems().size() - 1);
-
+                        List<MenuModel> menuItems = mMenusSpinner.getItems();
+                        // remove special menus in order to add new menu to end of list
+                        removeSpecialMenus(menuItems);
                         //add the newly created menu
-                        mMenusSpinner.getItems().add(menu);
-
-                        //re-add the "add menu option" item
-                        mMenusSpinner.setItems(mMenusSpinner.getItems());
+                        menuItems.add(menu);
+                        // add the special menus back
+                        addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
+                        // update the spinner items
+                        mMenusSpinner.setItems((List)menuItems);
+                        // enable the action UI elements
+                        mAddEditRemoveControl.setActive(true);
 
                         //set this newly created menu
                         mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
-
                     }
                 }
             }
