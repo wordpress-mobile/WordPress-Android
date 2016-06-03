@@ -19,7 +19,6 @@ public class MenuModel implements NameInterface {
     public String details;
     public List<MenuLocationModel> locations;
     public List<MenuItemModel> menuItems;
-    public boolean isDefault;
 
     @Override
     public boolean equals(Object other) {
