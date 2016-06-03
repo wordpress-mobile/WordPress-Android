@@ -3553,9 +3553,13 @@ ZSSField.prototype.disableEditing = function () {
  *  @details    A parent paragraph node should be added if the current parent is either the field
  *              node itself, or a blockquote node.
  */
-ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
-{
+ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
     var closerParentNode = ZSSEditor.closerParentNode();
+
+    if (closerParentNode == null) {
+        return;
+    }
+
     var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 
