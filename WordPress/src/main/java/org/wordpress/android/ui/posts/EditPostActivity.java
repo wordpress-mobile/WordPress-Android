@@ -102,7 +102,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -1560,7 +1559,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         Blog blog = WordPress.getCurrentBlog();
-        if (!blog.getMaxImageWidth().equals("Original Size")) {
+        if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
             // If the user has selected a maximum image width for uploads, rescale the image accordingly
             path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
         }
