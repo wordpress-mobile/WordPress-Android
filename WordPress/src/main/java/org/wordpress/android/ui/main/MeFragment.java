@@ -621,7 +621,6 @@ public class MeFragment extends Fragment {
     public void onEventMainThread(GravatarUploadFinished event) {
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
-
             final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
             loadAvatar(avatarUrl, event.filePath);
         } else {

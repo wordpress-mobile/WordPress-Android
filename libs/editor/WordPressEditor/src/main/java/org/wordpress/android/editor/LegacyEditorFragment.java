@@ -69,6 +69,8 @@ import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
 import org.wordpress.android.util.widgets.WPEditText;
 
+import java.util.Locale;
+
 public class LegacyEditorFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
     public static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
@@ -483,7 +485,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             }
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
-        mediaFile.setWidth(MediaUtils.getMinimumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        mediaFile.setWidth(MediaUtils.getMaximumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        imageSpan.setMediaFile(mediaFile);
         return imageSpan;
     }
 
@@ -741,7 +744,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         alignmentSpinner.setAdapter(adapter);
 
-                        imageWidthText.setText(String.valueOf(mediaFile.getWidth()) + "px");
                         seekBar.setProgress(mediaFile.getWidth());
                         titleText.setText(mediaFile.getTitle());
                         caption.setText(mediaFile.getCaption());
@@ -757,9 +759,10 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(),
+                        final int maxWidth = MediaUtils.getMaximumImageWidth(getActivity(),
                                 imageSpan.getImageSource(), mBlogSettingMaxImageWidth);
                         seekBar.setMax(maxWidth / 10);
+                        imageWidthText.setText(String.format(Locale.US, "%dpx", maxWidth));
                         if (mediaFile.getWidth() != 0) {
                             seekBar.setProgress(mediaFile.getWidth() / 10);
                         }
@@ -777,7 +780,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                                 if (progress == 0) {
                                     progress = 1;
                                 }
-                                imageWidthText.setText(progress * 10 + "px");
+                                imageWidthText.setText(String.format(Locale.US, "%dpx", progress * 10));
                             }
                         });
 

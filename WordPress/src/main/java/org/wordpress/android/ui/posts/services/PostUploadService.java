@@ -565,8 +565,9 @@ public class PostUploadService extends Service {
             // We won't resize gif images to keep them awesome.
             boolean shouldUploadResizedVersion = false;
             // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            if (!mimeType.equals("image/gif") && !mBlog.getMaxImageWidth().equals("Original Size")) {
-                //check the picture settings
+            if (!mimeType.equals("image/gif") && MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth())
+                    != Integer.MAX_VALUE) {
+                // check the picture settings
                 int pictureSettingWidth = mediaFile.getWidth();
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
@@ -696,7 +697,7 @@ public class PostUploadService extends Service {
                         }
                     } else {
                         // set the width of the video to the thumbnail width, else 640x480
-                        if (!mBlog.getMaxImageWidth().equals("Original Size")) {
+                        if (MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth()) != Integer.MAX_VALUE) {
                             xRes = mBlog.getMaxImageWidth();
                             yRes = String.valueOf(Math.round(Integer.valueOf(mBlog.getMaxImageWidth()) * 0.75));
                         } else {
