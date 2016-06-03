@@ -251,14 +251,14 @@ public class MenuAddEditRemoveView extends LinearLayout {
     }
 
     public boolean isCurrentMenuDefault() {
-        if (this.mCurrentMenu != null && this.mCurrentMenu.menuId == MenuLocationModel.DEFAULT_MENU_ID) {
+        if (this.mCurrentMenu != null && this.mCurrentMenu.isDefaultMenu()) {
             return true;
         }
         return false;
     }
 
     public boolean isCurrentMenuNoMenu() {
-        if (this.mCurrentMenu != null && this.mCurrentMenu.menuId == MenuLocationModel.NO_MENU_ID) {
+        if (this.mCurrentMenu != null && this.mCurrentMenu.isNoMenu()) {
             return true;
         }
         return false;

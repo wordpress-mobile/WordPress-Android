@@ -105,7 +105,7 @@ public class MenusRestWPCom {
     }
 
     public int updateMenu(final MenuModel menu) {
-        if (menu == null || isSpecialMenu(menu)) return -1;
+        if (menu == null || menu.isSpecialMenu()) return -1;
         final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
         JSONObject params = new JSONObject();
@@ -114,16 +114,18 @@ public class MenusRestWPCom {
             params.put(MENU_DESCRIPTION_KEY, menu.details);
             params.put(MENU_LOCATIONS_KEY, serializeLocations(menu.locations));
         } catch (JSONException e) {
-            Log.d(AppLog.T.MENUS, "failed to serialize menus update params, aborting REST call");
+            AppLog.d(AppLog.T.MENUS, "failed to serialize menus update params, aborting REST call");
             return -1;
         }
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
-            @Override public void onResponse(JSONObject response) {
+            @Override
+            public void onResponse(JSONObject response) {
                 MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), menu.locations, mListener.getSiteId());
                 mListener.onMenuUpdated(requestId, result);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.UPDATE_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
@@ -139,14 +141,16 @@ public class MenusRestWPCom {
         String path = formatPath(MENU_REST_PATH, String.valueOf(menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
-            @Override public void onResponse(JSONObject response) {
+            @Override
+            public void onResponse(JSONObject response) {
                 MenuModel result = menuFromJson(response.optJSONObject(MENU_KEY), null, mListener.getSiteId());
                 List<MenuModel> resultList = new ArrayList<>();
                 if (result != null) resultList.add(result);
                 mListener.onMenusReceived(requestId, resultList, null);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
@@ -162,7 +166,8 @@ public class MenusRestWPCom {
         String path = formatPath(MENUS_REST_PATH, null);
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().get(path, params, null, new RestRequest.Listener() {
-            @Override public void onResponse(JSONObject response) {
+            @Override
+            public void onResponse(JSONObject response) {
                 /* first we get all locations */
                 JSONArray locationsJson = response.optJSONArray(ALL_MENUS_LOCATIONS_KEY);
                 List<MenuLocationModel> locations = menuLocationsFromJson(locationsJson, mListener.getSiteId());
@@ -181,7 +186,8 @@ public class MenusRestWPCom {
                 mListener.onMenusReceived(requestId, menus, locations);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
@@ -197,12 +203,14 @@ public class MenusRestWPCom {
         String path = formatPath(DELETE_MENU_REST_PATH, String.valueOf(menu.menuId));
         Map<String, String> params = new HashMap<>();
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
-            @Override public void onResponse(JSONObject response) {
+            @Override
+            public void onResponse(JSONObject response) {
                 boolean deleted = response.optBoolean(DELETED_KEY, false);
                 mListener.onMenuDeleted(requestId, menu, deleted);
             }
         }, new RestRequest.ErrorListener() {
-            @Override public void onErrorResponse(VolleyError volleyError) {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.DELETE_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
@@ -217,10 +225,6 @@ public class MenusRestWPCom {
             return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
         return String.format(base, String.valueOf(mListener.getSiteId()));
-    }
-
-    private boolean isSpecialMenu(@NonNull MenuModel menu) {
-        return menu.menuId == MenuLocationModel.NO_MENU_ID || menu.menuId == MenuLocationModel.DEFAULT_MENU_ID;
     }
 
     @NonNull

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -47,6 +48,7 @@ public class MenusFragment extends Fragment {
     private LinearLayout mSpinnersLayout;
     private MenusSpinner mMenuLocationsSpinner;
     private MenusSpinner mMenusSpinner;
+    private MenuModel mCurrentMenuForLocation;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -219,13 +221,21 @@ public class MenusFragment extends Fragment {
                         }
                     }
 
-                    //I have to re-set items on the Spinner so not only the adapter will change but also the textview
-                    //within the Spinner control - note that if a menu has been updated, it is currently being shown and
-                    //selected within the Spinner control view, so it needs to change to reflect the update as well.
-                    if (selectedPos >= 0) {
-                        mMenusSpinner.setItems(mMenusSpinner.getItems());
-                        mMenusSpinner.setSelection(selectedPos);
+
+                    //only re-set the spinner if it's not a special menu that we have just updated.
+                    //otherwise, we would be changing the actual selection (i.e. user selected No Menu, we updated the
+                    //last rememebred real menu which is returned in this callback, and we'd be setting
+                    //the spinner to show that real menu instead of the selected No Menu).
+                    if (!((MenuModel) mMenusSpinner.getSelectedItem()).isSpecialMenu()){
+                        //I have to re-set items on the Spinner so not only the adapter will change but also the textview
+                        //within the Spinner control - note that if a menu has been updated, it is currently being shown and
+                        //selected within the Spinner control view, so it needs to change to reflect the update as well.
+                        if (selectedPos >= 0) {
+                            mMenusSpinner.setItems(mMenusSpinner.getItems());
+                            mMenusSpinner.setSelection(selectedPos);
+                        }
                     }
+
                 }
 
             }
@@ -336,29 +346,42 @@ public class MenusFragment extends Fragment {
                 }
 
                 //set the menu's current configuration now
+                MenuModel menuToUpdate = menu;
                 if (menu != null) {
-                    MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
-                    if (location != null) {
-                        if (menu.locations == null) {
-                            menu.locations = new ArrayList<MenuLocationModel>();
-                        }
 
-                        if (menu.locations.size() > 0) {
-                            //now add location if not existing there yet
-                            for (MenuLocationModel existingLocs : menu.locations) {
-                                if (!existingLocs.equals(location)) {
-                                    menu.locations.add(location);
-                                    break;
-                                }
+                    //first check if this is one of the special menus
+                    if (!menu.isSpecialMenu()) {
+
+                        MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
+                        if (location != null) {
+                            if (menu.locations == null) {
+                                menu.locations = new ArrayList<MenuLocationModel>();
                             }
-                        } else {
-                            //no menu locations yet, just add it
-                            menu.locations.add(location);
+
+                            if (menu.locations.size() > 0) {
+                                //now add location if not existing there yet
+                                for (MenuLocationModel existingLocs : menu.locations) {
+                                    if (!existingLocs.equals(location)) {
+                                        menu.locations.add(location);
+                                        break;
+                                    }
+                                }
+                            } else {
+                                //no menu locations yet, just add it
+                                menu.locations.add(location);
+                            }
+                        }
+                    } else {
+                        //if this is a special Menu, we need to retrieve the last "real" menu and erase the current location
+                        //from its locations list
+                        if (mCurrentMenuForLocation != null) {
+                            mCurrentMenuForLocation.stripLocationFromMenu((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem());
+                            menuToUpdate = mCurrentMenuForLocation;
                         }
                     }
                 }
 
-                mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
+                mCurrentUpdateRequestId = mRestWPCom.updateMenu(menuToUpdate);
             }
         });
 
@@ -381,6 +404,10 @@ public class MenusFragment extends Fragment {
                 } else {
                     MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
                     mAddEditRemoveControl.setMenu(model);
+
+                    if (!model.isSpecialMenu()) {
+                        mCurrentMenuForLocation = model;
+                    }
                 }
             }
 
@@ -413,6 +440,7 @@ public class MenusFragment extends Fragment {
                                 if (menuLocationSelected.equals(menuLocation)) {
                                     //set this one and break;
                                     mMenusSpinner.setSelection(i);
+                                    mCurrentMenuForLocation = menu;
                                     bFound = true;
                                     break;
                                 }
@@ -423,6 +451,7 @@ public class MenusFragment extends Fragment {
                     if (!bFound) {
                         // select the Default Menu
                         mMenusSpinner.setSelection(0);
+                        mCurrentMenuForLocation = (MenuModel) mMenusSpinner.getItems().get(0);
                     }
                 }
             }
@@ -600,9 +629,9 @@ public class MenusFragment extends Fragment {
         List<MenuModel> toRemove = new ArrayList<>();
         for (int i = 0; i < menus.size(); ++i) {
             long id = menus.get(i).menuId;
-            if (id == MenuLocationModel.ADD_MENU_ID ||
-                    id == MenuLocationModel.DEFAULT_MENU_ID ||
-                    id == MenuLocationModel.NO_MENU_ID) {
+            if (id == MenuModel.ADD_MENU_ID ||
+                    id == MenuModel.DEFAULT_MENU_ID ||
+                    id == MenuModel.NO_MENU_ID) {
                 toRemove.add(menus.get(0));
             }
         }
@@ -615,17 +644,17 @@ public class MenusFragment extends Fragment {
     private void addSpecialMenus(MenuLocationModel location, List<MenuModel> menus) {
         removeSpecialMenus(menus);
         if (MenuLocationModel.LOCATION_DEFAULT.equals(location.defaultState)) {
-            MenuModel defaultMenu = getSpecialMenu(MenuLocationModel.DEFAULT_MENU_ID,
+            MenuModel defaultMenu = getSpecialMenu(MenuModel.DEFAULT_MENU_ID,
                     getString(R.string.menus_default_menu_name));
             insertSpecialMenu(menus, 0, defaultMenu);
         } else if (MenuLocationModel.LOCATION_EMPTY.equals(location.defaultState)) {
-            MenuModel noMenu = getSpecialMenu(MenuLocationModel.NO_MENU_ID,
+            MenuModel noMenu = getSpecialMenu(MenuModel.NO_MENU_ID,
                     getString(R.string.menus_no_menu_name));
             insertSpecialMenu(menus, 0, noMenu);
         }
 
         MenuModel addMenu = new MenuModel();
-        addMenu.menuId = MenuLocationModel.ADD_MENU_ID;
+        addMenu.menuId = MenuModel.ADD_MENU_ID;
         addMenu.name = getString(R.string.menus_add_menu_name);
         insertSpecialMenu(menus, menus.size(), addMenu);
     }
