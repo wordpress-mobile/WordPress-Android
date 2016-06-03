@@ -183,10 +183,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             }
         });
 
-        if (mSelfHosted) {
-            showSelfHostedSignInForm();
-        }
-
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -229,6 +225,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         initInfoButtons(rootView);
         moveBottomButtons();
 
+        if (mSelfHosted) {
+            showSelfHostedSignInForm();
+        }
         autofillFromBuildConfig();
 
         return rootView;
