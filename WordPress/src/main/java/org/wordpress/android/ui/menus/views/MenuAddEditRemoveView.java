@@ -81,7 +81,10 @@ public class MenuAddEditRemoveView extends LinearLayout {
         mMenuInactiveStateView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setActive(true);
+                //do not allow editing for default menus
+                if (!isCurrentMenuDefault()) {
+                    setActive(true);
+                }
             }
         });
 
@@ -222,8 +225,10 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
         this.mCurrentMenuIsDefault = isDefault;
         if (isDefault){
+            mMenuInactiveTitleText.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             mMenuRemove.setVisibility(View.GONE);
         } else {
+            mMenuInactiveTitleText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.icon_menus_edit,0);
             mMenuRemove.setVisibility(View.VISIBLE);
         }
 
