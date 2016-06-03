@@ -3,7 +3,6 @@ package org.wordpress.android.networking.menus;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -114,7 +113,7 @@ public class MenusRestWPCom {
             params.put(MENU_DESCRIPTION_KEY, menu.details);
             params.put(MENU_LOCATIONS_KEY, serializeLocations(menu.locations));
         } catch (JSONException e) {
-            Log.d(AppLog.T.MENUS, "failed to serialize menus update params, aborting REST call");
+            AppLog.d(AppLog.T.MENUS, "failed to serialize menus update params, aborting REST call");
             return -1;
         }
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
