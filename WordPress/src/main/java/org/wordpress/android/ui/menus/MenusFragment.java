@@ -273,7 +273,10 @@ public class MenusFragment extends Fragment {
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
                     return;
                 }
-                mCurrentCreateRequestId = mRestWPCom.createMenu(menu);
+                //set the menu's current configuration now
+                MenuModel menuToUpdate = setMenuLocation(menu);
+
+                mCurrentCreateRequestId = mRestWPCom.createMenu(menuToUpdate);
             }
 
             @Override
@@ -334,40 +337,7 @@ public class MenusFragment extends Fragment {
                 }
 
                 //set the menu's current configuration now
-                MenuModel menuToUpdate = menu;
-                if (menu != null) {
-
-                    //first check if this is one of the special menus
-                    if (!menu.isSpecialMenu()) {
-
-                        MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
-                        if (location != null) {
-                            if (menu.locations == null) {
-                                menu.locations = new ArrayList<MenuLocationModel>();
-                            }
-
-                            if (menu.locations.size() > 0) {
-                                //now add location if not existing there yet
-                                for (MenuLocationModel existingLocs : menu.locations) {
-                                    if (!existingLocs.equals(location)) {
-                                        menu.locations.add(location);
-                                        break;
-                                    }
-                                }
-                            } else {
-                                //no menu locations yet, just add it
-                                menu.locations.add(location);
-                            }
-                        }
-                    } else {
-                        //if this is a special Menu, we need to retrieve the last "real" menu and erase the current location
-                        //from its locations list
-                        if (mCurrentMenuForLocation != null) {
-                            mCurrentMenuForLocation.stripLocationFromMenu((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem());
-                            menuToUpdate = mCurrentMenuForLocation;
-                        }
-                    }
-                }
+                MenuModel menuToUpdate = setMenuLocation(menu);
 
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menuToUpdate);
             }
@@ -647,6 +617,44 @@ public class MenusFragment extends Fragment {
         addMenu.menuId = MenuModel.ADD_MENU_ID;
         addMenu.name = getString(R.string.menus_add_menu_name);
         insertSpecialMenu(menus, menus.size(), addMenu);
+    }
+
+    private MenuModel setMenuLocation(MenuModel menu) {
+        if (menu != null) {
+            //first check if this is one of the special menus
+            if (!menu.isSpecialMenu()) {
+
+                MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
+                if (location != null) {
+                    if (menu.locations == null) {
+                        menu.locations = new ArrayList<MenuLocationModel>();
+                    }
+
+                    if (menu.locations.size() > 0) {
+                        //now add location if not existing there yet
+                        for (MenuLocationModel existingLocs : menu.locations) {
+                            if (!existingLocs.equals(location)) {
+                                menu.locations.add(location);
+                                break;
+                            }
+                        }
+                    } else {
+                        //no menu locations yet, just add it
+                        menu.locations.add(location);
+                    }
+                }
+
+            } else {
+                //if this is a special Menu, we need to retrieve the last "real" menu and erase the current location
+                //from its locations list
+                if (mCurrentMenuForLocation != null) {
+                    mCurrentMenuForLocation.stripLocationFromMenu((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem());
+                    return mCurrentMenuForLocation;
+                }
+            }
+        }
+
+        return menu;
     }
 
 }
