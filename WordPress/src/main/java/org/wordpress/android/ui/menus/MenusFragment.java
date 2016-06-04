@@ -83,6 +83,9 @@ public class MenusFragment extends Fragment {
                     addMenuToCurrentList(menu);
                     // enable the action UI elements
                     mAddEditRemoveControl.setActive(true);
+
+                    //now update the menu so the menu location will be saved server-side
+                    mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
                 }
             }
             @Override public Context getContext() { return getActivity(); }
