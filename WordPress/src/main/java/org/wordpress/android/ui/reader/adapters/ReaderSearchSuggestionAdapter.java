@@ -31,7 +31,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     public ReaderSearchSuggestionAdapter(Context context) {
         super(context, null, false);
-        String clearAllText = context.getString(R.string.label_clear_saved_searches);
+        String clearAllText = context.getString(R.string.label_clear_search_history);
         mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
         mClearAllBgColor = ContextCompat.getColor(context, R.color.grey_lighten_30);
     }
@@ -160,8 +160,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     private void confirmClearSavedSearches(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dlg_title_confirm_clear_saved_searches)
-               .setMessage(R.string.dlg_text_confirm_clear_saved_searches)
+        builder.setMessage(R.string.dlg_confirm_clear_search_history)
                .setCancelable(true)
                .setNegativeButton(R.string.no, null)
                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
