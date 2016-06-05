@@ -1188,7 +1188,7 @@
 
     <string name="dlg_title_confirm_clear_saved_searches">Clear</string>
     <string name="dlg_text_confirm_clear_saved_searches">Clear saved searches?</string>
-    <string name="label_clear_saved_searches">Clear</string>
+    <string name="label_clear_saved_searches">Clear search history</string>
 
     <!-- attribution line for Discover posts, ex: "Originally posted by [AuthorName] on [BlogName] -->
     <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
