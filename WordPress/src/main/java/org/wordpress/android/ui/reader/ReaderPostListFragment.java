@@ -11,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -863,7 +864,8 @@ public class ReaderPostListFragment extends Fragment
                         title = getString(R.string.reader_label_post_search_running);
                     } else {
                         title = getString(R.string.reader_empty_posts_in_search_title);
-                        description = String.format(getString(R.string.reader_empty_posts_in_search_description), mCurrentSearchQuery);
+                        String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
+                        description = String.format(getString(R.string.reader_empty_posts_in_search_description), formattedQuery);
                     }
                     break;
 
@@ -886,7 +888,11 @@ public class ReaderPostListFragment extends Fragment
         if (description == null) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
-            descriptionView.setText(description);
+            if (description.contains("<") && description.contains(">")) {
+                descriptionView.setText(Html.fromHtml(description));
+            } else {
+                descriptionView.setText(description);
+            }
             descriptionView.setVisibility(View.VISIBLE);
         }
 
