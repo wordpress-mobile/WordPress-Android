@@ -48,6 +48,11 @@ public class ReaderSearchTable {
         }
     }
 
+    public static void deleteQueryString(@NonNull String query) {
+        String[]args = new String[]{query};
+        ReaderDatabase.getWritableDb().delete("tbl_search_suggestions", "query_string=?", args);
+    }
+
     public static void deleteAllQueries() {
         SqlUtils.deleteAllRowsInTable(ReaderDatabase.getWritableDb(), "tbl_search_suggestions");
     }

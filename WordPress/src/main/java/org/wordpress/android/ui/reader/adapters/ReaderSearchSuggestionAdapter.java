@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -66,6 +67,15 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         swapCursor(matrixCursor);
     }
 
+    /*
+     * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
+     */
+    private void reload() {
+        String newFilter = mCurrentFilter;
+        mCurrentFilter = null;
+        setFilter(newFilter);
+    }
+
     private boolean isCurrentFilter(String filter) {
         if (TextUtils.isEmpty(filter) && TextUtils.isEmpty(mCurrentFilter)) {
             return true;
@@ -99,16 +109,20 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     private class SuggestionViewHolder {
         private final TextView txtSuggestion;
+        private final ImageView imgDelete;
 
         SuggestionViewHolder(View view) {
             txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
+            imgDelete = (ImageView) view.findViewById(R.id.image_delete);
         }
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.reader_listitem_suggestion, parent, false);
-        view.setTag(new SuggestionViewHolder(view));
+
+        SuggestionViewHolder holder = new SuggestionViewHolder(view);
+        view.setTag(holder);
 
         long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
         if (id == CLEAR_ALL_ROW_ID) {
@@ -119,6 +133,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
                     confirmClearSavedSearches(v.getContext());
                 }
             });
+            holder.imgDelete.setVisibility(View.GONE);
         }
 
         return view;
@@ -128,8 +143,19 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         SuggestionViewHolder holder = (SuggestionViewHolder) view.getTag();
 
-        String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
+        final String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
         holder.txtSuggestion.setText(query);
+
+        long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
+        if (id != CLEAR_ALL_ROW_ID) {
+            holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderSearchTable.deleteQueryString(query);
+                    reload();
+                }
+            });
+        }
     }
 
     private void confirmClearSavedSearches(Context context) {
