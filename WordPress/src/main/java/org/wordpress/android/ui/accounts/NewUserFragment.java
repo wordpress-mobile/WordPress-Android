@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
-import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
