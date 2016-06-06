@@ -79,7 +79,7 @@ public class GravatarApi {
                                 if (response.isSuccessful()) {
                                     gravatarUploadListener.onSuccess();
                                 } else {
-                                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPDATE_UNSUCCESSFUL);
+                                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL);
                                     AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
                                             response.message());
                                     gravatarUploadListener.onError();
@@ -93,7 +93,7 @@ public class GravatarApi {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPDATE_EXCEPTION);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION);
                                 CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
                                         AppLog.T.API, "Network call failure trying to upload Gravatar!");
                                 AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + e

@@ -453,11 +453,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ME_GRAVATAR_UPLOADED:
                 eventName = "me_gravatar_uploaded";
                 break;
-            case ME_GRAVATAR_UPDATE_UNSUCCESSFUL:
-                eventName = "me_gravatar_update_unsuccessful";
+            case ME_GRAVATAR_UPLOAD_UNSUCCESSFUL:
+                eventName = "me_gravatar_upload_unsuccessful";
                 break;
-            case ME_GRAVATAR_UPDATE_EXCEPTION:
-                eventName = "me_gravatar_update_exception";
+            case ME_GRAVATAR_UPLOAD_EXCEPTION:
+                eventName = "me_gravatar_upload_exception";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
