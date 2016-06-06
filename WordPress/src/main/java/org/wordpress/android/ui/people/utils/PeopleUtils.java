@@ -14,6 +14,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -276,7 +277,7 @@ public class PeopleUtils {
                     return;
                 }
 
-                List<String> failedUsernames = new ArrayList<>();
+                Map<String, String> failedUsernames = new LinkedHashMap<>();
 
                 JSONObject errors = jsonObject.optJSONObject("errors");
                 if (errors != null) {
@@ -284,7 +285,7 @@ public class PeopleUtils {
                         JSONObject userError = errors.optJSONObject(username);
 
                         if (userError != null) {
-                            failedUsernames.add(username);
+                            failedUsernames.put(username, userError.optString("message"));
                         }
                     }
                 }
@@ -332,7 +333,7 @@ public class PeopleUtils {
     }
 
     public interface InvitationsSendCallback {
-        void onSent(List<String> succeededUsernames, List<String> failedUsernames);
+        void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors);
         void onError();
     }
 }

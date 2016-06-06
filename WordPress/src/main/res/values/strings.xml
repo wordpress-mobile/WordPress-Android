@@ -1388,7 +1388,8 @@
     <string name="invite_error_invalid_usenames_one">Cannot send: A username or email is invalid</string>
     <string name="invite_error_invalid_usenames_multiple">Cannot send: There are invalid usernames or emails</string>
     <string name="invite_error_sending">An error occured while trying to send the invite!</string>
-    <string name="invite_error_some_failed">Error sending the invite to some recipients!</string>
+    <string name="invite_error_some_failed">Invite sent but error(s) ocurred!</string>
+    <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
 
     <!--My profile-->
