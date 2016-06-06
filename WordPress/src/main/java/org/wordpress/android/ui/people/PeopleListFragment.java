@@ -6,8 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -31,7 +30,7 @@ public class PeopleListFragment extends Fragment {
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
 
-    private RecyclerView mRecyclerView;
+    private FilteredRecyclerView mFilteredRecyclerView;
     private ProgressBar mProgress;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
@@ -61,10 +60,8 @@ public class PeopleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
+        mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
 
         // progress bar that appears when loading more people
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
@@ -96,10 +93,10 @@ public class PeopleListFragment extends Fragment {
         if (!isAdded()) return;
 
         List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
-        PeopleAdapter peopleAdapter = (PeopleAdapter) mRecyclerView.getAdapter();
+        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
-            mRecyclerView.setAdapter(peopleAdapter);
+            mFilteredRecyclerView.setAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
         }
@@ -129,7 +126,7 @@ public class PeopleListFragment extends Fragment {
         void onFetchMorePeople();
     }
 
-    public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder> {
+    public class PeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final LayoutInflater mInflater;
         private List<Person> mPeopleList;
         private int mAvatarSz;
@@ -178,15 +175,16 @@ public class PeopleListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(PeopleAdapter.PeopleViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
             final Person person = getPerson(position);
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                holder.txtDisplayName.setText(person.getDisplayName());
-                holder.txtUsername.setText(String.format("@%s", person.getUsername()));
-                holder.txtRole.setText(StringUtils.capitalize(person.getRole()));
+                peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                peopleViewHolder.txtDisplayName.setText(person.getDisplayName());
+                peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
+                peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole()));
             }
 
             // end of list is reached
