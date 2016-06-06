@@ -10,6 +10,8 @@ import android.os.Looper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -79,7 +81,11 @@ public class GravatarApi {
                                 if (response.isSuccessful()) {
                                     gravatarUploadListener.onSuccess();
                                 } else {
-                                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL);
+                                    Map<String, Object> properties = new HashMap<>();
+                                    properties.put("network_response_code", response.code());
+                                    properties.put("network_response_message", response.message());
+                                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
+                                            properties);
                                     AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
                                             response.message());
                                     gravatarUploadListener.onError();
@@ -93,7 +99,11 @@ public class GravatarApi {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION);
+                                Map<String, Object> properties = new HashMap<>();
+                                properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName()
+                                        : "null");
+                                properties.put("network_exception_message", e != null ? e.getMessage() : "null");
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                                 CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
                                         AppLog.T.API, "Network call failure trying to upload Gravatar!");
                                 AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + e
