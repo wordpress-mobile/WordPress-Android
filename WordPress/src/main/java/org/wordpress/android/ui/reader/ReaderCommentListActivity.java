@@ -123,7 +123,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-                        reloadPostAndComments();
+                        updatePostAndComments();
                     }
                 });
 
@@ -163,7 +163,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
 
-    private void reloadPostAndComments() {
+    private void updatePostAndComments() {
         //to do a complete refresh we need to get updated post and new comments
         ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
             @Override
