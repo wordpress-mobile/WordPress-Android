@@ -164,7 +164,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
 
     private void reloadPostAndComments() {
-        //to refresh we need to get fresh version of the post and new comments
+        //to do a complete refresh we need to get updated post and new comments
         ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
@@ -173,9 +173,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
 
                 if (result.isNewOrChanged()) {
-                    getCommentAdapter().setPost(mPost); //pass updated post to adapter
-                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-                    updateComments(false, false);
+                    getCommentAdapter().setPost(mPost); //pass updated post to the adapter
+                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
+                    updateComments(false, false); //load first page of comments
                 } else {
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }

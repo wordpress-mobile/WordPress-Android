@@ -483,12 +483,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     /*
-    *  Set a post to adapter and reflect it details in a header view.
+    *  Set a post to adapter and update relevant information in the post header
     */
     public void setPost(ReaderPost post) {
         if (post != null) {
             mPost = post;
-            notifyItemChanged(0);
+            notifyItemChanged(0); //notify header to update itself
         }
 
     }
