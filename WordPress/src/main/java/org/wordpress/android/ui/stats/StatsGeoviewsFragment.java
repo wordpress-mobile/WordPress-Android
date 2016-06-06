@@ -114,6 +114,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
                 String htmlPage = "<html>" +
                         "<head>" +
                         "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
