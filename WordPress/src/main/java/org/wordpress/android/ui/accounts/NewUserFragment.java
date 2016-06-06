@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -397,6 +398,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
             @Override
             public void afterTextChanged(Editable s) {
+                String lowerCase = s.toString().toLowerCase();
+                if (!lowerCase.equals(s.toString())) {
+                    s.replace(0, s.length(), lowerCase);
+                }
             }
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
