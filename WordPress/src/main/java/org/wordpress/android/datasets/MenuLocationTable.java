@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuLocationModel;
+import org.wordpress.android.models.MenuModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class MenuLocationTable {
 
     /** Well-formed SELECT query for selecting rows for a given site ID */
     public static final String SELECT_SITE_LOCATIONS_SQL =
-            "SELECT * FROM " + MENU_LOCATIONS_TABLE_NAME + "WHERE " + SITE_ID_COLUMN + "=?;";
+            "SELECT * FROM " + MENU_LOCATIONS_TABLE_NAME + " WHERE " + SITE_ID_COLUMN + "=?;";
 
     public static boolean saveMenuLocation(MenuLocationModel location) {
         if (location == null || location.siteId < 0) return false;
@@ -62,6 +63,23 @@ public class MenuLocationTable {
         ContentValues values = serializeToDatabase(location);
         return WordPress.wpDB.getDatabase().insertWithOnConflict(
                 MENU_LOCATIONS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+    }
+
+    public static void saveMenuLocations(List<MenuLocationModel> locations) {
+        if (locations == null || locations.size() == 0) return;
+
+        SQLiteDatabase db = WordPress.wpDB.getDatabase();
+        db.beginTransaction();
+        try {
+            for (MenuLocationModel location: locations) {
+                ContentValues values = serializeToDatabase(location);
+                db.insertWithOnConflict(
+                        MENU_LOCATIONS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public static void deleteMenuLocationForCurrentSite(String locationName) {
@@ -80,7 +98,7 @@ public class MenuLocationTable {
 
     public static void deleteAllLocationsForSite(long siteId) {
         if (siteId < 0) return;
-        String params = "WHERE " + SITE_ID_COLUMN + "=?";
+        String params = SITE_ID_COLUMN + "=?";
         String[] args = {String.valueOf(siteId)};
         WordPress.wpDB.getDatabase().delete(MENU_LOCATIONS_TABLE_NAME, params, args);
     }

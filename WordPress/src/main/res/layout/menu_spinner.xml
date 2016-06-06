@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    >
+
+    <ImageView
+        android:id="@+id/menu_spinner_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/gridicon_menus"
+        android:tint="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/menu_spinner_texts"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/menu_spinner_icon">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/menu_spinner_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:textColor="@color/grey_lighten_10"
+            tools:text="2 menu areas in this theme"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/menu_spinner_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textColor="@color/grey_dark"
+            tools:text="this is the menu title"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/menu_chevron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/gallery_arrow_dropdown_open"
+        android:layout_alignParentRight="true"
+        android:tint="@color/grey" />
+
+</LinearLayout>

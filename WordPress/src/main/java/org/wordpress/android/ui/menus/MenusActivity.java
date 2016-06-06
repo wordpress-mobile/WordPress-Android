@@ -1,18 +1,22 @@
 package org.wordpress.android.ui.menus;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+
+import org.wordpress.android.ui.ActivityLauncher;
+
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 
 public class MenusActivity extends AppCompatActivity {
-    private MenusFragment mMenusFragment;
+
+    private static final String MENUS_FRAGMENT_KEY = "menusFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,17 +24,20 @@ public class MenusActivity extends AppCompatActivity {
 
         setContentView(R.layout.menu_activity);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(R.string.menus);
+            actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         if (savedInstanceState == null) {
-            mMenusFragment = new MenusFragment();
+            MenusFragment menusFragment = new MenusFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.layout_fragment_container, mMenusFragment)
-                    .commit();
+                    .add(R.id.layout_fragment_container, menusFragment, MENUS_FRAGMENT_KEY)
+                    .commitAllowingStateLoss();
         }
     }
 
@@ -47,6 +54,15 @@ public class MenusActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
@@ -58,7 +74,7 @@ public class MenusActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AppLog.d(AppLog.T.MENUS, "comment activity new intent");
+        AppLog.d(AppLog.T.MENUS, "menus activity new intent");
     }
 
 }

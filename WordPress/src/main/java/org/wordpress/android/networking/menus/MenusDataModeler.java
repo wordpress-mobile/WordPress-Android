@@ -71,15 +71,45 @@ public class MenusDataModeler {
         return menu != null;
     }
 
-    public static MenuModel menuFromJson(JSONObject json) {
+    public static MenuModel menuFromJson(JSONObject json, List<MenuLocationModel> locations, long siteId) {
         if (!isValidMenuJson(json)) return null;
 
         MenuModel menu = new MenuModel();
+        menu.siteId = siteId;
         menu.menuId = json.optLong(MENU_ID_KEY);
         menu.name = json.optString(MENU_NAME_KEY);
         menu.details = json.optString(MENU_DESCRIPTION_KEY);
-        menu.menuItems = menuItemsFromJson(json.optJSONArray(MENU_ITEMS_KEY));
-        menu.locations = menuLocationsFromJson(json.optJSONArray(MENU_LOCATIONS_KEY));
+        menu.menuItems = menuItemsFromJson(json.optJSONArray(MENU_ITEMS_KEY), menu.menuId, 0);
+        List<String> locationNames = new ArrayList<>();
+
+        try {
+            JSONArray locationStrings = json.optJSONArray(MENU_LOCATIONS_KEY);
+            if (locationStrings != null) {
+                for (int i=0; i < locationStrings.length(); i++){
+                    locationNames.add(locationStrings.getString(i));
+                }
+            }
+        } catch (JSONException exception) {
+            AppLog.w(AppLog.T.API, "Error parsing All Menus REST response");
+        }
+
+        if (locations != null) {
+            //now that we have the possible available Menu Location names, we populate the MenuModel.locations
+            //attribute with each full blown MenuLocationModel instance for ease of use later on.
+            List<MenuLocationModel> locationModels = new ArrayList<>();
+            for (MenuLocationModel locationModel : locations){
+                for (String locationName : locationNames){
+                    if (locationModel.name != null) {
+                        if (locationModel.name.equals(locationName)) {
+                            locationModels.add(locationModel);
+                            break;
+                        }
+                    }
+                }
+            }
+            menu.locations = locationModels;
+        }
+
         return menu;
     }
 
@@ -123,7 +153,7 @@ public class MenusDataModeler {
         return location != null && !TextUtils.isEmpty(location.name);
     }
 
-    public static MenuLocationModel menuLocationFromJson(JSONObject json) {
+    public static MenuLocationModel menuLocationFromJson(JSONObject json, long siteId) {
         if (!isValidMenuLocationJson(json)) return null;
 
         try {
@@ -131,6 +161,7 @@ public class MenusDataModeler {
             location.name = json.getString(LOCATION_NAME_KEY);
             location.details = json.getString(LOCATION_DESCRIPTION_KEY);
             location.defaultState = json.getString(LOCATION_DEFAULT_STATE_KEY);
+            location.siteId = siteId;
             return location;
         } catch (JSONException exception) {
             AppLog.e(AppLog.T.API, "Error parsing Menu Location JSON: " + exception);
@@ -139,7 +170,7 @@ public class MenusDataModeler {
         return null;
     }
 
-    public static List<MenuLocationModel> menuLocationsFromJson(JSONArray json) {
+    public static List<MenuLocationModel> menuLocationsFromJson(JSONArray json, long siteId) {
         if (json == null || json.length() <= 0) return null;
 
         try {
@@ -147,7 +178,7 @@ public class MenusDataModeler {
 
             for (int i = 0; i < json.length(); ++i) {
                 JSONObject locationObj = json.getJSONObject(i);
-                MenuLocationModel location = menuLocationFromJson(locationObj);
+                MenuLocationModel location = menuLocationFromJson(locationObj, siteId);
                 if (location != null) locations.add(location);
             }
 
@@ -194,10 +225,12 @@ public class MenusDataModeler {
         return item != null;
     }
 
-    public static MenuItemModel menuItemFromJson(JSONObject json) {
+    public static MenuItemModel menuItemFromJson(JSONObject json, long menuId, long parentId) {
         if (!isValidMenuItemJson(json)) return null;
 
         MenuItemModel item = new MenuItemModel();
+        item.parentId = parentId;
+        item.menuId = menuId;
         item.itemId = json.optLong(ITEM_ID_KEY);
         item.contentId = json.optLong(ITEM_CONTENT_ID_KEY);
         item.type = json.optString(ITEM_TYPE_KEY);
@@ -213,7 +246,7 @@ public class MenusDataModeler {
             item.children = new ArrayList<>();
             JSONArray children = json.optJSONArray(ITEM_CHILDREN_KEY);
             for (int i = 0; i < children.length(); ++i) {
-                MenuItemModel child = menuItemFromJson(children.optJSONObject(i));
+                MenuItemModel child = menuItemFromJson(children.optJSONObject(i), menuId, item.itemId);
                 if (child == null) continue;
                 item.children.add(child);
             }
@@ -222,12 +255,12 @@ public class MenusDataModeler {
         return item;
     }
 
-    public static List<MenuItemModel> menuItemsFromJson(JSONArray json) {
+    public static List<MenuItemModel> menuItemsFromJson(JSONArray json, long menuId, long parentId) {
         if (json == null) return null;
 
         List<MenuItemModel> items = new ArrayList<>();
         for (int i = 0; i < json.length(); ++i) {
-            items.add(menuItemFromJson(json.optJSONObject(i)));
+            items.add(menuItemFromJson(json.optJSONObject(i), menuId, parentId));
         }
         return items;
     }
