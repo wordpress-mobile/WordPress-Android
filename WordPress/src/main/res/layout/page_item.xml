@@ -88,7 +88,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:contentDescription="@string/more"
-            android:src="@drawable/ic_action_more" />
+            app:srcCompat="@drawable/ic_action_more" />
     </RelativeLayout>
 
     <View

@@ -180,7 +180,6 @@ public class MeFragment extends Fragment {
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
         addDropShadowToAvatar();
-        refreshAccountDetails();
 
         mAvatarContainer.setOnClickListener(new View.OnClickListener() {
             @Override

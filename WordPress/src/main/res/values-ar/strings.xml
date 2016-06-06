@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">يلزم الحصول على الإذن لتتمكن من تحديد صورة أو التقاطها</string>
+	<string name="error_updating_gravatar">حدث خطأ أثناء تحديث جرافتار</string>
+	<string name="error_locating_image">حدث خطأ أثناء تحديد موقع الصورة التي تم اقتصاصها</string>
+	<string name="error_refreshing_gravatar">حدث خطأ أثناء إعادة تحميل جرافتار</string>
+	<string name="gravatar_tip">جديد! انقر على جرافاتار تغييره!</string>
+	<string name="error_cropping_image">حدث خطأ أثناء اقتصاص الصورة</string>
+	<string name="launch_your_email_app">بدء تشغيل تطبيق البريد الإلكتروني</string>
+	<string name="checking_email">التحقق من البريد الإلكتروني</string>
+	<string name="not_on_wordpress_com">أليست مشتركًا في وردبرس.كوم؟</string>
+	<string name="magic_link_unavailable_error_message">غير متاح حاليًا. يُرجى إدخال كلمة مرورك</string>
+	<string name="check_your_email">تحقق من بريدك الإلكتروني</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">احصل على الرابط المرسل إلى بريدك الإلكتروني لتتمكن من تسجيل الدخول في الحال</string>
+	<string name="logging_in">تسجيل الدخول</string>
+	<string name="enter_your_password_instead">أدخل كلمة مرورك بدلاً من ذلك</string>
+	<string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
+	<string name="jetpack_not_connected_message">إضافة Jetpack مثبتة، ولكنها ليست متصلة بوردبرس.كوم. هل تريد توصيل Jetpack؟</string>
+	<string name="username_email">البريد الإلكتروني أو اسم المستخدم</string>
+	<string name="jetpack_not_connected">إضافة Jetpack غير متصلة</string>
+	<string name="new_editor_reflection_error">المحرر المرئي غير متوافق مع جهازك. كان\n معطلاً تلقائيًا.</string>
+	<string name="stats_insights_latest_post_no_title">(بلا عنوان)</string>
+	<string name="capture_or_pick_photo">التقاط صورة أو تحديدها</string>
 	<string name="plans_post_purchase_text_themes">يتوفر لديك الآن الوصول غير المحدود إلى القوالب المميزة. قم بمعاينة أي قالب في الموقع للبدء.</string>
 	<string name="plans_post_purchase_button_themes">تصفح القوالب</string>
 	<string name="plans_post_purchase_title_themes">البحث عن قالب مميز ومثالي</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">إذا كنت تريد موقعًا ولا تريد أيًّا من المقالات أو الصفحات التي لديك الآن، فيمكن لفريق الدعم لدينا حذف المقالات والصفحات والوسائط والتعليقات الخاصة بك.\n\nسيبقي ذلك على موقعك وعنوان URL في حالة نشطة، ولكنه يعطيك بداية جديدة عند إنشاء المحتوى الخاص بك. اتصل بنا فقط لحذف المحتوى الحالي الخاص بك.</string>
 	<string name="site_settings_start_over_hint">ابدأ موقعك من جديد</string>
 	<string name="let_us_help">دعنا نساعدك</string>
-	<string name="me_btn_account_settings">إعدادات الحساب</string>
 	<string name="me_btn_app_settings">إعدادات التطبيق</string>
 	<string name="start_over">البدء من جديد</string>
 	<string name="editor_remove_failed_uploads">إزالة عمليات الرفع الفاشلة</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">انقر فوق رابط التحقق في البريد الإلكتروني المرسل إلى %1$s للتأكيد على عنوانك الجديد</string>
 	<string name="primary_site">موقع أساسي</string>
 	<string name="web_address">عنوان الويب</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
 	<string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
 	<string name="editor_post_settings_set_featured_image">تعيين الصورة المميزة</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">قطع الاتصال بموقع وردبرس.كوم</string>
 	<string name="me_connect_to_wordpress_com">الاتصال بموقع وردبرس.كوم</string>
 	<string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
+	<string name="account_settings">إعدادات الحساب</string>
 	<string name="me_btn_support">المساعدة والدعم</string>
 	<string name="site_picker_cant_hide_current_site">"%s" لم يكن مخفيًا لأنه الموقع الحالي</string>
 	<string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">غير قادر على حذف هذا الوسم</string>
 	<string name="required_field">حقل مطلوب</string>
 	<string name="email_hint">البريد الإلكتروني</string>
-	<string name="username_email">اسم المستخدم أو البريد الإلكتروني</string>
 	<string name="site_address">عنوانك المستضاف ذاتيًا ( URL )</string>
 	<string name="email_cant_be_used_to_signup">لا يمكنك استخدام عنوان البريد الإلكتروني هذا للتسجيل. نحن لدينا مشاكل معهم تتمثل في حجبهم بعض عناوين البريد الإلكتروني لدينا. استخدم مزود بريد إلكتروني آخر.</string>
 	<string name="email_reserved">لقد تم بالفعل استخدام عنوان البريد الإلكتروني هذا. تحقق من صندوق البريد الوارد لبريد التنشيط. إذا لم تقم بالتنشيط يمكنك المحاولة مرة أخرى في غضون أيام قليلة.</string>

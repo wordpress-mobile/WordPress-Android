@@ -2,7 +2,9 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +58,8 @@ public class PromoDialog extends DialogFragment {
         Button btn = (Button) view.findViewById(R.id.promo_dialog_cancel_button);
         btn.setText(mButtonLabelId);
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
-        image.setImageDrawable(getResources().getDrawable(mDrawableId));
+        Drawable drawable = VectorDrawableCompat.create(getResources(), mDrawableId, null);
+        image.setImageDrawable(drawable);
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
         title.setText(mTitleId);
         WPTextView desc = (WPTextView) view.findViewById(R.id.promo_dialog_description);

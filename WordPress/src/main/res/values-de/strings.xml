@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Zum aufnehmen oder auswählen eines Fotos sind die entsprechenden Rechte erforderlich</string>
+	<string name="error_updating_gravatar">Beim Aktualisieren deines Gravatars ist ein Fehler aufgetreten</string>
+	<string name="error_locating_image">Bei der Lokalisierung des zugeschnittenen Bildes ist ein Fehler aufgetreten.</string>
+	<string name="error_refreshing_gravatar">Beim Neuladen deines Gravatars ist ein Fehler aufgetreten</string>
+	<string name="gravatar_tip">Neu! Tippe deinen Gravatar an, um ihn zu ändern!</string>
+	<string name="error_cropping_image">Beim Zuschneiden des Bildes ist ein Fehler aufgetreten</string>
+	<string name="launch_your_email_app">E-Mail-Programm starten</string>
+	<string name="checking_email">Überprüfe E-Mail-Adresse</string>
+	<string name="not_on_wordpress_com">Nicht bei WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">Zur Zeit nicht verfügbar. Bitte gib dein Passwort ein</string>
+	<string name="check_your_email">Überprüfe dein Postfach</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lass dir einen Link für die sofortige Anmeldung per E-Mail zuschicken</string>
+	<string name="logging_in">Anmeldung läuft</string>
+	<string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
+	<string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
+	<string name="jetpack_not_connected_message">Das Jetpack-Plugin ist installiert, aber nicht mit WordPress.com verbunden. Möchtest du es verbinden?</string>
+	<string name="username_email">E-Mail-Adresse oder Benutzername</string>
+	<string name="jetpack_not_connected">Jetpack-Plugin nicht verbunden</string>
+	<string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
+	<string name="stats_insights_latest_post_no_title">(ohne Titel)</string>
+	<string name="capture_or_pick_photo">Foto aufnehmen oder auswählen</string>
 	<string name="plans_post_purchase_text_themes">Jetzt hast du unbegrenzten Zugriff auf Premium-Themes. Sieh dir als ersten Schritt die Vorschau eines beliebigen Themes auf deiner Website an.</string>
 	<string name="plans_post_purchase_button_themes">Themes durchstöbern</string>
 	<string name="plans_post_purchase_title_themes">Finde ein perfektes Premium Theme</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Wenn du eine Website haben möchtest, aber ohne deine aktuellen Beiträge und Seiten, kann unser Support-Team deine Beiträge, Seiten, Medien und Kommentare für dich löschen.\n\nSo bleiben deine Website und URL aktiv, aber du kannst von Neuem mit der Erstellung von Inhalten beginnen. Kontaktiere uns einfach, damit wir deine aktuellen Inhalte entfernen.</string>
 	<string name="site_settings_start_over_hint">Nochmal mit deiner Website beginnen</string>
 	<string name="let_us_help">Lass uns helfen</string>
-	<string name="me_btn_account_settings">Kontoeinstellungen</string>
 	<string name="me_btn_app_settings">App Einstellungen</string>
 	<string name="start_over">Neu beginnen</string>
 	<string name="editor_remove_failed_uploads">Fehlgeschlagene Uploads entfernen</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Klicke auf den Bestätigungslink in der E-Mail, die an %1$s gesendet wurde, um deine neue Adresse zu bestätigen.</string>
 	<string name="primary_site">Primäre Website</string>
 	<string name="web_address">Web-Adresse</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Medien werden hochgeladen … Bitte warte, bis der Vorgang abgeschlossen ist.</string>
 	<string name="error_refresh_comments_showing_older">Die Kommentare konnten nicht aktualisiert werden. Es werden ältere Kommentare angezeigt.</string>
 	<string name="editor_post_settings_set_featured_image">Beitragsbild festlegen</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Verbindung zu WordPress.com trennen</string>
 	<string name="me_connect_to_wordpress_com">Mit WordPress.com verbinden</string>
 	<string name="me_btn_login_logout">Anmelden/Abmelden</string>
+	<string name="account_settings">Kontoeinstellungen</string>
 	<string name="me_btn_support">Hilfe &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
 	<string name="site_picker_create_dotcom">WordPress.com Website erstellen</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Tag konnte nicht entfernt werden</string>
 	<string name="required_field">Pflichtfeld</string>
 	<string name="email_hint">E-Mail-Adresse</string>
-	<string name="username_email">Benutzername oder E-Mail</string>
 	<string name="site_address">Deine selbst-gehostete Adresse (URL)</string>
 	<string name="email_cant_be_used_to_signup">Du kannst diese E-Mail-Adresse nicht zur Registrierung verwenden. Wir haben Probleme mit diesem Anbieter, da er einige unserer E-Mails blockiert. Nutze bitte einen anderen E-Mail-Anbieter.</string>
 	<string name="email_reserved">Diese E-Mail-Adresse wird bereits verwendet. Schaue in deinem Posteingang nach einer Aktivierungs-E-Mail. Falls du nicht aktivierst, kannst du es in ein paar Tagen erneut versuchen.</string>

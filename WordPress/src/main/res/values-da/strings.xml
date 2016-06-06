@@ -374,7 +374,6 @@
 	<string name="required_field">Påkrævet felt</string>
 	<string name="content_required">Kommentar er påkrævet</string>
 	<string name="email_hint">E-mailadresse</string>
-	<string name="username_email">Brugernavn eller e-mailadresse</string>
 	<string name="reader_share_link">Del link</string>
 	<string name="image_settings">Billedeindstillinger</string>
 	<string name="add_account_blog_url">Blog-adresse</string>
