@@ -898,6 +898,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Gravatar Uploaded");
                 break;
+            case ME_GRAVATAR_UPDATE_UNSUCCESSFUL:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Update Unsuccessful");
+                break;
+            case ME_GRAVATAR_UPDATE_EXCEPTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Update Exception");
+                break;
             case MY_SITE_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("My Site - Accessed");
