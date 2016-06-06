@@ -177,7 +177,6 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
                     updateComments(false, false);
                 } else {
-                    // this will also be called in case of network problems
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
             }

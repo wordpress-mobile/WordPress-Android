@@ -50,6 +50,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
@@ -66,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
@@ -139,6 +142,24 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
+
+        CustomSwipeRefreshLayout swipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_to_refresh);
+
+        //this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
+        //so we have to set it manually
+        int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
+        swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
+
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
+            @Override
+            public void onRefreshStarted() {
+                if (!isAdded()) {
+                    return;
+                }
+
+                updatePost();
+            }
+        });
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -369,6 +390,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void updatePost() {
         if (!hasPost() || !mPost.isWP()) {
+            mSwipeToRefreshHelper.setRefreshing(false);
             return;
         }
 
@@ -391,6 +413,8 @@ public class ReaderPostDetailFragment extends Fragment
                         && numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
                     refreshLikes();
                 }
+
+                mSwipeToRefreshHelper.setRefreshing(false);
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -513,6 +537,7 @@ public class ReaderPostDetailFragment extends Fragment
                     showPost();
                 }
             }
+
             @Override
             public void onFailure(int statusCode) {
                 if (isAdded()) {
@@ -568,6 +593,7 @@ public class ReaderPostDetailFragment extends Fragment
      * AsyncTask to retrieve this post from SQLite and display it
      */
     private boolean mIsPostTaskRunning = false;
+
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
