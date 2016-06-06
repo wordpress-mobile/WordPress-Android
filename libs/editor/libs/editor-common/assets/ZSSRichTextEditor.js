@@ -235,6 +235,11 @@ ZSSEditor.onMutationObserved = function(mutations) {
     mutations.forEach(function(mutation) {
         for (var i = 0; i < mutation.removedNodes.length; i++) {
             var removedNode = mutation.removedNodes[i];
+            if (!removedNode.attributes) {
+                // Fix for https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/394
+                // If removedNode doesn't have an attributes property, it's not of type Node and we shouldn't proceed
+                continue;
+            }
             if (ZSSEditor.isMediaContainerNode(removedNode)) {
                 // An uploading or failed container node was deleted manually - notify native
                 var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
@@ -1958,9 +1963,16 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     selectionNode.appendChild( node );
 
     this.trackNodeForMutation($(selectionNode));
+
+    return selectionNode;
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
+    if (!$('#zss_field_content')[0].contains(imageNode)) {
+        // The image node has already been removed from the document
+        return;
+    }
+
     var node = ZSSEditor.findImageCaptionNode( imageNode );
     if ( !node.parentNode || node.parentNode.className.indexOf( "edit-container" ) == -1 ) {
         return;
@@ -3166,6 +3178,7 @@ ZSSField.prototype.handleFocusEvent = function(e) {
 ZSSField.prototype.handleKeyDownEvent = function(e) {
 
     var wasEnterPressed = (e.keyCode == '13');
+    var isHardwareKeyboardPaste = (e.ctrlKey && e.keyCode == '86');
 
     // Handle keyDownEvent actions that need to happen after the event has completed (and the field has been modified)
     setTimeout(this.afterKeyDownEvent, 20, e.target.innerHTML, e);
@@ -3198,18 +3211,30 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
         // incorrectly, so we skip it in this case.
         //
         // 3. On all APIs, hardware pasting (CTRL + V) doesn't automatically wrap the paste in paragraph tags in
-        // new posts. ZSSField.handlePasteEvent() does not address this problem. It's the same fix as #2 above, but we
-        // have to extend the `containsParagraphSeparators` check to all APIs, not just API19 and below, to fix
-        // hardware pasting.
+        // new posts. ZSSField.handlePasteEvent() won't fix the wrapping for hardware pastes if
+        // wrapCaretInParagraphIfNecessary() goes through first, so we need to skip it in that case.
+        // For API < 19, this is fixed implicitly by the 'containsParagraphSeparators' check, but for newer APIs we
+        // specifically detect hardware keyboard pastes and skip paragraph wrapping in that case
+        // case skip calling wrapCaretInParagraphIfNecessary().
+        //
+        // Previously, the check was 'if (containsParagraphSeparators)' for all API levels, but this turns out to cause
+        // an autocorrect issue for new posts on API 23+:
+        // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/389
+        // That issue can be fixed by allowing wrapCaretInParagraphIfNecessary() to go through when adding text to an
+        // empty post on those API levels, as long as we exclude the special case of hardware keyboard pasting
+        //
+        // We're using 'nativeState.androidApiLevel>19' rather than >22 because, even though the bug only appears on
+        // 23+ at the time of writing, it's entirely possible a future System WebView or Keyboard update will introduce
+        // the bug on 21+.
         var containsParagraphSeparators = this.getWrappedDomNode().innerHTML.search(
                 '<' + ZSSEditor.defaultParagraphSeparator) > -1;
-        if (containsParagraphSeparators) {
+        if (containsParagraphSeparators || (nativeState.androidApiLevel > 19 && !isHardwareKeyboardPaste)) {
             this.wrapCaretInParagraphIfNecessary();
         }
 
         if (wasEnterPressed) {
             // Wrap the existing text in paragraph tags if necessary (this should only be needed if
-            // wrapCaretInParagraphIfNecessary() was skipped earlier (API19))
+            // wrapCaretInParagraphIfNecessary() was skipped earlier)
             var currentHtml = this.getWrappedDomNode().innerHTML;
             if (currentHtml.search('<' + ZSSEditor.defaultParagraphSeparator) == -1) {
                 ZSSEditor.focusedField.setHTML(Util.wrapHTMLInTag(currentHtml, ZSSEditor.defaultParagraphSeparator));
@@ -3309,9 +3334,14 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
             // Format and flag the image as selected.
             ZSSEditor.currentEditingImage = targetNode;
-            ZSSEditor.applyImageSelectionFormatting(targetNode);
+            var containerNode = ZSSEditor.applyImageSelectionFormatting(targetNode);
 
-            ZSSEditor.setFocusAfterElement(targetNode);
+            // Move the cursor to the tapped image, to prevent scrolling to the bottom of the document when the
+            // keyboard comes up. On API 19 and below does not work properly, with the image sometimes getting removed
+            // from the post instead of the edit overlay being displayed
+            if (nativeState.androidApiLevel > 19) {
+                ZSSEditor.setFocusAfterElement(containerNode);
+            }
 
             return;
         }
@@ -3550,9 +3580,13 @@ ZSSField.prototype.disableEditing = function () {
  *  @details    A parent paragraph node should be added if the current parent is either the field
  *              node itself, or a blockquote node.
  */
-ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
-{
+ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
     var closerParentNode = ZSSEditor.closerParentNode();
+
+    if (closerParentNode == null) {
+        return;
+    }
+
     var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 
