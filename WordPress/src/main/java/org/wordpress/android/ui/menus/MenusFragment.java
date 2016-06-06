@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -232,7 +234,7 @@ public class MenusFragment extends Fragment {
             }
 
             @Override
-            public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
+            public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error, String errorMessage) {
                 // load menus
                 if (error == MenusRestWPCom.REST_ERROR.FETCH_ERROR) {
                     if (mMenuLocationsSpinner.getCount() == 0 || mMenusSpinner.getCount() == 0) {
@@ -245,11 +247,19 @@ public class MenusFragment extends Fragment {
                 }
                 else
                 if (error == MenusRestWPCom.REST_ERROR.CREATE_ERROR) {
-                    Toast.makeText(getActivity(), getString(R.string.could_not_create_menu), Toast.LENGTH_SHORT).show();
+                    if (!TextUtils.isEmpty(errorMessage)) {
+                        Toast.makeText(getActivity(), Html.fromHtml(errorMessage), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.could_not_create_menu), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 if (error == MenusRestWPCom.REST_ERROR.UPDATE_ERROR) {
-                    Toast.makeText(getActivity(), getString(R.string.could_not_update_menu), Toast.LENGTH_SHORT).show();
+                    if (!TextUtils.isEmpty(errorMessage)) {
+                        Toast.makeText(getActivity(), Html.fromHtml(errorMessage), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.could_not_update_menu), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else
                 if (error == MenusRestWPCom.REST_ERROR.DELETE_ERROR) {

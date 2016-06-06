@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wordpress.android.util.VolleyUtils.statusCodeFromVolleyError;
+import static org.wordpress.android.util.VolleyUtils.messageStringFromVolleyError;
 import static org.wordpress.android.networking.menus.MenusDataModeler.*;
 
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
@@ -51,7 +52,7 @@ public class MenusRestWPCom {
         void onMenuCreated(int requestId, MenuModel menu);
         void onMenuDeleted(int requestId, MenuModel menu, boolean deleted);
         void onMenuUpdated(int requestId, MenuModel menu);
-        void onErrorResponse(int requestId, REST_ERROR error);
+        void onErrorResponse(int requestId, REST_ERROR error, String errorMessage);
     }
 
     private static final String MENU_REST_PATH = "/sites/%s/menus/%s";
@@ -97,7 +98,7 @@ public class MenusRestWPCom {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.CREATE_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
-                mListener.onErrorResponse(requestId, error);
+                mListener.onErrorResponse(requestId, error, messageStringFromVolleyError(volleyError));
             }
         });
         return requestId;
@@ -128,7 +129,7 @@ public class MenusRestWPCom {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.UPDATE_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
-                mListener.onErrorResponse(requestId, error);
+                mListener.onErrorResponse(requestId, error, messageStringFromVolleyError(volleyError));
             }
         });
         return requestId;
@@ -154,7 +155,7 @@ public class MenusRestWPCom {
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
                 else if (statusCode == HTTP_BAD_REQUEST) error = REST_ERROR.RESERVED_ID_ERROR;
-                mListener.onErrorResponse(requestId, error);
+                mListener.onErrorResponse(requestId, error, messageStringFromVolleyError(volleyError));
             }
         });
         return requestId;
@@ -190,7 +191,7 @@ public class MenusRestWPCom {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.FETCH_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
-                mListener.onErrorResponse(requestId, error);
+                mListener.onErrorResponse(requestId, error, messageStringFromVolleyError(volleyError));
             }
         });
         return requestId;
@@ -213,17 +214,18 @@ public class MenusRestWPCom {
                 int statusCode = statusCodeFromVolleyError(volleyError);
                 REST_ERROR error = REST_ERROR.DELETE_ERROR;
                 if (statusCode == HTTP_FORBIDDEN) error = REST_ERROR.AUTHENTICATION_ERROR;
-                mListener.onErrorResponse(requestId, error);
+                mListener.onErrorResponse(requestId, error, messageStringFromVolleyError(volleyError));
             }
         });
         return requestId;
     }
 
     private String formatPath(String base, String menuId) {
+        String localeParam = "?locale=" + mListener.getContext().getResources().getConfiguration().locale.toString();
         if (!TextUtils.isEmpty(menuId)) {
-            return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
+            return String.format(base, String.valueOf(mListener.getSiteId()), menuId) + localeParam;
         }
-        return String.format(base, String.valueOf(mListener.getSiteId()));
+        return String.format(base, String.valueOf(mListener.getSiteId())) + localeParam;
     }
 
     @NonNull
