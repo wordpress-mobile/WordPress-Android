@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPTextView;
@@ -33,7 +34,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
     public interface MenuAddEditRemoveActionListener {
         void onMenuCreate(MenuModel menu);
-        void onMenuDelete(MenuModel menu);
+        boolean onMenuDelete(MenuModel menu); //return true if you want the MenuAddEditRemove control to reset itself afterwards
         void onMenuUpdate(MenuModel menu);
     }
 
@@ -80,7 +81,10 @@ public class MenuAddEditRemoveView extends LinearLayout {
         mMenuInactiveStateView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setActive(true);
+                //do not allow editing for default menus
+                if (!isCurrentMenuDefault()) {
+                    setActive(true);
+                }
             }
         });
 
@@ -121,8 +125,9 @@ public class MenuAddEditRemoveView extends LinearLayout {
                 setActive(false);
                 if (mActionListener != null) {
                     if (mCurrentMenu != null) {
-                        mActionListener.onMenuDelete(mCurrentMenu);
-                        setMenu(null, false);
+                        if (mActionListener.onMenuDelete(mCurrentMenu)) {
+                            setMenu(null);
+                        }
                     } else {
                         // in case this is a new menu (i.e. not really editing) we don't call the listener
                         // - we just clear the text and set inactive
@@ -138,15 +143,15 @@ public class MenuAddEditRemoveView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 String menuTitle = mMenuEditText.getText().toString();
-                if (TextUtils.isEmpty(menuTitle)){
+                if (TextUtils.isEmpty(menuTitle)) {
                     // this place shouldn't be reached as emptiness is being checked in the onTextChangedListener,
                     // but otherwise:
                     // TODO show a snackbar indicating you need to enter a menu title in order to create a menu
                 } else {
                     mMenuInactiveTitleText.setText(menuTitle);
                     setActive(false);
-                    if (mActionListener != null){
-                        if (mCurrentMenu == null){
+                    if (mActionListener != null) {
+                        if (mCurrentMenu == null || mCurrentMenu.menuId == 0) {
                             MenuModel menu = new MenuModel();
                             menu.name = menuTitle;
                             mActionListener.onMenuCreate(menu);
@@ -172,11 +177,15 @@ public class MenuAddEditRemoveView extends LinearLayout {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mMenuInactiveStateView.setVisibility(View.GONE);
-                            mMenuEditText.setAlpha(1.0f);
-                            mMenuEditText.setVisibility(View.VISIBLE);
-                            mMenuEditText.selectAll();
-                            mMenuEditText.requestFocus();
+                            if (isCurrentMenuNoMenu()) {
+                                mMenuInactiveStateView.setVisibility(View.GONE);
+                            } else {
+                                mMenuInactiveStateView.setVisibility(View.GONE);
+                                mMenuEditText.setAlpha(1.0f);
+                                mMenuEditText.setVisibility(View.VISIBLE);
+                                mMenuEditText.selectAll();
+                                mMenuEditText.requestFocus();
+                            }
                         }
                     });
         } else {
@@ -187,9 +196,13 @@ public class MenuAddEditRemoveView extends LinearLayout {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mMenuInactiveStateView.setVisibility(View.VISIBLE);
-                            mMenuInactiveStateView.setAlpha(1.0f);
-                            mMenuEditText.setVisibility(View.GONE);
+                            if (isCurrentMenuNoMenu()) {
+                                mMenuInactiveStateView.setVisibility(View.GONE);
+                            } else {
+                                mMenuInactiveStateView.setVisibility(View.VISIBLE);
+                                mMenuInactiveStateView.setAlpha(1.0f);
+                                mMenuEditText.setVisibility(View.GONE);
+                            }
                         }
                     });
         }
@@ -199,7 +212,7 @@ public class MenuAddEditRemoveView extends LinearLayout {
         return this.mIsActive;
     }
 
-    public void setMenu(MenuModel menu, boolean isDefault){
+    public void setMenu(MenuModel menu){
         this.mCurrentMenu = menu;
         if (menu != null){
             mMenuEditText.setText(menu.name);
@@ -218,9 +231,15 @@ public class MenuAddEditRemoveView extends LinearLayout {
             mMenuSave.setEnabled(false);
         }
 
-        if (isDefault){
+        if (isCurrentMenuDefault() || isCurrentMenuNoMenu()){
+            mMenuInactiveTitleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             mMenuRemove.setVisibility(View.GONE);
+            if (isCurrentMenuNoMenu()) {
+                mMenuInactiveStateView.setVisibility(View.GONE);
+            }
         } else {
+            mMenuInactiveStateView.setVisibility(View.VISIBLE);
+            mMenuInactiveTitleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_menus_edit,0);
             mMenuRemove.setVisibility(View.VISIBLE);
         }
 
@@ -229,6 +248,20 @@ public class MenuAddEditRemoveView extends LinearLayout {
 
     public MenuModel getMenu() {
         return this.mCurrentMenu;
+    }
+
+    public boolean isCurrentMenuDefault() {
+        if (this.mCurrentMenu != null && this.mCurrentMenu.isDefaultMenu()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCurrentMenuNoMenu() {
+        if (this.mCurrentMenu != null && this.mCurrentMenu.isNoMenu()) {
+            return true;
+        }
+        return false;
     }
 
     //set a listener to listen for SAVE and REMOVE buttons

@@ -19,6 +19,7 @@ import java.util.List;
 public class MenusSpinner extends Spinner {
     private String mTitle;
     private int mIconResource;
+    private MenusSpinnerAdapter mAdapter;
 
     public MenusSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,12 +36,19 @@ public class MenusSpinner extends Spinner {
         array.recycle();
     }
 
-    public void setItems(List<NameInterface> items) {
+    public void setItems(List<NameInterface> items, int displayBaseCount) {
         if (items != null && items.size() > 0) {
-            setAdapter(new MenusSpinnerAdapter(items));
+            mAdapter = new MenusSpinnerAdapter(items, displayBaseCount);
+            setAdapter(mAdapter);
         } else {
             setAdapter(null);
         }
+    }
+
+    public List getItems(){
+        if (mAdapter != null)
+            return mAdapter.getItems();
+        return null;
     }
 
     private class MenusSpinnerAdapter implements SpinnerAdapter {
@@ -48,10 +56,12 @@ public class MenusSpinner extends Spinner {
         private static final int NORMAL_VIEW_TYPE = 1;
 
         private final List<NameInterface> mItems;
+        private int mDisplayBaseCount; //count starts from this value
 
-        public MenusSpinnerAdapter(List<NameInterface> items) {
+        public MenusSpinnerAdapter(List<NameInterface> items, int displayBaseCount) {
             super();
             mItems = items;
+            mDisplayBaseCount = displayBaseCount;
         }
 
         public boolean hasItems() {
@@ -116,14 +126,16 @@ public class MenusSpinner extends Spinner {
 
             if (mIconResource > 0) {
                 ImageView iconView = (ImageView) convertView.findViewById(R.id.menu_spinner_icon);
-                iconView.setBackgroundResource(mIconResource);
+                iconView.setImageResource(mIconResource);
             }
 
             TextView titleView = (TextView) convertView.findViewById(R.id.menu_spinner_title);
-            titleView.setText(String.format(mTitle, getCount()));
+            titleView.setText(String.format(mTitle, getCount() + mDisplayBaseCount));
 
-            TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
-            nameView.setText(mItems.get(position).getName());
+            if (hasItems() && position < mItems.size()) {
+                TextView nameView = (TextView) convertView.findViewById(R.id.menu_spinner_name);
+                nameView.setText(mItems.get(position).getName());
+            }
 
             return convertView;
         }
@@ -142,5 +154,10 @@ public class MenusSpinner extends Spinner {
         public boolean isEmpty() {
             return !hasItems();
         }
+
+        public List getItems(){
+            return mItems;
+        }
+
     }
 }

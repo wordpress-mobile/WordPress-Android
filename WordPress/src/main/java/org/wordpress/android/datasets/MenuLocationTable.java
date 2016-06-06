@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuLocationModel;
+import org.wordpress.android.models.MenuModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,23 @@ public class MenuLocationTable {
         ContentValues values = serializeToDatabase(location);
         return WordPress.wpDB.getDatabase().insertWithOnConflict(
                 MENU_LOCATIONS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
+    }
+
+    public static void saveMenuLocations(List<MenuLocationModel> locations) {
+        if (locations == null || locations.size() == 0) return;
+
+        SQLiteDatabase db = WordPress.wpDB.getDatabase();
+        db.beginTransaction();
+        try {
+            for (MenuLocationModel location: locations) {
+                ContentValues values = serializeToDatabase(location);
+                db.insertWithOnConflict(
+                        MENU_LOCATIONS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public static void deleteMenuLocationForCurrentSite(String locationName) {

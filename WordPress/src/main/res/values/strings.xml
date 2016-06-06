@@ -1400,9 +1400,6 @@
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
-    <string name="uses">uses</string>
-    <string name="location_menu_spinner_title">%d menu areas in this theme</string>
-    <string name="menus_spinner_title">%d menus available</string>
 
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="exporting_content_progress">Exporting content…</string>
@@ -1431,19 +1428,23 @@
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
 
     <!-- Calypso menus -->
+    <string name="uses">uses</string>
+    <string name="location_menu_spinner_title">%d menu areas in this theme</string>
+    <string name="menus_spinner_title">%d menus available</string>
+    <string name="menus_spinner_empty">No menus loaded for this site</string>
+    <string name="menus_default_menu_name">Default Menu</string>
+    <string name="menus_no_menu_name">No Menu</string>
+    <string name="menus_add_menu_name">+ Add new menu</string>
+    <string name="could_not_load_menus">Could not load menus for this site</string>
+    <string name="could_not_refresh_menus">Could not refresh menus for this site - showing local pre-saved menus</string>
+    <string name="could_not_create_menu">Could not create menu</string>
+    <string name="could_not_update_menu">Could not update menu</string>
+    <string name="could_not_delete_menu">Could not delete menu</string>
+    <string name="menus_new_menu_name">Menu</string>
+    <string name="menus_menu_created">Menu created</string>
     <string name="menus_menu_deleted">Menu deleted</string>
+    <string name="menus_menu_updated">Menu updated</string>
 
-    <!-- FIXME delete these test strings -->
-    <string name="menus_test_test">Test</string>
-    <string name="menus_test_get_all_menus">Get all menus</string>
-    <string name="menus_test_get_last_menu">get last menu</string>
-    <string name="menus_test_get_inexistent_menu">get inexistent menu</string>
-    <string name="menus_test_get_id_zero">Get id=0 menu</string>
-    <string name="menus_test_set_menu">Set menu</string>
-    <string name="menus_test_set_default">Set default menu</string>
-    <string name="menus_test_reset">Reset</string>
-    <string name="menus_test_start_label">Add / Edit / Remove component starts below</string>
-    
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>

@@ -55,7 +55,9 @@ public class MenuItemTable {
                     ");";
 
     /** Well-formed WHERE clause for identifying a row using PRIMARY KEY constraints */
-    public static final String UNIQUE_WHERE_SQL = "WHERE " + ID_COLUMN + "=?";
+    public static final String UNIQUE_WHERE_SQL = ID_COLUMN + "=?";
+
+    public static final String UNIQUE_WHERE_SQL_MENU_ID = MENU_ID_COLUMN + "=?";
 
     public static void saveMenuItem(MenuItemModel item) {
         if (item == null || item.itemId < 0) return;
@@ -63,6 +65,12 @@ public class MenuItemTable {
         ContentValues row = serializeToDatabase(item);
         WordPress.wpDB.getDatabase().insertWithOnConflict(
                 MENU_ITEMS_TABLE_NAME, null, row, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    public static int deleteMenuItemForMenuId(long menuId) {
+        if (menuId < 0) return 0;
+        String[] args = {String.valueOf(menuId)};
+        return WordPress.wpDB.getDatabase().delete(MENU_ITEMS_TABLE_NAME, UNIQUE_WHERE_SQL_MENU_ID, args);
     }
 
     public static void deleteMenuItem(long itemId) {
@@ -79,16 +87,17 @@ public class MenuItemTable {
         if (itemId < 0) return null;
 
         String[] args = {String.valueOf(itemId)};
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(UNIQUE_WHERE_SQL, args);
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + " WHERE " + UNIQUE_WHERE_SQL + ";", args);
         cursor.moveToFirst();
         MenuItemModel item = deserializeFromDatabase(cursor);
         cursor.close();
         return item;
     }
 
-    public static List<MenuItemModel> getAllMenuItems() {
+    public static List<MenuItemModel> getMenuItemsForMenu(long menuId) {
         List<MenuItemModel> items = new ArrayList<>();
-        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + ";", null);
+        String[] args = {String.valueOf(menuId)};
+        Cursor cursor = WordPress.wpDB.getDatabase().rawQuery("SELECT * FROM " + MENU_ITEMS_TABLE_NAME + " WHERE " + UNIQUE_WHERE_SQL_MENU_ID + ";", args);
         if (cursor.moveToFirst()) {
             do {
                 MenuItemModel item = deserializeFromDatabase(cursor);

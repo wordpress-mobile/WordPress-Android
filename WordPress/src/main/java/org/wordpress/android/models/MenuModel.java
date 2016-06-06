@@ -13,11 +13,16 @@ import java.util.List;
  */
 
 public class MenuModel implements NameInterface {
+    public long siteId;
     public long menuId;
     public String name;
     public String details;
     public List<MenuLocationModel> locations;
     public List<MenuItemModel> menuItems;
+
+    public static final long ADD_MENU_ID = -1;
+    public static final long DEFAULT_MENU_ID = -2;
+    public static final long NO_MENU_ID = -3;
 
     @Override
     public boolean equals(Object other) {
@@ -35,4 +40,34 @@ public class MenuModel implements NameInterface {
     public String getName() {
         return name;
     }
+
+    public boolean isDefaultMenu() {
+        if (menuId == DEFAULT_MENU_ID) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isNoMenu() {
+        if (menuId == NO_MENU_ID) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSpecialMenu() {
+        return isNoMenu() || isDefaultMenu();
+    }
+
+    public void stripLocationFromMenu(MenuLocationModel location){
+        if (locations != null && location != null && location.name != null) {
+            for (MenuLocationModel loc : locations) {
+                if (loc.name != null && loc.name.equals(location.name)) {
+                    locations.remove(loc);
+                    break;
+                }
+            }
+        }
+    }
+
 }
