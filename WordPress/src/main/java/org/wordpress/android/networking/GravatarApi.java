@@ -83,11 +83,19 @@ public class GravatarApi {
                                 } else {
                                     Map<String, Object> properties = new HashMap<>();
                                     properties.put("network_response_code", response.code());
-                                    properties.put("network_response_message", response.message());
+
+                                    String responseBody;
+                                    try {
+                                        responseBody = response.body().string();
+                                    } catch (IOException e) {
+                                        responseBody = "null";
+                                    }
+                                    properties.put("network_response_body", responseBody);
+
                                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
                                             properties);
                                     AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
-                                            response.message());
+                                            responseBody);
                                     gravatarUploadListener.onError();
                                 }
                             }
