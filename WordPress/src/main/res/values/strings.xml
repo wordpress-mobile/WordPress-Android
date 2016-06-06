@@ -1370,6 +1370,10 @@
     <string name="person_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="person_removed">Successfully removed @%1$s</string>
     <string name="person_removed_general">User removed successfully</string>
+    <string name="people_dropdown_item_team">Team</string>
+    <string name="people_dropdown_item_followers">Followers</string>
+    <string name="people_dropdown_item_email_followers">Email Followers</string>
+    <string name="people_dropdown_item_viewers">Viewers</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
