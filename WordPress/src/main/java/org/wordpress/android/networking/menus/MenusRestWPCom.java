@@ -43,8 +43,6 @@ public class MenusRestWPCom {
         FETCH_ERROR
     }
 
-    private static final String ENCODING_UTF8 = "UTF-8";
-
     public interface MenusListener {
         Context getContext();
         long getSiteId();
