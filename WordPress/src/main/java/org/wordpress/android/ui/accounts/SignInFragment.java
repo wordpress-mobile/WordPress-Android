@@ -596,6 +596,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             }
 
             trackAnalyticsSignIn();
+            Optimizely.trackEvent("Signed In");
 
             // get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
