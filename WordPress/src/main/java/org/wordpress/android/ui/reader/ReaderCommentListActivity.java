@@ -177,7 +177,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
                     updateComments(false, false); //load first page of comments
                 } else {
-                    mSwipeToRefreshHelper.setRefreshing(false);
+                    setRefreshing(false);
                 }
             }
         });
@@ -402,7 +402,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             checkEmptyView();
         }
 
-        mSwipeToRefreshHelper.setRefreshing(false);
+        setRefreshing(false);
     }
 
     /*
@@ -411,10 +411,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void updateComments(boolean showProgress, boolean requestNextPage) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
+            setRefreshing(false);
             return;
         }
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.w(T.READER, "reader comments > no connection, update canceled");
+            setRefreshing(false);
             return;
         }
 
@@ -544,5 +546,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             return 0;
         }
+    }
+
+    private void setRefreshing(boolean refreshing) {
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 }

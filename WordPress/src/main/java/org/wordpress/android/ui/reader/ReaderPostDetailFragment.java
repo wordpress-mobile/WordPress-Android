@@ -390,7 +390,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void updatePost() {
         if (!hasPost() || !mPost.isWP()) {
-            mSwipeToRefreshHelper.setRefreshing(false);
+            setRefreshing(false);
             return;
         }
 
@@ -414,7 +414,7 @@ public class ReaderPostDetailFragment extends Fragment
                     refreshLikes();
                 }
 
-                mSwipeToRefreshHelper.setRefreshing(false);
+                setRefreshing(false);
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -972,6 +972,10 @@ public class ReaderPostDetailFragment extends Fragment
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;
+    }
+
+    private void setRefreshing(boolean refreshing) {
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
 }
