@@ -396,9 +396,6 @@ public class PeopleInviteFragment extends Fragment implements
             return;
         }
 
-        if (mUsernameEditText.getText().toString().length() > 0) {
-
-        }
         int invalidCount = 0;
         for (ValidationResult validationResult : mUsernameResults.values()) {
             if (validationResult != ValidationResult.USER_FOUND) {
