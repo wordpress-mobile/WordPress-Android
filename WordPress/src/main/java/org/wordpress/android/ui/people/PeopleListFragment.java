@@ -15,12 +15,17 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PeopleListFragment extends Fragment {
@@ -62,6 +67,45 @@ public class PeopleListFragment extends Fragment {
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+
+        mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
+            @Override
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
+                ArrayList<FilterCriteria> list = new ArrayList<>();
+                Collections.addAll(list, PeopleListFilter.values());
+                return list;
+            }
+
+            @Override
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+                //noop
+            }
+
+            @Override
+            public FilterCriteria onRecallSelection() {
+                return null;
+            }
+
+            @Override
+            public void onLoadData() {
+
+            }
+
+            @Override
+            public void onFilterSelected(int position, FilterCriteria criteria) {
+
+            }
+
+            @Override
+            public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
+                return null;
+            }
+
+            @Override
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
+
+            }
+        });
 
         // progress bar that appears when loading more people
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
