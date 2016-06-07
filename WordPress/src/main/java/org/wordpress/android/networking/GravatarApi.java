@@ -114,8 +114,8 @@ public class GravatarApi {
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                                 CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
                                         AppLog.T.API, "Network call failure trying to upload Gravatar!");
-                                AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + e
-                                        .getMessage());
+                                AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null
+                                        ? e.getMessage() : "null"));
                                 gravatarUploadListener.onError();
                             }
                         });
