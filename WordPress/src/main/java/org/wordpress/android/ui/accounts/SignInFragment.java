@@ -784,7 +784,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             return;
         }
 
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
         fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 

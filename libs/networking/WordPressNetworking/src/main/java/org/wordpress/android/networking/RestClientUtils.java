@@ -33,6 +33,7 @@ public class RestClientUtils {
 
     private RestClient mRestClient;
     private Authenticator mAuthenticator;
+    private Context mContext;
 
     /**
      * Socket timeout in milliseconds for rest requests
@@ -58,12 +59,13 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
-        this(queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
+        this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
+        mContext = context;
         mAuthenticator = authenticator;
         mRestClient = RestClientFactory.instantiate(queue, version);
         if (onAuthFailedListener != null) {
@@ -308,8 +310,12 @@ public class RestClientUtils {
     public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        if (params != null) {
+            paramsWithLocale.putAll(params);
+        }
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null,
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, paramsWithLocale), null,
                                                       listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -341,7 +347,13 @@ public class RestClientUtils {
     public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy)
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null, future, future);
+
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        if (params != null) {
+            paramsWithLocale.putAll(params);
+        }
+
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, paramsWithLocale), null, future, future);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -367,7 +379,7 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -383,7 +395,7 @@ public class RestClientUtils {
      */
     public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path), params,
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -398,12 +410,11 @@ public class RestClientUtils {
      * Returns locale parameter used in REST calls which require the response to be localized
      */
     public static HashMap<String, String> getRestLocaleParams(Context context) {
-        if (context == null) return null;
+        HashMap<String, String> params = new HashMap<>();
         //better use getConfiguration as it has the latest locale configuration change.
         //Otherwise Locale.getDefault().getLanguage() gets
         //the config upon application launch.
-        String deviceLanguageCode = context.getResources().getConfiguration().locale.toString();
-        HashMap<String, String> params = new HashMap<>();
+        String deviceLanguageCode = context != null ? context.getResources().getConfiguration().locale.toString() : Locale.getDefault().getLanguage();
         if (!TextUtils.isEmpty(deviceLanguageCode)) {
             params.put("locale", deviceLanguageCode);
         }
