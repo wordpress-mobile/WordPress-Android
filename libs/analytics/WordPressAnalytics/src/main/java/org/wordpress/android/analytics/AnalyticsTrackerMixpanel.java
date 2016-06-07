@@ -386,7 +386,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case READER_SEARCH_LOADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Reader - loaded search");
+                        mixpanelInstructionsForEventName("Reader - Loaded Search");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_loaded");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_search_loaded");
                 break;
