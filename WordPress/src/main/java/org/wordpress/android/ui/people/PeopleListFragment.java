@@ -20,6 +20,7 @@ import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -37,6 +38,7 @@ public class PeopleListFragment extends Fragment {
 
     private FilteredRecyclerView mFilteredRecyclerView;
     private ProgressBar mProgress;
+    private PeopleListFilter mPeopleListFilter;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -78,12 +80,13 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                //noop
+                // no-op
             }
 
             @Override
             public FilterCriteria onRecallSelection() {
-                return null;
+                mPeopleListFilter = AppPrefs.getPeopleListFilter();
+                return mPeopleListFilter;
             }
 
             @Override
@@ -93,7 +96,8 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
-
+                mPeopleListFilter = (PeopleListFilter) criteria;
+                AppPrefs.setPeopleListFilter(mPeopleListFilter);
             }
 
             @Override
