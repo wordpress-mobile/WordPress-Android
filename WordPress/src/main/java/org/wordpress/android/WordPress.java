@@ -489,6 +489,7 @@ public class WordPress extends Application {
 
         if (currentBlog != null && currentBlog.isHidden()) {
             wpDB.setDotComBlogsVisibility(id, true);
+            currentBlog.setHidden(false);
         }
     }
 
