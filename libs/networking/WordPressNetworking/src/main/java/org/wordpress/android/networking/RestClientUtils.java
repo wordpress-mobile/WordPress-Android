@@ -3,6 +3,9 @@
  */
 package org.wordpress.android.networking;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -18,6 +21,7 @@ import com.wordpress.rest.RestRequest.Listener;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -389,4 +393,21 @@ public class RestClientUtils {
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
         authCheck.send();
     }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static HashMap<String, String> getRestLocaleParams(Context context) {
+        if (context == null) return null;
+        //better use getConfiguration as it has the latest locale configuration change.
+        //Otherwise Locale.getDefault().getLanguage() gets
+        //the config upon application launch.
+        String deviceLanguageCode = context.getResources().getConfiguration().locale.toString();
+        HashMap<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
+    }
+
 }

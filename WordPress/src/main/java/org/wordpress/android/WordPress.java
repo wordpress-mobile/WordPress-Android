@@ -696,18 +696,6 @@ public class WordPress extends Application {
     }
 
     /**
-     * Returns locale parameter used in REST calls which require the response to be localized
-     */
-    public static Map<String, String> getRestLocaleParams() {
-        String deviceLanguageCode = Locale.getDefault().getLanguage();
-        Map<String, String> params = new HashMap<>();
-        if (!TextUtils.isEmpty(deviceLanguageCode)) {
-            params.put("locale", deviceLanguageCode);
-        }
-        return params;
-    }
-
-    /**
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
      * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
