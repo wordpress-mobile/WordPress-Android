@@ -26,6 +26,7 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -42,6 +43,8 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
@@ -62,6 +65,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ReaderRecyclerView mRecyclerView;
     private SuggestionAutoCompleteText mEditComment;
     private View mSubmitReplyBtn;
@@ -113,6 +117,16 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             }
         }
 
+
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
+                (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        updatePostAndComments();
+                    }
+                });
+
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
@@ -146,6 +160,27 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
+    }
+
+
+    private void updatePostAndComments() {
+        //to do a complete refresh we need to get updated post and new comments
+        ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (isFinishing()) {
+                    return;
+                }
+
+                if (result.isNewOrChanged()) {
+                    getCommentAdapter().setPost(mPost); //pass updated post to the adapter
+                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
+                    updateComments(false, false); //load first page of comments
+                } else {
+                    setRefreshing(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -226,6 +261,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             txtCommentsClosed.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
+
     private boolean loadPost() {
         mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
         if (mPost == null) {
@@ -365,6 +401,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         } else {
             checkEmptyView();
         }
+
+        setRefreshing(false);
     }
 
     /*
@@ -373,10 +411,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private void updateComments(boolean showProgress, boolean requestNextPage) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
+            setRefreshing(false);
             return;
         }
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.w(T.READER, "reader comments > no connection, update canceled");
+            setRefreshing(false);
             return;
         }
 
@@ -502,9 +542,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private int getCurrentPosition() {
         if (mRecyclerView != null && hasCommentAdapter()) {
-            return ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;
         }
+    }
+
+    private void setRefreshing(boolean refreshing) {
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 }

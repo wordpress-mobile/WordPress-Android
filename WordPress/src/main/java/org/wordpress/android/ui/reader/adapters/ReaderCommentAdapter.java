@@ -39,7 +39,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final ReaderPost mPost;
+    private ReaderPost mPost;
     private boolean mMoreCommentsExist;
 
     private static final int MAX_INDENT_LEVEL = 2;
@@ -113,6 +113,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     class PostHeaderHolder extends RecyclerView.ViewHolder {
         private final ReaderCommentsPostHeaderView mHeaderView;
+
         public PostHeaderHolder(View view) {
             super(view);
             mHeaderView = (ReaderCommentsPostHeaderView) view;
@@ -433,6 +434,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      * AsyncTask to load comments for this post
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList tmpComments;
         private boolean tmpMoreCommentsExist;
@@ -441,10 +443,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             if (mPost == null) {
@@ -461,6 +465,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
             return !mComments.isSameList(tmpComments);
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             mMoreCommentsExist = tmpMoreCommentsExist;
@@ -475,5 +480,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             mIsTaskRunning = false;
         }
+    }
+
+    /*
+    *  Set a post to adapter and update relevant information in the post header
+    */
+    public void setPost(ReaderPost post) {
+        if (post != null) {
+            mPost = post;
+            notifyItemChanged(0); //notify header to update itself
+        }
+
     }
 }
