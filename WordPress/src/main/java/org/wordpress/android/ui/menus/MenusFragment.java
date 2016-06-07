@@ -13,18 +13,24 @@ import org.wordpress.android.R;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.datasets.MenuTable;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
+import org.wordpress.android.ui.menus.views.MenuItemEditView;
+import org.wordpress.android.ui.menus.views.MenuItemFactory;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -39,6 +45,7 @@ public class MenusFragment extends Fragment {
     private boolean mUndoPressed = false;
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
+    private MenuItemEditView mItemEditView;
     private int mCurrentLoadRequestId;
     private int mCurrentCreateRequestId;
     private int mCurrentUpdateRequestId;
@@ -264,6 +271,9 @@ public class MenusFragment extends Fragment {
 
     }
 
+    private Button mAddItem, mRemoveItem;
+    private ListView mItemList;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -414,6 +424,7 @@ public class MenusFragment extends Fragment {
                         mMenusSpinner.setSelection(0);
                         mCurrentMenuForLocation = (MenuModel) mMenusSpinner.getItems().get(0);
                     }
+                    mItemList.setAdapter(getItemAdapter());
                 }
             }
 
@@ -423,7 +434,32 @@ public class MenusFragment extends Fragment {
             }
         });
 
+        mAddItem = (Button) view.findViewById(R.id.add_item_button);
+        mRemoveItem = (Button) view.findViewById(R.id.remove_item_button);
+
+        mItemEditView = (MenuItemEditView) view.findViewById(R.id.menu_item_edit_view);
+        mItemList = (ListView) view.findViewById(R.id.menu_item_list);
+        mItemList.setAdapter(getItemAdapter());
+
+        mAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemEditView.setType(MenuItemFactory.ITEM_TYPE.PAGE);
+            }
+        });
+
         return view;
+    }
+
+    private ArrayAdapter getItemAdapter() {
+        if (mCurrentMenuForLocation == null || mCurrentMenuForLocation.menuItems == null || mCurrentMenuForLocation.menuItems.size() <= 0) return null;
+        List<MenuItemModel> items = mCurrentMenuForLocation.menuItems;
+        String[] values = new String[items.size()];
+        for (int i = 0; i < items.size(); ++i) {
+            values[i] = items.get(i).typeLabel + " item - " + items.get(i).name;
+        }
+
+        return new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
     }
 
     @Override

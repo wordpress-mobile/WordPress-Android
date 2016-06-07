@@ -5,16 +5,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light"
-    >
-
+    android:background="@color/grey_light" >
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
@@ -22,7 +19,6 @@
         android:text="@string/empty_list_default"
         android:visibility="gone"
         tools:visibility="visible" />
-
 
     <LinearLayout
         android:id="@+id/spinner_group"
@@ -38,8 +34,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:spinnerTitle="@string/location_menu_spinner_title"
-            app:spinnerIcon="@drawable/gridicon_layout"
-            />
+            app:spinnerIcon="@drawable/gridicon_layout" />
 
         <View style="@style/MenusDividerView" />
 
@@ -65,10 +60,42 @@
 
     </LinearLayout>
 
-
     <org.wordpress.android.ui.menus.views.MenuAddEditRemoveView
         android:id="@+id/menu_add_edit_remove_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <View style="@style/MenusDividerView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/add_item_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add" />
+
+        <Button
+            android:id="@+id/remove_item_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remove" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.ui.menus.views.MenuItemEditView
+        android:id="@+id/menu_item_edit_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/menu_item_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View style="@style/MenusDividerView" />
 
 </LinearLayout>
