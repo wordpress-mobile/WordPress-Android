@@ -301,7 +301,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
                 && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
             fetchThemes();
-            mThemeBrowserFragment.setRefreshing(true);
+
+            //do not interact with theme browser fragment if we are in search mode
+            if (!mIsInSearchMode) {
+                mThemeBrowserFragment.setRefreshing(true);
+            }
         }
     }
 
@@ -318,7 +322,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     AppLog.d(T.THEMES, error.getMessage());
                 }
             });
-            mThemeBrowserFragment.setRefreshing(true);
+
+            //do not interact with theme browser fragment if we are in search mode
+            if (!mIsInSearchMode) {
+                mThemeBrowserFragment.setRefreshing(true);
+            }
         }
     }
 
