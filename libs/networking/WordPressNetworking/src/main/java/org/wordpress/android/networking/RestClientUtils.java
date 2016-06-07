@@ -4,6 +4,7 @@
 package org.wordpress.android.networking;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -20,7 +21,10 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -315,8 +319,13 @@ public class RestClientUtils {
             paramsWithLocale.putAll(params);
         }
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, paramsWithLocale), null,
-                                                      listener, errorListener);
+        List embeddedParams = sanitizeUrl(path);
+        String realPath = (String) embeddedParams.get(0);
+        paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null,
+                listener, errorListener);
+
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         }
@@ -421,4 +430,28 @@ public class RestClientUtils {
         return params;
     }
 
+    /**
+     * Takes a URL with query strings and separates it into the path and a Map of query strings values.
+     * Returns both objects in a List, where list[0] = path and list[1] = Map<String, String>
+     */
+    public static List sanitizeUrl(String unsanitizedPath){
+        ArrayList pathAndQueryString = new ArrayList();
+        HashMap<String, String> queryParams = new HashMap<>();
+
+        Uri uri=Uri.parse(unsanitizedPath);
+        pathAndQueryString.add(uri.getPath());
+
+        if (uri.getQueryParameterNames() != null ) {
+            Iterator iter = uri.getQueryParameterNames().iterator();
+            while (iter.hasNext()) {
+                String name = (String)iter.next();
+                String value = uri.getQueryParameter(name);
+                queryParams.put(name, value);
+            }
+        }
+
+        pathAndQueryString.add(queryParams);
+
+        return pathAndQueryString;
+    }
 }
