@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Machtigingen vereist om een foto te selecteren of te nemen</string>
+	<string name="error_updating_gravatar">Fout bij het updaten van je Gravatar</string>
+	<string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
+	<string name="error_refreshing_gravatar">Fout bij het opnieuw laden van je Gravatar</string>
+	<string name="gravatar_tip">Nieuw! Tik op je Gravatar om deze te wijzigen!</string>
+	<string name="error_cropping_image">Fout bij het bijsnijden van de afbeelding</string>
+	<string name="launch_your_email_app">Start je e-mailapp op</string>
+	<string name="checking_email">E-mail wordt gecontroleerd</string>
+	<string name="not_on_wordpress_com">Niet op WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
+	<string name="check_your_email">Controleer je e-mail</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Ontvang een link die wordt verzonden naar je e-mail om je meteen aan te melden.</string>
+	<string name="logging_in">Inloggen</string>
+	<string name="enter_your_password_instead">Voer je wachtwoord in</string>
+	<string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
+	<string name="jetpack_not_connected_message">De Jetpack-plugin is geïnstalleerd, maar niet verbonden met WordPress.com. Wil je Jetpack verbinden?</string>
+	<string name="username_email">E-mail of gebruikersnaam</string>
+	<string name="jetpack_not_connected">Jetpack-plugin niet verbonden</string>
+	<string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
+	<string name="stats_insights_latest_post_no_title">(geen titel)</string>
+	<string name="capture_or_pick_photo">Neem of selecteer foto</string>
 	<string name="plans_post_purchase_text_themes">Je hebt nu onbeperkt toegang tot premium thema\'s. Bekijk een voorbeeld van ieder gewenst thema op je site om te beginnen.</string>
 	<string name="plans_post_purchase_button_themes">Door thema\'s bladeren</string>
 	<string name="plans_post_purchase_title_themes">Vind een perfect premium thema</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Als je een site wilt, maar niet de berichten en pagina\'s die je nu hebt, kan ons ondersteuningsteam je berichten, pagina\'s, media en reacties voor je verwijderen.\n\nHiermee blijft je site en URL actief maar kan je van vooraf aan beginnen met het maken van content. Neem contact met ons op als je je huidige content wilt verwijderen.</string>
 	<string name="site_settings_start_over_hint">Begin opnieuw met je site</string>
 	<string name="let_us_help">Laat ons je helpen</string>
-	<string name="me_btn_account_settings">Accountinstellingen</string>
 	<string name="me_btn_app_settings">App-instellingen</string>
 	<string name="start_over">Begin opnieuw</string>
 	<string name="editor_remove_failed_uploads">Mislukte uploads verwijderen</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Klik op de link in de verificatiemail die verzonden is naar %1$s om je nieuwe adres te bevestigen</string>
 	<string name="primary_site">Primaire site</string>
 	<string name="web_address">Webadres</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
 	<string name="error_refresh_comments_showing_older">Reacties konden momenteel niet worden vernieuwd - oudere reacties worden weergegeven</string>
 	<string name="editor_post_settings_set_featured_image">Stel aanbevolen afbeelding in</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Loskoppelen van WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Verbinden met WordPress.com</string>
 	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
+	<string name="account_settings">Accountinstellingen</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">"%s" was niet verborgen omdat het de huidige site is</string>
 	<string name="site_picker_create_dotcom">WordPress.com site maken</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Deze tag kan niet worden verwijderd</string>
 	<string name="required_field">Vereist veld</string>
 	<string name="email_hint">E-mailadres</string>
-	<string name="username_email">Gebruikersnaam of e-mailadres</string>
 	<string name="site_address">Je zelf-gehoste adres (URL)</string>
 	<string name="email_cant_be_used_to_signup">Je kunt dat e-mailadres niet gebruiken om je aan te melden, omdat ze een aantal van onze e-mailberichten blokkeren. Probeer een andere e-mailaanbieder.</string>
 	<string name="email_reserved">Dat e-mailadres is al in gebruik. Zoek in je inbox naar een activeringsmail. Als je niet activeert, kun je het over een paar dagen opnieuw proberen.</string>

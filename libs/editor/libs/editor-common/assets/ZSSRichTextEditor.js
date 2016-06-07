@@ -235,6 +235,11 @@ ZSSEditor.onMutationObserved = function(mutations) {
     mutations.forEach(function(mutation) {
         for (var i = 0; i < mutation.removedNodes.length; i++) {
             var removedNode = mutation.removedNodes[i];
+            if (!removedNode.attributes) {
+                // Fix for https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/394
+                // If removedNode doesn't have an attributes property, it's not of type Node and we shouldn't proceed
+                continue;
+            }
             if (ZSSEditor.isMediaContainerNode(removedNode)) {
                 // An uploading or failed container node was deleted manually - notify native
                 var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
@@ -257,6 +262,18 @@ ZSSEditor.onMutationObserved = function(mutations) {
                     ZSSEditor.setRange(parentRange);
                 }
                 ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (mutation.target.className == "edit-container") {
+                // A media item wrapped in an edit container was deleted manually - remove its container
+                // No callback in this case since it's not an uploading or failed media item
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+
+                mutation.target.remove();
+
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
+
+                ZSSEditor.getFocusedField().emptyFieldIfNoContents();
             }
         }
     });
@@ -403,6 +420,19 @@ ZSSEditor.giveFocusToElement = function(element, offset) {
     var selection = document.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
+};
+
+ZSSEditor.setFocusAfterElement = function(element) {
+    var selection = window.getSelection();
+
+    if (selection.rangeCount) {
+        var range = document.createRange();
+
+        range.setStartAfter(element);
+        range.setEndAfter(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
 };
 
 ZSSEditor.getSelectedText = function() {
@@ -1193,6 +1223,7 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**
@@ -1504,6 +1535,7 @@ ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**
@@ -1538,7 +1570,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var videoContainerEnd = '</span>';
 
     if (posterURL == '') {
-       posterURL = "wpposter.svg";
+       posterURL = "svg/wpposter.svg";
     }
 
     var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
@@ -1788,7 +1820,7 @@ ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
         return match.content;
     }
     var videopressID = match.attrs.numeric[0];
-    var posterSVG = '"wpposter.svg"';
+    var posterSVG = '"svg/wpposter.svg"';
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
     var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster='
@@ -1875,6 +1907,10 @@ ZSSEditor.pauseAllVideos = function () {
     });
 }
 
+ZSSEditor.clearCurrentEditingImage = function() {
+    ZSSEditor.currentEditingImage = null;
+};
+
 /**
  *  @brief      Updates the currently selected image, replacing its markup with
  *  new markup based on the specified meta data string.
@@ -1905,13 +1941,15 @@ ZSSEditor.updateCurrentImageMeta = function( imageMetaString ) {
 ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     var node = ZSSEditor.findImageCaptionNode( imageNode );
 
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-icon"></span>'
+                  + '<span class="edit-content">' + nativeState.localizedStringEdit + '</span></span>';
+
     var sizeClass = "";
     if ( imageNode.width < 100 || imageNode.height < 100 ) {
         sizeClass = " small";
+    } else {
+        overlay = '<span class="delete-overlay" contenteditable="false"></span>' + overlay;
     }
-
-    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
-                  + nativeState.localizedStringEdit + '</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -1923,9 +1961,18 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
    	node.insertAdjacentHTML( 'beforebegin', html );
     var selectionNode = node.previousSibling;
     selectionNode.appendChild( node );
+
+    this.trackNodeForMutation($(selectionNode));
+
+    return selectionNode;
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
+    if (!$('#zss_field_content')[0].contains(imageNode)) {
+        // The image node has already been removed from the document
+        return;
+    }
+
     var node = ZSSEditor.findImageCaptionNode( imageNode );
     if ( !node.parentNode || node.parentNode.className.indexOf( "edit-container" ) == -1 ) {
         return;
@@ -2405,6 +2452,9 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
     str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoPressFormattingCallback );
     str = wp.shortcode.replace( 'video', str, ZSSEditor.applyVideoFormattingCallback );
 
+    // More tag
+    str = str.replace(/<!--more(.*?)-->/igm, "<hr class=\"more-tag\" wp-more-data=\"$1\">")
+    str = str.replace(/<!--nextpage-->/igm, "<hr class=\"nextpage-tag\">")
     return str;
 }
 
@@ -2422,6 +2472,10 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
     str = ZSSEditor.replaceVideosForShortcode( str );
+
+    // More tag
+    str = str.replace(/<hr class="more-tag" wp-more-data="(.*?)">/igm, "<!--more$1-->")
+    str = str.replace(/<hr class="nextpage-tag">/igm, "<!--nextpage-->")
     return str;
 };
 
@@ -3124,6 +3178,7 @@ ZSSField.prototype.handleFocusEvent = function(e) {
 ZSSField.prototype.handleKeyDownEvent = function(e) {
 
     var wasEnterPressed = (e.keyCode == '13');
+    var isHardwareKeyboardPaste = (e.ctrlKey && e.keyCode == '86');
 
     // Handle keyDownEvent actions that need to happen after the event has completed (and the field has been modified)
     setTimeout(this.afterKeyDownEvent, 20, e.target.innerHTML, e);
@@ -3156,18 +3211,30 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
         // incorrectly, so we skip it in this case.
         //
         // 3. On all APIs, hardware pasting (CTRL + V) doesn't automatically wrap the paste in paragraph tags in
-        // new posts. ZSSField.handlePasteEvent() does not address this problem. It's the same fix as #2 above, but we
-        // have to extend the `containsParagraphSeparators` check to all APIs, not just API19 and below, to fix
-        // hardware pasting.
+        // new posts. ZSSField.handlePasteEvent() won't fix the wrapping for hardware pastes if
+        // wrapCaretInParagraphIfNecessary() goes through first, so we need to skip it in that case.
+        // For API < 19, this is fixed implicitly by the 'containsParagraphSeparators' check, but for newer APIs we
+        // specifically detect hardware keyboard pastes and skip paragraph wrapping in that case
+        // case skip calling wrapCaretInParagraphIfNecessary().
+        //
+        // Previously, the check was 'if (containsParagraphSeparators)' for all API levels, but this turns out to cause
+        // an autocorrect issue for new posts on API 23+:
+        // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/389
+        // That issue can be fixed by allowing wrapCaretInParagraphIfNecessary() to go through when adding text to an
+        // empty post on those API levels, as long as we exclude the special case of hardware keyboard pasting
+        //
+        // We're using 'nativeState.androidApiLevel>19' rather than >22 because, even though the bug only appears on
+        // 23+ at the time of writing, it's entirely possible a future System WebView or Keyboard update will introduce
+        // the bug on 21+.
         var containsParagraphSeparators = this.getWrappedDomNode().innerHTML.search(
                 '<' + ZSSEditor.defaultParagraphSeparator) > -1;
-        if (containsParagraphSeparators) {
+        if (containsParagraphSeparators || (nativeState.androidApiLevel > 19 && !isHardwareKeyboardPaste)) {
             this.wrapCaretInParagraphIfNecessary();
         }
 
         if (wasEnterPressed) {
             // Wrap the existing text in paragraph tags if necessary (this should only be needed if
-            // wrapCaretInParagraphIfNecessary() was skipped earlier (API19))
+            // wrapCaretInParagraphIfNecessary() was skipped earlier)
             var currentHtml = this.getWrappedDomNode().innerHTML;
             if (currentHtml.search('<' + ZSSEditor.defaultParagraphSeparator) == -1) {
                 ZSSEditor.focusedField.setHTML(Util.wrapHTMLInTag(currentHtml, ZSSEditor.defaultParagraphSeparator));
@@ -3236,20 +3303,14 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.nodeName.toLowerCase() == 'a') {
             var arguments = ['url=' + encodeURIComponent(targetNode.href),
                              'title=' + encodeURIComponent(targetNode.innerHTML)];
-
             var joinedArguments = arguments.join(defaultCallbackSeparator);
-
-            var thisObj = this;
-
-            // WORKAROUND: force the event to become sort of "after-tap" through setTimeout()
-            //
-            setTimeout(function() { thisObj.callback('callback-link-tap', joinedArguments);}, 500);
+            this.callback('callback-link-tap', joinedArguments);
         }
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
             if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
-                this.sendImageTappedCallback( targetNode );
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
@@ -3261,25 +3322,34 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
             // Is the tapped image the image we're editing?
             if ( targetNode == ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( targetNode );
-                this.sendImageTappedCallback( targetNode );
+                ZSSEditor.removeImageSelectionFormatting(targetNode);
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
             // If there is a selected image, deselect it. A different image was tapped.
             if ( ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+                ZSSEditor.removeImageSelectionFormatting(ZSSEditor.currentEditingImage);
             }
 
             // Format and flag the image as selected.
             ZSSEditor.currentEditingImage = targetNode;
-            ZSSEditor.applyImageSelectionFormatting( targetNode );
+            var containerNode = ZSSEditor.applyImageSelectionFormatting(targetNode);
+
+            // Move the cursor to the tapped image, to prevent scrolling to the bottom of the document when the
+            // keyboard comes up. On API 19 and below does not work properly, with the image sometimes getting removed
+            // from the post instead of the edit overlay being displayed
+            if (nativeState.androidApiLevel > 19) {
+                ZSSEditor.setFocusAfterElement(containerNode);
+            }
 
             return;
         }
 
-        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1) {
+        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1
+            || targetNode.className.indexOf('edit-icon') != -1) {
             ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+
             this.sendImageTappedCallback( ZSSEditor.currentEditingImage );
             return;
         }
@@ -3290,6 +3360,26 @@ ZSSField.prototype.handleTapEvent = function(e) {
             var imageNode = targetNode.parentNode.getElementsByTagName('img')[0];
 
             this.sendImageTappedCallback( imageNode );
+            return;
+        }
+
+        if (targetNode.className.indexOf('delete-overlay') != -1) {
+            var parentEditContainer = targetNode.parentElement;
+            var parentDiv = parentEditContainer.parentElement;
+
+            if (parentDiv && parentDiv.nodeName == NodeName.DIV && parentDiv.parentElement.nodeName != NodeName.BODY) {
+                // Remove the parent div with all its contents, unless it's the contenteditable div itself rather than
+                // a paragraph
+                parentDiv.parentElement.removeChild(parentDiv);
+            } else if (parentEditContainer.classList.contains('edit-container')) {
+                parentEditContainer.parentElement.removeChild(parentEditContainer);
+            } else {
+                parentEditContainer.removeChild(targetNode);
+            }
+
+            this.emptyFieldIfNoContents();
+
+            ZSSEditor.currentEditingImage = null;
             return;
         }
 
@@ -3490,9 +3580,13 @@ ZSSField.prototype.disableEditing = function () {
  *  @details    A parent paragraph node should be added if the current parent is either the field
  *              node itself, or a blockquote node.
  */
-ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
-{
+ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
     var closerParentNode = ZSSEditor.closerParentNode();
+
+    if (closerParentNode == null) {
+        return;
+    }
+
     var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 

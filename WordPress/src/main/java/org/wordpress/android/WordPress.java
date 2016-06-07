@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -49,6 +48,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -75,6 +75,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -82,6 +83,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
@@ -199,7 +202,7 @@ public class WordPress extends Application {
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+            AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
@@ -370,7 +373,6 @@ public class WordPress extends Application {
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void enableStrictMode() {
         // return if the build is not a debug build
         if (!BuildConfig.DEBUG) {
@@ -537,7 +539,7 @@ public class WordPress extends Application {
         AnalyticsTracker.clearAllData();
 
         // disable passcode lock
-        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+        AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
         if (appLock != null) {
             appLock.setPassword(null);
         }
@@ -704,6 +706,25 @@ public class WordPress extends Application {
     }
 
     /**
+     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
+     * are used at the project level to set custom fields.
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     * @param application   Used to find the correct file
+     * @param fieldName     The name of the field-to-access
+     * @return              The value of the field, or {@code null} if the field is not found.
+     */
+    public static Object getBuildConfigValue(Application application, String fieldName) {
+        try {
+            String packageName = application.getClass().getPackage().getName();
+            Class<?> clazz = Class.forName(packageName + ".BuildConfig");
+            Field field = clazz.getField(fieldName);
+            return field.get(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * Detect when the app goes to the background and come back to the foreground.
      *
      * Turns out that when your app has no more visible UI, a callback is triggered.
@@ -717,8 +738,11 @@ public class WordPress extends Application {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        boolean mIsInBackground = true;
         boolean mFirstActivityResumed = true;
+        private Timer mActivityTransitionTimer;
+        private TimerTask mActivityTransitionTimerTask;
+        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+        boolean mIsInBackground = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -732,25 +756,6 @@ public class WordPress extends Application {
 
         @Override
         public void onTrimMemory(final int level) {
-            if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
-                // We're in the Background
-                mIsInBackground = true;
-                String lastActivityString = AppPrefs.getLastActivityStr();
-                ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
-                Map<String, Object> properties = new HashMap<String, Object>();
-                properties.put("last_visible_screen", lastActivity.toString());
-                if (mApplicationOpenedDate != null) {
-                    Date now = new Date();
-                    properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
-                    mApplicationOpenedDate = null;
-                }
-                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
-                AnalyticsTracker.endSession(false);
-                onAppGoesToBackground();
-            } else {
-                mIsInBackground = false;
-            }
-
             boolean evictBitmaps = false;
             switch (level) {
                 case TRIM_MEMORY_COMPLETE:
@@ -795,9 +800,56 @@ public class WordPress extends Application {
             }
         }
 
-        public void onAppGoesToBackground() {
-            AppLog.i(T.UTILS, "App goes to background");
-            ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+        /**
+         * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
+         * are used to track when the app goes to background.
+         *
+         * Our implementation uses `onActivityPaused` and `onActivityResumed` of ApplicationLifecycleMonitor
+         * to start and stop the timer that detects when the app goes to background.
+         *
+         * So when the user is simply navigating between the activities, the onActivityPaused() calls `startActivityTransitionTimer`
+         * and starts the timer, but almost immediately the new activity being entered, the ApplicationLifecycleMonitor cancels the timer
+         * in its onActivityResumed method, that in order calls `stopActivityTransitionTimer`.
+         * And so mIsInBackground would be false.
+         *
+         * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all the background logic is run.
+         */
+        private void startActivityTransitionTimer() {
+            this.mActivityTransitionTimer = new Timer();
+            this.mActivityTransitionTimerTask = new TimerTask() {
+                public void run() {
+                    AppLog.i(T.UTILS, "App goes to background");
+                    // We're in the Background
+                    mIsInBackground = true;
+                    String lastActivityString = AppPrefs.getLastActivityStr();
+                    ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put("last_visible_screen", lastActivity.toString());
+                    if (mApplicationOpenedDate != null) {
+                        Date now = new Date();
+                        properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
+                        mApplicationOpenedDate = null;
+                    }
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
+                    AnalyticsTracker.endSession(false);
+                    ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+                }
+            };
+
+            this.mActivityTransitionTimer.schedule(mActivityTransitionTimerTask,
+                    MAX_ACTIVITY_TRANSITION_TIME_MS);
+        }
+
+        private void stopActivityTransitionTimer() {
+            if (this.mActivityTransitionTimerTask != null) {
+                this.mActivityTransitionTimerTask.cancel();
+            }
+
+            if (this.mActivityTransitionTimer != null) {
+                this.mActivityTransitionTimer.cancel();
+            }
+
+            mIsInBackground = false;
         }
 
         /**
@@ -805,7 +857,7 @@ public class WordPress extends Application {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        public void onAppComesFromBackground() {
+        private void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
@@ -822,6 +874,7 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
+            PlansUtils.synchIAPsWordPressCom();
         }
 
         @Override
@@ -830,6 +883,8 @@ public class WordPress extends Application {
                 // was in background before
                 onAppComesFromBackground();
             }
+            stopActivityTransitionTimer();
+
             mIsInBackground = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
@@ -848,6 +903,7 @@ public class WordPress extends Application {
         @Override
         public void onActivityPaused(Activity arg0) {
             mLastPingDate = new Date();
+            startActivityTransitionTimer();
         }
 
         @Override

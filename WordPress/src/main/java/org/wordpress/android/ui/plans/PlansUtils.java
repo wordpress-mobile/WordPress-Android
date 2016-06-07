@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plans;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -7,6 +8,8 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.plans.models.Feature;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -94,6 +97,43 @@ public class PlansUtils {
         return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);
     }
 
+    public static boolean isFreePlan(Plan plan) {
+        return isFreePlan(plan.getProductID());
+    }
+
+    /**
+     * Weather the plan ID is a free plan.
+     *
+     * @param planID - The plan ID
+     * @return boolean - true if the current blog is on a free plan.
+     */
+    public static boolean isFreePlan(long planID) {
+        return planID == PlansConstants.JETPACK_FREE_PLAN_ID || planID == PlansConstants.FREE_PLAN_ID;
+    }
+
+    /**
+     * Weather the plan A is "greater" than or "equal to" the plan B
+     *
+     * TODO: Improve this, since we're assuming that a greater plan ID meant a more expensive plan.
+     */
+    public static boolean isGreaterEquals(Plan planA, Plan planB) {
+        return planA.getProductID() >= planB.getProductID();
+    }
+
+    public static Plan getPlan(Plan[] plans, long planID) {
+        if (plans == null) {
+            AppLog.w(AppLog.T.PLANS, "The passed plans list is null!!");
+            return null;
+        }
+        for (Plan currentPlan: plans) {
+            if (currentPlan.getProductID() == planID) {
+                return currentPlan;
+            }
+        }
+        AppLog.w(AppLog.T.PLANS, "Plan with ID " + planID + " wasn't found in the plans list");
+        return null;
+    }
+
     /**
      * Removes stored plan data - for testing purposes
      */
@@ -102,4 +142,16 @@ public class PlansUtils {
         AppPrefs.setGlobalPlansFeatures(null);
     }
 
+
+    /**
+     * Synch IAPs with wpcom backend. This need to be called to add/remove upgrades on wpcom side.
+     * Those upgrades the user has already bought/cancelled on mobile side (from the Google Store).
+     */
+    public static boolean synchIAPsWordPressCom() {
+            if (AccountHelper.isSignedInWordPressDotCom() && AppPrefs.isInAppPurchaseRefreshRequired()) {
+                new UpdateIAPTask(WordPress.getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return true;
+            }
+            return false;
+    }
 }

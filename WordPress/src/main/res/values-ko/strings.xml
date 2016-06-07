@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">사진을 선택하거나 캡처하려면 권한이 필요합니다.</string>
+	<string name="error_updating_gravatar">Gravatar를 업데이트하는 중 오류가 발생했습니다.</string>
+	<string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
+	<string name="error_refreshing_gravatar">Gravatar를 다시 로드하는 중 오류가 발생했습니다.</string>
+	<string name="gravatar_tip">새로운 기능 Gravatar를 변경하려면 탭하세요.</string>
+	<string name="error_cropping_image">이미지를 자르는 중 오류가 발생했습니다.</string>
+	<string name="launch_your_email_app">이메일 앱 시작</string>
+	<string name="checking_email">이메일 확인 중</string>
+	<string name="not_on_wordpress_com">워드프레스닷컴을 사용하고 있지 않습니까?</string>
+	<string name="magic_link_unavailable_error_message">현재 사용할 수 없습니다. 비밀번호를 입력하세요.</string>
+	<string name="check_your_email">이메일을 확인하세요.</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">바로 로그인하려면 이메일로 링크를 받으세요.</string>
+	<string name="logging_in">로그인 중</string>
+	<string name="enter_your_password_instead">비밀번호를 대신 입력하세요.</string>
+	<string name="web_address_dialog_hint">댓글을 달 때 공개적으로 표시합니다.</string>
+	<string name="jetpack_not_connected_message">젯팩 플러그인이 설치되었지만 워드프레스닷컴에 연결되지 않았습니다. 젯팩을 연결하시겠습니까?</string>
+	<string name="username_email">이메일 또는 사용자명</string>
+	<string name="jetpack_not_connected">젯팩 플러그인이 연결되지 않았습니다.</string>
+	<string name="new_editor_reflection_error">비주얼 편집기가 장치와 호환되지 않습니다. 자동으로\n 사용 중지되었습니다.</string>
+	<string name="stats_insights_latest_post_no_title">(제목 없음)</string>
+	<string name="capture_or_pick_photo">사진 캡처 또는 선택</string>
 	<string name="plans_post_purchase_text_themes">이제 프리미엄 테마에 무제한으로 접근할 수 있습니다. 시작하려면 아무 테마나 미리보기하시면 됩니다.</string>
 	<string name="plans_post_purchase_button_themes">테마 찾아보기</string>
 	<string name="plans_post_purchase_title_themes">완벽한 프리미엄 테마 찾기</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">사이트를 유지하되 현재 글과 페이지를 원하지 않는 경우 지원팀에서 글, 페이지, 미디어, 댓글을 삭제해드립니다.\n\n사이트와 URL은 활성 상태를 유지하지만 콘텐츠 생성을 처음부터 시작할 수 있게 됩니다. 현재 콘텐츠를 삭제하려면 지원팀에 문의해주세요.</string>
 	<string name="site_settings_start_over_hint">사이트 시작하기</string>
 	<string name="let_us_help">Let Us Help</string>
-	<string name="me_btn_account_settings">계정 설정</string>
 	<string name="me_btn_app_settings">앱 설정</string>
 	<string name="start_over">시작하기</string>
 	<string name="editor_remove_failed_uploads">실패한 업로드 제거</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">새 주소를 확인하려면 %1$s(으)로 전송된 이메일에 있는 확인 링크를 클릭하세요.</string>
 	<string name="primary_site">기본 사이트</string>
 	<string name="web_address">웹 주소</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
 	<string name="error_refresh_comments_showing_older">지금은 댓글을 새로 고칠 수 없습니다. 이전 댓글을 표시 중입니다.</string>
 	<string name="editor_post_settings_set_featured_image">특성 이미지 설정</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">워드프레스닷컴 연결 해제</string>
 	<string name="me_connect_to_wordpress_com">워드프레스닷컴 연결하기</string>
 	<string name="me_btn_login_logout">로그인/로그아웃</string>
+	<string name="account_settings">계정 설정</string>
 	<string name="me_btn_support">도움 및 지원</string>
 	<string name="site_picker_cant_hide_current_site">"%s"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
 	<string name="site_picker_create_dotcom">워드프레스닷컴 사이트 생성</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">태그를 삭제할 수 없습니다.</string>
 	<string name="required_field">필수 항목</string>
 	<string name="email_hint">이메일</string>
-	<string name="username_email">사용자 이름 또는 이메일</string>
 	<string name="site_address">인스톨 형 WordPress의 주소(URL)</string>
 	<string name="email_cant_be_used_to_signup">지정된 이메일 주소를 등록 제공되지 않습니다. 이 메일 공급자는 여기로부터의 메일이 차단되는 현상이 발생하고 있기 때문에 다른 공급자의 이메일 주소를 입력하십시오.</string>
 	<string name="email_reserved">그 메일 주소는 이미 사용되고 있습니다. 활성화 메일이 도착해 있지 않은가 체크해 주세요. 활성화하지 않으면 며칠 후 같은 주소로 다시 등록 할 수 있습니다.</string>

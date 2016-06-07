@@ -80,6 +80,11 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
+        public boolean isActionInProgress() {
+            return false;
+        }
+
+        @Override
         public boolean hasFailedMediaUploads() {
             return false;
         }

@@ -5,7 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -204,15 +205,10 @@ public class ReaderActivityLauncher {
         }
 
         if (context instanceof Activity) {
-            // use built-in scale animation on jb+, fall back to default animation on pre-jb
             Activity activity = (Activity) context;
-            if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
-                ActivityCompat.startActivity(activity, intent, options.toBundle());
-            } else {
-                activity.startActivity(intent);
-            }
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
         } else {
             context.startActivity(intent);
         }
@@ -226,26 +222,39 @@ public class ReaderActivityLauncher {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
+        if (context == null || TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            // That won't work on wpcom sites with custom urls
-            if (WPUrlUtils.isWordPressCom(url)) {
-                WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                        AccountHelper.getDefaultAccount().getUserName());
-            } else {
-                WPWebViewActivity.openURL(context, url);
-            }
+            openUrlInternal(context, url);
         } else {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
-                ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
-            }
+            openUrlExternal(context, url);
+        }
+    }
+
+    /*
+     * open the passed url in the app's internal WebView activity
+     */
+    private static void openUrlInternal(Context context, @NonNull String url) {
+        // That won't work on wpcom sites with custom urls
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
+                    AccountHelper.getDefaultAccount().getUserName());
+        } else {
+            WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
+        }
+    }
+
+    /*
+     * open the passed url in the device's external browser
+     */
+    private static void openUrlExternal(Context context, @NonNull String url) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            context.startActivity(intent);
+            AppLockManager.getInstance().setExtendedTimeout();
+        } catch (ActivityNotFoundException e) {
+            String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
+            ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
         }
     }
 }

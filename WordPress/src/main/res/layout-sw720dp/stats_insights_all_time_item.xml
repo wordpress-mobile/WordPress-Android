@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:baselineAligned="false"
-              android:padding="@dimen/margin_extra_large"
-              android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:baselineAligned="false"
+    android:padding="@dimen/margin_extra_large"
+    android:orientation="horizontal">
 
     <!-- Posts item -->
     <LinearLayout
@@ -27,7 +28,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                android:src="@drawable/my_site_icon_posts" />
+                app:srcCompat="@drawable/my_site_icon_posts" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -72,7 +73,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                android:src="@drawable/stats_icon_views" />
+                app:srcCompat="@drawable/stats_icon_views" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -117,7 +118,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                android:src="@drawable/stats_icon_visitors" />
+                app:srcCompat="@drawable/stats_icon_visitors" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"
@@ -162,7 +163,7 @@
                 android:layout_height="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
-                android:src="@drawable/stats_icon_trophy" />
+                app:srcCompat="@drawable/stats_icon_trophy" />
 
             <org.wordpress.android.widgets.WPAutoResizeTextView
                 style="@style/StatsInsightsLabel"

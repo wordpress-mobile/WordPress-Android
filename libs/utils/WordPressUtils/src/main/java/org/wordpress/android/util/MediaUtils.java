@@ -29,6 +29,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MediaUtils {
+    private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
+
     public static boolean isValidImage(String url) {
         if (url == null) {
             return false;
@@ -114,27 +116,50 @@ public class MediaUtils {
         return Uri.parse(contentUri.toString() + "/" + cursor.getLong(0));
     }
 
-    // Calculate the minimun width between the blog setting and picture real width
-    public static int getMinimumImageWidth(Context context, Uri curStream, String imageWidthBlogSettingString) {
-        int imageWidthBlogSetting = Integer.MAX_VALUE;
-
-        if (!imageWidthBlogSettingString.equals("Original Size")) {
-            try {
-                imageWidthBlogSetting = Integer.valueOf(imageWidthBlogSettingString);
-            } catch (NumberFormatException e) {
-                AppLog.e(T.POSTS, e);
-            }
+    /**
+     * Get image width setting from the image width site setting string. This string can be an int, in this case it's
+     * the maximum image width defined by the site.
+     * Examples:
+     *   "1000" will return 1000
+     *   "Original Size" will return Integer.MAX_VALUE
+     *   "Largeur originale" will return Integer.MAX_VALUE
+     *   null will return Integer.MAX_VALUE
+     * @param imageWidthSiteSettingString Image width site setting string
+     * @return Integer.MAX_VALUE if image width is not defined or invalid, maximum image width in other cases.
+     */
+    public static int getImageWidthSettingFromString(String imageWidthSiteSettingString) {
+        if (imageWidthSiteSettingString == null) {
+            return Integer.MAX_VALUE;
         }
+        try {
+            return Integer.valueOf(imageWidthSiteSettingString);
+        } catch (NumberFormatException e) {
+            return Integer.MAX_VALUE;
+        }
+    }
 
-        int[] dimensions = ImageUtils.getImageSize(curStream, context);
-        int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
+    /**
+     * Calculate and return the maximum allowed image width by comparing the width of the image at its full size with
+     * the maximum upload width set in the blog settings
+     * @param imageWidth the image's natural (full) width
+     * @param imageWidthSiteSettingString the maximum upload width set in the site settings
+     * @return maximum allowed image width
+     */
+    public static int getMaximumImageWidth(int imageWidth, String imageWidthSiteSettingString) {
+        int imageWidthBlogSetting = getImageWidthSettingFromString(imageWidthSiteSettingString);
+        int imageWidthPictureSetting = imageWidth == 0 ? Integer.MAX_VALUE : imageWidth;
 
         if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            // Default value in case of errors reading the picture size and the blog settings is set to Original size
-            return 1024;
+            // Default value in case of errors reading the picture size or the blog settings is set to Original size
+            return DEFAULT_MAX_IMAGE_WIDTH;
         } else {
             return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
         }
+    }
+
+    public static int getMaximumImageWidth(Context context, Uri curStream, String imageWidthBlogSettingString) {
+        int[] dimensions = ImageUtils.getImageSize(curStream, context);
+        return getMaximumImageWidth(dimensions[0], imageWidthBlogSettingString);
     }
 
     public static boolean isInMediaStore(Uri mediaUri) {

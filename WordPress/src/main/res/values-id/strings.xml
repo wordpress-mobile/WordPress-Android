@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Izin diperlukan untuk memilih atau mengambil foto</string>
+	<string name="error_updating_gravatar">Terjadi galat saat memperbarui Gravatar</string>
+	<string name="error_locating_image">Terjadi galat saat mencari gambar yang dipangkas</string>
+	<string name="error_refreshing_gravatar">Terjadi galat saat memuat ulang Gravatar</string>
+	<string name="gravatar_tip">Baru! Ketuk Gravatar untuk mengubahnya!</string>
+	<string name="error_cropping_image">Terjadi galat saat memangkas gambar</string>
+	<string name="launch_your_email_app">Luncurkan aplikasi surat elektronik</string>
+	<string name="checking_email">Memeriksa surat elektronik</string>
+	<string name="not_on_wordpress_com">Tidak di WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">Saat ini tidak tersedia. Masukkan kata sandi Anda</string>
+	<string name="check_your_email">Periksa surat elektronik Anda</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Dapatkan tautan yang dikirimkan ke surat elektronik Anda untuk langsung masuk</string>
+	<string name="logging_in">Proses masuk</string>
+	<string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
+	<string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
+	<string name="jetpack_not_connected_message">Plugin Jetpack terpasang, tetapi tidak terhubung ke WordPress.com. Ingin menghubungkan Jetpack?</string>
+	<string name="username_email">Surat elektronik atau nama pengguna</string>
+	<string name="jetpack_not_connected">Plugin Jetpack tidak terhubung</string>
+	<string name="new_editor_reflection_error">Visual editor tidak kompatibel dengan perangkat Anda. Ini\n dinonaktifkan secara otomatis.</string>
+	<string name="stats_insights_latest_post_no_title">(tanpa judul)</string>
+	<string name="capture_or_pick_photo">Ambil atau pilih foto</string>
 	<string name="plans_post_purchase_text_themes">Anda sekarang memiliki akses tak terbatas ke tema Premium. Pratinjau tema apa pun di situs Anda untuk memulai.</string>
 	<string name="plans_post_purchase_button_themes">Telusuri Tema</string>
 	<string name="plans_post_purchase_title_themes">Temukan tema Premium yang sempurna</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Jika Anda menginginkan sebuah situs tetapi tidak menginginkan beberapa pos dan halaman yang Anda miliki saat ini, tim dukungan kami dapat menghapus pos, halaman, media, dan komentar untuk Anda.\n\nTindakan ini akan membuat situs dan URL Anda tetap aktif, tetapi memberi Anda titik awal yang segar di pembuatan konten. Cukup hubungi kami untuk membersihkan konten Anda saat ini.</string>
 	<string name="site_settings_start_over_hint">Mulai dari awal situs Anda</string>
 	<string name="let_us_help">Mari Kami Bantu</string>
-	<string name="me_btn_account_settings">Pengaturan Akun</string>
 	<string name="me_btn_app_settings">Pengaturan Aplikasi</string>
 	<string name="start_over">Mulai</string>
 	<string name="editor_remove_failed_uploads">Buang unggahan yang gagal</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Klik tautan verifikasi di email yang dikirimkan ke %1$s untuk mengonfirmasi alamat baru Anda</string>
 	<string name="primary_site">Situs Utama</string>
 	<string name="web_address">Alamat Web</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">Saat ini Anda sedang mengunggah media. Harap tunggu hingga selesai.</string>
 	<string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
 	<string name="editor_post_settings_set_featured_image">Atur Gambar Unggulan</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Putuskan koneksi WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Koneksikan ke WordPress.com</string>
 	<string name="me_btn_login_logout">Log masuk/keluar</string>
+	<string name="account_settings">Pengaturan Akun</string>
 	<string name="me_btn_support">Bantuan &amp; Dukungan</string>
 	<string name="site_picker_cant_hide_current_site">"%s" tidak tersembunyi karena itu adalah situs saat ini</string>
 	<string name="site_picker_create_dotcom">Buat situs WordPress.com</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
 	<string name="required_field">Isian wajib</string>
 	<string name="email_hint">Alamat email</string>
-	<string name="username_email">Nama pengguna atau email</string>
 	<string name="site_address">Alamat (URL) host mandiri Anda</string>
 	<string name="email_cant_be_used_to_signup">Anda tak bisa menggunakan alamat email tersebut untuk mendaftar. Kami bermasalah dengan blokir mereka atas sejumlah email kami. Silakan gunakan layanan email lainnya.</string>
 	<string name="email_reserved">Alamat email tersebut telah digunakan. Periksa kotak masuk Anda untuk email aktivasi. Jika Anda tidak mengaktifkannya, Anda masih bisa mencoba lagi dalam beberapa hari.</string>

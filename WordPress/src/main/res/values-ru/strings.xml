@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">Разрешения, необходимые для выбора или создания фотографии</string>
+	<string name="error_updating_gravatar">При обновлении граватара произошла ошибка</string>
+	<string name="error_locating_image">Не удалось найти обрезанное изображение</string>
+	<string name="error_refreshing_gravatar">При перезагрузке граватара произошла ошибка</string>
+	<string name="gravatar_tip">Новая функция! Чтобы изменить граватар, просто нажмите его.</string>
+	<string name="error_cropping_image">При обрезке изображения произошла ошибка</string>
+	<string name="launch_your_email_app">Запустите приложение эл. почты</string>
+	<string name="checking_email">Проверка адреса эл. почты</string>
+	<string name="not_on_wordpress_com">Нет учетной записи на WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">В настоящий момент ссылка недоступна. Введите пароль</string>
+	<string name="check_your_email">Проверьте электронную почту</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Получите эл. письмо со ссылкой для моментального входа.</string>
+	<string name="logging_in">Вход в систему</string>
+	<string name="enter_your_password_instead">Введите пароль.</string>
+	<string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
+	<string name="jetpack_not_connected_message">Плагин Jetpack установлен, но не подключен к WordPress.com. Подключить Jetpack?</string>
+	<string name="username_email">Адрес эл. почты или имя пользователя</string>
+	<string name="jetpack_not_connected">Плагин Jetpack не подключен</string>
+	<string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
+	<string name="stats_insights_latest_post_no_title">(без заголовка)</string>
+	<string name="capture_or_pick_photo">Сделайте снимок или выберите фото</string>
 	<string name="plans_post_purchase_text_themes">У вас есть неограниченный доступ к премиум-темам. Для начала вы можете оценить любую тему на своем сайте, открыв её в режиме предварительного просмотра.</string>
 	<string name="plans_post_purchase_button_themes">Просмотр тем</string>
 	<string name="plans_post_purchase_title_themes">Найдите идеальную премиум-тему</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">Если вы хотите сохранить сайт, но при этом удалить с него все записи, страницы, медиафайлы и комментарии, обратитесь в службу поддержки.\n\nВ этом случае вы сохраните свой сайт и URL-адрес и сможете заново создавать содержимое. Свяжитесь с нами, чтобы мы удалили все содержимое сайта.</string>
 	<string name="site_settings_start_over_hint">Запустите свой сайт заново</string>
 	<string name="let_us_help">Обратитесь к нам за помощью</string>
-	<string name="me_btn_account_settings">Настройки учётной записи</string>
 	<string name="me_btn_app_settings">Настройки приложений</string>
 	<string name="start_over">Начать сначала</string>
 	<string name="editor_remove_failed_uploads">Удалить невыполненные загрузки</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">Нажмите на ссылку в электронном письме, отправленном на %1$s, чтобы подтвердить новый адрес</string>
 	<string name="primary_site">Основной сайт</string>
 	<string name="web_address">Интернет-адрес</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">В данный момент выполняется загрузка медиафайлов. Дождитесь окончания загрузки.</string>
 	<string name="error_refresh_comments_showing_older">Не удалось обновить ленту комментариев — отображены старые комментарии</string>
 	<string name="editor_post_settings_set_featured_image">Настроить избранное изображение</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/выход</string>
+	<string name="account_settings">Настройки учётной записи</string>
 	<string name="me_btn_support">Помощь и техническая поддержка</string>
 	<string name="site_picker_cant_hide_current_site">"%s" не был скрыт, так как это текущий сайт.</string>
 	<string name="site_picker_create_dotcom">Создать сайт на WordPress.com</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">Не удается удалить эту метку</string>
 	<string name="required_field">Обязательное поле</string>
 	<string name="email_hint">Email адрес</string>
-	<string name="username_email">Имя пользователя или email</string>
 	<string name="site_address">Адрес вашего сайта</string>
 	<string name="email_cant_be_used_to_signup">Вы не можете использовать этот адрес для регистрации- у нас есть проблемы с блокированием некоторых наших сообщений электронной почты. Используйте email другого поставщика услуг электронной почты.</string>
 	<string name="email_reserved">Этот адрес уже используется. Проверьте свою почту на наличие письма с кодом активации. Если вы не активировали запись, вы можете попробовать еще раз через несколько дней.</string>

@@ -116,8 +116,9 @@ public class CommentTable {
         String[] args = {Integer.toString(localBlogId), Long.toString(commentId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE blog_id=? AND comment_id=?", args);
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
+            }
             return getCommentFromCursor(c);
         } finally {
             SqlUtils.closeCursor(c);

@@ -580,7 +580,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
         final TextView txtDate = (TextView) getView().findViewById(R.id.text_date);
 
-        txtName.setText(mComment.hasAuthorName() ? mComment.getAuthorName() : getString(R.string.anonymous));
+        txtName.setText(mComment.hasAuthorName() ? HtmlUtils.fastUnescapeHtml(mComment.getAuthorName()) : getString(R.string.anonymous));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
@@ -782,10 +782,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         updateStatusViews();
         CommentActions.moderateCommentRestApi(mNote.getSiteId(), mComment.commentID, newStatus, new CommentActions.CommentActionListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onActionResult(CommentActionResult result) {
                 if (!isAdded()) return;
 
-                if (!succeeded) {
+                if (!result.isSuccess()) {
                     mComment.setStatus(CommentStatus.toString(oldStatus));
                     updateStatusViews();
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
@@ -817,21 +817,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onActionResult(CommentActionResult result) {
                 mIsSubmittingReply = false;
-                if (succeeded && mOnCommentChangeListener != null)
+                if (result.isSuccess() && mOnCommentChangeListener != null)
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
                 if (isAdded()) {
                     mEditReply.setEnabled(true);
                     mSubmitReplyBtn.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
                     updateStatusViews();
-                    if (succeeded) {
+                    if (result.isSuccess()) {
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
                     } else {
-                        ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                        String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
+                        ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard
                         EditTextUtils.showSoftInput(mEditReply);
                     }

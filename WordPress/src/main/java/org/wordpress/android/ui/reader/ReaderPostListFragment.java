@@ -74,7 +74,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostAdapter mPostAdapter;
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
-    private ReaderTagList mTags = new ReaderTagList();
+    private final ReaderTagList mTags = new ReaderTagList();
 
     private View mNewPostsBar;
     private View mEmptyView;
@@ -405,8 +405,6 @@ public class ReaderPostListFragment extends Fragment
                     */
                     mRecyclerView.setRefreshing(false);
                     mFirstLoad = false;
-                    return;
-
                 } else {
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
@@ -617,6 +615,8 @@ public class ReaderPostListFragment extends Fragment
                 }
             } else if (getCurrentTag().isPostsILike()) {
                 titleResId = R.string.reader_empty_posts_liked;
+            } else if (getCurrentTag().tagType == ReaderTagType.CUSTOM_LIST) {
+                titleResId = R.string.reader_empty_posts_in_custom_list;
             } else {
                 titleResId = R.string.reader_empty_posts_in_tag;
             }
@@ -1257,7 +1257,7 @@ public class ReaderPostListFragment extends Fragment
 
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
 
-        private FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
         public LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener){
             mFilterCriteriaLoaderListener = listener;
@@ -1266,6 +1266,7 @@ public class ReaderPostListFragment extends Fragment
         @Override
         protected ReaderTagList doInBackground(Void... voids) {
             ReaderTagList tagList = ReaderTagTable.getDefaultTags();
+            tagList.addAll(ReaderTagTable.getCustomListTags());
             tagList.addAll(ReaderTagTable.getFollowedTags());
             return tagList;
         }

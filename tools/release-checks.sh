@@ -91,8 +91,8 @@ function printVersion() {
 
 function checkGradleProperties() {
 	/bin/echo -n "Check WordPress/gradle.properties..."
-	checksum=`cat WordPress/gradle.properties|grep "^wp."|tr "[A-Z]" "[a-z]"|sed "s/ //g"|sort|sha1sum |cut -d- -f1| sed "s/ //g"`
-	known_checksum="2a9fd98ebd7244da4fa3476cc3acddc37f8d529c"
+	checksum=`cat WordPress/gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
+	known_checksum="4058cdf3d784e4b79f63514d4780e92c28b5ab78"
 	if [ x$checksum != x$known_checksum ]; then
 		pFail
 		exit 5

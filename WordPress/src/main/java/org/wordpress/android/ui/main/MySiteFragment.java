@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -61,6 +62,7 @@ public class MySiteFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
+    private RelativeLayout mPeopleView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -142,6 +144,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
@@ -221,6 +224,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
+            }
+        });
+
+        mPeopleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPeople(getActivity());
             }
         });
 
@@ -343,16 +353,21 @@ public class MySiteFragment extends Fragment
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
-        toggleAdminVisibility();
+        toggleAdminVisibility(blog);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        int settingsVisibility = blog.isAdmin() || !blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        boolean isAdminOrSelfHosted =  blog.isAdmin() || !blog.isDotcomFlag();
+        boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
+        mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
+        mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
+
+        // if either people or settings is visible, configuration header should be visible
+        int settingsVisibility = (isAdminOrSelfHosted || canListPeople) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
-        mSettingsView.setVisibility(settingsVisibility);
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
@@ -383,17 +398,21 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void toggleAdminVisibility() {
-        if (shouldHideWPAdmin()) {
+    private void toggleAdminVisibility(@Nullable final Blog blog) {
+        if (blog == null) {
+            return;
+        }
+        if (shouldHideWPAdmin(blog)) {
             mAdminView.setVisibility(View.GONE);
         } else {
             mAdminView.setVisibility(View.VISIBLE);
         }
     }
 
-    private boolean shouldHideWPAdmin() {
-        Blog blog = WordPress.getCurrentBlog();
-
+    private boolean shouldHideWPAdmin(@Nullable final Blog blog) {
+        if (blog == null) {
+            return false;
+        }
         if (!blog.isDotcomFlag()) {
             return false;
         } else {

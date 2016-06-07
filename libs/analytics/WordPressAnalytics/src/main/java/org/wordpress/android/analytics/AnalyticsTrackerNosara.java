@@ -281,6 +281,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_MY_PROFILE:
                 eventName = "my_profile_opened";
                 break;
+            case OPENED_PEOPLE_MANAGEMENT:
+                eventName = "people_management_list_opened";
+                break;
+            case OPENED_PERSON:
+                eventName = "people_management_details_opened";
+                break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
                 break;
@@ -364,19 +370,19 @@ public class AnalyticsTrackerNosara extends Tracker {
                 eventName = "support_reply_to_support_message_sent";
                 break;
             case LOGIN_MAGIC_LINK_EXITED:
-                eventName = "loagin_magic_link_exited";
+                eventName = "login_magic_link_exited";
                 break;
             case LOGIN_MAGIC_LINK_FAILED:
-                eventName = "loagin_magic_link_failed";
+                eventName = "login_magic_link_failed";
                 break;
             case LOGIN_MAGIC_LINK_OPENED:
-                eventName = "loagin_magic_link_opened";
+                eventName = "login_magic_link_opened";
                 break;
             case LOGIN_MAGIC_LINK_REQUESTED:
-                eventName = "loagin_magic_link_requested";
+                eventName = "login_magic_link_requested";
                 break;
             case LOGIN_MAGIC_LINK_SUCCEEDED:
-                eventName = "loagin_magic_link_succeeded";
+                eventName = "login_magic_link_succeeded";
                 break;
             case LOGIN_FAILED:
                 eventName = "login_failed_to_login";
@@ -392,6 +398,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
                 eventName = "login_autofill_credentials_updated";
+                break;
+            case PERSON_REMOVED:
+                eventName = "people_management_person_removed";
+                break;
+            case PERSON_UPDATED:
+                eventName = "people_management_person_updated";
                 break;
             case PUSH_AUTHENTICATION_APPROVED:
                 eventName = "push_authentication_approved";
@@ -416,6 +428,30 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ME_ACCESSED:
                 eventName = "me_tab_accessed";
+                break;
+            case ME_GRAVATAR_TAPPED:
+                eventName = "me_gravatar_tapped";
+                break;
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
+                eventName = "me_gravatar_tooltip_tapped";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                eventName = "me_gravatar_permissions_denied";
+                break;
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                eventName = "me_gravatar_permissions_accepted";
+                break;
+            case ME_GRAVATAR_SHOT_NEW:
+                eventName = "me_gravatar_shot_new";
+                break;
+            case ME_GRAVATAR_GALLERY_PICKED:
+                eventName = "me_gravatar_gallery_picked";
+                break;
+            case ME_GRAVATAR_CROPPED:
+                eventName = "me_gravatar_cropped";
+                break;
+            case ME_GRAVATAR_UPLOADED:
+                eventName = "me_gravatar_uploaded";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";
