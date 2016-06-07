@@ -383,6 +383,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
+        if (post.getStatusEnum() == PostStatus.DRAFT) {
+            holder.btnPublish.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnPublish.setVisibility(View.GONE);
+        }
+
         boolean canShowStatsButton = canShowStatsForPost(post);
         int numVisibleButtons = (canShowStatsButton ? 4 : 3);
 
@@ -429,6 +435,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.btnTrash.setOnClickListener(btnClickListener);
         holder.btnMore.setOnClickListener(btnClickListener);
         holder.btnBack.setOnClickListener(btnClickListener);
+        holder.btnPublish.setOnClickListener(btnClickListener);
     }
 
     /*
@@ -526,6 +533,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final PostListButton btnEdit;
         private final PostListButton btnView;
+        private final PostListButton btnPublish;
         private final PostListButton btnMore;
 
         private final PostListButton btnStats;
@@ -545,6 +553,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
             btnView = (PostListButton) view.findViewById(R.id.btn_view);
+            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
             btnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
             btnStats = (PostListButton) view.findViewById(R.id.btn_stats);

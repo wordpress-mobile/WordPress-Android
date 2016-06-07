@@ -67,7 +67,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
@@ -234,7 +233,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post for share intents and QuickPress
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
-                mPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(this) +"]");
+                mPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(this) + "]");
                 mPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(this));
                 WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
@@ -501,7 +500,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                 shouldShowContextMenu = false;
                             } else {
                                 registerReceiver(mGalleryReceiver,
-                                    new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
+                                        new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
                                 refreshBlogMedia();
                             }
                             break;
@@ -518,46 +517,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             default:
                 break;
-        }
-    }
-
-    private void trackSavePostAnalytics() {
-        PostStatus status = mPost.getStatusEnum();
-        switch (status) {
-            case PUBLISHED:
-                if (!mPost.isLocalDraft()) {
-                    AnalyticsUtils.trackWithBlogDetails(
-                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                            WordPress.getBlog(mPost.getLocalTableBlogId())
-                    );
-                } else {
-                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
-                }
-                break;
-            case SCHEDULED:
-                if (!mPost.isLocalDraft()) {
-                    AnalyticsUtils.trackWithBlogDetails(
-                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                            WordPress.getBlog(mPost.getLocalTableBlogId())
-                    );
-                } else {
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-                    AnalyticsUtils.trackWithBlogDetails(
-                            AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
-                            WordPress.getBlog(mPost.getLocalTableBlogId()),
-                            properties
-                    );
-                }
-                break;
-            case DRAFT:
-                AnalyticsUtils.trackWithBlogDetails(
-                        AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT,
-                        WordPress.getBlog(mPost.getLocalTableBlogId())
-                );
-                break;
-            default:
-                // No-op
         }
     }
 
@@ -649,7 +608,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
 
-                trackSavePostAnalytics();
+                PostUtils.trackSavePostAnalytics(mPost);
 
                 PostUploadService.addPostToUpload(mPost);
                 PostUploadService.setLegacyMode(!mShowNewEditor);
@@ -1075,7 +1034,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Not a Jetpack or wpcom blog
             // imageURL = mediaFile.getThumbnailURL(); // do not use fileURL here since downloading picture
             // of big dimensions can result in OOM Exception
-            imageURL = mediaFile.getFileURL() != null ?  mediaFile.getFileURL() : mediaFile.getThumbnailURL();
+            imageURL = mediaFile.getFileURL() != null ? mediaFile.getFileURL() : mediaFile.getThumbnailURL();
         }
         return imageURL;
     }
