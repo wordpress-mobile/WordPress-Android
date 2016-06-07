@@ -21,6 +21,7 @@ import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -69,6 +70,7 @@ public class PeopleListFragment extends Fragment {
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
 
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
