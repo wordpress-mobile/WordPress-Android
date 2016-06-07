@@ -320,8 +320,11 @@ public class RestClientUtils {
         }
 
         List embeddedParams = sanitizeUrl(path);
-        String realPath = (String) embeddedParams.get(0);
-        paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+        String realPath = path;
+        if (embeddedParams != null && embeddedParams.size() == 2) {
+            realPath = (String) embeddedParams.get(0);
+            paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+        }
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null,
                 listener, errorListener);
@@ -362,7 +365,14 @@ public class RestClientUtils {
             paramsWithLocale.putAll(params);
         }
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, paramsWithLocale), null, future, future);
+        List embeddedParams = sanitizeUrl(path);
+        String realPath = path;
+        if (embeddedParams != null && embeddedParams.size() == 2) {
+            realPath = (String) embeddedParams.get(0);
+            paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+        }
+
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null, future, future);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -439,7 +449,12 @@ public class RestClientUtils {
         HashMap<String, String> queryParams = new HashMap<>();
 
         Uri uri=Uri.parse(unsanitizedPath);
-        pathAndQueryString.add(uri.getPath());
+        String path = uri.getPath();
+        if (!TextUtils.isEmpty(path)) {
+            pathAndQueryString.add(uri.getPath());
+        } else {
+            pathAndQueryString.add(""); //adding empty String so returned List always has 2 items
+        }
 
         if (uri.getQueryParameterNames() != null ) {
             Iterator iter = uri.getQueryParameterNames().iterator();
