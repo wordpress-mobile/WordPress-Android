@@ -145,6 +145,9 @@ public class ReaderPostActions {
                 // before calling isSamePost (since the difference in those IDs causes it to return false)
                 if (serverPost.feedId == 0 && localPost.feedId != 0) {
                     serverPost.feedId = localPost.feedId;
+                }
+
+                if (serverPost.feedItemId == 0 && localPost.feedItemId != 0) {
                     serverPost.feedItemId = localPost.feedItemId;
                 }
 
