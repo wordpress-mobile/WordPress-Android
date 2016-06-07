@@ -75,27 +75,32 @@ public class GravatarApi {
                 new Callback() {
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            Map<String, Object> properties = new HashMap<>();
+                            properties.put("network_response_code", response.code());
+
+                            // response's body can only be read once so, keep it in a local variable
+                            String responseBody;
+
+                            try {
+                                responseBody = response.body().string();
+                            } catch (IOException e) {
+                                responseBody = "null";
+                            }
+                            properties.put("network_response_body", responseBody);
+
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
+                                    properties);
+                            AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
+                                    responseBody);
+                        }
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 if (response.isSuccessful()) {
                                     gravatarUploadListener.onSuccess();
                                 } else {
-                                    Map<String, Object> properties = new HashMap<>();
-                                    properties.put("network_response_code", response.code());
-
-                                    String responseBody;
-                                    try {
-                                        responseBody = response.body().string();
-                                    } catch (IOException e) {
-                                        responseBody = "null";
-                                    }
-                                    properties.put("network_response_body", responseBody);
-
-                                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
-                                            properties);
-                                    AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
-                                            responseBody);
                                     gravatarUploadListener.onError();
                                 }
                             }
@@ -104,18 +109,18 @@ public class GravatarApi {
 
                     @Override
                     public void onFailure(okhttp3.Call call, final IOException e) {
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
+                        properties.put("network_exception_message", e != null ? e.getMessage() : "null");
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
+                        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
+                                AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null ?
+                                e.getMessage() : "null"));
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                Map<String, Object> properties = new HashMap<>();
-                                properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName()
-                                        : "null");
-                                properties.put("network_exception_message", e != null ? e.getMessage() : "null");
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                                CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                                        AppLog.T.API, "Network call failure trying to upload Gravatar!");
-                                AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null
-                                        ? e.getMessage() : "null"));
                                 gravatarUploadListener.onError();
                             }
                         });
