@@ -320,7 +320,7 @@ public class RestClientUtils {
         }
 
         String realPath = getSanitizedPath(path);
-        if (!TextUtils.isEmpty(realPath)) {
+        if (TextUtils.isEmpty(realPath)) {
             realPath = path;
         }
         paramsWithLocale.putAll(getSanitizedParameters(path));
@@ -365,7 +365,7 @@ public class RestClientUtils {
         }
 
         String realPath = getSanitizedPath(path);
-        if (!TextUtils.isEmpty(realPath)) {
+        if (TextUtils.isEmpty(realPath)) {
             realPath = path;
         }
         paramsWithLocale.putAll(getSanitizedParameters(path));
