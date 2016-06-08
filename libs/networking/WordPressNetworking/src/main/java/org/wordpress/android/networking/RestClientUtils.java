@@ -319,12 +319,11 @@ public class RestClientUtils {
             paramsWithLocale.putAll(params);
         }
 
-        List embeddedParams = sanitizeUrl(path);
-        String realPath = path;
-        if (embeddedParams != null && embeddedParams.size() == 2) {
-            realPath = (String) embeddedParams.get(0);
-            paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+        String realPath = getSanitizedPath(path);
+        if (!TextUtils.isEmpty(realPath)) {
+            realPath = path;
         }
+        paramsWithLocale.putAll(getSanitizedParameters(path));
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null,
                 listener, errorListener);
@@ -365,12 +364,11 @@ public class RestClientUtils {
             paramsWithLocale.putAll(params);
         }
 
-        List embeddedParams = sanitizeUrl(path);
-        String realPath = path;
-        if (embeddedParams != null && embeddedParams.size() == 2) {
-            realPath = (String) embeddedParams.get(0);
-            paramsWithLocale.putAll( (HashMap<String, String>) embeddedParams.get(1));
+        String realPath = getSanitizedPath(path);
+        if (!TextUtils.isEmpty(realPath)) {
+            realPath = path;
         }
+        paramsWithLocale.putAll(getSanitizedParameters(path));
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null, future, future);
 
@@ -441,20 +439,24 @@ public class RestClientUtils {
     }
 
     /**
-     * Takes a URL with query strings and separates it into the path and a Map of query strings values.
-     * Returns both objects in a List, where list[0] = path and list[1] = Map<String, String>
+     * Takes a URL and returns the path within, or an empty string (not null)
      */
-    public static List sanitizeUrl(String unsanitizedPath){
-        ArrayList pathAndQueryString = new ArrayList();
-        HashMap<String, String> queryParams = new HashMap<>();
-
+    public static String getSanitizedPath(String unsanitizedPath){
         Uri uri=Uri.parse(unsanitizedPath);
         String path = uri.getPath();
-        if (!TextUtils.isEmpty(path)) {
-            pathAndQueryString.add(uri.getPath());
-        } else {
-            pathAndQueryString.add(""); //adding empty String so returned List always has 2 items
+        if (TextUtils.isEmpty(path)) {
+            path = "";
         }
+        return path;
+    }
+
+    /**
+     * Takes a URL with query strings and returns a Map of query string values.
+     */
+    public static HashMap<String, String> getSanitizedParameters(String unsanitizedPath){
+        HashMap<String, String> queryParams = new HashMap<>();
+
+        Uri uri = Uri.parse(unsanitizedPath);
 
         if (uri.getQueryParameterNames() != null ) {
             Iterator iter = uri.getQueryParameterNames().iterator();
@@ -465,8 +467,7 @@ public class RestClientUtils {
             }
         }
 
-        pathAndQueryString.add(queryParams);
-
-        return pathAndQueryString;
+        return queryParams;
     }
+
 }
