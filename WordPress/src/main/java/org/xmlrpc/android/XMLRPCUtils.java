@@ -298,6 +298,11 @@ public class XMLRPCUtils {
                     return url;
                 }
             } catch (XMLRPCUtilsException e) {
+                if (e.kind == XMLRPCUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE ||
+                    e.kind == XMLRPCUtilsException.Kind.HTTP_AUTH_REQUIRED ||
+                    e.kind == XMLRPCUtilsException.Kind.MISSING_XMLRPC_METHOD) {
+                    throw e;
+                }
                 // swallow the error since we are just verifying various URLs
                 continue;
             } catch (RuntimeException re) {
