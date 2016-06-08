@@ -289,6 +289,9 @@ public class XMLRPCUtils {
                     // Endpoint found and works fine.
                     return url;
                 }
+            } catch (XMLRPCUtilsException e) {
+                // swallow the error since we are just verifying various URLs
+                continue;
             } catch (RuntimeException re) {
                 // depending how corrupt the user entered URL is, it can generate several kind of runtime exceptions,
                 // ignore them
