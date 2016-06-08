@@ -276,7 +276,7 @@ public class XMLRPCUtils {
         // start by adding the https URL with 'xmlrpc.php'. This will be the first URL to try.
         urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttps));
 
-        // add the sanitized http URL without the '/xmlrpc.php' suffix added to it
+        // add the sanitized https URL without the '/xmlrpc.php' suffix added to it
         urlsToTry.add(sanitizedSiteUrlHttps);
 
         final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
