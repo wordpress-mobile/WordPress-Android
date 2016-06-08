@@ -104,7 +104,38 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                return null;
+                if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
+                    if (mPeopleListFilter == null) {
+                        return "";
+                    } else {
+                        switch (mPeopleListFilter) {
+                            case FOLLOWERS:
+                                return getString(R.string.people_empty_list_filtered_followers);
+                            case EMAIL_FOLLOWERS:
+                                return getString(R.string.people_empty_list_filtered_email_followers);
+                            case VIEWERS:
+                                return getString(R.string.people_empty_list_filtered_viewers);
+                            default:
+                                // A site should always have at least 1 user, assuming there is an error, return empty
+                                return "";
+                        }
+                    }
+
+                } else {
+                    int stringId = 0;
+                    switch (emptyViewMsgType) {
+                        case LOADING:
+                            stringId = R.string.people_fetching;
+                            break;
+                        case NETWORK_ERROR:
+                            stringId = R.string.no_network_message;
+                            break;
+                        case GENERIC_ERROR:
+                            stringId = R.string.error_fetch_people_list;
+                            break;
+                    }
+                    return getString(stringId);
+                }
             }
 
             @Override
