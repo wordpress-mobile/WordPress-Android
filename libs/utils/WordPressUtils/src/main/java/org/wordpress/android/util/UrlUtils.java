@@ -86,25 +86,25 @@ public class UrlUtils {
      * http client will work as expected.
      *
      * @param url url entered by the user or fetched from a server
-     * @param isHTTPS true will make the url starts with https;//
-     * @return transformed url prefixed by its http;// or https;// scheme
+     * @param addHttps true and the url is not starting with http://, it will make the url starts with https://
+     * @return url prefixed by http:// or https://
      */
-    public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
+    public static String addUrlSchemeIfNeeded(String url, boolean addHttps) {
         if (url == null) {
             return null;
         }
 
         // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
         // switch between http or https
-        url = removeLeadingDoubleSlash(url, (isHTTPS ? "https" : "http") + "://");
+        url = removeLeadingDoubleSlash(url, (addHttps ? "https" : "http") + "://");
 
-        if (!URLUtil.isValidUrl(url)) {
-            if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-                url = (isHTTPS ? "https" : "http") + "://" + url;
-            }
+        // If the URL is a valid http or https URL, we're good to go
+        if (URLUtil.isHttpUrl(url) || URLUtil.isHttpsUrl(url)) {
+            return url;
         }
 
-        return url;
+        // Else, remove the old scheme and prefix it by https:// or http://
+        return (addHttps ? "https" : "http") + "://" + removeScheme(url);
     }
 
     /**

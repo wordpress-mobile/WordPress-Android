@@ -17,9 +17,11 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
      * rather than its actual class - use this to convert the serialized list back
      * into a ReaderBlogIdPostIdList
      */
+    @SuppressWarnings("unused")
     public ReaderBlogIdPostIdList(Serializable serializedList) {
         super();
         if (serializedList != null && serializedList instanceof ArrayList) {
+            //noinspection unchecked
             ArrayList<ReaderBlogIdPostId> list = (ArrayList<ReaderBlogIdPostId>) serializedList;
             for (ReaderBlogIdPostId idPair: list) {
                 this.add(idPair);

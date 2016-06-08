@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SlidingScrollView is used for animating the slide in-out between fragments
+    Background color is set so the fragment below it, PeopleListFragment, won't be visible
+-->
+<org.wordpress.android.ui.SlidingScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/usernames_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            android:text="@string/invite_names_title"/>
+
+        <LinearLayout
+            android:id="@+id/usernames_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.FlowLayout
+                android:id="@+id/usernames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/invites_border"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="@dimen/margin_large"
+                android:animateLayoutChanges="true" >
+
+                <org.wordpress.android.widgets.WPEditText
+                    android:id="@+id/invite_usernames"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:paddingTop="@dimen/margin_large"
+                    android:paddingBottom="0dp"
+                    android:paddingLeft="@dimen/margin_medium"
+                    android:paddingRight="@dimen/margin_medium"
+                    android:singleLine="true"
+                    android:textColor="#444444"
+                    android:textColorHint="#AAAAAA"
+                    android:textSize="@dimen/text_sz_medium"
+                    tools:text="sdfwefef"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:minWidth="40dp" />
+            </org.wordpress.android.widgets.FlowLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/role_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="?android:selectableItemBackground"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="@string/role"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="@string/role"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="@string/role"/>
+
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/message_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            android:text="@string/invite_message_title"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/invites_border"
+            android:layout_marginTop="5dp"
+            android:padding="2dp">
+
+            <org.wordpress.android.widgets.WPEditText
+                android:id="@+id/message"
+                style="@style/WordPress.NUXEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:layout_marginLeft="0dp"
+                android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                android:minLines="4"
+                android:maxLength="@integer/invite_message_char_limit"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/message_remaining"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_below="@+id/message"
+                android:padding="5dp"
+                android:textColor="@color/grey_lighten_10"
+                android:textSize="@dimen/text_sz_small"
+                tools:text="@string/invite_message_remaining"/>
+        </RelativeLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/message_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/grey_lighten_10"
+            android:textSize="@dimen/text_sz_small"
+            android:textStyle="italic"
+            android:text="@string/invite_message_info"/>
+    </LinearLayout>
+</org.wordpress.android.ui.SlidingScrollView>

@@ -89,17 +89,13 @@ class ReaderPostRenderer {
     /*
      * scan the content for images and make sure they're correctly sized for the device
      */
-    void resizeImages() {
+    private void resizeImages() {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
-            public void onTagFound(String imageTag, String imageUrl, int start, int end) {
+            public void onTagFound(String imageTag, String imageUrl) {
                 if (!imageUrl.contains("wpcom-smileys")) {
                     replaceImageTag(imageTag, imageUrl);
                 }
-            }
-            @Override
-            public void onScanCompleted() {
-                // nop
             }
         };
         ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
@@ -109,15 +105,11 @@ class ReaderPostRenderer {
     /*
      * scan the content for iframes and make sure they're correctly sized for the device
      */
-    void resizeIframes() {
+    private void resizeIframes() {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
-            public void onTagFound(String tag, String src, int start, int end) {
+            public void onTagFound(String tag, String src) {
                 replaceIframeTag(tag, src);
-            }
-            @Override
-            public void onScanCompleted() {
-                // nop
             }
         };
         ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
@@ -180,16 +172,14 @@ class ReaderPostRenderer {
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
         String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
         if (height > 0) {
-            return new StringBuilder("<img class='").append(imageClass).append("'")
-                    .append(" src='").append(newImageUrl).append("'")
-                    .append(" width='").append(pxToDp(width)).append("'")
-                    .append(" height='").append(pxToDp(height)).append("' />")
-                    .toString();
+            return "<img class='" + imageClass + "'" +
+                    " src='" + newImageUrl + "'" +
+                    " width='" + pxToDp(width) + "'" +
+                    " height='" + pxToDp(height) + "' />";
         } else {
-            return new StringBuilder("<img class='").append(imageClass).append("'")
-                    .append( "src='").append(newImageUrl).append("'")
-                    .append(" width='").append(pxToDp(width)).append("' />")
-                    .toString();
+            return "<img class='" + imageClass + "'" +
+                    "src='" + newImageUrl + "'" +
+                    " width='" + pxToDp(width) + "' />";
         }
     }
 
@@ -198,6 +188,7 @@ class ReaderPostRenderer {
         int newHeight;
         if (width > 0 && height > 0) {
             if (height > width) {
+                //noinspection SuspiciousNameCombination
                 newHeight = mResourceVars.fullSizeImageWidthPx;
                 float ratio = ((float) width / (float) height);
                 newWidth = (int) (newHeight * ratio);
@@ -294,11 +285,10 @@ class ReaderPostRenderer {
             newHeight = mResourceVars.videoHeightPx;
         }
 
-        String newTag = new StringBuilder("<iframe src='").append(src).append("'")
-                .append(" frameborder='0' allowfullscreen='true' allowtransparency='true'")
-                .append(" width='").append(pxToDp(newWidth)).append("'")
-                .append(" height='").append(pxToDp(newHeight)).append("' />")
-                .toString();
+        String newTag = "<iframe src='" + src + "'" +
+                " frameborder='0' allowfullscreen='true' allowtransparency='true'" +
+                " width='" + pxToDp(newWidth) + "'" +
+                " height='" + pxToDp(newHeight) + "' />";
 
         int start = mRenderBuilder.indexOf(tag);
         if (start == -1) {
@@ -313,6 +303,7 @@ class ReaderPostRenderer {
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
     private String formatPostContentForWebView(final String content) {
+        @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't necessary, but it's invalid html5 without one

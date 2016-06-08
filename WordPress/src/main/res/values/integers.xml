@@ -26,4 +26,7 @@
     <integer name="threading_limit">10</integer>
     <integer name="close_after_limit">365</integer>
 
+    <!-- People Management -->
+    <integer name="invite_message_char_limit">500</integer>
+
 </resources>

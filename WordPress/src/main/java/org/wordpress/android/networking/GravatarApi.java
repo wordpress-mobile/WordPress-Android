@@ -1,12 +1,17 @@
 package org.wordpress.android.networking;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 
 import android.os.Handler;
 import android.os.Looper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,6 +75,26 @@ public class GravatarApi {
                 new Callback() {
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            Map<String, Object> properties = new HashMap<>();
+                            properties.put("network_response_code", response.code());
+
+                            // response's body can only be read once so, keep it in a local variable
+                            String responseBody;
+
+                            try {
+                                responseBody = response.body().string();
+                            } catch (IOException e) {
+                                responseBody = "null";
+                            }
+                            properties.put("network_response_body", responseBody);
+
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
+                                    properties);
+                            AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
+                                    responseBody);
+                        }
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
@@ -83,7 +108,16 @@ public class GravatarApi {
                     }
 
                     @Override
-                    public void onFailure(okhttp3.Call call, IOException e) {
+                    public void onFailure(okhttp3.Call call, final IOException e) {
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
+                        properties.put("network_exception_message", e != null ? e.getMessage() : "null");
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
+                        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
+                                AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null ?
+                                e.getMessage() : "null"));
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
