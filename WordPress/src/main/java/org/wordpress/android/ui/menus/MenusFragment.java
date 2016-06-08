@@ -34,6 +34,7 @@ import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,45 +64,41 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         super.onCreate(bundle);
 
         mRestWPCom = new MenusRestWPCom(new MenusRestWPCom.MenusListener() {
+            @Override public Context getContext() {
+                return getActivity();
+            }
+
             @Override public long getSiteId() {
                 return Long.valueOf(WordPress.getCurrentRemoteBlogId());
             }
-            @Override public void onMenuCreated(int requestId, final MenuModel menu) {
-                if (!isAdded()) {
-                    return;
-                }
 
-                if (menu != null) {
-                    //save new menu to local DB here
-                    new AsyncTask<Void, Void, Boolean>() {
-                        @Override
-                        protected Boolean doInBackground(Void... params) {
-                            MenuTable.saveMenu(menu);
-                            return null;
-                        }
+            @Override public void onMenuCreated(int requestId, @NonNull final MenuModel menu) {
+                // make sure we don't intercept another create request
+                if (requestId != mCurrentCreateRequestId) return;
 
-                        @Override
-                        protected void onPostExecute(Boolean result) {
-                        };
-                    }.execute();
+                // TODO: will local-only changes be affected when refreshing menus?
+                //save new menu to local DB here
+                saveMenuBackground(menu);
 
-                    Toast.makeText(getActivity(), getString(R.string.menus_menu_created), Toast.LENGTH_SHORT).show();
-                    // add this newly created menu to the spinner
-                    addMenuToCurrentList(menu);
-                    // enable the action UI elements
-                    mAddEditRemoveControl.setActive(true);
+                if (!isAdded()) return;
 
-                    //now update the menu so the menu location will be saved server-side
-                    mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
-                }
+                // notify user that menu was created successfully
+                ToastUtils.showToast(getActivity(), getString(R.string.menus_menu_created));
+                // add this newly created menu to the spinner
+                addMenuToCurrentList(menu);
+                // enable the action UI elements
+                mAddEditRemoveControl.setActive(true);
+                // TODO: should updating the menu be handled here or in MenusRestWPCom?
+                //now update the menu so the menu location will be saved server-side
+                mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
             }
-            @Override public Context getContext() { return getActivity(); }
+
             @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, final List<MenuLocationModel> locations) {
+                // make sure we don't intercept another load request
+                if (requestId != mCurrentLoadRequestId) return;
                 boolean bSpinnersUpdated = false;
                 if (locations != null) {
-                    if (CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
-                        // no op
-                    } else {
+                    if (!CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
                         // update Menu Locations spinner
                         mMenuLocationsSpinner.setItems((List)locations, 0);
                         bSpinnersUpdated = true;
@@ -109,28 +106,24 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 }
 
                 if (menus != null) {
-                    if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
-                        // no op
-                    } else {
+                    if (!CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         //make a copy of the menu array and strip off the default and add menu "menus"
                         final List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
 
                         //save menus to local DB here
                         new AsyncTask<Void, Void, Boolean>() {
-                            @Override
-                            protected Boolean doInBackground(Void... params) {
+                            @Override protected Boolean doInBackground(Void... params) {
                                 MenuTable.saveMenus(userMenusOnly);
                                 MenuLocationTable.saveMenuLocations(locations);
                                 return null;
                             }
 
-                            @Override
-                            protected void onPostExecute(Boolean result) {
-                            };
-
+                            @Override protected void onPostExecute(Boolean result) { }
                         }.execute();
 
-                        addSpecialMenus(locations.get(0), menus);
+                        if (locations != null) {
+                            addSpecialMenus(locations.get(0), menus);
+                        }
                         // update Menus spinner
                         mMenusSpinner.setItems((List)menus, BASE_DISPLAY_COUNT_MENUS);
                         bSpinnersUpdated = true;
@@ -148,25 +141,20 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
             }
 
             @Override public void onMenuDeleted(int requestId, MenuModel menu, boolean deleted) {
+                // make sure we don't intercept another delete request
+                if (requestId != mCurrentDeleteRequestId) return;
                 //delete menu from local DB here
                 final long menuId = menu.menuId;
                 new AsyncTask<Void, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Void... params) {
+                    @Override protected Boolean doInBackground(Void... params) {
                         MenuTable.deleteMenu(menuId);
                         return null;
                     }
 
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-                    };
-
+                    @Override protected void onPostExecute(Boolean result) { }
                 }.execute();
 
-                if (!isAdded()) {
-                    return;
-                }
-
+                if (!isAdded()) return;
 
                 if (deleted) {
                     Toast.makeText(getActivity(), getString(R.string.menus_menu_deleted), Toast.LENGTH_SHORT).show();
@@ -182,27 +170,15 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 }
 
             }
-            @Override public void onMenuUpdated(int requestId, final MenuModel menu) {
-
+            @Override public void onMenuUpdated(int requestId, @NonNull final MenuModel menu) {
+                // make sure we don't intercept another update request
+                if (requestId != mCurrentUpdateRequestId) return;
                 //update menu in local DB here
-                new AsyncTask<Void, Void, Boolean>() {
-                    @Override
-                    protected Boolean doInBackground(Void... params) {
-                        MenuTable.saveMenu(menu);
-                        return null;
-                    }
+                saveMenuBackground(menu);
 
-                    @Override
-                    protected void onPostExecute(Boolean result) {
-                    };
+                if (!isAdded()) return;
 
-                }.execute();
-
-                if (!isAdded()) {
-                    return;
-                }
-
-                Toast.makeText(getActivity(), getString(R.string.menus_menu_updated), Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(getActivity(), getString(R.string.menus_menu_updated));
 
                 //update menu in Spinner here
                 if (mMenusSpinner.getItems() != null) {
@@ -283,9 +259,8 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
 
             @Override
             public void onMenuCreate(MenuModel menu) {
-                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
-                    return;
-                }
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) return;
+
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
@@ -294,7 +269,6 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
 
             @Override
             public boolean onMenuDelete(final MenuModel menu) {
-
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
                     //restore the Add/Edit/Remove control
                     mAddEditRemoveControl.setMenu(menu);
@@ -320,7 +294,10 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                     }
                 };
 
-                Snackbar snackbar = Snackbar.make(getView(), getString(R.string.menus_menu_deleted), Snackbar.LENGTH_LONG)
+                View snackbarView = getView();
+                if (snackbarView == null) return true;
+
+                Snackbar snackbar = Snackbar.make(snackbarView, getString(R.string.menus_menu_deleted), Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo, undoListener);
 
                 // wait for the undo snackbar to disappear before actually deleting the menu
@@ -489,7 +466,6 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         mCurrentLoadRequestId = mRestWPCom.fetchAllMenus();
     }
 
-
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView != null) {
             int stringId = 0;
@@ -526,7 +502,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
     }
 
     private List<MenuModel> getUserMenusOnly(List<MenuModel> menus){
-        ArrayList<MenuModel> tmpMenus = new ArrayList();
+        ArrayList<MenuModel> tmpMenus = new ArrayList<>();
         if (menus != null) {
             for (MenuModel menu : menus) {
                 if (menu.siteId > 0) {
@@ -549,7 +525,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
             // add the special menus back
             addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
             // update the spinner items
-            mMenusSpinner.setItems((List)menuItems, BASE_DISPLAY_COUNT_MENUS);
+            mMenusSpinner.setItems((List) menuItems, BASE_DISPLAY_COUNT_MENUS);
             //set this newly created menu
             mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
         }
@@ -572,20 +548,16 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
     private boolean mIsLoadTaskRunning = false;
 
     @Override
-    public void onEditorShown() {
-    }
+    public void onEditorShown() { }
 
     @Override
-    public void onEditorHidden() {
-    }
+    public void onEditorHidden() { }
 
     @Override
-    public void onMenuItemAdded(MenuItemModel menuItem) {
-    }
+    public void onMenuItemAdded(MenuItemModel menuItem) { }
 
     @Override
-    public void onMenuItemChanged(MenuItemModel menuItem) {
-    }
+    public void onMenuItemChanged(MenuItemModel menuItem) { }
 
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
@@ -595,16 +567,19 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         protected void onPreExecute() {
             mIsLoadTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsLoadTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             tmpMenus = MenuTable.getAllMenusForCurrentSite();
             tmpMenuLocations = MenuLocationTable.getAllMenuLocationsForCurrentSite();
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
@@ -683,7 +658,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 MenuLocationModel location = (MenuLocationModel) mMenuLocationsSpinner.getSelectedItem();
                 if (location != null) {
                     if (menu.locations == null) {
-                        menu.locations = new ArrayList<MenuLocationModel>();
+                        menu.locations = new ArrayList<>();
                     }
 
                     if (menu.locations.size() > 0) {
@@ -713,4 +688,14 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         return menu;
     }
 
+    private void saveMenuBackground(@NonNull final MenuModel menu) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override protected Boolean doInBackground(Void... params) {
+                MenuTable.saveMenu(menu);
+                return null;
+            }
+
+            @Override protected void onPostExecute(Boolean result) { }
+        }.execute();
+    }
 }
