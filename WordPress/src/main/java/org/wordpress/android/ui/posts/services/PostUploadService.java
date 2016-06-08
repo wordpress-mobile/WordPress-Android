@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.services;
 
+import android.app.Notification;
+import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,8 +16,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -33,6 +33,7 @@ import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceive
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -209,14 +210,13 @@ public class PostUploadService extends Service {
         protected Boolean doInBackground(Post... posts) {
             mPost = posts[0];
 
-            mPostUploadNotifier = new PostUploadNotifier(mPost);
             String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
             String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
             String uploadingPostMessage = String.format(
                     getString(R.string.sending_content),
                     mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
             );
-            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
+            mPostUploadNotifier = new PostUploadNotifier(mPost, uploadingPostTitle, uploadingPostMessage);
 
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
             if (mBlog == null) {
@@ -238,8 +238,6 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
                 moreContent = processPostMedia(mPost.getMoreText());
             }
-
-            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
@@ -444,6 +442,7 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
+            properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
             AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }
 
@@ -566,8 +565,9 @@ public class PostUploadService extends Service {
             // We won't resize gif images to keep them awesome.
             boolean shouldUploadResizedVersion = false;
             // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            if (!mimeType.equals("image/gif") && !mBlog.getMaxImageWidth().equals("Original Size")) {
-                //check the picture settings
+            if (!mimeType.equals("image/gif") && MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth())
+                    != Integer.MAX_VALUE) {
+                // check the picture settings
                 int pictureSettingWidth = mediaFile.getWidth();
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
@@ -697,7 +697,7 @@ public class PostUploadService extends Service {
                         }
                     } else {
                         // set the width of the video to the thumbnail width, else 640x480
-                        if (!mBlog.getMaxImageWidth().equals("Original Size")) {
+                        if (MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth()) != Integer.MAX_VALUE) {
                             xRes = mBlog.getMaxImageWidth();
                             yRes = String.valueOf(Math.round(Integer.valueOf(mBlog.getMaxImageWidth()) * 0.75));
                         } else {
@@ -853,44 +853,34 @@ public class PostUploadService extends Service {
 
     private class PostUploadNotifier {
         private final NotificationManager mNotificationManager;
-        private final NotificationCompat.Builder mNotificationBuilder;
-
+        private final Builder mNotificationBuilder;
         private final int mNotificationId;
         private int mNotificationErrorId = 0;
         private int mTotalMediaItems;
         private int mCurrentMediaItem;
         private float mItemProgressSize;
 
-        public PostUploadNotifier(Post post) {
+        public PostUploadNotifier(Post post, String title, String message) {
             // add the uploader to the notification bar
             mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext,
                     Context.NOTIFICATION_SERVICE);
-
-            mNotificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            mNotificationBuilder = new Notification.Builder(getApplicationContext());
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
-            mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
-            startForeground(mNotificationId, mNotificationBuilder.build());
-        }
-
-
-        public void updateNotificationMessage(String title, String message) {
             if (title != null) {
                 mNotificationBuilder.setContentTitle(title);
             }
-
             if (message != null) {
                 mNotificationBuilder.setContentText(message);
             }
-
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
+            startForeground(mNotificationId, mNotificationBuilder.build());
         }
 
         public void updateNotificationIcon(Bitmap icon) {
             if (icon != null) {
                 mNotificationBuilder.setLargeIcon(icon);
             }
-
-            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+            doNotify(mNotificationId, mNotificationBuilder.build());
         }
 
         public void cancelNotification() {
@@ -907,7 +897,7 @@ public class PostUploadService extends Service {
             }
 
             // Notification builder
-            Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
             String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                     .page_published) : mContext.getResources().getText(R.string.post_published));
             if (!isFirstPublishing) {
@@ -947,7 +937,7 @@ public class PostUploadService extends Service {
                 notificationBuilder.addAction(R.drawable.ic_share_white_24dp, getString(R.string.share_action),
                         pendingIntent);
             }
-            mNotificationManager.notify(notificationId, notificationBuilder.build());
+            doNotify(notificationId, notificationBuilder.build());
         }
 
         private int getNotificationIdForPost(Post post) {
@@ -960,7 +950,7 @@ public class PostUploadService extends Service {
         public void updateNotificationError(String mErrorMessage, boolean isMediaError, boolean isPage) {
             AppLog.d(T.POSTS, "updateNotificationError: " + mErrorMessage);
 
-            Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+            Builder notificationBuilder = new Notification.Builder(getApplicationContext());
             String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id)
                     : mContext.getResources().getText(R.string.post_id));
             Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -987,7 +977,7 @@ public class PostUploadService extends Service {
             if (mNotificationErrorId == 0) {
                 mNotificationErrorId = mNotificationId + (new Random()).nextInt();
             }
-            mNotificationManager.notify(mNotificationErrorId, notificationBuilder.build());
+            doNotify(mNotificationErrorId, notificationBuilder.build());
         }
 
         public void updateNotificationProgress(float progress) {
@@ -1004,13 +994,16 @@ public class PostUploadService extends Service {
             }
 
             mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
+            doNotify(mNotificationId, mNotificationBuilder.build());
+        }
 
+        private synchronized void doNotify(int id, Notification notification) {
             try {
-                mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+                mNotificationManager.notify(id, notification);
             } catch (RuntimeException runtimeException) {
                 CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                        AppLog.T.UTILS, "See issue #2858");
-                AppLog.d(T.POSTS, "See issue #2858; notify failed with:" + runtimeException);
+                        AppLog.T.UTILS, "See issue #2858 / #3966");
+                AppLog.d(T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);
             }
         }
 

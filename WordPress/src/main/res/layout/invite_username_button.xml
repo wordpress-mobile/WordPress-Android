@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="6dp"
+    android:paddingRight="12dp">
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:paddingTop="@dimen/margin_large"
+        android:gravity="center_vertical"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_medium"/>
+
+    <ImageButton
+        android:id="@+id/username_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/username"
+        android:paddingTop="@dimen/margin_large"
+        android:layout_alignTop="@+id/username"
+        android:layout_alignBottom="@+id/username"
+        android:src="@drawable/ic_close_grey600_24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
+</RelativeLayout>
