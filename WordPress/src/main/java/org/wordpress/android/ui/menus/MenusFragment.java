@@ -30,7 +30,7 @@ import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemEditView;
-import org.wordpress.android.ui.menus.views.MenuItemFactory;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -38,7 +38,7 @@ import org.wordpress.android.util.NetworkUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenusFragment extends Fragment {
+public class MenusFragment extends Fragment implements MenuItemEditView.MenuItemEditorListener {
 
     private static final int BASE_DISPLAY_COUNT_MENUS = -2;
 
@@ -444,7 +444,7 @@ public class MenusFragment extends Fragment {
         mAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemEditView.setType(MenuItemFactory.ITEM_TYPE.PAGE);
+                mItemEditView.setType(MenuItemEditorFactory.ITEM_TYPE.PAGE);
             }
         });
 
@@ -570,6 +570,23 @@ public class MenusFragment extends Fragment {
      * AsyncTask to load menus from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
+    @Override
+    public void onEditorShown() {
+    }
+
+    @Override
+    public void onEditorHidden() {
+    }
+
+    @Override
+    public void onMenuItemAdded(MenuItemModel menuItem) {
+    }
+
+    @Override
+    public void onMenuItemChanged(MenuItemModel menuItem) {
+    }
+
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
         List<MenuLocationModel> tmpMenuLocations;

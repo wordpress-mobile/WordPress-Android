@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.util.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey"
+        android:text="@string/link_item_editor_url_input_header" />
+
+    <org.wordpress.android.util.widgets.WPEditText
+        android:id="@+id/link_editor_url_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <org.wordpress.android.widgets.WPCheckBox
+        android:id="@+id/link_editor_open_new_tab_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/link_item_editor_open_new_window_option" />
+
+</LinearLayout>

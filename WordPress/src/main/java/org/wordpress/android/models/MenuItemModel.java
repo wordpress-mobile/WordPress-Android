@@ -1,10 +1,14 @@
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Menu Items define content that a Menu displays. They can be of type Page, Link, Post, Category,
@@ -31,6 +35,7 @@ public class MenuItemModel {
     public String type;
     public String typeFamily;
     public String typeLabel;
+    public Map<String, String> data;
     public List<MenuItemModel> children;
 
     @Override
@@ -55,5 +60,10 @@ public class MenuItemModel {
 
     public boolean hasChildren() {
         return children != null && children.size() > 0;
+    }
+
+    public void addData(@NonNull String key, String value) {
+        if (data == null) data = new HashMap<>();
+        data.put(key, value);
     }
 }

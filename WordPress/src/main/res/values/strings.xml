@@ -1447,6 +1447,8 @@
     <string name="menus_menu_created">Menu created</string>
     <string name="menus_menu_deleted">Menu deleted</string>
     <string name="menus_menu_updated">Menu updated</string>
+    <string name="link_item_editor_url_input_header">Link address (URL)</string>
+    <string name="link_item_editor_open_new_window_option">Open link in new window/tab</string>
 
     <!-- Menu Item types -->
     <string name="menu_item_type_page" translatable="false">@string/page</string>
