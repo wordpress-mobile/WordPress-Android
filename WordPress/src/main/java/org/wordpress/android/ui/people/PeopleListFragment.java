@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
@@ -67,6 +69,8 @@ public class PeopleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
+        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
@@ -77,6 +81,10 @@ public class PeopleListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
+                Blog blog = WordPress.getBlog(mLocalTableBlogID);
+                if (blog != null && !blog.isPrivate()) {
+                    list.remove(PeopleListFilter.VIEWERS);
+                }
                 return list;
             }
 
@@ -150,8 +158,6 @@ public class PeopleListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
 
         // refresh the first page to serve fresh data
         updatePeople(false);
