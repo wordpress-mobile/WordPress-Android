@@ -100,7 +100,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 if (locations != null) {
                     if (!CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
                         // update Menu Locations spinner
-                        mMenuLocationsSpinner.setItems((List)locations, 0);
+                        mMenuLocationsSpinner.setItems(locations, 0);
                         bSpinnersUpdated = true;
                     }
                 }
@@ -125,7 +125,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                             addSpecialMenus(locations.get(0), menus);
                         }
                         // update Menus spinner
-                        mMenusSpinner.setItems((List)menus, BASE_DISPLAY_COUNT_MENUS);
+                        mMenusSpinner.setItems(menus, BASE_DISPLAY_COUNT_MENUS);
                         bSpinnersUpdated = true;
                     }
                 }
@@ -379,7 +379,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                     addSpecialMenus(menuLocationSelected, menus);
                     //we need to re-set (re-create) the spinner adapter in order to make the selection be re-drawn
                     //otherwise if items have changed but the selection remains the same, changes don' get rendered
-                    mMenusSpinner.setItems((List) menus, BASE_DISPLAY_COUNT_MENUS);
+                    mMenusSpinner.setItems(menus, BASE_DISPLAY_COUNT_MENUS);
 
                     for (int i = 0; i < menus.size() && !bFound; i++) {
                         MenuModel menu = menus.get(i);
@@ -525,7 +525,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
             // add the special menus back
             addSpecialMenus((MenuLocationModel) mMenuLocationsSpinner.getSelectedItem(), menuItems);
             // update the spinner items
-            mMenusSpinner.setItems((List) menuItems, BASE_DISPLAY_COUNT_MENUS);
+            mMenusSpinner.setItems(menuItems, BASE_DISPLAY_COUNT_MENUS);
             //set this newly created menu
             mMenusSpinner.setSelection(mMenusSpinner.getItems().size() - 2);
         }
@@ -583,11 +583,11 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                mMenuLocationsSpinner.setItems((List)tmpMenuLocations, 0);
+                mMenuLocationsSpinner.setItems(tmpMenuLocations, 0);
                 if (tmpMenuLocations != null && tmpMenuLocations.size() > 0) {
                     addSpecialMenus(tmpMenuLocations.get(0), tmpMenus);
                 }
-                mMenusSpinner.setItems((List)tmpMenus, BASE_DISPLAY_COUNT_MENUS);
+                mMenusSpinner.setItems(tmpMenus, BASE_DISPLAY_COUNT_MENUS);
             }
 
             if ( (!result || tmpMenuLocations == null || tmpMenuLocations.size() == 0)

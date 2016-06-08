@@ -36,29 +36,29 @@ public class MenusSpinner extends Spinner {
         array.recycle();
     }
 
-    public void setItems(List<NameInterface> items, int displayBaseCount) {
+    public <T extends NameInterface> void setItems(List<T> items, int displayBaseCount) {
         if (items != null && items.size() > 0) {
-            mAdapter = new MenusSpinnerAdapter(items, displayBaseCount);
+            mAdapter = new MenusSpinnerAdapter<>(items, displayBaseCount);
             setAdapter(mAdapter);
         } else {
             setAdapter(null);
         }
     }
 
-    public List getItems(){
+    public <T extends NameInterface> List<T> getItems(){
         if (mAdapter != null)
             return mAdapter.getItems();
         return null;
     }
 
-    private class MenusSpinnerAdapter implements SpinnerAdapter {
+    private class MenusSpinnerAdapter<T extends NameInterface> implements SpinnerAdapter {
         private static final int EMPTY_VIEW_TYPE = 0;
         private static final int NORMAL_VIEW_TYPE = 1;
 
-        private final List<NameInterface> mItems;
+        private final List<T> mItems;
         private int mDisplayBaseCount; //count starts from this value
 
-        public MenusSpinnerAdapter(List<NameInterface> items, int displayBaseCount) {
+        public MenusSpinnerAdapter(List<T> items, int displayBaseCount) {
             super();
             mItems = items;
             mDisplayBaseCount = displayBaseCount;
@@ -155,9 +155,8 @@ public class MenusSpinner extends Spinner {
             return !hasItems();
         }
 
-        public List getItems(){
+        public List<T> getItems(){
             return mItems;
         }
-
     }
 }
