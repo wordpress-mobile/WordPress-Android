@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -38,7 +37,6 @@ public class PeopleListFragment extends Fragment {
     private OnFetchPeopleListener mOnFetchPeopleListener;
 
     private FilteredRecyclerView mFilteredRecyclerView;
-    private ProgressBar mProgress;
     private PeopleListFilter mPeopleListFilter;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
@@ -113,10 +111,6 @@ public class PeopleListFragment extends Fragment {
             }
         });
 
-        // progress bar that appears when loading more people
-        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
-        mProgress.setVisibility(View.GONE);
-
         return rootView;
     }
 
@@ -156,12 +150,11 @@ public class PeopleListFragment extends Fragment {
     * show/hide progress bar which appears at the bottom of the activity when loading more people
     */
     public void showLoadingProgress(boolean showProgress) {
-        if (isAdded() && mProgress != null) {
+        if (isAdded() && mFilteredRecyclerView != null) {
             if (showProgress) {
-                mProgress.bringToFront();
-                mProgress.setVisibility(View.VISIBLE);
+                mFilteredRecyclerView.showLoadingProgress();
             } else {
-                mProgress.setVisibility(View.GONE);
+                mFilteredRecyclerView.hideLoadingProgress();
             }
         }
     }
