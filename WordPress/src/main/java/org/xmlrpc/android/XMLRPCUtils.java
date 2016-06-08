@@ -268,16 +268,19 @@ public class XMLRPCUtils {
 
     private static String verifyXmlrpcUrl(final String siteUrl, final String httpUsername, final String httpPassword)
             throws XMLRPCUtilsException {
-        final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
+        final String sanitizedSiteUrlHttps = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
+        final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
 
         // Ordered set of Strings that contains the URLs we want to try. No discovery ;)
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
-        // start by adding the url with 'xmlrpc.php'. This will be the first url to try.
-        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrl));
+        // start by adding the URLs with 'xmlrpc.php'. This will be the first URLs to try.
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttps));
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttp));
 
-        // add the sanitized URL without the '/xmlrpc.php' suffix added to it
-        urlsToTry.add(sanitizedSiteUrl);
+        // add the sanitized URLs without the '/xmlrpc.php' suffix added to it
+        urlsToTry.add(sanitizedSiteUrlHttps);
+        urlsToTry.add(sanitizedSiteUrlHttp);
 
         // add the user provided URL as well
         urlsToTry.add(siteUrl);
