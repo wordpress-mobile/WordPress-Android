@@ -11,7 +11,8 @@
     <Spinner
         android:id="@+id/menu_item_type_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/menu_item_type_spinner_entries" />
 
     <View style="@style/MenusDividerView" />
 

@@ -83,6 +83,7 @@
     <string name="unknown">Unknown</string>
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
+    <string name="link">Link</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -681,7 +682,7 @@
     <!-- stats: label for the entries -->
     <string name="stats_entry_country">Country</string>
     <string name="stats_entry_posts_and_pages">Title</string>
-    <string name="stats_entry_clicks_link">Link</string>
+    <string name="stats_entry_clicks_link" translatable="false">@string/link</string>
     <string name="stats_entry_tags_and_categories">Topic</string>
     <string name="stats_entry_authors">Author</string>
     <string name="stats_entry_referrers">Referrer</string>
@@ -930,7 +931,7 @@
     <string name="post_format_chat">Chat</string>
     <string name="post_format_gallery">Gallery</string>
     <string name="post_format_image">Image</string>
-    <string name="post_format_link">Link</string>
+    <string name="post_format_link" translatable="false">@string/link</string>
     <string name="post_format_quote">Quote</string>
     <string name="post_format_standard">Standard</string>
     <string name="post_format_status">Status</string>
@@ -1427,7 +1428,9 @@
     <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
 
+    <!--               -->
     <!-- Calypso menus -->
+    <!--               -->
     <string name="uses">uses</string>
     <string name="location_menu_spinner_title">%d menu areas in this theme</string>
     <string name="menus_spinner_title">%d menus available</string>
@@ -1444,6 +1447,22 @@
     <string name="menus_menu_created">Menu created</string>
     <string name="menus_menu_deleted">Menu deleted</string>
     <string name="menus_menu_updated">Menu updated</string>
+
+    <!-- Menu Item types -->
+    <string name="menu_item_type_page" translatable="false">@string/page</string>
+    <string name="menu_item_type_post" translatable="false">@string/post</string>
+    <string name="menu_item_type_link" translatable="false">@string/link</string>
+    <string name="menu_item_type_tag">Tag</string>
+    <string name="menu_item_type_category">Category</string>
+    <string name="menu_item_type_testimonial">Testimonial</string>
+    <string-array name="menu_item_type_spinner_entries">
+        <item>@string/menu_item_type_page</item>
+        <item>@string/menu_item_type_post</item>
+        <item>@string/menu_item_type_link</item>
+        <item>@string/menu_item_type_tag</item>
+        <item>@string/menu_item_type_category</item>
+        <item>@string/menu_item_type_testimonial</item>
+    </string-array>
 
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
