@@ -22,6 +22,7 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -91,7 +92,7 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onLoadData() {
-
+                updatePeople(false);
             }
 
             @Override
@@ -121,9 +122,7 @@ public class PeopleListFragment extends Fragment {
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
 
         // refresh the first page to serve fresh data
-        if (mOnFetchPeopleListener != null) {
-            mOnFetchPeopleListener.onFetchFirstPage();
-        }
+        updatePeople(false);
     }
 
     @Override
@@ -143,6 +142,24 @@ public class PeopleListFragment extends Fragment {
             mFilteredRecyclerView.setAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
+        }
+    }
+
+    private void updatePeople(boolean loadMore) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            mFilteredRecyclerView.setRefreshing(false);
+            return;
+        }
+
+        mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
+
+        if (mOnFetchPeopleListener != null) {
+            if (loadMore) {
+                mOnFetchPeopleListener.onFetchMorePeople();
+            } else {
+                mOnFetchPeopleListener.onFetchFirstPage();
+            }
         }
     }
 
@@ -231,8 +248,8 @@ public class PeopleListFragment extends Fragment {
             }
 
             // end of list is reached
-            if (mOnFetchPeopleListener != null && position == getItemCount() - 1) {
-                mOnFetchPeopleListener.onFetchMorePeople();
+            if (position == getItemCount() - 1) {
+                updatePeople(true);
             }
         }
 
