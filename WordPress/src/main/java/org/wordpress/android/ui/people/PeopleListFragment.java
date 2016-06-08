@@ -70,6 +70,7 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
+        mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
@@ -142,6 +143,9 @@ public class PeopleListFragment extends Fragment {
             mFilteredRecyclerView.setAdapter(peopleAdapter);
         } else {
             peopleAdapter.setPeopleList(peopleList);
+        }
+        if (peopleList != null && !peopleList.isEmpty()) {
+            mFilteredRecyclerView.hideEmptyView();
         }
     }
 
