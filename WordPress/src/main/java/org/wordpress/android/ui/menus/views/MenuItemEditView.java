@@ -3,15 +3,20 @@ package org.wordpress.android.ui.menus.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.ViewFlipper;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.items.BaseMenuItemEditor;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
+
+import java.util.Map;
 
 /**
  */
@@ -25,12 +30,11 @@ public class MenuItemEditView extends LinearLayout {
 
     private MenuItemEditorFactory.ITEM_TYPE mType;
     private MenuItemEditorListener mListener;
-    private BaseMenuItemEditor mCurrentEditor;
 
     private Spinner mTypePicker;
     private Button mAddButton;
     private Button mCancelButton;
-    private View mEditView;
+    private ViewFlipper mEditorFlipper;
 
     public MenuItemEditView(Context context, MenuItemEditorFactory.ITEM_TYPE type) {
         super(context);
@@ -53,12 +57,26 @@ public class MenuItemEditView extends LinearLayout {
         mTypePicker = (Spinner) findViewById(R.id.menu_item_type_spinner);
         mAddButton = (Button) findViewById(R.id.menu_item_edit_add);
         mCancelButton = (Button) findViewById(R.id.menu_item_edit_cancel);
-        mEditView = findViewById(R.id.menu_item_edit_view_stub);
+        mEditorFlipper = (ViewFlipper) findViewById(R.id.menu_item_editor_flipper);
+
+        // add editor view stubs
+        for (MenuItemEditorFactory.ITEM_TYPE type : MenuItemEditorFactory.ITEM_TYPE.values()) {
+            BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getContext(), type);
+            if (editor != null) {
+                mEditorFlipper.addView(editor);
+            }
+        }
 
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // TODO: set type and update editor view
+                mEditorFlipper.setDisplayedChild(position);
+                ViewGroup child = (ViewGroup) mEditorFlipper.getCurrentView();
+                View stub = child.getChildAt(0);
+                if (stub instanceof ViewStub) {
+                    ((ViewStub) stub).inflate();
+                }
                 MenuItemEditorFactory.ITEM_TYPE type = MenuItemEditorFactory.ITEM_TYPE.typeForString(mTypePicker.getSelectedItem().toString());
                 setType(type);
             }
@@ -85,21 +103,26 @@ public class MenuItemEditView extends LinearLayout {
     }
 
     public void refreshView() {
+        if (mType == MenuItemEditorFactory.ITEM_TYPE.NULL) {
+            setVisibility(View.GONE);
+            notifyHidden();
+        } else {
+            setVisibility(View.VISIBLE);
+            notifyShown();
+        }
+
         switch (mType) {
-            case NULL:
-                setVisibility(View.GONE);
-                notifyHidden();
-                break;
             case PAGE:
-                setVisibility(View.VISIBLE);
-                notifyShown();
                 break;
         }
     }
 
     public void setType(MenuItemEditorFactory.ITEM_TYPE type) {
+        setType(type, null);
+    }
+
+    public void setType(MenuItemEditorFactory.ITEM_TYPE type, Map<String, Object> data) {
         mType = type;
-        mCurrentEditor = MenuItemEditorFactory.getEditor(type);
         refreshView();
     }
 

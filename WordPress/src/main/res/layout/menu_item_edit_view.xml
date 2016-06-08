@@ -16,8 +16,8 @@
 
     <View style="@style/MenusDividerView" />
 
-    <ViewStub
-        android:id="@+id/menu_item_edit_view_stub"
+    <ViewFlipper
+        android:id="@+id/menu_item_editor_flipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.menus.items;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 /**
@@ -30,21 +31,20 @@ public class MenuItemEditorFactory {
         }
     }
 
-    public static BaseMenuItemEditor getEditor(ITEM_TYPE type) {
+    public static BaseMenuItemEditor getEditor(Context context, ITEM_TYPE type) {
         switch (type) {
             case PAGE:
-                return new PageItemEditor();
+                return new PageItemEditor(context);
             case POST:
-                return new PostItemEditor();
+                return new PostItemEditor(context);
             case CATEGORY:
-                return new CategoryItemEditor();
+                return new CategoryItemEditor(context);
             case TAG:
-                return new TagItemEditor();
+                return new TagItemEditor(context);
             case LINK:
-                return new LinkItemEditor();
+                return new LinkItemEditor(context);
             case TESTIMONIAL:
-                return new TestimonialItemEditor();
-            case NULL:
+                return new TestimonialItemEditor(context);
             default:
                 return null;
         }

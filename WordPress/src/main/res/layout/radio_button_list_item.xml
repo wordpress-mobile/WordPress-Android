@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.CheckableLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_button_item_layout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPRadioButton
+        android:id="@+id/checkable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <org.wordpress.android.util.widgets.WPTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Radio Button List Item Title" />
+
+</org.wordpress.android.widgets.CheckableLinearLayout>

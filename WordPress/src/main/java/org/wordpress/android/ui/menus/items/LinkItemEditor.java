@@ -3,7 +3,7 @@ package org.wordpress.android.ui.menus.items;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -19,19 +19,24 @@ public class LinkItemEditor extends BaseMenuItemEditor {
     private EditText mUrlEditText;
     private CheckBox mOpenNewTabCheckBox;
 
+    public LinkItemEditor(Context context) {
+        super(context);
+    }
+
+    @Override
+    public void onInflate(ViewStub stub, View inflated) {
+        mUrlEditText = (EditText) inflated.findViewById(R.id.link_editor_url_input);
+        mOpenNewTabCheckBox = (CheckBox) inflated.findViewById(R.id.link_editor_open_new_tab_checkbox);
+    }
+
     @Override
     public int getIconDrawable() {
         return R.drawable.gridicon_link;
     }
 
     @Override
-    public View getEditView(Context context, ViewGroup root) {
-        View editView = View.inflate(context, R.layout.link_menu_item_edit_view, root);
-
-        mUrlEditText = (EditText) editView.findViewById(R.id.link_editor_url_input);
-        mOpenNewTabCheckBox = (CheckBox) editView.findViewById(R.id.link_editor_open_new_tab_checkbox);
-
-        return editView;
+    public int getLayoutRes() {
+        return R.layout.link_menu_item_edit_view;
     }
 
     @Override
