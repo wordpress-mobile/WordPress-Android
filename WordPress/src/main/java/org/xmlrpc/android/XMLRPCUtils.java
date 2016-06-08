@@ -272,20 +272,15 @@ public class XMLRPCUtils {
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
         final String sanitizedSiteUrlHttps = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
+        final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
 
         // start by adding the https URL with 'xmlrpc.php'. This will be the first URL to try.
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttp));
         urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttps));
 
         // add the sanitized https URL without the '/xmlrpc.php' suffix added to it
-        urlsToTry.add(sanitizedSiteUrlHttps);
-
-        final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
-
-        // add the http URL with 'xmlrpc.php'
-        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttp));
-
-        // add the sanitized http URL without the '/xmlrpc.php' suffix added to it
         urlsToTry.add(sanitizedSiteUrlHttp);
+        urlsToTry.add(sanitizedSiteUrlHttps);
 
         // add the user provided URL as well
         urlsToTry.add(siteUrl);
