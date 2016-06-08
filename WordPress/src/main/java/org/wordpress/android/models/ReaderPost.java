@@ -10,7 +10,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -539,8 +538,12 @@ public class ReaderPost {
         return xpostBlogId != 0 && xpostPostId != 0;
     }
 
+    /*
+     * returns true if the passed post appears to be the same as this one - used when posts are
+     * retrieved to determine which ones are new/changed/unchanged
+     */
     public boolean isSamePost(ReaderPost post) {
-        boolean result = post != null
+        return post != null
                 && post.blogId == this.blogId
                 && post.postId == this.postId
                 && post.feedId == this.feedId
@@ -553,8 +556,6 @@ public class ReaderPost {
                 && post.getTitle().equals(this.getTitle())
                 && post.getExcerpt().equals(this.getExcerpt())
                 && post.getText().equals(this.getText());
-        AppLog.w(AppLog.T.READER, "isSamePost = " + result);
-        return result;
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
