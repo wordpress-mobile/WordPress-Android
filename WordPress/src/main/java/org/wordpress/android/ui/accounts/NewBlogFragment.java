@@ -18,8 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
@@ -51,11 +51,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (fieldsFilled()) {
-            mSignupButton.setEnabled(true);
-        } else {
-            mSignupButton.setEnabled(false);
-        }
+        checkIfFieldsFilled();
     }
 
     public void setSignoutOnCancelMode(boolean mode) {
@@ -237,15 +233,33 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
-        mSiteUrlTextField.addTextChangedListener(this);
         mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+        mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkIfFieldsFilled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String lowerCase = s.toString().toLowerCase();
+                if (!lowerCase.equals(s.toString())) {
+                    s.replace(0, s.length(), lowerCase);
+                }
+            }
+        });
 
         mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
         mSiteTitleTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     mAutoCompleteUrl = EditTextUtils.getText(mSiteTitleTextField)
                             .equals(EditTextUtils.getText(mSiteUrlTextField))
@@ -254,6 +268,14 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             }
         });
         return rootView;
+    }
+
+    private void checkIfFieldsFilled() {
+        if (fieldsFilled()) {
+            mSignupButton.setEnabled(true);
+        } else {
+            mSignupButton.setEnabled(false);
+        }
     }
 
     private final OnClickListener mSignupClickListener = new OnClickListener() {

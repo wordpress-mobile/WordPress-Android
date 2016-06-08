@@ -64,11 +64,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (fieldsFilled()) {
-            mSignupButton.setEnabled(true);
-        } else {
-            mSignupButton.setEnabled(false);
-        }
+        checkIfFieldsFilled();
     }
 
     private boolean fieldsFilled() {
@@ -314,7 +310,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                     }
                 });
         AppLog.i(T.NUX, "User tries to create a new account, username: " + username + ", email: " + email
-                        + ", site name: " + siteName + ", site URL: " + siteUrl);
+                + ", site name: " + siteName + ", site URL: " + siteUrl);
         createUserAndBlog.startCreateUserAndBlogProcess();
     }
 
@@ -352,12 +348,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>",
                 "</u>")));
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Uri uri = Uri.parse(Constants.URL_TOS);
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                    }
-                }
+                                                      @Override
+                                                      public void onClick(View v) {
+                                                          Uri uri = Uri.parse(Constants.URL_TOS);
+                                                          startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                                                      }
+                                                  }
         );
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
@@ -377,9 +373,27 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mEmailTextField.addTextChangedListener(this);
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
-        mSiteUrlTextField.addTextChangedListener(this);
         mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkIfFieldsFilled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String lowerCase = s.toString().toLowerCase();
+                if (!lowerCase.equals(s.toString())) {
+                    s.replace(0, s.length(), lowerCase);
+                }
+            }
+        });
 
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -404,7 +418,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override public void onFocusChange(View v, boolean hasFocus) {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
                             .equals(EditTextUtils.getText(mSiteUrlTextField))
@@ -423,6 +438,14 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         initPasswordVisibilityButton(rootView, mPasswordTextField);
         initInfoButton(rootView);
         return rootView;
+    }
+
+    private void checkIfFieldsFilled() {
+        if (fieldsFilled()) {
+            mSignupButton.setEnabled(true);
+        } else {
+            mSignupButton.setEnabled(false);
+        }
     }
 
     private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
