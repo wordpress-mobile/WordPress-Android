@@ -189,19 +189,23 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     private void showPasswordFieldAndFocus() {
-        endProgress();
-        showPasswordField();
-        mPasswordEditText.requestFocus();
-        mSignInButton.setText(getString(R.string.sign_in));
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
+        if (isAdded()) {
+            endProgress();
+            showPasswordField();
+            mPasswordEditText.requestFocus();
+            mSignInButton.setText(getString(R.string.sign_in));
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     private void showPasswordField() {
-        mPasswordLayout.setVisibility(View.VISIBLE);
-        mForgotPassword.setVisibility(View.VISIBLE);
-        if (!mSelfHosted) {
-            mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        if (isAdded()) {
+            mPasswordLayout.setVisibility(View.VISIBLE);
+            mForgotPassword.setVisibility(View.VISIBLE);
+            if (!mSelfHosted) {
+                mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            }
         }
     }
 
