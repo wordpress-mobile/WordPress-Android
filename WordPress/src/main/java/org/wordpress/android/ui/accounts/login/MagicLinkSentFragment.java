@@ -49,17 +49,13 @@ public class MagicLinkSentFragment extends Fragment {
         });
 
         TextView openEmailView = (TextView) view.findViewById(R.id.open_email_button);
-        if (isEmailClientAvailable()) {
-            openEmailView.setOnClickListener(new View.OnClickListener() {
+        openEmailView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openEmailClient();
                 }
             });
-        } else {
-            openEmailView.setVisibility(View.GONE);
-        }
-
+        
         initInfoButtons(view);
 
         return view;
