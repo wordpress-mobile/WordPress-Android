@@ -184,8 +184,8 @@ public class ReaderPostTable {
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
         // delete all the posts from the blogs we stopped following
-        numDeleted +=  db.delete("tbl_posts", "blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE " +
-                "tbl_blog_info.is_following != 0)", null);
+        numDeleted += db.delete("tbl_posts",
+                "blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE tbl_blog_info.is_following != 0)", null);
 
         return numDeleted;
     }
