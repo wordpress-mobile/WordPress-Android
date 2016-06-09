@@ -17,4 +17,8 @@
         android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/refresh"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_no_amp"
+        android:title="@string/view_in_browser_no_amp"
+        app:showAsAction="never" />
 </menu>

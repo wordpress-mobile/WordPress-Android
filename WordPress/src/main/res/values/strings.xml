@@ -365,6 +365,7 @@
     <string name="post_not_published">Post status isn\'t published</string>
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
+    <string name="view_in_browser_no_amp">Open non AMP version</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
@@ -617,6 +618,9 @@
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_posts_list">Posts List</string>
+    <string name="preference_use_amp">AMP</string>
+    <string name="preference_user_amp_summary">Use Accelerated Mobile Pages when possible</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>

@@ -3,7 +3,10 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
@@ -69,6 +73,8 @@ import java.util.Map;
  *
  */
 public class WPWebViewActivity extends WebViewActivity {
+    private static final String NON_AMP_URL = "non_amp_url";
+
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -77,8 +83,27 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String LOCAL_BLOG_ID = "local_blog_id";
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
+    public static final String USE_AMP_IF_ENABLED = "use_amp_if_enabled";
 
     private static final String ENCODING_UTF8 = "UTF-8";
+
+    private String mNonAmpUrl;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mNonAmpUrl = savedInstanceState.getString(NON_AMP_URL);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(NON_AMP_URL, mNonAmpUrl);
+    }
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
         openWPCOMURL(context, url, user);
@@ -111,6 +136,10 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
+
+            if (!post.isPage()) {
+                intent.putExtra(WPWebViewActivity.USE_AMP_IF_ENABLED, true);
+            }
         }
         context.startActivity(intent);
     }
@@ -202,12 +231,28 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
+        boolean useAmpIfEnabled = extras.getBoolean(USE_AMP_IF_ENABLED);
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             Toast.makeText(this, getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
+        }
+
+        mNonAmpUrl = null;
+
+        if (useAmpIfEnabled) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            final boolean isAmpEnabled = prefs.getBoolean(getString(R.string.pref_key_amp_enabled), false);
+
+            if (isAmpEnabled) {
+                mNonAmpUrl = addressToLoad;
+
+                addressToLoad = Uri.parse(addressToLoad).buildUpon().appendPath("amp").build().toString();
+                AppLog.v(AppLog.T.POSTS, "Using AMP to open " + addressToLoad);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.AMP_POST_OPEN);
+            }
         }
 
         if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
@@ -318,6 +363,16 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem noAmpOpen = menu.findItem(R.id.menu_no_amp);
+        if (noAmpOpen != null) {
+            noAmpOpen.setVisible(mNonAmpUrl != null);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (mWebView == null) {
             return false;
@@ -341,6 +396,9 @@ public class WPWebViewActivity extends WebViewActivity {
             return true;
         } else if (itemID == R.id.menu_browser) {
             ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+            return true;
+        } else if (itemID == R.id.menu_no_amp) {
+            ReaderActivityLauncher.openUrl(this, mNonAmpUrl, ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             return true;
         }
 
