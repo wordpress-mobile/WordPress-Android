@@ -2,8 +2,6 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,8 +13,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.util.HelpshiftHelper;
-
-import java.util.List;
 
 public class MagicLinkSentFragment extends Fragment {
     public interface OnMagicLinkSentInteraction {
@@ -86,18 +82,5 @@ public class MagicLinkSentFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_APP_EMAIL);
         getActivity().startActivity(intent);
-    }
-
-    private boolean isEmailClientAvailable() {
-        if (getActivity() == null) {
-            return false;
-        }
-
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-        PackageManager packageManager = getActivity().getPackageManager();
-        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        return !emailApps.isEmpty();
     }
 }
