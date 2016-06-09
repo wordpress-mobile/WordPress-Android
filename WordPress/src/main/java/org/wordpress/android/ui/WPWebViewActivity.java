@@ -105,6 +105,11 @@ public class WPWebViewActivity extends WebViewActivity {
         outState.putString(NON_AMP_URL, mNonAmpUrl);
     }
 
+    private static boolean isAmpCapableServer(String addressToLoad) {
+        // add more AMP-capable servers here
+        return WPUrlUtils.isWordPressCom(addressToLoad);
+    }
+
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
         openWPCOMURL(context, url, user);
     }
@@ -137,7 +142,7 @@ public class WPWebViewActivity extends WebViewActivity {
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
 
-            if (!post.isPage()) {
+            if (!post.isPage() && isAmpCapableServer(url)) {
                 intent.putExtra(WPWebViewActivity.USE_AMP_IF_ENABLED, true);
             }
         }
