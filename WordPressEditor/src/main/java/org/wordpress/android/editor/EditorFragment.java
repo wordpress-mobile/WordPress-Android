@@ -71,6 +71,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
+    public static final int MAX_ACTION_TIME_MS = 2000;
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -105,6 +106,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private CountDownLatch mGetSelectedTextCountDownLatch;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
+
+    private long mActionStartedAt = -1;
 
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
@@ -435,6 +438,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
+    public boolean isActionInProgress() {
+        return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
     private void toggleHtmlMode(final ToggleButton toggleButton) {
         if (!isAdded()) {
             return;
@@ -443,10 +450,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
         // Don't switch to HTML mode if currently uploading media
-        if (!mUploadingMedia.isEmpty()) {
+        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
             toggleButton.setChecked(false);
-
-            ToastUtils.showToast(getActivity(), R.string.alert_html_toggle_uploading, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
 
@@ -577,6 +583,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         } else if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
+
+            if (isActionInProgress()) {
+                ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+                return;
+            }
 
             if (mSourceView.getVisibility() == View.VISIBLE) {
                 ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
@@ -843,6 +854,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + safeMediaUrl + "', '" + mediaId +
                                 "');");
                     }
+                    mActionStartedAt = System.currentTimeMillis();
                 } else {
                     String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
@@ -1470,5 +1482,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             content.insert(selectionEnd, endTag);
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
         }
+    }
+
+    @Override
+    public void onActionFinished() {
+        mActionStartedAt = -1;
     }
 }

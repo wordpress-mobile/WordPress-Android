@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         versionCode 11
         versionName "1.1"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
     }
     buildTypes {
@@ -48,7 +48,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile 'org.wordpress:utils:1.9.0'
+    compile 'org.wordpress:utils:1.10.0'
 
     // Test libraries
     testCompile 'junit:junit:4.11'
