@@ -18,7 +18,7 @@ public class Post implements Serializable {
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
 
-    private static int FEATURED_IMAGE_INIT_VALUE = -2;
+    private static long FEATURED_IMAGE_INIT_VALUE = -2;
 
     private long localTablePostId;
     private int localTableBlogId;
