@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_reader_settings"
-        android:icon="@drawable/reader_settings"
+        android:icon="@drawable/gridicons_cog_light"
         android:title="@string/reader_menu_tags"
         app:showAsAction="always" />
 
