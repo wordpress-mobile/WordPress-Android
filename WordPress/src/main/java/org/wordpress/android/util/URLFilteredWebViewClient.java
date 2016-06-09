@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
- * username and password of the blog configured for this activity.
+ * WebViewClient that adds the ability of restrict URL loading (navigation) to a list of allowed URLs.
+ * Generally used to disable links and navigation in admin pages.
  */
 public class URLFilteredWebViewClient extends WebViewClient {
     ArrayList<String> allowedURLs = new ArrayList<>();
