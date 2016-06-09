@@ -311,8 +311,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isGooglePlayServicesAvailable() {
-        return isAdded() && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())
-                == ConnectionResult.SUCCESS;
+        if (getActivity() == null) {
+            return false;
+        }
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+        return status == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
