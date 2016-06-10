@@ -265,12 +265,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onPause();
 
         if (mSearchMenuItem != null) {
+            String tempQuery = mQuery;
             MenuItemCompat.collapseActionView(mSearchMenuItem);
+            mQuery = tempQuery;
         }
     }
 
     @Override
     public void onMediaItemSelected(String mediaId) {
+        String tempQuery = mQuery;
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -288,6 +291,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
+            mQuery = tempQuery;
         }
     }
 
@@ -296,9 +300,27 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
         getMenuInflater().inflate(R.menu.media, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         mSearchView.setOnQueryTextListener(this);
-        return true;
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+
+        //open search bar if we were searching for something before
+        if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
+            String tempQuery = mQuery; //temporary hold onto query
+            MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
+            onQueryTextSubmit(tempQuery);
+            mSearchView.setQuery(mQuery, true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+
     }
 
     @Override
@@ -434,11 +456,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        // preserve the previous query
-        String tmpQuery = mQuery;
-        onQueryTextChange("");
-        mQuery = tmpQuery;
-
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterVisibility(View.VISIBLE);
             mMediaGridFragment.setFilter(Filter.ALL);
