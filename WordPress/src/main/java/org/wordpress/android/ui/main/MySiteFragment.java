@@ -42,6 +42,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -421,7 +422,8 @@ public class MySiteFragment extends Fragment
             GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
 
-            return account.getDateCreated().after(calendar.getTime());
+            Date dateCreated = account.getDateCreated();
+            return dateCreated != null && dateCreated.after(calendar.getTime());
         }
     }
 
