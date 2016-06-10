@@ -19,6 +19,8 @@
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
     <string name="pref_key_visual_editor_enabled" translatable="false">wp_pref_visual_editor_enabled</string>
+    <string name="pref_key_posts_list" translatable="false">wp_pref_posts_list</string>
+    <string name="pref_key_amp_enabled" translatable="false">wp_pref_amp_enabled</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
     <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>

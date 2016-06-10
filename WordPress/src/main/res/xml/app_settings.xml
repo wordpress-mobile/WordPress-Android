@@ -49,6 +49,20 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="@string/pref_key_posts_list"
+        android:layout="@layout/preference_category"
+        android:title="@string/preference_posts_list">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_amp_enabled"
+            android:layout="@layout/preference_layout"
+            android:title="@string/preference_use_amp"
+            android:summary="@string/preference_user_amp_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="@string/pref_key_about_section"
         android:layout="@layout/preference_category"
         android:title="@string/about_the_app">
