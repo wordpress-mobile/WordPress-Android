@@ -127,6 +127,6 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
         }
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 }
