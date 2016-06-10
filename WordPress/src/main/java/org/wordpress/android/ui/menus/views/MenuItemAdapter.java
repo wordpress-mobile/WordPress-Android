@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public MenuItemHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.title);
-            imgMenuItemType = (ImageView) view.findViewById(R.id.avatar);
+            imgMenuItemType = (ImageView) view.findViewById(R.id.image_menu_item_type);
             containerView = (ViewGroup) view.findViewById(R.id.layout_container);
             imgEditIcon = (ImageView) view.findViewById(R.id.icon_edit);
             imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
@@ -60,7 +61,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.txtTitle.setText(Html.fromHtml(menuItem.name));
         //TODO: set the correct icon type depending on the menu item type
         switch (menuItem.type) {
-            case "test":
+            case "post":
                 holder.imgMenuItemType.setImageResource(R.drawable.my_site_icon_pages);
                 break;
         }
@@ -69,6 +70,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 //TODO implement edit
+                ToastUtils.showToast(mContext, "not implemented yet", ToastUtils.Duration.SHORT);
             }
         });
 
@@ -76,6 +78,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 //TODO implement add item
+                ToastUtils.showToast(mContext, "not implemented yet", ToastUtils.Duration.SHORT);
             }
         });
     }
@@ -106,6 +109,9 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return (position >= 0 && position < mMenuItems.size());
     }
 
+    /*
+    * menu item operations
+     */
     void replaceMenuItems(List<MenuItemModel> menuItems) {
         if (menuItems != null) {
             mMenuItems.clear();
