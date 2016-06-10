@@ -9,11 +9,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MenuItemsView extends RelativeLayout {
@@ -21,6 +25,7 @@ public class MenuItemsView extends RelativeLayout {
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private MenuModel mMenu;
+    private List<MenuItemModel> mFlattenedList;
 
     private MenuItemAdapter mItemAdapter;
     private AppLog.T mTAG;
@@ -74,12 +79,9 @@ public class MenuItemsView extends RelativeLayout {
         mMenu = menu;
         getAdapter();
         if (menu != null) {
-            mItemAdapter.replaceMenuItems(menu.menuItems);
+            mFlattenedList = flattenMenuItemModelList(menu.menuItems, 0);
+            mItemAdapter.replaceMenuItems(mFlattenedList);
         }
-    }
-
-    private boolean hasAdapter() {
-        return (mItemAdapter != null);
     }
 
     public boolean emptyViewIsVisible(){
@@ -101,5 +103,29 @@ public class MenuItemsView extends RelativeLayout {
             mEmptyView.setVisibility(View.GONE);
         }
     }
+
+
+    private boolean hasAdapter() {
+        return (mItemAdapter != null);
+    }
+
+    private List<MenuItemModel> flattenMenuItemModelList(List<MenuItemModel> hierarchyList, int currentLevel) {
+        ArrayList<MenuItemModel> flattenedList = new ArrayList<>();
+
+        if (hierarchyList != null) {
+            for (MenuItemModel item : hierarchyList) {
+                item.flattenedLevel = currentLevel;
+                flattenedList.add(item);
+                if (item.hasChildren()) {
+                    List<MenuItemModel> tmpList = flattenMenuItemModelList(item.children, currentLevel+1);
+                    flattenedList.addAll(tmpList);
+                }
+            }
+        }
+
+
+        return flattenedList;
+    }
+
 
 }

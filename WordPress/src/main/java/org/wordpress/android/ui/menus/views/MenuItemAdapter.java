@@ -20,6 +20,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final LayoutInflater mInflater;
     private final Context mContext;
+    private int mPadding;
 
     private final List<MenuItemModel> mMenuItems = new ArrayList<>();
 
@@ -43,6 +44,8 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     MenuItemAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        mPadding = mContext.getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+
     }
 
     @Override
@@ -59,6 +62,8 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         MenuItemHolder holder = (MenuItemHolder) viewHolder;
 
         holder.txtTitle.setText(Html.fromHtml(menuItem.name));
+        mPadding = mContext.getResources().getDimensionPixelOffset(R.dimen.margin_medium);
+        holder.containerView.setPadding(menuItem.flattenedLevel * mPadding,0,0,0);
         //TODO: set the correct icon type depending on the menu item type
         switch (menuItem.type) {
             case "post":

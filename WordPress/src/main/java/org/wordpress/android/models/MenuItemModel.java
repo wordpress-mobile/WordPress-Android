@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +31,26 @@ public class MenuItemModel {
     public String typeFamily;
     public String typeLabel;
     public List<MenuItemModel> children;
+    public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
+
+    public MenuItemModel() {
+    }
+
+    public MenuItemModel(MenuItemModel item) {
+        this.itemId = item.itemId;
+        this.menuId = item.menuId;
+        this.parentId = item.parentId;
+        this.contentId = item.contentId;
+        this.url = item.url;
+        this.name = item.name;
+        this.details = item.details;
+        this.linkTarget = item.linkTarget;
+        this.linkTitle = item.linkTitle;
+        this.type = item.type;
+        this.typeFamily = item.typeFamily;
+        this.typeLabel = item.typeLabel;
+        this.children = item.children;
+    }
 
     @Override
     public boolean equals(Object other) {
