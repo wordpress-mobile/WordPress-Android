@@ -161,7 +161,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private boolean canShowStatsForPost(PostsListPost post) {
         return mIsStatsSupported
                 && post.getStatusEnum() == PostStatus.PUBLISHED
-                && !post.isLocalDraft();
+                && !post.isLocalDraft()
+                && !post.hasLocalChanges();
     }
 
     private boolean canPublishPost(PostsListPost post) {
