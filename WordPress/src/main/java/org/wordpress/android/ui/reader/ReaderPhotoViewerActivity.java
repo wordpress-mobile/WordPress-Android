@@ -58,7 +58,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         }
 
         mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 updateTitle(position);

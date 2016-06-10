@@ -38,17 +38,6 @@ public class ReaderVideoUtils {
 		return (!TextUtils.isEmpty(getYouTubeVideoId(link)));
 	}
 
-    /*
-     * accepts a YouTube link in any format (such as the /embed/ format) and turns it into a
-     * standard YouTube video link
-     */
-    public static String fixYouTubeVideoLink(final String videoUrl) {
-        String videoId = getYouTubeVideoId(videoUrl);
-        if (TextUtils.isEmpty(videoId))
-            return videoUrl;
-        return "http://www.youtube.com/watch?v=" + videoId;
-    }
-
 	/*
 	 * extract the video id from the passed YouTube url
      */
@@ -168,7 +157,7 @@ public class ReaderVideoUtils {
         WordPress.requestQueue.add(request);
     }
 
-    public static interface VideoThumbnailListener {
-        public void onResponse(boolean successful, String thumbnailUrl);
+    public interface VideoThumbnailListener {
+        void onResponse(boolean successful, String thumbnailUrl);
     }
 }

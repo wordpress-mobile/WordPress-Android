@@ -11,3 +11,7 @@ wp.helpshift.api.key = wordpress
 wp.helpshift.api.domain = wordpress.org
 wp.helpshift.api.id = wordpress
 wp.app_license_key = wordpress
+
+# Optional: used to autofill username and password fields at login on debug build only
+wp.debug.dotcom_login_username =
+wp.debug.dotcom_login_password =

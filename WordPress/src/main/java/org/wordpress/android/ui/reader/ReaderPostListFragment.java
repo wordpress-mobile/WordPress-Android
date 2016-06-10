@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -468,8 +469,8 @@ public class ReaderPostListFragment extends Fragment
             ReaderUtils.setBackgroundToRoundRipple(settingsControl);
         }
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
-        mRecyclerView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
+        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
@@ -1096,15 +1097,10 @@ public class ReaderPostListFragment extends Fragment
         }
 
         ReaderPostListType type = getPostListType();
-        Map<String, Object> analyticsProperties = new HashMap<>();
 
         switch (type) {
             case TAG_FOLLOWED:
             case TAG_PREVIEW:
-                String key = (type == ReaderPostListType.TAG_PREVIEW ?
-                        AnalyticsTracker.READER_DETAIL_TYPE_TAG_PREVIEW :
-                        AnalyticsTracker.READER_DETAIL_TYPE_NORMAL);
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY, key);
                 ReaderActivityLauncher.showReaderPostPagerForTag(
                         getActivity(),
                         getCurrentTag(),
@@ -1113,8 +1109,6 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case BLOG_PREVIEW:
-                analyticsProperties.put(AnalyticsTracker.READER_DETAIL_TYPE_KEY,
-                        AnalyticsTracker.READER_DETAIL_TYPE_BLOG_PREVIEW);
                 ReaderActivityLauncher.showReaderPostPagerForBlog(
                         getActivity(),
                         post.blogId,
@@ -1277,6 +1271,7 @@ public class ReaderPostListFragment extends Fragment
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)
+                    //noinspection unchecked
                     mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List)mTags);
             }
         }

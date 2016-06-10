@@ -285,6 +285,7 @@
 	<string name="me_disconnect_from_wordpress_com">Odspoji sa WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Spoji sa WordPress.com</string>
 	<string name="me_btn_login_logout">Prijava/Odjava</string>
+	<string name="account_settings">Postavke računa</string>
 	<string name="me_btn_support">Pomoć i podrška</string>
 	<string name="site_picker_cant_hide_current_site">"%s" nije skriven jer je to trenutna web stranica.</string>
 	<string name="site_picker_create_dotcom">Kreiraj WordPress.com web stranicu</string>
@@ -682,7 +683,6 @@
 	<string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
 	<string name="required_field">Obavezno polje</string>
 	<string name="email_hint">Adresa e-pošte</string>
-	<string name="username_email">Korisničko ime ili e-pošta</string>
 	<string name="site_address">Adresa vaše samostalno hostane web stranice (URL)</string>
 	<string name="email_cant_be_used_to_signup">Ne možete koristiti tu adresu e-pošte za registraciju. Imamo problema sa njima jer blokiraju neke naše poruke. Koristite drugog pružatelja adrese e-pošte.</string>
 	<string name="email_reserved">Navedena adresa e-pošte se već koristi. Provjerite vaš dolaznu poštu za aktivacijsku poruku. Ako ne aktivirate, možete ponovno pokušati za par dana.</string>

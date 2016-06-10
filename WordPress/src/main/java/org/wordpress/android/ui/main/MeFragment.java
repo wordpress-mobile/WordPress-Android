@@ -180,7 +180,6 @@ public class MeFragment extends Fragment {
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
         addDropShadowToAvatar();
-        refreshAccountDetails();
 
         mAvatarContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -510,6 +509,7 @@ public class MeFragment extends Fragment {
         options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
         options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
         options.setAllowedGestures(UCropActivity.ALL, UCropActivity.ALL, UCropActivity.ALL);
+        options.setHideBottomControls(true);
 
         UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
                 .withAspectRatio(1, 1)
@@ -622,7 +622,6 @@ public class MeFragment extends Fragment {
     public void onEventMainThread(GravatarUploadFinished event) {
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
-
             final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
             loadAvatar(avatarUrl, event.filePath);
         } else {

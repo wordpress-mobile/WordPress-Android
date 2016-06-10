@@ -538,6 +538,10 @@ public class ReaderPost {
         return xpostBlogId != 0 && xpostPostId != 0;
     }
 
+    /*
+     * returns true if the passed post appears to be the same as this one - used when posts are
+     * retrieved to determine which ones are new/changed/unchanged
+     */
     public boolean isSamePost(ReaderPost post) {
         return post != null
                 && post.blogId == this.blogId
@@ -548,7 +552,10 @@ public class ReaderPost {
                 && post.numReplies == this.numReplies
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
-                && post.isCommentsOpen == this.isCommentsOpen;
+                && post.isCommentsOpen == this.isCommentsOpen
+                && post.getTitle().equals(this.getTitle())
+                && post.getExcerpt().equals(this.getExcerpt())
+                && post.getText().equals(this.getText());
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {

@@ -189,6 +189,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private boolean mEditingEnabled = true;
 
+    // Reference to the state of the fragment
+    private boolean mIsFragmentPaused = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,11 +226,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onPause() {
         super.onPause();
         WordPress.wpDB.saveBlog(mBlog);
+        mIsFragmentPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        // Fragment#onResume() is called after FragmentActivity#onPostResume().
+        // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
+        mIsFragmentPaused = false;
 
         // always load cached settings
         mSiteSettings.init(false);
@@ -740,6 +748,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                 AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED);
     }
 
+    private void dismissProgressDialog(ProgressDialog progressDialog) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            try {
+                progressDialog.dismiss();
+            } catch (IllegalArgumentException e) {
+                // dialog doesn't exist
+            }
+        }
+    }
+
     private void requestPurchasesForDeletionCheck() {
         final Blog currentBlog = WordPress.getCurrentBlog();
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
@@ -748,7 +766,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WordPress.getRestClientUtils().getSitePurchases(currentBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                progressDialog.dismiss();
+                dismissProgressDialog(progressDialog);
                 if (isAdded()) {
                     showPurchasesOrDeleteSiteDialog(response, currentBlog);
                 }
@@ -756,7 +774,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
+                dismissProgressDialog(progressDialog);
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), getString(R.string.purchases_request_error));
                     AppLog.e(AppLog.T.API, "Error occurred while requesting purchases for deletion check: " + error.toString());
@@ -815,6 +833,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
+        if (mIsFragmentPaused) return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
+        // DialogFragment internally uses commit(), and not commitAllowingStateLoss, crashing the app in case like that.
         Bundle args = new Bundle();
         args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mBlog.getHomeURL()));
         DeleteSiteDialogFragment deleteSiteDialogFragment = new DeleteSiteDialogFragment();
@@ -1241,7 +1261,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             if (isAdded()) {
                                 AnalyticsUtils.trackWithCurrentBlogDetails(
                                         AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK);
-                                progressDialog.dismiss();
+                                dismissProgressDialog(progressDialog);
                                 Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                             }
                         }
@@ -1253,7 +1273,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                                 errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
                                 AnalyticsUtils.trackWithCurrentBlogDetails(
                                         AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR, errorProperty);
-                                progressDialog.dismiss();
+                                dismissProgressDialog(progressDialog);
                             }
                         }
                     });
@@ -1281,7 +1301,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                             errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, errorProperty);
-                            progressDialog.dismiss();
+                            dismissProgressDialog(progressDialog);
                             handleDeleteSiteError();
                         }
                     });

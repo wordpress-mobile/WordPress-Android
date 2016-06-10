@@ -60,12 +60,16 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
 import org.wordpress.android.util.widgets.WPEditText;
+
+import java.util.Locale;
 
 public class LegacyEditorFragment extends EditorFragmentAbstract implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -464,6 +468,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     };
 
     private WPEditImageSpan createWPEditImageSpanLocal(Context context, MediaFile mediaFile) {
+        if (context == null || mediaFile == null || mediaFile.getFilePath() == null) {
+            return null;
+        }
         Uri imageUri = Uri.parse(mediaFile.getFilePath());
         Bitmap thumbnailBitmap;
         if (MediaUtils.isVideo(imageUri.toString())) {
@@ -478,11 +485,15 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             }
         }
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, thumbnailBitmap, imageUri);
-        mediaFile.setWidth(MediaUtils.getMinimumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        mediaFile.setWidth(MediaUtils.getMaximumImageWidth(context, imageUri, mBlogSettingMaxImageWidth));
+        imageSpan.setMediaFile(mediaFile);
         return imageSpan;
     }
 
     private WPEditImageSpan createWPEditImageSpanRemote(Context context, MediaFile mediaFile) {
+        if (context == null || mediaFile == null || mediaFile.getFileURL() == null) {
+            return null;
+        }
         int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
@@ -733,7 +744,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         alignmentSpinner.setAdapter(adapter);
 
-                        imageWidthText.setText(String.valueOf(mediaFile.getWidth()) + "px");
                         seekBar.setProgress(mediaFile.getWidth());
                         titleText.setText(mediaFile.getTitle());
                         caption.setText(mediaFile.getCaption());
@@ -749,9 +759,10 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
-                        final int maxWidth = MediaUtils.getMinimumImageWidth(getActivity(),
+                        final int maxWidth = MediaUtils.getMaximumImageWidth(getActivity(),
                                 imageSpan.getImageSource(), mBlogSettingMaxImageWidth);
                         seekBar.setMax(maxWidth / 10);
+                        imageWidthText.setText(String.format(Locale.US, "%dpx", maxWidth));
                         if (mediaFile.getWidth() != 0) {
                             seekBar.setProgress(mediaFile.getWidth() / 10);
                         }
@@ -769,7 +780,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                                 if (progress == 0) {
                                     progress = 1;
                                 }
-                                imageWidthText.setText(progress * 10 + "px");
+                                imageWidthText.setText(String.format(Locale.US, "%dpx", progress * 10));
                             }
                         });
 
@@ -1046,6 +1057,12 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
 
         protected void onPostExecute(WPEditImageSpan imageSpan) {
+            if (imageSpan == null) {
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), R.string.alert_error_adding_media, Duration.LONG);
+                }
+                return ;
+            }
             // Insert the WPImageSpan in the content field
             int selectionStart = mStart;
             int selectionEnd = mEnd;
@@ -1164,11 +1181,14 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void setTitlePlaceholder(CharSequence text) {
-
     }
 
     @Override
     public void setContentPlaceholder(CharSequence text) {
+    }
 
+    @Override
+    public boolean isActionInProgress() {
+        return false;
     }
 }

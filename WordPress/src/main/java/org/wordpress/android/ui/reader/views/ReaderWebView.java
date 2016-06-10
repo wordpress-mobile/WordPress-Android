@@ -33,6 +33,7 @@ import java.net.URL;
 public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
+        @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
@@ -206,15 +207,13 @@ public class ReaderWebView extends WebView {
             // loaded (is visible) - have seen some posts containing iframes
             // automatically try to open urls (without being clicked)
             // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE
+            return view.getVisibility() == View.VISIBLE
                     && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)) {
-                return mReaderWebView.getUrlClickListener().onUrlClick(url);
-            } else {
-                return false;
-            }
+                    && isValidClickedUrl(url)
+                    && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             URL imageUrl  = null;

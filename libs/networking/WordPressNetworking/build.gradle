@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.9.0'
+    compile 'org.wordpress:utils:1.10.0'
     compile 'com.automattic:rest:1.0.3'
 }
 

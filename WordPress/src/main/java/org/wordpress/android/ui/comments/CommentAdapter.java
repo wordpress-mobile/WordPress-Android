@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.comments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -24,13 +21,10 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -125,11 +119,11 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         mLocalBlogId = localBlogId;
 
-        mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
-        mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
+        mStatusColorSpam = ContextCompat.getColor(context, R.color.comment_status_spam);
+        mStatusColorUnapproved = ContextCompat.getColor(context, R.color.comment_status_unapproved);
 
-        mUnselectedColor = context.getResources().getColor(R.color.white);
-        mSelectedColor = context.getResources().getColor(R.color.translucent_grey_lighten_20);
+        mUnselectedColor = ContextCompat.getColor(context, R.color.white);
+        mSelectedColor = ContextCompat.getColor(context, R.color.translucent_grey_lighten_20);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
@@ -248,7 +242,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mComments.size();
     }
 
-    boolean isEmpty() {
+    private boolean isEmpty() {
         return getItemCount() == 0;
     }
 
@@ -399,7 +393,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean mIsLoadTaskRunning = false;
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
-        CommentStatus mStatusFilter;
+        final CommentStatus mStatusFilter;
 
         public LoadCommentsTask (CommentStatus statusFilter){
             mStatusFilter = statusFilter;

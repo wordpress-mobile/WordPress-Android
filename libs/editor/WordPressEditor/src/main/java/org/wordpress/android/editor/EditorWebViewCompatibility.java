@@ -1,7 +1,6 @@
 package org.wordpress.android.editor;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.webkit.WebView;
@@ -65,26 +64,18 @@ public class EditorWebViewCompatibility extends EditorWebViewAbstract {
         }
         Object webViewProvider;
         try {
-            if (Build.VERSION.SDK_INT >= 16) {
-                // On API >= 16, the WebViewCore instance is not defined inside WebView itself but inside a
-                // WebViewClassic (implementation of WebViewProvider), referenced from the WebView as mProvider
+            // On API >= 16, the WebViewCore instance is not defined inside WebView itself but inside a
+            // WebViewClassic (implementation of WebViewProvider), referenced from the WebView as mProvider
 
-                // Access WebViewClassic object
-                Field webViewProviderField = WebView.class.getDeclaredField("mProvider");
-                webViewProviderField.setAccessible(true);
-                webViewProvider = webViewProviderField.get(this);
+            // Access WebViewClassic object
+            Field webViewProviderField = WebView.class.getDeclaredField("mProvider");
+            webViewProviderField.setAccessible(true);
+            webViewProvider = webViewProviderField.get(this);
 
-                // Access WebViewCore object
-                Field webViewCoreField = webViewProvider.getClass().getDeclaredField("mWebViewCore");
-                webViewCoreField.setAccessible(true);
-                mWebViewCore = webViewCoreField.get(webViewProvider);
-            } else {
-                // On API < 16, the WebViewCore is directly accessible from the WebView
-                // Access WebViewCore object
-                Field webViewCoreField = WebView.class.getDeclaredField("mWebViewCore");
-                webViewCoreField.setAccessible(true);
-                mWebViewCore = webViewCoreField.get(this);
-            }
+            // Access WebViewCore object
+            Field webViewCoreField = webViewProvider.getClass().getDeclaredField("mWebViewCore");
+            webViewCoreField.setAccessible(true);
+            mWebViewCore = webViewCoreField.get(webViewProvider);
 
             // Access WebViewCore#sendMessage(Message) method
             if (mWebViewCore != null) {

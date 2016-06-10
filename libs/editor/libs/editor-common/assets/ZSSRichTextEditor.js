@@ -235,6 +235,11 @@ ZSSEditor.onMutationObserved = function(mutations) {
     mutations.forEach(function(mutation) {
         for (var i = 0; i < mutation.removedNodes.length; i++) {
             var removedNode = mutation.removedNodes[i];
+            if (!removedNode.attributes) {
+                // Fix for https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/394
+                // If removedNode doesn't have an attributes property, it's not of type Node and we shouldn't proceed
+                continue;
+            }
             if (ZSSEditor.isMediaContainerNode(removedNode)) {
                 // An uploading or failed container node was deleted manually - notify native
                 var mediaIdentifier = ZSSEditor.extractMediaIdentifier(removedNode);
@@ -257,6 +262,18 @@ ZSSEditor.onMutationObserved = function(mutations) {
                     ZSSEditor.setRange(parentRange);
                 }
                 ZSSEditor.sendMediaRemovedCallback(mediaIdentifier);
+            } else if (mutation.target.className == "edit-container") {
+                // A media item wrapped in an edit container was deleted manually - remove its container
+                // No callback in this case since it's not an uploading or failed media item
+                var parentRange = ZSSEditor.getParentRangeOfFocusedNode();
+
+                mutation.target.remove();
+
+                if (parentRange != null) {
+                    ZSSEditor.setRange(parentRange);
+                }
+
+                ZSSEditor.getFocusedField().emptyFieldIfNoContents();
             }
         }
     });
@@ -403,6 +420,19 @@ ZSSEditor.giveFocusToElement = function(element, offset) {
     var selection = document.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
+};
+
+ZSSEditor.setFocusAfterElement = function(element) {
+    var selection = window.getSelection();
+
+    if (selection.rangeCount) {
+        var range = document.createRange();
+
+        range.setStartAfter(element);
+        range.setEndAfter(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
 };
 
 ZSSEditor.getSelectedText = function() {
@@ -673,12 +703,28 @@ ZSSEditor.setBlockquote = function() {
 
         var childNodes = this.getChildNodesIntersectingRange(ancestorElement, range);
 
+        // On older APIs, the rangy selection node is targeted when turning off empty blockquotes at the start of a post
+        // In that case, add the empty DIV element next to the rangy selection to the childNodes array to correctly
+        // turn the blockquote off
+        // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/401
+        var nextChildNode = childNodes[childNodes.length-1].nextSibling;
+        if (nextChildNode && nextChildNode.nodeName == NodeName.DIV && nextChildNode.innerHTML == "") {
+            childNodes.push(nextChildNode);
+        }
+
         if (childNodes && childNodes.length) {
             this.toggleBlockquoteForSpecificChildNodes(ancestorElement, childNodes);
         }
     }
 
     rangy.restoreSelection(savedSelection);
+
+    // When turning off an empty blockquote in an empty post, ensure there aren't any leftover empty paragraph tags
+    // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/401
+    var currentContenteditableDiv = ZSSEditor.focusedField.getWrappedDomNode();
+    if (currentContenteditableDiv.children.length == 1 && currentContenteditableDiv.firstChild.innerHTML == "") {
+        ZSSEditor.focusedField.emptyFieldIfNoContents();
+    }
 
     if (sendStyles) {
         ZSSEditor.sendEnabledStyles();
@@ -1193,6 +1239,7 @@ ZSSEditor.insertImage = function(url, remoteId, alt) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**
@@ -1504,6 +1551,7 @@ ZSSEditor.insertVideo = function(videoURL, posterURL, videopressID) {
     this.insertHTMLWrappedInParagraphTags(html);
 
     this.sendEnabledStyles();
+    this.callback("callback-action-finished");
 };
 
 /**
@@ -1538,7 +1586,7 @@ ZSSEditor.insertLocalVideo = function(videoNodeIdentifier, posterURL) {
     var videoContainerEnd = '</span>';
 
     if (posterURL == '') {
-       posterURL = "wpposter.svg";
+       posterURL = "svg/wpposter.svg";
     }
 
     var image = '<img data-video_wpid="' + videoNodeIdentifier + '" src="' + posterURL + '" alt="" />';
@@ -1788,7 +1836,7 @@ ZSSEditor.applyVideoPressFormattingCallback = function( match ) {
         return match.content;
     }
     var videopressID = match.attrs.numeric[0];
-    var posterSVG = '"wpposter.svg"';
+    var posterSVG = '"svg/wpposter.svg"';
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the video is tapped.
     var out = '<video data-wpvideopress="' + videopressID + '" webkit-playsinline src="" preload="metadata" poster='
@@ -1875,6 +1923,10 @@ ZSSEditor.pauseAllVideos = function () {
     });
 }
 
+ZSSEditor.clearCurrentEditingImage = function() {
+    ZSSEditor.currentEditingImage = null;
+};
+
 /**
  *  @brief      Updates the currently selected image, replacing its markup with
  *  new markup based on the specified meta data string.
@@ -1905,13 +1957,15 @@ ZSSEditor.updateCurrentImageMeta = function( imageMetaString ) {
 ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
     var node = ZSSEditor.findImageCaptionNode( imageNode );
 
+    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-icon"></span>'
+                  + '<span class="edit-content">' + nativeState.localizedStringEdit + '</span></span>';
+
     var sizeClass = "";
     if ( imageNode.width < 100 || imageNode.height < 100 ) {
         sizeClass = " small";
+    } else {
+        overlay = '<span class="delete-overlay" contenteditable="false"></span>' + overlay;
     }
-
-    var overlay = '<span class="edit-overlay" contenteditable="false"><span class="edit-content">'
-                  + nativeState.localizedStringEdit + '</span></span>';
 
     if (document.body.style.filter == null) {
         // CSS Filters (including blur) are not supported
@@ -1923,9 +1977,18 @@ ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
    	node.insertAdjacentHTML( 'beforebegin', html );
     var selectionNode = node.previousSibling;
     selectionNode.appendChild( node );
+
+    this.trackNodeForMutation($(selectionNode));
+
+    return selectionNode;
 }
 
 ZSSEditor.removeImageSelectionFormatting = function( imageNode ) {
+    if (!$('#zss_field_content')[0].contains(imageNode)) {
+        // The image node has already been removed from the document
+        return;
+    }
+
     var node = ZSSEditor.findImageCaptionNode( imageNode );
     if ( !node.parentNode || node.parentNode.className.indexOf( "edit-container" ) == -1 ) {
         return;
@@ -2405,6 +2468,9 @@ ZSSEditor.applyVisualFormatting  = function( html ) {
     str = wp.shortcode.replace( 'wpvideo', str, ZSSEditor.applyVideoPressFormattingCallback );
     str = wp.shortcode.replace( 'video', str, ZSSEditor.applyVideoFormattingCallback );
 
+    // More tag
+    str = str.replace(/<!--more(.*?)-->/igm, "<hr class=\"more-tag\" wp-more-data=\"$1\">")
+    str = str.replace(/<!--nextpage-->/igm, "<hr class=\"nextpage-tag\">")
     return str;
 }
 
@@ -2422,6 +2488,10 @@ ZSSEditor.removeVisualFormatting = function( html ) {
     str = ZSSEditor.removeCaptionFormatting( str );
     str = ZSSEditor.replaceVideoPressVideosForShortcode( str );
     str = ZSSEditor.replaceVideosForShortcode( str );
+
+    // More tag
+    str = str.replace(/<hr class="more-tag" wp-more-data="(.*?)">/igm, "<!--more$1-->")
+    str = str.replace(/<hr class="nextpage-tag">/igm, "<!--nextpage-->")
     return str;
 };
 
@@ -3124,6 +3194,7 @@ ZSSField.prototype.handleFocusEvent = function(e) {
 ZSSField.prototype.handleKeyDownEvent = function(e) {
 
     var wasEnterPressed = (e.keyCode == '13');
+    var isHardwareKeyboardPaste = (e.ctrlKey && e.keyCode == '86');
 
     // Handle keyDownEvent actions that need to happen after the event has completed (and the field has been modified)
     setTimeout(this.afterKeyDownEvent, 20, e.target.innerHTML, e);
@@ -3156,18 +3227,30 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
         // incorrectly, so we skip it in this case.
         //
         // 3. On all APIs, hardware pasting (CTRL + V) doesn't automatically wrap the paste in paragraph tags in
-        // new posts. ZSSField.handlePasteEvent() does not address this problem. It's the same fix as #2 above, but we
-        // have to extend the `containsParagraphSeparators` check to all APIs, not just API19 and below, to fix
-        // hardware pasting.
+        // new posts. ZSSField.handlePasteEvent() won't fix the wrapping for hardware pastes if
+        // wrapCaretInParagraphIfNecessary() goes through first, so we need to skip it in that case.
+        // For API < 19, this is fixed implicitly by the 'containsParagraphSeparators' check, but for newer APIs we
+        // specifically detect hardware keyboard pastes and skip paragraph wrapping in that case
+        // case skip calling wrapCaretInParagraphIfNecessary().
+        //
+        // Previously, the check was 'if (containsParagraphSeparators)' for all API levels, but this turns out to cause
+        // an autocorrect issue for new posts on API 23+:
+        // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/389
+        // That issue can be fixed by allowing wrapCaretInParagraphIfNecessary() to go through when adding text to an
+        // empty post on those API levels, as long as we exclude the special case of hardware keyboard pasting
+        //
+        // We're using 'nativeState.androidApiLevel>19' rather than >22 because, even though the bug only appears on
+        // 23+ at the time of writing, it's entirely possible a future System WebView or Keyboard update will introduce
+        // the bug on 21+.
         var containsParagraphSeparators = this.getWrappedDomNode().innerHTML.search(
                 '<' + ZSSEditor.defaultParagraphSeparator) > -1;
-        if (containsParagraphSeparators) {
+        if (containsParagraphSeparators || (nativeState.androidApiLevel > 19 && !isHardwareKeyboardPaste)) {
             this.wrapCaretInParagraphIfNecessary();
         }
 
         if (wasEnterPressed) {
             // Wrap the existing text in paragraph tags if necessary (this should only be needed if
-            // wrapCaretInParagraphIfNecessary() was skipped earlier (API19))
+            // wrapCaretInParagraphIfNecessary() was skipped earlier)
             var currentHtml = this.getWrappedDomNode().innerHTML;
             if (currentHtml.search('<' + ZSSEditor.defaultParagraphSeparator) == -1) {
                 ZSSEditor.focusedField.setHTML(Util.wrapHTMLInTag(currentHtml, ZSSEditor.defaultParagraphSeparator));
@@ -3236,20 +3319,14 @@ ZSSField.prototype.handleTapEvent = function(e) {
         if (targetNode.nodeName.toLowerCase() == 'a') {
             var arguments = ['url=' + encodeURIComponent(targetNode.href),
                              'title=' + encodeURIComponent(targetNode.innerHTML)];
-
             var joinedArguments = arguments.join(defaultCallbackSeparator);
-
-            var thisObj = this;
-
-            // WORKAROUND: force the event to become sort of "after-tap" through setTimeout()
-            //
-            setTimeout(function() { thisObj.callback('callback-link-tap', joinedArguments);}, 500);
+            this.callback('callback-link-tap', joinedArguments);
         }
 
         if (targetNode.nodeName.toLowerCase() == 'img') {
             // If the image is uploading, or is a local image do not select it.
             if ( targetNode.dataset.wpid || targetNode.dataset.video_wpid ) {
-                this.sendImageTappedCallback( targetNode );
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
@@ -3261,25 +3338,34 @@ ZSSField.prototype.handleTapEvent = function(e) {
 
             // Is the tapped image the image we're editing?
             if ( targetNode == ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( targetNode );
-                this.sendImageTappedCallback( targetNode );
+                ZSSEditor.removeImageSelectionFormatting(targetNode);
+                this.sendImageTappedCallback(targetNode);
                 return;
             }
 
             // If there is a selected image, deselect it. A different image was tapped.
             if ( ZSSEditor.currentEditingImage ) {
-                ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+                ZSSEditor.removeImageSelectionFormatting(ZSSEditor.currentEditingImage);
             }
 
             // Format and flag the image as selected.
             ZSSEditor.currentEditingImage = targetNode;
-            ZSSEditor.applyImageSelectionFormatting( targetNode );
+            var containerNode = ZSSEditor.applyImageSelectionFormatting(targetNode);
+
+            // Move the cursor to the tapped image, to prevent scrolling to the bottom of the document when the
+            // keyboard comes up. On API 19 and below does not work properly, with the image sometimes getting removed
+            // from the post instead of the edit overlay being displayed
+            if (nativeState.androidApiLevel > 19) {
+                ZSSEditor.setFocusAfterElement(containerNode);
+            }
 
             return;
         }
 
-        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1) {
+        if (targetNode.className.indexOf('edit-overlay') != -1 || targetNode.className.indexOf('edit-content') != -1
+            || targetNode.className.indexOf('edit-icon') != -1) {
             ZSSEditor.removeImageSelectionFormatting( ZSSEditor.currentEditingImage );
+
             this.sendImageTappedCallback( ZSSEditor.currentEditingImage );
             return;
         }
@@ -3290,6 +3376,26 @@ ZSSField.prototype.handleTapEvent = function(e) {
             var imageNode = targetNode.parentNode.getElementsByTagName('img')[0];
 
             this.sendImageTappedCallback( imageNode );
+            return;
+        }
+
+        if (targetNode.className.indexOf('delete-overlay') != -1) {
+            var parentEditContainer = targetNode.parentElement;
+            var parentDiv = parentEditContainer.parentElement;
+
+            if (parentDiv && parentDiv.nodeName == NodeName.DIV && parentDiv.parentElement.nodeName != NodeName.BODY) {
+                // Remove the parent div with all its contents, unless it's the contenteditable div itself rather than
+                // a paragraph
+                parentDiv.parentElement.removeChild(parentDiv);
+            } else if (parentEditContainer.classList.contains('edit-container')) {
+                parentEditContainer.parentElement.removeChild(parentEditContainer);
+            } else {
+                parentEditContainer.removeChild(targetNode);
+            }
+
+            this.emptyFieldIfNoContents();
+
+            ZSSEditor.currentEditingImage = null;
             return;
         }
 
@@ -3331,11 +3437,40 @@ ZSSField.prototype.handlePasteEvent = function(e) {
  *  @brief      Fires after 'keydown' events, when the field contents have already been modified
  */
 ZSSField.prototype.afterKeyDownEvent = function(beforeHTML, e) {
-    var htmlWasModified = (beforeHTML != e.target.innerHTML);
+    var afterHTML = e.target.innerHTML;
+    var htmlWasModified = (beforeHTML != afterHTML);
 
     var selection = document.getSelection();
     var range = selection.getRangeAt(0).cloneRange();
     var focusedNode = range.startContainer;
+
+    // Correct situation where autocorrect can remove blockquotes at start of document, either when pressing enter
+    // inside a blockquote, or pressing backspace immediately after one
+    // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/385
+    if (htmlWasModified) {
+        var blockquoteMatch = beforeHTML.match('^<blockquote><div>(.*)</div></blockquote>');
+
+        if (blockquoteMatch != null && afterHTML.match('<blockquote>') == null) {
+            // Blockquote at start of post was removed
+            var newParagraphMatch = afterHTML.match('^<div>(.*?)</div><div><br></div>');
+
+            if (newParagraphMatch != null) {
+                // The blockquote was removed in a newline operation
+                var originalText = blockquoteMatch[1];
+                var newText = newParagraphMatch[1];
+
+                if (originalText != newText) {
+                    // Blockquote was removed and its inner text changed - this points to autocorrect removing the
+                    // blockquote when changing the text in the previous paragraph, so we replace the blockquote
+                    ZSSEditor.turnBlockquoteOnForNode(focusedNode.parentNode.firstChild);
+                }
+            } else if (afterHTML.match('^<div>(.*?)</div>') != null) {
+                // The blockquote was removed in a backspace operation
+                ZSSEditor.turnBlockquoteOnForNode(focusedNode.parentNode);
+                ZSSEditor.setFocusAfterElement(focusedNode);
+            }
+        }
+    }
 
     var focusedNodeIsEmpty = (focusedNode.innerHTML != undefined
         && (focusedNode.innerHTML.length == 0 || focusedNode.innerHTML == '<br>'));
@@ -3355,13 +3490,25 @@ ZSSField.prototype.afterKeyDownEvent = function(beforeHTML, e) {
         // Give focus to new div
         var newFocusElement = focusedNode.firstChild;
         ZSSEditor.giveFocusToElement(newFocusElement, 1);
-    } else if (focusedNode.nodeName == NodeName.DIV && focusedNode.parentNode.nodeName == NodeName.BLOCKQUOTE
-        && focusedNode.parentNode.previousSibling == null && focusedNode.parentNode.childNodes.length == 1
-        && focusedNodeIsEmpty) {
-        // When a post begins with a blockquote, and there's content after that blockquote, backspacing inside that
-        // blockquote will work until the blockquote is empty. After that, backspace will have no effect
-        // This fix identifies that situation and makes the call to setBlockquote() to toggle off the blockquote
-        ZSSEditor.setBlockquote();
+    } else if (focusedNode.nodeName == NodeName.DIV && focusedNode.parentNode.nodeName == NodeName.BLOCKQUOTE) {
+        if (focusedNode.parentNode.previousSibling == null && focusedNode.parentNode.childNodes.length == 1
+            && focusedNodeIsEmpty) {
+            // When a post begins with a blockquote, and there's content after that blockquote, backspacing inside that
+            // blockquote will work until the blockquote is empty. After that, backspace will have no effect
+            // This fix identifies that situation and makes the call to setBlockquote() to toggle off the blockquote
+            ZSSEditor.setBlockquote();
+        } else {
+            // Remove extraneous break tags sometimes added to blockquotes by autocorrect actions
+            // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/385
+            var blockquoteChildNodes = focusedNode.parentNode.childNodes;
+
+            for (var i = 0; i < blockquoteChildNodes.length; i++) {
+                var childNode = blockquoteChildNodes[i];
+                if (childNode.nodeName == NodeName.BR) {
+                    childNode.parentNode.removeChild(childNode);
+                }
+            }
+        }
     }
 };
 
@@ -3490,9 +3637,13 @@ ZSSField.prototype.disableEditing = function () {
  *  @details    A parent paragraph node should be added if the current parent is either the field
  *              node itself, or a blockquote node.
  */
-ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
-{
+ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
     var closerParentNode = ZSSEditor.closerParentNode();
+
+    if (closerParentNode == null) {
+        return;
+    }
+
     var parentNodeShouldBeParagraph = (closerParentNode == this.getWrappedDomNode()
                                        || closerParentNode.nodeName == NodeName.BLOCKQUOTE);
 
@@ -3500,10 +3651,19 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
     // won't properly wrap the text once it's entered
     // In that case, remove the paragraph tags and re-apply them, wrapping around the newly entered text
     var fixNewPostBlockquoteBug = (closerParentNode.nodeName == NodeName.DIV
-                                       && closerParentNode.parentNode.nodeName == NodeName.BLOCKQUOTE
-                                       && closerParentNode.innerHTML.length == 0);
+            && closerParentNode.parentNode.nodeName == NodeName.BLOCKQUOTE
+            && closerParentNode.innerHTML.length == 0);
 
-    if (parentNodeShouldBeParagraph || fixNewPostBlockquoteBug) {
+    // On API 19 and below, identifying the situation where the blockquote bug for new posts occurs works a little
+    // differently than above, with the focused node being the parent blockquote rather than the empty div inside it.
+    // We still remove the empty div so it can be re-applied correctly to the newly entered text, but we select it
+    // differently
+    // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/398
+    var fixNewPostBlockquoteBugOldApi = (closerParentNode.nodeName == NodeName.BLOCKQUOTE
+            && closerParentNode.parentNode.nodeName == NodeName.DIV
+            && closerParentNode.innerHTML == '<div></div>');
+
+    if (parentNodeShouldBeParagraph || fixNewPostBlockquoteBug || fixNewPostBlockquoteBugOldApi) {
         var selection = window.getSelection();
 
         if (selection && selection.rangeCount > 0) {
@@ -3512,7 +3672,10 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function()
             if (range.startContainer == range.endContainer) {
                 if (fixNewPostBlockquoteBug) {
                     closerParentNode.parentNode.removeChild(closerParentNode);
+                } else if (fixNewPostBlockquoteBugOldApi) {
+                    closerParentNode.removeChild(closerParentNode.firstChild);
                 }
+
                 var paragraph = document.createElement("div");
                 var textNode = document.createTextNode("&#x200b;");
 

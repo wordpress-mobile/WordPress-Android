@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="gravatar_camera_and_media_permission_required">写真の選択または撮影に必要な権限</string>
+	<string name="error_updating_gravatar">Gravatar 更新エラー</string>
+	<string name="error_locating_image">切り抜き済み画像位置不明エラー</string>
+	<string name="error_refreshing_gravatar">Gravatar 再読み込みエラー</string>
+	<string name="gravatar_tip">[New] Gravatar をタップして変更できます。</string>
+	<string name="error_cropping_image">画像切り抜きエラー</string>
+	<string name="launch_your_email_app">メールアプリを開く</string>
+	<string name="checking_email">メールをチェック</string>
+	<string name="not_on_wordpress_com">WordPress.com をご利用ではありませんか ?</string>
+	<string name="magic_link_unavailable_error_message">現在ご利用いただけません。パスワードを入力してください</string>
+	<string name="check_your_email">メールをご確認ください</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">メールで送信されたリンクですぐにログイン</string>
+	<string name="logging_in">ログインしています</string>
+	<string name="enter_your_password_instead">代わりにパスワードを入力</string>
+	<string name="web_address_dialog_hint">コメントする際に公開表示されます。</string>
+	<string name="jetpack_not_connected_message">Jetpack プラグインがインストールされていますが、WordPress.com と連携されていません。Jetpack との連携を行いますか ?</string>
+	<string name="username_email">メールアドレスまたはユーザー名</string>
+	<string name="jetpack_not_connected">Jetpack プラグインが連携されていません</string>
+	<string name="new_editor_reflection_error">ビジュアルエディターはお使いのデバイスとの互換性がありません。自動で無効化されました。</string>
+	<string name="stats_insights_latest_post_no_title">(タイトルなし)</string>
+	<string name="capture_or_pick_photo">写真を撮影または選択</string>
 	<string name="plans_post_purchase_text_themes">さまざまなプレミアムテーマを無制限に利用できます。まずはサイト上で1つのテーマをプレビューしてください。</string>
 	<string name="plans_post_purchase_button_themes">テーマを表示</string>
 	<string name="plans_post_purchase_title_themes">サイトにぴったりのプレミアムテーマを見つけましょう</string>
@@ -44,7 +65,6 @@
 	<string name="start_over_text">サイトは維持したままで現在の投稿やページを削除したい場合は、サポートスタッフが投稿、ページ、メディア、コメントをすべて削除するお手伝いをさせていただきます。\n\nこうすることで、サイトと URL を保ったまま新しいコンテンツを一から作り始めることができます。サポートに連絡し、現在のコンテンツをすべて削除したい旨をお知らせください。</string>
 	<string name="site_settings_start_over_hint">サイトを最初からやり直す</string>
 	<string name="let_us_help">お手伝いさせてください</string>
-	<string name="me_btn_account_settings">アカウント設定</string>
 	<string name="me_btn_app_settings">アプリ設定</string>
 	<string name="start_over">最初からやり直す</string>
 	<string name="editor_remove_failed_uploads">アップロードに失敗したメディアを削除</string>
@@ -110,7 +130,6 @@
 	<string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
 	<string name="primary_site">基本のサイト</string>
 	<string name="web_address">ウェブアドレス</string>
-	<string name="account_settings">@string/me_btn_account_settings</string>
 	<string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
 	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
@@ -416,6 +435,7 @@
 	<string name="me_disconnect_from_wordpress_com">WordPress.com 連携を解除</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com アカウントに連携</string>
 	<string name="me_btn_login_logout">ログイン/ログアウト</string>
+	<string name="account_settings">アカウント設定</string>
 	<string name="me_btn_support">ヘルプ &amp; サポート</string>
 	<string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
 	<string name="site_picker_create_dotcom">WordPress.com サイトを作成</string>
@@ -814,7 +834,6 @@
 	<string name="reader_toast_err_remove_tag">このタグを削除できません</string>
 	<string name="required_field">記入必須欄</string>
 	<string name="email_hint">メールアドレス</string>
-	<string name="username_email">ユーザー名またはメールアドレス</string>
 	<string name="site_address">インストール型 WordPress のアドレス (URL)</string>
 	<string name="email_cant_be_used_to_signup">こちらから送信するメールがブロックされる問題が発生しているため、そのメールアドレスは登録の際にお使いいただけません。他のメールプロバイダをご利用ください。</string>
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
