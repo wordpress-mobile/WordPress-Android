@@ -14,6 +14,7 @@ import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -67,7 +68,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         p.setMargins(menuItem.flattenedLevel * mPadding,0,0,0);
         holder.containerView.requestLayout();
         //holder.containerView.setPadding(menuItem.flattenedLevel * mPadding,0,0,0);
-        //TODO: set the correct icon type depending on the menu item type
+        //TODO: set the correct icon type depending on the menu item type, check with @tonyrh59
         switch (menuItem.type) {
             case "post":
                 holder.imgMenuItemType.setImageResource(R.drawable.my_site_icon_pages);
@@ -131,6 +132,25 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     void deleteMenuItem(MenuItemModel menuItem) {
         mMenuItems.remove(menuItem);
         notifyDataSetChanged();
+    }
+
+    void deleteMenuItem(int index) {
+        mMenuItems.remove(index);
+        notifyDataSetChanged();
+    }
+
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mMenuItems, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mMenuItems, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
     }
 
     /*
