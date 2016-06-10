@@ -63,7 +63,10 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.txtTitle.setText(Html.fromHtml(menuItem.name));
         mPadding = mContext.getResources().getDimensionPixelOffset(R.dimen.margin_medium);
-        holder.containerView.setPadding(menuItem.flattenedLevel * mPadding,0,0,0);
+        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.containerView.getLayoutParams();
+        p.setMargins(menuItem.flattenedLevel * mPadding,0,0,0);
+        holder.containerView.requestLayout();
+        //holder.containerView.setPadding(menuItem.flattenedLevel * mPadding,0,0,0);
         //TODO: set the correct icon type depending on the menu item type
         switch (menuItem.type) {
             case "post":
