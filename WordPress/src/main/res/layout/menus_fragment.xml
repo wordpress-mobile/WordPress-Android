@@ -72,13 +72,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <Button
+        <org.wordpress.android.widgets.WPButton
             android:id="@+id/add_item_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add" />
 
-        <Button
+        <org.wordpress.android.widgets.WPButton
             android:id="@+id/remove_item_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,10 +91,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ListView
+    <org.wordpress.android.widgets.RadioButtonListView
         android:id="@+id/menu_item_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <View style="@style/MenusDividerView" />
 

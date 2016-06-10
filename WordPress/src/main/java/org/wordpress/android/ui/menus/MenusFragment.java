@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.util.ListUtils;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.datasets.MenuTable;
@@ -28,7 +30,6 @@ import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.menus.items.PageItemEditor;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemEditView;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
@@ -36,11 +37,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.RadioButtonListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MenusFragment extends Fragment implements MenuItemEditView.MenuItemEditorListener {
 
@@ -423,9 +423,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
         mAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, Object> data = new HashMap<>();
-                data.put(PageItemEditor.PAGE_LIST_KEY, new String[] {"Page 1", "Page 2", "Page 3"});
-                mItemEditView.setType(MenuItemEditorFactory.ITEM_TYPE.PAGE, data);
+                mItemEditView.setType(MenuItemEditorFactory.ITEM_TYPE.PAGE);
             }
         });
 
@@ -433,14 +431,14 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
     }
 
     private ArrayAdapter getItemAdapter() {
-        if (mCurrentMenuForLocation == null || mCurrentMenuForLocation.menuItems == null || mCurrentMenuForLocation.menuItems.size() <= 0) return null;
+        if (mCurrentMenuForLocation == null || ListUtils.isEmpty(mCurrentMenuForLocation.menuItems)) return null;
         List<MenuItemModel> items = mCurrentMenuForLocation.menuItems;
         String[] values = new String[items.size()];
         for (int i = 0; i < items.size(); ++i) {
             values[i] = items.get(i).typeLabel + " item - " + items.get(i).name;
         }
 
-        return new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, values);
+        return new RadioButtonListView.RadioButtonListAdapter(getActivity(), values);
     }
 
     @Override
