@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-        android:id="@+id/ptr_layout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
-    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 
     <org.wordpress.android.widgets.WPTextView
@@ -33,12 +25,5 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/margin_extra_large" />
 </RelativeLayout>
 
