@@ -63,7 +63,7 @@ A number of library dependencies are managed as separate open source projects an
 
         $ git subtree pull --squash --prefix libs/library_name https://github.com/wordpress-mobile/WordPress-Library_Name-Android.git develop
 
-and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics` respectively.
+and substitute the `library_name` and `Library_Name` to match the library project. As an example, for the Analytics library use 'analytics' and 'Analytics' respectively.
 
 Similarly, issue a `subtree push` to push changes committed to the main app repo, upstream to the library repo:
 
@@ -79,7 +79,9 @@ Here are the libraries currently maintained and subtree'd:
 
 # Drawable Resources
 
-The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
+The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
+
+Since Vector Drawable are not the easiest file type to edit, they're chances the Vector Drawable you'll add comes from a SVG file. If the SVG file is specific to the WPAndroid project (like a banner image or unlike a gridicon), then add the SVG source in `WordPress/src/future/svg/`. The argument behind this: make sure we can find and edit the SVG file and then export it in Vector Drawable format.
 
 # Subtree'd projects
 

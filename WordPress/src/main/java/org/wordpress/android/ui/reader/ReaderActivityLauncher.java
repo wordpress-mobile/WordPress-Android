@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -15,7 +14,6 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -164,17 +162,6 @@ public class ReaderActivityLauncher {
     }
 
     /*
-     * show users who liked the passed comment
-     */
-    public static void showReaderLikingUsers(Context context, ReaderComment comment) {
-        Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, comment.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, comment.postId);
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, comment.commentId);
-        context.startActivity(intent);
-    }
-
-    /*
      * show followed tags & blogs
      */
     public static void showReaderSubs(Context context) {
@@ -206,15 +193,10 @@ public class ReaderActivityLauncher {
         }
 
         if (context instanceof Activity) {
-            // use built-in scale animation on jb+, fall back to default animation on pre-jb
             Activity activity = (Activity) context;
-            if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
-                ActivityCompat.startActivity(activity, intent, options.toBundle());
-            } else {
-                activity.startActivity(intent);
-            }
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
         } else {
             context.startActivity(intent);
         }

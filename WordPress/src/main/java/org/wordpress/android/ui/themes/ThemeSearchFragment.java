@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -36,29 +35,14 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        restoreState(savedInstanceState);
-
-        return view;
+        if (savedInstanceState != null) {
+            mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(BUNDLE_LAST_SEARCH)) {
-                mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
-                configureSearchView();
-            }
-        }
     }
 
     @Override

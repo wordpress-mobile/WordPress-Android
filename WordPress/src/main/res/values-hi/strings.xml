@@ -399,7 +399,6 @@
 	<string name="reader_toast_err_remove_tag">इस टैग को हटाने में असमर्थ</string>
 	<string name="required_field">आवश्यक फ़ील्ड</string>
 	<string name="email_hint">ईमेल पता</string>
-	<string name="username_email">उपयोगकर्ता नाम या ईमेल</string>
 	<string name="site_address">आपका अपने से होस्ट किया हुआ पता(यूआरएल)</string>
 	<string name="email_cant_be_used_to_signup">आप पंजीकरण करने के लिए कि उस ईमेल पते का उपयोग नहीं कर सकते हैं. हमें उनके साथ समस्या हो रही है क्योंकि वे  हमारे ईमेल को ब्लॉक कर रहे है. एक अन्य ईमेल प्रदाता का प्रयोग करें.</string>
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>

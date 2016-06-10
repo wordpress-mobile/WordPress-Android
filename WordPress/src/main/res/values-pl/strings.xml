@@ -359,7 +359,6 @@
 	<string name="reader_toast_err_remove_tag">Nie udało się usunąć tagu</string>
 	<string name="required_field">Wymagane pole</string>
 	<string name="email_hint">Adres email</string>
-	<string name="username_email">Nazwa użytkownika lub email</string>
 	<string name="site_address">Adres strony na Twoim hostingu</string>
 	<string name="email_cant_be_used_to_signup">Nie możesz użyć tego adresu email do rejestracji, ponieważ jego serwer blokuje naszą korespondencję. Użyj innego usługodawcy emailów.</string>
 	<string name="email_reserved">Ten adres email został już użyty. Sprawdź czy nie masz w skrzynce odbiorczej maila aktywacyjnego. Jeśli go nie aktywujesz możesz spróbować znów za klika dni.</string>

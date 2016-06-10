@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -76,6 +75,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -202,7 +202,7 @@ public class WordPress extends Application {
 
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-            AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
+            AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
@@ -216,16 +216,6 @@ public class WordPress extends Application {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
-
-        // TODO: remove this after the visual editor is enabled in a release version (5.4 if everything goes well)
-        enableVisualEditorForBetaUsers();
-    }
-
-    private void enableVisualEditorForBetaUsers() {
-        if (BuildConfig.VERSION_NAME.contains("5.4-rc")) {
-            AppPrefs.setVisualEditorAvailable(true);
-            AppPrefs.setVisualEditorEnabled(true);
-        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -373,7 +363,6 @@ public class WordPress extends Application {
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void enableStrictMode() {
         // return if the build is not a debug build
         if (!BuildConfig.DEBUG) {
@@ -490,6 +479,7 @@ public class WordPress extends Application {
 
         if (currentBlog != null && currentBlog.isHidden()) {
             wpDB.setDotComBlogsVisibility(id, true);
+            currentBlog.setHidden(false);
         }
     }
 
@@ -540,7 +530,7 @@ public class WordPress extends Application {
         AnalyticsTracker.clearAllData();
 
         // disable passcode lock
-        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+        AbstractAppLock appLock = AppLockManager.getInstance().getAppLock();
         if (appLock != null) {
             appLock.setPassword(null);
         }
@@ -704,6 +694,25 @@ public class WordPress extends Application {
             params.put("locale", deviceLanguageCode);
         }
         return params;
+    }
+
+    /**
+     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
+     * are used at the project level to set custom fields.
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     * @param application   Used to find the correct file
+     * @param fieldName     The name of the field-to-access
+     * @return              The value of the field, or {@code null} if the field is not found.
+     */
+    public static Object getBuildConfigValue(Application application, String fieldName) {
+        try {
+            String packageName = application.getClass().getPackage().getName();
+            Class<?> clazz = Class.forName(packageName + ".BuildConfig");
+            Field field = clazz.getField(fieldName);
+            return field.get(null);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**

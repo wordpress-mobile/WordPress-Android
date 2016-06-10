@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
@@ -84,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 44;
+    private static final int DATABASE_VERSION = 47;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -225,6 +226,9 @@ public class WordPressDB {
     // add plan_product_name_short to blog
     private static final String ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT = "alter table accounts add plan_product_name_short text default '';";
 
+    // add capabilities to blog
+    private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
+
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
@@ -256,7 +260,7 @@ public class WordPressDB {
         boolean isNewInstall = (currentVersion == 0);
 
         if (!isNewInstall && currentVersion != DATABASE_VERSION) {
-            AppLog.d(T.DB, "updgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+            AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
         switch (currentVersion) {
@@ -409,6 +413,16 @@ public class WordPressDB {
             case 43:
                 db.execSQL(ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT);
                 currentVersion++;
+            case 44:
+                PeopleTable.createTables(db);
+                currentVersion++;
+            case 45:
+                db.execSQL(ADD_BLOGS_CAPABILITIES);
+                currentVersion++;
+            case 46:
+                AppPrefs.setVisualEditorAvailable(true);
+                AppPrefs.setVisualEditorEnabled(true);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -519,6 +533,7 @@ public class WordPressDB {
         }
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
+        values.put("capabilities", blog.getCapabilities());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
@@ -542,12 +557,12 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
-                                                int limit, boolean shouldHideJetpack) {
+                                                int limit, boolean hideJetpackWithoutCredentials) {
         if (db == null) {
             return new Vector<>();
         }
 
-        if (shouldHideJetpack) {
+        if (hideJetpackWithoutCredentials) {
             // Hide Jetpack blogs that were added in FetchBlogListWPCom
             // They will have a false dotcomFlag and an empty (but encrypted) password
             String hideJetpackArgs = String.format("NOT(dotcomFlag=0 AND password='%s')", encryptPassword(""));
@@ -719,6 +734,7 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
+        values.put("capabilities", blog.getCapabilities());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -748,6 +764,7 @@ public class WordPressDB {
         int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForLocalTableBlogId(ctx, id);
         deleteAllPostsForLocalTableBlogId(id);
+        PeopleTable.deletePeopleForLocalBlogId(id);
         return (rowsAffected > 0);
     }
 
@@ -757,6 +774,7 @@ public class WordPressDB {
             int localBlogId = MapUtils.getMapInt(blog, "id");
             deleteQuickPressShortcutsForLocalTableBlogId(ctx, localBlogId);
             deleteAllPostsForLocalTableBlogId(localBlogId);
+            PeopleTable.deletePeopleForLocalBlogId(localBlogId);
         }
 
         // H4ck alert: We need to delete the Jetpack sites that were added in the initial
@@ -813,7 +831,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short"};
+                             "plan_product_id", "plan_product_name_short", "capabilities"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -871,6 +889,7 @@ public class WordPressDB {
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
+                blog.setCapabilities(c.getString(c.getColumnIndex("capabilities")));
             }
         }
         c.close();
@@ -2052,7 +2071,7 @@ public class WordPressDB {
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
     }
-    
+
     private void updateCurrentBlog(Blog blog) {
         Blog currentBlog = WordPress.currentBlog;
         if (currentBlog != null && blog.getLocalTableBlogId() == currentBlog.getLocalTableBlogId()) {

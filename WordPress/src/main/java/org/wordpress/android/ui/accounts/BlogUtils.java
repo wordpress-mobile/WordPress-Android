@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
+import android.text.Editable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -74,9 +75,10 @@ public class BlogUtils {
                 planID = MapUtils.getMapLong(blogMap, "planID");
             }
             String planShortName = MapUtils.getMapStr(blogMap, "plan_product_name_short");
+            String capabilities = MapUtils.getMapStr(blogMap, "capabilities");
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
-                    httpPassword, isAdmin, isVisible, planID, planShortName);
+                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities);
         }
         return retValue;
     }
@@ -104,9 +106,9 @@ public class BlogUtils {
      * Return false if no change has been made.
      */
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
-                                           String username, String password, String httpUsername, String httpPassword,
-                                           boolean isAdmin, boolean isVisible,
-                                           long planID, String planShortName) {
+                                          String username, String password, String httpUsername, String httpPassword,
+                                          boolean isAdmin, boolean isVisible,
+                                          long planID, String planShortName, String capabilities) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -129,6 +131,7 @@ public class BlogUtils {
             blog.setHidden(!isVisible);
             blog.setPlanID(planID);
             blog.setPlanShortName(planShortName);
+            blog.setCapabilities(capabilities);
             WordPress.wpDB.saveBlog(blog);
             return true;
         } else {
@@ -150,6 +153,10 @@ public class BlogUtils {
                     blog.setPlanShortName(planShortName);
                     blogUpdated = true;
                 }
+                if (blog.getCapabilities() == null || !blog.getCapabilities().equals(capabilities)) {
+                    blog.setCapabilities(capabilities);
+                    blogUpdated = true;
+                }
                 if (blogUpdated) {
                     WordPress.wpDB.saveBlog(blog);
                     return true;
@@ -167,10 +174,18 @@ public class BlogUtils {
 
     /**
      * Get a Blog's local Id.
+     *
      * @param blog The Blog to get its local ID
      * @return Blog's local id or {@value BlogUtils#BLOG_ID_INVALID} if null
      */
     public static int getBlogLocalId(final Blog blog) {
         return (blog != null ? blog.getLocalTableBlogId() : BLOG_ID_INVALID);
+    }
+
+    public static void convertToLowercase(Editable s) {
+        String lowerCase = s.toString().toLowerCase();
+        if (!lowerCase.equals(s.toString())) {
+            s.replace(0, s.length(), lowerCase);
+        }
     }
 }

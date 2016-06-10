@@ -34,7 +34,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
     public interface BlogClickListener {
-        public void onBlogClicked(Object blog);
+        void onBlogClicked(Object blog);
     }
 
     private final ReaderBlogType mBlogType;
@@ -109,7 +109,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof BlogViewHolder) {
             final BlogViewHolder blogHolder = (BlogViewHolder) holder;
             switch (getBlogType()) {
@@ -143,12 +143,13 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 blogHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int clickedPosition = blogHolder.getAdapterPosition();
                         switch (getBlogType()) {
                             case RECOMMENDED:
-                                mClickListener.onBlogClicked(mRecommendedBlogs.get(position));
+                                mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));
                                 break;
                             case FOLLOWED:
-                                mClickListener.onBlogClicked(mFollowedBlogs.get(position));
+                                mClickListener.onBlogClicked(mFollowedBlogs.get(clickedPosition));
                                 break;
                         }
                     }

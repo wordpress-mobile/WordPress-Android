@@ -102,7 +102,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -589,7 +588,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaUploadService mediaUploadService = MediaUploadService.getInstance();
 
         // Disable format bar buttons while a media upload is in progress
-        if ((mediaUploadService != null && mediaUploadService.hasUploads()) || mEditorFragment.isUploadingMedia()) {
+        if ((mediaUploadService != null && mediaUploadService.hasUploads()) || mEditorFragment.isUploadingMedia() ||
+                mEditorFragment.isActionInProgress()) {
             ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
             return false;
         }
@@ -1559,7 +1559,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         Blog blog = WordPress.getCurrentBlog();
-        if (!blog.getMaxImageWidth().equals("Original Size")) {
+        if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
             // If the user has selected a maximum image width for uploads, rescale the image accordingly
             path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
         }
@@ -2098,7 +2098,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onFeaturedImageChanged(int mediaId) {
+    public void onFeaturedImageChanged(long mediaId) {
         mPost.setFeaturedImageId(mediaId);
         mEditPostSettingsFragment.updateFeaturedImage(mediaId);
     }
