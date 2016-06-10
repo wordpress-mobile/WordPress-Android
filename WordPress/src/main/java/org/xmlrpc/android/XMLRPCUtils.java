@@ -268,16 +268,19 @@ public class XMLRPCUtils {
 
     private static String verifyXmlrpcUrl(final String siteUrl, final String httpUsername, final String httpPassword)
             throws XMLRPCUtilsException {
-        final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
-
         // Ordered set of Strings that contains the URLs we want to try. No discovery ;)
         final Set<String> urlsToTry = new LinkedHashSet<>();
 
-        // start by adding the url with 'xmlrpc.php'. This will be the first url to try.
-        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrl));
+        final String sanitizedSiteUrlHttps = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
+        final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
 
-        // add the sanitized URL without the '/xmlrpc.php' suffix added to it
-        urlsToTry.add(sanitizedSiteUrl);
+        // start by adding the https URL with 'xmlrpc.php'. This will be the first URL to try.
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttp));
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttps));
+
+        // add the sanitized https URL without the '/xmlrpc.php' suffix added to it
+        urlsToTry.add(sanitizedSiteUrlHttp);
+        urlsToTry.add(sanitizedSiteUrlHttps);
 
         // add the user provided URL as well
         urlsToTry.add(siteUrl);
@@ -289,6 +292,14 @@ public class XMLRPCUtils {
                     // Endpoint found and works fine.
                     return url;
                 }
+            } catch (XMLRPCUtilsException e) {
+                if (e.kind == XMLRPCUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE ||
+                    e.kind == XMLRPCUtilsException.Kind.HTTP_AUTH_REQUIRED ||
+                    e.kind == XMLRPCUtilsException.Kind.MISSING_XMLRPC_METHOD) {
+                    throw e;
+                }
+                // swallow the error since we are just verifying various URLs
+                continue;
             } catch (RuntimeException re) {
                 // depending how corrupt the user entered URL is, it can generate several kind of runtime exceptions,
                 // ignore them

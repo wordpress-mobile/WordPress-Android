@@ -311,8 +311,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isGooglePlayServicesAvailable() {
-        return isAdded() && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())
-                == ConnectionResult.SUCCESS;
+        if (getActivity() == null) {
+            return false;
+        }
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+        return status == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -616,6 +619,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             }
 
             trackAnalyticsSignIn();
+            Optimizely.trackEvent("Signed In");
 
             // get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this

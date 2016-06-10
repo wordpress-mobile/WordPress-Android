@@ -85,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 46;
+    private static final int DATABASE_VERSION = 47;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -418,6 +418,10 @@ public class WordPressDB {
                 currentVersion++;
             case 45:
                 db.execSQL(ADD_BLOGS_CAPABILITIES);
+                currentVersion++;
+            case 46:
+                AppPrefs.setVisualEditorAvailable(true);
+                AppPrefs.setVisualEditorEnabled(true);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
