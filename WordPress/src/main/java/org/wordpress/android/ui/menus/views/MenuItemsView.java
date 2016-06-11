@@ -88,10 +88,10 @@ public class MenuItemsView extends RelativeLayout {
 
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                //return 0;
                 int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                return makeMovementFlags(dragFlags, swipeFlags);            }
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -103,12 +103,6 @@ public class MenuItemsView extends RelativeLayout {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 mItemAdapter.deleteMenuItem(viewHolder.getAdapterPosition());
             }
-
-            @Override
-            public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
-                return super.getSwipeThreshold(viewHolder);
-            }
-
 
         });
         touchHelper.attachToRecyclerView(mRecyclerView);
