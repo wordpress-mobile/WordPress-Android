@@ -20,8 +20,10 @@ import android.widget.Toast;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.datasets.MenuTable;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
@@ -280,6 +282,9 @@ public class MenusFragment extends Fragment {
                 }
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
+
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
 
                 mCurrentCreateRequestId = mRestWPCom.createMenu(menuToUpdate);
             }

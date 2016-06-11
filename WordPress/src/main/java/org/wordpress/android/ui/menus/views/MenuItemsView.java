@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -76,6 +77,9 @@ public class MenuItemsView extends RelativeLayout {
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
 
+            int dragFrom = -1;
+            int dragTo = -1;
+
             @Override
             public boolean isLongPressDragEnabled() {
                 return true;
@@ -95,13 +99,30 @@ public class MenuItemsView extends RelativeLayout {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                mItemAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                if(dragFrom == -1) {
+                    dragFrom =  fromPosition;
+                }
+                dragTo = toPosition;
+                mItemAdapter.onItemMove(fromPosition, toPosition);
                 return true;
             }
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 mItemAdapter.deleteMenuItem(viewHolder.getAdapterPosition());
+            }
+
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+                    mItemAdapter.onDrop(dragFrom, dragTo);
+                }
+
+                dragFrom = dragTo = -1;
             }
 
         });
@@ -113,7 +134,7 @@ public class MenuItemsView extends RelativeLayout {
         mMenu = menu;
         getAdapter();
         if (menu != null) {
-            mFlattenedList = flattenMenuItemModelList(menu.menuItems, 0);
+            mFlattenedList = MenusDataModeler.flattenMenuItemModelList(menu.menuItems, 0);
             mItemAdapter.replaceMenuItems(mFlattenedList);
         }
     }
@@ -138,28 +159,14 @@ public class MenuItemsView extends RelativeLayout {
         }
     }
 
+    public List<MenuItemModel> getCurrentMenuItems(){
+        if (mItemAdapter == null) return null;
+        return mItemAdapter.getCurrentMenuItems();
+    }
+
 
     private boolean hasAdapter() {
         return (mItemAdapter != null);
     }
-
-    private List<MenuItemModel> flattenMenuItemModelList(List<MenuItemModel> hierarchyList, int currentLevel) {
-        ArrayList<MenuItemModel> flattenedList = new ArrayList<>();
-
-        if (hierarchyList != null) {
-            for (MenuItemModel item : hierarchyList) {
-                item.flattenedLevel = currentLevel;
-                flattenedList.add(item);
-                if (item.hasChildren()) {
-                    List<MenuItemModel> tmpList = flattenMenuItemModelList(item.children, currentLevel+1);
-                    flattenedList.addAll(tmpList);
-                }
-            }
-        }
-
-
-        return flattenedList;
-    }
-
 
 }

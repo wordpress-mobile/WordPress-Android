@@ -300,4 +300,44 @@ public class MenusDataModeler {
 
         return null;
     }
+
+    public static List<MenuItemModel> inflateMenuItemModelList(List<MenuItemModel> flattenedList) {
+        List<MenuItemModel> inflatedList = new ArrayList<>();
+
+        if (flattenedList != null && flattenedList.size() > 0) {
+            int lastLevel = 0;
+            MenuItemModel parent = flattenedList.get(0);
+            for (MenuItemModel item : flattenedList){
+                if (item.flattenedLevel == lastLevel) {
+                    //same hierarchy
+                    parent = item;
+                    inflatedList.add(item);
+                }
+                else if (item.flattenedLevel > lastLevel) {
+                    //further down the hierarchy
+                    parent.children = inflateMenuItemModelList(flattenedList.subList(flattenedList.indexOf(item), flattenedList.size()-1));
+                } else {
+                    //one or more levels up the hierarchy
+                    return inflatedList;
+                }
+            }
+        }
+
+        return inflatedList;
+    }
+
+    public static List<MenuItemModel> flattenMenuItemModelList(List<MenuItemModel> hierarchyList, int currentLevel) {
+        ArrayList<MenuItemModel> flattenedList = new ArrayList<>();
+        if (hierarchyList != null) {
+            for (MenuItemModel item : hierarchyList) {
+                item.flattenedLevel = currentLevel;
+                flattenedList.add(item);
+                if (item.hasChildren()) {
+                    List<MenuItemModel> tmpList = flattenMenuItemModelList(item.children, currentLevel+1);
+                    flattenedList.addAll(tmpList);
+                }
+            }
+        }
+        return flattenedList;
+    }
 }
