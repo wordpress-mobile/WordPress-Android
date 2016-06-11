@@ -270,6 +270,7 @@ public class ReaderUpdateService extends Service {
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
+                    ReaderPostTable.deletePostsFromUnfollowedBlogs();
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
                     EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
