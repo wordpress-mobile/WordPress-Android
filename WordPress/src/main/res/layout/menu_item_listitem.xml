@@ -1,9 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -11,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/content_margin"
-        android:background="@color/white"
+        android:background="?android:selectableItemBackground"
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin"
