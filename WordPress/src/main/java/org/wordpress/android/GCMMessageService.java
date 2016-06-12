@@ -295,14 +295,13 @@ public class GCMMessageService extends GcmListenerService {
         boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
         boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
         boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
-        String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null);
+        String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
 
-        boolean isNotificationSoundSelected = !TextUtils.isEmpty(notificationSound);
 
-        // use default sound if the legacy sound preference was ON but the custom sound is not selected
-        if (shouldPlaySound && !isNotificationSoundSelected) {
+        // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
+        if (shouldPlaySound && notificationSound == null) {
             builder.setSound(Uri.parse("content://settings/system/notification_sound"));
-        } else if (isNotificationSoundSelected) {
+        } else if (!TextUtils.isEmpty(notificationSound)) {
             builder.setSound(Uri.parse(notificationSound));
         }
 
