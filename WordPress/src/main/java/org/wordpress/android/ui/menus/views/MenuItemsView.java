@@ -18,7 +18,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
