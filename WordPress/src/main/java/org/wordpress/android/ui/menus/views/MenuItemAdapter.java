@@ -11,17 +11,23 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.ui.menus.event.MenuEvents;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final LayoutInflater mInflater;
     private final Context mContext;
     private int mPadding;
+    private static int ADD_MENU_ITEM_ABOVE_ID = -100;
+    private static int ADD_MENU_ITEM_BELOW_ID = -200;
+    private static int ADD_MENU_ITEM_TO_CHILDREN_ID = -300;
 
     private final List<MenuItemModel> mFlattenedMenuItems = new ArrayList<>();
 
@@ -38,7 +44,7 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.title);
             imgMenuItemType = (ImageView) view.findViewById(R.id.image_menu_item_type);
-            containerView = (ViewGroup) view.findViewById(R.id.layout_container);
+            containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
             imgEditIcon = (ImageView) view.findViewById(R.id.icon_edit);
             imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
             imgArrowLeft = (ImageView) view.findViewById(R.id.arrow_left);
@@ -72,10 +78,12 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         p.setMargins(menuItem.flattenedLevel * mPadding,0,0,0);
         holder.containerView.requestLayout();
         //TODO: set the correct icon type depending on the menu item type, check with @tonyrh59
-        switch (menuItem.type) {
-            case "post":
-                holder.imgMenuItemType.setImageResource(R.drawable.my_site_icon_pages);
-                break;
+        if (menuItem.type != null) {
+            switch (menuItem.type) {
+                case "post":
+                    holder.imgMenuItemType.setImageResource(R.drawable.my_site_icon_pages);
+                    break;
+            }
         }
 
         holder.imgEditIcon.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +97,35 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.imgAddIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO implement add item
-                ToastUtils.showToast(mContext, "not implemented yet", ToastUtils.Duration.SHORT);
+
+                //insert items above and below
+                AddItemAbove above = new AddItemAbove(mContext);
+                above.flattenedLevel = menuItem.flattenedLevel;
+                mFlattenedMenuItems.add(position, above);
+                notifyItemInserted(position);
+
+                AddItemBelow below = new AddItemBelow(mContext);
+                below.flattenedLevel = menuItem.flattenedLevel;
+                if (position == mFlattenedMenuItems.size()-1) {
+                    mFlattenedMenuItems.add(below);
+                    notifyItemInserted(mFlattenedMenuItems.size()-1);
+                } else {
+                    mFlattenedMenuItems.add(position + 2, below);
+                    notifyItemInserted(position + 2);
+                }
+
+                AddItemToChildren toChildren = new AddItemToChildren(mContext);
+                toChildren.flattenedLevel = menuItem.flattenedLevel + 1;
+                if (position == mFlattenedMenuItems.size()-1) {
+                    mFlattenedMenuItems.add(toChildren);
+                    notifyItemInserted(mFlattenedMenuItems.size() - 1);
+                } else {
+                    mFlattenedMenuItems.add(position + 3, toChildren);
+                    notifyItemInserted(position + 3);
+                }
+
+                EventBus.getDefault().post(new MenuEvents.AddMenuClicked(position));
+
             }
         });
 
@@ -301,6 +336,28 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public List<MenuItemModel> getCurrentMenuItems(){
         return mFlattenedMenuItems;
+    }
+
+
+    private class AddItemAbove extends MenuItemModel {
+        public AddItemAbove(Context context){
+            this.menuId = ADD_MENU_ITEM_ABOVE_ID;
+            this.name = context.getString(R.string.menus_add_item_above);
+        }
+    }
+
+    private class AddItemBelow extends MenuItemModel {
+        public AddItemBelow(Context context){
+            this.menuId = ADD_MENU_ITEM_BELOW_ID;
+            this.name = context.getString(R.string.menus_add_item_below);
+        }
+    }
+
+    private class AddItemToChildren extends MenuItemModel {
+        public AddItemToChildren(Context context){
+            this.menuId = ADD_MENU_ITEM_TO_CHILDREN_ID;
+            this.name = context.getString(R.string.menus_add_item_to_children);
+        }
     }
 
 }

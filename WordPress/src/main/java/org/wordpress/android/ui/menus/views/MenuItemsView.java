@@ -14,11 +14,14 @@ import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.menus.event.MenuEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 
 public class MenuItemsView extends RelativeLayout {
@@ -168,4 +171,20 @@ public class MenuItemsView extends RelativeLayout {
         return (mItemAdapter != null);
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(MenuEvents.AddMenuClicked event) {
+        mRecyclerView.scrollToPosition(event.mPosition);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
+    }
 }

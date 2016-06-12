@@ -1477,6 +1477,9 @@
     <string name="menus_menu_created">Menu created</string>
     <string name="menus_menu_deleted">Menu deleted</string>
     <string name="menus_menu_updated">Menu updated</string>
+    <string name="menus_add_item_above">Add menu item above</string>
+    <string name="menus_add_item_below">Add menu item below</string>
+    <string name="menus_add_item_to_children">Add menu item to children</string>
 
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
