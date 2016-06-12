@@ -349,6 +349,9 @@ public class MenusFragment extends Fragment {
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
+
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menuToUpdate);
             }
         });
