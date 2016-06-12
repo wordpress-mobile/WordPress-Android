@@ -47,23 +47,23 @@
             android:gravity="right"
             android:orientation="horizontal">
 
-            <ImageView
+            <org.wordpress.android.widgets.WPTintImageView
                 android:id="@+id/arrow_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_arrow_left"
-                android:tint="@color/blue_wordpress"
+                app:tint="@drawable/arrow_image_selector"
                 android:layout_marginRight="@dimen/margin_large"
                 />
 
-            <ImageView
+            <org.wordpress.android.widgets.WPTintImageView
                 android:id="@+id/arrow_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_arrow_right"
-                android:tint="@color/blue_wordpress"
+                app:tint="@drawable/arrow_image_selector"
                 android:layout_marginRight="@dimen/margin_large"
                 />
 
