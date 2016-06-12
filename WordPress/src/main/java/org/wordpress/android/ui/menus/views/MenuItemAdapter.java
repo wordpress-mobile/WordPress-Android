@@ -99,31 +99,40 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 //if position == 0 we can't move left - the first item always has the left-most level
                 if (position > 0) {
-                    if (mFlattenedMenuItems.size() > (position + 1) && (menuItem.flattenedLevel > 0)) {
-                        MenuItemModel nextItem = mFlattenedMenuItems.get(position + 1);
-                        //if next item is less or equal in level, this item has no children; it's OK to decrement the level
-                        if (nextItem.flattenedLevel <= menuItem.flattenedLevel) {
-                            menuItem.flattenedLevel--;
-                            notifyItemChanged(position);
+                    if (mFlattenedMenuItems.size() >= (position + 1) && (menuItem.flattenedLevel > 0)) {
+                        MenuItemModel nextItem = null;
+                        if (position == mFlattenedMenuItems.size()-1) {
+                            //last item - special case
+                            if (menuItem.flattenedLevel > 0) {
+                                menuItem.flattenedLevel--;
+                                notifyItemChanged(position);
+                            }
                         } else {
-                            //otherwise if next item has a greater level -> that means it's a child of the current item, so all the children
-                            //need to be moved as well
-                            int currentLevel = menuItem.flattenedLevel;
-                            boolean downTreeBranch = false;
-                            for (int i = position; i < mFlattenedMenuItems.size(); i++) {
-                                MenuItemModel item = mFlattenedMenuItems.get(i);
-                                if (item.flattenedLevel >= currentLevel) {
-                                    if (item.flattenedLevel > currentLevel) {
-                                        downTreeBranch = true;
-                                    } else {
-                                        if (downTreeBranch) {
-                                            break;
+                            nextItem = mFlattenedMenuItems.get(position + 1);
+                            //if next item is less or equal in level, this item has no children; it's OK to decrement the level
+                            if (nextItem.flattenedLevel <= menuItem.flattenedLevel) {
+                                menuItem.flattenedLevel--;
+                                notifyItemChanged(position);
+                            } else {
+                                //otherwise if next item has a greater level -> that means it's a child of the current item, so all the children
+                                //need to be moved as well
+                                int currentLevel = menuItem.flattenedLevel;
+                                boolean downTreeBranch = false;
+                                for (int i = position; i < mFlattenedMenuItems.size(); i++) {
+                                    MenuItemModel item = mFlattenedMenuItems.get(i);
+                                    if (item.flattenedLevel >= currentLevel) {
+                                        if (item.flattenedLevel > currentLevel) {
+                                            downTreeBranch = true;
+                                        } else {
+                                            if (downTreeBranch) {
+                                                break;
+                                            }
                                         }
+                                        item.flattenedLevel--;
+                                        notifyItemChanged(i);
+                                    } else {
+                                        break;
                                     }
-                                    item.flattenedLevel--;
-                                    notifyItemChanged(i);
-                                } else {
-                                    break;
                                 }
                             }
                         }
@@ -138,31 +147,40 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 //if position == 0 we can't move right - the first item always has the left-most level
                 if (position > 0) {
                     MenuItemModel prevItem = mFlattenedMenuItems.get(position - 1);
-                    if (mFlattenedMenuItems.size() >= position + 1 && (prevItem.flattenedLevel >= menuItem.flattenedLevel)) {
-                        MenuItemModel nextItem = mFlattenedMenuItems.get(position + 1);
-                        //if next item is less or equal in level, it's OK to augment the level
-                        if (nextItem.flattenedLevel <= menuItem.flattenedLevel) {
-                            menuItem.flattenedLevel++;
-                            notifyItemChanged(position);
+                    if ((mFlattenedMenuItems.size() >= position + 1) && (prevItem.flattenedLevel >= menuItem.flattenedLevel)) {
+                        MenuItemModel nextItem = null;
+                        if (position == mFlattenedMenuItems.size()-1) {
+                            //last item - special case, only check prev item
+                            if (prevItem.flattenedLevel >= menuItem.flattenedLevel) {
+                                menuItem.flattenedLevel++;
+                                notifyItemChanged(position);
+                            }
                         } else {
-                            //otherwise if next item has a greater level -> that means it's a child of the current item, so all the children
-                            //need to be moved as well
-                            int currentLevel = menuItem.flattenedLevel;
-                            boolean downTreeBranch = false;
-                            for (int i = position; i < mFlattenedMenuItems.size(); i++) {
-                                MenuItemModel item = mFlattenedMenuItems.get(i);
-                                if (item.flattenedLevel >= currentLevel) {
-                                    if (item.flattenedLevel > currentLevel) {
-                                        downTreeBranch = true;
-                                    } else {
-                                        if (downTreeBranch) {
-                                            break;
+                            nextItem = mFlattenedMenuItems.get(position + 1);
+                            //if next item is less or equal in level, it's OK to augment the level
+                            if (nextItem.flattenedLevel <= menuItem.flattenedLevel) {
+                                menuItem.flattenedLevel++;
+                                notifyItemChanged(position);
+                            } else {
+                                //otherwise if next item has a greater level -> that means it's a child of the current item, so all the children
+                                //need to be moved as well
+                                int currentLevel = menuItem.flattenedLevel;
+                                boolean downTreeBranch = false;
+                                for (int i = position; i < mFlattenedMenuItems.size(); i++) {
+                                    MenuItemModel item = mFlattenedMenuItems.get(i);
+                                    if (item.flattenedLevel >= currentLevel) {
+                                        if (item.flattenedLevel > currentLevel) {
+                                            downTreeBranch = true;
+                                        } else {
+                                            if (downTreeBranch) {
+                                                break;
+                                            }
                                         }
+                                        item.flattenedLevel++;
+                                        notifyItemChanged(i);
+                                    } else {
+                                        break;
                                     }
-                                    item.flattenedLevel++;
-                                    notifyItemChanged(i);
-                                } else {
-                                    break;
                                 }
                             }
                         }
@@ -248,10 +266,28 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mFlattenedMenuItems.get(toPosition).flattenedLevel = previousItemLevel;
         }
 
-        notifyItemChanged(toPosition);
+        //now check that we don't have any gaps in between flattenedLevels (all jumps need to be consecutive)
+        sanitizeFlattenedLevels();
+
+        //we need no notifyDataSetChanged instead of notifyItemChanged(toPosition);
+        // so every item will calculate its enabled/disabled states for arrow left/right
+        notifyDataSetChanged();
         return true;
     }
 
+    /**
+     * check and fix there are no gaps in between flattenedLevels
+     */
+    private void sanitizeFlattenedLevels(){
+        int lastLevel = 0;
+        for (MenuItemModel item : mFlattenedMenuItems) {
+            if (item.flattenedLevel > (lastLevel+1)) {
+                //sanitize this and the following items
+                item.flattenedLevel--;
+                lastLevel = item.flattenedLevel;
+            }
+        }
+    }
 
     /*
      * clear all menu items
