@@ -48,6 +48,11 @@ public class PeopleTable {
         createTables(db);
     }
 
+    public static void migrationAddFollowerFields(SQLiteDatabase db) {
+        db.execSQL("ALTER TABLE " + PEOPLE_TABLE + " ADD is_follower BOOLEAN DEFAULT false;");
+        db.execSQL("ALTER TABLE " + PEOPLE_TABLE + " ADD is_email_follower BOOLEAN DEFAULT false;");
+    }
+
     public static void save(Person person) {
         save(person, getWritableDb());
     }
@@ -63,6 +68,8 @@ public class PeopleTable {
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
         values.put("role", person.getRole());
+        values.put("is_follower", person.isFollower());
+        values.put("is_email_follower", person.isEmailFollower());
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -163,6 +170,8 @@ public class PeopleTable {
         person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
         person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
         person.setRole(c.getString(c.getColumnIndex("role")));
+        person.setFollower(c.getInt(c.getColumnIndex("is_follower")) > 0);
+        person.setEmailFollower(c.getInt(c.getColumnIndex("is_email_follower")) > 0);
 
         return person;
     }
