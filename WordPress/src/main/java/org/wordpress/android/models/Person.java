@@ -33,7 +33,12 @@ public class Person {
             return null;
         }
 
-        // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        /**
+         * We'll parse the user information for both the user & follows point here:
+         * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+         * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/follows/
+         */
+        // Response parameters are in:
         try {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, blogId, localTableBlogId);
@@ -46,6 +51,12 @@ public class Person {
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
 
+            /**
+             * If we made a request to the follows point we know that this is a follower and not a user.
+             * Please note that the `email` parameter for these endpoints return different values. For users endpoint,
+             * it will return the user's email address, whereas for follows endpoint it'll return if it's an email
+             * follower. We don't use user's email address for now, so it's ignored for users endpoint.
+             */
             if (isFollower) {
                 person.setFollower(true);
                 person.setEmailFollower(json.optBoolean("email"));
