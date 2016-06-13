@@ -2,7 +2,6 @@ package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.SearchView;
 
 import org.wordpress.android.R;
@@ -31,25 +30,20 @@ public class PostItemEditor extends BaseMenuItemEditor
     }
 
     @Override
-    public void onInflate(ViewStub stub, View inflated) {
-        mSearchView = (SearchView) inflated.findViewById(R.id.page_editor_search_view);
-        mPageListView = (RadioButtonListView) inflated.findViewById(R.id.page_editor_page_list);
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
 
-        if (mSearchView != null) {
+        if (child.getId() == R.id.page_editor_search_view) {
+            mSearchView = (SearchView) child;
             mSearchView.setOnQueryTextListener(this);
-        }
-        if (mPageListView != null) {
-            mPageListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPageListView.getContext(), mPosts));
+        } else if (child.getId() == R.id.page_editor_page_list) {
+            mPageListView = (RadioButtonListView) child;
+            refreshAdapter();
         }
     }
 
     @Override
-    public int getIconDrawable() {
-        return R.drawable.my_site_icon_posts;
-    }
-
-    @Override
-    protected int getLayoutRes() {
+    public int getLayoutRes() {
         return R.layout.post_menu_item_edit_view;
     }
 
@@ -81,6 +75,12 @@ public class PostItemEditor extends BaseMenuItemEditor
         PostsListPostList posts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), false);
         for (PostsListPost post : posts) {
             mPosts.add(post.getTitle());
+        }
+    }
+
+    private void refreshAdapter() {
+        if (mPageListView != null) {
+            mPageListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPageListView.getContext(), mPosts));
         }
     }
 }

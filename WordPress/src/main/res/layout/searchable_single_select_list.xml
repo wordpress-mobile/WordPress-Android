@@ -7,12 +7,12 @@
     android:orientation="vertical">
 
     <SearchView
-        android:id="@+id/page_editor_search_view"
+        android:id="@+id/single_select_search_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <org.wordpress.android.widgets.RadioButtonListView
-        android:id="@+id/page_editor_page_list"
+        android:id="@+id/single_select_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

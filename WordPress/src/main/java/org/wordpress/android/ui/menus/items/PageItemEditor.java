@@ -2,7 +2,6 @@ package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.SearchView;
 
 import org.wordpress.android.R;
@@ -18,50 +17,33 @@ import java.util.List;
 /**
  */
 public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
-    public static final String PAGE_LIST_KEY = "page-list";
+    private final List<String> mAllPages;
+    private final List<String> mFilteredPages;
 
-    private final List<String> mPages;
-
-    private SearchView mSearchView;
     private RadioButtonListView mPageListView;
 
     public PageItemEditor(Context context) {
         super(context);
-        mPages = new ArrayList<>();
+        mAllPages = new ArrayList<>();
+        mFilteredPages = new ArrayList<>();
         loadPageList();
     }
 
     @Override
-    public void onInflate(ViewStub stub, View inflated) {
-        mSearchView = (SearchView) inflated.findViewById(R.id.page_editor_search_view);
-        mPageListView = (RadioButtonListView) inflated.findViewById(R.id.page_editor_page_list);
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
 
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(this);
-        }
-        if (mPageListView != null) {
-            mPageListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPageListView.getContext(), mPages));
+        if (child.getId() == R.id.page_editor_search_view && child instanceof SearchView) {
+            ((SearchView) child).setOnQueryTextListener(this);
+        } else if (child.getId() == R.id.page_editor_page_list) {
+            mPageListView = (RadioButtonListView) child;
+            refreshAdapter();
         }
     }
 
     @Override
-    protected int getLayoutRes() {
+    public int getLayoutRes() {
         return R.layout.page_menu_item_edit_view;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-    @Override
-    public int getIconDrawable() {
-        return R.drawable.my_site_icon_pages;
     }
 
     @Override
@@ -80,10 +62,47 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         // TODO: remove from DB
     }
 
+    //
+    // SearchView query callbacks
+    //
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filterAdapter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filterAdapter(newText);
+        return true;
+    }
+
     private void loadPageList() {
         PostsListPostList posts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), true);
         for (PostsListPost post : posts) {
-            mPages.add(post.getTitle());
+            mAllPages.add(post.getTitle());
+        }
+    }
+
+    private void filterAdapter(String filter) {
+        if (mPageListView == null) return;
+        refreshFilteredPages(filter);
+        refreshAdapter();
+    }
+
+    private void refreshAdapter() {
+        if (mPageListView != null) {
+            mPageListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPageListView.getContext(), mFilteredPages));
+        }
+    }
+
+    private void refreshFilteredPages(String filter) {
+        mFilteredPages.clear();
+        String upperFiler = filter.toUpperCase();
+        for (String s : mAllPages) {
+            if (s.toUpperCase().contains(upperFiler)) {
+                mFilteredPages.add(s);
+            }
         }
     }
 }

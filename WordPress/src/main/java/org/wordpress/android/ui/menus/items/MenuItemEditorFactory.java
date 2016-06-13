@@ -3,6 +3,8 @@ package org.wordpress.android.ui.menus.items;
 import android.content.Context;
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+
 /**
  * Provides appropriate {@link BaseMenuItemEditor} subclasses.
  */
@@ -28,6 +30,25 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(TESTIMONIAL.name())) return TESTIMONIAL;
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
             else return NULL;
+        }
+    }
+
+    public static int getIconDrawableRes(ITEM_TYPE type) {
+        switch (type) {
+            case POST:
+                return R.drawable.my_site_icon_posts;
+            case PAGE:
+                return R.drawable.my_site_icon_pages;
+            case CATEGORY:
+                return R.drawable.stats_icon_categories;
+            case TAG:
+                return R.drawable.gridicon_tag;
+            case LINK:
+                return R.drawable.gridicon_link;
+            case TESTIMONIAL:
+                return R.drawable.media_image_placeholder;
+            default:
+                return -1;
         }
     }
 

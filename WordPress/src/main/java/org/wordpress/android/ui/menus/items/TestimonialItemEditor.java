@@ -12,11 +12,6 @@ public class TestimonialItemEditor extends BaseMenuItemEditor {
     }
 
     @Override
-    public int getIconDrawable() {
-        return 0;
-    }
-
-    @Override
     public int getLayoutRes() {
         return 0;
     }

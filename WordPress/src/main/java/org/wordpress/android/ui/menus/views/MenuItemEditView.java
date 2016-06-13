@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,17 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.items.BaseMenuItemEditor;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
-
-import java.util.Map;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory.ITEM_TYPE;
 
 /**
+ * A combination of views that provide functionality for editing menu items.
+ *
+ * TEMPORARY
+ *  - {@link Spinner} containing a list of available item types
+ *
+ *  MAYBE PERMANENT:
+ *  - {@link ViewFlipper} containing stubs for each of the item edit views
+ *  - {@link Button}'s for canceling and saving/updating the current item
  */
 public class MenuItemEditView extends LinearLayout {
     public interface MenuItemEditorListener {
@@ -28,24 +36,32 @@ public class MenuItemEditView extends LinearLayout {
         void onMenuItemChanged(MenuItemModel menuItem);
     }
 
-    private MenuItemEditorFactory.ITEM_TYPE mType;
+    private ITEM_TYPE mType;
     private MenuItemEditorListener mListener;
+    private MenuItemModel mOriginalItem;
 
     private Spinner mTypePicker;
     private Button mAddButton;
     private Button mCancelButton;
     private ViewFlipper mEditorFlipper;
 
-    public MenuItemEditView(Context context, MenuItemEditorFactory.ITEM_TYPE type) {
+    public MenuItemEditView(Context context, ITEM_TYPE type) {
         super(context);
         initView();
         setType(type);
     }
 
+    public MenuItemEditView(Context context, @NonNull MenuItemModel originalItem) {
+        super(context);
+        initView();
+        mOriginalItem = originalItem;
+        setType(MenuItemEditorFactory.ITEM_TYPE.typeForString(originalItem.type));
+    }
+
     public MenuItemEditView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
-        setType(MenuItemEditorFactory.ITEM_TYPE.NULL);
+        setType(ITEM_TYPE.NULL);
     }
 
     public void setListener(MenuItemEditorListener listener) {
@@ -59,8 +75,8 @@ public class MenuItemEditView extends LinearLayout {
         mCancelButton = (Button) findViewById(R.id.menu_item_edit_cancel);
         mEditorFlipper = (ViewFlipper) findViewById(R.id.menu_item_editor_flipper);
 
-        // add editor view stubs
-        for (MenuItemEditorFactory.ITEM_TYPE type : MenuItemEditorFactory.ITEM_TYPE.values()) {
+        // add editor views
+        for (ITEM_TYPE type : ITEM_TYPE.values()) {
             BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getContext(), type);
             if (editor != null) {
                 mEditorFlipper.addView(editor);
@@ -77,7 +93,7 @@ public class MenuItemEditView extends LinearLayout {
                 if (stub instanceof ViewStub) {
                     ((ViewStub) stub).inflate();
                 }
-                MenuItemEditorFactory.ITEM_TYPE type = MenuItemEditorFactory.ITEM_TYPE.typeForString(mTypePicker.getSelectedItem().toString());
+                ITEM_TYPE type = ITEM_TYPE.typeForString(mTypePicker.getSelectedItem().toString());
                 setType(type);
             }
 
@@ -90,40 +106,36 @@ public class MenuItemEditView extends LinearLayout {
         mCancelButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setType(MenuItemEditorFactory.ITEM_TYPE.NULL);
+                hide();
+                notifyHidden();
             }
         });
+        if (mOriginalItem != null) {
+            mAddButton.setText(getContext().getString(R.string.update_verb));
+        }
         mAddButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: add menu item to current menu
-                notifyAdded(null);
+                if (mOriginalItem != null) {
+                    notifyChanged(mOriginalItem);
+                } else {
+                    notifyAdded(null);
+                }
             }
         });
     }
 
-    public void refreshView() {
-        if (mType == MenuItemEditorFactory.ITEM_TYPE.NULL) {
-            setVisibility(View.GONE);
-            notifyHidden();
-        } else {
-            setVisibility(View.VISIBLE);
-            notifyShown();
-        }
-
-        switch (mType) {
-            case PAGE:
-                break;
-        }
-    }
-
-    public void setType(MenuItemEditorFactory.ITEM_TYPE type) {
-        setType(type, null);
-    }
-
-    public void setType(MenuItemEditorFactory.ITEM_TYPE type, Map<String, Object> data) {
+    public void setType(ITEM_TYPE type) {
         mType = type;
-        refreshView();
+    }
+
+    public void show() {
+        setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        setVisibility(View.GONE);
     }
 
     //
