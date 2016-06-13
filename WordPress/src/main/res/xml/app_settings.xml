@@ -34,7 +34,7 @@
         android:persistent="false"
         android:title="@string/passcode_preference_title">
 
-        <Preference
+        <SwitchPreference
             android:key="@string/pref_key_passcode_toggle"
             android:layout="@layout/preference_layout"
             android:persistent="false"
