@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts.login;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -25,11 +24,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInFragment;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
-import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
-import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 
 import java.util.HashMap;
@@ -189,19 +186,23 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     private void showPasswordFieldAndFocus() {
-        endProgress();
-        showPasswordField();
-        mPasswordEditText.requestFocus();
-        mSignInButton.setText(getString(R.string.sign_in));
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
+        if (isAdded()) {
+            endProgress();
+            showPasswordField();
+            mPasswordEditText.requestFocus();
+            mSignInButton.setText(getString(R.string.sign_in));
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mPasswordEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     private void showPasswordField() {
-        mPasswordLayout.setVisibility(View.VISIBLE);
-        mForgotPassword.setVisibility(View.VISIBLE);
-        if (!mSelfHosted) {
-            mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        if (isAdded()) {
+            mPasswordLayout.setVisibility(View.VISIBLE);
+            mForgotPassword.setVisibility(View.VISIBLE);
+            if (!mSelfHosted) {
+                mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+            }
         }
     }
 
@@ -216,8 +217,8 @@ public class MagicLinkSignInFragment extends SignInFragment {
                     } else {
                         showPasswordFieldAndFocus();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (JSONException error) {
+                    AppLog.e(AppLog.T.MAIN, error);
                     showPasswordFieldAndFocus();
                 }
             }

@@ -48,7 +48,7 @@ public abstract class AbstractFragment extends Fragment {
 
     protected RestClientUtils getRestClientUtils() {
         if (mRestClientUtils == null) {
-            mRestClientUtils = new RestClientUtils(requestQueue, null, null);
+            mRestClientUtils = new RestClientUtils(getContext(), requestQueue, null, null);
         }
         return mRestClientUtils;
     }

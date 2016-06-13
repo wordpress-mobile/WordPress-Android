@@ -198,7 +198,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
-    public void onFeaturedImageChanged(int mediaId) {
+    public void onFeaturedImageChanged(long mediaId) {
 
     }
 
