@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -105,14 +105,14 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final CheckBoxPreference visualEditorCheckBox = (CheckBoxPreference) findPreference(getActivity()
+            final SwitchPreference visualEditorSwitch = (SwitchPreference) findPreference(getActivity()
                     .getString(R.string.pref_key_visual_editor_enabled));
-            visualEditorCheckBox.setChecked(AppPrefs.isVisualEditorEnabled());
-            visualEditorCheckBox.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            visualEditorSwitch.setChecked(AppPrefs.isVisualEditorEnabled());
+            visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    visualEditorCheckBox.setChecked(!visualEditorCheckBox.isChecked());
-                    AppPrefs.setVisualEditorEnabled(visualEditorCheckBox.isChecked());
+                    visualEditorSwitch.setChecked(!visualEditorSwitch.isChecked());
+                    AppPrefs.setVisualEditorEnabled(visualEditorSwitch.isChecked());
                     return false;
                 }
             });

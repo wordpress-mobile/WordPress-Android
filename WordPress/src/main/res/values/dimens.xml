@@ -273,4 +273,11 @@
     <dimen name="tooltip_padding">7dp</dimen>
     <dimen name="tooltip_text_size">16sp</dimen>
     <dimen name="tooltip_radius">5dp</dimen>
+
+    <!--people management-->
+    <dimen name="people_avatar_sz">40dp</dimen>
+    <dimen name="people_list_row_height">72dp</dimen>
+    <dimen name="people_list_row_role_margin_top">20dp</dimen>
+    <dimen name="people_list_divider_height">1dp</dimen>
+    <dimen name="people_list_divider_left_margin">72dp</dimen>
 </resources>

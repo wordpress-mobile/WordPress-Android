@@ -69,6 +69,7 @@ import org.xml.sax.XMLReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML
@@ -449,22 +450,20 @@ public class WPHtml {
             String localBlogID = imageSpan.getMediaFile().getBlogId();
             Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
             // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            if (currentBlog != null && !mediaFile.getMimeType().equals("image/gif") &&
-                !currentBlog.getMaxImageWidth().equals("Original Size")) {
-                int maxImageWidth = Integer.parseInt(currentBlog.getMaxImageWidth());
-                // use the correct resize settings.
-                width = Math.min(width, maxImageWidth);
+            if (currentBlog != null && !mediaFile.getMimeType().equals("image/gif")
+                    && MediaUtils.getImageWidthSettingFromString(currentBlog.getMaxImageWidth()) != Integer.MAX_VALUE) {
+                width = MediaUtils.getMaximumImageWidth(width, currentBlog.getMaxImageWidth());
                 // Use inline CSS on self-hosted blogs to enforce picture resize settings
                 if (!currentBlog.isDotcomFlag()) {
-                    inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
+                    inlineCSS = String.format(Locale.US, " style=\"width:%dpx;max-width:%dpx;\" ", width, width);
                 }
             }
-
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
             if (!caption.equals("")) {
-                content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+                content = String.format(Locale.US,
+                        "[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
                         alignment, width, TextUtils.htmlEncode(caption), content);
             }
         }

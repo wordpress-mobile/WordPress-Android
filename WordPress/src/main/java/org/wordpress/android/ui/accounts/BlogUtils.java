@@ -74,9 +74,10 @@ public class BlogUtils {
                 planID = MapUtils.getMapLong(blogMap, "planID");
             }
             String planShortName = MapUtils.getMapStr(blogMap, "plan_product_name_short");
+            String capabilities =  MapUtils.getMapStr(blogMap, "capabilities");
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
-                    httpPassword, isAdmin, isVisible, planID, planShortName);
+                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities);
         }
         return retValue;
     }
@@ -106,7 +107,7 @@ public class BlogUtils {
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                                            String username, String password, String httpUsername, String httpPassword,
                                            boolean isAdmin, boolean isVisible,
-                                           long planID, String planShortName) {
+                                           long planID, String planShortName, String capabilities) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -129,6 +130,7 @@ public class BlogUtils {
             blog.setHidden(!isVisible);
             blog.setPlanID(planID);
             blog.setPlanShortName(planShortName);
+            blog.setCapabilities(capabilities);
             WordPress.wpDB.saveBlog(blog);
             return true;
         } else {
@@ -148,6 +150,10 @@ public class BlogUtils {
                 }
                 if (!blog.getPlanShortName().equals(planShortName)) {
                     blog.setPlanShortName(planShortName);
+                    blogUpdated = true;
+                }
+                if (blog.getCapabilities() == null || !blog.getCapabilities().equals(capabilities)) {
+                    blog.setCapabilities(capabilities);
                     blogUpdated = true;
                 }
                 if (blogUpdated) {

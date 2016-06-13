@@ -114,12 +114,15 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
+                // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
                 String htmlPage = "<html>" +
                         "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                         "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                         "<script type=\"text/javascript\">" +
-                            "google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});" +
-                            "google.setOnLoadCallback(drawRegionsMap);" +
+                            "google.charts.load('42', {'packages':['geochart']});" +
+                            "google.charts.setOnLoadCallback(drawRegionsMap);" +
                             "function drawRegionsMap() {" +
                                 "var data = google.visualization.arrayToDataTable(" +
                                 "[" +

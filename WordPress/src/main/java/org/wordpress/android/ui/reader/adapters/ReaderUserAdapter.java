@@ -39,7 +39,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         return mUsers.size();
     }
 
-    boolean isEmpty() {
+    private boolean isEmpty() {
         return (getItemCount() == 0);
     }
 

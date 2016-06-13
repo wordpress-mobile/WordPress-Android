@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,16 +202,14 @@ public class CommentsListFragment extends Fragment {
         mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
-                ArrayList<FilterCriteria> criterias = new ArrayList();
-                for (CommentStatus criteria : commentStatuses) {
-                    criterias.add(criteria);
-                }
-                return criterias;
+                @SuppressWarnings("unchecked")
+                ArrayList<FilterCriteria> criteria = new ArrayList();
+                Collections.addAll(criteria, commentStatuses);
+                return criteria;
             }
 
             @Override
             public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                //noop
             }
 
             @Override
@@ -275,13 +275,12 @@ public class CommentsListFragment extends Fragment {
 
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-                //noop
             }
         });
 
         // the following will change the look and feel of the toolbar to match the current design
-        mFilteredCommentsView.setToolbarBackgroundColor(getResources().getColor(R.color.blue_medium));
-        mFilteredCommentsView.setToolbarSpinnerTextColor(getResources().getColor(R.color.white));
+        mFilteredCommentsView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
+        mFilteredCommentsView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.arrow);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
@@ -302,8 +301,8 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    public void setCommentStatusFilter(CommentStatus statusfilter) {
-        mCommentStatusFilter = statusfilter;
+    public void setCommentStatusFilter(CommentStatus statusFilter) {
+        mCommentStatusFilter = statusFilter;
     }
 
     private void dismissDialog(int id) {
@@ -335,7 +334,7 @@ public class CommentsListFragment extends Fragment {
                 dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
                 break;
             case UNAPPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
+                dlgId = CommentDialogs.ID_COMMENT_DLG_DISAPPROVING;
                 break;
             case SPAM:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
@@ -376,8 +375,8 @@ public class CommentsListFragment extends Fragment {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
-            int resid = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
-            dialogBuilder.setMessage(getResources().getText(resid));
+            int resId = getAdapter().getSelectedCommentCount() > 1 ? R.string.dlg_sure_to_delete_comments : R.string.dlg_sure_to_delete_comment;
+            dialogBuilder.setMessage(getResources().getText(resId));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -451,12 +450,12 @@ public class CommentsListFragment extends Fragment {
         getAdapter().loadComments(mCommentStatusFilter);
     }
 
-    void updateEmptyView(EmptyViewMessageType emptyViewMessageType){
+    void updateEmptyView(){
         //this is called from CommentsActivity in the case the last moment for a given type has been changed from that
         //status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
         //does the handling itself, so we only check for null here.
         if (mFilteredCommentsView != null){
-            mFilteredCommentsView.updateEmptyView(emptyViewMessageType);
+            mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
 
@@ -510,9 +509,9 @@ public class CommentsListFragment extends Fragment {
         final boolean mIsLoadingMore;
         final CommentStatus mStatusFilter;
 
-        private UpdateCommentsTask(boolean loadMore, CommentStatus statusfilter) {
+        private UpdateCommentsTask(boolean loadMore, CommentStatus statusFilter) {
             mIsLoadingMore = loadMore;
-            mStatusFilter = statusfilter;
+            mStatusFilter = statusFilter;
         }
 
         @Override
@@ -565,7 +564,7 @@ public class CommentsListFragment extends Fragment {
                                 blog.getPassword(),
                                 hPost };
             try {
-                CommentList comments = ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                return ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
                         int localBlogId = blog.getLocalTableBlogId();
@@ -573,7 +572,6 @@ public class CommentsListFragment extends Fragment {
                         CommentTable.saveComments(localBlogId, (CommentList)list);
                     }
                 });
-                return comments;
             } catch (XMLRPCFault xmlrpcFault) {
                 mErrorType = ErrorType.UNKNOWN_ERROR;
                 if (xmlrpcFault.getFaultCode() == 401) {

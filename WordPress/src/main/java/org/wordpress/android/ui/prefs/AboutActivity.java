@@ -39,6 +39,9 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
 
         WPTextView copyright = (WPTextView) findViewById(R.id.about_copyright);
         copyright.setText("©" + Calendar.getInstance().get(Calendar.YEAR) + " " + getString(R.string.automattic_inc));
+
+        WPTextView about = (WPTextView) findViewById(R.id.about_url);
+        about.setOnClickListener(this);
     }
 
     @Override

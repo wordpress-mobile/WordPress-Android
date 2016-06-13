@@ -369,6 +369,7 @@
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
         <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
     </style>
+
     <style name="MyProfileRow">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
@@ -400,6 +401,19 @@
         <item name="android:background">@color/me_divider</item>
     </style>
 
+    <!--People Management Styles-->
+    <style name="PersonAvatar">
+        <item name="android:layout_width">@dimen/people_avatar_sz</item>
+        <item name="android:layout_height">@dimen/people_avatar_sz</item>
+        <item name="android:layout_margin">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PersonUsernameAndDisplayName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
     <!-- Plans Styles -->
     <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />

@@ -50,6 +50,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
@@ -66,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
     private ViewGroup mLayoutFooter;
     private ReaderWebView mReaderWebView;
@@ -126,6 +129,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -138,6 +142,24 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
+
+        CustomSwipeRefreshLayout swipeRefreshLayout = (CustomSwipeRefreshLayout) view.findViewById(R.id.swipe_to_refresh);
+
+        //this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
+        //so we have to set it manually
+        int swipeToRefreshOffset = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
+        swipeRefreshLayout.setProgressViewOffset(false, 0, swipeToRefreshOffset);
+
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(), swipeRefreshLayout, new SwipeToRefreshHelper.RefreshListener() {
+            @Override
+            public void onRefreshStarted() {
+                if (!isAdded()) {
+                    return;
+                }
+
+                updatePost();
+            }
+        });
 
         mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -274,7 +296,8 @@ public class ReaderPostDetailFragment extends Fragment
         likeCount.setSelected(isAskingToLike);
         ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(mPost, isAskingToLike)) {
+        boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+        if (!success) {
             likeCount.setSelected(!isAskingToLike);
             return;
         }
@@ -367,6 +390,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void updatePost() {
         if (!hasPost() || !mPost.isWP()) {
+            setRefreshing(false);
             return;
         }
 
@@ -389,6 +413,8 @@ public class ReaderPostDetailFragment extends Fragment
                         && numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
                     refreshLikes();
                 }
+
+                setRefreshing(false);
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -511,6 +537,7 @@ public class ReaderPostDetailFragment extends Fragment
                     showPost();
                 }
             }
+
             @Override
             public void onFailure(int statusCode) {
                 if (isAdded()) {
@@ -566,16 +593,8 @@ public class ReaderPostDetailFragment extends Fragment
      * AsyncTask to retrieve this post from SQLite and display it
      */
     private boolean mIsPostTaskRunning = false;
-    private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
-        TextView txtTitle;
-        TextView txtAuthor;
-        TextView txtBlogName;
-        TextView txtDateLine;
-        TextView txtTag;
-        ReaderFollowButton followButton;
-        ViewGroup layoutHeader;
-        WPNetworkImageView imgAvatar;
 
+    private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             mIsPostTaskRunning = true;
@@ -588,11 +607,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            final View container = getView();
-            if (container == null) {
-                return false;
-            }
-
             mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
@@ -613,19 +627,6 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 }
             }
-
-            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
-            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
-
-            txtTitle = (TextView) container.findViewById(R.id.text_title);
-            txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtAuthor = (TextView) container.findViewById(R.id.text_author);
-            txtDateLine = (TextView) container.findViewById(R.id.text_dateline);
-            txtTag = (TextView) container.findViewById(R.id.text_tag);
-
-            layoutHeader = (ViewGroup) container.findViewById(R.id.layout_post_detail_header);
-            followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-            imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
 
             return true;
         }
@@ -652,6 +653,19 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 return;
             }
+
+            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
+            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
+
+            TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
+            TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
+            TextView txtAuthor = (TextView) getView().findViewById(R.id.text_author);
+            TextView txtDateLine = (TextView) getView().findViewById(R.id.text_dateline);
+            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
+
+            ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
+            ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
 
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
@@ -958,6 +972,10 @@ public class ReaderPostDetailFragment extends Fragment
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;
+    }
+
+    private void setRefreshing(boolean refreshing) {
+        mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
 }
