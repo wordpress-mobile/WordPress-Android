@@ -44,6 +44,28 @@
 
             </FrameLayout>
 
+
+            <LinearLayout
+                android:id="@+id/layout_cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <org.wordpress.android.widgets.WPButton
+                    android:id="@+id/cancel_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"/>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/layout_buttons"
                 android:layout_width="wrap_content"

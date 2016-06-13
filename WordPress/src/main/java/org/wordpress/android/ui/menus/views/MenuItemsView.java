@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.menus.views;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
