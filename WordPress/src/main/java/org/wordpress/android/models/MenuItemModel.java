@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,8 @@ public class MenuItemModel {
     public String typeLabel;
     public Map<String, String> data;
     public List<MenuItemModel> children;
+    public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
+    public boolean editingMode;// used for visual representation
 
     @Override
     public boolean equals(Object other) {

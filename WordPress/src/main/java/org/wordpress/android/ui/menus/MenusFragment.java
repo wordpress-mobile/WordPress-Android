@@ -28,11 +28,13 @@ import org.wordpress.android.datasets.MenuTable;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemEditView;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
+import org.wordpress.android.ui.menus.views.MenuItemsView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -61,6 +63,7 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
     private MenusSpinner mMenuLocationsSpinner;
     private MenusSpinner mMenusSpinner;
     private MenuModel mCurrentMenuForLocation;
+    private MenuItemsView mItemsView;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -267,6 +270,9 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
+
                 mCurrentCreateRequestId = mRestWPCom.createMenu(menuToUpdate);
             }
 
@@ -332,6 +338,9 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
+
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menuToUpdate);
             }
         });
@@ -352,6 +361,8 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                     //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
                     //that's why we set the menu within the control to null
                     mAddEditRemoveControl.setMenu(null);
+                    mItemsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+
                 } else {
                     MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
                     mAddEditRemoveControl.setMenu(model);
@@ -359,6 +370,10 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                     if (!model.isSpecialMenu()) {
                         mCurrentMenuForLocation = model;
                     }
+
+                    //show items
+                    mItemsView.hideEmptyView();
+                    mItemsView.setMenu(model);
                 }
             }
 
@@ -426,6 +441,8 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                 mItemEditView.setType(MenuItemEditorFactory.ITEM_TYPE.PAGE);
             }
         });
+
+        mItemsView = (MenuItemsView) view.findViewById(R.id.menu_items_recyclerview);
 
         return view;
     }

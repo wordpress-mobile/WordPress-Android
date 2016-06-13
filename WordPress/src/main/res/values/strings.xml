@@ -1480,6 +1480,9 @@
     <string name="menus_menu_created">Menu created</string>
     <string name="menus_menu_deleted">Menu deleted</string>
     <string name="menus_menu_updated">Menu updated</string>
+    <string name="menus_add_item_above">Add menu item above</string>
+    <string name="menus_add_item_below">Add menu item below</string>
+    <string name="menus_add_item_to_children">Add menu item to children</string>
     <string name="link_item_editor_url_input_header">Link address (URL)</string>
     <string name="link_item_editor_open_new_window_option">Open link in new window/tab</string>
 
