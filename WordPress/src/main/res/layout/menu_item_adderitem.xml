@@ -1,0 +1,64 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_container_outter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/layout_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/content_margin"
+            android:background="?android:selectableItemBackground"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/content_margin"
+            android:paddingRight="@dimen/content_margin"
+            android:paddingTop="@dimen/margin_large">
+
+            <FrameLayout
+                android:id="@+id/frame_menu_item_type"
+                android:layout_width="@dimen/menu_item_height"
+                android:layout_height="@dimen/menu_item_height"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_extra_small">
+
+                <ImageView
+                    android:id="@+id/icon_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_add_blue_24dp"
+                    android:tint="@color/blue_wordpress"
+                    android:layout_marginRight="@dimen/content_margin"
+                    />
+
+            </FrameLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/layout_date_status"
+                android:layout_toRightOf="@+id/frame_menu_item_type"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="title" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>

@@ -86,4 +86,8 @@
         <attr name="spinnerIcon" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="WPTintImageView">
+        <attr name="tint" format="reference|color" />
+    </declare-styleable>
+
 </resources>

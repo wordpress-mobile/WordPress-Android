@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -258,7 +259,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (isMagicLinkEnabledVariable.get()) {
+        if (isMagicLinkEnabledVariable.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {

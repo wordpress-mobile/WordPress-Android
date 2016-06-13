@@ -72,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_account_blog_url"
                     android:inputType="textUri"
+                    android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:clickable="true"
                     android:paddingLeft="0dp"
                     android:paddingTop="12dp"

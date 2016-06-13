@@ -20,11 +20,14 @@ import android.widget.Toast;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
 import org.wordpress.android.datasets.MenuTable;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.MenuLocationModel;
 import org.wordpress.android.models.MenuModel;
+import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
+import org.wordpress.android.ui.menus.views.MenuItemsView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -50,6 +53,7 @@ public class MenusFragment extends Fragment {
     private MenusSpinner mMenuLocationsSpinner;
     private MenusSpinner mMenusSpinner;
     private MenuModel mCurrentMenuForLocation;
+    private MenuItemsView mItemsView;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -105,7 +109,7 @@ public class MenusFragment extends Fragment {
                     if (CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
                         // no op
                     } else {
-                        //make a copy of the menu array and strip off the default and add menu "menus"
+                        //make a copy of the menu array and strip off the "default" and "add menu" menus
                         final List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
 
                         //save menus to local DB here
@@ -279,6 +283,9 @@ public class MenusFragment extends Fragment {
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
+
                 mCurrentCreateRequestId = mRestWPCom.createMenu(menuToUpdate);
             }
 
@@ -342,6 +349,9 @@ public class MenusFragment extends Fragment {
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
 
+                //add the menu items
+                menuToUpdate.menuItems = MenusDataModeler.inflateMenuItemModelList(mItemsView.getCurrentMenuItems());
+
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menuToUpdate);
             }
         });
@@ -362,6 +372,8 @@ public class MenusFragment extends Fragment {
                     //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
                     //that's why we set the menu within the control to null
                     mAddEditRemoveControl.setMenu(null);
+                    mItemsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+
                 } else {
                     MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
                     mAddEditRemoveControl.setMenu(model);
@@ -369,6 +381,10 @@ public class MenusFragment extends Fragment {
                     if (!model.isSpecialMenu()) {
                         mCurrentMenuForLocation = model;
                     }
+
+                    //show items
+                    mItemsView.hideEmptyView();
+                    mItemsView.setMenu(model);
                 }
             }
 
@@ -422,6 +438,8 @@ public class MenusFragment extends Fragment {
 
             }
         });
+
+        mItemsView = (MenuItemsView) view.findViewById(R.id.menu_items_recyclerview);
 
         return view;
     }

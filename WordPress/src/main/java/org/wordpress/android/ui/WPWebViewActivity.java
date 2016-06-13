@@ -23,6 +23,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPUrlUtils;
@@ -32,6 +33,7 @@ import org.wordpress.android.util.helpers.WPWebChromeClient;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,6 +79,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String LOCAL_BLOG_ID = "local_blog_id";
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
+    public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -84,6 +87,7 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url, user);
     }
 
+    // Note: The webview has links disabled!!
     public static void openUrlByUsingBlogCredentials(Context context, Blog blog, Post post, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
@@ -109,6 +113,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
         }
@@ -172,6 +177,21 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setDomStorageEnabled(true);
 
         WebViewClient webViewClient;
+        Bundle extras = getIntent().getExtras();
+
+        // Configure the allowed URLs if available
+        ArrayList<String> allowedURL = null;
+        if (extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
+            String addressToLoad = extras.getString(URL_TO_LOAD);
+            String authURL = extras.getString(AUTHENTICATION_URL);
+            allowedURL = new ArrayList<>();
+            if (!TextUtils.isEmpty(addressToLoad)) {
+                allowedURL.add(addressToLoad);
+            }
+            if (!TextUtils.isEmpty(authURL)) {
+                allowedURL.add(authURL);
+            }
+        }
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
@@ -179,9 +199,9 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(blog);
+            webViewClient = new WPWebViewClient(blog, allowedURL);
         } else {
-            webViewClient = new WebViewClient();
+            webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
 
         mWebView.setWebViewClient(webViewClient);

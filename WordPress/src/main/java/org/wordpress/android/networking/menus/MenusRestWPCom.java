@@ -107,15 +107,7 @@ public class MenusRestWPCom {
         if (menu == null || menu.isSpecialMenu()) return -1;
         final int requestId = ++mRequestCounter;
         String path = formatPath(MENU_REST_PATH, String.valueOf(menu.menuId));
-        JSONObject params = new JSONObject();
-        try {
-            params.put(MENU_NAME_KEY, menu.name);
-            params.put(MENU_DESCRIPTION_KEY, menu.details);
-            params.put(MENU_LOCATIONS_KEY, serializeLocations(menu.locations));
-        } catch (JSONException e) {
-            AppLog.d(AppLog.T.MENUS, "failed to serialize menus update params, aborting REST call");
-            return -1;
-        }
+        JSONObject params = menuToJson(menu);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -224,16 +216,5 @@ public class MenusRestWPCom {
             return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
         return String.format(base, String.valueOf(mListener.getSiteId()));
-    }
-
-    @NonNull
-    private JSONArray serializeLocations(List<MenuLocationModel> locations) {
-        JSONArray locationsArray = new JSONArray();
-        if (locations != null && locations.size() > 0) {
-            for (MenuLocationModel location : locations) {
-                if (location != null) locationsArray.put(location.name);
-            }
-        }
-        return locationsArray;
     }
 }

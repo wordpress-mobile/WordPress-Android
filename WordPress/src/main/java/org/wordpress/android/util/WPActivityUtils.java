@@ -3,7 +3,10 @@ package org.wordpress.android.util;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class WPActivityUtils {
@@ -121,5 +125,18 @@ public class WPActivityUtils {
             }
         }
         return context;
+    }
+
+    public static boolean isEmailClientAvailable(Context context) {
+        if (context == null) {
+            return false;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        return !emailApps.isEmpty();
     }
 }

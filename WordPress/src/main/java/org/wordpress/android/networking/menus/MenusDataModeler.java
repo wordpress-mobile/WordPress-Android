@@ -1,5 +1,6 @@
 package org.wordpress.android.networking.menus;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.helpshift.support.util.ListUtils;
@@ -113,12 +114,26 @@ public class MenusDataModeler {
         return menu;
     }
 
+    @NonNull
+    private static JSONArray serializeLocations(List<MenuLocationModel> locations) {
+        JSONArray locationsArray = new JSONArray();
+        if (locations != null && locations.size() > 0) {
+            for (MenuLocationModel location : locations) {
+                if (location != null) locationsArray.put(location.name);
+            }
+        }
+        return locationsArray;
+    }
+
     public static JSONObject menuToJson(MenuModel menu) {
         if (!isValidMenu(menu)) return null;
 
         try {
             JSONObject json = new JSONObject();
             json.put(MENU_ID_KEY, menu.menuId);
+            json.put(MENU_NAME_KEY, menu.name);
+            json.put(MENU_DESCRIPTION_KEY, menu.details);
+            json.put(MENU_LOCATIONS_KEY, serializeLocations(menu.locations));
             if (!ListUtils.isEmpty(menu.menuItems)) {
                 JSONArray itemArray = new JSONArray();
                 for (MenuItemModel item : menu.menuItems) {
@@ -299,5 +314,71 @@ public class MenusDataModeler {
         }
 
         return null;
+    }
+
+    public static List<MenuItemModel> inflateMenuItemModelList(List<MenuItemModel> flattenedList) {
+        List<MenuItemModel> inflatedList = new ArrayList<>();
+
+        if (flattenedList != null && flattenedList.size() > 0) {
+            MenuItemModel parent = flattenedList.get(0);
+            int lastLevel = parent.flattenedLevel;
+            int itemsProcessedInThisBranch = 0;
+            for (int i=0; i < flattenedList.size(); i += itemsProcessedInThisBranch){
+                MenuItemModel item = flattenedList.get(i);
+                if (item != null) {
+                    if (item.flattenedLevel == lastLevel) {
+                        //same hierarchy
+                        parent = item;
+                        parent.children = null;
+                        inflatedList.add(item);
+                        itemsProcessedInThisBranch = 1;
+                    }
+                    else if (item.flattenedLevel > lastLevel) {
+                        //further down the hierarchy
+                        parent.children = inflateMenuItemModelList(flattenedList.subList(flattenedList.indexOf(item), flattenedList.size()));
+                        itemsProcessedInThisBranch = getElementCountInHierarchy(parent.children);
+                    } else {
+                        //one or more levels up the hierarchy
+                        return inflatedList;
+                    }
+                }
+            }
+        }
+
+        return inflatedList;
+    }
+
+    /**
+     * Receives a hierarchized MenuItemModel list and counts all elements in this hierarchy.
+     * Please note it *MUST NOT* be a flattened list.
+     * @param itemList
+     * @return element count in hierarchy
+     */
+    public static int getElementCountInHierarchy(List<MenuItemModel> itemList) {
+        int total = 0;
+        if (itemList != null) {
+            for (MenuItemModel item : itemList) {
+                total++;
+                if (item.hasChildren()) {
+                    total += getElementCountInHierarchy(item.children);
+                }
+            }
+        }
+        return total;
+    }
+
+    public static List<MenuItemModel> flattenMenuItemModelList(List<MenuItemModel> hierarchyList, int currentLevel) {
+        ArrayList<MenuItemModel> flattenedList = new ArrayList<>();
+        if (hierarchyList != null) {
+            for (MenuItemModel item : hierarchyList) {
+                item.flattenedLevel = currentLevel;
+                flattenedList.add(item);
+                if (item.hasChildren()) {
+                    List<MenuItemModel> tmpList = flattenMenuItemModelList(item.children, currentLevel+1);
+                    flattenedList.addAll(tmpList);
+                }
+            }
+        }
+        return flattenedList;
     }
 }

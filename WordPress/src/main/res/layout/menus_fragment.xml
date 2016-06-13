@@ -8,7 +8,6 @@
     android:background="@color/grey_light"
     >
 
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
         style="@style/WordPress.EmptyList.Title"
@@ -68,6 +67,11 @@
 
     <org.wordpress.android.ui.menus.views.MenuAddEditRemoveView
         android:id="@+id/menu_add_edit_remove_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <org.wordpress.android.ui.menus.views.MenuItemsView
+        android:id="@+id/menu_items_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
