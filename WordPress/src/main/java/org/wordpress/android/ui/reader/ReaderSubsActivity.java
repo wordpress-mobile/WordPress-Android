@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -89,20 +90,23 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        int normalColor = getResources().getColor(R.color.blue_light);
-        int selectedColor = getResources().getColor(R.color.white);
+        int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+        int selectedColor = ContextCompat.getColor(this, R.color.white);
         tabLayout.setTabTextColors(normalColor, selectedColor);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
@@ -420,7 +424,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         // note that this uses the endpoint to follow as a feed since typed URLs are more
         // likely to point to a feed than a wp blog (and the endpoint should internally
         // follow it as a blog if it is one)
-        ReaderBlogActions.followFeedByUrl(normUrl, true, followListener);
+        ReaderBlogActions.followFeedByUrl(normUrl, followListener);
     }
 
     /*

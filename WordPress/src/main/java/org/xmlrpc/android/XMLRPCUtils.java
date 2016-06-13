@@ -1,5 +1,10 @@
 package org.xmlrpc.android;
 
+import android.support.annotation.StringRes;
+import android.text.TextUtils;
+import android.util.Xml;
+import android.webkit.URLUtil;
+
 import com.android.volley.TimeoutError;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -11,21 +16,17 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
 import org.xmlrpc.android.XMLRPCUtils.XMLRPCUtilsException.Kind;
-
-import android.support.annotation.StringRes;
-import android.text.TextUtils;
-import android.util.Xml;
-import android.webkit.URLUtil;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -151,12 +152,7 @@ public class XMLRPCUtils {
         return URLUtil.isValidUrl(newUrl) ? newUrl : url;
     }
 
-    public static String sanitizeSiteUrl(String siteUrl) throws XMLRPCUtilsException {
-        if (TextUtils.isEmpty(siteUrl)) {
-            throw new XMLRPCUtilsException(XMLRPCUtilsException.Kind.SITE_URL_CANNOT_BE_EMPTY, R.string
-                    .invalid_site_url_message, siteUrl, null);
-        }
-
+    public static String sanitizeSiteUrl(String siteUrl, boolean addHttps) throws XMLRPCUtilsException {
         // remove padding whitespace
         String url = siteUrl.trim();
 
@@ -169,12 +165,12 @@ public class XMLRPCUtils {
         url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        url = UrlUtils.addUrlSchemeIfNeeded(url, false);
+        url = UrlUtils.addUrlSchemeIfNeeded(url, addHttps);
 
         // strip url from known usual trailing paths
         url = XMLRPCUtils.stripKnownPaths(url);
 
-        if (!URLUtil.isValidUrl(url)) {
+        if (!(URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url))) {
             throw new XMLRPCUtilsException(Kind.INVALID_URL, R.string.invalid_site_url_message, url, null);
         }
 
@@ -272,29 +268,42 @@ public class XMLRPCUtils {
 
     private static String verifyXmlrpcUrl(final String siteUrl, final String httpUsername, final String httpPassword)
             throws XMLRPCUtilsException {
-        final String sanitizedSiteUrl = XMLRPCUtils.sanitizeSiteUrl(siteUrl);
+        // Ordered set of Strings that contains the URLs we want to try. No discovery ;)
+        final Set<String> urlsToTry = new LinkedHashSet<>();
 
-        // Array of Strings that contains the URLs we want to try. No discovery ;)
-        final List<String> urlsToTry = new ArrayList<>();
+        final String sanitizedSiteUrlHttps = XMLRPCUtils.sanitizeSiteUrl(siteUrl, true);
+        final String sanitizedSiteUrlHttp = XMLRPCUtils.sanitizeSiteUrl(siteUrl, false);
 
-        // start by adding the url with 'xmlrpc.php'. This will be the first url to try.
-        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrl));
+        // start by adding the https URL with 'xmlrpc.php'. This will be the first URL to try.
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttp));
+        urlsToTry.add(XMLRPCUtils.appendXMLRPCPath(sanitizedSiteUrlHttps));
 
-        // add the sanitized URL without the '/xmlrpc.php' suffix added to it
-        if (!urlsToTry.contains(sanitizedSiteUrl)) {
-            urlsToTry.add(sanitizedSiteUrl);
-        }
+        // add the sanitized https URL without the '/xmlrpc.php' suffix added to it
+        urlsToTry.add(sanitizedSiteUrlHttp);
+        urlsToTry.add(sanitizedSiteUrlHttps);
 
         // add the user provided URL as well
-        if (!urlsToTry.contains(siteUrl)) {
-            urlsToTry.add(siteUrl);
-        }
+        urlsToTry.add(siteUrl);
 
         AppLog.i(AppLog.T.NUX, "The app will call system.listMethods on the following URLs: " + urlsToTry);
         for (String url : urlsToTry) {
-            if (XMLRPCUtils.checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
-                // Endpoint found and works fine.
-                return url;
+            try {
+                if (XMLRPCUtils.checkXMLRPCEndpointValidity(url, httpUsername, httpPassword)) {
+                    // Endpoint found and works fine.
+                    return url;
+                }
+            } catch (XMLRPCUtilsException e) {
+                if (e.kind == XMLRPCUtilsException.Kind.ERRONEOUS_SSL_CERTIFICATE ||
+                    e.kind == XMLRPCUtilsException.Kind.HTTP_AUTH_REQUIRED ||
+                    e.kind == XMLRPCUtilsException.Kind.MISSING_XMLRPC_METHOD) {
+                    throw e;
+                }
+                // swallow the error since we are just verifying various URLs
+                continue;
+            } catch (RuntimeException re) {
+                // depending how corrupt the user entered URL is, it can generate several kind of runtime exceptions,
+                // ignore them
+                continue;
             }
         }
 
@@ -307,23 +316,17 @@ public class XMLRPCUtils {
     // whole process.
     private static String discoverSelfHostedXmlrpcUrl(String siteUrl, String httpUsername, String httpPassword) throws
             XMLRPCUtilsException {
-        // Array of Strings that contains the URLs we want to try
-        final List<String> urlsToTry = new ArrayList<>();
+        // Ordered set of Strings that contains the URLs we want to try
+        final Set<String> urlsToTry = new LinkedHashSet<>();
 
         // add the url as provided by the user
         urlsToTry.add(siteUrl);
 
-        // add a sanitized version of the url
-        final String sanitizedURL = sanitizeSiteUrl(siteUrl);
-        if (!urlsToTry.contains(sanitizedURL)) {
-            urlsToTry.add(sanitizedURL);
-        }
+        // add a sanitized version of the https url (if the user didn't specify it)
+        urlsToTry.add(sanitizeSiteUrl(siteUrl, true));
 
-        String appendedXmlrpcUrl = appendXMLRPCPath(sanitizedURL);
-        if (!urlsToTry.contains(appendedXmlrpcUrl)) {
-            appendedXmlrpcUrl += "?rsd";
-            urlsToTry.add(appendedXmlrpcUrl);
-        }
+        // add a sanitized version of the http url (if the user didn't specify it)
+        urlsToTry.add(sanitizeSiteUrl(siteUrl, false));
 
         AppLog.i(AppLog.T.NUX, "The app will call the RSD discovery process on the following URLs: " + urlsToTry);
 

@@ -439,3 +439,21 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
     padding-left: 80px;
     padding-right: 80px;
 }
+
+.more-tag {
+  border: 0;
+  width: 96%;
+  height: 16px;
+  display: block;
+  background: transparent url('svg/more-2x.png') repeat-y scroll center center;
+  background-size: 1900px 20px;
+}
+
+.nextpage-tag {
+  border: 0;
+  width: 96%;
+  height: 16px;
+  display: block;
+  background: transparent url('svg/pagebreak-2x.png') repeat-y scroll center center;
+  background-size: 1900px 20px;
+}

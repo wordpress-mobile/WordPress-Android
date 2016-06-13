@@ -9,9 +9,8 @@ import java.util.regex.Pattern;
 
 public class ReaderHtmlUtils {
 
-    public static interface HtmlScannerListener {
-        public void onTagFound(String tag, String src, int start, int end);
-        public void onScanCompleted();
+    public interface HtmlScannerListener {
+        void onTagFound(String tag, String src);
     }
 
     // regex for matching width attributes in tags
@@ -81,7 +80,8 @@ public class ReaderHtmlUtils {
      * if the url is invalid, or the param doesn't exist, or the param value could not be
      * converted to an int
      */
-    public static int getIntQueryParam(final String url, final String param) {
+    public static int getIntQueryParam(final String url,
+                                       @SuppressWarnings("SameParameterValue") final String param) {
         if (url == null
                 || param == null
                 || !url.startsWith("http")

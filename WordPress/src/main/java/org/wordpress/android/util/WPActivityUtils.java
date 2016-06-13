@@ -3,7 +3,10 @@ package org.wordpress.android.util;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -12,20 +15,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class WPActivityUtils {
@@ -37,40 +38,14 @@ public class WPActivityUtils {
         }
 
         Toolbar toolbar;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (dialog.findViewById(android.R.id.list) == null) {
-                return;
-            }
-
-            LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
-            toolbar = (Toolbar) LayoutInflater.from(context.getActivity()).inflate(org.wordpress.android.R.layout.toolbar, root, false);
-            root.addView(toolbar, 0);
-        } else {
-            if (dialog.findViewById(android.R.id.content) == null) {
-                return;
-            }
-
-            ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.content);
-            if (!(root.getChildAt(0) instanceof ListView)) {
-                return;
-            }
-
-            ListView content = (ListView) root.getChildAt(0);
-            root.removeAllViews();
-
-            toolbar = (Toolbar) LayoutInflater.from(context.getActivity()).inflate(org.wordpress.android.R.layout.toolbar, root, false);
-            int height;
-            TypedValue tv = new TypedValue();
-            if (context.getActivity().getTheme().resolveAttribute(org.wordpress.android.R.attr.actionBarSize, tv, true)) {
-                height = TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-            } else{
-                height = toolbar.getHeight();
-            }
-
-            content.setPadding(0, height, 0, 0);
-            root.addView(content);
-            root.addView(toolbar);
+        if (dialog.findViewById(android.R.id.list) == null) {
+            return;
         }
+
+        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
+                .inflate(org.wordpress.android.R.layout.toolbar, root, false);
+        root.addView(toolbar, 0);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
 
@@ -150,5 +125,18 @@ public class WPActivityUtils {
             }
         }
         return context;
+    }
+
+    public static boolean isEmailClientAvailable(Context context) {
+        if (context == null) {
+            return false;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        return !emailApps.isEmpty();
     }
 }

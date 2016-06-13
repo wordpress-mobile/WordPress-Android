@@ -3,7 +3,6 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -50,10 +49,8 @@ public class TypefaceCache {
             return getTypefaceForTypefaceName(context, typefaceName);
         }
 
-        // default system font - note that "sans-serif-light" was added in SDK 4.1
-        // http://developer.android.com/about/versions/android-4.1.html#Fonts
-        if (family == FAMILY_DEFAULT_LIGHT
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        // default system font
+        if (family == FAMILY_DEFAULT_LIGHT) {
             return Typeface.create("sans-serif-light", fontStyle);
         } else {
             return Typeface.defaultFromStyle(fontStyle);

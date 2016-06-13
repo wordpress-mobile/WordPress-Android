@@ -61,6 +61,11 @@ public class Utils {
             html = html.replace("'", "\\'");
             html = html.replace("\r", "\\r");
             html = html.replace("\n", "\\n");
+
+            // Escape invisible line separator (U+2028) and paragraph separator (U+2029) characters
+            // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/405
+            html = html.replace("\u2028", "\\u2028");
+            html = html.replace("\u2029", "\\u2029");
         }
         return html;
     }

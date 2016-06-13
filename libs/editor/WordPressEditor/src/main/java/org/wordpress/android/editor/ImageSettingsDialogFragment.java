@@ -28,6 +28,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
@@ -41,11 +42,8 @@ import java.util.Map;
  * when the fragment is dismissed to restore it.
  */
 public class ImageSettingsDialogFragment extends DialogFragment {
-
     public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
     public static final String IMAGE_SETTINGS_DIALOG_TAG = "image-settings";
-
-    private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
 
     private JSONObject mImageMeta;
     private int mMaxImageWidth;
@@ -170,7 +168,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 mLinkTo.setText(mImageMeta.getString("linkUrl"));
 
-                mMaxImageWidth = getMaximumImageWidth(mImageMeta.getInt("naturalWidth"), bundle.getString("maxWidth"));
+                mMaxImageWidth = MediaUtils.getMaximumImageWidth(mImageMeta.getInt("naturalWidth"),
+                        bundle.getString("maxWidth"));
 
                 setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
 
@@ -394,34 +393,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 return true;
             }
         });
-    }
-
-    /**
-     * Calculate and return the maximum allowed image width by comparing the width of the image at its full size with
-     * the maximum upload width set in the blog settings
-     * @param naturalImageWidth the image's natural (full) width
-     * @param imageWidthBlogSettingString the maximum upload width set in the blog settings
-     * @return
-     */
-    public static int getMaximumImageWidth(int naturalImageWidth, String imageWidthBlogSettingString) {
-        int imageWidthBlogSetting = Integer.MAX_VALUE;
-
-        if (!imageWidthBlogSettingString.equals("Original Size")) {
-            try {
-                imageWidthBlogSetting = Integer.valueOf(imageWidthBlogSettingString);
-            } catch (NumberFormatException e) {
-                AppLog.e(AppLog.T.EDITOR, e);
-            }
-        }
-
-        int imageWidthPictureSetting = naturalImageWidth == 0 ? Integer.MAX_VALUE : naturalImageWidth;
-
-        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            // Default value in case of errors reading the picture size and the blog settings is set to Original size
-            return DEFAULT_MAX_IMAGE_WIDTH;
-        } else {
-            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
-        }
     }
 
     /**

@@ -299,7 +299,7 @@ public class EditCommentActivity extends AppCompatActivity {
             final String authorUrl = getEditTextStr(R.id.author_url);
             final String content = getEditTextStr(R.id.edit_comment_content);
 
-            final Map<String, String> postHash = new HashMap<String, String>();
+            final Map<String, String> postHash = new HashMap<>();
 
             // using CommentStatus.toString() rather than getStatus() ensures that the XML-RPC
             // status value is used - important since comment may have been loaded via the

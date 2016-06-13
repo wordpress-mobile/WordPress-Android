@@ -28,6 +28,7 @@ import org.wordpress.android.ui.menus.MenusActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -48,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -122,6 +124,12 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             slideInFromRight(context, intent);
         }
+    }
+
+    public static void viewCurrentBlogPeople(Context context) {
+        Intent intent = new Intent(context, PeopleManagementActivity.class);
+        slideInFromRight(context, intent);
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
@@ -251,7 +259,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (isMagicLinkEnabledVariable.get()) {
+        if (isMagicLinkEnabledVariable.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {

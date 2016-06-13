@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.editorexample"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

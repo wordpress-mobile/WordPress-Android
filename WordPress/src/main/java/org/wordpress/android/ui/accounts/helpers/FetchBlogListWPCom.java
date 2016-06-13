@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts.helpers;
 
+import android.content.Context;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -7,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -18,8 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 public class FetchBlogListWPCom extends FetchBlogListAbstract {
-    public FetchBlogListWPCom() {
+
+    private Context mContext;
+
+    public FetchBlogListWPCom(Context context) {
         super(null, null);
+        mContext = context;
     }
 
     protected void fetchBlogList(final Callback callback) {
@@ -44,6 +51,9 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
                     site.put("isAdmin", jsonSite.get("user_can_manage"));
                     site.put("isVisible", jsonSite.get("visible"));
 
+                    // store capabilities as a json string
+                    site.put("capabilities", jsonSite.getString("capabilities"));
+
                     JSONObject plan = jsonSite.getJSONObject("plan");
                     site.put("planID", plan.get("product_id"));
                     site.put("plan_product_name_short", plan.get("product_name_short"));
@@ -64,7 +74,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
     }
 
     private void getUsersBlogsRequestREST(final FetchBlogListAbstract.Callback callback) {
-        WordPress.getRestClientUtils().get("me/sites", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtils().get("me/sites", RestClientUtils.getRestLocaleParams(mContext), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
