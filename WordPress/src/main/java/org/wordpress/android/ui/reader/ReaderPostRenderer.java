@@ -71,10 +71,14 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                resizeImages();
+                if (!mResourceVars.canShowTiledGallery) {
+                    resizeImages();
+                }
+
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder
+                        .toString(), mResourceVars.canShowTiledGallery);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -302,7 +306,7 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content) {
+    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
         @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -317,15 +321,20 @@ class ReaderPostRenderer {
 
         .append("<style type='text/css'>")
         .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
-        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-        .append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }")
-        .append("  h1, h2 { line-height: 1.2em; }")
+        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }");
 
-        // counteract pre-defined height/width styles
-        .append("  p, div, dl, table { width: auto !important; height: auto !important; }")
+        if (!renderAsTiledGallery) {
+            sbHtml.append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }");
+        }
+        sbHtml.append("  h1, h2 { line-height: 1.2em; }");
+
+        if (!renderAsTiledGallery) {
+            // counteract pre-defined height/width styles
+            sbHtml.append("  p, div, dl, table { width: auto !important; height: auto !important; }");
+        }
 
         // make sure long strings don't force the user to scroll horizontally
-        .append("  body, p, div, a { word-wrap: break-word; }")
+        sbHtml.append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
@@ -355,14 +364,80 @@ class ReaderPostRenderer {
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
-        // set tiled gallery containers to auto height/width
-        .append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-        .append("  div.tiled-gallery-caption { clear: both; }")
+        if (renderAsTiledGallery) {
+            sbHtml
+            .append("  .tiled-gallery {")
+            .append("    clear:both;")
+            .append("    margin:0 0 20px;")
+            .append("    overflow:hidden;}")
+            .append(".tiled-gallery img {")
+            .append("    margin:2px !important;}")
+            .append(".tiled-gallery .gallery-group {")
+            .append("    float:left;")
+            .append("    position:relative;}")
+            .append(".tiled-gallery .tiled-gallery-item {")
+            .append("    float:left;")
+            .append("    margin:0;")
+            .append("    position:relative;")
+            .append("    width:inherit;}")
+            .append(".tiled-gallery .gallery-row {")
+            .append("    overflow:hidden;}")
+            .append(".tiled-gallery .tiled-gallery-item a {")
+            .append("    background:transparent;")
+            .append("    border:none;")
+            .append("    color:inherit;")
+            .append("    margin:0;")
+            .append("    padding:0;")
+            .append("    text-decoration:none;")
+            .append("    width:auto;}")
+            .append(".tiled-gallery .tiled-gallery-item img,")
+            .append(".tiled-gallery .tiled-gallery-item img:hover {")
+            .append("    background:none;")
+            .append("    border:none;")
+            .append("    box-shadow:none;")
+            .append("    max-width:100%;")
+            .append("    padding:0;")
+            .append("    vertical-align:middle;}")
+            .append(".tiled-gallery-caption {")
+            .append("    background:#eee;")
+            .append("    background:rgba( 255,255,255,0.8 );")
+            .append("    color:#333;")
+            .append("    font-size:13px;")
+            .append("    font-weight:400;")
+            .append("    overflow:hidden;")
+            .append("    padding:10px 0;")
+            .append("    position:absolute;")
+            .append("    bottom:0;")
+            .append("    text-indent:10px;")
+            .append("    text-overflow:ellipsis;")
+            .append("    width:100%;")
+            .append("    white-space:nowrap;}")
+            .append(".tiled-gallery .tiled-gallery-item-small .tiled-gallery-caption {")
+            .append("    font-size:11px;}")
+            .append(".widget-gallery .tiled-gallery-unresized {")
+            .append("    visibility:hidden;")
+            .append("    height:0px;")
+            .append("    overflow:hidden;}")
+            .append(".tiled-gallery .tiled-gallery-item img.grayscale {")
+            .append("    position:absolute;")
+            .append("    left:0;")
+            .append("    top:0;}")
+            .append(".tiled-gallery .tiled-gallery-item img.grayscale:hover {")
+            .append("    opacity:0;}")
+            .append(".tiled-gallery.type-circle .tiled-gallery-item img {")
+            .append("    border-radius:50% !important;}")
+            .append(".tiled-gallery.type-circle .tiled-gallery-caption {")
+            .append("    display:none;")
+            .append("    opacity:0;}");
+        } else {
+            // set tiled gallery containers to auto height/width
+            sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }");
+        }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
-        .append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
+        sbHtml.append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
         .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
