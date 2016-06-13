@@ -32,15 +32,13 @@
             android:id="@+id/media_filter_result_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/media_filter_spinner_container"
             android:padding="8dp"
             android:visibility="gone"/>
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/media_filter_result_text">
+            android:layout_height="match_parent">
 
             <GridView
                 android:id="@+id/media_gridview"
@@ -64,7 +62,6 @@
         android:id="@+id/empty_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/media_filter_spinner_container"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone">
