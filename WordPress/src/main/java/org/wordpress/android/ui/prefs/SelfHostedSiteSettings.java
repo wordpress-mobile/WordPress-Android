@@ -133,8 +133,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
      */
     @Override
     protected void fetchRemoteData() {
-
-        Thread thread = new Thread(new Runnable() {
+        new Thread() {
             @Override
             public void run() {
                 Object[] params = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
@@ -143,8 +142,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                 instantiateInterface().callAsync(mOptionsCallback, Method.GET_OPTIONS, params);
                 instantiateInterface().callAsync(mCategoriesCallback, Method.GET_CATEGORIES, params);
             }
-        });
-        thread.run();
+        }.start();
     }
 
     /**

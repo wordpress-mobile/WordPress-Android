@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -34,6 +35,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
     private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
     private static final String KEY_TITLE = "page-title";
+    private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
     private boolean mPeopleEndOfListReached;
     private boolean mFetchRequestInProgress;
@@ -147,6 +149,26 @@ public class PeopleManagementActivity extends AppCompatActivity
         } else if (item.getItemId() == R.id.remove_person) {
             confirmRemovePerson();
             return true;
+        } else if (item.getItemId() == R.id.invite) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+            if (peopleInviteFragment == null) {
+                Blog blog = WordPress.getCurrentBlog();
+                peopleInviteFragment = PeopleInviteFragment.newInstance(blog.getDotComBlogId());
+            }
+            if (!peopleInviteFragment.isAdded()) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        } else if (item.getItemId() == R.id.send_invitation) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
+            if (peopleInviteFragment != null) {
+                ((InvitationSender) peopleInviteFragment).send();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -204,7 +226,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (!personDetailFragment.isAdded()) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
+            fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
 
             ActionBar actionBar = getSupportActionBar();
@@ -404,5 +426,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
         }
+    }
+
+    public interface InvitationSender {
+        void send();
     }
 }

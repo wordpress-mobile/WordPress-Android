@@ -11,45 +11,52 @@
         android:background="@color/white"
         android:descendantFocusability="blocksDescendants">
 
-        <org.wordpress.android.widgets.WPScrollView
-            android:id="@+id/scroll_view_reader"
+        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+            android:id="@+id/swipe_to_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:scrollbarStyle="insideOverlay">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <org.wordpress.android.widgets.WPScrollView
+                android:id="@+id/scroll_view_reader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:clipToPadding="false"
+                android:scrollbarStyle="insideOverlay">
 
-                <include
-                    layout="@layout/reader_include_post_detail_header"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_large"
-                    android:layout_marginTop="@dimen/margin_large" />
+                    android:orientation="vertical">
 
-                <View
-                    android:id="@+id/divider_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="@dimen/margin_small"
-                    android:background="@color/reader_divider_grey" />
+                    <include
+                        layout="@layout/reader_include_post_detail_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_large" />
 
-                <include
-                    layout="@layout/reader_include_post_detail_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <View
+                        android:id="@+id/divider_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:background="@color/reader_divider_grey" />
 
-                <View
-                    android:id="@+id/footer_spacer"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/toolbar_height" />
+                    <include
+                        layout="@layout/reader_include_post_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-            </LinearLayout>
+                    <View
+                        android:id="@+id/footer_spacer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/toolbar_height" />
 
-        </org.wordpress.android.widgets.WPScrollView>
+                </LinearLayout>
+
+            </org.wordpress.android.widgets.WPScrollView>
+
+        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
         <include
             android:id="@+id/layout_post_detail_footer"

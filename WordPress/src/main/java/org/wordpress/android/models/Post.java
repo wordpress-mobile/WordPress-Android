@@ -18,7 +18,7 @@ public class Post implements Serializable {
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
 
-    private static int FEATURED_IMAGE_INIT_VALUE = -2;
+    private static long FEATURED_IMAGE_INIT_VALUE = -2;
 
     private long localTablePostId;
     private int localTableBlogId;
@@ -54,8 +54,8 @@ public class Post implements Serializable {
     private String quickPostType;
     private PostLocation mPostLocation;
 
-    private int lastKnownRemoteFeaturedImageId;
-    private int featuredImageId = FEATURED_IMAGE_INIT_VALUE;
+    private long lastKnownRemoteFeaturedImageId;
+    private long featuredImageId = FEATURED_IMAGE_INIT_VALUE;
 
     public Post() {
     }
@@ -483,7 +483,7 @@ public class Post implements Serializable {
         return TextUtils.isEmpty(this.getTitle()) && TextUtils.isEmpty(this.getContent());
     }
 
-    public int getFeaturedImageId() {
+    public long getFeaturedImageId() {
         if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
             return 0;
         }
@@ -491,7 +491,7 @@ public class Post implements Serializable {
         return featuredImageId;
     }
 
-    public void setFeaturedImageId(int id) {
+    public void setFeaturedImageId(long id) {
         if (featuredImageId == FEATURED_IMAGE_INIT_VALUE) {
             lastKnownRemoteFeaturedImageId = id;
         }

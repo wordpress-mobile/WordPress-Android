@@ -17,10 +17,10 @@ import org.wordpress.android.util.ToastUtils;
 // simple wrapper activity for CommentDetailFragment
 public class CommentDetailActivity extends AppCompatActivity {
 
-    public static final String KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-    public static final String KEY_COMMENT_DETAIL_COMMENT_ID = "comment_detail_comment_id";
-    public static final String KEY_COMMENT_DETAIL_NOTE_ID = "comment_detail_note_id";
-    public static final String KEY_COMMENT_DETAIL_IS_REMOTE = "comment_detail_is_remote";
+    private static final String KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static final String KEY_COMMENT_DETAIL_COMMENT_ID = "comment_detail_comment_id";
+    private static final String KEY_COMMENT_DETAIL_NOTE_ID = "comment_detail_note_id";
+    private static final String KEY_COMMENT_DETAIL_IS_REMOTE = "comment_detail_is_remote";
 
     private static final String TAG_COMMENT_DETAIL_FRAGMENT = "tag_comment_detail_fragment";
 

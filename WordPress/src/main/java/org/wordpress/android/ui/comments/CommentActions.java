@@ -59,10 +59,9 @@ public class CommentActions {
      * used by comment fragments to alert container activity of a change to one or more
      * comments (moderated, deleted, added, etc.)
      */
-    public enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
-    public enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
+    public enum ChangeType {EDITED, REPLIED}
     public interface OnCommentChangeListener {
-        void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
+        void onCommentChanged(ChangeType changeType);
     }
 
     public interface OnCommentActionListener {
@@ -73,63 +72,6 @@ public class CommentActions {
         void onModerateCommentForNote(Note note, CommentStatus newStatus);
     }
 
-
-    /*
-     * add a comment for the passed post
-     */
-    public static void addComment(final int accountId,
-                                  final String postID,
-                                  final String commentText,
-                                  final CommentActionListener actionListener) {
-        final Blog blog = WordPress.getBlog(accountId);
-        if (blog==null || TextUtils.isEmpty(commentText)) {
-            if (actionListener != null) {
-                actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS   , null));
-            }
-            return;
-        }
-
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-
-                Map<String, Object> commentHash = new HashMap<String, Object>();
-                commentHash.put("content", commentText);
-                commentHash.put("author", "");
-                commentHash.put("author_url", "");
-                commentHash.put("author_email", "");
-
-                Object[] params = {
-                        blog.getRemoteBlogId(),
-                        blog.getUsername(),
-                        blog.getPassword(),
-                        postID,
-                        commentHash};
-
-                int newCommentID = CommentActionResult.COMMENT_ID_ON_ERRORS;
-                String message = null;
-                try {
-                   newCommentID = (Integer) client.call(Method.NEW_COMMENT, params);
-                } catch (IOException | XmlPullParserException | XMLRPCException e) {
-                    AppLog.e(T.COMMENTS, "Error while sending new comment", e);
-                    message = e.getMessage();
-                }
-                final CommentActionResult cr = new CommentActionResult(newCommentID, message);
-                if (actionListener != null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            actionListener.onActionResult(cr);
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
 
     /**
      * reply to an individual comment
@@ -154,7 +96,7 @@ public class CommentActions {
                 XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                         blog.getHttppassword());
 
-                Map<String, Object> replyHash = new HashMap<String, Object>();
+                Map<String, Object> replyHash = new HashMap<>();
                 replyHash.put("comment_parent", Long.toString(comment.commentID));
                 replyHash.put("content", replyText);
                 replyHash.put("author", "");
@@ -359,9 +301,6 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-
                 final boolean success = ApiHelper.editComment(blog, comment, newStatus);
 
                 if (success) {
@@ -465,14 +404,8 @@ public class CommentActions {
                 Object result;
                 try {
                     result = client.call(Method.DELETE_COMMENT, params);
-                } catch (final XMLRPCException e) {
+                } catch (final XMLRPCException | XmlPullParserException | IOException e) {
                     AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    result = null;
-                } catch (IOException e) {
-                    AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    result = null;
-                } catch (XmlPullParserException e) {
-                    AppLog.e(T.COMMENTS,"Error while deleting comment", e);
                     result = null;
                 }
 
@@ -541,11 +474,7 @@ public class CommentActions {
                         boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                         if (success)
                             deletedComments.add(comment);
-                    } catch (XMLRPCException e) {
-                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    } catch (IOException e) {
-                        AppLog.e(T.COMMENTS, "Error while deleting comment", e);
-                    } catch (XmlPullParserException e) {
+                    } catch (XMLRPCException | XmlPullParserException | IOException e) {
                         AppLog.e(T.COMMENTS, "Error while deleting comment", e);
                     }
                 }
