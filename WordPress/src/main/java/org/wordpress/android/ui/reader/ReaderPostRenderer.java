@@ -393,6 +393,9 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSize(final String imageTag, final String imageUrl) {
         ImageSize size = getImageSizeFromAttachments(imageUrl);
+        if (size == null && imageTag.contains("data-orig-size=")) {
+            size = getImageOriginalSizeFromAttributes(imageTag);
+        }
         if (size == null && imageUrl.contains("?")) {
             size = getImageSizeFromQueryParams(imageUrl);
         }
@@ -429,6 +432,12 @@ class ReaderPostRenderer {
         }
 
         return null;
+    }
+
+    private ImageSize getImageOriginalSizeFromAttributes(final String imageTag) {
+        return new ImageSize(
+                ReaderHtmlUtils.getOriginalWidthAttrValue(imageTag),
+                ReaderHtmlUtils.getOriginalHeightAttrValue(imageTag));
     }
 
     private ImageSize getImageSizeFromAttributes(final String imageTag) {
