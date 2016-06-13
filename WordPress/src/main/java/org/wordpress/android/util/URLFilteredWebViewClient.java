@@ -1,17 +1,23 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.wordpress.android.*;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * WebViewClient that adds the ability of restrict URL loading (navigation) to a list of allowed URLs.
  * Generally used to disable links and navigation in admin pages.
  */
 public class URLFilteredWebViewClient extends WebViewClient {
-    ArrayList<String> allowedURLs = new ArrayList<>();
+    private Set<String> allowedURLs = new LinkedHashSet<>();
+    private int linksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
 
     public URLFilteredWebViewClient() {
     }
@@ -20,7 +26,7 @@ public class URLFilteredWebViewClient extends WebViewClient {
        allowedURLs.add(url);
     }
 
-    public URLFilteredWebViewClient(List<String> urls) {
+    public URLFilteredWebViewClient(Collection<String> urls) {
         if (urls == null || urls.size() == 0) {
             AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! " +
                     "HTTP Links in the page are NOT disabled, and ALL URLs could be loaded by the user!!");
@@ -43,7 +49,15 @@ public class URLFilteredWebViewClient extends WebViewClient {
 
         if (isAllURLsAllowed() || allowedURLs.contains(url)) {
             view.loadUrl(url);
+        } else {
+            // show "links are disabled" message.
+            Context ctx = WordPress.getContext();
+            Toast.makeText(ctx, ctx.getText(linksDisabledMessageResId), Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    public void setLinksDisabledMessageResId(int resId) {
+        linksDisabledMessageResId = resId;
     }
 }
