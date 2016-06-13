@@ -18,6 +18,8 @@ public class Person {
     private String displayName;
     private String avatarUrl;
     private String role;
+    private boolean isFollower;
+    private boolean isEmailFollower;
 
     public Person(long personID, String blogId, int localTableBlogId) {
         this.personID = personID;
@@ -26,7 +28,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person fromJSON(JSONObject json, String blogId, int localTableBlogId, boolean isFollower) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -43,6 +45,11 @@ public class Person {
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
+
+            if (isFollower) {
+                person.setFollower(true);
+                person.setEmailFollower(json.optBoolean("email"));
+            }
 
             return person;
         } catch (NumberFormatException e) {
@@ -110,5 +117,21 @@ public class Person {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public boolean isFollower() {
+        return isFollower;
+    }
+
+    public void setFollower(boolean follower) {
+        isFollower = follower;
+    }
+
+    public boolean isEmailFollower() {
+        return isEmailFollower;
+    }
+
+    public void setEmailFollower(boolean emailFollower) {
+        isEmailFollower = emailFollower;
     }
 }
