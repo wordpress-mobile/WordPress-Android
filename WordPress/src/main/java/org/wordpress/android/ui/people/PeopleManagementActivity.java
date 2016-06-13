@@ -66,7 +66,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deleteUsersForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
             if (actionBar != null) {
@@ -190,7 +190,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
                 mPeopleEndOfListReached = isEndOfList;
-                PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
+                PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
 
                 mFetchRequestInProgress = false;
@@ -401,7 +401,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
         Blog blog = WordPress.getCurrentBlog();
-        int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
+        int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
         fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
     }
 

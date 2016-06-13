@@ -73,12 +73,12 @@ public class PeopleTable {
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static void savePeople(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+    public static void saveUsers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
-            //We have a fresh list, remove the previous list of people in case it was deleted on remote
+            // We have a fresh list, remove the previous list of users in case it was deleted on remote
             if (isFreshList) {
-                PeopleTable.deletePeopleForLocalBlogId(localTableBlogId);
+                PeopleTable.deleteUsersForLocalBlogId(localTableBlogId);
             }
 
             for (Person person : peopleList) {
@@ -90,30 +90,65 @@ public class PeopleTable {
         }
     }
 
-    public static int getPeopleCountForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId)};
-        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?";
-        return SqlUtils.intForQuery(getReadableDb(), sql, args);
+    public static void saveFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+        getWritableDb().beginTransaction();
+        try {
+            // We have a fresh list, remove the previous list of followers in case it was deleted on remote
+            if (isFreshList) {
+                PeopleTable.deleteFollowersForLocalBlogId(localTableBlogId);
+            }
+
+            for (Person person : peopleList) {
+                PeopleTable.save(person);
+            }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
+        }
     }
 
-    public static void deletePeopleForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    public static void deleteUsersForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(false)};
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
     }
 
-    public static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
-        int size = getPeopleCountForLocalBlogId(localTableBlogId);
+    public static void deleteFollowersForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(true)};
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
+    }
+
+    public static void deleteUsersForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
+        PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(localTableBlogId, false);
+    }
+
+    public static void deleteFollowersForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
+        PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(localTableBlogId, false);
+    }
+
+    private static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId, boolean isFollower) {
+        int size = getPeopleCountForLocalBlogId(localTableBlogId, isFollower);
         int fetchLimit = PeopleUtils.FETCH_USERS_LIMIT;
         if (size > fetchLimit) {
             int deleteCount = size - fetchLimit;
             String[] args = new String[] {
                     Integer.toString(localTableBlogId),
+                    Boolean.toString(isFollower),
                     Integer.toString(deleteCount)
             };
-            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND person_id " +
-                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?1 " +
-                    "ORDER BY display_name DESC LIMIT ?2)", args);
+            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 AND person_id " +
+                    "IN (SELECT person_id FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?1 AND is_follower=?2 " +
+                    "ORDER BY display_name DESC LIMIT ?3)", args);
         }
+    }
+
+    public static int getUsersCountForLocalBlogId(int localTableBlogId) {
+        return PeopleTable.getPeopleCountForLocalBlogId(localTableBlogId, false);
+    }
+
+    private static int getPeopleCountForLocalBlogId(int localTableBlogId, boolean isFollower) {
+        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(isFollower)};
+        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?&is_follower=?";
+        return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
     public static void deletePerson(long personID, int localTableBlogId) {
@@ -121,11 +156,15 @@ public class PeopleTable {
         getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=?", args);
     }
 
-    public static List<Person> getPeople(int localTableBlogId) {
+    public static List<Person> getUsers(int localTableBlogId) {
+        return PeopleTable.getPeople(localTableBlogId, false);
+    }
+
+    private static List<Person> getPeople(int localTableBlogId, boolean isFollower) {
         List<Person> people = new ArrayList<>();
-        String[] args = { Integer.toString(localTableBlogId) };
+        String[] args = { Integer.toString(localTableBlogId), Boolean.toString(isFollower) };
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE local_blog_id=? ORDER BY lower(display_name), lower(user_name)", args);
+                " WHERE local_blog_id=? AND is_follower=? ORDER BY lower(display_name), lower(user_name)", args);
 
         try {
             while (c.moveToNext()) {
