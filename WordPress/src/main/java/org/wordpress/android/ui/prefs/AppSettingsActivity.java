@@ -3,11 +3,13 @@ package org.wordpress.android.ui.prefs;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
 public class AppSettingsActivity extends AppCompatActivity {
@@ -56,6 +58,8 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         if (togglePref != null && changePref != null) {
             mPasscodePreferenceFragment.setPreferences(togglePref, changePref);
+            ((SwitchPreference) togglePref).setChecked(
+                    AppLockManager.getInstance().getAppLock().isPasswordLocked());
         }
     }
 
