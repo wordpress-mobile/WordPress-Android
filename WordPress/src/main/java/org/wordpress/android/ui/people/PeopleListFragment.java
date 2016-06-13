@@ -183,7 +183,22 @@ public class PeopleListFragment extends Fragment {
     public void refreshPeopleList() {
         if (!isAdded()) return;
 
-        List<Person> peopleList = PeopleTable.getUsers(mLocalTableBlogID);
+        List<Person> peopleList;
+        switch (mPeopleListFilter) {
+            case TEAM:
+                peopleList = PeopleTable.getUsers(mLocalTableBlogID);
+                break;
+            case FOLLOWERS:
+                peopleList = PeopleTable.getFollowers(mLocalTableBlogID);
+                break;
+            case EMAIL_FOLLOWERS:
+                peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
+                break;
+            default:
+                // TODO: implement viewers
+                peopleList = new ArrayList<>();
+                break;
+        }
         PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
         if (peopleAdapter == null) {
             peopleAdapter = new PeopleAdapter(getActivity(), peopleList);

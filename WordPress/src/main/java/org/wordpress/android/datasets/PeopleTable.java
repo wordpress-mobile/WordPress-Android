@@ -157,14 +157,27 @@ public class PeopleTable {
     }
 
     public static List<Person> getUsers(int localTableBlogId) {
-        return PeopleTable.getPeople(localTableBlogId, false);
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(0) };
+        String where = "WHERE local_blog_id=? AND is_follower=?";
+        return PeopleTable.getPeople(localTableBlogId, where, args);
     }
 
-    private static List<Person> getPeople(int localTableBlogId, boolean isFollower) {
+    public static List<Person> getFollowers(int localTableBlogId) {
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1) };
+        String where = "WHERE local_blog_id=? AND is_follower=?";
+        return PeopleTable.getPeople(localTableBlogId, where, args);
+    }
+
+    public static List<Person> getEmailFollowers(int localTableBlogId) {
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1) };
+        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2";
+        return PeopleTable.getPeople(localTableBlogId, where, args);
+    }
+
+    private static List<Person> getPeople(int localTableBlogId, String whereStatement, String[] args) {
         List<Person> people = new ArrayList<>();
-        String[] args = { Integer.toString(localTableBlogId), Boolean.toString(isFollower) };
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE local_blog_id=? AND is_follower=? ORDER BY lower(display_name), lower(user_name)", args);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " " + whereStatement +
+                " ORDER BY lower(display_name), lower(user_name)", args);
 
         try {
             while (c.moveToNext()) {
