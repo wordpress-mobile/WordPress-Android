@@ -332,8 +332,7 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        return BuildConfig.VISUAL_EDITOR_AVAILABLE
-                || getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
+        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
     }
 
     public static boolean isVisualEditorEnabled() {
