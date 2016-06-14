@@ -219,19 +219,6 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
-    /*
-    * show/hide progress bar which appears at the bottom of the activity when loading more people
-    */
-    public void showLoadingProgress(boolean showProgress) {
-        if (isAdded() && mFilteredRecyclerView != null) {
-            if (showProgress) {
-                mFilteredRecyclerView.showLoadingProgress();
-            } else {
-                mFilteredRecyclerView.hideLoadingProgress();
-            }
-        }
-    }
-
     // Container Activity must implement this interface
     public interface OnPersonSelectedListener {
         void onPersonSelected(Person person);

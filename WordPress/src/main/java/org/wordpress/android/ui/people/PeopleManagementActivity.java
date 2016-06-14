@@ -179,11 +179,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        final PeopleListFragment peopleListFragment = getListFragment();
-        if (peopleListFragment != null) {
-            peopleListFragment.showLoadingProgress(true);
-        }
-
         mUsersFetchRequestInProgress = true;
 
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
@@ -195,17 +190,11 @@ public class PeopleManagementActivity extends AppCompatActivity
                 refreshOnScreenFragmentDetails();
 
                 mUsersFetchRequestInProgress = false;
-                if (peopleListFragment != null) {
-                    peopleListFragment.showLoadingProgress(false);
-                }
             }
 
             @Override
             public void onError() {
                 mUsersFetchRequestInProgress = false;
-                if (peopleListFragment != null) {
-                    peopleListFragment.showLoadingProgress(false);
-                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_people_list,
                         ToastUtils.Duration.LONG);
