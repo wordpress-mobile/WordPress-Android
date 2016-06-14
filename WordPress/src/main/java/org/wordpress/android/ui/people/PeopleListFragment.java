@@ -209,13 +209,12 @@ public class PeopleListFragment extends Fragment {
             return;
         }
 
-        mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
-
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
-                mOnFetchPeopleListener.onFetchMorePeople();
+                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
             } else {
-                mOnFetchPeopleListener.onFetchFirstPage();
+                mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
+                mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
             }
         }
     }
@@ -239,8 +238,8 @@ public class PeopleListFragment extends Fragment {
     }
 
     public interface OnFetchPeopleListener {
-        void onFetchFirstPage();
-        void onFetchMorePeople();
+        void onFetchFirstPage(PeopleListFilter filter);
+        void onFetchMorePeople(PeopleListFilter filter);
     }
 
     public class PeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

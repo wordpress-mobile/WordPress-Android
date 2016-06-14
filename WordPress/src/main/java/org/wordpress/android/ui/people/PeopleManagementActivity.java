@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
@@ -37,8 +38,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
-    private boolean mPeopleEndOfListReached;
-    private boolean mFetchRequestInProgress;
+    private boolean mUsersEndOfListReached;
+    private boolean mUsersFetchRequestInProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,15 +78,15 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchPeopleListener(this);
 
-            mPeopleEndOfListReached = false;
-            mFetchRequestInProgress = false;
+            mUsersEndOfListReached = false;
+            mUsersFetchRequestInProgress = false;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
-            mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
-            mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
+            mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
+            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -108,8 +109,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
-        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+        outState.putBoolean(KEY_END_OF_LIST_REACHED, mUsersEndOfListReached);
+        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -174,7 +175,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
-        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+        if (mUsersEndOfListReached || mUsersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
             return;
         }
 
@@ -183,17 +184,17 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.showLoadingProgress(true);
         }
 
-        mFetchRequestInProgress = true;
+        mUsersFetchRequestInProgress = true;
 
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
-                mPeopleEndOfListReached = isEndOfList;
+                mUsersEndOfListReached = isEndOfList;
                 PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
                 refreshOnScreenFragmentDetails();
 
-                mFetchRequestInProgress = false;
+                mUsersFetchRequestInProgress = false;
                 if (peopleListFragment != null) {
                     peopleListFragment.showLoadingProgress(false);
                 }
@@ -201,7 +202,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
-                mFetchRequestInProgress = false;
+                mUsersFetchRequestInProgress = false;
                 if (peopleListFragment != null) {
                     peopleListFragment.showLoadingProgress(false);
                 }
@@ -390,19 +391,23 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFetchFirstPage() {
-        Blog blog = WordPress.getCurrentBlog();
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+    public void onFetchFirstPage(PeopleListFilter filter) {
+        if (filter == PeopleListFilter.TEAM) {
+            Blog blog = WordPress.getCurrentBlog();
+            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+        }
     }
 
     @Override
-    public void onFetchMorePeople() {
-        if (mPeopleEndOfListReached) {
-            return;
+    public void onFetchMorePeople(PeopleListFilter filter) {
+        if (filter == PeopleListFilter.TEAM) {
+            if (mUsersEndOfListReached) {
+                return;
+            }
+            Blog blog = WordPress.getCurrentBlog();
+            int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
+            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
         }
-        Blog blog = WordPress.getCurrentBlog();
-        int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
     }
 
     private PeopleListFragment getListFragment() {
