@@ -163,8 +163,8 @@ public class PeopleTable {
     }
 
     public static List<Person> getFollowers(int localTableBlogId) {
-        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1) };
-        String where = "WHERE local_blog_id=? AND is_follower=?";
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0) };
+        String where = "WHERE local_blog_id=? AND is_follower=? AND is_email_follower=?";
         return PeopleTable.getPeople(localTableBlogId, where, args);
     }
 
