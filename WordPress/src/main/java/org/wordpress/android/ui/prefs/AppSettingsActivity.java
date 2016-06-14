@@ -58,8 +58,11 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         if (togglePref != null && changePref != null) {
             mPasscodePreferenceFragment.setPreferences(togglePref, changePref);
-            ((SwitchPreference) togglePref).setChecked(
-                    AppLockManager.getInstance().getAppLock().isPasswordLocked());
+
+            if (togglePref instanceof SwitchPreference) {
+                ((SwitchPreference) togglePref).setChecked(
+                        AppLockManager.getInstance().getAppLock().isPasswordLocked());
+            }
         }
     }
 
