@@ -38,7 +38,6 @@ public class Person {
          * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
          * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/follows/
          */
-        // Response parameters are in:
         try {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, blogId, localTableBlogId);
