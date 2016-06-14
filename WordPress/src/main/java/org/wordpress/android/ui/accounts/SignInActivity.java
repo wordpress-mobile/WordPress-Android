@@ -100,12 +100,6 @@ public class SignInActivity extends AppCompatActivity {
             } else {
                 AppLog.e(T.NUX, "Credential read failed");
             }
-        } else if (resultCode == RESULT_OK && data != null) {
-            String username = data.getStringExtra("username");
-            String password = data.getStringExtra("password");
-            if (username != null) {
-                getSignInFragment().signInDotComUser(username, password);
-            }
         }
     }
 

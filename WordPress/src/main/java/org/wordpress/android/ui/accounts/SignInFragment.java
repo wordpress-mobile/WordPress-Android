@@ -228,7 +228,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             showSelfHostedSignInForm();
         }
         autofillFromBuildConfig();
-
         return rootView;
     }
 
@@ -943,14 +942,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public void signInDotComUser(String username, String password) {
-        if (username != null && password != null) {
-            mUsernameEditText.setText(username);
-            mPasswordEditText.setText(password);
-            signIn();
         }
     }
 

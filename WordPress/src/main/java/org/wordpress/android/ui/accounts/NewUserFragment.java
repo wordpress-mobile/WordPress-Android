@@ -24,21 +24,33 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
+import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
+import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NewUserFragment extends AbstractFragment implements TextWatcher {
+    public static final int NEW_USER = 1;
     private EditText mSiteUrlTextField;
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
@@ -49,6 +61,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl;
+    private String mUsername;
+    private String mPassword;
 
     public NewUserFragment() {
         mEmailChecker = new EmailChecker();
@@ -189,21 +203,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return siteUrl;
     }
 
-    private void finishThisStuff(String username, String password) {
-        final Activity activity = getActivity();
-        if (activity != null) {
-            Intent intent = new Intent();
-            intent.putExtra("username", username);
-            intent.putExtra("password", password);
-            activity.setResult(NewAccountActivity.RESULT_OK, intent);
-            activity.finish();
-            PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
-            persistentEditTextHelper.clearSavedText(mEmailTextField, null);
-            persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
-            persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
-        }
-    }
-
     protected boolean specificShowError(int messageId) {
         switch (getErrorType(messageId)) {
             case USERNAME:
@@ -261,12 +260,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String email = EditTextUtils.getText(mEmailTextField).trim();
-        final String password = EditTextUtils.getText(mPasswordTextField).trim();
-        final String username = EditTextUtils.getText(mUsernameTextField).trim();
+        mUsername = EditTextUtils.getText(mUsernameTextField).trim();
+        mPassword = EditTextUtils.getText(mPasswordTextField).trim();
         final String siteName = siteUrlToSiteName(siteUrl);
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
+        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, mUsername, mPassword,
                 siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
                 new CreateUserAndBlog.Callback() {
                     @Override
@@ -294,14 +293,15 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
-                        AnalyticsUtils.refreshMetadata(username, email);
+                        // User has been created. From this point, all errors should close this screen and display the
+                        // sign in screen
+                        AnalyticsUtils.refreshMetadata(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                        endProgress();
                         // Set visual editor available when user signup
                         AppPrefs.setVisualEditorAvailable(true);
                         AppPrefs.setVisualEditorEnabled(true);
                         if (isAdded()) {
-                            finishThisStuff(username, password);
+                            signInAndFetchBlogListWPCom();
                         }
                     }
 
