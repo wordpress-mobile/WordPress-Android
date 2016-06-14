@@ -219,11 +219,10 @@ public class MenusRestWPCom {
     }
 
     private String formatPath(String base, String menuId) {
-        String localeParam = "?locale=" + mListener.getContext().getResources().getConfiguration().locale.toString();
         if (!TextUtils.isEmpty(menuId)) {
-            return String.format(base, String.valueOf(mListener.getSiteId()), menuId) + localeParam;
+            return String.format(base, String.valueOf(mListener.getSiteId()), menuId);
         }
-        return String.format(base, String.valueOf(mListener.getSiteId())) + localeParam;
+        return String.format(base, String.valueOf(mListener.getSiteId()));
     }
 
     @NonNull
