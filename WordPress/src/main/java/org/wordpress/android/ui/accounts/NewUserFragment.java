@@ -313,10 +313,86 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         }
                     }
                 });
-        AppLog.i(T.NUX, "User tries to create a new account, username: " + username + ", email: " + email
+        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + email
                 + ", site name: " + siteName + ", site URL: " + siteUrl);
         createUserAndBlog.startCreateUserAndBlogProcess();
     }
+
+    private void signInAndFetchBlogListWPCom() {
+        updateProgress(getString(R.string.signing_in));
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, null, false, null);
+        login.execute(new LoginAbstract.Callback() {
+            @Override
+            public void onSuccess() {
+                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
+                fetchBlogListWPCom.execute(mFetchBlogListCallback);
+            }
+
+            @Override
+            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired,
+                                boolean erroneousSslCertificate) {
+                // Should not happen (excepted for a timeout), go back to the sign in screen
+                finishAndShowSignInScreen();
+            }
+        });
+    }
+
+    private void finishCurrentActivity() {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+        PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
+        persistentEditTextHelper.clearSavedText(mEmailTextField, null);
+        persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
+        persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
+    }
+
+    /**
+     * In case an error happened after the user creation steps, we don't want to show the sign up screen.
+     * Show the sign in screen with username and password prefilled, plus a toast message to explain what happened.
+     *
+     * Note: this should be called only if the user has been created.
+     */
+    private void finishAndShowSignInScreen() {
+        if (!isAdded()) {
+            return;
+        }
+        endProgress();
+        Intent intent = new Intent();
+        intent.putExtra("username", mUsername);
+        intent.putExtra("password", mPassword);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        getFragmentManager().popBackStack();
+        ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
+    }
+
+    protected final Callback mFetchBlogListCallback = new Callback() {
+        @Override
+        public void onSuccess(final List<Map<String, Object>> userBlogList) {
+            if (!isAdded()) {
+                return;
+            }
+            if (userBlogList != null) {
+                BlogUtils.addBlogs(userBlogList, mUsername);
+            }
+
+            // get reader tags so they're available as soon as the Reader is accessed - done for
+            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+            // uses the application context since the activity is finished immediately below
+            ReaderUpdateService.startService(getActivity().getApplicationContext(),
+                    EnumSet.of(UpdateTask.TAGS));
+            finishCurrentActivity();
+        }
+
+        @Override
+        public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
+                            final boolean erroneousSslCertificate, final String clientResponse) {
+            // Should not happen (excepted for a timeout), go back to the sign in screen
+            finishAndShowSignInScreen();
+        }
+    };
 
     private void autocorrectEmail() {
         if (mEmailAutoCorrected) {

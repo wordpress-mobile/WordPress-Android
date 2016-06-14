@@ -520,6 +520,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private void createUserFragment() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
+        newUserFragment.setTargetFragment(this, NewUserFragment.NEW_USER);
         transaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         transaction.replace(R.id.fragment_container, newUserFragment);
@@ -1109,5 +1110,29 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_SELF_HOSTED, mSelfHosted);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Autofill username / password if string fields are set (only usefull after an error in sign up).
+        // This can't be done in onCreateView
+        if (mUsername != null) {
+            mUsernameEditText.setText(mUsername);
+        }
+        if (mPassword != null) {
+            mPasswordEditText.setText(mPassword);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NewUserFragment.NEW_USER && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                // Text views will be populated by username/password if these fields are set
+                mUsername = data.getStringExtra("username");
+                mPassword = data.getStringExtra("password");
+            }
+        }
     }
 }
