@@ -28,7 +28,6 @@ import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
@@ -297,9 +296,11 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         // sign in screen
                         AnalyticsUtils.refreshMetadata(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                        // Set visual editor available when user signup
-                        AppPrefs.setVisualEditorAvailable(true);
-                        AppPrefs.setVisualEditorEnabled(true);
+                        // Save credentials to smart lock
+                        SmartLockHelper smartLockHelper = getSmartLockHelper();
+                        if (smartLockHelper != null) {
+                            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
+                        }
                         if (isAdded()) {
                             signInAndFetchBlogListWPCom();
                         }
@@ -529,4 +530,11 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             return false;
         }
     };
+
+    private SmartLockHelper getSmartLockHelper() {
+        if (getActivity() != null && getActivity() instanceof SignInActivity) {
+            return ((SignInActivity) getActivity()).getSmartLockHelper();
+        }
+        return null;
+    }
 }
