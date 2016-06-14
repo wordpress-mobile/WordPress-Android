@@ -321,20 +321,22 @@ class ReaderPostRenderer {
 
         .append("<style type='text/css'>")
         .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
-        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }");
+        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
-        if (!renderAsTiledGallery) {
-            sbHtml.append("  p, div, li { line-height: 1.6em; font-size: 0.95em; }");
-        }
-        sbHtml.append("  h1, h2 { line-height: 1.2em; }");
+        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
+        // handled with the .tiled-gallery rules bellow.
+        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
+                ", li { line-height: 1.6em; font-size: 0.95em; }")
 
-        if (!renderAsTiledGallery) {
-            // counteract pre-defined height/width styles
-            sbHtml.append("  p, div, dl, table { width: auto !important; height: auto !important; }");
-        }
+        .append("  h1, h2 { line-height: 1.2em; }")
+
+        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
+        // as those will be handled with the .tiled-gallery rules bellow.
+        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
+                ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
-        sbHtml.append("  body, p, div, a { word-wrap: break-word; }")
+        .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
@@ -435,9 +437,6 @@ class ReaderPostRenderer {
             .append(".tiled-gallery.type-circle .tiled-gallery-caption {")
             .append("    display:none;")
             .append("    opacity:0;}");
-        } else {
-            // set tiled gallery containers to auto height/width
-            sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }");
         }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
