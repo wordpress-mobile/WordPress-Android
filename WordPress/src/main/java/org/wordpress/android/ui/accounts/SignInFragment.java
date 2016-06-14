@@ -54,7 +54,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
@@ -515,12 +514,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private final View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Activity activity = getActivity();
-            if (activity != null) {
-                ActivityLauncher.newAccountForResult(activity);
-            }
+            createUserFragment();
         }
     };
+
+    private void createUserFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        NewUserFragment newUserFragment = NewUserFragment.newInstance();
+        transaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        transaction.replace(R.id.fragment_container, newUserFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
     private String getForgotPasswordURL() {
         String baseUrl = DOT_COM_BASE_URL;

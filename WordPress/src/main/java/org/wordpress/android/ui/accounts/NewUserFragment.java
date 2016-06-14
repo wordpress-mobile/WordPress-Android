@@ -54,6 +54,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mEmailChecker = new EmailChecker();
     }
 
+    public static NewUserFragment newInstance() {
+        return new NewUserFragment();
+    }
+
     @Override
     public void afterTextChanged(Editable s) {
     }
