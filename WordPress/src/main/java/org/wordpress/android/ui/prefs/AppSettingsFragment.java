@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -105,17 +106,30 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final SwitchPreference visualEditorSwitch = (SwitchPreference) findPreference(getActivity()
+            final Preference visualEditorPreference = findPreference(getActivity()
                     .getString(R.string.pref_key_visual_editor_enabled));
-            visualEditorSwitch.setChecked(AppPrefs.isVisualEditorEnabled());
-            visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    visualEditorSwitch.setChecked(!visualEditorSwitch.isChecked());
-                    AppPrefs.setVisualEditorEnabled(visualEditorSwitch.isChecked());
-                    return false;
-                }
-            });
+
+            if (visualEditorPreference instanceof CheckBoxPreference) {
+                ((CheckBoxPreference) visualEditorPreference).setChecked(AppPrefs.isVisualEditorEnabled());
+                visualEditorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                        ((CheckBoxPreference) visualEditorPreference).setChecked(!((CheckBoxPreference) visualEditorPreference).isChecked());
+                        AppPrefs.setVisualEditorEnabled(((CheckBoxPreference) visualEditorPreference).isChecked());
+                        return false;
+                    }
+                });
+            } else if (visualEditorPreference instanceof SwitchPreference) {
+                ((SwitchPreference) visualEditorPreference).setChecked(AppPrefs.isVisualEditorEnabled());
+                visualEditorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                        ((SwitchPreference) visualEditorPreference).setChecked(!((SwitchPreference) visualEditorPreference).isChecked());
+                        AppPrefs.setVisualEditorEnabled(((SwitchPreference) visualEditorPreference).isChecked());
+                        return false;
+                    }
+                });
+            }
         }
     }
 
