@@ -192,13 +192,24 @@ public class PeopleManagementActivity extends AppCompatActivity
                 boolean isFreshList = (offset == 0);
                 mUsersEndOfListReached = isEndOfList;
                 PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
-                refreshOnScreenFragmentDetails();
 
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage);
+                }
+
+                refreshOnScreenFragmentDetails();
                 mUsersFetchRequestInProgress = false;
             }
 
             @Override
             public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage);
+                }
                 mUsersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_people_list,

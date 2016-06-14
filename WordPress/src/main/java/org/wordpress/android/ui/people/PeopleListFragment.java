@@ -222,6 +222,16 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
+    public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage) {
+        if (mPeopleListFilter == filter) {
+            if (isFirstPage) {
+                mFilteredRecyclerView.setRefreshing(false);
+            } else {
+                mFilteredRecyclerView.hideLoadingProgress();
+            }
+        }
+    }
+
     // Container Activity must implement this interface
     public interface OnPersonSelectedListener {
         void onPersonSelected(Person person);
