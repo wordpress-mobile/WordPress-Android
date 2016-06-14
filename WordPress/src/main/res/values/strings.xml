@@ -1395,10 +1395,8 @@
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
-    <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
     <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
-    <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
     <string name="people_fetching">Fetching users..</string>
 
     <!--My profile-->
