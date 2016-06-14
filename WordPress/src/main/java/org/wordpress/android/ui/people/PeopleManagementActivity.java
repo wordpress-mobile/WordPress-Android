@@ -33,13 +33,15 @@ public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
-    private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
-    private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
+    private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
+    private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_USERS = "can-refresh-users";
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
     private boolean mUsersEndOfListReached;
     private boolean mUsersFetchRequestInProgress;
+    private boolean mCanRefreshUsers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,13 +82,15 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             mUsersEndOfListReached = false;
             mUsersFetchRequestInProgress = false;
+            mCanRefreshUsers = true;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
-            mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
-            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
+            mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_USERS_END_OF_LIST_REACHED);
+            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshUsers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_USERS);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -109,8 +113,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_END_OF_LIST_REACHED, mUsersEndOfListReached);
-        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
+        outState.putBoolean(KEY_USERS_END_OF_LIST_REACHED, mUsersEndOfListReached);
+        outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_USERS, mCanRefreshUsers);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -380,19 +385,18 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFetchFirstPage(PeopleListFilter filter) {
-        if (filter == PeopleListFilter.TEAM) {
+    public boolean onFetchFirstPage(PeopleListFilter filter) {
+        if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
             Blog blog = WordPress.getCurrentBlog();
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+            return true;
         }
+        return false;
     }
 
     @Override
     public void onFetchMorePeople(PeopleListFilter filter) {
-        if (filter == PeopleListFilter.TEAM) {
-            if (mUsersEndOfListReached) {
-                return;
-            }
+        if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
             Blog blog = WordPress.getCurrentBlog();
             int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);

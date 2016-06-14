@@ -169,7 +169,27 @@ public class PeopleListFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        refreshPeopleList();
+        updatePeople(false);
+    }
+
+    private void updatePeople(boolean loadMore) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            mFilteredRecyclerView.setRefreshing(false);
+            return;
+        }
+
+        if (mOnFetchPeopleListener != null) {
+            if (loadMore) {
+                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+            } else {
+                refreshPeopleList();
+                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                if (isFetching) {
+                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
+                }
+            }
+        }
     }
 
     public void refreshPeopleList() {
@@ -202,30 +222,13 @@ public class PeopleListFragment extends Fragment {
         }
     }
 
-    private void updatePeople(boolean loadMore) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            mFilteredRecyclerView.setRefreshing(false);
-            return;
-        }
-
-        if (mOnFetchPeopleListener != null) {
-            if (loadMore) {
-                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
-            } else {
-                mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
-                mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
-            }
-        }
-    }
-
     // Container Activity must implement this interface
     public interface OnPersonSelectedListener {
         void onPersonSelected(Person person);
     }
 
     public interface OnFetchPeopleListener {
-        void onFetchFirstPage(PeopleListFilter filter);
+        boolean onFetchFirstPage(PeopleListFilter filter);
         void onFetchMorePeople(PeopleListFilter filter);
     }
 
