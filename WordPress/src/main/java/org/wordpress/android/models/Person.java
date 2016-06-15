@@ -55,7 +55,8 @@ public class Person {
     }
 
     @Nullable
-    public static Person followerFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person followerFromJSON(JSONObject json, String blogId, int localTableBlogId, boolean isEmailFollower)
+            throws JSONException {
         if (json == null) {
             return null;
         }
@@ -66,6 +67,7 @@ public class Person {
             Person person = new Person(personID, blogId, localTableBlogId);
             person.setDisplayName(json.optString("label"));
             person.setAvatarUrl(json.optString("avatar"));
+            person.setEmailFollower(isEmailFollower);
 
             return person;
         } catch (NumberFormatException e) {
