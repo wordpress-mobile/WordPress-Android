@@ -66,11 +66,11 @@ public class SmartLockHelper {
 
     public void smartLockAutoFill(final Callback callback) {
         Activity activity = getActivityAndCheckAvailability();
-        if (activity == null) {
+        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
-                .setSupportsPasswordLogin(true)
+                .setPasswordLoginSupported(true)
                 .build();
         Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
                 new ResultCallback<CredentialRequestResult>() {
