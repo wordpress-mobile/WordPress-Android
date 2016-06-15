@@ -428,21 +428,25 @@ public class MeFragment extends Fragment {
             grantResults) {
         switch (requestCode) {
             case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
-                for (int grantResult : grantResults) {
-                    if (grantResult == PackageManager.PERMISSION_DENIED) {
-                        ToastUtils.showToast(this.getActivity(), getString(R.string
-                                .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
+                if (permissions == null || permissions.length == 0) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_INTERRUPTED);
+                }  else {
+                    for (int grantResult : grantResults) {
+                        if (grantResult == PackageManager.PERMISSION_DENIED) {
+                            ToastUtils.showToast(this.getActivity(), getString(R.string
+                                    .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
 
-                        AnalyticsTracker.track(AnalyticsTracker.Stat
-                                .ME_GRAVATAR_PERMISSIONS_DENIED);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat
+                                    .ME_GRAVATAR_PERMISSIONS_DENIED);
 
-                        return;
+                            return;
+                        }
                     }
+
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
+
+                    askForCameraOrGallery();
                 }
-
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
-
-                askForCameraOrGallery();
                 break;
         }
     }
