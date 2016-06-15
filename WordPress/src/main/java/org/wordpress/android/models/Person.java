@@ -54,6 +54,27 @@ public class Person {
         return null;
     }
 
+    @Nullable
+    public static Person followerFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+        if (json == null) {
+            return null;
+        }
+
+        // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/stats/followers/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            Person person = new Person(personID, blogId, localTableBlogId);
+            person.setDisplayName(json.optString("label"));
+            person.setAvatarUrl(json.optString("avatar"));
+
+            return person;
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
+    }
+
     public long getPersonID() {
         return personID;
     }
