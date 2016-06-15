@@ -269,16 +269,16 @@ public class ReaderUpdateService extends Service {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
-                boolean blogsHaveChanged = !localBlogs.isSameList(serverBlogs);
+                boolean followedBlogsChanged = !localBlogs.isSameList(serverBlogs);
 
-                if (blogsHaveChanged) {
+                if (followedBlogsChanged) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
                 }
 
                 int numberOfDeletedPosts = ReaderPostTable.deletePostsFromUnfollowedBlogs();
 
-                if (blogsHaveChanged || numberOfDeletedPosts > 0) {
+                if (followedBlogsChanged || numberOfDeletedPosts > 0) {
                     EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
 
