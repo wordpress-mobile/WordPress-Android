@@ -347,6 +347,7 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter = null;
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
+        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
     }
 
     @SuppressWarnings("unused")
@@ -513,6 +514,8 @@ public class ReaderPostListFragment extends Fragment
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
             setupRecyclerToolbar();
         }
+
+        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -1298,8 +1301,16 @@ public class ReaderPostListFragment extends Fragment
         // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
         // doing a refresh while another update is already in progress
         if (mRecyclerView != null && !mRecyclerView.isRefreshing()) {
-            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating);
+            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported());
         }
+    }
+
+    /*
+     * swipe-to-refresh isn't supported for search results since they're really brief snapshots
+     * and are unlikely to show new posts due to the way they're sorted by score
+     */
+    private boolean isSwipeToRefreshSupported() {
+        return getPostListType() != ReaderPostListType.SEARCH_RESULTS;
     }
 
     /*
