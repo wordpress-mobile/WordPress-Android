@@ -28,16 +28,12 @@ public class Person {
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, String blogId, int localTableBlogId, boolean isFollower) throws JSONException {
+    public static Person userFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
 
-        /**
-         * We'll parse the user information for both the user & follows point here:
-         * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
-         * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/follows/
-         */
+        // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, blogId, localTableBlogId);
@@ -49,17 +45,6 @@ public class Person {
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
-
-            /**
-             * If we made a request to the follows point we know that this is a follower and not a user.
-             * Please note that the `email` parameter for these endpoints return different values. For users endpoint,
-             * it will return the user's email address, whereas for follows endpoint it'll return if it's an email
-             * follower. We don't use user's email address for now, so it's ignored for users endpoint.
-             */
-            if (isFollower) {
-                person.setFollower(true);
-                person.setEmailFollower(json.optBoolean("email"));
-            }
 
             return person;
         } catch (NumberFormatException e) {

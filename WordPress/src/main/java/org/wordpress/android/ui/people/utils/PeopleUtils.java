@@ -67,7 +67,7 @@ public class PeopleUtils {
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
-                        Person person = Person.fromJSON(jsonObject, blogId, localTableBlogId, false);
+                        Person person = Person.userFromJSON(jsonObject, blogId, localTableBlogId);
                         if (person != null) {
                             callback.onSuccess(person);
                         } else {
@@ -137,7 +137,7 @@ public class PeopleUtils {
         ArrayList<Person> peopleList = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Person person = Person.fromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId, false);
+            Person person = Person.userFromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId, false);
             if (person != null) {
                 peopleList.add(person);
             }
