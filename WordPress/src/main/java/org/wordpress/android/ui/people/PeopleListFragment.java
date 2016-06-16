@@ -158,14 +158,6 @@ public class PeopleListFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // refresh the first page to serve fresh data
-        updatePeople(false);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
