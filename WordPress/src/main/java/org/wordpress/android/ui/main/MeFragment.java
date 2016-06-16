@@ -63,8 +63,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -433,22 +435,28 @@ public class MeFragment extends Fragment {
                 if (permissions == null || permissions.length == 0) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_INTERRUPTED);
                 }  else {
+                    List<String> granted = new ArrayList<>();
+                    List<String> denied = new ArrayList<>();
+
                     for (int i = 0; i < grantResults.length; i++) {
-                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                            ToastUtils.showToast(this.getActivity(), getString(R.string
-                                    .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
-
-                            Map<String, Object> properties = new HashMap<>();
-                            properties.put("permission denied", permissions[i]);
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_DENIED, properties);
-
-                            return;
+                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                            granted.add(permissions[i]);
+                        } else {
+                            denied.add(permissions[i]);
                         }
                     }
 
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
-
-                    askForCameraOrGallery();
+                    if (denied.size() == 0) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
+                        askForCameraOrGallery();
+                    } else {
+                        ToastUtils.showToast(this.getActivity(), getString(R.string
+                                .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("permissions granted", TextUtils.join(",", granted));
+                        properties.put("permissions denied", TextUtils.join(",", denied));
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_DENIED, properties);
+                    }
                 }
                 break;
         }
