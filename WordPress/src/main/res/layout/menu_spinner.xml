@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -8,8 +10,7 @@
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingLeft="@dimen/margin_extra_large"
-    >
+    android:paddingLeft="@dimen/margin_extra_large">
 
     <ImageView
         android:id="@+id/menu_spinner_icon"
@@ -17,7 +18,7 @@
         android:layout_height="36dp"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/gridicon_menus"
+        app:srcCompat="@drawable/gridicon_menus"
         android:tint="@color/grey" />
 
     <LinearLayout
@@ -25,8 +26,7 @@
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/menu_spinner_icon">
+        android:layout_height="wrap_content">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/menu_spinner_title"
@@ -55,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:src="@drawable/gallery_arrow_dropdown_open"
-        android:layout_alignParentRight="true"
         android:tint="@color/grey" />
 
 </LinearLayout>
