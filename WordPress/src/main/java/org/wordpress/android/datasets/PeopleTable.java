@@ -113,12 +113,12 @@ public class PeopleTable {
     }
 
     public static void deleteUsersForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(false)};
+        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
     }
 
     public static void deleteFollowersForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(true)};
+        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(1)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
     }
 
@@ -137,7 +137,7 @@ public class PeopleTable {
             int deleteCount = size - fetchLimit;
             String[] args = new String[] {
                     Integer.toString(localTableBlogId),
-                    Boolean.toString(isFollower),
+                    Integer.toString(isFollower ? 1 : 0),
                     Integer.toString(deleteCount)
             };
             getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 AND person_id " +
@@ -151,7 +151,7 @@ public class PeopleTable {
     }
 
     private static int getPeopleCountForLocalBlogId(int localTableBlogId, boolean isFollower) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(isFollower)};
+        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(isFollower ? 1 : 0)};
         String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?&is_follower=?";
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
@@ -174,7 +174,7 @@ public class PeopleTable {
     }
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
-        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1) };
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1)};
         String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2";
         return PeopleTable.getPeople(localTableBlogId, where, args);
     }
