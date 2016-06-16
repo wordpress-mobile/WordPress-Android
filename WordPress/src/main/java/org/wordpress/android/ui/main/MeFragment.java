@@ -432,7 +432,7 @@ public class MeFragment extends Fragment {
             grantResults) {
         switch (requestCode) {
             case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
-                if (permissions == null || permissions.length == 0) {
+                if (permissions.length == 0) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_INTERRUPTED);
                 }  else {
                     List<String> granted = new ArrayList<>();
