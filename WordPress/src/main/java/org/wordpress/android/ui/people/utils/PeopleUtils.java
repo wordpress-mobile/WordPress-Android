@@ -70,7 +70,7 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, false, false);
+                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, true, false);
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages;
                         callback.onSuccess(people, isEndOfList);

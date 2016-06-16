@@ -36,12 +36,18 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
     private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_USERS = "can-refresh-users";
+    private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
+    private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
     private boolean mUsersEndOfListReached;
     private boolean mUsersFetchRequestInProgress;
     private boolean mCanRefreshUsers;
+    private boolean mFollowersEndOfListReached;
+    private boolean mFollowersFetchRequestInProgress;
+    private boolean mCanRefreshFollowers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             mUsersEndOfListReached = false;
             mUsersFetchRequestInProgress = false;
             mCanRefreshUsers = true;
+            mFollowersEndOfListReached = false;
+            mFollowersFetchRequestInProgress = false;
+            mCanRefreshFollowers = true;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
@@ -91,6 +100,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_USERS_END_OF_LIST_REACHED);
             mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
             mCanRefreshUsers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_USERS);
+            mFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED);
+            mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_FOLLOWERS);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -116,6 +128,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         outState.putBoolean(KEY_USERS_END_OF_LIST_REACHED, mUsersEndOfListReached);
         outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
         outState.putBoolean(KEY_CAN_REFRESH_USERS, mCanRefreshUsers);
+        outState.putBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED, mFollowersEndOfListReached);
+        outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_FOLLOWERS, mCanRefreshFollowers);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -211,6 +226,45 @@ public class PeopleManagementActivity extends AppCompatActivity
                     peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage);
                 }
                 mUsersFetchRequestInProgress = false;
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_people_list,
+                        ToastUtils.Duration.LONG);
+            }
+        });
+    }
+
+    private void fetchFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+        if (mFollowersEndOfListReached || mFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        mFollowersFetchRequestInProgress = true;
+
+        PeopleUtils.fetchFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
+            @Override
+            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+                boolean isFreshList = (page == 1);
+                mFollowersEndOfListReached = isEndOfList;
+                PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
+
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage);
+                }
+
+                refreshOnScreenFragmentDetails();
+                mFollowersFetchRequestInProgress = false;
+            }
+
+            @Override
+            public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage);
+                }
+                mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_people_list,
                         ToastUtils.Duration.LONG);
@@ -397,9 +451,12 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public boolean onFetchFirstPage(PeopleListFilter filter) {
+        Blog blog = WordPress.getCurrentBlog();
         if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
-            Blog blog = WordPress.getCurrentBlog();
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+            return true;
+        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers){
+            fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
             return true;
         }
         return false;
