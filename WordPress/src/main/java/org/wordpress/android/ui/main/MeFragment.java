@@ -453,7 +453,8 @@ public class MeFragment extends Fragment {
                         ToastUtils.showToast(this.getActivity(), getString(R.string
                                 .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
                         Map<String, Object> properties = new HashMap<>();
-                        properties.put("permissions granted", TextUtils.join(",", granted));
+                        properties.put("permissions granted", granted.size() == 0 ? "[none]" : TextUtils
+                                .join(",", granted));
                         properties.put("permissions denied", TextUtils.join(",", denied));
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_DENIED, properties);
                     }
