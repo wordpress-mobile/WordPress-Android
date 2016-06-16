@@ -37,6 +37,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 24
 
+        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
@@ -52,18 +53,20 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
+            minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
     }
 
     buildTypes {
         release {
-            // Proguard is only used to fix an issue with some Samsung device
-            // https://github.com/wordpress-mobile/WordPress-Android/issues/2151
+            // Proguard is used to shrink our apk, and reduce the number of methods in our final apk,
+            // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
         }
 
         debug {
+            minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             ext.enableCrashlytics = false
         }
@@ -85,6 +88,7 @@ dependencies {
     }
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v13:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:cardview-v7:24.0.0'

@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
@@ -88,7 +90,7 @@ import java.util.TimerTask;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends Application {
+public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static Blog currentBlog;
     public static WordPressDB wpDB;
@@ -109,8 +111,13 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
     /**
-     *  Updates Options for the current blog in background.
+     * Updates Options for the current blog in background.
      */
     public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
         protected boolean run() {
