@@ -67,6 +67,7 @@ public class Person {
             Person person = new Person(personID, blogId, localTableBlogId);
             person.setDisplayName(json.optString("label"));
             person.setAvatarUrl(json.optString("avatar"));
+            person.setFollower(!isEmailFollower);
             person.setEmailFollower(isEmailFollower);
 
             return person;
