@@ -767,8 +767,7 @@ public class WordPressDB {
         int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
         deleteQuickPressShortcutsForLocalTableBlogId(ctx, id);
         deleteAllPostsForLocalTableBlogId(id);
-        PeopleTable.deleteUsersForLocalBlogId(id);
-        PeopleTable.deleteFollowersForLocalBlogId(id);
+        PeopleTable.deletePeopleForLocalBlogId(id);
         return (rowsAffected > 0);
     }
 
@@ -778,8 +777,7 @@ public class WordPressDB {
             int localBlogId = MapUtils.getMapInt(blog, "id");
             deleteQuickPressShortcutsForLocalTableBlogId(ctx, localBlogId);
             deleteAllPostsForLocalTableBlogId(localBlogId);
-            PeopleTable.deleteUsersForLocalBlogId(localBlogId);
-            PeopleTable.deleteFollowersForLocalBlogId(localBlogId);
+            PeopleTable.deletePeopleForLocalBlogId(localBlogId);
         }
 
         // H4ck alert: We need to delete the Jetpack sites that were added in the initial

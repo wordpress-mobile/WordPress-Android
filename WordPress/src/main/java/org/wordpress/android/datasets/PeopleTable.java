@@ -107,6 +107,11 @@ public class PeopleTable {
         }
     }
 
+    public static void deletePeopleForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId)};
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+    }
+
     public static void deleteUsersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Boolean.toString(false)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
