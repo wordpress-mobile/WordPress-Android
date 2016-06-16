@@ -35,6 +35,17 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
                     String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtils.getString(jsonAttach, "URL")));
                     int width = jsonAttach.optInt("width");
                     int height = jsonAttach.optInt("height");
+
+                    // chech if data-orig-size is present and use it
+                    String originalSize = jsonAttach.optString("data-orig-size", null);
+                    if (originalSize != null) {
+                        String[] sizes = originalSize.split(",");
+                        if (sizes != null && sizes.length == 2) {
+                            width = Integer.parseInt(sizes[0]);
+                            height = Integer.parseInt(sizes[1]);
+                        }
+                    }
+
                     this.put(normUrl, new ImageSize(width, height));
                 }
             }

@@ -85,7 +85,17 @@
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="signin"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -490,7 +500,18 @@
                     android:scheme="wordpress" >
                 </data>
             </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".ui.HelpshiftDeepLinkReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="helpshift"
+                    android:scheme="wordpress" />
+            </intent-filter>
         </activity>
 
         <!-- Smart Lock for Passwords -->

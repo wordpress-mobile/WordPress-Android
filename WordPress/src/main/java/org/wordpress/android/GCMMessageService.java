@@ -69,8 +69,8 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
 
     // Add to the analytics properties map a subset of the push notification payload.
-    private static String[] propertiesToCopyIntoAnalytics = { PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
-            "comment_id" };
+    private static String[] propertiesToCopyIntoAnalytics = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
+            "comment_id"};
 
     private void synchronizedHandleDefaultPush(String from, @NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
@@ -295,9 +295,16 @@ public class GCMMessageService extends GcmListenerService {
         boolean shouldPlaySound = prefs.getBoolean("wp_pref_notification_sound", false);
         boolean shouldVibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
         boolean shouldBlinkLight = prefs.getBoolean("wp_pref_notification_light", false);
-        if (shouldPlaySound) {
-            builder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification));
+        String notificationSound = prefs.getString("wp_pref_custom_notification_sound", null); //"" if None is selected
+
+
+        // use default sound if the legacy sound preference was ON but the custom sound was not selected (null)
+        if (shouldPlaySound && notificationSound == null) {
+            builder.setSound(Uri.parse("content://settings/system/notification_sound"));
+        } else if (!TextUtils.isEmpty(notificationSound)) {
+            builder.setSound(Uri.parse(notificationSound));
         }
+
         if (shouldVibrate) {
             builder.setVibrate(new long[]{500, 500, 500});
         }
@@ -475,7 +482,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,
-                                                                    Map<String, Object> properties) {
+                                                       Map<String, Object> properties) {
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
             return;
@@ -486,9 +493,9 @@ public class GCMMessageService extends GcmListenerService {
 
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {
-            for (String currentPropertyToCopy: propertiesToCopyIntoAnalytics) {
+            for (String currentPropertyToCopy : propertiesToCopyIntoAnalytics) {
                 if (noteBundle.containsKey(currentPropertyToCopy)) {
-                    properties.put("push_notification_" + currentPropertyToCopy,  noteBundle.get(currentPropertyToCopy));
+                    properties.put("push_notification_" + currentPropertyToCopy, noteBundle.get(currentPropertyToCopy));
                 }
             }
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());

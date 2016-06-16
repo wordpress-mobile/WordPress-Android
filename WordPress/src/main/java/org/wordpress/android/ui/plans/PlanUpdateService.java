@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -95,7 +96,7 @@ public class PlanUpdateService extends Service {
      * download features for the global plans
      */
     private void downloadPlanFeatures() {
-        WordPress.getRestClientUtilsV1_2().get("plans/features/", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("plans/features/", RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {
@@ -122,7 +123,7 @@ public class PlanUpdateService extends Service {
      */
     private void downloadAvailablePlansForSite() {
         int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
-        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", WordPress.getRestLocaleParams(), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {
