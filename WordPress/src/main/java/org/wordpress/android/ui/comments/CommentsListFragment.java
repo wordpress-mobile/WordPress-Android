@@ -40,7 +40,82 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommentsListFragment extends Fragment {
+public class CommentsListFragment extends Fragment implements CommentAdapter.OnDataLoadedListener,
+        CommentAdapter.OnLoadMoreListener,  CommentAdapter.OnSelectedItemsChangeListener, CommentAdapter.OnCommentPressedListener {
+
+    // called after comments have been loaded
+    @Override
+    public void onDataLoaded(boolean isEmpty) {
+        if (!isAdded()) return;
+
+        if (!isEmpty) {
+            // After comments are loaded, we should check if some of them are selected and show CAB if necessary
+            if (shouldRestoreCab()) {
+                restoreCab();
+            }
+
+
+
+            // Hide the empty view if there are already some displayed comments
+            mFilteredCommentsView.hideEmptyView();
+        } else if (!mIsUpdatingComments) {
+            // Change LOADING to NO_CONTENT message
+            mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+    }
+
+    @Override
+    public void onLoadMore() {
+        if (mCanLoadMoreComments && !mIsUpdatingComments) {
+            updateComments(true);
+        }
+    }
+
+    // adapter calls this when selected comments have changed (CAB)
+    @Override
+    public void onSelectedItemsChanged() {
+        if (mActionMode != null) {
+            if (getSelectedCommentCount() == 0) {
+                mActionMode.finish();
+            } else {
+                updateActionModeTitle();
+                // must invalidate to ensure onPrepareActionMode is called
+                mActionMode.invalidate();
+            }
+        }
+    }
+
+    @Override
+    public void onCommentPressed(int position, View view) {
+        Comment comment = getAdapter().getItem(position);
+        if (comment == null) {
+            return;
+        }
+        if (mActionMode == null) {
+            if (!getAdapter().isModeratingCommentId(comment.commentID)) {
+                mFilteredCommentsView.invalidate();
+                if (getActivity() instanceof OnCommentSelectedListener) {
+                    ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
+                }
+            }
+        } else {
+            getAdapter().toggleItemSelected(position, view);
+        }
+    }
+
+    @Override
+    public void onCommentLongPressed(int position, View view) {
+        // enable CAB if it's not already enabled
+        if (mActionMode == null) {
+            if (getActivity() instanceof AppCompatActivity) {
+                ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                getAdapter().setEnableSelection(true);
+                getAdapter().setItemSelected(position, true, view);
+            }
+        } else {
+            getAdapter().toggleItemSelected(position, view);
+        }
+    }
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId);
@@ -55,7 +130,7 @@ public class CommentsListFragment extends Fragment {
 
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
     private FilteredRecyclerView mFilteredCommentsView;
-    private CommentAdapter mAdapter;
+    private CommentAdapter mCommentsAdapter;
     private ActionMode mActionMode;
     private CommentStatus mCommentStatusFilter;
 
@@ -63,95 +138,11 @@ public class CommentsListFragment extends Fragment {
 
     public static final int COMMENTS_PER_PAGE = 30;
 
-    private CommentAdapter getAdapter() {
-        if (mAdapter == null) {
-             // called after comments have been loaded
-            CommentAdapter.OnDataLoadedListener dataLoadedListener = new CommentAdapter.OnDataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (!isAdded()) return;
+    private CommentAdapterState mCommentAdapterState;
 
-                    if (!isEmpty) {
-                        // Hide the empty view if there are already some displayed comments
-                        mFilteredCommentsView.hideEmptyView();
-                    } else if (!mIsUpdatingComments) {
-                        // Change LOADING to NO_CONTENT message
-                        mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    }
-                }
-            };
-
-            // adapter calls this to request more comments from server when it reaches the end
-            CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
-                @Override
-                public void onLoadMore() {
-                    if (mCanLoadMoreComments && !mIsUpdatingComments) {
-                        updateComments(true);
-                    }
-                }
-            };
-
-            // adapter calls this when selected comments have changed (CAB)
-            CommentAdapter.OnSelectedItemsChangeListener changeListener = new CommentAdapter.OnSelectedItemsChangeListener() {
-                @Override
-                public void onSelectedItemsChanged() {
-                    if (mActionMode != null) {
-                        if (getSelectedCommentCount() == 0) {
-                            mActionMode.finish();
-                        } else {
-                            updateActionModeTitle();
-                            // must invalidate to ensure onPrepareActionMode is called
-                            mActionMode.invalidate();
-                        }
-                    }
-                }
-            };
-
-            CommentAdapter.OnCommentPressedListener pressedListener = new CommentAdapter.OnCommentPressedListener() {
-                @Override
-                public void onCommentPressed(int position, View view) {
-                    Comment comment = getAdapter().getItem(position);
-                    if (comment == null) {
-                        return;
-                    }
-                    if (mActionMode == null) {
-                        if (!getAdapter().isModeratingCommentId(comment.commentID)) {
-                            mFilteredCommentsView.invalidate();
-                            if (getActivity() instanceof OnCommentSelectedListener) {
-                                ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
-                            }
-                        }
-                    } else {
-                        getAdapter().toggleItemSelected(position, view);
-                    }
-                }
-                @Override
-                public void onCommentLongPressed(int position, View view) {
-                    // enable CAB if it's not already enabled
-                    if (mActionMode == null) {
-                        if (getActivity() instanceof AppCompatActivity) {
-                            ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
-                            getAdapter().setEnableSelection(true);
-                            getAdapter().setItemSelected(position, true, view);
-                        }
-                    } else {
-                        getAdapter().toggleItemSelected(position, view);
-                    }
-                }
-            };
-
-            mAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
-            mAdapter.setOnCommentPressedListener(pressedListener);
-            mAdapter.setOnDataLoadedListener(dataLoadedListener);
-            mAdapter.setOnLoadMoreListener(loadMoreListener);
-            mAdapter.setOnSelectedItemsChangeListener(changeListener);
-        }
-
-        return mAdapter;
-    }
 
     private boolean hasAdapter() {
-        return (mAdapter != null);
+        return (mCommentsAdapter != null);
     }
 
     private int getSelectedCommentCount() {
@@ -176,6 +167,10 @@ public class CommentsListFragment extends Fragment {
         } else {
             mHasAutoRefreshedComments = false;
             mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
+        }
+
+        if(savedInstanceState != null){
+            mCommentAdapterState = savedInstanceState.getParcelable(CommentAdapterState.TAG);
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -635,6 +630,11 @@ public class CommentsListFragment extends Fragment {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
+        if (hasAdapter()) {
+            outState.putParcelable(CommentAdapterState.TAG, getAdapter().saveAdapterState());
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -736,6 +736,30 @@ public class CommentsListFragment extends Fragment {
             getAdapter().setEnableSelection(false);
             mFilteredCommentsView.setSwipeToRefreshEnabled(true);
             mActionMode = null;
+        }
+    }
+
+    private CommentAdapter getAdapter() {
+        if (mCommentsAdapter == null) {
+            mCommentsAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
+            mCommentsAdapter.setInitialState(mCommentAdapterState);
+            mCommentsAdapter.setOnCommentPressedListener(this);
+            mCommentsAdapter.setOnDataLoadedListener(this);
+            mCommentsAdapter.setOnLoadMoreListener(this);
+            mCommentsAdapter.setOnSelectedItemsChangeListener(this);
+        }
+
+        return mCommentsAdapter;
+    }
+
+    private boolean shouldRestoreCab() {
+        return hasAdapter() && !getAdapter().getSelectedCommentsId().isEmpty() && mActionMode == null;
+    }
+
+    private void restoreCab() {
+        if (getActivity() instanceof AppCompatActivity) {
+            ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+            updateActionModeTitle();
         }
     }
 

@@ -25,11 +25,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
-class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     interface OnDataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
@@ -44,6 +42,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     interface OnCommentPressedListener {
         void onCommentPressed(int position, View view);
+
         void onCommentLongPressed(int position, View view);
     }
 
@@ -51,8 +50,9 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context mContext;
 
     private final CommentList mComments = new CommentList();
-    private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-    private final List<Long> mModeratingCommentsIds = new ArrayList<>();
+    private final HashSet<Long> mSelectedCommentsId = new HashSet<>();
+    private final HashSet<Long> mModeratingCommentsIds = new HashSet<>();
+    private final HashSet<Long> mTrashedCommentsId = new HashSet<>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
@@ -175,7 +175,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // status is only shown for comments that haven't been approved
         final boolean showStatus;
         switch (comment.getStatusEnum()) {
-            case SPAM :
+            case SPAM:
                 showStatus = true;
                 holder.txtStatus.setText(mStatusTextSpam);
                 holder.txtStatus.setTextColor(mStatusColorSpam);
@@ -185,7 +185,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder.txtStatus.setText(mStatusTextUnapproved);
                 holder.txtStatus.setTextColor(mStatusColorUnapproved);
                 break;
-            default :
+            default:
                 showStatus = false;
                 break;
         }
@@ -218,7 +218,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount()-1
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
                 && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
@@ -258,8 +258,8 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     void clearSelectedComments() {
-        if (mSelectedPositions.size() > 0) {
-            mSelectedPositions.clear();
+        if (mSelectedCommentsId.size() > 0) {
+            mSelectedCommentsId.clear();
             notifyDataSetChanged();
             if (mOnSelectedChangeListener != null) {
                 mOnSelectedChangeListener.onSelectedItemsChanged();
@@ -268,7 +268,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     int getSelectedCommentCount() {
-        return mSelectedPositions.size();
+        return mSelectedCommentsId.size();
     }
 
     CommentList getSelectedComments() {
@@ -277,26 +277,36 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return comments;
         }
 
-        for (Integer position: mSelectedPositions) {
-            if (isPositionValid(position))
-                comments.add(mComments.get(position));
+        for (Long commentId : mSelectedCommentsId) {
+            if (isCommentIdValid(commentId))
+                comments.add(mComments.get(indexOfCommentId(commentId)));
         }
 
         return comments;
     }
 
+
+    private boolean isCommentIdValid(long commentId) {
+        return indexOfCommentId(commentId) != -1;
+    }
+
     private boolean isItemSelected(int position) {
-        return mSelectedPositions.contains(position);
+        Comment comment = getItem(position);
+        return comment != null && mSelectedCommentsId.contains(comment.commentID);
     }
 
     void setItemSelected(int position, boolean isSelected, View view) {
         if (isItemSelected(position) == isSelected) return;
 
+        Comment comment = getItem(position);
+        if (comment == null) return;
+
         if (isSelected) {
-            mSelectedPositions.add(position);
+            mSelectedCommentsId.add(comment.commentID);
         } else {
-            mSelectedPositions.remove(position);
+            mSelectedCommentsId.remove(comment.commentID);
         }
+
 
         notifyItemChanged(position);
 
@@ -370,7 +380,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * clear all comments
      */
     void clearComments() {
-        if (mComments != null){
+        if (mComments != null) {
             mComments.clear();
             notifyDataSetChanged();
         }
@@ -391,11 +401,12 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * AsyncTask to load comments from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
         final CommentStatus mStatusFilter;
 
-        public LoadCommentsTask (CommentStatus statusFilter){
+        public LoadCommentsTask(CommentStatus statusFilter) {
             mStatusFilter = statusFilter;
         }
 
@@ -403,13 +414,15 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         protected void onPreExecute() {
             mIsLoadTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsLoadTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mStatusFilter == null){
+            if (mStatusFilter == null) {
                 tmpComments = CommentTable.getCommentsForBlogWithFilter(mLocalBlogId, CommentStatus.UNKNOWN);
             } else {
                 tmpComments = CommentTable.getCommentsForBlogWithFilter(mLocalBlogId, mStatusFilter);
@@ -420,7 +433,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
 
             // pre-calc transient values so they're cached prior to display
-            for (Comment comment: tmpComments) {
+            for (Comment comment : tmpComments) {
                 comment.getDatePublished();
                 comment.getUnescapedPostTitle();
                 comment.getAvatarForDisplay(mAvatarSz);
@@ -434,6 +447,7 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
@@ -450,4 +464,47 @@ class CommentAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    public HashSet<Long> getSelectedCommentsId() {
+        return mSelectedCommentsId;
+    }
+
+
+    public CommentAdapterState saveAdapterState() {
+        return new CommentAdapterState(
+                mTrashedCommentsId,
+                mSelectedCommentsId,
+                mModeratingCommentsIds);
+    }
+
+    private void removeTrashedComments() {
+        if (!mTrashedCommentsId.isEmpty()) {
+            for (Long trashedCommentId : mTrashedCommentsId) {
+                int index = mComments.indexOfCommentId(trashedCommentId);
+                if (isPositionValid(index)) {
+                    mComments.remove(index);
+                }
+            }
+        }
+    }
+
+
+    public void setInitialState(CommentAdapterState adapterState) {
+        if (adapterState == null) return;
+
+        if (adapterState.hasSelectedComments()) {
+            mSelectedCommentsId.addAll(adapterState.getSelectedComments());
+            setEnableSelection(true);
+        }
+
+        if (adapterState.hasModeratingComments()) {
+            mModeratingCommentsIds.addAll(adapterState.getModeratedCommentsId());
+        }
+
+        if (adapterState.hasTrashedComments()) {
+            mTrashedCommentsId.addAll(adapterState.getTrashedCommentId());
+            removeTrashedComments();
+        }
+
+
+    }
 }
