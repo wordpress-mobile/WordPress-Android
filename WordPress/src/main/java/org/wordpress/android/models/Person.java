@@ -66,6 +66,7 @@ public class Person {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, blogId, localTableBlogId);
             person.setDisplayName(json.optString("label"));
+            person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
             person.setFollower(!isEmailFollower);
             person.setEmailFollower(isEmailFollower);
