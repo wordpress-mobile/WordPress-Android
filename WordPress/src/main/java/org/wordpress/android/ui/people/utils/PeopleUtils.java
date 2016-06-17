@@ -71,9 +71,10 @@ public class PeopleUtils {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
                         List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, true, false);
+                        int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages;
-                        callback.onSuccess(people, isEndOfList);
+                        callback.onSuccess(people, pageFetched, isEndOfList);
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
@@ -197,7 +198,7 @@ public class PeopleUtils {
     }
 
     public interface FetchFollowersCallback extends Callback {
-        void onSuccess(List<Person> peopleList, boolean isEndOfList);
+        void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList);
     }
 
     public interface RemoveUserCallback extends Callback {

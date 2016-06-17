@@ -39,6 +39,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
     private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
+    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page-received";
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
@@ -48,6 +49,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean mFollowersEndOfListReached;
     private boolean mFollowersFetchRequestInProgress;
     private boolean mCanRefreshFollowers;
+    private int mFollowersLastFetchedPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             mFollowersEndOfListReached = false;
             mFollowersFetchRequestInProgress = false;
             mCanRefreshFollowers = true;
+            mFollowersLastFetchedPage = 0;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
@@ -103,6 +106,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             mFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED);
             mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
             mCanRefreshFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_FOLLOWERS);
+            mFollowersLastFetchedPage = savedInstanceState.getInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -131,6 +135,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         outState.putBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED, mFollowersEndOfListReached);
         outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
         outState.putBoolean(KEY_CAN_REFRESH_FOLLOWERS, mCanRefreshFollowers);
+        outState.putInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE, mFollowersLastFetchedPage);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -244,8 +249,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         PeopleUtils.fetchFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+            public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
+                mFollowersLastFetchedPage = pageFetched;
                 mFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
 
@@ -470,6 +476,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             Blog blog = WordPress.getCurrentBlog();
             int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
             fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+        } else if (filter == PeopleListFilter.FOLLOWERS && !mFollowersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int pageToFetch = mFollowersLastFetchedPage + 1;
+            fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
         }
     }
 
