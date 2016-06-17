@@ -91,6 +91,15 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         false)
         );
 
+        noteBlockHolder.commentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getOnNoteBlockTextClickListener() != null) {
+                    getOnNoteBlockTextClickListener().showDetailForNoteIds();
+                }
+            }
+        });
+
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
         // 2. Unapproved comments have different background and text color

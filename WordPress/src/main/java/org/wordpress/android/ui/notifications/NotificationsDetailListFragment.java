@@ -220,6 +220,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             } else if (mNote.isFollowType()) {
                 detailActivity.showBlogPreviewActivity(mNote.getSiteId());
+            } else if (mNote.isCommentType() && mNote.getCommentId() > 0) {
+                detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
             } else {
                 // otherwise, load the post in the Reader
                 detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
