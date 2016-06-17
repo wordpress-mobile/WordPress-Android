@@ -13,6 +13,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.event.MenuEvents;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory.ITEM_TYPE;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPButton;
 
@@ -124,12 +126,11 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mListener.onItemClick(menuItem);
                     }
                 });
-                //TODO: set the correct icon type depending on the menu item type, check with @tonyrh59
-                if (menuItem.type != null) {
-                    switch (menuItem.type) {
-                        case "post":
-                            holder.imgMenuItemType.setImageResource(R.drawable.my_site_icon_pages);
-                            break;
+                ITEM_TYPE itemType = ITEM_TYPE.typeForString(menuItem.type);
+                if (itemType != ITEM_TYPE.NULL) {
+                    int itemRes = MenuItemEditorFactory.getIconDrawableRes(itemType);
+                    if (itemRes != -1) {
+                        holder.imgMenuItemType.setImageResource(itemRes);
                     }
                 }
 
