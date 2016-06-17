@@ -34,7 +34,9 @@ public class PeopleTable {
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
                 + "role                    TEXT,"
-                + "PRIMARY KEY (person_id, local_blog_id)"
+                + "is_follower             BOOLEAN DEFAULT false,"
+                + "is_email_follower       BOOLEAN DEFAULT false,"
+                + "PRIMARY KEY (person_id, local_blog_id, is_follower)"
                 + ");");
     }
 
@@ -46,11 +48,6 @@ public class PeopleTable {
         AppLog.i(AppLog.T.PEOPLE, "resetting people table");
         dropTables(db);
         createTables(db);
-    }
-
-    public static void migrationAddFollowerFields(SQLiteDatabase db) {
-        db.execSQL("ALTER TABLE " + PEOPLE_TABLE + " ADD is_follower BOOLEAN DEFAULT false;");
-        db.execSQL("ALTER TABLE " + PEOPLE_TABLE + " ADD is_email_follower BOOLEAN DEFAULT false;");
     }
 
     public static void save(Person person) {

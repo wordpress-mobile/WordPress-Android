@@ -424,7 +424,7 @@ public class WordPressDB {
                 AppPrefs.setVisualEditorEnabled(true);
                 currentVersion++;
             case 47:
-                PeopleTable.migrationAddFollowerFields(db);
+                PeopleTable.reset(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
