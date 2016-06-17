@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.auth.api.credentials.Credential;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -242,5 +243,11 @@ public class MagicLinkSignInFragment extends SignInFragment {
         account.setUserName(mUsername);
         account.save();
         account.fetchAccountDetails();
+    }
+
+    @Override
+    public void onCredentialRetrieved(Credential credential) {
+        super.onCredentialRetrieved(credential);
+        showPasswordField();
     }
 }
