@@ -58,7 +58,7 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     }
 
     @Override
-    public void onFeaturedImageChanged(int mediaId) {
+    public void onFeaturedImageChanged(long mediaId) {
 
     }
 

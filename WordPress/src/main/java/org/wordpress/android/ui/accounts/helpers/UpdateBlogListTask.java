@@ -36,7 +36,7 @@ public class UpdateBlogListTask extends AsyncTask<Void, Void, List<Map<String, O
     protected List<Map<String, Object>> doInBackground(Void... args) {
         final String username = AccountHelper.getDefaultAccount().getUserName();
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        FetchBlogListWPCom fetchBlogList = new FetchBlogListWPCom();
+        FetchBlogListWPCom fetchBlogList = new FetchBlogListWPCom(mContext);
         fetchBlogList.execute(new Callback() {
             @Override
             public void onSuccess(List<Map<String, Object>> userBlogList) {
