@@ -15,5 +15,10 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
 
     public BaseMenuItemEditor(Context context) {
         super(context);
+        init();
+    }
+
+    protected void init() {
+        inflate(getContext(), getLayoutRes(), this);
     }
 }

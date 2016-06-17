@@ -67,37 +67,6 @@
 
     <View style="@style/MenusDividerView" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <org.wordpress.android.widgets.WPButton
-            android:id="@+id/add_item_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
-
-        <org.wordpress.android.widgets.WPButton
-            android:id="@+id/remove_item_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remove" />
-
-    </LinearLayout>
-
-    <org.wordpress.android.ui.menus.views.MenuItemEditView
-        android:id="@+id/menu_item_edit_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <org.wordpress.android.widgets.RadioButtonListView
-        android:id="@+id/menu_item_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <View style="@style/MenusDividerView" />
-
     <org.wordpress.android.ui.menus.views.MenuItemsView
         android:id="@+id/menu_items_recyclerview"
         android:layout_width="match_parent"

@@ -2,6 +2,7 @@
 
 <org.wordpress.android.widgets.CheckableLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/checkable_layout"
     android:layout_width="match_parent"
@@ -20,6 +21,9 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey_dark"
+        app:wpFontFamily="defaultLight"
         tools:text="Radio Button List Item Title" />
 
 </org.wordpress.android.widgets.CheckableLinearLayout>

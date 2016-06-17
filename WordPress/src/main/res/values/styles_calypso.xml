@@ -121,4 +121,10 @@
         <item name="android:background">@color/blue_wordpress</item>
     </style>
 
+    <style name="Calypso.MenuItemEditor" parent="Calypso.AlertDialog">
+        <item name="android:padding">@dimen/margin_extra_large</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>

@@ -3,46 +3,32 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View style="@style/MenusDividerView" />
-
-    <Spinner
-        android:id="@+id/menu_item_type_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/menu_item_type_spinner_entries" />
-
-    <View style="@style/MenusDividerView" />
-
-    <ViewFlipper
-        android:id="@+id/menu_item_editor_flipper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <View style="@style/MenusDividerView" />
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
 
     <LinearLayout
-        android:id="@+id/menu_item_edit_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/Calypso.MenuItemEditor">
 
-        <Button
-            android:id="@+id/menu_item_edit_cancel"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/menu_item_type_spinner"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel" />
+            android:entries="@array/menu_item_type_spinner_entries" />
 
-        <Button
-            android:id="@+id/menu_item_edit_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
+        <View style="@style/MenusDividerView" />
+
+        <ViewFlipper
+            android:id="@+id/menu_item_editor_flipper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
-
-    <View style="@style/MenusDividerView" />
 
 </LinearLayout>

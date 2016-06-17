@@ -33,12 +33,8 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     public void onViewAdded(View child) {
         super.onViewAdded(child);
 
-        if (child.getId() == R.id.page_editor_search_view && child instanceof SearchView) {
-            ((SearchView) child).setOnQueryTextListener(this);
-        } else if (child.getId() == R.id.page_editor_page_list) {
-            mPageListView = (RadioButtonListView) child;
-            refreshAdapter();
-        }
+        ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
+        mPageListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
     }
 
     @Override
@@ -81,7 +77,9 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         PostsListPostList posts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), true);
         for (PostsListPost post : posts) {
             mAllPages.add(post.getTitle());
+            mFilteredPages.add(post.getTitle());
         }
+        refreshAdapter();
     }
 
     private void filterAdapter(String filter) {

@@ -22,7 +22,12 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public interface MenuItemInteractions {
+        void onItemClick(MenuItemModel item);
+        void onCancelClick();
+        void onAddClick();
+    }
 
     private final LayoutInflater mInflater;
     private final Context mContext;
@@ -38,47 +43,10 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<MenuItemModel> mFlattenedMenuItems = new ArrayList<>();
 
-    class MenuItemHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTitle;
-        private final ImageView imgMenuItemType;
-        private final ImageView imgEditIcon;
-        private final ImageView imgAddIcon;
-        private final ImageView imgArrowLeft;
-        private final ImageView imgArrowRight;
-        private final WPButton  btnCancelAdd;
-        private final ViewGroup containerCancel;
-        private final ViewGroup containerButtons;
-        private final ViewGroup containerView;
+    private MenuItemInteractions mListener;
 
-        public MenuItemHolder(View view) {
-            super(view);
-            txtTitle = (TextView) view.findViewById(R.id.title);
-            imgMenuItemType = (ImageView) view.findViewById(R.id.image_menu_item_type);
-            containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
-            imgEditIcon = (ImageView) view.findViewById(R.id.icon_edit);
-            imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
-            imgArrowLeft = (ImageView) view.findViewById(R.id.arrow_left);
-            imgArrowRight = (ImageView) view.findViewById(R.id.arrow_right);
-            btnCancelAdd = (WPButton) view.findViewById(R.id.cancel_button);
-            containerCancel = (ViewGroup) view.findViewById(R.id.layout_cancel_button);
-            containerButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
-        }
-    }
-
-    class AddItemHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTitle;
-        private final ImageView imgAddIcon;
-        private final ViewGroup containerView;
-
-        public AddItemHolder(View view) {
-            super(view);
-            txtTitle = (TextView) view.findViewById(R.id.title);
-            containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
-            imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
-        }
-    }
-
-    MenuItemAdapter(Context context) {
+    MenuItemAdapter(Context context, MenuItemInteractions listener) {
+        mListener = listener;
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mPadding = mContext.getResources().getDimensionPixelOffset(R.dimen.margin_medium);
@@ -119,7 +87,6 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-
         switch (getItemViewType(position)) {
             case VIEW_TYPE_ADDER: {
                 final AddItem menuItem = (AddItem) mFlattenedMenuItems.get(position);
@@ -151,6 +118,12 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.containerView.getLayoutParams();
                 p.setMargins(menuItem.flattenedLevel * mPadding,0,0,0);
                 holder.containerView.requestLayout();
+                holder.containerView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemClick(menuItem);
+                    }
+                });
                 //TODO: set the correct icon type depending on the menu item type, check with @tonyrh59
                 if (menuItem.type != null) {
                     switch (menuItem.type) {
@@ -491,4 +464,43 @@ class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    public static class MenuItemHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final ImageView imgMenuItemType;
+        private final ImageView imgEditIcon;
+        private final ImageView imgAddIcon;
+        private final ImageView imgArrowLeft;
+        private final ImageView imgArrowRight;
+        private final WPButton  btnCancelAdd;
+        private final ViewGroup containerCancel;
+        private final ViewGroup containerButtons;
+        private final ViewGroup containerView;
+
+        public MenuItemHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.title);
+            imgMenuItemType = (ImageView) view.findViewById(R.id.image_menu_item_type);
+            containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
+            imgEditIcon = (ImageView) view.findViewById(R.id.icon_edit);
+            imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
+            imgArrowLeft = (ImageView) view.findViewById(R.id.arrow_left);
+            imgArrowRight = (ImageView) view.findViewById(R.id.arrow_right);
+            btnCancelAdd = (WPButton) view.findViewById(R.id.cancel_button);
+            containerCancel = (ViewGroup) view.findViewById(R.id.layout_cancel_button);
+            containerButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+        }
+    }
+
+    public static class AddItemHolder extends RecyclerView.ViewHolder {
+        private final TextView txtTitle;
+        private final ImageView imgAddIcon;
+        private final ViewGroup containerView;
+
+        public AddItemHolder(View view) {
+            super(view);
+            txtTitle = (TextView) view.findViewById(R.id.title);
+            containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
+            imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
+        }
+    }
 }

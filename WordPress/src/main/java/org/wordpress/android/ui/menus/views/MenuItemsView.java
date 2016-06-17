@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.menus.views;
 
 import android.content.Context;
-import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -25,7 +23,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-
 public class MenuItemsView extends RelativeLayout {
 
     private RecyclerView mRecyclerView;
@@ -34,6 +31,7 @@ public class MenuItemsView extends RelativeLayout {
     private List<MenuItemModel> mFlattenedList;
 
     private MenuItemAdapter mItemAdapter;
+    private MenuItemAdapter.MenuItemInteractions mListener;
     private AppLog.T mTAG;
 
     public MenuItemsView(Context context) {
@@ -56,9 +54,13 @@ public class MenuItemsView extends RelativeLayout {
         mRecyclerView.setAdapter(adapter);
     }
 
+    public void setListener(MenuItemAdapter.MenuItemInteractions listener) {
+        mListener = listener;
+    }
+
     public MenuItemAdapter getAdapter(){
         if (mItemAdapter == null) {
-            mItemAdapter = new MenuItemAdapter(getContext());
+            mItemAdapter = new MenuItemAdapter(getContext(), mListener);
             mRecyclerView.setAdapter(mItemAdapter);
         }
         return mItemAdapter;
@@ -131,7 +133,6 @@ public class MenuItemsView extends RelativeLayout {
 
         });
         touchHelper.attachToRecyclerView(mRecyclerView);
-
     }
 
     public void setMenu(MenuModel menu){

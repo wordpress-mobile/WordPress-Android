@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
  * or Tag and can have any number of children (also Menu Items).
  */
 
-public class MenuItemModel {
+public class MenuItemModel implements Serializable {
     //
     // Primary key attributes (cannot be null)
     //
@@ -38,6 +40,31 @@ public class MenuItemModel {
     public List<MenuItemModel> children;
     public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
     public boolean editingMode;// used for visual representation
+
+    public MenuItemModel() {
+    }
+
+    public MenuItemModel(MenuItemModel other) {
+        if (other == null) return;
+        menuId = other.menuId;
+        parentId = other.parentId;
+        contentId = other.contentId;
+        url = other.url;
+        name = other.name;
+        details = other.details;
+        linkTarget = other.linkTarget;
+        type = other.type;
+        typeFamily = other.typeFamily;
+        typeLabel = other.typeLabel;
+        if (other.data != null) {
+            data = new HashMap<>(other.data);
+        }
+        if (other.children != null) {
+            children = new ArrayList<>(other.children);
+        }
+        flattenedLevel = other.flattenedLevel;
+        editingMode = other.editingMode;
+    }
 
     @Override
     public boolean equals(Object other) {

@@ -16,16 +16,16 @@ import java.util.List;
 
 /**
  */
-public class PostItemEditor extends BaseMenuItemEditor
-        implements SearchView.OnQueryTextListener {
-    private final List<String> mPosts;
+public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
+    private final List<String> mAllPosts;
+    private final List<String> mFilteredPosts;
 
-    private SearchView mSearchView;
-    private RadioButtonListView mPageListView;
+    private RadioButtonListView mPostListView;
 
     public PostItemEditor(Context context) {
         super(context);
-        mPosts = new ArrayList<>();
+        mAllPosts = new ArrayList<>();
+        mFilteredPosts = new ArrayList<>();
         loadPostList();
     }
 
@@ -33,28 +33,13 @@ public class PostItemEditor extends BaseMenuItemEditor
     public void onViewAdded(View child) {
         super.onViewAdded(child);
 
-        if (child.getId() == R.id.page_editor_search_view) {
-            mSearchView = (SearchView) child;
-            mSearchView.setOnQueryTextListener(this);
-        } else if (child.getId() == R.id.page_editor_page_list) {
-            mPageListView = (RadioButtonListView) child;
-            refreshAdapter();
-        }
+        ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
+        mPostListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
     }
 
     @Override
     public int getLayoutRes() {
         return R.layout.post_menu_item_edit_view;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 
     @Override
@@ -65,22 +50,57 @@ public class PostItemEditor extends BaseMenuItemEditor
 
     @Override
     public void onSave() {
+        // TODO: save to DB
     }
 
     @Override
     public void onDelete() {
+        // TODO: remove from DB
+    }
+
+    //
+    // SearchView query callbacks
+    //
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filterAdapter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filterAdapter(newText);
+        return true;
+    }
+
+    private void filterAdapter(String filter) {
+        if (mPostListView == null) return;
+        refreshFilteredPosts(filter);
+        refreshAdapter();
+    }
+
+    private void refreshFilteredPosts(String filter) {
+        mFilteredPosts.clear();
+        String upperFiler = filter.toUpperCase();
+        for (String s : mAllPosts) {
+            if (s.toUpperCase().contains(upperFiler)) {
+                mFilteredPosts.add(s);
+            }
+        }
+    }
+
+    private void refreshAdapter() {
+        if (mPostListView != null) {
+            mPostListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPostListView.getContext(), mFilteredPosts));
+        }
     }
 
     private void loadPostList() {
         PostsListPostList posts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), false);
         for (PostsListPost post : posts) {
-            mPosts.add(post.getTitle());
+            mAllPosts.add(post.getTitle());
+            mFilteredPosts.add(post.getTitle());
         }
-    }
-
-    private void refreshAdapter() {
-        if (mPageListView != null) {
-            mPageListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(mPageListView.getContext(), mPosts));
-        }
+        refreshAdapter();
     }
 }

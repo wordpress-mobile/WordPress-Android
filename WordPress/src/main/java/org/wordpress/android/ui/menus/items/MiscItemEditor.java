@@ -7,8 +7,8 @@ import org.wordpress.android.models.MenuItemModel;
 
 /**
  */
-public class TestimonialItemEditor extends BaseMenuItemEditor {
-    public TestimonialItemEditor(Context context) {
+public class MiscItemEditor extends BaseMenuItemEditor {
+    public MiscItemEditor(Context context) {
         super(context);
     }
 
@@ -19,8 +19,7 @@ public class TestimonialItemEditor extends BaseMenuItemEditor {
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
-        return menuItem;
+        return null;
     }
 
     @Override

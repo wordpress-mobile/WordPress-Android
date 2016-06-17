@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,14 +14,9 @@ import org.wordpress.android.R;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.helpshift.support.util.ListUtils;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuLocationTable;
@@ -32,26 +28,23 @@ import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
-import org.wordpress.android.ui.menus.views.MenuItemEditView;
-import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
+import org.wordpress.android.ui.menus.views.MenuItemAdapter;
 import org.wordpress.android.ui.menus.views.MenuItemsView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.RadioButtonListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenusFragment extends Fragment implements MenuItemEditView.MenuItemEditorListener {
+public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions {
 
     private static final int BASE_DISPLAY_COUNT_MENUS = -2;
 
     private boolean mUndoPressed = false;
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
-    private MenuItemEditView mItemEditView;
     private int mCurrentLoadRequestId;
     private int mCurrentCreateRequestId;
     private int mCurrentUpdateRequestId;
@@ -253,9 +246,6 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
 
     }
 
-    private Button mAddItem, mRemoveItem;
-    private ListView mItemList;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -419,7 +409,6 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
                         mMenusSpinner.setSelection(0);
                         mCurrentMenuForLocation = (MenuModel) mMenusSpinner.getItems().get(0);
                     }
-                    mItemList.setAdapter(getItemAdapter());
                 }
             }
 
@@ -428,34 +417,27 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
             }
         });
 
-        mAddItem = (Button) view.findViewById(R.id.add_item_button);
-        mRemoveItem = (Button) view.findViewById(R.id.remove_item_button);
-
-        mItemEditView = (MenuItemEditView) view.findViewById(R.id.menu_item_edit_view);
-        mItemList = (ListView) view.findViewById(R.id.menu_item_list);
-        mItemList.setAdapter(getItemAdapter());
-
-        mAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mItemEditView.setType(MenuItemEditorFactory.ITEM_TYPE.PAGE);
-            }
-        });
-
         mItemsView = (MenuItemsView) view.findViewById(R.id.menu_items_recyclerview);
+        mItemsView.setListener(this);
 
         return view;
     }
 
-    private ArrayAdapter getItemAdapter() {
-        if (mCurrentMenuForLocation == null || ListUtils.isEmpty(mCurrentMenuForLocation.menuItems)) return null;
-        List<MenuItemModel> items = mCurrentMenuForLocation.menuItems;
-        String[] values = new String[items.size()];
-        for (int i = 0; i < items.size(); ++i) {
-            values[i] = items.get(i).typeLabel + " item - " + items.get(i).name;
+    @Override
+    public void onItemClick(MenuItemModel item) {
+        if (item != null) {
+            FragmentManager fm = getFragmentManager();
+            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
+            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
         }
+    }
 
-        return new RadioButtonListView.RadioButtonListAdapter(getActivity(), values);
+    @Override
+    public void onCancelClick() {
+    }
+
+    @Override
+    public void onAddClick() {
     }
 
     @Override
@@ -565,18 +547,6 @@ public class MenusFragment extends Fragment implements MenuItemEditView.MenuItem
      * AsyncTask to load menus from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
-
-    @Override
-    public void onEditorShown() { }
-
-    @Override
-    public void onEditorHidden() { }
-
-    @Override
-    public void onMenuItemAdded(MenuItemModel menuItem) { }
-
-    @Override
-    public void onMenuItemChanged(MenuItemModel menuItem) { }
 
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
