@@ -173,8 +173,10 @@ public class PeopleListFragment extends Fragment {
 
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
-                mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
-                mFilteredRecyclerView.showLoadingProgress();
+                boolean isFetching = mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+                if (isFetching) {
+                    mFilteredRecyclerView.showLoadingProgress();
+                }
             } else {
                 boolean isRefreshing = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
                 if (isRefreshing) {
@@ -235,7 +237,7 @@ public class PeopleListFragment extends Fragment {
 
     public interface OnFetchPeopleListener {
         boolean onFetchFirstPage(PeopleListFilter filter);
-        void onFetchMorePeople(PeopleListFilter filter);
+        boolean onFetchMorePeople(PeopleListFilter filter);
     }
 
     public class PeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -471,16 +471,17 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFetchMorePeople(PeopleListFilter filter) {
+    public boolean onFetchMorePeople(PeopleListFilter filter) {
         if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
             Blog blog = WordPress.getCurrentBlog();
             int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
-            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
         } else if (filter == PeopleListFilter.FOLLOWERS && !mFollowersEndOfListReached) {
             Blog blog = WordPress.getCurrentBlog();
             int pageToFetch = mFollowersLastFetchedPage + 1;
-            fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
         }
+        return false;
     }
 
     private PeopleListFragment getListFragment() {
