@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -29,12 +30,25 @@ public class SignInActivity extends AppCompatActivity {
     public static final String EXTRA_JETPACK_SITE_AUTH = "EXTRA_JETPACK_SITE_AUTH";
     public static final String EXTRA_JETPACK_MESSAGE_AUTH = "EXTRA_JETPACK_MESSAGE_AUTH";
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
+    public static final String EXTRA_PREFILL_URL = "EXTRA_PREFILL_URL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
+
+        String action = getIntent().getAction();
+        Uri data = getIntent().getData();
+
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            if (data.getBooleanQueryParameter("selfhosted", false)) {
+                getIntent().putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+                if (data.getQueryParameter("url") != null) {
+                    getIntent().putExtra(EXTRA_PREFILL_URL, data.getQueryParameter("url"));
+                }
+            }
+        }
 
         if (savedInstanceState == null) {
             addSignInFragment();
@@ -58,6 +72,7 @@ public class SignInActivity extends AppCompatActivity {
 
     protected void actionMode(Bundle extras) {
         int actionMode = SIGN_IN_REQUEST;
+        String prefillUrl = "";
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
             if (extras.containsKey(EXTRA_JETPACK_SITE_AUTH)) {
@@ -69,10 +84,11 @@ public class SignInActivity extends AppCompatActivity {
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
                 getSignInFragment().showAuthErrorMessage();
             }
+            prefillUrl = extras.getString(EXTRA_PREFILL_URL, "");
         }
         switch (actionMode) {
             case ADD_SELF_HOSTED_BLOG:
-                getSignInFragment().forceSelfHostedMode();
+                getSignInFragment().forceSelfHostedMode(prefillUrl);
                 break;
             default:
                 break;

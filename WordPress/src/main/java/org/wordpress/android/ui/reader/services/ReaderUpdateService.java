@@ -261,6 +261,7 @@ public class ReaderUpdateService extends Service {
         // request using ?meta=site,feed to get extra info
         WordPress.getRestClientUtilsV1_1().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
+
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override
@@ -268,9 +269,16 @@ public class ReaderUpdateService extends Service {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
-                if (!localBlogs.isSameList(serverBlogs)) {
+                boolean followedBlogsChanged = !localBlogs.isSameList(serverBlogs);
+
+                if (followedBlogsChanged) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
+                }
+
+                int numberOfDeletedPosts = ReaderPostTable.deletePostsFromUnfollowedBlogs();
+
+                if (followedBlogsChanged || numberOfDeletedPosts > 0) {
                     EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                 }
 

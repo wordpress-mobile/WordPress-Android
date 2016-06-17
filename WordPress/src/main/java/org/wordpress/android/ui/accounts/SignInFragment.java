@@ -260,10 +260,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    public void forceSelfHostedMode() {
+    public void forceSelfHostedMode(String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
+        mUrlEditText.setText(prefillUrl);
         mSelfHosted = true;
     }
 
@@ -793,7 +794,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             return;
         }
 
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
         fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 
