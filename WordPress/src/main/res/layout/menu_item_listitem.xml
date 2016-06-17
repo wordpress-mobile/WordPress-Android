@@ -99,16 +99,6 @@
                     />
 
                 <ImageView
-                    android:id="@+id/icon_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_menus_edit"
-                    android:tint="@color/blue_wordpress"
-                    android:layout_marginRight="@dimen/content_margin"
-                    />
-
-                <ImageView
                     android:id="@+id/icon_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

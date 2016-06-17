@@ -58,7 +58,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_ADDER: {
-                View view = mInflater.inflate(R.layout.menu_item_adderitem, null);
+                View view = mInflater.inflate(R.layout.menu_item_adderitem, parent, false);
                 AddItemHolder holder = new AddItemHolder(view);
                 view.setTag(holder);
                 return holder;
@@ -66,7 +66,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case VIEW_TYPE_NORMAL:
             default:
             {
-                View view = mInflater.inflate(R.layout.menu_item_listitem, null);
+                View view = mInflater.inflate(R.layout.menu_item_listitem, parent, false);
                 MenuItemHolder holder = new MenuItemHolder(view);
                 view.setTag(holder);
                 return holder;
@@ -88,7 +88,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
         switch (getItemViewType(position)) {
             case VIEW_TYPE_ADDER: {
                 final AddItem menuItem = (AddItem) mFlattenedMenuItems.get(position);
@@ -108,7 +108,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 break;
             }
-
             case VIEW_TYPE_NORMAL:
             default:
             {
@@ -147,15 +146,16 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.btnCancelAdd.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            int pos = viewHolder.getAdapterPosition();
                             mInAddingMode = false;
                             menuItem.editingMode = false;
                             //eliminate now items above and below
-                            mFlattenedMenuItems.remove(position + 1);
-                            notifyItemRemoved(position + 1);
-                            mFlattenedMenuItems.remove(position + 1);
-                            notifyItemRemoved(position + 1);
-                            mFlattenedMenuItems.remove(position - 1);
-                            notifyItemRemoved(position - 1);
+                            mFlattenedMenuItems.remove(pos + 1);
+                            notifyItemRemoved(pos + 1);
+                            mFlattenedMenuItems.remove(pos + 1);
+                            notifyItemRemoved(pos + 1);
+                            mFlattenedMenuItems.remove(pos - 1);
+                            notifyItemRemoved(pos - 1);
 
                             Handler hdlr = new Handler();
                             hdlr.postDelayed(new Runnable() {
@@ -164,58 +164,49 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     notifyDataSetChanged();
                                 }
                             }, 350);
-
                         }
                     });
-
                 } else {
 
                     holder.containerButtons.setVisibility(View.VISIBLE);
                     holder.containerCancel.setVisibility(View.GONE);
 
-                    holder.imgEditIcon.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO implement edit
-                            ToastUtils.showToast(mContext, "not implemented yet", ToastUtils.Duration.SHORT);
-                        }
-                    });
-
                     holder.imgAddIcon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            int pos = viewHolder.getAdapterPosition();
 
                             //insert items above and below
                             menuItem.editingMode = true;
 
                             AddItemAbove above = new AddItemAbove(mContext);
                             above.flattenedLevel = menuItem.flattenedLevel;
-                            mFlattenedMenuItems.add(position, above);
-                            notifyItemInserted(position);
+                            mFlattenedMenuItems.add(pos, above);
+                            notifyItemInserted(pos);
 
                             AddItemBelow below = new AddItemBelow(mContext);
                             below.flattenedLevel = menuItem.flattenedLevel;
-                            if (position == mFlattenedMenuItems.size()-1) {
+                            if (pos == mFlattenedMenuItems.size() - 1) {
                                 mFlattenedMenuItems.add(below);
-                                notifyItemInserted(mFlattenedMenuItems.size()-1);
+                                notifyItemInserted(mFlattenedMenuItems.size() - 1);
                             } else {
-                                mFlattenedMenuItems.add(position + 2, below);
-                                notifyItemInserted(position + 2);
+                                mFlattenedMenuItems.add(pos + 2, below);
+                                notifyItemInserted(pos + 2);
                             }
 
                             AddItemToChildren toChildren = new AddItemToChildren(mContext);
                             toChildren.flattenedLevel = menuItem.flattenedLevel + 1;
-                            if (position == mFlattenedMenuItems.size()-1) {
+                            if (pos == mFlattenedMenuItems.size() - 1) {
                                 mFlattenedMenuItems.add(toChildren);
                                 notifyItemInserted(mFlattenedMenuItems.size() - 1);
                             } else {
-                                mFlattenedMenuItems.add(position + 3, toChildren);
-                                notifyItemInserted(position + 3);
+                                mFlattenedMenuItems.add(pos + 3, toChildren);
+                                notifyItemInserted(pos + 3);
                             }
 
                             mInAddingMode = true;
 
-                            EventBus.getDefault().post(new MenuEvents.AddMenuClicked(position));
+                            EventBus.getDefault().post(new MenuEvents.AddMenuClicked(pos));
 
                             Handler hdlr = new Handler();
                             hdlr.postDelayed(new Runnable() {
@@ -329,7 +320,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         }
-
     }
 
     public MenuItemModel getItem(int position) {
@@ -468,7 +458,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static class MenuItemHolder extends RecyclerView.ViewHolder {
         private final TextView txtTitle;
         private final ImageView imgMenuItemType;
-        private final ImageView imgEditIcon;
         private final ImageView imgAddIcon;
         private final ImageView imgArrowLeft;
         private final ImageView imgArrowRight;
@@ -482,7 +471,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             txtTitle = (TextView) view.findViewById(R.id.title);
             imgMenuItemType = (ImageView) view.findViewById(R.id.image_menu_item_type);
             containerView = (ViewGroup) view.findViewById(R.id.layout_container_outter);
-            imgEditIcon = (ImageView) view.findViewById(R.id.icon_edit);
             imgAddIcon = (ImageView) view.findViewById(R.id.icon_add);
             imgArrowLeft = (ImageView) view.findViewById(R.id.arrow_left);
             imgArrowRight = (ImageView) view.findViewById(R.id.arrow_right);

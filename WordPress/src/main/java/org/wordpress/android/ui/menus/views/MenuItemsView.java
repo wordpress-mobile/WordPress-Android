@@ -106,7 +106,7 @@ public class MenuItemsView extends RelativeLayout {
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 int fromPosition = viewHolder.getAdapterPosition();
                 int toPosition = target.getAdapterPosition();
-                if(dragFrom == -1) {
+                if (dragFrom == -1) {
                     dragFrom =  fromPosition;
                 }
                 dragTo = toPosition;
