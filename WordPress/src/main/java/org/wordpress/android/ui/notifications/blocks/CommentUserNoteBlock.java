@@ -91,16 +91,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         false)
         );
 
-        // show all comments on this post when user clicks the comment text
-        noteBlockHolder.commentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getOnNoteBlockTextClickListener() != null) {
-                    getOnNoteBlockTextClickListener().showReaderPostComments();
-                }
-            }
-        });
-
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
         // 2. Unapproved comments have different background and text color
@@ -195,6 +185,16 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 public void onClick(View v) {
                     if (getOnNoteBlockTextClickListener() != null) {
                         getOnNoteBlockTextClickListener().showSitePreview(getMetaSiteId(), getMetaSiteUrl());
+                    }
+                }
+            });
+
+            // show all comments on this post when user clicks the comment text
+            commentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getOnNoteBlockTextClickListener() != null) {
+                        getOnNoteBlockTextClickListener().showReaderPostComments();
                     }
                 }
             });
