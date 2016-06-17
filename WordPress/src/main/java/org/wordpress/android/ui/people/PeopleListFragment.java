@@ -174,6 +174,7 @@ public class PeopleListFragment extends Fragment {
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
                 mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+                mFilteredRecyclerView.showLoadingProgress();
             } else {
                 boolean isRefreshing = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
                 if (isRefreshing) {
