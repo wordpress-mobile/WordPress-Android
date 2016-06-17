@@ -149,7 +149,7 @@ public class PeopleTable {
 
     private static int getPeopleCountForLocalBlogId(int localTableBlogId, boolean isFollower) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(isFollower ? 1 : 0)};
-        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?&is_follower=?";
+        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=? AND is_follower=?";
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
