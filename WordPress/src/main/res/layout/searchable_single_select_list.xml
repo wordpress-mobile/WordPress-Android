@@ -9,7 +9,9 @@
     <SearchView
         android:id="@+id/single_select_search_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:iconifiedByDefault="false" />
 
     <org.wordpress.android.widgets.RadioButtonListView
         android:id="@+id/single_select_list_view"
