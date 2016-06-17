@@ -82,7 +82,6 @@ public class MenuItemsView extends RelativeLayout {
         mEmptyView = (TextView) findViewById(R.id.empty_view);
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-
             int dragFrom = -1;
             int dragTo = -1;
 

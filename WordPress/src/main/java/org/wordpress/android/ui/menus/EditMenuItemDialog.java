@@ -79,7 +79,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         setupToolbar();
         setupTypePicker();
-        fillViewFlipper(inflater);
+        fillViewFlipper();
         setType(isCreating() ? DEFAULT_ITEM_TYPE : mOriginalItem.type);
 
         return dialogView;
@@ -111,14 +111,15 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     public void setType(String type) {
         if (type.equalsIgnoreCase(mWorkingItem.type)) return;
         mWorkingItem.type = type;
-        mToolbar.setTitle(type);
+        mToolbar.setTitle(mWorkingItem.name);
         mTypePicker.setSelection(mItemPositions.get(type));
         mEditorFlipper.setDisplayedChild(mItemPositions.get(type));
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
     }
 
-    private void fillViewFlipper(LayoutInflater inflater) {
+    private void fillViewFlipper() {
         if (mEditorFlipper == null || !isAdded()) return;
+
         // add editor views
         for (int i = 0; i < mTypePicker.getCount(); ++i) {
             String type = mTypePicker.getItemAtPosition(i).toString();
@@ -132,19 +133,24 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     }
 
     private void setupToolbar() {
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        if (mToolbar == null || !isAdded()) return;
+
+        // add back arrow that dismisses dialog without saving
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                dismiss();
-            }
+            @Override public void onClick(View v) { dismiss(); }
         });
-        mToolbar.setTitle(mWorkingItem.type);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+
+        mToolbar.setTitle(mWorkingItem.name);
+
+        // add options menu
         mToolbar.inflateMenu(R.menu.menu_item_editor);
         mToolbar.setOnMenuItemClickListener(this);
     }
 
     private void setupTypePicker() {
         if (mTypePicker == null || !isAdded()) return;
+
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

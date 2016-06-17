@@ -8,7 +8,7 @@
         android:id="@+id/save_item"
         android:icon="@drawable/ic_save_white_24dp"
         android:title="@string/save"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/delete_item"

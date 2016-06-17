@@ -65,8 +65,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <View style="@style/MenusDividerView" />
-
     <org.wordpress.android.ui.menus.views.MenuItemsView
         android:id="@+id/menu_items_recyclerview"
         android:layout_width="match_parent"
