@@ -194,6 +194,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
             if (!mSelfHosted) {
                 mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             }
+            mSignInButton.setText(R.string.sign_in);
         }
     }
 
