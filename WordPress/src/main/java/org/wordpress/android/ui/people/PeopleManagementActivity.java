@@ -194,9 +194,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+    private boolean fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
         if (mUsersEndOfListReached || mUsersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
-            return;
+            return false;
         }
 
         mUsersFetchRequestInProgress = true;
@@ -231,11 +231,13 @@ public class PeopleManagementActivity extends AppCompatActivity
                         ToastUtils.Duration.LONG);
             }
         });
+
+        return true;
     }
 
-    private void fetchFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+    private boolean fetchFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
         if (mFollowersEndOfListReached || mFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
-            return;
+            return false;
         }
 
         mFollowersFetchRequestInProgress = true;
@@ -270,6 +272,8 @@ public class PeopleManagementActivity extends AppCompatActivity
                         ToastUtils.Duration.LONG);
             }
         });
+
+        return true;
     }
 
     @Override
@@ -453,11 +457,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     public boolean onFetchFirstPage(PeopleListFilter filter) {
         Blog blog = WordPress.getCurrentBlog();
         if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
-            fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
-            return true;
+            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers){
-            fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
-            return true;
+            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
         }
         return false;
     }
