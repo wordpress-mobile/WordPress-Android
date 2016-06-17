@@ -91,11 +91,12 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         false)
         );
 
+        // show all comments on this post when user clicks the comment text
         noteBlockHolder.commentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getOnNoteBlockTextClickListener() != null) {
-                    getOnNoteBlockTextClickListener().showDetailForNoteIds();
+                    getOnNoteBlockTextClickListener().showReaderPostComments();
                 }
             }
         });
