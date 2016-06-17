@@ -175,11 +175,14 @@ public class PeopleListFragment extends Fragment {
             if (loadMore) {
                 mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
             } else {
-                refreshPeopleList();
-                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
-                if (isFetching) {
+                boolean isRefreshing = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                if (isRefreshing) {
                     mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
+                } else {
+                    mFilteredRecyclerView.hideEmptyView();
+                    mFilteredRecyclerView.setRefreshing(false);
                 }
+                refreshPeopleList();
             }
         }
     }
