@@ -133,15 +133,22 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     @Override
     public void onConnected(Bundle bundle) {
         AppLog.d(T.NUX, "Google API client connected");
-        mSmartLockHelper.smartLockAutoFill(new Callback() {
-            @Override
-            public void onCredentialRetrieved(Credential credential) {
-                SignInFragment signInFragment = (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
-                if (signInFragment != null) {
-                    signInFragment.onCredentialRetrieved(credential);
+        SignInFragment signInFragment =
+                (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+        // Autofill only if signInFragment is there and if it can be autofilled (ie. username and password fields are
+        // empty).
+        if (signInFragment != null && signInFragment.canAutofillUsernameAndPassword()) {
+            mSmartLockHelper.smartLockAutoFill(new Callback() {
+                @Override
+                public void onCredentialRetrieved(Credential credential) {
+                    SignInFragment signInFragment =
+                            (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+                    if (signInFragment != null) {
+                        signInFragment.onCredentialRetrieved(credential);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

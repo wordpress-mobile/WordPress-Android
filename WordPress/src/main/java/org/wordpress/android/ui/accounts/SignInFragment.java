@@ -327,9 +327,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    public boolean canAutofillUsernameAndPassword() {
+        return EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty();
+    }
+
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        if (EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty()) {
+        if (canAutofillUsernameAndPassword()) {
             track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
