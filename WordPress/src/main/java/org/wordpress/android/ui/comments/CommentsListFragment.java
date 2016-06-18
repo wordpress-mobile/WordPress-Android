@@ -347,16 +347,8 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
-                if (!isAdded()) return;
-
-                finishActionMode();
-                dismissDialog(dlgId);
-                if (moderatedComments.size() > 0) {
-                    getAdapter().clearSelectedComments();
-                    getAdapter().replaceComments(moderatedComments);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
-                }
+                EventBus.getDefault().postSticky(
+                        new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false));
             }
         };
 
@@ -365,6 +357,24 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                 updateComments,
                 newStatus,
                 listener);
+    }
+
+
+    public void onEventMainThread(CommentEvents.CommentsBatchModerationFinishedEvent moderatedComments) {
+        if (!isAdded()) return;
+        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentsBatchModerationFinishedEvent.class);
+
+        finishActionMode();
+        if (moderatedComments.getComments().size() > 0) {
+            getAdapter().clearSelectedComments();
+            if (moderatedComments.isDeleted()) {
+                getAdapter().deleteComments(moderatedComments.getComments());
+            } else {
+                getAdapter().replaceComments(moderatedComments.getComments());
+            }
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
+        }
     }
 
     private void confirmDeleteComments() {
