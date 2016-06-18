@@ -207,6 +207,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
+            if (post.isUploading()) {
+                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+            } else {
+                postHolder.disabledOverlay.setVisibility(View.GONE);
+            }
+
             updateStatusText(postHolder.txtStatus, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
@@ -519,6 +525,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
+        private final View disabledOverlay;
         private final TextView txtTitle;
         private final TextView txtExcerpt;
         private final TextView txtDate;
@@ -537,6 +544,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public PostViewHolder(View view) {
             super(view);
+
+            disabledOverlay = view.findViewById(R.id.disabled_overlay);
 
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
