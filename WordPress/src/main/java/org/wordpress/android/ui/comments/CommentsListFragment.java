@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class CommentsListFragment extends Fragment implements CommentAdapter.OnDataLoadedListener,
         CommentAdapter.OnLoadMoreListener,  CommentAdapter.OnSelectedItemsChangeListener, CommentAdapter.OnCommentPressedListener {
 
@@ -760,6 +762,34 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         if (getActivity() instanceof AppCompatActivity) {
             ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
             updateActionModeTitle();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void onEventMainThread(CommentEvents.CommentModerationFinishedEvent event) {
+        if (!isAdded()) return;
+
+        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentModerationFinishedEvent.class);
+
+        setCommentIsModerating(event.getCommentId(), false);
+
+        if (!event.isSuccess()) {
+            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+        }
+
+        if (event.isCommentsRefreshRequired()) {
+            loadComments();
         }
     }
 
