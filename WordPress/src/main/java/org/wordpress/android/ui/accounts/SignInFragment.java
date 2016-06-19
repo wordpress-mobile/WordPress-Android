@@ -260,10 +260,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    public void forceSelfHostedMode() {
+    public void forceSelfHostedMode(String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
+        mUrlEditText.setText(prefillUrl);
         mSelfHosted = true;
     }
 
@@ -311,8 +312,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     }
 
     protected boolean isGooglePlayServicesAvailable() {
-        return isAdded() && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity())
-                == ConnectionResult.SUCCESS;
+        if (getActivity() == null) {
+            return false;
+        }
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
+        return status == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -616,6 +620,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             }
 
             trackAnalyticsSignIn();
+            Optimizely.trackEvent("Signed In");
 
             // get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
@@ -789,7 +794,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             return;
         }
 
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
         fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 

@@ -203,11 +203,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void startOptimizely(boolean isAsync) {
-        if (isAsync) {
-            Optimizely.startOptimizelyAsync(BuildConfig.OPTIMIZELY_TOKEN, getApplication(), new WPOptimizelyEventListener());
-        } else {
-            Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
-            Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
+        if (!BuildConfig.DEBUG) {
+            if (isAsync) {
+                Optimizely.startOptimizelyAsync(BuildConfig.OPTIMIZELY_TOKEN, getApplication(), new WPOptimizelyEventListener());
+            } else {
+                Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
+                Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
+            }
         }
     }
 

@@ -43,7 +43,6 @@ import android.widget.Toast;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.helpshift.util.StringUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
@@ -103,7 +102,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private int mFeaturedImageId;
+    private long mFeaturedImageId;
 
     private ArrayList<String> mCategories;
 
@@ -376,11 +375,11 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    public int getFeaturedImageId() {
+    public long getFeaturedImageId() {
         return mFeaturedImageId;
     }
 
-    public void updateFeaturedImage(int id) {
+    public void updateFeaturedImage(long id) {
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
@@ -453,7 +452,7 @@ public class EditPostSettingsFragment extends Fragment
                             return;
                         }
 
-                        updateFeaturedImage(Integer.parseInt(ids.get(0)));
+                        updateFeaturedImage(Long.parseLong(ids.get(0)));
                     }
             }
         }

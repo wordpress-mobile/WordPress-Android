@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -32,13 +32,12 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-13"
-        versionCode 274
+        versionName "alpha-14"
+        versionCode 277
         minSdkVersion 16
         targetSdkVersion 23
 
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
         buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
 
@@ -46,13 +45,11 @@ android {
         vanilla {} // used for release and beta
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
         }
@@ -99,7 +96,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
     compile 'com.helpshift:android-helpshift-aar:4.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.automattic:rest:1.0.5'
+    compile 'com.automattic:rest:1.0.6'
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.1'
 

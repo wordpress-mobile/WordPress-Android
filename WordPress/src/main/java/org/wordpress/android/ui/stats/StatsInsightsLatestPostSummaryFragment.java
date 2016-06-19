@@ -56,6 +56,11 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             return;
         }
 
+        if (event.mInsightsLatestPostModel == null) {
+            showErrorUI();
+            return;
+        }
+
         mInsightsLatestPostModel = event.mInsightsLatestPostModel;
 
         // check if there is a post "published" on the blog
@@ -83,6 +88,11 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.InsightsLatestPostDetailsUpdated event) {
         if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        if (mInsightsLatestPostModel == null || event.mInsightsLatestPostDetailsModel == null) {
+            showErrorUI();
             return;
         }
 
