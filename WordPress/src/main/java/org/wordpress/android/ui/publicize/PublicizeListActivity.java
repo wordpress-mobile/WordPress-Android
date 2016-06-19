@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -263,8 +263,26 @@ public class PublicizeListActivity extends AppCompatActivity
         closeWebViewFragment();
         reloadDetailFragment();
 
-        if (!event.didSucceed()) {
-            ToastUtils.showToast(this, R.string.error_generic);
+        if (event.getAction() == PublicizeConstants.ConnectAction.CHOOSE_ACCOUNT) {
+            showChooserDialog();
+        } else {
+            if (!event.didSucceed()) {
+                ToastUtils.showToast(this, R.string.error_generic);
+            }
         }
+    }
+
+    private void showChooserDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String[] array = {
+                "hey", "what", "else"
+        };
+        builder.setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PublicizeActions.connectStepTwo(1, 1);
+            }
+        });
+        builder.show();
     }
 }
