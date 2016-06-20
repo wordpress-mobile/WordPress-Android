@@ -49,6 +49,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
     private boolean mShouldShowPassword;
+    private boolean mSmartLockEnabled = true;
 
     public MagicLinkSignInFragment() {
         super();
@@ -92,6 +93,9 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
         if (!mToken.isEmpty()) {
             attemptLoginWithMagicLink();
+            mSmartLockEnabled = false;
+        } else {
+            mSmartLockEnabled = true;
         }
         if (mShouldShowPassword) {
             showPasswordFieldAndFocus();
@@ -250,5 +254,11 @@ public class MagicLinkSignInFragment extends SignInFragment {
     public void onCredentialRetrieved(Credential credential) {
         super.onCredentialRetrieved(credential);
         showPasswordField();
+    }
+
+    @Override
+    public boolean canAutofillUsernameAndPassword() {
+        return mSmartLockEnabled && EditTextUtils.getText(mUsernameEditText).isEmpty()
+                && EditTextUtils.getText(mPasswordEditText).isEmpty();
     }
 }
