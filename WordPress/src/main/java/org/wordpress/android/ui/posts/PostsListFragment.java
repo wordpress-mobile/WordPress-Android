@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -43,9 +44,9 @@ import de.greenrobot.event.EventBus;
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
-                   PostsListAdapter.OnLoadMoreListener,
-                   PostsListAdapter.OnPostSelectedListener,
-                   PostsListAdapter.OnPostButtonClickListener {
+        PostsListAdapter.OnLoadMoreListener,
+        PostsListAdapter.OnPostSelectedListener,
+        PostsListAdapter.OnPostButtonClickListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -402,8 +403,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
-                PostUploadService.addPostToUpload(fullPost);
-                getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+                publishPost(fullPost);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
@@ -422,6 +422,27 @@ public class PostsListFragment extends Fragment
                 }
                 break;
         }
+    }
+
+    private void publishPost(final Post post) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        // If the post is empty, don't publish
+        if (!post.isPublishable()) {
+            ToastUtils.showToast(getActivity(), R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        post.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
+        post.setChangedFromDraftToPublished(true);
+
+        PostUploadService.addPostToUpload(post);
+        getActivity().startService(new Intent(getActivity(), PostUploadService.class));
+
+        PostUtils.trackSavePostAnalytics(post);
     }
 
     /*

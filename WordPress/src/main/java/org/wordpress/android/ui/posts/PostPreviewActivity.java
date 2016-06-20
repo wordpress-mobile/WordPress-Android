@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -172,7 +173,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         if (mPost == null
                 || mIsUpdatingPost
                 || PostUploadService.isPostUploading(mPost.getLocalTablePostId())
-                || (!mPost.isLocalChange() && !mPost.isLocalDraft())) {
+                || (!mPost.isLocalChange() && !mPost.isLocalDraft()) && mPost.getStatusEnum() != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
             return;
         }
@@ -182,6 +183,8 @@ public class PostPreviewActivity extends AppCompatActivity {
             messageText.setText(R.string.local_changes_explainer);
         } else if (mPost.isLocalDraft()) {
             messageText.setText(R.string.local_draft_explainer);
+        } else if (mPost.getStatusEnum() == PostStatus.DRAFT) {
+            messageText.setText(R.string.draft_explainer);
         }
 
         // publish applies to both local draft and local changes
@@ -196,8 +199,8 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         // revert applies to only local changes
         View btnRevert = messageView.findViewById(R.id.btn_revert);
-        btnRevert.setVisibility(mPost.isLocalDraft() ? View.GONE : View.VISIBLE);
-        if (!mPost.isLocalDraft()) {
+        btnRevert.setVisibility(mPost.isLocalChange() ? View.VISIBLE : View.GONE);
+        if (mPost.isLocalChange() ) {
             btnRevert.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -260,6 +263,11 @@ public class PostPreviewActivity extends AppCompatActivity {
                         WordPress.getBlog(mPost.getLocalTableBlogId())
                 );
             }
+
+            if (mPost.getStatusEnum() == PostStatus.DRAFT) {
+                mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
+            }
+
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
         }
