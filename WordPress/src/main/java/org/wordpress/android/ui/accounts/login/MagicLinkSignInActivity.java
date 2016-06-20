@@ -103,6 +103,7 @@ public class MagicLinkSignInActivity extends SignInActivity
                         getSignInFragment().setToken("");
                     }
                 });
+        mProgressDialog.show();
     }
 
     private void saveEmailToAccount(String email) {
