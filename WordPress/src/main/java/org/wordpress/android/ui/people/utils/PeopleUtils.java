@@ -21,6 +21,7 @@ import java.util.Map;
 public class PeopleUtils {
     public static int FETCH_USERS_LIMIT = 20;
     public static int FETCH_FOLLOWERS_LIMIT = 20;
+    public static int FETCH_EMAIL_FOLLOWERS_LIMIT = 20;
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
                                   final FetchUsersCallback callback) {
@@ -64,13 +65,24 @@ public class PeopleUtils {
 
     public static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
                                       final FetchFollowersCallback callback) {
+        fetchFollowers(blogId, localTableBlogId, page, callback, false);
+    }
+
+    public static void fetchEmailFollowers(final String blogId, final int localTableBlogId, final int page,
+                                           final FetchFollowersCallback callback) {
+        fetchFollowers(blogId, localTableBlogId, page, callback, true);
+    }
+
+    private static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
+                                       final FetchFollowersCallback callback, final boolean isEmailFollower) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, true, false);
+                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, !isEmailFollower,
+                                isEmailFollower);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages;
@@ -95,9 +107,9 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("max", Integer.toString(PeopleUtils.FETCH_FOLLOWERS_LIMIT));
+        params.put("max", Integer.toString(isEmailFollower? FETCH_EMAIL_FOLLOWERS_LIMIT : FETCH_FOLLOWERS_LIMIT));
         params.put("page", Integer.toString(page));
-        params.put("type", "wp_com");
+        params.put("type", isEmailFollower ? "email" : "wp_com");
         String path = String.format("sites/%s/stats/followers", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
