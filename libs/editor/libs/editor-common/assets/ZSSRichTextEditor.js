@@ -1147,6 +1147,22 @@ ZSSEditor.sendOptimisticProgressUpdate = function(mediaNodeIdentifier, nCall) {
     ZSSEditor.setupOptimisticProgressUpdate(mediaNodeIdentifier, nCall + 1);
 };
 
+ZSSEditor.removeAllFailedMediaUploads = function() {
+    console.log("Remove all failed media");
+    var failedMediaArray = ZSSEditor.getFailedMediaIdArray();
+    for (var i = 0; i < failedMediaArray.length; i++) {
+        ZSSEditor.removeMedia(failedMediaArray[i]);
+    }
+};
+
+ZSSEditor.removeMedia = function(mediaNodeIdentifier) {
+    if (this.getImageNodeWithIdentifier(mediaNodeIdentifier).length != 0) {
+        this.removeImage(mediaNodeIdentifier);
+    } else if (this.getVideoNodeWithIdentifier(mediaNodeIdentifier).length != 0) {
+        this.removeVideo(mediaNodeIdentifier);
+    }
+};
+
 ZSSEditor.sendMediaRemovedCallback = function(mediaNodeIdentifier) {
     var arguments = ['id=' + encodeURIComponent(mediaNodeIdentifier)];
     var joinedArguments = arguments.join(defaultCallbackSeparator);
@@ -1513,14 +1529,6 @@ ZSSEditor.removeImage = function(imageNodeIdentifier) {
         imageContainerNode.remove();
     }
 };
-
-ZSSEditor.removeAllFailedMediaUploads = function() {
-    console.log("Remove all failed media");
-    var failedMediaArray = ZSSEditor.getFailedMediaIdArray();
-    for (var i = 0; i < failedMediaArray.length; i++) {
-        ZSSEditor.removeImage(failedMediaArray[i]);
-    }
-}
 
 /**
  *  @brief Inserts a video tag using the videoURL as source and posterURL as the
