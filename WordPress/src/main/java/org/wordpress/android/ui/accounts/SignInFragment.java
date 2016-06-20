@@ -565,7 +565,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                         String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
                         Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
                         SmartLockHelper smartLockHelper = getSmartLockHelper();
-                        if (smartLockHelper != null) {
+                        // mUsername and mPassword are null when the user sign in with a magic link
+                        if (smartLockHelper != null && mUsername != null && mPassword != null) {
                             smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, displayName,
                                     profilePicture);
                         }
