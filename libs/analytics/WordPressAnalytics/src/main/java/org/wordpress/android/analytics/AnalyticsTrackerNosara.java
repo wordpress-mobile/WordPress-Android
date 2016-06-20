@@ -435,6 +435,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ME_GRAVATAR_TOOLTIP_TAPPED:
                 eventName = "me_gravatar_tooltip_tapped";
                 break;
+            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
+                eventName = "me_gravatar_permissions_interrupted";
+                break;
             case ME_GRAVATAR_PERMISSIONS_DENIED:
                 eventName = "me_gravatar_permissions_denied";
                 break;
