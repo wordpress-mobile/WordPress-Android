@@ -22,6 +22,10 @@ Formatter.convertPToDiv = function(html) {
     mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/video>|<\/span>)<br \/>/igm,
             function replaceBrWithDivs(match) { return match.substr(0, match.length - 6) + '</div><div>'; });
 
+    // Append paragraph-wrapped break tag under media at the end of a post
+    mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/video>|<\/span>)[^<>]*<\/div>\s$/igm,
+            function replaceBrWithDivs(match) { return match + '<div><br></div>'; });
+
     return mutatedHTML;
 }
 
