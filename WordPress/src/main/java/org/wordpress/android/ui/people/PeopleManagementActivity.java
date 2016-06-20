@@ -39,11 +39,11 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
     private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
-    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page-received";
+    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
     private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
     private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_EMAIL_FOLLOWERS = "can-refresh-email-followers";
-    private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page-received";
+    private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page";
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
