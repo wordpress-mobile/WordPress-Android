@@ -141,7 +141,17 @@ public class PeopleListFragment extends Fragment {
                             stringId = R.string.no_network_message;
                             break;
                         case GENERIC_ERROR:
-                            stringId = R.string.error_fetch_people_list;
+                            switch (mPeopleListFilter) {
+                                case TEAM:
+                                    stringId = R.string.error_fetch_users_list;
+                                    break;
+                                case FOLLOWERS:
+                                    stringId = R.string.error_fetch_followers_list;
+                                    break;
+                                case EMAIL_FOLLOWERS:
+                                    stringId = R.string.error_fetch_email_followers_list;
+                                    break;
+                            }
                             break;
                     }
                     return getString(stringId);
@@ -178,19 +188,19 @@ public class PeopleListFragment extends Fragment {
                     mFilteredRecyclerView.showLoadingProgress();
                 }
             } else {
-                boolean isRefreshing = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
-                if (isRefreshing) {
+                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                if (isFetching) {
                     mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
                 } else {
                     mFilteredRecyclerView.hideEmptyView();
                     mFilteredRecyclerView.setRefreshing(false);
                 }
-                refreshPeopleList();
+                refreshPeopleList(isFetching);
             }
         }
     }
 
-    public void refreshPeopleList() {
+    public void refreshPeopleList(boolean isFetching) {
         if (!isAdded()) return;
 
         List<Person> peopleList;
@@ -215,15 +225,23 @@ public class PeopleListFragment extends Fragment {
         } else {
             peopleAdapter.setPeopleList(peopleList);
         }
-        if (peopleList != null && !peopleList.isEmpty()) {
+
+        if (!peopleList.isEmpty()) {
+            // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
+        } else if (!isFetching) {
+            // if we are not fetching and list is empty, show no content message
+            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
 
-    public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage) {
+    public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
         if (mPeopleListFilter == filter) {
             if (isFirstPage) {
                 mFilteredRecyclerView.setRefreshing(false);
+                if (!isSuccessful) {
+                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                }
             } else {
                 mFilteredRecyclerView.hideLoadingProgress();
             }

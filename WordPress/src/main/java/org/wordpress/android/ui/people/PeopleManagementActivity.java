@@ -216,7 +216,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = offset == 0;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -228,11 +228,11 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = offset == 0;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage, false);
                 }
                 mUsersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_fetch_people_list,
+                        R.string.error_fetch_users_list,
                         ToastUtils.Duration.LONG);
             }
         });
@@ -258,7 +258,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -270,11 +270,11 @@ public class PeopleManagementActivity extends AppCompatActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, false);
                 }
                 mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_fetch_people_list,
+                        R.string.error_fetch_followers_list,
                         ToastUtils.Duration.LONG);
             }
         });
@@ -417,7 +417,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private void refreshPeopleListFragment() {
         PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
-            peopleListFragment.refreshPeopleList();
+            peopleListFragment.refreshPeopleList(false);
         }
     }
 
