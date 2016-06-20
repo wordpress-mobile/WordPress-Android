@@ -104,6 +104,23 @@ public class PeopleTable {
         }
     }
 
+    public static void saveEmailFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+        getWritableDb().beginTransaction();
+        try {
+            // We have a fresh list, remove the previous list of email followers in case it was deleted on remote
+            if (isFreshList) {
+                PeopleTable.deleteEmailFollowersForLocalBlogId(localTableBlogId);
+            }
+
+            for (Person person : peopleList) {
+                PeopleTable.save(person);
+            }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
+        }
+    }
+
     public static void deletePeopleForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
         getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
@@ -111,12 +128,17 @@ public class PeopleTable {
 
     public static void deleteUsersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND is_follower=?", args);
     }
 
     public static void deleteFollowersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(1)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?&is_follower=?", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND is_follower=?", args);
+    }
+
+    public static void deleteEmailFollowersForLocalBlogId(int localTableBlogId) {
+        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(1)};
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND is_email_follower=?", args);
     }
 
     public static void deleteUsersForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
