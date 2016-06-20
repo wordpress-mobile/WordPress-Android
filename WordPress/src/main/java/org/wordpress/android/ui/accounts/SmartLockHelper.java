@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.IntentSender;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.auth.api.Auth;
@@ -24,14 +25,14 @@ import org.wordpress.android.util.AppLog.T;
 import java.lang.ref.WeakReference;
 
 public class SmartLockHelper {
-    protected GoogleApiClient mCredentialsClient;
+    private GoogleApiClient mCredentialsClient;
     private WeakReference<FragmentActivity> mActivity;
 
     public interface Callback {
         void onCredentialRetrieved(Credential credential);
     }
 
-    public SmartLockHelper(FragmentActivity activity) {
+    public SmartLockHelper(@NonNull FragmentActivity activity) {
         if (activity instanceof OnConnectionFailedListener && activity instanceof ConnectionCallbacks) {
             mActivity = new WeakReference<>(activity);
         } else {
@@ -40,7 +41,7 @@ public class SmartLockHelper {
         }
     }
 
-    protected FragmentActivity getActivityAndCheckAvailability() {
+    private FragmentActivity getActivityAndCheckAvailability() {
         FragmentActivity activity = mActivity.get();
         if (activity == null) {
             return null;
@@ -64,7 +65,7 @@ public class SmartLockHelper {
                 .build();
     }
 
-    public void smartLockAutoFill(final Callback callback) {
+    public void smartLockAutoFill(@NonNull final Callback callback) {
         Activity activity = getActivityAndCheckAvailability();
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
@@ -75,7 +76,7 @@ public class SmartLockHelper {
         Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
                 new ResultCallback<CredentialRequestResult>() {
                     @Override
-                    public void onResult(CredentialRequestResult result) {
+                    public void onResult(@NonNull CredentialRequestResult result) {
                         Status status = result.getStatus();
                         if (status.isSuccess()) {
                             Credential credential = result.getCredential();
@@ -102,8 +103,8 @@ public class SmartLockHelper {
     }
 
 
-    public void saveCredentialsInSmartLock(final String username, final String password,
-                                            final String displayName, final Uri profilePicture) {
+    public void saveCredentialsInSmartLock(@NonNull final String username, @NonNull final String password,
+                                           @NonNull final String displayName, @NonNull final Uri profilePicture) {
         Activity activity = getActivityAndCheckAvailability();
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
@@ -113,7 +114,7 @@ public class SmartLockHelper {
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
-                    public void onResult(Status status) {
+                    public void onResult(@NonNull Status status) {
                         if (!status.isSuccess() && status.hasResolution()) {
                             try {
                                 Activity activity = getActivityAndCheckAvailability();
@@ -130,7 +131,7 @@ public class SmartLockHelper {
                 });
     }
 
-    public void deleteCredentialsInSmartLock(final String username, final String password) {
+    public void deleteCredentialsInSmartLock(@NonNull final String username, @NonNull final String password) {
         Activity activity = getActivityAndCheckAvailability();
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
@@ -140,7 +141,7 @@ public class SmartLockHelper {
         Auth.CredentialsApi.delete(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
-                    public void onResult(Status status) {
+                    public void onResult(@NonNull Status status) {
                         AppLog.i(T.NUX, status.isSuccess() ? "SmartLock: credentials deleted for username: " + username
                                 : "SmartLock: Credentials not deleted for username: " + username );
                     }
