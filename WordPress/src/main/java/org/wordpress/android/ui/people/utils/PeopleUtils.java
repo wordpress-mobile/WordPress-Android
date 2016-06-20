@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PeopleUtils {
-    public static int FETCH_USERS_LIMIT = 20;
-    public static int FETCH_FOLLOWERS_LIMIT = 20;
-    public static int FETCH_EMAIL_FOLLOWERS_LIMIT = 20;
+    public static int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
                                   final FetchUsersCallback callback) {
@@ -55,7 +53,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("number", Integer.toString(PeopleUtils.FETCH_USERS_LIMIT));
+        params.put("number", Integer.toString(PeopleUtils.FETCH_LIMIT));
         params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");
@@ -107,7 +105,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("max", Integer.toString(isEmailFollower? FETCH_EMAIL_FOLLOWERS_LIMIT : FETCH_FOLLOWERS_LIMIT));
+        params.put("max", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
         params.put("type", isEmailFollower ? "email" : "wp_com");
         String path = String.format("sites/%s/stats/followers", blogId);

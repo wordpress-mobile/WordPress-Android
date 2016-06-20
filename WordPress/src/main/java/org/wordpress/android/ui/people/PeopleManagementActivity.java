@@ -85,7 +85,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deleteUsersForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
             if (actionBar != null) {
