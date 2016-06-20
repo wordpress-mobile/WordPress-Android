@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
+import org.json.JSONObject;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 
 /**
@@ -16,10 +17,22 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
+        private final JSONObject mJsonObject;
 
         public ActionCompleted(boolean succeeded, ConnectAction action) {
             mSucceeded = succeeded;
             mAction = action;
+            mJsonObject = new JSONObject();
+        }
+
+        public ActionCompleted(JSONObject jsonObject, ConnectAction action) {
+            mSucceeded = false;
+            mJsonObject = jsonObject;
+            mAction = action;
+        }
+
+        public JSONObject getJsonObject() {
+            return mJsonObject;
         }
 
         public ConnectAction getAction() {
