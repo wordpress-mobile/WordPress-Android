@@ -56,7 +56,7 @@ function testMediaParagraphWrapping(mediaType, htmlModeMediaHtml, visualModeMedi
       assert.equal('<p>' + visualModeMediaHtml + '</p>\n', visualFormattingApplied);
 
       var convertedToDivs = formatter.convertPToDiv(visualFormattingApplied).replace(/\n/g, '');
-      assert.equal('<div>' + visualModeMediaHtml + '</div><div><br></div>', convertedToDivs);
+      assert.equal('<div>' + visualModeMediaHtml + '</div>', convertedToDivs);
     });
 
     it('with paragraphs above and below', function () {
@@ -106,7 +106,7 @@ function testMediaParagraphWrapping(mediaType, htmlModeMediaHtml, visualModeMedi
       assert.equal('<p>Line 1</p>\n<p>' + visualModeMediaHtml + '</p>\n', visualFormattingApplied);
 
       var convertedToDivs = formatter.convertPToDiv(visualFormattingApplied).replace(/\n/g, '');
-      assert.equal('<div>Line 1</div><div>' + visualModeMediaHtml + '</div><div><br></div>', convertedToDivs);
+      assert.equal('<div>Line 1</div><div>' + visualModeMediaHtml + '</div>', convertedToDivs);
     });
 
     it('end of post, with line break above', function () {
@@ -116,7 +116,7 @@ function testMediaParagraphWrapping(mediaType, htmlModeMediaHtml, visualModeMedi
       assert.equal('<p>Line 1<br \/>\n' + visualModeMediaHtml + '</p>\n', visualFormattingApplied);
 
       var convertedToDivs = formatter.convertPToDiv(visualFormattingApplied).replace(/\n/g, '');
-      assert.equal('<div>Line 1</div><div>' + visualModeMediaHtml + '</div><div><br></div>', convertedToDivs);
+      assert.equal('<div>Line 1</div><div>' + visualModeMediaHtml + '</div>', convertedToDivs);
     });
   });
 }
