@@ -120,30 +120,30 @@ public class ReaderBlogActions {
     public static void followFeedByUrl(final String feedUrl,
                                        final ActionListener actionListener) {
         if (TextUtils.isEmpty(feedUrl)) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
+            ReaderActions.callActionListener(actionListener, false);
             return;
         }
 
+        // use existing blog info if we can
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
             internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
             return;
         }
 
+        // otherwise, look it up via the endpoint
         updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null) {
-                    internalFollowFeed(
-                            blogInfo.feedId,
-                            blogInfo.getFeedUrl(),
-                            true,
-                            actionListener);
-                } else if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
+                // note we attempt to follow even when the look up fails (blogInfo = null) because that
+                // endpoint doesn't perform feed discovery, whereas the endpoint to follow a feed does
+                long feedIdToFollow = blogInfo != null ? blogInfo.feedId : 0;
+                String feedUrlToFollow = (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
+                internalFollowFeed(
+                        feedIdToFollow,
+                        feedUrlToFollow,
+                        true,
+                        actionListener);
             }
         });
     }
