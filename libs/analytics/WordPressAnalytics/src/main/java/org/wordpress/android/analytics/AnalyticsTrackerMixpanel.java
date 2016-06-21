@@ -874,6 +874,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Tapped Gravatar Tooltip");
                 break;
+            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Permissions Interrupted");
+                break;
             case ME_GRAVATAR_PERMISSIONS_DENIED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Gravatar Permissions Denied");

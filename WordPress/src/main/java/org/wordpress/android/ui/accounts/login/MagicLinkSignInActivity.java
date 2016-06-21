@@ -14,7 +14,9 @@ import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 
-public class MagicLinkSignInActivity extends SignInActivity implements MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+public class MagicLinkSignInActivity extends SignInActivity
+        implements MagicLinkRequestFragment.OnMagicLinkFragmentInteraction,
+        MagicLinkSignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
     private ProgressDialog mProgressDialog;
@@ -37,7 +39,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
 
     @Override
     public MagicLinkSignInFragment getSignInFragment() {
-        MagicLinkSignInFragment signInFragment = (MagicLinkSignInFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSignInFragment.TAG);
+        MagicLinkSignInFragment signInFragment =
+                (MagicLinkSignInFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSignInFragment.TAG);
         if (signInFragment == null) {
             return new MagicLinkSignInFragment();
         } else {
@@ -93,12 +96,14 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
         MagicLinkSignInFragment magicLinkSignInFragment = getSignInFragment();
         slideInFragment(magicLinkSignInFragment, false);
 
-        mProgressDialog = ProgressDialog.show(this, "", getString(R.string.logging_in), true, true, new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                getSignInFragment().setToken("");
-            }
-        });
+        mProgressDialog = ProgressDialog
+                .show(this, "", getString(R.string.logging_in), true, true, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        getSignInFragment().setToken("");
+                    }
+                });
+        mProgressDialog.show();
     }
 
     private void saveEmailToAccount(String email) {
@@ -122,7 +127,8 @@ public class MagicLinkSignInActivity extends SignInActivity implements MagicLink
 
     private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left, R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
