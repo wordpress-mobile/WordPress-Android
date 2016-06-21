@@ -91,6 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
