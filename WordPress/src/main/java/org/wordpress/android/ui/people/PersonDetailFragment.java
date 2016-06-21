@@ -109,7 +109,12 @@ public class PersonDetailFragment extends Fragment {
             mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
-            setupRoleContainerForCapability();
+            if (person.isFollower() || person.isEmailFollower()) {
+                mRoleContainer.setVisibility(View.GONE);
+            } else {
+                mRoleContainer.setVisibility(View.VISIBLE);
+                setupRoleContainerForCapability();
+            }
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
