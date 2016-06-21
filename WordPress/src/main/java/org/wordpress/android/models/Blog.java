@@ -126,8 +126,10 @@ public class Blog {
     }
 
     /**
-     * TODO: When we rewrite this in WPStores, make sure we only have one of this function
-     * @return
+     * TODO: When we rewrite this in WPStores, make sure we only have one of this function.
+     * This is used to open the site in the browser. getHomeURL() was not used, probably due to a bug where
+     * it returns an empty or invalid url.
+     * @return site url
      */
     public @NonNull String getAlternativeHomeUrl() {
         String siteURL = null;
