@@ -344,8 +344,9 @@
 
                     <ImageView
                         android:id="@+id/my_site_view_site_icon_external"
-                        app:srcCompat="@drawable/noticon_view"
-                        style="@style/MySiteListRowSecondaryElement" />
+                        style="@style/MySiteListRowSecondaryElement"
+                        android:tint="@color/grey_darken_10"
+                        app:srcCompat="@drawable/gridicons_external" />
 
                 </RelativeLayout>
 
@@ -367,8 +368,9 @@
 
                     <ImageView
                         android:id="@+id/my_site_admin_icon_external"
-                        app:srcCompat="@drawable/noticon_view"
-                        style="@style/MySiteListRowSecondaryElement" />
+                        style="@style/MySiteListRowSecondaryElement"
+                        android:tint="@color/grey_darken_10"
+                        app:srcCompat="@drawable/gridicons_external" />
 
                 </RelativeLayout>
             </LinearLayout>
