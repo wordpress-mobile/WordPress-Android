@@ -14,6 +14,8 @@ class ReaderResourceVars {
     final int marginSmallPx;
     final int marginExtraSmallPx;
 
+    final boolean canShowTiledGallery;
+
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
 
@@ -29,6 +31,9 @@ class ReaderResourceVars {
         Resources resources = context.getResources();
 
         int displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
+
+        canShowTiledGallery = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
+
         int marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
         int detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);
 

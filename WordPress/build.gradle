@@ -32,13 +32,12 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-14"
-        versionCode 277
+        versionName "alpha-15"
+        versionCode 279
         minSdkVersion 16
         targetSdkVersion 23
 
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "false"
         buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
 
@@ -46,13 +45,11 @@ android {
         vanilla {} // used for release and beta
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            buildConfigField "boolean", "VISUAL_EDITOR_AVAILABLE", "true"
             buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
         }

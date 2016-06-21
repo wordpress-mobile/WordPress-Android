@@ -34,6 +34,18 @@ Integration testing is done with the [Android testing framework](http://develope
 
 Add new unit tests to `src/test/java/` and integration tests to `stc/androidTest/java/`.
 
+### JavaScript Tests ###
+
+This project also has unit tests for the JS part of the editor using [Mocha](https://mochajs.org/).
+
+To be able to run the tests, [npm](https://www.npmjs.com/) and Mocha (`npm install -g mocha`) are required.
+
+With npm and Mocha installed, from within `libs/editor-common/assets/test`, run:
+
+    npm install chai
+
+It should now be possible to run the tests using `mocha` inside `libs/editor-common/assets`.
+
 ## LICENSE ##
 
 WordPress-Editor-Android is an Open Source project covered by the [GNU General Public License version 2](LICENSE.md).
