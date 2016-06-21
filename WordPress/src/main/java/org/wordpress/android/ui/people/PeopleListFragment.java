@@ -315,8 +315,10 @@ public class PeopleListFragment extends Fragment {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
                 peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 peopleViewHolder.txtDisplayName.setText(person.getDisplayName());
-                peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
                 peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole()));
+                if (!person.getUsername().isEmpty()) {
+                    peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
+                }
             }
 
             // end of list is reached
