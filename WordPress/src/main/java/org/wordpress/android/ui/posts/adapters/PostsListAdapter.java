@@ -557,7 +557,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
-        private final View disabledOverlay;
         private final TextView txtTitle;
         private final TextView txtExcerpt;
         private final TextView txtDate;
@@ -575,10 +574,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final WPNetworkImageView imgFeatured;
         private final ViewGroup layoutButtons;
 
+        private final View disabledOverlay;
+
         public PostViewHolder(View view) {
             super(view);
-
-            disabledOverlay = view.findViewById(R.id.disabled_overlay);
 
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
@@ -596,6 +595,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
             layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+
+            disabledOverlay = view.findViewById(R.id.disabled_overlay);
         }
     }
 
