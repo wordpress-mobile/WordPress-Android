@@ -418,7 +418,11 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
-        builder.setMessage(getString(R.string.person_remove_confirmation_message, person.getDisplayName()));
+        if (person.isFollower() || person.isEmailFollower()) {
+            builder.setMessage(R.string.follower_remove_confirmation_message);
+        } else {
+            builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        }
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
