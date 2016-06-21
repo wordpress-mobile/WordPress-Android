@@ -442,36 +442,50 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
-        PeopleUtils.removePerson(person.getBlogId(),
-                person.getPersonID(),
-                person.getLocalTableBlogId(),
-                new PeopleUtils.RemoveUserCallback() {
-                    @Override
-                    public void onSuccess(long personID, int localTableBlogId) {
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
-                        // remove the person from db, navigate back to list fragment and refresh it
-                        Person person = PeopleTable.getPerson(personID, localTableBlogId);
-                        String text;
-                        if (person != null) {
-                            PeopleTable.deletePerson(personID, localTableBlogId);
-                            text = getString(R.string.person_removed, person.getUsername());
-                        } else {
-                            text = getString(R.string.person_removed_general);
-                        }
+        final boolean isFollower = person.isFollower();
+        final boolean isEmailFollower = person.isEmailFollower();
 
-                        ToastUtils.showToast(PeopleManagementActivity.this, text, ToastUtils.Duration.LONG);
+        PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
+            @Override
+            public void onSuccess(long personID, int localTableBlogId) {
+                if (!isFollower && !isEmailFollower) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
+                }
 
-                        navigateBackToPeopleListFragment();
-                        refreshPeopleListFragment();
+                // remove the person from db, navigate back to list fragment and refresh it
+                Person person = PeopleTable.getPerson(personID, localTableBlogId);
+                String text;
+                if (person != null) {
+                    PeopleTable.deletePerson(personID, localTableBlogId);
+                    text = getString(R.string.person_removed, person.getDisplayName());
+                } else {
+                    if (isFollower || isEmailFollower) {
+                        text = getString(R.string.follower_removed_general);
+                    } else {
+                        text = getString(R.string.user_removed_general);
                     }
+                }
 
-                    @Override
-                    public void onError() {
-                        ToastUtils.showToast(PeopleManagementActivity.this,
-                                R.string.error_remove_user,
-                                ToastUtils.Duration.LONG);
-                    }
-                });
+                ToastUtils.showToast(PeopleManagementActivity.this, text, ToastUtils.Duration.LONG);
+
+                navigateBackToPeopleListFragment();
+                refreshPeopleListFragment();
+            }
+
+            @Override
+            public void onError() {
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_remove_user,
+                        ToastUtils.Duration.LONG);
+            }
+        };
+
+        if (isFollower || isEmailFollower) {
+            PeopleUtils.removeFollower(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(),
+                    isEmailFollower, callback);
+        } else {
+            PeopleUtils.removeUser(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(), callback);
+        }
     }
 
     // This helper method is used after a successful network request

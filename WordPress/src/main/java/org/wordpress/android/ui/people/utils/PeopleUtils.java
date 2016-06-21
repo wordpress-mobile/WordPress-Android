@@ -149,8 +149,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    public static void removePerson(String blogId, final long personID, final int localTableBlogId,
-                                    final RemoveUserCallback callback) {
+    public static void removeUser(String blogId, final long personID, final int localTableBlogId,
+                                  final RemoveUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -177,6 +177,42 @@ public class PeopleUtils {
         };
 
         String path = String.format("sites/%s/users/%d/delete", blogId, personID);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+    }
+
+    public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
+                                      boolean isEmailFollower, final RemoveUserCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    // check if the call was successful
+                    boolean success = jsonObject.optBoolean("deleted");
+                    if (success) {
+                        callback.onSuccess(personID, localTableBlogId);
+                    } else {
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path;
+        if (isEmailFollower) {
+            path = String.format("sites/%s/email-followers/%d/delete", blogId, personID);
+        } else {
+            path = String.format("sites/%s/followers/%d/delete", blogId, personID);
+        }
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
