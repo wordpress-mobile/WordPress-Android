@@ -1262,6 +1262,9 @@
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Sign in again to continue.</string>
+    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
+        in. Try to sign in with your newly created username and password.</string>
+
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1366,7 +1369,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
-    
+
     <!--People Management-->
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
