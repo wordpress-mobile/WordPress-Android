@@ -21,10 +21,8 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -407,6 +405,7 @@ public class RestClientUtils {
         authCheck.send();
     }
 
+
     /**
      * Make a JSON POST request
      */
@@ -444,12 +443,16 @@ public class RestClientUtils {
      * Takes a URL and returns the path within, or an empty string (not null)
      */
     public static String getSanitizedPath(String unsanitizedPath){
-        Uri uri=Uri.parse(unsanitizedPath);
-        String path = uri.getPath();
-        if (TextUtils.isEmpty(path)) {
-            path = "";
+        if (unsanitizedPath != null) {
+            int qmarkPos = unsanitizedPath.indexOf('?');
+            if (qmarkPos > -1) { //strip any querystring params off this to obtain the path
+                return unsanitizedPath.substring(0, qmarkPos+1);
+            } else {
+                // return the string as is, consider the whole string as the path
+                return unsanitizedPath;
+            }
         }
-        return path;
+        return "";
     }
 
     /**
