@@ -1,15 +1,43 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.widgets.RadioButtonListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
-public class TagItemEditor extends BaseMenuItemEditor {
+public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
+    private final List<String> mAllTags;
+    private final List<String> mFilteredTags;
+
+    private RadioButtonListView mTagListView;
+
     public TagItemEditor(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public TagItemEditor(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        mAllTags = new ArrayList<>();
+        mFilteredTags = new ArrayList<>();
+    }
+
+    @Override
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
+
+        ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
+        mTagListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
+        loadTags();
     }
 
     @Override
@@ -19,7 +47,7 @@ public class TagItemEditor extends BaseMenuItemEditor {
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
+        MenuItemModel menuItem = super.getMenuItem();
         return menuItem;
     }
 
@@ -29,5 +57,32 @@ public class TagItemEditor extends BaseMenuItemEditor {
 
     @Override
     public void onDelete() {
+    }
+
+    //
+    // SearchView query callbacks
+    //
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filterAdapter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        filterAdapter(newText);
+        return true;
+    }
+
+    private void loadTags() {
+    }
+
+    private void fetchTags() {
+    }
+
+    private void filterAdapter(String filter) {
+    }
+
+    private void refreshAdapter() {
     }
 }

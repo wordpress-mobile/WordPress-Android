@@ -1,11 +1,16 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.MenuItemTable;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
@@ -29,17 +34,21 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     private RadioButtonListView mPageListView;
 
     public PageItemEditor(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public PageItemEditor(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
         mLocalBlogId = WordPress.getCurrentLocalTableBlogId();
         mAllPages = new ArrayList<>();
         mFilteredPages = new ArrayList<>();
-        loadPages();
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventBus.getDefault().register(this);
+        loadPages();
         fetchPages();
     }
 
@@ -55,6 +64,14 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
         ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
         mPageListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
+        mPageListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mWorkingItem.name = mPageListView.getSelectedItem().toString();
+            }
+
+            @Override public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     @Override
@@ -63,19 +80,32 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     @Override
-    public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
-        return menuItem;
+    public void setMenuItem(MenuItemModel menuItem) {
+        super.setMenuItem(menuItem);
+        if (!TextUtils.isEmpty(menuItem.name)) {
+            setSelection(menuItem.name);
+        }
+    }
+
+    private void setSelection(String name) {
+        int selectedPosition = mFilteredPages.indexOf(name);
+        if (selectedPosition != -1 && selectedPosition < mPageListView.getCount()) {
+            mPageListView.setSelection(selectedPosition);
+        }
+    }
+
+    public boolean shouldEdit() {
+        return false;
     }
 
     @Override
     public void onSave() {
-        // TODO: save to DB
+        if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
     }
 
     @Override
     public void onDelete() {
-        // TODO: remove from DB
+        if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
     }
 
     //

@@ -17,6 +17,8 @@ import java.util.Map;
  */
 
 public class MenuItemModel implements Serializable {
+    public static final String SELECTED_POST_KEY = "selected-post";
+
     //
     // Primary key attributes (cannot be null)
     //
@@ -93,5 +95,10 @@ public class MenuItemModel implements Serializable {
     public void addData(@NonNull String key, String value) {
         if (data == null) data = new HashMap<>();
         data.put(key, value);
+    }
+
+    public String getData(@NonNull String key) {
+        if (data == null) data = new HashMap<>();
+        return data.get(key);
     }
 }

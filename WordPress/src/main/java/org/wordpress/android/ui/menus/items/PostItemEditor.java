@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -23,7 +25,11 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     private RadioButtonListView mPostListView;
 
     public PostItemEditor(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public PostItemEditor(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
         mAllPosts = new ArrayList<>();
         mFilteredPosts = new ArrayList<>();
         loadPostList();

@@ -78,8 +78,8 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mToolbar = (Toolbar) dialogView.findViewById(R.id.toolbar);
 
         setupToolbar();
-        setupTypePicker();
         fillViewFlipper();
+        setupTypePicker();
         setType(isCreating() ? DEFAULT_ITEM_TYPE : mOriginalItem.type);
 
         return dialogView;
@@ -109,12 +109,12 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     }
 
     public void setType(String type) {
-        if (type.equalsIgnoreCase(mWorkingItem.type)) return;
         mWorkingItem.type = type;
         mToolbar.setTitle(mWorkingItem.name);
-        mTypePicker.setSelection(mItemPositions.get(type));
-        mEditorFlipper.setDisplayedChild(mItemPositions.get(type));
+        mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
+        mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
+        mCurrentEditor.setMenuItem(mWorkingItem);
     }
 
     private void fillViewFlipper() {
@@ -127,7 +127,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getActivity(), itemType);
             if (editor != null) {
                 mEditorFlipper.addView(editor);
-                mItemPositions.put(type, i);
+                mItemPositions.put(type.toUpperCase(), i);
             }
         }
     }
@@ -151,6 +151,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private void setupTypePicker() {
         if (mTypePicker == null || !isAdded()) return;
 
+        mTypePicker.setSelection(mItemPositions.get(mWorkingItem.type.toUpperCase()));
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

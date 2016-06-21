@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
@@ -9,7 +11,11 @@ import org.wordpress.android.models.MenuItemModel;
  */
 public class TestimonialItemEditor extends BaseMenuItemEditor {
     public TestimonialItemEditor(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public TestimonialItemEditor(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
     }
 
     @Override

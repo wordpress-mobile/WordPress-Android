@@ -1,15 +1,50 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.SiteSettingsTable;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.widgets.RadioButtonListView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  */
 public class CategoryItemEditor extends BaseMenuItemEditor {
+    private final List<CategoryModel> mCategories;
+    private final List<String> mCategoryNames;
+
+    private RadioButtonListView mCategoryListView;
+
     public CategoryItemEditor(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public CategoryItemEditor(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        mCategories = new ArrayList<>();
+        mCategoryNames = new ArrayList<>();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+//        EventBus.getDefault().register(this);
+        loadCategories();
+    }
+
+    @Override
+    public void onViewAdded(View child) {
+        super.onViewAdded(child);
+
+        mCategoryListView = (RadioButtonListView) child.findViewById(R.id.category_list);
     }
 
     @Override
@@ -19,7 +54,7 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
+        MenuItemModel menuItem = super.getMenuItem();
         return menuItem;
     }
 
@@ -31,5 +66,28 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
     @Override
     public void onDelete() {
         // TODO: remove from DB
+    }
+
+    public String getSelectedCategoryName() {
+        return "";
+    }
+
+    private void loadCategories() {
+        Map<Integer, CategoryModel> categories = SiteSettingsTable.getAllCategories();
+        mCategories.clear();
+        if (categories != null) {
+            mCategories.addAll(categories.values());
+        }
+        refreshAdapter();
+    }
+
+    private void fetchCategories() {
+        // TODO
+    }
+
+    private void refreshAdapter() {
+        if (mCategoryListView != null) {
+            mCategoryListView.setAdapter(new RadioButtonListView.RadioButtonListAdapter(getContext(), mCategoryNames));
+        }
     }
 }

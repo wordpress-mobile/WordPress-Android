@@ -21,11 +21,13 @@ public class RadioButtonListView extends ListView {
         setChoiceMode(CHOICE_MODE_SINGLE);
     }
 
-    public static class RadioButtonListAdapter extends ArrayAdapter<String> {
-        public RadioButtonListAdapter(Context context, String[] items) {
-            super(context, 0, items);
-        }
+    @Override
+    public void setSelection(int position) {
+        super.setSelection(position);
+        setItemChecked(position, true);
+    }
 
+    public static class RadioButtonListAdapter extends ArrayAdapter<String> {
         public RadioButtonListAdapter(Context context, List<String> items) {
             super(context, 0, items);
         }
