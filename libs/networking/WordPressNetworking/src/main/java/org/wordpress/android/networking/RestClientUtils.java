@@ -21,11 +21,8 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -314,7 +311,7 @@ public class RestClientUtils {
     public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
-        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        HashMap<String, String> paramsWithLocale = LanguageUtils.getRestLocaleParams(mContext);
         if (params != null) {
             paramsWithLocale.putAll(params);
         }
@@ -359,7 +356,7 @@ public class RestClientUtils {
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
-        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        HashMap<String, String> paramsWithLocale = LanguageUtils.getRestLocaleParams(mContext);
         if (params != null) {
             paramsWithLocale.putAll(params);
         }
@@ -396,7 +393,7 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, LanguageUtils.getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -412,7 +409,7 @@ public class RestClientUtils {
      */
     public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, LanguageUtils.getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -421,23 +418,6 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
         authCheck.send();
-    }
-
-    /**
-     * Returns locale parameter used in REST calls which require the response to be localized
-     */
-    public static HashMap<String, String> getRestLocaleParams(Context context) {
-        HashMap<String, String> params = new HashMap<>();
-        //better use getConfiguration as it has the latest locale configuration change.
-        //Otherwise Locale.getDefault().getLanguage() gets
-        //the config upon application launch.
-        String deviceLanguageCode = context != null ? context.getResources().getConfiguration().locale.toString() : Locale.getDefault().getLanguage();
-        if (!TextUtils.isEmpty(deviceLanguageCode)) {
-            //patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
-            deviceLanguageCode = patchDeviceLanguageCode(deviceLanguageCode);
-            params.put("locale", deviceLanguageCode);
-        }
-        return params;
     }
 
     /**
@@ -470,29 +450,6 @@ public class RestClientUtils {
         }
 
         return queryParams;
-    }
-
-    /**
-     * Patches a deviceLanguageCode if any of deprecated values iw, id, or yi
-     */
-    public static String patchDeviceLanguageCode(String deviceLanguageCode){
-        String patchedCode = deviceLanguageCode;
-        /*
-         <p>Note that Java uses several deprecated two-letter codes. The Hebrew ("he") language
-         * code is rewritten as "iw", Indonesian ("id") as "in", and Yiddish ("yi") as "ji". This
-         * rewriting happens even if you construct your own {@code Locale} object, not just for
-         * instances returned by the various lookup methods.
-         */
-        if (deviceLanguageCode != null) {
-            if (deviceLanguageCode.startsWith("iw"))
-                patchedCode = deviceLanguageCode.replace("iw", "he");
-            else if (deviceLanguageCode.startsWith("in"))
-                patchedCode = deviceLanguageCode.replace("in", "id");
-            else if (deviceLanguageCode.startsWith("ji"))
-                patchedCode = deviceLanguageCode.replace("ji", "yi");
-        }
-
-        return patchedCode;
     }
 
 }

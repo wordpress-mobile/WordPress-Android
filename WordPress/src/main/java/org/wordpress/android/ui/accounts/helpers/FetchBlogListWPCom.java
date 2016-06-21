@@ -9,7 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.networking.LanguageUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -74,7 +74,7 @@ public class FetchBlogListWPCom extends FetchBlogListAbstract {
     }
 
     private void getUsersBlogsRequestREST(final FetchBlogListAbstract.Callback callback) {
-        WordPress.getRestClientUtils().get("me/sites", RestClientUtils.getRestLocaleParams(mContext), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtils().get("me/sites", LanguageUtils.getRestLocaleParams(mContext), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response != null) {

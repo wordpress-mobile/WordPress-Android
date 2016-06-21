@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.networking.LanguageUtils;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;
@@ -101,6 +102,7 @@ public class WPActivityUtils {
         if (sharedPreferences.contains(AppSettingsFragment.LANGUAGE_PREF_KEY)) {
             Locale contextLocale = context.getResources().getConfiguration().locale;
             String contextLanguage = contextLocale.getLanguage();
+            contextLanguage = LanguageUtils.patchDeviceLanguageCode(contextLanguage);
             String contextCountry = contextLocale.getCountry();
             String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
 
