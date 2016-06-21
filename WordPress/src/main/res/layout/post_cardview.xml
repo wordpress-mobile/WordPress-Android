@@ -24,7 +24,7 @@
             android:layout_below="@+id/layout_post_header"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
@@ -32,7 +32,7 @@
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:text="text_title"/>
+            tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
@@ -42,7 +42,7 @@
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:maxLines="4"
-            tools:text="text_excerpt"/>
+            tools:text="text_excerpt" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
@@ -52,7 +52,7 @@
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
-            tools:text="text_date"/>
+            tools:text="text_date" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_status"
@@ -67,7 +67,7 @@
             android:visibility="gone"
             tools:drawableLeft="@drawable/noticon_scheduled"
             tools:text="text_status"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="edit"/>
+                    wp:wpPostButtonType="edit" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_view"
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="view"/>
+                    wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_publish"
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="publish"/>
+                    wp:wpPostButtonType="publish" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_stats"
@@ -114,7 +114,7 @@
                     android:gravity="center"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    wp:wpPostButtonType="stats"/>
+                    wp:wpPostButtonType="stats" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_trash"
@@ -124,7 +124,7 @@
                     android:gravity="center"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    wp:wpPostButtonType="trash"/>
+                    wp:wpPostButtonType="trash" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_more"
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="more"/>
+                    wp:wpPostButtonType="more" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_back"
@@ -140,12 +140,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="back"/>
+                    wp:wpPostButtonType="back" />
 
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/disabled_overlay"
