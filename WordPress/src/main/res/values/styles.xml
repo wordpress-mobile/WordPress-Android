@@ -289,6 +289,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:gravity">right|center_vertical</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
