@@ -284,19 +284,23 @@
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="MySiteListRowSecodaryTextView">
-        <item name="android:layout_width">match_parent</item>
+    <style name="MySiteListRowSecondaryElement">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:ellipsize">end</item>
         <item name="android:gravity">right|center_vertical</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:textColor">@color/grey_darken_20</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
 
     <style name="MySiteListHeaderLayout">
