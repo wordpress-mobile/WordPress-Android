@@ -46,6 +46,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -419,6 +420,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
+        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
         for (ReaderPost post: event.getRelatedPosts()) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
@@ -437,6 +439,15 @@ public class ReaderPostDetailFragment extends Fragment
             }
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
             txtSubtitle.setText(subTitle);
+
+            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
+            if (post.hasFeaturedImage()) {
+                String imageUrl = post.getFeaturedImageForDisplay(imageSize, imageSize);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setVisibility(View.VISIBLE);
+            } else {
+                imgFeatured.setVisibility(View.GONE);
+            }
 
             container.addView(postView);
         }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_post_title"
@@ -12,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_related_post_margin"
         android:layout_marginRight="@dimen/reader_related_post_margin"
+        android:layout_toLeftOf="@+id/image_related_post"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/grey_dark"
@@ -24,13 +24,24 @@
         android:id="@+id/text_related_post_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/text_related_post_title"
         android:layout_marginBottom="@dimen/reader_related_post_margin"
         android:layout_marginLeft="@dimen/reader_related_post_margin"
         android:layout_marginRight="@dimen/reader_related_post_margin"
+        android:layout_toLeftOf="@+id/image_related_post"
         android:ellipsize="end"
         android:maxLines="4"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_medium"
         tools:text="text_related_post_subtitle" />
 
-</LinearLayout>
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_related_post"
+        android:layout_width="@dimen/reader_related_post_image_size"
+        android:layout_height="@dimen/reader_related_post_image_size"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/reader_related_post_margin"
+        android:visibility="gone"
+        tools:src="@drawable/drake_empty_results"
+        tools:visibility="visible" />
+</RelativeLayout>
