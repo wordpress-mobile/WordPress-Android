@@ -31,6 +31,19 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
             else return NULL;
         }
+
+        public static ITEM_TYPE typeForIndex(int index){
+            if (NULL.ordinal() == index) return NULL;
+            if (POST.ordinal() == index) return POST;
+            if (PAGE.ordinal() == index) return PAGE;
+            if (CATEGORY.ordinal() == index) return CATEGORY;
+            if (TAG.ordinal() == index) return TAG;
+            if (LINK.ordinal() == index) return LINK;
+            if (TESTIMONIAL.ordinal() == index) return TESTIMONIAL;
+            if (CUSTOM.ordinal() == index) return CUSTOM;
+
+            return NULL;
+        }
     }
 
     public static int getIconDrawableRes(ITEM_TYPE type) {
