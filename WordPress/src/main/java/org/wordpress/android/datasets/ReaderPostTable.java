@@ -154,6 +154,15 @@ public class ReaderPostTable {
                 + "   has_gap_marker    INTEGER DEFAULT 0,"
                 + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
+
+        db.execSQL("CREATE TABLE tbl_related_posts ("
+                + "   post_id           INTEGER DEFAULT 0,"
+                + "   blog_id           INTEGER DEFAULT 0,"
+                + "   related_post_id   INTEGER DEFAULT 0,"
+                + "   related_blog_id   INTEGER DEFAULT 0,"
+                + "   PRIMARY KEY (post_id, blog_id, related_post_id, related_blog_id)"
+                + ")");
+        db.execSQL("CREATE INDEX idx_related_posts ON tbl_posts(post_id, blog_id)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
