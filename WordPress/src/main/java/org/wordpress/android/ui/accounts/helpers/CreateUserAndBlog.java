@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.LanguageUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.util.AppLog;

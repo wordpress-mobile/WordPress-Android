@@ -13,7 +13,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
-import org.wordpress.android.networking.LanguageUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;

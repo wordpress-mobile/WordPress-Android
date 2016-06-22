@@ -20,6 +20,7 @@ import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -311,7 +312,7 @@ public class RestClientUtils {
     public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
-        HashMap<String, String> paramsWithLocale = LanguageUtils.getRestLocaleParams(mContext);
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
         if (params != null) {
             paramsWithLocale.putAll(params);
         }
@@ -356,7 +357,7 @@ public class RestClientUtils {
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
-        HashMap<String, String> paramsWithLocale = LanguageUtils.getRestLocaleParams(mContext);
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
         if (params != null) {
             paramsWithLocale.putAll(params);
         }
@@ -393,7 +394,7 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, LanguageUtils.getRestLocaleParams(mContext)), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -409,7 +410,7 @@ public class RestClientUtils {
      */
     public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, LanguageUtils.getRestLocaleParams(mContext)), params,
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -450,6 +451,20 @@ public class RestClientUtils {
         }
 
         return queryParams;
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static HashMap<String, String> getRestLocaleParams(Context context) {
+        HashMap<String, String> params = new HashMap<>();
+        String deviceLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode(context);
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            //patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
+            deviceLanguageCode = LanguageUtils.patchDeviceLanguageCode(deviceLanguageCode);
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
     }
 
 }

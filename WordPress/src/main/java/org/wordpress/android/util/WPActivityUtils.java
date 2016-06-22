@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.networking.LanguageUtils;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;

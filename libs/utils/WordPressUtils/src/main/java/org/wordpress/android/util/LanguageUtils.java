@@ -1,9 +1,7 @@
-package org.wordpress.android.networking;
+package org.wordpress.android.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -11,16 +9,21 @@ import java.util.Locale;
  */
 public class LanguageUtils {
 
-    public static String getCurrentDeviceLanguage(Context context) {
+    public static Locale getCurrentDeviceLanguage(Context context) {
         //better use getConfiguration as it has the latest locale configuration change.
         //Otherwise Locale.getDefault().getLanguage() gets
         //the config upon application launch.
-        String deviceLanguageCode = context != null ? context.getResources().getConfiguration().locale.toString() : Locale.getDefault().getLanguage();
+        Locale deviceLocale = context != null ? context.getResources().getConfiguration().locale : Locale.getDefault();
+        return deviceLocale;
+    }
+
+    public static String getCurrentDeviceLanguageCode(Context context) {
+        String deviceLanguageCode = getCurrentDeviceLanguage(context).toString();
         return deviceLanguageCode;
     }
 
     public static String getPatchedCurrentDeviceLanguage(Context context) {
-        return patchDeviceLanguageCode(getCurrentDeviceLanguage(context));
+        return patchDeviceLanguageCode(getCurrentDeviceLanguageCode(context));
     }
 
     /**
@@ -44,20 +47,6 @@ public class LanguageUtils {
         }
 
         return patchedCode;
-    }
-
-    /**
-     * Returns locale parameter used in REST calls which require the response to be localized
-     */
-    public static HashMap<String, String> getRestLocaleParams(Context context) {
-        HashMap<String, String> params = new HashMap<>();
-        String deviceLanguageCode = getCurrentDeviceLanguage(context);
-        if (!TextUtils.isEmpty(deviceLanguageCode)) {
-            //patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
-            deviceLanguageCode = patchDeviceLanguageCode(deviceLanguageCode);
-            params.put("locale", deviceLanguageCode);
-        }
-        return params;
     }
 
 }
