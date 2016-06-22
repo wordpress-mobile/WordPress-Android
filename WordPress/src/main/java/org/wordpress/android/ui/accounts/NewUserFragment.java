@@ -39,7 +39,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
+import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
 import java.util.EnumSet;
@@ -57,15 +57,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
-    private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl;
     private String mUsername;
     private String mPassword;
-
-    public NewUserFragment() {
-        mEmailChecker = new EmailChecker();
-    }
 
     public static NewUserFragment newInstance() {
         return new NewUserFragment();
@@ -400,7 +395,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         final String email = EditTextUtils.getText(mEmailTextField).trim();
-        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        String suggest = EmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mEmailTextField.setText(suggest);
