@@ -458,7 +458,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower);
                 String text;
                 if (person != null) {
-                    PeopleTable.deletePerson(personID, localTableBlogId);
+                    PeopleTable.deletePerson(personID, localTableBlogId, isFollower);
                     text = getString(R.string.person_removed, person.getDisplayName());
                 } else {
                     if (isFollower || isEmailFollower) {

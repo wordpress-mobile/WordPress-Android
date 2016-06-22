@@ -169,9 +169,10 @@ public class PeopleTable {
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
-    public static void deletePerson(long personID, int localTableBlogId) {
-        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId)};
-        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=?", args);
+    public static void deletePerson(long personID, int localTableBlogId, boolean isFollower) {
+        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId),
+                Integer.toString(isFollower ? 1 : 0)};
+        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=? AND is_follower=?", args);
     }
 
     public static List<Person> getUsers(int localTableBlogId) {
