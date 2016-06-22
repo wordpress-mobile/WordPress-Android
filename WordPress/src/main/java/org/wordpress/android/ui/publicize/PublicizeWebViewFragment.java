@@ -114,11 +114,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         setNavigationIcon(R.drawable.ic_close_white_24dp);
