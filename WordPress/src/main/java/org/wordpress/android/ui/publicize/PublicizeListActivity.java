@@ -11,9 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -23,9 +20,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -274,40 +268,7 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
-    private void showChooserDialog(JSONObject jsonObject) {
-        LinkedList<String> lists = new LinkedList<>();
-        try {
-            JSONArray array = jsonObject.getJSONArray("connections");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                lists.add(object.getString("external_display"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String[] array = lists.toArray(new String[lists.size()]);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Connecting " + "Facebook");
-//        builder.setMessage("Select the account you wish to authorize. Note that your posts will be shared to the selected account automatically.");
-        builder.setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                PublicizeActions.connectStepTwo(1, 1);
-            }
-        });
-        builder.show();
+    public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
+        PublicizeEvents.Connection[] connections = event.getConnections();
     }
 }
