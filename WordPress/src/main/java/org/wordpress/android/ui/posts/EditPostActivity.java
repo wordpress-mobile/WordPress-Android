@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -67,6 +68,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
@@ -101,6 +103,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -121,7 +124,8 @@ import java.util.regex.Pattern;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
+        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
+        WPAlertDialogFragment.OnDialogConfirmListener, WPAlertDialogFragment.OnDialogDismissListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -149,6 +153,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
+
+    private static final String SAVE_DIALOG_TAG = "SAVE_DIALOG_TAG";
 
     private Handler mHandler;
     private boolean mShowNewEditor;
@@ -844,7 +850,67 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void saveAndFinish() {
-        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        boolean wasLocalChange = mPost.isLocalChange();
+        updatePostObject(false);
+
+        if (isNewPost() && mPost.isPublishable()) {
+            // new post - user just left the editor without publishing, they probably want
+            // to keep the post as a draft
+            mPost.setPostStatus(PostStatus.toString(PostStatus.DRAFT));
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.updateStatusSpinner();
+            }
+
+            showSaveDialog();
+        }
+        else if ((mOriginalPost != null && mPost.hasChanges(mOriginalPost) || wasLocalChange || mPost.isLocalDraft()) && mPost.isPublishable()) {
+            // changed post or has local changes or is a local draft
+            showSaveDialog();
+        }
+        else {
+            // no changes
+            deleteIfNewAndFinish();
+        }
+    }
+
+    private void saveRemotelyIfPossible() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            publishPost();
+        } else {
+            new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void showSaveDialog() {
+        FragmentManager fm = getFragmentManager();
+        WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(SAVE_DIALOG_TAG);
+        if (saveDialog == null) {
+            saveDialog = WPAlertDialogFragment.newConfirmDialog(getString(R.string.editor_save_dialog_title),
+                    getString(R.string.editor_save_dialog_message));
+            saveDialog.setCancelable(false);
+        }
+        if (!saveDialog.isAdded()) {
+            saveDialog.show(fm, SAVE_DIALOG_TAG);
+        }
+    }
+
+
+    @Override
+    public void onDialogConfirm() {
+        saveRemotelyIfPossible();
+    }
+
+    @Override
+    public void onDialogDismiss() {
+        deleteIfNewAndFinish();
+    }
+
+    private void deleteIfNewAndFinish() {
+        if (isNewPost()) {
+            WordPress.wpDB.deletePost(getPost());
+        }
+        finish();
     }
 
     /**

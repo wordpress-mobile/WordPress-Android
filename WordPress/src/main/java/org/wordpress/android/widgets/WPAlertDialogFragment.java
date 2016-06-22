@@ -25,7 +25,11 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
     private static final String ARG_INFO_URL   = "info-url";
 
     public interface OnDialogConfirmListener {
-        public void onDialogConfirm();
+        void onDialogConfirm();
+    }
+
+    public interface OnDialogDismissListener {
+        void onDialogDismiss();
     }
 
     public static WPAlertDialogFragment newAlertDialog(String message) {
@@ -114,7 +118,15 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
                         }
                     }
                 });
-                builder.setNegativeButton(R.string.no, this);
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (getActivity() instanceof OnDialogDismissListener) {
+                            OnDialogDismissListener act = (OnDialogDismissListener) getActivity();
+                            act.onDialogDismiss();
+                        }
+                    }
+                });
                 break;
 
             case URL_INFO:

@@ -918,6 +918,8 @@
     editor. Try it out by creating a new post.</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
+    <string name="editor_save_dialog_title">Unsaved local changes</string>
+    <string name="editor_save_dialog_message">Would you like to save them?</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
