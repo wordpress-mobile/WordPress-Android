@@ -56,6 +56,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
+import de.greenrobot.event.EventBus;
+
 public class ReaderPostDetailFragment extends Fragment
         implements ScrollDirectionListener,
         ReaderCustomViewListener,
@@ -278,9 +280,16 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         if (!hasPost()) {
             showPost();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     /*
@@ -393,6 +402,47 @@ public class ReaderPostDetailFragment extends Fragment
 
         ReaderPostActions.updateRelatedPosts(mPost);
     }
+
+    /*
+     * related posts were retrieved, so show them
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
+        if (!isAdded()) return;
+
+        // locate the related posts container and remove all views except the label
+        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
+        if (container.getChildCount() > 1) {
+            int numToRemove = container.getChildCount() - 1;
+            container.removeViews(1, numToRemove);
+        }
+
+        // add a separate view for each related post
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        for (ReaderPost post: event.getRelatedPosts()) {
+            View postView = inflater.inflate(R.layout.reader_related_post, container, true);
+            TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
+            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            txtTitle.setText(post.getTitle());
+            String subTitle;
+            // TODO: prefix author name with "By "
+            if (post.hasAuthorName() && post.hasBlogName()) {
+                subTitle = post.getAuthorName() + ", " + post.getBlogName();
+            } else if (post.hasAuthorName()) {
+                subTitle = post.getAuthorName();
+            } else if (post.hasBlogName()) {
+                subTitle = post.getBlogName();
+            } else {
+                subTitle = "";
+            }
+            txtSubtitle.setText(subTitle);
+        }
+
+        if (container.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        }
+    }
+
     /*
      * get the latest version of this post
      */

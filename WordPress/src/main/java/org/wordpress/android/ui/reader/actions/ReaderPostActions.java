@@ -322,8 +322,6 @@ public class ReaderPostActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, "updateRelatedPosts succeeded");
-                AppLog.d(T.READER, jsonObject.toString());
                 ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
                 if (relatedPosts != null && relatedPosts.size() > 0) {
                     EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(relatedPosts));
