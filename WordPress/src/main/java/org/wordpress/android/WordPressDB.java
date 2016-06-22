@@ -33,6 +33,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -1635,7 +1636,7 @@ public class WordPressDB {
         // Currently on WordPress.com, the media search engine only searches the title.
         // We'll match this.
 
-        String term = searchTerm.toLowerCase(Locale.getDefault());
+        String term = searchTerm.toLowerCase(LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()));
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "%" + term + "%", "uploading"});
     }
 
