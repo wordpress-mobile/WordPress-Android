@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 120;
+    private static final int DB_VERSION = 119;
 
     /*
      * version history
@@ -71,7 +71,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  117 - changed tbl_posts.timestamp from INTEGER to REAL
      *  118 - renamed tbl_search_history to tbl_search_suggestions
      *  119 - renamed tbl_posts.timestamp to sort_index
-     *  120 - added tbl_related_posts to ReaderPostTable
      */
 
     /*
