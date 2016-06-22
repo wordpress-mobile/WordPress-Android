@@ -316,17 +316,16 @@ public class ReaderPostActions {
         WordPress.requestQueue.add(request);
     }
 
-    public static void updateRelatedPosts(final ReaderPost post) {
-        if (post == null) return;
+    /*
+     * request posts related to the passed one
+     */
+    public static void updateRelatedPosts(final ReaderPost sourcePost) {
+        if (sourcePost == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
-                if (relatedPosts != null && relatedPosts.size() > 0) {
-                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(post, relatedPosts));
-                }
+               handleRelatedPostsResponse(sourcePost, jsonObject);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -338,8 +337,23 @@ public class ReaderPostActions {
             }
         };
 
-        // /read/sites/:site/posts/:post/related
-        String path = "/read/site/" + post.blogId + "/post/" + post.postId + "/related";
+        String path = "/read/site/" + sourcePost.blogId + "/post/" + sourcePost.postId + "/related";
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+    }
+
+    private static void handleRelatedPostsResponse(final ReaderPost sourcePost, final JSONObject jsonObject) {
+        if (jsonObject == null) return;
+
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
+                if (relatedPosts != null && relatedPosts.size() > 0) {
+                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
+                }
+            }
+        }.start();
+
     }
 }
