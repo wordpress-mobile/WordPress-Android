@@ -213,12 +213,14 @@ public class PeopleTable {
      * retrieve a single person
      * @param personId - id of a person in a particular blog
      * @param localTableBlogId - the local blog id the user belongs to
+     * @param isFollower - if the person is a follower
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId, int localTableBlogId) {
-        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId) };
+    public static Person getPerson(long personId, int localTableBlogId, boolean isFollower) {
+        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId),
+                Integer.toString(isFollower ? 1 : 0)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE person_id=? AND local_blog_id=?", args);
+                " WHERE person_id=? AND local_blog_id=? AND is_follower=?", args);
         try {
             if (!c.moveToFirst()) {
                 return null;

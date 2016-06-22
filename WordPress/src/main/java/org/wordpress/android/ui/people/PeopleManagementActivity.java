@@ -350,8 +350,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
+        boolean isFollower = person.isFollower();
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, isFollower);
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -377,7 +378,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId);
+        // You can't change a follower's role, so it's always false
+        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId, false);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
@@ -453,7 +455,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getPerson(personID, localTableBlogId);
+                Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower);
                 String text;
                 if (person != null) {
                     PeopleTable.deletePerson(personID, localTableBlogId);

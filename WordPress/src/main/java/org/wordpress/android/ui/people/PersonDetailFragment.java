@@ -28,9 +28,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static String ARG_IS_FOLLOWER = "is_follower";
 
     private long mPersonID;
     private int mLocalTableBlogID;
+    private boolean mIsFollower;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -38,11 +40,12 @@ public class PersonDetailFragment extends Fragment {
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
 
-    public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
+    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, boolean isFollower) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(ARG_PERSON_ID, personID);
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        bundle.putBoolean(ARG_IS_FOLLOWER, isFollower);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
     }
@@ -72,6 +75,7 @@ public class PersonDetailFragment extends Fragment {
 
         mPersonID = getArguments().getLong(ARG_PERSON_ID);
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        mIsFollower = getArguments().getBoolean(ARG_IS_FOLLOWER);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
@@ -174,6 +178,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public Person loadPerson() {
-        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID);
+        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mIsFollower);
     }
 }
