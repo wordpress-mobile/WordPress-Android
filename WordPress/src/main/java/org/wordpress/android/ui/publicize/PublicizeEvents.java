@@ -17,16 +17,20 @@ public class PublicizeEvents {
     public static class ActionCompleted {
         private final boolean mSucceeded;
         private final ConnectAction mAction;
-        private final JSONObject mJsonObject;
 
         public ActionCompleted(boolean succeeded, ConnectAction action) {
             mSucceeded = succeeded;
             mAction = action;
-            mJsonObject = new JSONObject();
         }
 
-        public ActionCompleted(JSONObject jsonObject, ConnectAction action) {
-            mSucceeded = false;
+        public ConnectAction getAction() {
+            return mAction;
+        }
+
+        public boolean didSucceed() {
+            return mSucceeded;
+        }
+    }
             mJsonObject = jsonObject;
             mAction = action;
         }
