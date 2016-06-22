@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
@@ -20,6 +21,7 @@ public class Person {
     private String role;
     private boolean isFollower;
     private boolean isEmailFollower;
+    private String subscribed;
 
     public Person(long personID, String blogId, int localTableBlogId) {
         this.personID = personID;
@@ -68,6 +70,7 @@ public class Person {
             person.setDisplayName(json.optString("label"));
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
+            person.setSubscribed(json.optString("date_subscribed"));
             person.setFollower(!isEmailFollower);
             person.setEmailFollower(isEmailFollower);
 
@@ -153,5 +156,23 @@ public class Person {
 
     public void setEmailFollower(boolean emailFollower) {
         isEmailFollower = emailFollower;
+    }
+
+    public String getSubscribed() {
+        return StringUtils.notNullStr(subscribed);
+    }
+
+    public void setSubscribed(String subscribed) {
+        this.subscribed = StringUtils.notNullStr(subscribed);
+    }
+
+    /*
+     * converts iso8601 subscribed date to an actual java date
+     */
+    private transient java.util.Date dtSubscribed;
+    public java.util.Date getDateSubscribed() {
+        if (dtSubscribed == null)
+            dtSubscribed = DateTimeUtils.iso8601ToJavaDate(subscribed);
+        return dtSubscribed;
     }
 }

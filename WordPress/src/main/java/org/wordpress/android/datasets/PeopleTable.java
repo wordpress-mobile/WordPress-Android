@@ -34,6 +34,7 @@ public class PeopleTable {
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
                 + "role                    TEXT,"
+                + "subscribed              TEXT,"
                 + "is_follower             BOOLEAN DEFAULT false,"
                 + "is_email_follower       BOOLEAN DEFAULT false,"
                 + "PRIMARY KEY (person_id, local_blog_id, is_follower)"
@@ -65,6 +66,7 @@ public class PeopleTable {
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
         values.put("role", person.getRole());
+        values.put("subscribed", person.getSubscribed());
         values.put("is_follower", person.isFollower());
         values.put("is_email_follower", person.isEmailFollower());
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -243,6 +245,7 @@ public class PeopleTable {
         person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
         person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
         person.setRole(c.getString(c.getColumnIndex("role")));
+        person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
         person.setFollower(c.getInt(c.getColumnIndex("is_follower")) > 0);
         person.setEmailFollower(c.getInt(c.getColumnIndex("is_email_follower")) > 0);
 
