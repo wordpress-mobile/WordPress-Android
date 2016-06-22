@@ -423,7 +423,7 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (ReaderPost post: event.getRelatedPosts()) {
+        for (final ReaderPost post: event.getRelatedPosts()) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             txtTitle.setText(post.getTitle());
@@ -450,6 +450,14 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 imgFeatured.setVisibility(View.GONE);
             }
+
+            // tapping this view should open the related post detail
+            postView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), post.blogId, post.postId);
+                }
+            });
 
             container.addView(postView);
         }
