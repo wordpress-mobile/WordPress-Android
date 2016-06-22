@@ -155,6 +155,7 @@ public class ReaderPostTable {
                 + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
 
+        // TODO: right now related posts aren't stored, we should drop this if that doesn't change
         db.execSQL("CREATE TABLE tbl_related_posts ("
                 + "   post_id           INTEGER DEFAULT 0,"
                 + "   blog_id           INTEGER DEFAULT 0,"

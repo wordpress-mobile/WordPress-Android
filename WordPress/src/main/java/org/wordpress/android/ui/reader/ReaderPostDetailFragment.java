@@ -386,6 +386,14 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
+     * get posts related to the one being displayed - only works for public wp.com blogs
+     */
+    private void updateRelatedPosts() {
+        if (!hasPost() || !mPost.isWP() || mPost.isPrivate) return;
+
+        ReaderPostActions.updateRelatedPosts(mPost);
+    }
+    /*
      * get the latest version of this post
      */
     private void updatePost() {
@@ -782,6 +790,7 @@ public class ReaderPostDetailFragment extends Fragment
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
+                        updateRelatedPosts();
                     }
                 }
             }, 300);
