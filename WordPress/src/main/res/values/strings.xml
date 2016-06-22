@@ -1078,6 +1078,7 @@
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
+    <string name="reader_title_search_results">Search for %s</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
@@ -1103,6 +1104,7 @@
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
+    <string name="reader_hint_post_search">Search WordPress.com</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1122,6 +1124,8 @@
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
+    <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
+    <string name="reader_label_post_search_running">Searching…</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1184,6 +1188,11 @@
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_empty_posts_in_blog">This blog is empty</string>
+    <string name="reader_empty_posts_in_search_title">No posts found</string>
+    <string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
+
+    <string name="dlg_confirm_clear_search_history">Clear search history?</string>
+    <string name="label_clear_search_history">Clear search history</string>
 
     <!-- attribution line for Discover posts, ex: "Originally posted by [AuthorName] on [BlogName] -->
     <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>

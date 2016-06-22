@@ -264,7 +264,8 @@
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar">
+        </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:label="@string/reader_title_post_detail"
@@ -398,6 +399,10 @@
             android:name=".ui.reader.services.ReaderPostService"
             android:exported="false"
             android:label="Reader Post Service" />
+        <service
+            android:name=".ui.reader.services.ReaderSearchService"
+            android:exported="false"
+            android:label="Reader Search Service" />
         <service
             android:name=".ui.reader.services.ReaderCommentService"
             android:exported="false"
