@@ -3,9 +3,11 @@ package org.wordpress.android.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.optimizely.Optimizely;
 import com.optimizely.Variable.LiveVariable;
@@ -47,6 +49,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -63,12 +66,6 @@ public class ActivityLauncher {
                 R.anim.activity_slide_in_from_left,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
-    }
-
-    public static void viewCurrentSite(Context context) {
-        Intent intent = new Intent(context, ViewSiteActivity.class);
-        slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
     }
 
     public static void viewBlogStats(Context context, int blogLocalTableId) {
@@ -132,18 +129,38 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, blog);
     }
 
+    public static void viewCurrentSite(Context context, Blog blog) {
+        if (blog == null) {
+            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String siteUrl = blog.getAlternativeHomeUrl();
+        Uri uri = Uri.parse(siteUrl);
+
+        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        context.startActivity(intent);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
     public static void viewBlogAdmin(Context context, Blog blog) {
-        if (blog == null) return;
+        if (blog == null) {
+            Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String adminUrl = blog.getAdminUrl();
+        Uri uri = Uri.parse(adminUrl);
 
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
 
-        Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, blog.getAdminUrl());
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPWebViewActivity.getBlogLoginUrl(blog));
-        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        slideInFromRight(context, intent);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        context.startActivity(intent);
+        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {

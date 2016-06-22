@@ -293,7 +293,7 @@ public class RestClientUtils {
     public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         post("auth/send-login-email", params, null, listener, errorListener);
     }
-    
+
     public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
         String path = String.format("is-available/email?q=%s", email);
         get(path, listener, errorListener);
@@ -405,6 +405,7 @@ public class RestClientUtils {
         authCheck.send();
     }
 
+
     /**
      * Make a JSON POST request
      */
@@ -425,12 +426,16 @@ public class RestClientUtils {
      * Takes a URL and returns the path within, or an empty string (not null)
      */
     public static String getSanitizedPath(String unsanitizedPath){
-        Uri uri=Uri.parse(unsanitizedPath);
-        String path = uri.getPath();
-        if (TextUtils.isEmpty(path)) {
-            path = "";
+        if (unsanitizedPath != null) {
+            int qmarkPos = unsanitizedPath.indexOf('?');
+            if (qmarkPos > -1) { //strip any querystring params off this to obtain the path
+                return unsanitizedPath.substring(0, qmarkPos+1);
+            } else {
+                // return the string as is, consider the whole string as the path
+                return unsanitizedPath;
+            }
         }
-        return path;
+        return "";
     }
 
     /**
