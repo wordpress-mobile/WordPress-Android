@@ -324,6 +324,7 @@ public class ReaderPostActions {
             public void onResponse(JSONObject jsonObject) {
                 ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
                 if (relatedPosts != null && relatedPosts.size() > 0) {
+                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
                     EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(post, relatedPosts));
                 }
             }
