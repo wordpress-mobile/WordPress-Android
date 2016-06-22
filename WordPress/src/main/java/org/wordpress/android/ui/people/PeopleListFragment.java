@@ -28,6 +28,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -315,7 +316,13 @@ public class PeopleListFragment extends Fragment {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
                 peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
                 peopleViewHolder.txtDisplayName.setText(person.getDisplayName());
-                peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole()));
+                if (person.isFollower() || person.isEmailFollower()) {
+                    String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                    String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                    peopleViewHolder.txtRoleOrSubscribed.setText(dateText);
+                } else {
+                    peopleViewHolder.txtRoleOrSubscribed.setText(StringUtils.capitalize(person.getRole()));
+                }
                 if (!person.getUsername().isEmpty()) {
                     peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
                 }
@@ -331,14 +338,14 @@ public class PeopleListFragment extends Fragment {
             private final WPNetworkImageView imgAvatar;
             private final TextView txtDisplayName;
             private final TextView txtUsername;
-            private final TextView txtRole;
+            private final TextView txtRoleOrSubscribed;
 
             public PeopleViewHolder(View view) {
                 super(view);
                 imgAvatar = (WPNetworkImageView) view.findViewById(R.id.person_avatar);
                 txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
                 txtUsername = (TextView) view.findViewById(R.id.person_username);
-                txtRole = (TextView) view.findViewById(R.id.person_role);
+                txtRoleOrSubscribed = (TextView) view.findViewById(R.id.person_role_or_subscribed);
 
                 itemView.setOnClickListener(this);
             }
