@@ -24,21 +24,32 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
+import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
+import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
+import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NewUserFragment extends AbstractFragment implements TextWatcher {
+    public static final int NEW_USER = 1;
     private EditText mSiteUrlTextField;
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
@@ -46,12 +57,13 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
-    private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl;
+    private String mUsername;
+    private String mPassword;
 
-    public NewUserFragment() {
-        mEmailChecker = new EmailChecker();
+    public static NewUserFragment newInstance() {
+        return new NewUserFragment();
     }
 
     @Override
@@ -185,21 +197,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return siteUrl;
     }
 
-    private void finishThisStuff(String username, String password) {
-        final Activity activity = getActivity();
-        if (activity != null) {
-            Intent intent = new Intent();
-            intent.putExtra("username", username);
-            intent.putExtra("password", password);
-            activity.setResult(NewAccountActivity.RESULT_OK, intent);
-            activity.finish();
-            PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
-            persistentEditTextHelper.clearSavedText(mEmailTextField, null);
-            persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
-            persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
-        }
-    }
-
     protected boolean specificShowError(int messageId) {
         switch (getErrorType(messageId)) {
             case USERNAME:
@@ -257,12 +254,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String email = EditTextUtils.getText(mEmailTextField).trim();
-        final String password = EditTextUtils.getText(mPasswordTextField).trim();
-        final String username = EditTextUtils.getText(mUsernameTextField).trim();
+        mUsername = EditTextUtils.getText(mUsernameTextField).trim();
+        mPassword = EditTextUtils.getText(mPasswordTextField).trim();
         final String siteName = siteUrlToSiteName(siteUrl);
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
+        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
+        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, mUsername, mPassword,
                 siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
                 new CreateUserAndBlog.Callback() {
                     @Override
@@ -290,14 +287,17 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
-                        AnalyticsUtils.refreshMetadata(username, email);
+                        // User has been created. From this point, all errors should close this screen and display the
+                        // sign in screen
+                        AnalyticsUtils.refreshMetadata(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                        endProgress();
-                        // Set visual editor available when user signup
-                        AppPrefs.setVisualEditorAvailable(true);
-                        AppPrefs.setVisualEditorEnabled(true);
+                        // Save credentials to smart lock
+                        SmartLockHelper smartLockHelper = getSmartLockHelper();
+                        if (smartLockHelper != null) {
+                            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
+                        }
                         if (isAdded()) {
-                            finishThisStuff(username, password);
+                            signInAndFetchBlogListWPCom();
                         }
                     }
 
@@ -309,17 +309,93 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         }
                     }
                 });
-        AppLog.i(T.NUX, "User tries to create a new account, username: " + username + ", email: " + email
+        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + email
                 + ", site name: " + siteName + ", site URL: " + siteUrl);
         createUserAndBlog.startCreateUserAndBlogProcess();
     }
+
+    private void signInAndFetchBlogListWPCom() {
+        updateProgress(getString(R.string.signing_in));
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword, null, false, null);
+        login.execute(new LoginAbstract.Callback() {
+            @Override
+            public void onSuccess() {
+                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
+                fetchBlogListWPCom.execute(mFetchBlogListCallback);
+            }
+
+            @Override
+            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired,
+                                boolean erroneousSslCertificate) {
+                // Should not happen (excepted for a timeout), go back to the sign in screen
+                finishAndShowSignInScreen();
+            }
+        });
+    }
+
+    private void finishCurrentActivity() {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+        PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
+        persistentEditTextHelper.clearSavedText(mEmailTextField, null);
+        persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
+        persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
+    }
+
+    /**
+     * In case an error happened after the user creation steps, we don't want to show the sign up screen.
+     * Show the sign in screen with username and password prefilled, plus a toast message to explain what happened.
+     *
+     * Note: this should be called only if the user has been created.
+     */
+    private void finishAndShowSignInScreen() {
+        if (!isAdded()) {
+            return;
+        }
+        endProgress();
+        Intent intent = new Intent();
+        intent.putExtra("username", mUsername);
+        intent.putExtra("password", mPassword);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        getFragmentManager().popBackStack();
+        ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
+    }
+
+    protected final Callback mFetchBlogListCallback = new Callback() {
+        @Override
+        public void onSuccess(final List<Map<String, Object>> userBlogList) {
+            if (!isAdded()) {
+                return;
+            }
+            if (userBlogList != null) {
+                BlogUtils.addBlogs(userBlogList, mUsername);
+            }
+
+            // get reader tags so they're available as soon as the Reader is accessed - done for
+            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
+            // uses the application context since the activity is finished immediately below
+            ReaderUpdateService.startService(getActivity().getApplicationContext(),
+                    EnumSet.of(UpdateTask.TAGS));
+            finishCurrentActivity();
+        }
+
+        @Override
+        public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
+                            final boolean erroneousSslCertificate, final String clientResponse) {
+            // Should not happen (excepted for a timeout), go back to the sign in screen
+            finishAndShowSignInScreen();
+        }
+    };
 
     private void autocorrectEmail() {
         if (mEmailAutoCorrected) {
             return;
         }
         final String email = EditTextUtils.getText(mEmailTextField).trim();
-        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        String suggest = EmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mEmailTextField.setText(suggest);
@@ -449,4 +525,11 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             return false;
         }
     };
+
+    private SmartLockHelper getSmartLockHelper() {
+        if (getActivity() != null && getActivity() instanceof SignInActivity) {
+            return ((SignInActivity) getActivity()).getSmartLockHelper();
+        }
+        return null;
+    }
 }

@@ -313,8 +313,8 @@ public class ReaderPostService extends Service {
                                 break;
                             case REQUEST_OLDER_THAN_GAP:
                                 // if service was started as a request to fill a gap, delete existing posts
-                                // older than the one with the gap marker, then remove the existing gap marker
-                                ReaderPostTable.deletePostsOlderThanGapMarkerForTag(tag);
+                                // before the one with the gap marker, then remove the existing gap marker
+                                ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag);
                                 ReaderPostTable.removeGapMarkerForTag(tag);
                                 break;
                         }

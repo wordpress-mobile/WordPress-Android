@@ -13,6 +13,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -24,7 +25,6 @@ import org.xmlrpc.android.XMLRPCFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -762,7 +762,7 @@ public abstract class SiteSettingsInterface {
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
             mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
             if (mSettings.language == null) {
-                setLanguageCode(Locale.getDefault().getLanguage());
+                setLanguageCode(LanguageUtils.getPatchedCurrentDeviceLanguage(null));
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;

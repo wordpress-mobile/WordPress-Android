@@ -17,9 +17,11 @@ import android.util.Pair;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
@@ -124,7 +126,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
-        Locale currentLocale = conf.locale != null ? conf.locale : Locale.getDefault();
+        Locale currentLocale = conf.locale != null ? conf.locale : LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
 
         if (currentLocale.toString().equals(languageCode)) return;
 
@@ -135,7 +137,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         conf.locale = newLocale;
         res.updateConfiguration(conf, res.getDisplayMetrics());
 
-        if (Locale.getDefault().equals(newLocale)) {
+        if (LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()).equals(newLocale)) {
             // remove custom locale key when original device locale is selected
             mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
         } else {

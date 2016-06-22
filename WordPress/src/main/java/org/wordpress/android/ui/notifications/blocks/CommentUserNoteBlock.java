@@ -188,6 +188,16 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                     }
                 }
             });
+
+            // show all comments on this post when user clicks the comment text
+            commentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getOnNoteBlockTextClickListener() != null) {
+                        getOnNoteBlockTextClickListener().showReaderPostComments();
+                    }
+                }
+            });
         }
     }
 

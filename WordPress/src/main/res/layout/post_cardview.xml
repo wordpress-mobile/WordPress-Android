@@ -99,12 +99,12 @@
                     wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_more"
+                    android:id="@+id/btn_publish"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="more" />
+                    wp:wpPostButtonType="publish" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_stats"
@@ -125,6 +125,14 @@
                     android:visibility="gone"
                     tools:visibility="visible"
                     wp:wpPostButtonType="trash" />
+
+                <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    wp:wpPostButtonType="more" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_back"

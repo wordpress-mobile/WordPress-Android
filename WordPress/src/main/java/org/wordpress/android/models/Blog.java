@@ -2,7 +2,11 @@
 
 package org.wordpress.android.models;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,8 +15,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 public class Blog {
     private int localTableBlogId;
@@ -117,6 +123,30 @@ public class Blog {
             AppLog.e(T.UTILS, "Blog url is invalid: " + getUrl());
             return null;
         }
+    }
+
+    /**
+     * TODO: When we rewrite this in WPStores, make sure we only have one of this function.
+     * This is used to open the site in the browser. getHomeURL() was not used, probably due to a bug where
+     * it returns an empty or invalid url.
+     * @return site url
+     */
+    public @NonNull String getAlternativeHomeUrl() {
+        String siteURL = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() { }.getType();
+        Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("home_url");
+            if (homeURLMap != null) {
+                siteURL = homeURLMap.get("value").toString();
+            }
+        }
+        // Try to guess the URL of the site if blogOptions is null (blog not added to the app)
+        if (siteURL == null) {
+            siteURL = this.getUrl().replace("/xmlrpc.php", "");
+        }
+        return siteURL;
     }
 
     public String getHomeURL() {

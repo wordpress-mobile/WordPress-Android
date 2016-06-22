@@ -175,7 +175,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentSite(getActivity());
+                ActivityLauncher.viewCurrentSite(getActivity(), WordPress.getBlog(mBlogLocalId));
             }
         });
 

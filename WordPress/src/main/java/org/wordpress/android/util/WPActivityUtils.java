@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -42,7 +43,7 @@ public class WPActivityUtils {
             return;
         }
 
-        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                 .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
@@ -54,7 +55,6 @@ public class WPActivityUtils {
         titleView.setText(title);
 
         toolbar.setTitle("");
-        toolbar.setContentInsetsAbsolute(0, 0);
         toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +101,7 @@ public class WPActivityUtils {
         if (sharedPreferences.contains(AppSettingsFragment.LANGUAGE_PREF_KEY)) {
             Locale contextLocale = context.getResources().getConfiguration().locale;
             String contextLanguage = contextLocale.getLanguage();
+            contextLanguage = LanguageUtils.patchDeviceLanguageCode(contextLanguage);
             String contextCountry = contextLocale.getCountry();
             String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
 
