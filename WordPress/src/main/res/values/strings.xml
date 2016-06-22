@@ -980,9 +980,11 @@
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
 
-    <!-- message on post preview explaining what local changes and local drafts are -->
+    <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
     <string name="local_draft_explainer">This post is a local draft which hasn\'t been published</string>
+    <string name="draft_explainer">This post is a draft which hasn\'t been published</string>
+
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
@@ -1260,6 +1262,9 @@
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Sign in again to continue.</string>
+    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
+        in. Try to sign in with your newly created username and password.</string>
+
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1272,7 +1277,7 @@
     <string name="faq_button">FAQ</string>
 
     <!--My Site-->
-    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_publish">Publish</string>
@@ -1364,7 +1369,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
-    
+
     <!--People Management-->
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
