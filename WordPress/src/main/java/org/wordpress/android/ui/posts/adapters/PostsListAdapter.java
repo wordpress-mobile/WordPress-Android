@@ -255,6 +255,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+
+
+            if (post.isUploading()) {
+                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+            } else {
+                pageHolder.disabledOverlay.setVisibility(View.GONE);
+            }
         }
 
         // load more posts when we near the end
@@ -529,6 +536,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mPosts.remove(position);
             if (mPosts.size() > 0) {
                 notifyItemRemoved(position);
+
+                //when page is removed update the next one in case we need to show a header
+                if (mIsPage) {
+                    notifyItemChanged(position);
+                }
             } else {
                 // we must call notifyDataSetChanged when the only post has been deleted - if we
                 // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
@@ -607,6 +619,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
+        private final View disabledOverlay;
 
         public PageViewHolder(View view) {
             super(view);
@@ -616,6 +629,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
+            disabledOverlay = view.findViewById(R.id.disabled_overlay);
         }
     }
 
