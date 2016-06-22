@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.text.Collator;
@@ -212,7 +213,7 @@ public class WPPrefUtils {
      * Gets a locale for the given language code.
      */
     public static Locale languageLocale(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return Locale.getDefault();
+        if (TextUtils.isEmpty(languageCode)) return LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
 
         if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
             return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),

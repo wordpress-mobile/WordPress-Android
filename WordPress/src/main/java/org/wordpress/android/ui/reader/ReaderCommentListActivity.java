@@ -40,6 +40,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -135,7 +136,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
         mEditComment.getAutoSaveTextHelper().setUniqueId(
-                String.format(Locale.getDefault(),
+                String.format(LanguageUtils.getCurrentDeviceLanguage(this),
                         "%s%d%d",
                         AccountHelper.getCurrentUsernameForBlog(null), mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
