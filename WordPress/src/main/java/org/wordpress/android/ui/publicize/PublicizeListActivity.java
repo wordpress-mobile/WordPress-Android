@@ -269,13 +269,8 @@ public class PublicizeListActivity extends AppCompatActivity
         closeWebViewFragment();
         reloadDetailFragment();
 
-        if (event.getAction() == PublicizeConstants.ConnectAction.CHOOSE_ACCOUNT) {
-            JSONObject jsonObject = event.getJsonObject();
-            showChooserDialog(jsonObject);
-        } else {
-            if (!event.didSucceed()) {
-                ToastUtils.showToast(this, R.string.error_generic);
-            }
+        if (!event.didSucceed()) {
+            ToastUtils.showToast(this, R.string.error_generic);
         }
     }
 
