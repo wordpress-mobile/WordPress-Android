@@ -1,6 +1,6 @@
 language: android
-jdk: oraclejdk7
-sudo: false
+jdk: oraclejdk8
+sudo: required
 
 notifications:
   # Slack notification on failure (secured token).
@@ -17,19 +17,23 @@ android:
     - extra-android-support
     - platform-tools
     - tools
-    - build-tools-23.0.3
-    - android-23
+    - build-tools-24.0.0
+    - android-24
 
 env:
   global:
+    - MALLOC_ARENA_MAX=2
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
 
+before_install:
+  # TODO: Remove the following line when Travis' platform-tools are updated to v24+
+  - echo yes | android update sdk -a --filter platform-tools --no-ui --force
+
 install:
   # Setup gradle.properties
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
-  - cp WordPress/test.properties-example WordPress/test.properties
 
 script:
-  - ./gradlew -PdisablePreDex assembleVanillaRelease lintVanillaRelease || (grep -A20 -B2 'severity="Error"' WordPress/build/outputs/lint-results-vanillaRelease.xml; exit 1)
+  - ./gradlew -PdisablePreDex assembleVanillaRelease lint || (grep -A20 -B2 'severity="Error"' WordPress/build/outputs/lint-results-vanillaDebug.xml; exit 1)

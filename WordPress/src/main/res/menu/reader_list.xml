@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_reader_settings"
+        android:icon="@drawable/gridicons_cog_light"
+        android:title="@string/reader_menu_tags"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_reader_search"
+        android:icon="@drawable/gridicons_search_light"
+        android:title="@string/search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always|collapseActionView" />
+
+</menu>

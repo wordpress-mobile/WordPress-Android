@@ -40,6 +40,7 @@ public final class AnalyticsTracker {
         READER_TAG_LOADED,
         READER_TAG_PREVIEWED,
         READER_TAG_UNFOLLOWED,
+        READER_SEARCH_LOADED,
         STATS_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,

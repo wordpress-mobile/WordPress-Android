@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:card_view="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -89,25 +89,6 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <!--View Site-->
-            <RelativeLayout
-                android:id="@+id/row_view_site"
-                style="@style/MySiteListRowLayout"
-                android:layout_marginTop="@dimen/my_site_margin_general">
-
-                <ImageView
-                    android:id="@+id/my_site_view_site_icon"
-                    style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/my_site_icon_view_site" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_view_site_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_site_view_site_icon"
-                    android:text="@string/my_site_btn_view_site" />
-
-            </RelativeLayout>
-
             <!--Stats-->
             <RelativeLayout
                 android:id="@+id/row_stats"
@@ -144,8 +125,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_current_plan_text_view"
-                    style="@style/MySiteListRowSecodaryTextView"
-                    android:layout_toRightOf="@id/my_site_plan_text_view"
+                    style="@style/MySiteListRowSecondaryTextView"
                     android:text="@string/plan" />
 
             </RelativeLayout>
@@ -348,22 +328,47 @@
 
             </RelativeLayout>
 
+            <!--EXTERNAL-->
             <LinearLayout
                 android:id="@+id/admin_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!--Admin-->
                 <LinearLayout style="@style/MySiteListHeaderLayout">
-
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/MySiteListHeaderTextView"
-                        android:text="@string/my_site_header_admin" />
+                        android:text="@string/my_site_header_external" />
 
                     <View style="@style/MySiteListSectionDividerView" />
 
                 </LinearLayout>
+
+                <!--View Site-->
+                <RelativeLayout
+                    android:id="@+id/row_view_site"
+                    style="@style/MySiteListRowLayout"
+                    android:layout_marginTop="@dimen/my_site_margin_general">
+
+                    <ImageView
+                        android:id="@+id/my_site_view_site_icon"
+                        style="@style/MySiteListRowIcon"
+                        app:srcCompat="@drawable/my_site_icon_view_site" />
+
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/my_site_view_site_text_view"
+                        style="@style/MySiteListRowTextView"
+                        android:layout_toRightOf="@id/my_site_view_site_icon"
+                        android:text="@string/my_site_btn_view_site" />
+
+                    <ImageView
+                        android:id="@+id/my_site_view_site_icon_external"
+                        style="@style/MySiteListRowSecondaryIcon"
+                        android:layout_toRightOf="@+id/my_site_view_site_text_view"
+                        android:tint="@color/grey_darken_10"
+                        app:srcCompat="@drawable/gridicons_external" />
+
+                </RelativeLayout>
 
                 <!--View Admin-->
                 <RelativeLayout
@@ -381,10 +386,15 @@
                         android:layout_toRightOf="@id/my_site_view_admin_icon"
                         android:text="@string/my_site_btn_view_admin" />
 
+                    <ImageView
+                        android:id="@+id/my_site_admin_icon_external"
+                        style="@style/MySiteListRowSecondaryIcon"
+                        android:layout_toRightOf="@+id/my_site_view_admin_text_view"
+                        android:tint="@color/grey_darken_10"
+                        app:srcCompat="@drawable/gridicons_external" />
+
                 </RelativeLayout>
             </LinearLayout>
-
-
 
             <View
                 android:layout_width="match_parent"

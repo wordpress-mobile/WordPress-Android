@@ -9,6 +9,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MapUtils;
@@ -20,7 +21,6 @@ import org.xmlrpc.android.XMLRPCException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,7 +81,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || mSettings.defaultPostFormat.equals("0")) {
             mSettings.defaultPostFormat = siteSettingsPreferences(mActivity).getString(DEF_FORMAT_PREF_KEY, "0");
         }
-        mSettings.language = siteSettingsPreferences(mActivity).getString(LANGUAGE_PREF_KEY, Locale.getDefault().getLanguage());
+        mSettings.language = siteSettingsPreferences(mActivity).getString(LANGUAGE_PREF_KEY, LanguageUtils.getPatchedCurrentDeviceLanguage(null));
 
         return this;
     }

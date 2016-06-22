@@ -105,7 +105,7 @@ public class ReaderPostListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.goBackInTagHistory()) {
+        if (fragment == null || !fragment.onActivityBackPressed()) {
             super.onBackPressed();
         }
     }

@@ -101,6 +101,7 @@ public class WPActivityUtils {
         if (sharedPreferences.contains(AppSettingsFragment.LANGUAGE_PREF_KEY)) {
             Locale contextLocale = context.getResources().getConfiguration().locale;
             String contextLanguage = contextLocale.getLanguage();
+            contextLanguage = LanguageUtils.patchDeviceLanguageCode(contextLanguage);
             String contextCountry = contextLocale.getCountry();
             String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
 

@@ -4,16 +4,24 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +31,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
@@ -40,8 +49,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.ui.reader.services.ReaderPostService.UpdateAction;
+import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -51,6 +62,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -70,20 +82,29 @@ public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
                    ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
+                   WPMainActivity.OnActivityBackPressedListener,
                    WPMainActivity.OnScrollToTopListener {
 
     private ReaderPostAdapter mPostAdapter;
+    private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
+
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
     private final ReaderTagList mTags = new ReaderTagList();
 
     private View mNewPostsBar;
     private View mEmptyView;
+    private View mEmptyViewBoxImages;
     private ProgressBar mProgress;
+
+    private SearchView mSearchView;
+    private MenuItem mSettingsMenuItem;
+    private MenuItem mSearchMenuItem;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
+    private String mCurrentSearchQuery;
     private ReaderPostListType mPostListType;
 
     private int mRestorePosition;
@@ -189,6 +210,7 @@ public class ReaderPostListFragment extends Fragment
 
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
+            mCurrentSearchQuery = args.getString(ReaderConstants.ARG_SEARCH_QUERY);
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
@@ -210,6 +232,9 @@ public class ReaderPostListFragment extends Fragment
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_FEED_ID)) {
                 mCurrentFeedId = savedInstanceState.getLong(ReaderConstants.ARG_FEED_ID);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_SEARCH_QUERY)) {
+                mCurrentSearchQuery = savedInstanceState.getString(ReaderConstants.ARG_SEARCH_QUERY);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -233,15 +258,21 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        checkAdapter();
+        checkPostAdapter();
 
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-            if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+            if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
             } else {
                 refreshPosts();
+            }
+
+            // if the user was searching, make sure the filter toolbar is showing
+            // so the user can see the search keyword they entered
+            if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                mRecyclerView.showToolbar();
             }
         }
     }
@@ -293,7 +324,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
-    private void checkAdapter()  {
+    private void checkPostAdapter()  {
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
 
@@ -306,6 +337,17 @@ public class ReaderPostListFragment extends Fragment
                 }
             }
         }
+    }
+
+    /*
+     * reset the post adapter to initial state and create it again using the passed list type
+     */
+    private void resetPostAdapter(ReaderPostListType postListType) {
+        mPostListType = postListType;
+        mPostAdapter = null;
+        mRecyclerView.setAdapter(null);
+        mRecyclerView.setAdapter(getPostAdapter());
+        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
     }
 
     @SuppressWarnings("unused")
@@ -345,6 +387,7 @@ public class ReaderPostListFragment extends Fragment
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
+        outState.putString(ReaderConstants.ARG_SEARCH_QUERY, mCurrentSearchQuery);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
@@ -372,7 +415,7 @@ public class ReaderPostListFragment extends Fragment
         // view that appears when current tag/blog has no posts - box images in this view are
         // displayed and animated for tags only
         mEmptyView = rootView.findViewById(R.id.empty_custom_view);
-        mEmptyView.findViewById(R.id.layout_box_images).setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
+        mEmptyViewBoxImages = mEmptyView.findViewById(R.id.layout_box_images);
 
         mRecyclerView.setLogT(AppLog.T.READER);
         mRecyclerView.setCustomEmptyView(mEmptyView);
@@ -458,16 +501,6 @@ public class ReaderPostListFragment extends Fragment
         int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        if (!ReaderUtils.isLoggedOutReader()) {
-            View settingsControl = inflater.inflate(R.layout.filtered_recyclerview_settings_control, null);
-            mRecyclerView.addToolbarCustomControl(settingsControl, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderSubs(v.getContext());
-                }
-            });
-            ReaderUtils.setBackgroundToRoundRipple(settingsControl);
-        }
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
@@ -475,6 +508,14 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
+
+        // add a menu to the filtered recycler's toolbar
+        if (!ReaderUtils.isLoggedOutReader()
+                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
+            setupRecyclerToolbar();
+        }
+
+        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -487,12 +528,214 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
         return rootView;
+    }
+
+    /*
+     * adds a menu to the recycler's toolbar containing settings & search items - only called
+     * for followed tags
+     */
+    private void setupRecyclerToolbar() {
+        Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
+        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
+        mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
+
+        mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                ReaderActivityLauncher.showReaderSubs(getActivity());
+                return true;
+            }
+        });
+
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
+        mSearchView.setSubmitButtonEnabled(false);
+        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setIconified(true);
+
+        // force the search view to take up as much horizontal space as possible (without this
+        // it looks truncated on landscape)
+        int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+        mSearchView.setMaxWidth(maxWidth);
+
+        // this is hacky, but we want to change the SearchView's autocomplete to show suggestions
+        // after a single character is typed, and there's no less hacky way to do this...
+        View view = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        if (view instanceof AutoCompleteTextView) {
+            ((AutoCompleteTextView) view).setThreshold(1);
+        }
+
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
+                showSearchMessage();
+                mSettingsMenuItem.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                hideSearchMessage();
+                resetSearchSuggestionAdapter();
+                mSettingsMenuItem.setVisible(true);
+                mCurrentSearchQuery = null;
+
+                // return to the followed tag that was showing prior to searching
+                resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
+
+                return true;
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+               @Override
+               public boolean onQueryTextSubmit(String query) {
+                   submitSearchQuery(query);
+                   return true;
+               }
+
+               @Override
+               public boolean onQueryTextChange(String newText) {
+                   if (TextUtils.isEmpty(newText)) {
+                       showSearchMessage();
+                   } else {
+                       populateSearchSuggestionAdapter(newText);
+                   }
+                   return true;
+               }
+           }
+        );
+    }
+
+    /*
+     * start the search service to search for posts matching the current query - the passed
+     * offset is used during infinite scroll, pass zero for initial search
+     */
+    private void updatePostsInCurrentSearch(int offset) {
+        ReaderSearchService.startService(getActivity(), mCurrentSearchQuery, offset);
+    }
+
+    private void submitSearchQuery(@NonNull String query) {
+        if (!isAdded()) return;
+
+        mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
+        hideSearchMessage();
+
+        // remember this query for future suggestions
+        String trimQuery = query != null ? query.trim() : "";
+        ReaderSearchTable.addOrUpdateQueryString(trimQuery);
+
+        // remove cached results for this search - search results are ephemeral so each search
+        // should be treated as a "fresh" one
+        ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(trimQuery);
+        ReaderPostTable.deletePostsWithTag(searchTag);
+
+        mPostAdapter.setCurrentTag(searchTag);
+        mCurrentSearchQuery = trimQuery;
+        updatePostsInCurrentSearch(0);
+
+        // track that the user performed a search
+        if (!trimQuery.equals("")) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("query", trimQuery);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED, properties);
+        }
+    }
+
+    /*
+     * reuse "empty" view to let user know what they're querying
+     */
+    private void showSearchMessage() {
+        if (!isAdded()) return;
+
+        // clear posts so only the empty view is visible
+        getPostAdapter().clear();
+
+        setEmptyTitleAndDescription(false);
+        showEmptyView();
+    }
+
+    private void hideSearchMessage() {
+        hideEmptyView();
+    }
+
+    /*
+     * create and assign the suggestion adapter for the search view
+     */
+    private void createSearchSuggestionAdapter() {
+        mSearchSuggestionAdapter = new ReaderSearchSuggestionAdapter(getActivity());
+        mSearchView.setSuggestionsAdapter(mSearchSuggestionAdapter);
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                String query = mSearchSuggestionAdapter.getSuggestion(position);
+                if (!TextUtils.isEmpty(query)) {
+                    mSearchView.setQuery(query, true);
+                }
+                return true;
+            }
+        });
+    }
+
+    private void populateSearchSuggestionAdapter(String query) {
+        if (mSearchSuggestionAdapter == null) {
+            createSearchSuggestionAdapter();
+        }
+        mSearchSuggestionAdapter.setFilter(query);
+    }
+
+    private void resetSearchSuggestionAdapter() {
+        mSearchView.setSuggestionsAdapter(null);
+        mSearchSuggestionAdapter = null;
+    }
+
+    /*
+     * is the search input showing?
+     */
+    private boolean isSearchViewExpanded() {
+        return mSearchView != null && !mSearchView.isIconified();
+    }
+
+    private boolean isSearchViewEmpty() {
+        return mSearchView != null && mSearchView.getQuery().length() == 0;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
+        if (!isAdded()) return;
+
+        UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
+        setIsUpdating(true, updateAction);
+        setEmptyTitleAndDescription(false);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
+        if (!isAdded()) return;
+
+        UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
+        setIsUpdating(false, updateAction);
+
+        // load the results if the search succeeded and it's the current search - note that success
+        // means the search didn't fail, not necessarily that is has results - which is fine because
+        // if there aren't results then refreshing will show the empty message
+        if (event.didSucceed()
+                && getPostListType() == ReaderPostListType.SEARCH_RESULTS
+                && event.getQuery().equals(mCurrentSearchQuery)) {
+            refreshPosts();
+        }
     }
 
     /*
@@ -570,15 +813,14 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * box/pages animation that appears when loading an empty list (only appears for tags)
+     * box/pages animation that appears when loading an empty list
      */
     private boolean shouldShowBoxAndPagesAnimation() {
         return getPostListType().isTagType();
     }
+
     private void startBoxAndPagesAnimation() {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
         ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
         ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
@@ -590,50 +832,92 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescription(boolean requestFailed) {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
-        int titleResId;
-        int descriptionResId = 0;
+        String title;
+        String description = null;
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            titleResId = R.string.reader_empty_posts_no_connection;
+            title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
-            titleResId = R.string.reader_empty_posts_request_failed;
-        } else if (isUpdating()) {
-            titleResId = R.string.reader_empty_posts_in_tag_updating;
-        } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            titleResId = R.string.reader_empty_posts_in_blog;
-        } else if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && hasCurrentTag()) {
-            if (getCurrentTag().isFollowedSites()) {
-                if (ReaderBlogTable.hasFollowedBlogs()) {
-                    titleResId = R.string.reader_empty_followed_blogs_no_recent_posts_title;
-                    descriptionResId = R.string.reader_empty_followed_blogs_no_recent_posts_description;
-                } else {
-                    titleResId = R.string.reader_empty_followed_blogs_title;
-                    descriptionResId = R.string.reader_empty_followed_blogs_description;
-                }
-            } else if (getCurrentTag().isPostsILike()) {
-                titleResId = R.string.reader_empty_posts_liked;
-            } else if (getCurrentTag().tagType == ReaderTagType.CUSTOM_LIST) {
-                titleResId = R.string.reader_empty_posts_in_custom_list;
-            } else {
-                titleResId = R.string.reader_empty_posts_in_tag;
-            }
+            title = getString(R.string.reader_empty_posts_request_failed);
+        } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+            title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
-            titleResId = R.string.reader_empty_posts_in_tag;
+            switch (getPostListType()) {
+                case TAG_FOLLOWED:
+                    if (getCurrentTag().isFollowedSites()) {
+                        if (ReaderBlogTable.hasFollowedBlogs()) {
+                            title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
+                            description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
+                        } else {
+                            title = getString(R.string.reader_empty_followed_blogs_title);
+                            description = getString(R.string.reader_empty_followed_blogs_description);
+                        }
+                    } else if (getCurrentTag().isPostsILike()) {
+                        title = getString(R.string.reader_empty_posts_liked);
+                    } else if (getCurrentTag().isListTopic()) {
+                        title = getString(R.string.reader_empty_posts_in_custom_list);
+                    } else {
+                        title = getString(R.string.reader_empty_posts_in_tag);
+                    }
+                    break;
+
+                case BLOG_PREVIEW:
+                    title = getString(R.string.reader_empty_posts_in_blog);
+                    break;
+
+                case SEARCH_RESULTS:
+                    if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
+                        title = getString(R.string.reader_label_post_search_explainer);
+                    } else if (isUpdating()) {
+                        title = getString(R.string.reader_label_post_search_running);
+                    } else {
+                        title = getString(R.string.reader_empty_posts_in_search_title);
+                        String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
+                        description = String.format(getString(R.string.reader_empty_posts_in_search_description), formattedQuery);
+                    }
+                    break;
+
+                default:
+                    title = getString(R.string.reader_empty_posts_in_tag);
+                    break;
+            }
         }
 
+        setEmptyTitleAndDescription(title, description);
+    }
+
+    private void setEmptyTitleAndDescription(@NonNull String title, String description) {
+        if (!isAdded()) return;
+
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
-        titleView.setText(getString(titleResId));
+        titleView.setText(title);
 
         TextView descriptionView = (TextView) mEmptyView.findViewById(R.id.description_empty);
-        if (descriptionResId == 0) {
+        if (description == null) {
             descriptionView.setVisibility(View.INVISIBLE);
         } else {
-            descriptionView.setText(getString(descriptionResId));
+            if (description.contains("<") && description.contains(">")) {
+                descriptionView.setText(Html.fromHtml(description));
+            } else {
+                descriptionView.setText(description);
+            }
             descriptionView.setVisibility(View.VISIBLE);
+        }
+
+        mEmptyViewBoxImages.setVisibility(shouldShowBoxAndPagesAnimation() ? View.VISIBLE : View.GONE);
+    }
+
+    private void showEmptyView() {
+        if (isAdded()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideEmptyView() {
+        if (isAdded()) {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -649,12 +933,12 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setRefreshing(false);
             if (isEmpty) {
                 setEmptyTitleAndDescription(false);
-                mEmptyView.setVisibility(View.VISIBLE);
+                showEmptyView();
                 if (shouldShowBoxAndPagesAnimation()) {
                     startBoxAndPagesAnimation();
                 }
             } else {
-                mEmptyView.setVisibility(View.GONE);
+                hideEmptyView();
                 if (mRestorePosition > 0) {
                     AppLog.d(T.READER, "reader post list > restoring position");
                     mRecyclerView.scrollRecycleViewToPosition(mRestorePosition);
@@ -698,6 +982,15 @@ public class ReaderPostListFragment extends Fragment
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
+
+                case SEARCH_RESULTS:
+                    ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                    int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
+                    if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                        updatePostsInCurrentSearch(offset);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                    }
+                    break;
             }
         }
     };
@@ -719,6 +1012,9 @@ public class ReaderPostListFragment extends Fragment
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
+            } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+                ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                mPostAdapter.setCurrentTag(searchTag);
             }
         }
         return mPostAdapter;
@@ -783,11 +1079,27 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
+     * called by the activity when user hits the back button - returns true if the back button
+     * is handled here and should be ignored by the activity
+     */
+    @Override
+    public boolean onActivityBackPressed() {
+        if (isSearchViewExpanded()) {
+            mSearchMenuItem.collapseActionView();
+            return true;
+        } else if (goBackInTagHistory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
     * when previewing posts with a specific tag, a history of previewed tags is retained so
     * the user can navigate back through them - this is faster and requires less memory
     * than creating a new fragment for each previewed tag
     */
-    boolean goBackInTagHistory() {
+    private boolean goBackInTagHistory() {
         if (mTagPreviewHistory.empty()) {
             return false;
         }
@@ -842,7 +1154,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-
     /*
      * get posts for the current blog from the server
      */
@@ -872,6 +1183,13 @@ public class ReaderPostListFragment extends Fragment
 
         setIsUpdating(false, event.getAction());
         if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
+            return;
+        }
+
+        // don't show new posts if user is searching - posts will automatically
+        // appear when search is exited
+        if (isSearchViewExpanded()
+                || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -983,8 +1301,16 @@ public class ReaderPostListFragment extends Fragment
         // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
         // doing a refresh while another update is already in progress
         if (mRecyclerView != null && !mRecyclerView.isRefreshing()) {
-            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating);
+            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported());
         }
+    }
+
+    /*
+     * swipe-to-refresh isn't supported for search results since they're really brief snapshots
+     * and are unlikely to show new posts due to the way they're sorted by score
+     */
+    private boolean isSwipeToRefreshSupported() {
+        return getPostListType() != ReaderPostListType.SEARCH_RESULTS;
     }
 
     /*
@@ -1114,6 +1440,9 @@ public class ReaderPostListFragment extends Fragment
                         post.blogId,
                         post.postId);
                 break;
+            case SEARCH_RESULTS:
+                ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
+                break;
         }
     }
 
@@ -1169,9 +1498,7 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) {
-            return;
-        }
+        if (view == null || post == null || !isAdded()) return;
 
         Context context = view.getContext();
         final ListPopupWindow listPopup = new ListPopupWindow(context);
