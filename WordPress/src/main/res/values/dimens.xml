@@ -83,6 +83,8 @@
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
+    <dimen name="reader_related_post_margin">@dimen/margin_extra_large</dimen>
+
     <!-- height of divider between cards -->
     <dimen name="reader_card_gutters">12dp</dimen>
 

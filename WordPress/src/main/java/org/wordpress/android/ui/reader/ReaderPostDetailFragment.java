@@ -420,12 +420,12 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         for (ReaderPost post: event.getRelatedPosts()) {
-            View postView = inflater.inflate(R.layout.reader_related_post, container, true);
+            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
             txtTitle.setText(post.getTitle());
-            String subTitle;
+
             // TODO: prefix author name with "By "
+            String subTitle;
             if (post.hasAuthorName() && post.hasBlogName()) {
                 subTitle = post.getAuthorName() + ", " + post.getBlogName();
             } else if (post.hasAuthorName()) {
@@ -435,7 +435,10 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 subTitle = "";
             }
+            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
             txtSubtitle.setText(subTitle);
+
+            container.addView(postView);
         }
 
         if (container.getVisibility() != View.VISIBLE) {

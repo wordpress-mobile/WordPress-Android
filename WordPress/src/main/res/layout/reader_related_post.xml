@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/calypso_bordered_bg"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_extra_large">
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_related_post_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_related_post_margin"
+        android:layout_marginRight="@dimen/reader_related_post_margin"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
         app:wpFontFamily="merriweather"
         tools:text="text_related_post_title" />
 
@@ -23,10 +24,13 @@
         android:id="@+id/text_related_post_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/reader_related_post_margin"
+        android:layout_marginLeft="@dimen/reader_related_post_margin"
+        android:layout_marginRight="@dimen/reader_related_post_margin"
         android:ellipsize="end"
         android:maxLines="4"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_medium"
-        app:wpFontFamily="merriweather"
-        tools:text="text_related_post_content" />
+        tools:text="text_related_post_subtitle" />
+
 </LinearLayout>
