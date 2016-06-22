@@ -474,6 +474,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return ReaderPostDetailFragment.newInstance(
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
+                    mIsSinglePostView,
                     getPostListType());
         }
 

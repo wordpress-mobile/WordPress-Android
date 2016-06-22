@@ -82,6 +82,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
+    private boolean mIsSinglePostView;
     private int mToolbarHeight;
     private String mErrorMessage;
 
@@ -93,17 +94,19 @@ public class ReaderPostDetailFragment extends Fragment
 
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, null);
+        return newInstance(blogId, postId, true, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
+                                                       boolean isSinglePostView,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
+        args.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, isSinglePostView);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -126,6 +129,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            mIsSinglePostView = args.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -396,10 +400,17 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get posts related to the one being displayed - only works for public wp.com blogs
+     * get posts related to the one being displayed - only works for public wp.com blogs, and
+     * skipped for single post view
      */
     private void updateRelatedPosts() {
-        if (!hasPost() || !mPost.isWP() || mPost.isPrivate) return;
+        if (!hasPost()
+                || !mPost.isWP()
+                || mPost.isPrivate
+                || mIsLoggedOutReader
+                || mIsSinglePostView) {
+            return;
+        }
 
         ReaderPostActions.updateRelatedPosts(mPost);
     }
