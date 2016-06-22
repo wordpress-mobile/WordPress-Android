@@ -256,7 +256,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
-
             if (post.isUploading()) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
