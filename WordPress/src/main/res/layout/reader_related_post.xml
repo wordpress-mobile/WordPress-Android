@@ -43,6 +43,7 @@
         android:layout_height="@dimen/reader_related_post_image_size"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/reader_related_post_margin"
         android:visibility="gone"
         tools:src="@drawable/my_site_no_sites_drake"
         tools:visibility="visible" />
