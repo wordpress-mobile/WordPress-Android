@@ -16,6 +16,7 @@ android:
     - extra-android-m2repository
     - extra-android-support
     - platform-tools
+    # TODO: Remove platform-tools-preview when platform-tools are updated to v24+
     - platform-tools-preview
     - tools
     - build-tools-24.0.0
@@ -29,6 +30,7 @@ env:
     - ANDROID_TARGET=android-14
 
 before_install:
+  # TODO: Remove the following line when platform-tools or platform-tools-preview are updated to v24+
   - echo yes | android update sdk -a --filter platform-tools-preview --no-ui --force
 
 install:
