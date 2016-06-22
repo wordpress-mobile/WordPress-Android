@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
@@ -110,11 +109,6 @@ public class WordPress extends MultiDexApplication {
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
-
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
 
     /**
      * Updates Options for the current blog in background.
