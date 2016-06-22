@@ -170,7 +170,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
+        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
                 getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {

@@ -15,6 +15,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.PhotonUtils;
 
 import java.util.Currency;
@@ -39,9 +40,9 @@ public class PlansUtils {
     public static String getPlanDisplayPrice(@NonNull Plan plan) {
         // lookup currency code/symbol on first use
         if (deviceCurrencyCode == null) {
-            Currency currency = Currency.getInstance(Locale.getDefault());
+            Currency currency = Currency.getInstance(LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()));
             deviceCurrencyCode = currency.getCurrencyCode();
-            deviceCurrencySymbol = currency.getSymbol(Locale.getDefault());
+            deviceCurrencySymbol = currency.getSymbol(LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()));
         }
 
         String currencySymbol;

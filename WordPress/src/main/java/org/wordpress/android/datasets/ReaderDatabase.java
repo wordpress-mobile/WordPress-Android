@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 115;
+    private static final int DB_VERSION = 119;
 
     /*
      * version history
@@ -66,7 +66,11 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  112 - no structural change, just reset db
      *  113 - added tag_title to tag tables
      *  114 - renamed tag_name to tag_slug in tag tables
-     *  115 - added tag_display_name to tag tables
+     *  115 - added ReaderSearchTable
+     *  116 - added tag_display_name to tag tables
+     *  117 - changed tbl_posts.timestamp from INTEGER to REAL
+     *  118 - renamed tbl_search_history to tbl_search_suggestions
+     *  119 - renamed tbl_posts.timestamp to sort_index
      */
 
     /*
@@ -142,6 +146,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.createTables(db);
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
+        ReaderSearchTable.createTables(db);
     }
 
     private void dropAllTables(SQLiteDatabase db) {
@@ -152,6 +157,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.dropTables(db);
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
+        ReaderSearchTable.dropTables(db);
     }
 
     /*
