@@ -1286,7 +1286,7 @@
     <string name="faq_button">FAQ</string>
 
     <!--My Site-->
-    <string name="my_site_header_admin">Admin</string>
+    <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_publish">Publish</string>
