@@ -316,7 +316,7 @@ public class ReaderPostActions {
         WordPress.requestQueue.add(request);
     }
 
-    public static void updateRelatedPosts(ReaderPost post) {
+    public static void updateRelatedPosts(final ReaderPost post) {
         if (post == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -324,7 +324,7 @@ public class ReaderPostActions {
             public void onResponse(JSONObject jsonObject) {
                 ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
                 if (relatedPosts != null && relatedPosts.size() > 0) {
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(relatedPosts));
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(post, relatedPosts));
                 }
             }
         };

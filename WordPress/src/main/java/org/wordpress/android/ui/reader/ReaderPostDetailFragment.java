@@ -409,14 +409,16 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
-        if (!isAdded()) return;
+        if (!isAdded() || !hasPost()) return;
 
-        // locate the related posts container and remove all views except the label
-        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
-        if (container.getChildCount() > 1) {
-            int numToRemove = container.getChildCount() - 1;
-            container.removeViews(1, numToRemove);
+        // make sure this is for the current post
+        if (event.getSourcePost().postId != mPostId || event.getSourcePost().blogId != mBlogId) {
+            return;
         }
+
+        // locate the related posts container and remove all child views
+        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
+        container.removeAllViews();
 
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -452,9 +454,9 @@ public class ReaderPostDetailFragment extends Fragment
             container.addView(postView);
         }
 
-        if (container.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
-        }
+        View label = getView().findViewById(R.id.text_related_posts_label);
+        label.setVisibility(View.VISIBLE);
+        container.setVisibility(View.VISIBLE);
     }
 
     /*
