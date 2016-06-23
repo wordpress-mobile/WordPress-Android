@@ -6,6 +6,13 @@ Formatter.videoShortcodeFormats = ["mp4", "m4v", "webm", "ogv", "wmv", "flv"];
 
 Formatter.htmlToVisual = function(html) {
     var mutatedHTML = wp.loadText(html);
+
+    // Perform extra transformations to properly wrap captioned images in paragraphs
+    mutatedHTML = mutatedHTML.replace(/^\[caption([^\]]*\])/igm, '<p>[caption$1');
+    mutatedHTML = mutatedHTML.replace(/([^\n>])\[caption/igm, '$1<br />\n[caption');
+    mutatedHTML = mutatedHTML.replace(/\[\/caption\]\n(?=<|$)/igm, '[/caption]</p>\n');
+    mutatedHTML = mutatedHTML.replace(/\[\/caption\]\n(?=[^<])/igm, '[/caption]<br />\n');
+
     return Formatter.applyVisualFormatting(mutatedHTML);
 }
 
@@ -17,13 +24,13 @@ Formatter.convertPToDiv = function(html) {
     // The break tags appear when text and media are separated by only a line break rather than a paragraph break,
     // which can happen when inserting media inline and switching to HTML mode and back, or by deleting line breaks
     // in HTML mode
-    mutatedHTML = mutatedHTML.replace(/<br \/>(?=\s*(<a href|<img|<video|<span class="edit-container"))/igm,
+    mutatedHTML = mutatedHTML.replace(/<br \/>(?=\s*(<img|<a href|<label|<video|<span class="edit-container"))/igm,
             '</div><div>');
-    mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/video>|<\/span>)<br \/>/igm,
+    mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/label>|<\/video>|<\/span>)<br \/>/igm,
             function replaceBrWithDivs(match) { return match.substr(0, match.length - 6) + '</div><div>'; });
 
     // Append paragraph-wrapped break tag under media at the end of a post
-    mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/video>|<\/span>)[^<>]*<\/div>\s$/igm,
+    mutatedHTML = mutatedHTML.replace(/(<img [^<>]*>|<\/a>|<\/label>|<\/video>|<\/span>)[^<>]*<\/div>\s$/igm,
             function replaceBrWithDivs(match) { return match + '<div><br></div>'; });
 
     return mutatedHTML;
@@ -68,15 +75,15 @@ Formatter.applyCaptionFormatting = function(match) {
     var attrs = match.attrs.named;
     // The empty 'onclick' is important. It prevents the cursor jumping to the end
     // of the content body when `-webkit-user-select: none` is set and the caption is tapped.
-    var out = '<label class="wp-temp" data-wp-temp="caption" contenteditable="false" onclick="">';
+    var out = '<label class="wp-temp" data-wp-temp="caption" onclick="">';
     out += '<span class="wp-caption"';
 
     if (attrs.width) {
         out += ' style="width:' + attrs.width + 'px; max-width:100% !important;"';
     }
-    $.each(attrs, function(key, value) {
-        out += " data-caption-" + key + '="' + value + '"';
-    });
+    for (var key in attrs) {
+        out += " data-caption-" + key + '="' + attrs[key] + '"';
+    }
 
     out += '>';
     out += match.content;
