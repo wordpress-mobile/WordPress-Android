@@ -888,7 +888,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (saveDialog == null) {
             saveDialog = WPAlertDialogFragment.newConfirmDialog(getString(R.string.editor_save_dialog_title),
                     getString(R.string.editor_save_dialog_message));
-            saveDialog.setCancelable(false);
         }
         if (!saveDialog.isAdded()) {
             saveDialog.show(fm, SAVE_DIALOG_TAG);
