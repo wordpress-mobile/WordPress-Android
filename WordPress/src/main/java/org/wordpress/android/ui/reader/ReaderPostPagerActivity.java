@@ -57,10 +57,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+    private boolean mIsRelatedPostView;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-
-    private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
+            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -92,7 +92,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
+            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -180,7 +181,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -474,7 +476,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return ReaderPostDetailFragment.newInstance(
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
-                    mIsSinglePostView,
+                    mIsRelatedPostView,
                     getPostListType());
         }
 

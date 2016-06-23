@@ -82,7 +82,8 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
-    private boolean mIsSinglePostView;
+    private boolean mIsRelatedPost;
+
     private int mToolbarHeight;
     private String mErrorMessage;
 
@@ -94,19 +95,19 @@ public class ReaderPostDetailFragment extends Fragment
 
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, true, null);
+        return newInstance(blogId, postId, false, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
-                                                       boolean isSinglePostView,
+                                                       boolean isRelatedPost,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
-        args.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, isSinglePostView);
+        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -129,7 +130,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = args.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -249,8 +250,10 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         if (!TextUtils.isEmpty(mErrorMessage)) {
@@ -271,6 +274,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -461,7 +465,7 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), post.blogId, post.postId);
+                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), post.blogId, post.postId, true);
                 }
             });
 
