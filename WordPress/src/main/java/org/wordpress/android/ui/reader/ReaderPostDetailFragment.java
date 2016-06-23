@@ -433,7 +433,7 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderPost post: event.getRelatedPosts()) {
+        for (final ReaderPost post : event.getRelatedPosts()) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
@@ -473,8 +473,12 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         View label = getView().findViewById(R.id.text_related_posts_label);
-        label.setVisibility(View.VISIBLE);
-        container.setVisibility(View.VISIBLE);
+        if (label.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
+        }
+        if (container.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        }
     }
 
     /*
