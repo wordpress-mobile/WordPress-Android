@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -444,7 +445,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
         List<MenuItemModel> items = mItemsView.getCurrentMenuItems();
         MenuItemModel originalItem = items.get(position);
-        MenuItemModel newItem = new MenuItemModel();
+        final MenuItemModel newItem = new MenuItemModel();
         newItem.name = getString(R.string.menus_item_new_item);
         newItem.flattenedLevel = originalItem.flattenedLevel;
         newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
@@ -467,9 +468,17 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 break;
         }
 
-        FragmentManager fm = getFragmentManager();
-        EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
-        dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+        //enclosed Dialog show in a delayed handler to allow animations to be appreciated
+        Handler hdlr = new Handler();
+        hdlr.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fm = getFragmentManager();
+                EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+                dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+            }
+        }, 350);
+
     }
 
     @Override
