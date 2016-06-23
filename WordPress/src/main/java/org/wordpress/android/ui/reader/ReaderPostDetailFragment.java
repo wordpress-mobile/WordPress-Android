@@ -406,8 +406,8 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * show existing related posts if we already have them, otherwise request posts related to
-     * the one being displayed - only available for wp.com
+     * show existing related posts if we already have them, otherwise request them - only
+     * available for wp.com
      */
     private void updateRelatedPosts() {
         if (mRelatedPosts.size() > 0) {

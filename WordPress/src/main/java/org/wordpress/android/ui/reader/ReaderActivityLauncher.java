@@ -42,7 +42,11 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        ActivityLauncher.slideInFromRight(context, intent);
+        if (isRelatedPost) {
+            context.startActivity(intent);
+        } else {
+            ActivityLauncher.slideInFromRight(context, intent);
+        }
     }
 
     /*
