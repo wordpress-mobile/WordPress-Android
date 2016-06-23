@@ -1499,6 +1499,7 @@
     <string name="menus_add_item_above">Add menu item above</string>
     <string name="menus_add_item_below">Add menu item below</string>
     <string name="menus_add_item_to_children">Add menu item to children</string>
+    <string name="menus_item_new_item">New item</string>
     <string name="link_item_editor_url_input_header">Link address (URL)</string>
     <string name="link_item_editor_open_new_window_option">Open link in new window/tab</string>
 
@@ -1518,6 +1519,7 @@
         <item>@string/menu_item_type_testimonial</item>
     </string-array>
 
+    <!-- empty menu item adapter views -->
     <string name="menu_item_type_page_empty_list">No pages found</string>
     <string name="menu_item_type_post_empty_list">No posts found</string>
     <string name="menu_item_type_tag_empty_list">No tags found</string>

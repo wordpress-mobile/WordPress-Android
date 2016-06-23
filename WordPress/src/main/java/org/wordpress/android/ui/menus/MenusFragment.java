@@ -434,10 +434,44 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
     @Override
     public void onCancelClick() {
+        // no op
     }
 
     @Override
-    public void onAddClick() {
+    public void onAddClick(int position, MenuItemAdapter.ItemAddPosition where) {
+        //the user wants to add a new item <where: above/below/tochildren> relative to <position>
+
+        List<MenuItemModel> items = mItemsView.getCurrentMenuItems();
+        MenuItemModel originalItem = items.get(position);
+        MenuItemModel newItem = new MenuItemModel();
+        newItem.name = getString(R.string.menus_item_new_item);
+        newItem.flattenedLevel = originalItem.flattenedLevel;
+        switch (where) {
+            case TO_CHILDREN:
+                newItem.flattenedLevel++;
+            case BELOW :
+                if (position == items.size() - 1) {
+                    items.add(newItem);
+                    mItemsView.getAdapter().notifyItemInserted(items.size() - 1);
+                } else {
+                    items.add(position, newItem);
+                    mItemsView.getAdapter().notifyItemInserted(position+1);
+                }
+                break;
+            case ABOVE :
+            default:
+                items.add(position, newItem);
+                mItemsView.getAdapter().notifyItemInserted(position);
+                break;
+        }
+
+//        if (newItem != null) {
+//            FragmentManager fm = getFragmentManager();
+//            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+//            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+//        } else {
+//            //TODO show some error toast
+//        }
     }
 
     @Override
