@@ -63,8 +63,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
-import java.util.Stack;
-
 import de.greenrobot.event.EventBus;
 
 public class ReaderPostDetailFragment extends Fragment
@@ -80,7 +78,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
-    private final Stack<ReaderBlogIdPostId> mPostHistory = new Stack<>();
+    private final ReaderPostHistory mPostHistory = new ReaderPostHistory();
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -132,6 +130,9 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        if (savedInstanceState != null) {
+            mPostHistory.restoreInstance(savedInstanceState);
+        }
     }
 
     @Override
@@ -265,6 +266,8 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
 
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+
+        mPostHistory.saveInstance(outState);
 
         if (!TextUtils.isEmpty(mErrorMessage)) {
             outState.putString(ReaderConstants.KEY_ERROR_MESSAGE, mErrorMessage);
