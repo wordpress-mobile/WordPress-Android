@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -30,6 +31,10 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     private static final String DEFAULT_ITEM_TYPE = ITEM_TYPE.POST.name();
 
+    public interface EditMenuItemDismissListener {
+        void onDismiss(MenuItemModel item);
+    }
+
     public static EditMenuItemDialog newInstance(MenuItemModel menuItem) {
         EditMenuItemDialog dialog = new EditMenuItemDialog();
         Bundle args = new Bundle();
@@ -53,6 +58,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private ViewFlipper mEditorFlipper;
     private Toolbar mToolbar;
     private Spinner mTypePicker;
+    private EditMenuItemDismissListener mDismissListener;
 
     public EditMenuItemDialog() {
         // empty constructor required
@@ -94,6 +100,14 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     }
 
     @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mDismissListener != null) {
+            mDismissListener.onDismiss(mWorkingItem);
+        }
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.save_item) {
             mCurrentEditor.onSave();
@@ -109,14 +123,22 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         return mOriginalItem == null;
     }
 
+    public void setDismissListener(EditMenuItemDismissListener listener){
+        mDismissListener = listener;
+    }
+
     public void setType(String type) {
         mWorkingItem.type = type;
         mToolbar.setTitle(mWorkingItem.name);
-        //mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
-        //mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
         setPickerAndChildViewSelection(type.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         mCurrentEditor.setMenuItem(mWorkingItem);
+        mCurrentEditor.setMenuItemNameChangeListener(new BaseMenuItemEditor.MenuItemNameChangeListener() {
+            @Override
+            public void onNameChanged(String newName) {
+                mToolbar.setTitle(newName);
+            }
+        });
     }
 
     private void fillViewFlipper() {

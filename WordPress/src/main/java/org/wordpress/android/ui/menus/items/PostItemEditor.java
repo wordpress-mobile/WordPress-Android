@@ -54,6 +54,11 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     @Override
+    public int getNameEditTextRes() {
+        return R.id.menu_item_title_edit;
+    }
+
+    @Override
     public MenuItemModel getMenuItem() {
         MenuItemModel menuItem = new MenuItemModel();
         return menuItem;

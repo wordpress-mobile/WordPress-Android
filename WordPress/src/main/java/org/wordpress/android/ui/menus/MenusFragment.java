@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,7 +41,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions {
+public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions, EditMenuItemDialog.EditMenuItemDismissListener {
 
     private static final int BASE_DISPLAY_COUNT_MENUS = -2;
 
@@ -59,6 +60,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     private MenusSpinner mMenusSpinner;
     private MenuModel mCurrentMenuForLocation;
     private MenuItemsView mItemsView;
+    private int mCurrentMenuItemBeingEdited = -1;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -426,11 +428,13 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     }
 
     @Override
-    public void onItemClick(MenuItemModel item) {
+    public void onItemClick(MenuItemModel item, int position) {
         if (item != null) {
             FragmentManager fm = getFragmentManager();
             EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
+            dialog.setDismissListener(MenusFragment.this);
             dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+            mCurrentMenuItemBeingEdited = position;
         }
     }
 
@@ -468,6 +472,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 break;
         }
 
+        mCurrentMenuItemBeingEdited = position;
+
         //enclosed Dialog show in a delayed handler to allow animations to be appreciated
         Handler hdlr = new Handler();
         hdlr.postDelayed(new Runnable() {
@@ -475,6 +481,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             public void run() {
                 FragmentManager fm = getFragmentManager();
                 EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+                dialog.setDismissListener(MenusFragment.this);
                 dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
             }
         }, 350);
@@ -485,6 +492,16 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         updateMenus();
+    }
+
+    @Override
+    public void onDismiss(MenuItemModel modifiedItem) {
+        //re-draw menu items
+        if (mCurrentMenuItemBeingEdited > -1) {
+            List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+            flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
+            mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+        }
     }
 
     private void updateMenus() {
@@ -588,6 +605,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
      * AsyncTask to load menus from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
 
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
