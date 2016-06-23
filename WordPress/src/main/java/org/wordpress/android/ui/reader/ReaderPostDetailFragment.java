@@ -24,7 +24,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
@@ -33,6 +32,8 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
@@ -50,6 +51,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -71,7 +73,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
-    private final ReaderPostList mRelatedPosts = new ReaderPostList();
+    private ReaderRelatedPostList mRelatedPosts;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -410,7 +412,7 @@ public class ReaderPostDetailFragment extends Fragment
      * available for wp.com
      */
     private void updateRelatedPosts() {
-        if (mRelatedPosts.size() > 0) {
+        if (hasRelatedPosts()) {
             showRelatedPosts();
         } else if (hasPost() && mPost.isWP() &&  !mIsLoggedOutReader) {
             ReaderPostActions.updateRelatedPosts(mPost);
@@ -426,14 +428,17 @@ public class ReaderPostDetailFragment extends Fragment
 
         // make sure this is for the current post
         if (event.getSourcePost().postId == mPostId && event.getSourcePost().blogId == mBlogId) {
-            mRelatedPosts.clear();
-            mRelatedPosts.addAll(event.getRelatedPosts());
+            mRelatedPosts = new ReaderRelatedPostList(event.getRelatedPosts());
             showRelatedPosts();
         }
     }
 
+    private boolean hasRelatedPosts() {
+        return mRelatedPosts != null && mRelatedPosts.size() > 0;
+    }
+
     private void showRelatedPosts() {
-        if (mRelatedPosts.size() == 0) return;
+        if (!hasRelatedPosts()) return;
 
         // locate the related posts container and remove any existing related post views
         ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
@@ -442,29 +447,19 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderPost post : mRelatedPosts) {
+        for (final ReaderRelatedPost relatedPost : mRelatedPosts) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
             WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
 
-            txtTitle.setText(post.getTitle());
+            txtTitle.setText(relatedPost.getTitle());
+            txtSubtitle.setText(relatedPost.getSubtitle());
 
-            String subTitle;
-            if (post.hasAuthorName() && post.hasBlogName()) {
-                subTitle = post.getAuthorName() + ", " + post.getBlogName();
-            } else if (post.hasAuthorName()) {
-                subTitle = post.getAuthorName();
-            } else if (post.hasBlogName()) {
-                subTitle = post.getBlogName();
-            } else {
-                subTitle = "";
-            }
-            txtSubtitle.setText(subTitle);
 
-            imgFeatured.setVisibility(post.hasFeaturedImage() ? View.VISIBLE : View.GONE);
-            if (post.hasFeaturedImage()) {
-                String imageUrl = post.getFeaturedImageForDisplay(imageSize, imageSize);
+            imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
+            if (relatedPost.hasFeaturedImage()) {
+                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
                 imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
                 imgFeatured.setVisibility(View.VISIBLE);
             }
@@ -473,7 +468,7 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), post.blogId, post.postId, true);
+                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
                 }
             });
 

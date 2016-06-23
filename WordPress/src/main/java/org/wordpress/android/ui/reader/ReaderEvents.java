@@ -122,7 +122,7 @@ public class ReaderEvents {
         private final ReaderPostList mRelatedPosts;
         public RelatedPostsUpdated(@NonNull ReaderPost sourcePost, @NonNull ReaderPostList relatedPosts) {
             mSourcePost = sourcePost;
-            mRelatedPosts = relatedPosts;
+            mRelatedPosts = (ReaderPostList) relatedPosts.clone();
         }
         public ReaderPost getSourcePost() {
             return mSourcePost;
