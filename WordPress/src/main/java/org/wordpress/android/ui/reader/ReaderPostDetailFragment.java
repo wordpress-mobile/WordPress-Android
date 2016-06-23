@@ -24,6 +24,7 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
@@ -70,6 +71,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
+    private final ReaderPostList mRelatedPosts = new ReaderPostList();
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -404,14 +406,15 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get posts related to the one being displayed - only available for wp.com
+     * show existing related posts if we already have them, otherwise request posts related to
+     * the one being displayed - only available for wp.com
      */
     private void updateRelatedPosts() {
-        if (!hasPost() || !mPost.isWP() || mIsLoggedOutReader) {
-            return;
+        if (mRelatedPosts.size() > 0) {
+            showRelatedPosts();
+        } else if (hasPost() && mPost.isWP() &&  !mIsLoggedOutReader) {
+            ReaderPostActions.updateRelatedPosts(mPost);
         }
-
-        ReaderPostActions.updateRelatedPosts(mPost);
     }
 
     /*
@@ -422,9 +425,15 @@ public class ReaderPostDetailFragment extends Fragment
         if (!isAdded() || !hasPost()) return;
 
         // make sure this is for the current post
-        if (event.getSourcePost().postId != mPostId || event.getSourcePost().blogId != mBlogId) {
-            return;
+        if (event.getSourcePost().postId == mPostId || event.getSourcePost().blogId == mBlogId) {
+            mRelatedPosts.clear();
+            mRelatedPosts.addAll(event.getRelatedPosts());
+            showRelatedPosts();
         }
+    }
+
+    private void showRelatedPosts() {
+        if (mRelatedPosts.size() == 0) return;
 
         // locate the related posts container and remove any existing related post views
         ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
@@ -433,7 +442,7 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderPost post : event.getRelatedPosts()) {
+        for (final ReaderPost post : mRelatedPosts) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
@@ -441,7 +450,6 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle.setText(post.getTitle());
 
-            // TODO: prefix author name with "By "
             String subTitle;
             if (post.hasAuthorName() && post.hasBlogName()) {
                 subTitle = post.getAuthorName() + ", " + post.getBlogName();
