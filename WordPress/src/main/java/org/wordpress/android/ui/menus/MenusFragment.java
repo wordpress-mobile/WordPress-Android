@@ -27,6 +27,7 @@ import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemAdapter;
 import org.wordpress.android.ui.menus.views.MenuItemsView;
@@ -446,6 +447,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         MenuItemModel newItem = new MenuItemModel();
         newItem.name = getString(R.string.menus_item_new_item);
         newItem.flattenedLevel = originalItem.flattenedLevel;
+        newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
         switch (where) {
             case TO_CHILDREN:
                 newItem.flattenedLevel++;
@@ -465,13 +467,13 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 break;
         }
 
-//        if (newItem != null) {
-//            FragmentManager fm = getFragmentManager();
-//            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
-//            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
-//        } else {
-//            //TODO show some error toast
-//        }
+        if (newItem != null) {
+            FragmentManager fm = getFragmentManager();
+            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+        } else {
+            //TODO show some error toast
+        }
     }
 
     @Override
