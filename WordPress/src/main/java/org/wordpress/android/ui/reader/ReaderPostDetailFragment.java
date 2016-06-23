@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
 import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -79,7 +80,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
-    private final Stack<ReaderRelatedPost> mRelatedPostHistory = new Stack<>();
+    private final Stack<ReaderBlogIdPostId> mPostHistory = new Stack<>();
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -316,7 +317,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @Override
     public boolean onActivityBackPressed() {
-        if (goBackInRelatedPostHistory()) {
+        if (goBackInPostHistory()) {
             return true;
         } else {
             return false;
@@ -426,26 +427,30 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * if we're already showing a related post, replace it with the passed one - otherwise
-     * start a new detail activity to show the passed one
+     * replace the current post with the passed one
      */
-    private void navigateToRelatedPost(@NonNull ReaderRelatedPost relatedPost) {
-        if (mIsRelatedPost) {
-            mBlogId = relatedPost.getBlogId();
-            mPostId = relatedPost.getPostId();
-            mHasAlreadyRequestedPost = false;
-            mHasAlreadyUpdatedPost = false;
+    private void replacePost(long blogId, long postId) {
+        mBlogId = blogId;
+        mPostId = postId;
+        mHasAlreadyRequestedPost = false;
+        mHasAlreadyUpdatedPost = false;
 
-            // hide the current list of related posts
-            View container = getView().findViewById(R.id.container_related_posts);
-            View label = getView().findViewById(R.id.text_related_posts_label);
-            container.setVisibility(View.INVISIBLE);
-            label.setVisibility(View.INVISIBLE);
+        // hide views that would show info for the previous post - these will be re-displayed
+        // with the correct info once the new post loads
+        getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
+        getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+        mLikingUsersView.setVisibility(View.GONE);
+        mLikingUsersDivider.setVisibility(View.GONE);
 
-            showPost();
-        } else {
-            ReaderActivityLauncher.showReaderPostDetail(getActivity(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
-        }
+        // clear the webView - otherwise it will remain scrolled to where the user scrolled to
+        mReaderWebView.clearContent();
+
+        // make sure the toolbar and footer are showing
+        showToolbar(true);
+        showFooter(true);
+
+        // now show the passed post
+        showPost();
     }
 
     /*
@@ -499,12 +504,15 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // if we're already viewing a related post, add it to the related post
-                    // history - this way the user can back-button through the history
+                    // if we're already viewing a related post, add it to the history stack
+                    // so the user can back-button through the history - otherwise start a
+                    // new detail activity for this related post
                     if (mIsRelatedPost) {
-                        mRelatedPostHistory.push(new ReaderRelatedPost(mPost));
+                        mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
+                        replacePost(relatedPost.getBlogId(), relatedPost.getPostId());
+                    } else {
+                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
                     }
-                    navigateToRelatedPost(relatedPost);
                 }
             });
 
@@ -521,13 +529,12 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * when showing a related post, a history of related posts is retained so the user
-     * can navigate back through them - this is faster and requires less memory
-     * than creating a new fragment for each related post
-    */
-    protected boolean goBackInRelatedPostHistory() {
-        if (mIsRelatedPost && !mRelatedPostHistory.isEmpty()) {
-            navigateToRelatedPost(mRelatedPostHistory.pop());
+     * if the fragment is maintaining a backstack of posts, navigate to the previous one
+     */
+    protected boolean goBackInPostHistory() {
+        if (!mPostHistory.isEmpty()) {
+            ReaderBlogIdPostId ids = mPostHistory.pop();
+            replacePost(ids.getBlogId(), ids.getPostId());
             return true;
         } else {
             return false;
