@@ -64,6 +64,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mMenusView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -146,6 +147,7 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
         mPeopleView = (RelativeLayout) rootView.findViewById(R.id.row_people);
+        mMenusView = (RelativeLayout) rootView.findViewById(R.id.row_menus);
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
@@ -242,7 +244,7 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        rootView.findViewById(R.id.row_menus).setOnClickListener(new View.OnClickListener() {
+        mMenusView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogMenus(getActivity());
@@ -371,6 +373,7 @@ public class MySiteFragment extends Fragment
         boolean isAdminOrSelfHosted =  blog.isAdmin() || !blog.isDotcomFlag();
         boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
+        mMenusView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
