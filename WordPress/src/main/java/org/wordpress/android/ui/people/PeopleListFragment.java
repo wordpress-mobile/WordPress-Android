@@ -324,7 +324,10 @@ public class PeopleListFragment extends Fragment {
                     peopleViewHolder.txtRoleOrSubscribed.setText(StringUtils.capitalize(person.getRole()));
                 }
                 if (!person.getUsername().isEmpty()) {
+                    peopleViewHolder.txtUsername.setVisibility(View.VISIBLE);
                     peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
+                } else {
+                    peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
             }
 
