@@ -4,9 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import org.apache.commons.lang.ArrayUtils;
-
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -15,9 +12,9 @@ import java.util.HashSet;
 public class CommentAdapterState implements Parcelable {
     public static final String TAG = "comments_adapter_state";
 
-    private long[] mTrashedCommentId;
-    private long[] mSelectedComments;
-    private long[] mModeratedCommentsId;
+    private HashSet<Long> mTrashedCommentId;
+    private HashSet<Long> mSelectedComments;
+    private HashSet<Long> mModeratedCommentsId;
 
     public CommentAdapterState(@NonNull HashSet<Long> trashedCommentId,
                                @NonNull HashSet<Long> selectedComments,
@@ -25,45 +22,41 @@ public class CommentAdapterState implements Parcelable {
 
         // I encountered couple of issues when passing HashSets as serializable
         // so instead they are converted to primitive arrays before going into Parcel
-        mTrashedCommentId = ArrayUtils.toPrimitive(trashedCommentId.toArray(new Long[trashedCommentId.size()]));
-        mSelectedComments = ArrayUtils.toPrimitive(selectedComments.toArray(new Long[selectedComments.size()]));
-        mModeratedCommentsId = ArrayUtils.toPrimitive(moderatedCommentsId.toArray(new Long[moderatedCommentsId.size()]));
+        mTrashedCommentId = trashedCommentId;
+        mSelectedComments = selectedComments;
+        mModeratedCommentsId = moderatedCommentsId;
     }
 
     public HashSet<Long> getTrashedCommentId() {
-        return primitiveArrayToHashSet(mTrashedCommentId);
+        return mTrashedCommentId;
     }
 
     public HashSet<Long> getSelectedComments() {
-        return primitiveArrayToHashSet(mSelectedComments);
+        return mSelectedComments;
     }
 
     public HashSet<Long> getModeratedCommentsId() {
-        return primitiveArrayToHashSet(mModeratedCommentsId);
+        return mModeratedCommentsId;
     }
 
-    private HashSet<Long> primitiveArrayToHashSet(long[] array) {
-        if (array == null) return null;
-        return new HashSet<>(Arrays.asList(ArrayUtils.toObject(array)));
-    }
 
     public boolean hasSelectedComments() {
-        return mSelectedComments != null && mSelectedComments.length > 0;
+        return mSelectedComments != null && mSelectedComments.size() > 0;
     }
 
     public boolean hasModeratingComments() {
-        return mModeratedCommentsId != null && mModeratedCommentsId.length > 0;
+        return mModeratedCommentsId != null && mModeratedCommentsId.size() > 0;
     }
 
     public boolean hasTrashedComments() {
-        return mTrashedCommentId != null && mTrashedCommentId.length > 0;
+        return mTrashedCommentId != null && mTrashedCommentId.size() > 0;
     }
 
     @SuppressWarnings("unchecked")
     protected CommentAdapterState(Parcel in) {
-        mTrashedCommentId = in.createLongArray();
-        mSelectedComments = in.createLongArray();
-        mModeratedCommentsId = in.createLongArray();
+        mTrashedCommentId = (HashSet<Long>) in.readSerializable();
+        mSelectedComments = (HashSet<Long>) in.readSerializable();
+        mModeratedCommentsId = (HashSet<Long>) in.readSerializable();
     }
 
     @Override
@@ -73,9 +66,9 @@ public class CommentAdapterState implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLongArray(mTrashedCommentId);
-        dest.writeLongArray(mSelectedComments);
-        dest.writeLongArray(mModeratedCommentsId);
+        dest.writeSerializable(mTrashedCommentId);
+        dest.writeSerializable(mSelectedComments);
+        dest.writeSerializable(mModeratedCommentsId);
     }
 
     @SuppressWarnings("unused")
