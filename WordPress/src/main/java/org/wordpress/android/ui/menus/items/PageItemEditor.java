@@ -18,6 +18,7 @@ import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.widgets.RadioButtonListView;
 import org.wordpress.android.widgets.RadioButtonListView.RadioButtonListAdapter;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,11 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
         ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
         mPageListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
+
+        WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
+        emptyTextView.setText(getContext().getString(R.string.menu_item_type_page_empty_list));
+        mPageListView.setEmptyView(emptyTextView);
+
         mPageListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mWorkingItem.name = mPageListView.getSelectedItem().toString();

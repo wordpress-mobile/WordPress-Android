@@ -6,9 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.widgets.RadioButtonListView
-        android:id="@+id/category_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</merge>
+        <org.wordpress.android.widgets.RadioButtonListView
+            android:id="@+id/category_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- empty view -->
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/empty_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/menu_item_type_category_empty_list">
+        </org.wordpress.android.widgets.WPTextView>
+    </LinearLayout>
+</merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
