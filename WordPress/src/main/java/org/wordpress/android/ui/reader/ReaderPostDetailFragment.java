@@ -400,15 +400,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get posts related to the one being displayed - only works for public wp.com blogs, and
-     * skipped for single post view
+     * get posts related to the one being displayed - only available for wp.com
      */
     private void updateRelatedPosts() {
-        if (!hasPost()
-                || !mPost.isWP()
-                || mPost.isPrivate
-                || mIsLoggedOutReader
-                || mIsSinglePostView) {
+        if (!hasPost() || !mPost.isWP() || mIsLoggedOutReader) {
             return;
         }
 
@@ -427,7 +422,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        // locate the related posts container and remove all child views
+        // locate the related posts container and remove any existing related post views
         ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
         container.removeAllViews();
 
@@ -437,6 +432,9 @@ public class ReaderPostDetailFragment extends Fragment
         for (final ReaderPost post: event.getRelatedPosts()) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
+            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
+
             txtTitle.setText(post.getTitle());
 
             // TODO: prefix author name with "By "
@@ -450,16 +448,13 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 subTitle = "";
             }
-            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
             txtSubtitle.setText(subTitle);
 
-            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
+            imgFeatured.setVisibility(post.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (post.hasFeaturedImage()) {
                 String imageUrl = post.getFeaturedImageForDisplay(imageSize, imageSize);
                 imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
                 imgFeatured.setVisibility(View.VISIBLE);
-            } else {
-                imgFeatured.setVisibility(View.GONE);
             }
 
             // tapping this view should open the related post detail
