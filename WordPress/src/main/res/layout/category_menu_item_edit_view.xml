@@ -25,8 +25,4 @@
             android:text="@string/menu_item_type_category_empty_list">
         </org.wordpress.android.widgets.WPTextView>
     </LinearLayout>
-</merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+</merge>
