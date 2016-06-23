@@ -42,7 +42,13 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+
+        // if this is a related post, we don't add it to the back stack - this allows the
+        // user to return to the original post with the back button regardless of how
+        // many related posts they opened
         if (isRelatedPost) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             context.startActivity(intent);
         } else {
             ActivityLauncher.slideInFromRight(context, intent);
