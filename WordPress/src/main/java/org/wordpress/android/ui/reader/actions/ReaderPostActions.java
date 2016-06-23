@@ -319,7 +319,7 @@ public class ReaderPostActions {
     /*
      * request posts related to the passed one
      */
-    public static void updateRelatedPosts(final ReaderPost sourcePost) {
+    public static void requestRelatedPosts(final ReaderPost sourcePost) {
         if (sourcePost == null) return;
 
         RestRequest.Listener listener = new RestRequest.Listener() {

@@ -6,6 +6,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.services.ReaderPostService;
 import org.wordpress.android.util.StringUtils;
 
@@ -119,15 +120,15 @@ public class ReaderEvents {
 
     public static class RelatedPostsUpdated {
         private final ReaderPost mSourcePost;
-        private final ReaderPostList mRelatedPosts;
+        private final ReaderRelatedPostList mRelatedPosts;
         public RelatedPostsUpdated(@NonNull ReaderPost sourcePost, @NonNull ReaderPostList relatedPosts) {
             mSourcePost = sourcePost;
-            mRelatedPosts = (ReaderPostList) relatedPosts.clone();
+            mRelatedPosts = new ReaderRelatedPostList(relatedPosts);
         }
         public ReaderPost getSourcePost() {
             return mSourcePost;
         }
-        public ReaderPostList getRelatedPosts() {
+        public ReaderRelatedPostList getRelatedPosts() {
             return mRelatedPosts;
         }
     }

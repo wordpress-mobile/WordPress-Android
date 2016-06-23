@@ -42,11 +42,6 @@
                         android:layout_marginBottom="@dimen/margin_small"
                         android:background="@color/reader_divider_grey" />
 
-                    <include
-                        layout="@layout/reader_include_post_detail_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/text_related_posts_label"
                         android:layout_width="match_parent"
@@ -75,6 +70,11 @@
                         android:paddingTop="@dimen/reader_related_post_margin"
                         android:visibility="gone"
                         tools:visibility="visible" />
+
+                    <include
+                        layout="@layout/reader_include_post_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <View
                         android:id="@+id/footer_spacer"

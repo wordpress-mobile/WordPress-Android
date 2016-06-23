@@ -14,6 +14,9 @@ public class ReaderRelatedPostList extends ArrayList<ReaderRelatedPost> {
         return super.clone();
     }
 
+    public ReaderRelatedPostList() {
+
+    }
     public ReaderRelatedPostList(@NonNull ReaderPostList posts) {
         for (ReaderPost post: posts) {
             add(new ReaderRelatedPost(post));

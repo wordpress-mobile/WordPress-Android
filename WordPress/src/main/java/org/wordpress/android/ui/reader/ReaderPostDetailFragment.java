@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -60,20 +62,24 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
+import java.util.Stack;
+
 import de.greenrobot.event.EventBus;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements ScrollDirectionListener,
-        ReaderCustomViewListener,
-        ReaderWebViewPageFinishedListener,
-        ReaderWebViewUrlClickListener {
+        implements WPMainActivity.OnActivityBackPressedListener,
+                   ScrollDirectionListener,
+                   ReaderCustomViewListener,
+                   ReaderWebViewPageFinishedListener,
+                   ReaderWebViewUrlClickListener {
 
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
-    private ReaderRelatedPostList mRelatedPosts;
+
+    private final Stack<ReaderRelatedPost> mRelatedPostHistory = new Stack<>();
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -96,7 +102,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
-
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false, null);
@@ -306,6 +311,19 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
+     * called by the activity when user hits the back button - returns true if the back button
+     * is handled here and should be ignored by the activity
+     */
+    @Override
+    public boolean onActivityBackPressed() {
+        if (goBackInRelatedPostHistory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
      * changes the like on the passed post
      */
     private void togglePostLike() {
@@ -408,14 +426,34 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * show existing related posts if we already have them, otherwise request them - only
-     * available for wp.com
+     * if we're already showing a related post, replace it with the passed one - otherwise
+     * start a new detail activity to show the passed one
      */
-    private void updateRelatedPosts() {
-        if (hasRelatedPosts()) {
-            showRelatedPosts();
-        } else if (hasPost() && mPost.isWP() &&  !mIsLoggedOutReader) {
-            ReaderPostActions.updateRelatedPosts(mPost);
+    private void navigateToRelatedPost(@NonNull ReaderRelatedPost relatedPost) {
+        if (mIsRelatedPost) {
+            mBlogId = relatedPost.getBlogId();
+            mPostId = relatedPost.getPostId();
+            mHasAlreadyRequestedPost = false;
+            mHasAlreadyUpdatedPost = false;
+
+            // hide the current list of related posts
+            View container = getView().findViewById(R.id.container_related_posts);
+            View label = getView().findViewById(R.id.text_related_posts_label);
+            container.setVisibility(View.INVISIBLE);
+            label.setVisibility(View.INVISIBLE);
+
+            showPost();
+        } else {
+            ReaderActivityLauncher.showReaderPostDetail(getActivity(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
+        }
+    }
+
+    /*
+     * request posts related to the current one - only available for wp.com
+     */
+    private void requestRelatedPosts() {
+        if (hasPost() && mPost.isWP() &&  !mIsLoggedOutReader) {
+            ReaderPostActions.requestRelatedPosts(mPost);
         }
     }
 
@@ -428,18 +466,11 @@ public class ReaderPostDetailFragment extends Fragment
 
         // make sure this is for the current post
         if (event.getSourcePost().postId == mPostId && event.getSourcePost().blogId == mBlogId) {
-            mRelatedPosts = new ReaderRelatedPostList(event.getRelatedPosts());
-            showRelatedPosts();
+            showRelatedPosts(event.getRelatedPosts());
         }
     }
 
-    private boolean hasRelatedPosts() {
-        return mRelatedPosts != null && mRelatedPosts.size() > 0;
-    }
-
-    private void showRelatedPosts() {
-        if (!hasRelatedPosts()) return;
-
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts) {
         // locate the related posts container and remove any existing related post views
         ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
         container.removeAllViews();
@@ -447,7 +478,7 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderRelatedPost relatedPost : mRelatedPosts) {
+        for (final ReaderRelatedPost relatedPost : relatedPosts) {
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
@@ -468,7 +499,12 @@ public class ReaderPostDetailFragment extends Fragment
             postView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
+                    // if we're already viewing a related post, add it to the related post
+                    // history - this way the user can back-button through the history
+                    if (mIsRelatedPost) {
+                        mRelatedPostHistory.push(new ReaderRelatedPost(mPost));
+                    }
+                    navigateToRelatedPost(relatedPost);
                 }
             });
 
@@ -481,6 +517,20 @@ public class ReaderPostDetailFragment extends Fragment
         }
         if (container.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
+     * when showing a related post, a history of related posts is retained so the user
+     * can navigate back through them - this is faster and requires less memory
+     * than creating a new fragment for each related post
+    */
+    protected boolean goBackInRelatedPostHistory() {
+        if (mIsRelatedPost && !mRelatedPostHistory.isEmpty()) {
+            navigateToRelatedPost(mRelatedPostHistory.pop());
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -881,7 +931,7 @@ public class ReaderPostDetailFragment extends Fragment
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
-                        updateRelatedPosts();
+                        requestRelatedPosts();
                     }
                 }
             }, 300);
