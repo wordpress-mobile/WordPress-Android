@@ -43,81 +43,7 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 
 public class CommentsListFragment extends Fragment implements CommentAdapter.OnDataLoadedListener,
-        CommentAdapter.OnLoadMoreListener,  CommentAdapter.OnSelectedItemsChangeListener, CommentAdapter.OnCommentPressedListener {
-
-    // called after comments have been loaded
-    @Override
-    public void onDataLoaded(boolean isEmpty) {
-        if (!isAdded()) return;
-
-        if (!isEmpty) {
-            // After comments are loaded, we should check if some of them are selected and show CAB if necessary
-            if (shouldRestoreCab()) {
-                restoreCab();
-            }
-
-
-
-            // Hide the empty view if there are already some displayed comments
-            mFilteredCommentsView.hideEmptyView();
-        } else if (!mIsUpdatingComments) {
-            // Change LOADING to NO_CONTENT message
-            mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-        }
-    }
-
-    @Override
-    public void onLoadMore() {
-        if (mCanLoadMoreComments && !mIsUpdatingComments) {
-            updateComments(true);
-        }
-    }
-
-    // adapter calls this when selected comments have changed (CAB)
-    @Override
-    public void onSelectedItemsChanged() {
-        if (mActionMode != null) {
-            if (getSelectedCommentCount() == 0) {
-                mActionMode.finish();
-            } else {
-                updateActionModeTitle();
-                // must invalidate to ensure onPrepareActionMode is called
-                mActionMode.invalidate();
-            }
-        }
-    }
-
-    @Override
-    public void onCommentPressed(int position, View view) {
-        Comment comment = getAdapter().getItem(position);
-        if (comment == null) {
-            return;
-        }
-        if (mActionMode == null) {
-            if (!getAdapter().isModeratingCommentId(comment.commentID)) {
-                mFilteredCommentsView.invalidate();
-                if (getActivity() instanceof OnCommentSelectedListener) {
-                    ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
-                }
-            }
-        } else {
-            getAdapter().toggleItemSelected(position, view);
-        }
-    }
-
-    @Override
-    public void onCommentLongPressed(int position, View view) {
-        // enable CAB if it's not already enabled
-        if (mActionMode == null) {
-            if (getActivity() instanceof AppCompatActivity) {
-                ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
-                getAdapter().setEnableSelection(true);
-                getAdapter().setItemSelected(position, true, view);
-            }
-        } else {
-            getAdapter().toggleItemSelected(position, view);
-        }
-    }
+        CommentAdapter.OnLoadMoreListener, CommentAdapter.OnSelectedItemsChangeListener, CommentAdapter.OnCommentPressedListener {
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId);
@@ -171,7 +97,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
             mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
         }
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mCommentAdapterState = savedInstanceState.getParcelable(CommentAdapterState.TAG);
         }
 
@@ -291,7 +217,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         super.onResume();
         if (mFilteredCommentsView.getAdapter() == null) {
             mFilteredCommentsView.setAdapter(getAdapter());
-            if (!NetworkUtils.isNetworkAvailable(getActivity())){
+            if (!NetworkUtils.isNetworkAvailable(getActivity())) {
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             }
             getAdapter().loadComments(mCommentStatusFilter);
@@ -317,7 +243,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         final CommentList updateComments = new CommentList();
 
         // build list of comments whose status is different than passed
-        for (Comment comment: selectedComments) {
+        for (Comment comment : selectedComments) {
             if (comment.getStatusEnum() != newStatus)
                 updateComments.add(comment);
         }
@@ -325,32 +251,24 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
-        final int dlgId;
-        switch (newStatus) {
-            case APPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
-                break;
-            case UNAPPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_DISAPPROVING;
-                break;
-            case SPAM:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
-                break;
-            case TRASH:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
-                break;
-            default :
-                return;
-        }
-        getActivity().showDialog(dlgId);
-
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
                 EventBus.getDefault().postSticky(
-                        new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false));
+                        new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false, newStatus));
             }
         };
+
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            for (Comment comment : updateComments) {
+                setCommentIsModerating(comment.commentID, true);
+            }
+        }
+
+        getAdapter().clearSelectedComments();
+        finishActionMode();
+
+        updateEmptyView();
 
         CommentActions.moderateComments(
                 WordPress.getCurrentLocalTableBlogId(),
@@ -360,25 +278,8 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     }
 
 
-    public void onEventMainThread(CommentEvents.CommentsBatchModerationFinishedEvent moderatedComments) {
-        if (!isAdded()) return;
-        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentsBatchModerationFinishedEvent.class);
-
-        finishActionMode();
-        if (moderatedComments.getComments().size() > 0) {
-            getAdapter().clearSelectedComments();
-            if (moderatedComments.isDeleted()) {
-                getAdapter().deleteComments(moderatedComments.getComments());
-            } else {
-                getAdapter().replaceComments(moderatedComments.getComments());
-            }
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
-        }
-    }
-
     private void confirmDeleteComments() {
-        if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
+        if (CommentStatus.TRASH.equals(mCommentStatusFilter)) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     getActivity());
             dialogBuilder.setTitle(getResources().getText(R.string.delete));
@@ -422,7 +323,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     private void deleteSelectedComments(boolean deletePermanently) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
-        final int dlgId = deletePermanently ?  CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
+        final int dlgId = deletePermanently ? CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
 
         final CommentList selectedComments = getAdapter().getSelectedComments();
         getActivity().showDialog(dlgId);
@@ -443,7 +344,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         };
 
         CommentStatus newStatus = CommentStatus.TRASH;
-        if (deletePermanently){
+        if (deletePermanently) {
             newStatus = CommentStatus.DELETE;
         }
         CommentActions.moderateComments(
@@ -457,11 +358,11 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         getAdapter().loadComments(mCommentStatusFilter);
     }
 
-    void updateEmptyView(){
+    void updateEmptyView() {
         //this is called from CommentsActivity in the case the last moment for a given type has been changed from that
         //status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
         //does the handling itself, so we only check for null here.
-        if (mFilteredCommentsView != null){
+        if (mFilteredCommentsView != null) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
@@ -484,7 +385,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         }
 
         //immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
-        if (!loadMore){
+        if (!loadMore) {
             getAdapter().loadComments(mCommentStatusFilter);
         }
 
@@ -559,24 +460,24 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                 hPost.put("number", COMMENTS_PER_PAGE);
             }
 
-            if (mStatusFilter != null){
+            if (mStatusFilter != null) {
                 //if this is UNKNOWN that means show ALL, i.e., do not apply filter
-                if (!mStatusFilter.equals(CommentStatus.UNKNOWN)){
+                if (!mStatusFilter.equals(CommentStatus.UNKNOWN)) {
                     hPost.put("status", CommentStatus.toString(mStatusFilter));
                 }
             }
 
-            Object[] params = { blog.getRemoteBlogId(),
-                                blog.getUsername(),
-                                blog.getPassword(),
-                                hPost };
+            Object[] params = {blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(),
+                    hPost};
             try {
                 return ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
                         int localBlogId = blog.getLocalTableBlogId();
                         CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
-                        CommentTable.saveComments(localBlogId, (CommentList)list);
+                        CommentTable.saveComments(localBlogId, (CommentList) list);
                     }
                 });
             } catch (XMLRPCFault xmlrpcFault) {
@@ -627,7 +528,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                 if (comments != null && comments.size() > 0) {
                     getAdapter().loadComments(mStatusFilter);
                 } else {
-                    if (isRefreshing){
+                    if (isRefreshing) {
                         //if refreshing and no errors, we only want freshest stuff, so clear old data
                         getAdapter().clearComments();
                     }
@@ -704,14 +605,14 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
             boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
             boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve,   hasUnapproved || hasSpam || hasTrash);
+            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam || hasTrash);
             setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam,      hasAnyNonSpam);
+            setItemEnabled(menu, R.id.menu_spam, hasAnyNonSpam);
             setItemEnabled(menu, R.id.menu_trash, hasSelection);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
-            if (trashItem != null){
-                if (CommentStatus.TRASH.equals(mCommentStatusFilter)){
+            if (trashItem != null) {
+                if (CommentStatus.TRASH.equals(mCommentStatusFilter)) {
                     trashItem.setTitle(R.string.mnu_comment_delete_permanently);
                 }
             }
@@ -764,6 +665,53 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         return mCommentsAdapter;
     }
 
+
+    // adapter calls this when selected comments have changed (CAB)
+    @Override
+    public void onSelectedItemsChanged() {
+        if (mActionMode != null) {
+            if (getSelectedCommentCount() == 0) {
+                mActionMode.finish();
+            } else {
+                updateActionModeTitle();
+                // must invalidate to ensure onPrepareActionMode is called
+                mActionMode.invalidate();
+            }
+        }
+    }
+
+    @Override
+    public void onCommentPressed(int position, View view) {
+        Comment comment = getAdapter().getItem(position);
+        if (comment == null) {
+            return;
+        }
+        if (mActionMode == null) {
+            if (!getAdapter().isModeratingCommentId(comment.commentID)) {
+                mFilteredCommentsView.invalidate();
+                if (getActivity() instanceof OnCommentSelectedListener) {
+                    ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
+                }
+            }
+        } else {
+            getAdapter().toggleItemSelected(position, view);
+        }
+    }
+
+    @Override
+    public void onCommentLongPressed(int position, View view) {
+        // enable CAB if it's not already enabled
+        if (mActionMode == null) {
+            if (getActivity() instanceof AppCompatActivity) {
+                ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+                getAdapter().setEnableSelection(true);
+                getAdapter().setItemSelected(position, true, view);
+            }
+        } else {
+            getAdapter().toggleItemSelected(position, view);
+        }
+    }
+
     private boolean shouldRestoreCab() {
         return hasAdapter() && !getAdapter().getSelectedCommentsId().isEmpty() && mActionMode == null;
     }
@@ -798,8 +746,64 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
         }
 
-        if (event.isCommentsRefreshRequired()) {
+        if (event.isCommentsRefreshRequired() || event.getNewStatus() != mCommentStatusFilter) {
             loadComments();
+        }
+    }
+
+    public void onEventMainThread(CommentEvents.CommentsBatchModerationFinishedEvent moderatedComments) {
+        if (!isAdded()) return;
+        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentsBatchModerationFinishedEvent.class);
+
+        finishActionMode();
+        if (moderatedComments.getComments().size() > 0) {
+
+            for (Comment comment : moderatedComments.getComments()) {
+
+                setCommentIsModerating(comment.commentID, false);
+            }
+
+            getAdapter().clearSelectedComments();
+            if (moderatedComments.isDeleted()) {
+                getAdapter().deleteComments(moderatedComments.getComments());
+            } else {
+                getAdapter().replaceComments(moderatedComments.getComments());
+            }
+
+            // if the new comments status is not the same as the current filter status it means user have switched filter
+            // while comment moderation/deletion was in progress and we need to reload comments from DB to reflect changes
+            if (moderatedComments.getNewStatus() != mCommentStatusFilter) {
+                loadComments();
+            }
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
+        }
+    }
+
+
+    // called after comments have been loaded
+    @Override
+    public void onDataLoaded(boolean isEmpty) {
+        if (!isAdded()) return;
+
+        if (!isEmpty) {
+            // After comments are loaded, we should check if some of them are selected and show CAB if necessary
+            if (shouldRestoreCab()) {
+                restoreCab();
+            }
+
+            // Hide the empty view if there are already some displayed comments
+            mFilteredCommentsView.hideEmptyView();
+        } else if (!mIsUpdatingComments) {
+            // Change LOADING to NO_CONTENT message
+            mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+    }
+
+    @Override
+    public void onLoadMore() {
+        if (mCanLoadMoreComments && !mIsUpdatingComments) {
+            updateComments(true);
         }
     }
 

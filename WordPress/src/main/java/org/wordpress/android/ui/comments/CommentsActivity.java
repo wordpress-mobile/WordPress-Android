@@ -251,7 +251,7 @@ public class CommentsActivity extends AppCompatActivity
                         public void onActionResult(CommentActionResult result) {
                             if (isListeningForModerationResult()) {
                                 EventBus.getDefault().postSticky(new CommentEvents.CommentModerationFinishedEvent
-                                        (result.isSuccess(), true, comment.commentID));
+                                        (result.isSuccess(), true, comment.commentID, newStatus));
                             }
                         }
                     });
@@ -290,7 +290,7 @@ public class CommentsActivity extends AppCompatActivity
                         public void onActionResult(CommentActionResult result) {
                             if (isListeningForModerationResult()) {
                                 EventBus.getDefault().postSticky(new CommentEvents.CommentModerationFinishedEvent
-                                        (result.isSuccess(), true, comment.commentID));
+                                        (result.isSuccess(), true, comment.commentID, newStatus));
                             }
                         }
                     });
