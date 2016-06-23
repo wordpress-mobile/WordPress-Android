@@ -467,13 +467,9 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 break;
         }
 
-        if (newItem != null) {
-            FragmentManager fm = getFragmentManager();
-            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
-            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
-        } else {
-            //TODO show some error toast
-        }
+        FragmentManager fm = getFragmentManager();
+        EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+        dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
     }
 
     @Override
