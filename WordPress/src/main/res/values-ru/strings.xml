@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="gravatar_camera_and_media_permission_required">Разрешения, необходимые для выбора или создания фотографии</string>
+	<string name="person_removed_general">Пользователь удалён</string>
+	<string name="person_remove_confirmation_message">Если вы удалите пользователя %1$s, он больше не сможет посещать этот сайт, но всё содержимое, созданное пользователем %1$s, останется на сайте.\n\nВсё равно удалить этого пользователя?</string>
+	<string name="person_removed">Выполнено удаление @%1$s</string>
+	<string name="person_remove_confirmation_title">Удалить %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">На сайтах из этого списка за последнее время не было ничего опубликовано</string>
+	<string name="people">Люди</string>
+	<string name="edit_user">Изменить пользователя</string>
+	<string name="role">Роль</string>
+	<string name="error_remove_user">Не удалось удалить пользователя</string>
+	<string name="error_fetch_people_list">Не получить список пользователей сайта</string>
+	<string name="error_update_role">Не удалось обновить роль пользователя</string>
+	<string name="gravatar_camera_and_media_permission_required">Разрешения необходимые для выбора или создания фотографии</string>
 	<string name="error_updating_gravatar">При обновлении граватара произошла ошибка</string>
 	<string name="error_locating_image">Не удалось найти обрезанное изображение</string>
 	<string name="error_refreshing_gravatar">При перезагрузке граватара произошла ошибка</string>

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Gebruiker is verwijderd</string>
+	<string name="person_remove_confirmation_message">Als je %1$s verwijdert, kan die gebruiker deze site niet meer openen. Alle content die door %1$s is gemaakt, blijft echter op de site staan.\n\nWil je deze gebruiker toch verwijderen?</string>
+	<string name="person_removed">\@%1$s is verwijderd.</string>
+	<string name="person_remove_confirmation_title">Verwijder %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">De sites in deze lijst hebben recent niets geplaatst</string>
+	<string name="people">Mensen</string>
+	<string name="edit_user">Gebruiker bewerken</string>
+	<string name="role">Rol</string>
+	<string name="error_remove_user">Gebruiker verwijderen mislukt</string>
+	<string name="error_fetch_people_list">Site-gebruikers ophalen mislukt</string>
+	<string name="error_update_role">Gebruikersrol updaten mislukt</string>
 	<string name="gravatar_camera_and_media_permission_required">Machtigingen vereist om een foto te selecteren of te nemen</string>
 	<string name="error_updating_gravatar">Fout bij het updaten van je Gravatar</string>
 	<string name="error_locating_image">Fout bij het vinden van de bij te snijden afbeelding</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Er is iets fout gegaan. Kon aankopen niet aanvragen.</string>
 	<string name="delete_site_progress">Site verwijderen...</string>
 	<string name="delete_site_summary">Deze actie kan niet ongedaan worden gemaakt. Door de site te verwijderen worden alle content, bijdragers en domeinen van de site verwijderd.</string>
-	<string name="delete_site_hint">Je site verwijderen</string>
+	<string name="delete_site_hint">Site verwijderen</string>
 	<string name="export_site_hint">Exporteer je site naar een XML-bestand</string>
 	<string name="are_you_sure">Weet je het zeker?</string>
 	<string name="export_site_summary">Als je het zeker weet, neem dan nu de tijd om je content te exporteren. Deze kan later niet meer worden hersteld.</string>
