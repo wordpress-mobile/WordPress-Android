@@ -59,13 +59,6 @@
         <item>Right</item>
     </string-array>
 
-    <string-array name="image_size_array">
-        <item>Thumbnail</item>
-        <item>Medium</item>
-        <item>Large</item>
-        <item>Full Size</item>
-    </string-array>
-
     <!-- Accessibility - format bar button descriptions -->
     <string name="format_bar_description_bold">Bold</string>
     <string name="format_bar_description_italic">Italic</string>
@@ -81,9 +74,7 @@
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 
-
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="send_link">Send link</string>
 </resources>
