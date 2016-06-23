@@ -21,6 +21,16 @@ var imageSrc = 'content://com.android.providers.media.documents/document/image%3
 var plainImageHtml = '<img src="' + imageSrc + '" alt="" class="wp-image-123 size-full" width="172" height="244">';
 var imageWrappedInLinkHtml = '<a href="' + imageSrc + '">' + plainImageHtml + '</a>';
 
+// Captioned image strings
+var imageCaptionShortcode = '[caption width="600" align="alignnone"]' + imageSrc + 'Text[/caption]';
+var imageWithCaptionHtml = '<label class="wp-temp" data-wp-temp="caption" onclick="">' +
+    '<span class="wp-caption" style="width:600px; max-width:100% !important;" data-caption-width="600" ' +
+    'data-caption-align="alignnone">' + imageSrc + 'Text</span></label>';
+var linkedImageCaptionShortcode = '[caption width="600" align="alignnone"]' + imageWrappedInLinkHtml + 'Text[/caption]';
+var linkedImageCaptionHtml = '<label class="wp-temp" data-wp-temp="caption" onclick="">' +
+    '<span class="wp-caption" style="width:600px; max-width:100% !important;" data-caption-width="600" ' +
+    'data-caption-align="alignnone">' + imageWrappedInLinkHtml + 'Text</span></label>';
+
 // Video strings
 var videoSrc = 'content://com.android.providers.media.documents/document/video%3A12966';
 var videoShortcode = '[video src="' + videoSrc + '" poster=""][/video]';
@@ -43,8 +53,10 @@ describe('HTML to Visual formatter should correctly convert', function () {
     assert.equal('<p>Some text</p>\n<p>More text</p>\n', formatter.htmlToVisual('Some text\n\nMore text'));
   });
 
-  testMediaParagraphWrapping('image wrapped in link', plainImageHtml, plainImageHtml);
-  testMediaParagraphWrapping('image not wrapped in link', imageWrappedInLinkHtml, imageWrappedInLinkHtml);
+  testMediaParagraphWrapping('non-linked image', plainImageHtml, plainImageHtml);
+  testMediaParagraphWrapping('linked image', imageWrappedInLinkHtml, imageWrappedInLinkHtml);
+  testMediaParagraphWrapping('non-linked image, with caption', imageCaptionShortcode, imageWithCaptionHtml);
+  testMediaParagraphWrapping('linked image, with caption', linkedImageCaptionShortcode, linkedImageCaptionHtml);
   testMediaParagraphWrapping('non-VideoPress video', videoShortcode, videoHtml);
   testMediaParagraphWrapping('VideoPress video', vpVideoShortcode, vpVideoHtml);
 });
