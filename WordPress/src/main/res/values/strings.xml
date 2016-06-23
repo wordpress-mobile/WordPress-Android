@@ -1267,7 +1267,14 @@
     <string name="auth_required">Sign in again to continue.</string>
     <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
         in. Try to sign in with your newly created username and password.</string>
-
+    <string name="send_link">Send link</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="logging_in">Logging in</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="launch_your_email_app">Launch your email app</string>
+    <string name="checking_email">Checking email</string>
+    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1467,13 +1474,6 @@
     <string name="plans_post_purchase_title_themes">Find a perfect, Premium theme</string>
     <string name="plans_post_purchase_text_themes">You now have unlimited access to Premium themes. Preview any theme on your site to get started.</string>
     <string name="plans_post_purchase_button_themes">Browse Themes</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
-    <string name="logging_in">Logging in</string>
-    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
-    <string name="check_your_email">Check your email</string>
-    <string name="launch_your_email_app">Launch your email app</string>
-    <string name="checking_email">Checking email</string>
-    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
 
     <!-- gravatar -->
     <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
