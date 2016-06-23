@@ -13,7 +13,6 @@ public class ReaderRelatedPost {
     private final long mBlogId;
     private final String mTitle;
     private final String mSubtitle;
-    private final String mUrl;
     private final String mFeaturedImage;
 
     public ReaderRelatedPost(@NonNull ReaderPost post) {
@@ -21,7 +20,6 @@ public class ReaderRelatedPost {
         mBlogId = post.blogId;
 
         mTitle = post.getTitle();
-        mUrl = post.getUrl();
         mFeaturedImage = post.getFeaturedImage();
 
         if (post.hasAuthorName() && post.hasBlogName()) {
@@ -49,10 +47,6 @@ public class ReaderRelatedPost {
 
     public String getSubtitle() {
         return mSubtitle;
-    }
-
-    public String getUrl() {
-        return mUrl;
     }
 
     public String getFeaturedImage() {

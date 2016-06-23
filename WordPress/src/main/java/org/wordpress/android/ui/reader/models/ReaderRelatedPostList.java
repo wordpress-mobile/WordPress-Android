@@ -9,14 +9,6 @@ import java.util.ArrayList;
 
 public class ReaderRelatedPostList extends ArrayList<ReaderRelatedPost> {
 
-    @Override
-    public Object clone() {
-        return super.clone();
-    }
-
-    public ReaderRelatedPostList() {
-
-    }
     public ReaderRelatedPostList(@NonNull ReaderPostList posts) {
         for (ReaderPost post: posts) {
             add(new ReaderRelatedPost(post));

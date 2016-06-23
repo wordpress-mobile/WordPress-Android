@@ -6,7 +6,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 
 /*
@@ -36,10 +35,7 @@ class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
 
     private ArrayList<String> toArrayList() {
         ArrayList<String> list = new ArrayList<>();
-
-        Iterator<ReaderBlogIdPostId> iterator = this.iterator();
-        while (iterator.hasNext()) {
-            ReaderBlogIdPostId ids = iterator.next();
+        for (ReaderBlogIdPostId ids : this) {
             list.add(ids.getBlogId() + ":" + ids.getPostId());
         }
         return list;

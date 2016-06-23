@@ -320,11 +320,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @Override
     public boolean onActivityBackPressed() {
-        if (goBackInPostHistory()) {
-            return true;
-        } else {
-            return false;
-        }
+        return goBackInPostHistory();
     }
 
     /*

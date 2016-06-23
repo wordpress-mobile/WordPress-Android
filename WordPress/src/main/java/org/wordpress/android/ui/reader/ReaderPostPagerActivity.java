@@ -228,7 +228,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
         } else if (fragment != null && fragment.goBackInPostHistory()) {
-            // fragment moved back to a previous post
+            // noop - fragment moved back to a previous post
         } else {
             super.onBackPressed();
         }
