@@ -476,7 +476,8 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                     @Override
                     public void onDataReadyToSave(List list) {
                         int localBlogId = blog.getLocalTableBlogId();
-                        if(!mIsLoadingMore){
+
+                        if(!mIsLoadingMore){ //existing comments should be deleted only if we are not "loading more"
                             CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
                         }
                         CommentTable.saveComments(localBlogId, (CommentList) list);
