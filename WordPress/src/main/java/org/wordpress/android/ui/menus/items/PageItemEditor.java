@@ -11,7 +11,6 @@ import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.MenuItemTable;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
