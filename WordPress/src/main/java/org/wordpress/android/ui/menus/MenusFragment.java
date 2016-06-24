@@ -459,9 +459,10 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             case BELOW :
                 if (position == items.size() - 1) {
                     items.add(newItem);
+                    position++;
                     mItemsView.getAdapter().notifyItemInserted(items.size() - 1);
                 } else {
-                    items.add(position+1, newItem);
+                    items.add(position, newItem);
                     mItemsView.getAdapter().notifyItemInserted(position+1);
                 }
                 break;
