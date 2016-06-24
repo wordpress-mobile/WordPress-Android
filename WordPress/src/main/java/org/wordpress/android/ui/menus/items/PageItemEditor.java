@@ -106,11 +106,24 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     private void setSelection(long contentId) {
+        boolean selectionMarked = false;
         for (int i=0; i < mFilteredPages.size(); i++) {
             PostsListPost post = mFilteredPages.get(i);
             String remoteId = post.getRemotePostId();
             if (remoteId != null && (!TextUtils.isEmpty(remoteId)) && Long.valueOf(remoteId) == contentId){
                 mPageListView.setSelection(i);
+                selectionMarked = true;
+                break;
+            }
+        }
+
+        if (!selectionMarked) {
+            //check if home
+            MenuItemModel item = super.getMenuItem();
+            if (item != null) {
+                if (item.url.compareToIgnoreCase(WordPress.getCurrentBlog().getHomeURL() + "/") == 0) {
+                    mPageListView.setSelection(0);
+                }
             }
         }
     }

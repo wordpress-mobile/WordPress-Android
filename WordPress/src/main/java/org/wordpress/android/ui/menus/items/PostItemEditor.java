@@ -76,6 +76,7 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
             String remoteId = post.getRemotePostId();
             if (remoteId != null && Long.valueOf(remoteId) == contentId){
                 mPostListView.setSelection(i);
+                break;
             }
         }
     }
