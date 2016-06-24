@@ -52,6 +52,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String TESTIMONIAL_KEY = "jetpack_testimonial";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -179,6 +180,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.commentsRequireUserAccount = settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true);
         mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(WHITELIST_KNOWN_USERS_KEY, false);
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
+        mRemoteSettings.testimonialsEnabled = settingsObject.optBoolean(TESTIMONIAL_KEY, false);
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
 
