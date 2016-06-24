@@ -1386,7 +1386,7 @@
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
     <string name="role">Role</string>
-    <string name="follower_subscribed_since">SINCE %1$s</string>
+    <string name="follower_subscribed_since">Since %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>

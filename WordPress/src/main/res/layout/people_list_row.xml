@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/people_list_row"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/people_list_row_height"
-    android:background="?android:selectableItemBackground">
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:minHeight="@dimen/people_list_row_height">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_role"
@@ -48,6 +50,18 @@
         android:layout_below="@id/person_display_name"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
+        tools:text="username"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/follower_subscribed_date"
+        style="@style/PersonUsernameAndDisplayName"
+        android:layout_alignLeft="@id/person_display_name"
+        android:layout_alignStart="@id/person_display_name"
+        android:layout_below="@id/person_username"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_small"
         tools:text="username"/>
 
 </RelativeLayout>

@@ -28,6 +28,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -322,6 +323,14 @@ public class PeopleListFragment extends Fragment {
                 } else {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
+                if (person.isFollower() || person.isEmailFollower()) {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
+                    String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                    String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                    peopleViewHolder.txtSubscribed.setText(dateText);
+                } else {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
+                }
             }
 
             // end of list is reached
@@ -335,6 +344,7 @@ public class PeopleListFragment extends Fragment {
             private final TextView txtDisplayName;
             private final TextView txtUsername;
             private final TextView txtRole;
+            private final TextView txtSubscribed;
 
             public PeopleViewHolder(View view) {
                 super(view);
@@ -342,6 +352,7 @@ public class PeopleListFragment extends Fragment {
                 txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
                 txtUsername = (TextView) view.findViewById(R.id.person_username);
                 txtRole = (TextView) view.findViewById(R.id.person_role);
+                txtSubscribed = (TextView) view.findViewById(R.id.follower_subscribed_date);
 
                 itemView.setOnClickListener(this);
             }
