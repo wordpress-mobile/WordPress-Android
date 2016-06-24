@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.auth.api.credentials.Credential;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
@@ -48,6 +49,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
     private boolean mShouldShowPassword;
+    private boolean mSmartLockEnabled = true;
 
     public MagicLinkSignInFragment() {
         super();
@@ -91,6 +93,9 @@ public class MagicLinkSignInFragment extends SignInFragment {
 
         if (!mToken.isEmpty()) {
             attemptLoginWithMagicLink();
+            mSmartLockEnabled = false;
+        } else {
+            mSmartLockEnabled = true;
         }
         if (mShouldShowPassword) {
             showPasswordFieldAndFocus();
@@ -159,16 +164,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     @Override
-    protected boolean isSmartLockAvailable() {
-        return false;
-    }
-
-    @Override
-    protected boolean isGooglePlayServicesAvailable() {
-        return false;
-    }
-
-    @Override
     protected void showSelfHostedSignInForm() {
         super.showSelfHostedSignInForm();
         showPasswordField();
@@ -203,6 +198,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
             if (!mSelfHosted) {
                 mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
             }
+            mSignInButton.setText(R.string.sign_in);
         }
     }
 
@@ -252,5 +248,17 @@ public class MagicLinkSignInFragment extends SignInFragment {
         account.setUserName(mUsername);
         account.save();
         account.fetchAccountDetails();
+    }
+
+    @Override
+    public void onCredentialRetrieved(Credential credential) {
+        super.onCredentialRetrieved(credential);
+        showPasswordField();
+    }
+
+    @Override
+    public boolean canAutofillUsernameAndPassword() {
+        return mSmartLockEnabled && EditTextUtils.getText(mUsernameEditText).isEmpty()
+                && EditTextUtils.getText(mPasswordEditText).isEmpty();
     }
 }

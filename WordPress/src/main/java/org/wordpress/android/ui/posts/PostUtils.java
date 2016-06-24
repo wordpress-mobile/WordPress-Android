@@ -1,8 +1,15 @@
 package org.wordpress.android.ui.posts;
 
+import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,5 +86,45 @@ public class PostUtils {
         }
 
         return mShortcodeTable.contains(shortCode);
+    }
+
+    public static void trackSavePostAnalytics(Post post) {
+        PostStatus status = post.getStatusEnum();
+        switch (status) {
+            case PUBLISHED:
+                if (!post.isLocalDraft()) {
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
+                            WordPress.getBlog(post.getLocalTableBlogId())
+                    );
+                } else {
+                    // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
+                }
+                break;
+            case SCHEDULED:
+                if (!post.isLocalDraft()) {
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
+                            WordPress.getBlog(post.getLocalTableBlogId())
+                    );
+                } else {
+                    Map<String, Object> properties = new HashMap<String, Object>();
+                    properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
+                    AnalyticsUtils.trackWithBlogDetails(
+                            AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
+                            WordPress.getBlog(post.getLocalTableBlogId()),
+                            properties
+                    );
+                }
+                break;
+            case DRAFT:
+                AnalyticsUtils.trackWithBlogDetails(
+                        AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT,
+                        WordPress.getBlog(post.getLocalTableBlogId())
+                );
+                break;
+            default:
+                // No-op
+        }
     }
 }

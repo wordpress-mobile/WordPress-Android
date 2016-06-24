@@ -27,7 +27,11 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
+        <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
     </style>
+
+    <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.Light.SearchView" />
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -86,10 +90,9 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterContainer">
+    <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
-        <item name="android:background">@color/blue_medium</item>
     </style>
 
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
@@ -284,19 +287,29 @@
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="MySiteListRowSecodaryTextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:ellipsize">end</item>
         <item name="android:gravity">right|center_vertical</item>
+    </style>
+
+    <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
     </style>
 
     <style name="MySiteListHeaderLayout">

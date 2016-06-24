@@ -161,7 +161,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private boolean canShowStatsForPost(PostsListPost post) {
         return mIsStatsSupported
                 && post.getStatusEnum() == PostStatus.PUBLISHED
-                && !post.isLocalDraft();
+                && !post.isLocalDraft()
+                && !post.hasLocalChanges();
+    }
+
+    private boolean canPublishPost(PostsListPost post) {
+        return post != null && !post.isUploading() &&
+                (post.hasLocalChanges() || post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT);
     }
 
     @Override
@@ -207,6 +213,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
+            if (post.isUploading()) {
+                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+            } else {
+                postHolder.disabledOverlay.setVisibility(View.GONE);
+            }
+
             updateStatusText(postHolder.txtStatus, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
@@ -243,6 +255,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+
+            if (post.isUploading()) {
+                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+            } else {
+                pageHolder.disabledOverlay.setVisibility(View.GONE);
+            }
         }
 
         // load more posts when we near the end
@@ -377,43 +395,59 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostsListPost post) {
         // posts with local changes have preview rather than view button
-        if (post.isLocalDraft() || post.hasLocalChanges()) {
+        if (post.isLocalDraft() || post.hasLocalChanges() || post.getStatusEnum() == PostStatus.DRAFT) {
             holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
         }
 
+        if (post.getStatusEnum() == PostStatus.DRAFT) {
+            holder.btnPublish.setVisibility(View.VISIBLE);
+        } else {
+            holder.btnPublish.setVisibility(View.GONE);
+        }
+
         boolean canShowStatsButton = canShowStatsForPost(post);
-        int numVisibleButtons = (canShowStatsButton ? 4 : 3);
+        boolean canShowPublishButton = canPublishPost(post);
+
+        int numVisibleButtons = 3;
+        if (canShowPublishButton) numVisibleButtons++;
+        if (canShowStatsButton) numVisibleButtons++;
 
         // edit / view are always visible
         holder.btnEdit.setVisibility(View.VISIBLE);
         holder.btnView.setVisibility(View.VISIBLE);
 
-        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash
+        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
         if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
             holder.btnMore.setVisibility(View.GONE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.VISIBLE);
             holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
+            holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
         } else {
             holder.btnMore.setVisibility(View.VISIBLE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.GONE);
             holder.btnStats.setVisibility(View.GONE);
+            holder.btnPublish.setVisibility(View.GONE);
         }
 
         View.OnClickListener btnClickListener = new View.OnClickListener() {
+
+            int row = 0;
+
             @Override
             public void onClick(View view) {
                 // handle back/more here, pass other actions to activity/fragment
                 int buttonType = ((PostListButton) view).getButtonType();
                 switch (buttonType) {
                     case PostListButton.BUTTON_MORE:
-                        animateButtonRows(holder, post, false);
+                        animateButtonRows(holder, post, ++row);
                         break;
                     case PostListButton.BUTTON_BACK:
-                        animateButtonRows(holder, post, true);
+                        row = 0;
+                        animateButtonRows(holder, post, row);
                         break;
                     default:
                         if (mOnPostButtonClickListener != null) {
@@ -429,6 +463,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.btnTrash.setOnClickListener(btnClickListener);
         holder.btnMore.setOnClickListener(btnClickListener);
         holder.btnBack.setOnClickListener(btnClickListener);
+        holder.btnPublish.setOnClickListener(btnClickListener);
     }
 
     /*
@@ -438,7 +473,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      */
     private void animateButtonRows(final PostViewHolder holder,
                                    final PostsListPost post,
-                                   final boolean showRow1) {
+                                   final int row) {
         // first animate out the button row, then show/hide the appropriate buttons,
         // then animate the row layout back in
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
@@ -450,14 +485,23 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                // row 1
-                holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                // row 2
-                holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
-                holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+
+                holder.btnEdit.setVisibility(row == 0 ? View.VISIBLE : View.GONE);
+                holder.btnView.setVisibility(row == 0 ? View.VISIBLE : View.GONE);
+                holder.btnTrash.setVisibility(row == 1 ? View.VISIBLE : View.GONE);
+
+                boolean canShowStats = canShowStatsForPost(post);
+                holder.btnStats.setVisibility(row == 1 && canShowStats ? View.VISIBLE : View.GONE);
+
+                // if we don't show stats button, we have space for the publish button in 2nd row
+                boolean canPublish = canPublishPost(post);
+                holder.btnPublish.setVisibility((row == 1 && !canShowStats || row == 2) && canPublish ? View.VISIBLE : View.GONE);
+
+                // only show more button in 1st row or 2nd if both stats and publish buttons visible
+                holder.btnMore.setVisibility(row == 0 || row == 1 && canShowStats && canPublish ? View.VISIBLE : View.GONE);
+
+                // show the back button if not showing more button
+                holder.btnBack.setVisibility(holder.btnMore.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
 
                 PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f);
                 PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f);
@@ -491,6 +535,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mPosts.remove(position);
             if (mPosts.size() > 0) {
                 notifyItemRemoved(position);
+
+                //when page is removed update the next one in case we need to show a header
+                if (mIsPage) {
+                    notifyItemChanged(position);
+                }
             } else {
                 // we must call notifyDataSetChanged when the only post has been deleted - if we
                 // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
@@ -526,6 +575,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final PostListButton btnEdit;
         private final PostListButton btnView;
+        private final PostListButton btnPublish;
         private final PostListButton btnMore;
 
         private final PostListButton btnStats;
@@ -534,6 +584,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private final WPNetworkImageView imgFeatured;
         private final ViewGroup layoutButtons;
+
+        private final View disabledOverlay;
 
         public PostViewHolder(View view) {
             super(view);
@@ -545,6 +597,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
             btnView = (PostListButton) view.findViewById(R.id.btn_view);
+            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
             btnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
             btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
@@ -553,6 +606,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
             layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+
+            disabledOverlay = view.findViewById(R.id.disabled_overlay);
         }
     }
 
@@ -563,6 +618,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private final ViewGroup dateHeader;
         private final View btnMore;
         private final View dividerTop;
+        private final View disabledOverlay;
 
         public PageViewHolder(View view) {
             super(view);
@@ -572,6 +628,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             dividerTop = view.findViewById(R.id.divider_top);
             dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
             txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
+            disabledOverlay = view.findViewById(R.id.disabled_overlay);
         }
     }
 

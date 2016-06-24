@@ -70,7 +70,6 @@
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -96,11 +95,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.accounts.NewAccountActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -270,7 +264,8 @@
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar">
+        </activity>
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:label="@string/reader_title_post_detail"
@@ -324,9 +319,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.ViewSiteActivity"
-            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.main.SitePickerActivity"
             android:label="@string/site_picker_title"
@@ -407,6 +399,10 @@
             android:name=".ui.reader.services.ReaderPostService"
             android:exported="false"
             android:label="Reader Post Service" />
+        <service
+            android:name=".ui.reader.services.ReaderSearchService"
+            android:exported="false"
+            android:label="Reader Search Service" />
         <service
             android:name=".ui.reader.services.ReaderCommentService"
             android:exported="false"

@@ -131,7 +131,6 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-
     /*
      * show comments for the passed Ids
      */

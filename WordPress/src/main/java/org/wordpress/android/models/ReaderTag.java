@@ -150,6 +150,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public boolean isPostsILike() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
+
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }

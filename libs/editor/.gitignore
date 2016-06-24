@@ -50,3 +50,7 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 
 # libs
 libs/utils
+
+# Node-based JS Tests
+node_modules
+npm-debug.log*
