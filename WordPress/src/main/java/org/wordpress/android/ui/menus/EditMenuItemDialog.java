@@ -104,7 +104,6 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         setupToolbar();
         setupTypePicker();
-        fillViewFlipper();
         setType(isCreating() ? DEFAULT_ITEM_TYPE : mOriginalItem.type);
 
         return dialogView;
@@ -199,6 +198,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItemTypes);
         mTypePicker.setAdapter(adapter);
 
+        fillViewFlipper();
         setPickerAndChildViewSelection(mWorkingItem.type.toUpperCase());
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
