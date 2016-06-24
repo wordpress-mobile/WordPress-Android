@@ -16,7 +16,6 @@ public class MenuItemEditorFactory {
         CATEGORY,
         TAG,
         LINK,
-        TESTIMONIAL,
         CUSTOM;
 
         public static ITEM_TYPE typeForString(String typeName) {
@@ -27,7 +26,6 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(CATEGORY.name())) return CATEGORY;
             else if (typeName.equalsIgnoreCase(TAG.name())) return TAG;
             else if (typeName.equalsIgnoreCase(LINK.name())) return LINK;
-            else if (typeName.equalsIgnoreCase(TESTIMONIAL.name())) return TESTIMONIAL;
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
             else return NULL;
         }
@@ -39,7 +37,6 @@ public class MenuItemEditorFactory {
             if (CATEGORY.ordinal() == index) return CATEGORY;
             if (TAG.ordinal() == index) return TAG;
             if (LINK.ordinal() == index) return LINK;
-            if (TESTIMONIAL.ordinal() == index) return TESTIMONIAL;
             if (CUSTOM.ordinal() == index) return CUSTOM;
 
             return NULL;
@@ -58,8 +55,6 @@ public class MenuItemEditorFactory {
                 return R.drawable.gridicon_tag;
             case LINK:
                 return R.drawable.gridicon_link;
-            case TESTIMONIAL:
-                return R.drawable.media_image_placeholder;
             default:
                 return -1;
         }
@@ -77,8 +72,6 @@ public class MenuItemEditorFactory {
                 return new TagItemEditor(context);
             case LINK:
                 return new LinkItemEditor(context);
-            case TESTIMONIAL:
-                return new TestimonialItemEditor(context);
             default:
                 return null;
         }

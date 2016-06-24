@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.menus;
 
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,6 +27,12 @@ import java.util.Map;
 /**
  */
 public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener {
+    public static final int EDIT_REQUEST_CODE = 10001;
+
+    public static final int SAVE_RESULT_CODE = 1;
+
+    public static final String EDITED_ITEM_KEY = "edited-item";
+
     private static final String ORIGINAL_ITEM_ARG = "original-menu-item";
     private static final String WORKING_ITEM_ARG = "working-menu-item";
 
@@ -65,10 +73,19 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CalypsoTheme);
 
         Bundle args = getArguments();
-        if (args != null && args.containsKey(ORIGINAL_ITEM_ARG)) {
-            mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+        if (args != null) {
+            if (args.containsKey(ORIGINAL_ITEM_ARG)) {
+                mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+            }
+
+            if (args.containsKey(WORKING_ITEM_ARG)) {
+                mWorkingItem = (MenuItemModel) args.getSerializable(WORKING_ITEM_ARG);
+            }
         }
-        mWorkingItem = new MenuItemModel(mOriginalItem);
+
+        if (mWorkingItem == null) {
+            mWorkingItem = new MenuItemModel(mOriginalItem);
+        }
     }
 
     @Override
@@ -95,14 +112,23 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.save_item) {
+        if (item.getItemId() == R.id.menu_item_editor_confirm) {
             mCurrentEditor.onSave();
-            return true;
-        } else if (item.getItemId() == R.id.delete_item) {
-            mCurrentEditor.onDelete();
+            if (isCreating() || !mOriginalItem.equals(mCurrentEditor.getMenuItem())) {
+                sendResultToTarget(SAVE_RESULT_CODE, mCurrentEditor.getMenuItem());
+            }
+            dismiss();
             return true;
         }
         return false;
+    }
+
+    private void sendResultToTarget(int resultCode, MenuItemModel item) {
+        Fragment fragment = getTargetFragment();
+        if (fragment == null) return;
+        Intent data = new Intent();
+        data.putExtra(EDITED_ITEM_KEY, item);
+        fragment.onActivityResult(getTargetRequestCode(), resultCode, data);
     }
 
     public boolean isCreating() {
@@ -112,11 +138,15 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     public void setType(String type) {
         mWorkingItem.type = type;
         mToolbar.setTitle(mWorkingItem.name);
-        //mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
-        //mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
         setPickerAndChildViewSelection(type.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         mCurrentEditor.setMenuItem(mWorkingItem);
+        mCurrentEditor.setMenuItemNameChangeListener(new BaseMenuItemEditor.MenuItemNameChangeListener() {
+            @Override
+            public void onNameChanged(String newName) {
+                mToolbar.setTitle(newName);
+            }
+        });
     }
 
     private void fillViewFlipper() {
@@ -163,9 +193,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             }
 
             // no-op
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            @Override public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 

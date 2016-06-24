@@ -71,11 +71,13 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         mPageListView.setEmptyView(emptyTextView);
 
         mPageListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mWorkingItem.name = mPageListView.getSelectedItem().toString();
             }
 
-            @Override public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
@@ -83,6 +85,11 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     @Override
     public int getLayoutRes() {
         return R.layout.page_menu_item_edit_view;
+    }
+
+    @Override
+    public int getNameEditTextRes() {
+        return R.id.menu_item_title_edit;
     }
 
     @Override
