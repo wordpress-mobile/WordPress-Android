@@ -27,9 +27,7 @@ class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
 
     void saveInstance(Bundle bundle) {
         if (bundle != null && !isEmpty()) {
-            ArrayList<String> history = new ArrayList<>();
-            history.addAll(this.toArrayList());
-            bundle.putStringArrayList(HISTORY_KEY_NAME, history);
+            bundle.putStringArrayList(HISTORY_KEY_NAME, this.toArrayList());
         }
     }
 

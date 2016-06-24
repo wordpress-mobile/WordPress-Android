@@ -491,7 +491,6 @@ public class ReaderPostDetailFragment extends Fragment
             txtTitle.setText(relatedPost.getTitle());
             txtSubtitle.setText(relatedPost.getSubtitle());
 
-
             imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (relatedPost.hasFeaturedImage()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
