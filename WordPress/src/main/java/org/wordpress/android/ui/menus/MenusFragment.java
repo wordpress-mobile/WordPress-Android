@@ -3,6 +3,7 @@ package org.wordpress.android.ui.menus;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +42,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions, EditMenuItemDialog.EditMenuItemDismissListener {
+public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions {
 
     private static final int BASE_DISPLAY_COUNT_MENUS = -2;
 
@@ -198,7 +199,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                         }
                     }
 
-
                     //only re-set the spinner if it's not a special menu that we have just updated.
                     //otherwise, we would be changing the actual selection (i.e. user selected No Menu, we updated the
                     //last rememebred real menu which is returned in this callback, and we'd be setting
@@ -212,9 +212,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                             mMenusSpinner.setSelection(selectedPos);
                         }
                     }
-
                 }
-
             }
 
             @Override
@@ -325,9 +323,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
             @Override
             public void onMenuUpdate(MenuModel menu) {
-                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
-                    return;
-                }
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) return;
 
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
@@ -432,7 +428,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         if (item != null) {
             FragmentManager fm = getFragmentManager();
             EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
-            dialog.setDismissListener(MenusFragment.this);
+            dialog.setTargetFragment(this, EditMenuItemDialog.EDIT_REQUEST_CODE);
             dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
             mCurrentMenuItemBeingEdited = position;
         }
@@ -481,7 +477,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             public void run() {
                 FragmentManager fm = getFragmentManager();
                 EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
-                dialog.setDismissListener(MenusFragment.this);
+                dialog.setTargetFragment(MenusFragment.this, EditMenuItemDialog.EDIT_REQUEST_CODE);
                 dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
             }
         }, 350);
@@ -495,13 +491,20 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     }
 
     @Override
-    public void onDismiss(MenuItemModel modifiedItem) {
-        //re-draw menu items
-        if (mCurrentMenuItemBeingEdited > -1) {
-            List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
-            flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
-            mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == EditMenuItemDialog.EDIT_REQUEST_CODE) {
+            //here get the modified item from the Intent parcelable and refresh the menu item list
+            //re-draw menu items
+            if (mCurrentMenuItemBeingEdited > -1) {
+                MenuItemModel modifiedItem = (MenuItemModel) data.getSerializableExtra(EditMenuItemDialog.EDITED_ITEM_KEY);
+                List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+                flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
+                mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+            }
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateMenus() {

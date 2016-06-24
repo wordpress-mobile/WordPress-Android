@@ -9,12 +9,12 @@ import org.wordpress.android.models.MenuItemModel;
 
 /**
  */
-public class MiscItemEditor extends BaseMenuItemEditor {
-    public MiscItemEditor(Context context) {
+public class CustomItemEditor extends BaseMenuItemEditor {
+    public CustomItemEditor(Context context) {
         this(context, null);
     }
 
-    public MiscItemEditor(Context context, @Nullable AttributeSet attrs) {
+    public CustomItemEditor(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 

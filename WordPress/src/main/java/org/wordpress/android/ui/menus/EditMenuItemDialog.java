@@ -2,6 +2,8 @@ package org.wordpress.android.ui.menus;
 
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -26,14 +28,16 @@ import java.util.Map;
 /**
  */
 public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenuItemClickListener {
+    public static final int EDIT_REQUEST_CODE = 10001;
+
+    public static final int SAVE_RESULT_CODE = 1;
+
+    public static final String EDITED_ITEM_KEY = "edited-item";
+
     private static final String ORIGINAL_ITEM_ARG = "original-menu-item";
     private static final String WORKING_ITEM_ARG = "working-menu-item";
 
     private static final String DEFAULT_ITEM_TYPE = ITEM_TYPE.POST.name();
-
-    public interface EditMenuItemDismissListener {
-        void onDismiss(MenuItemModel item);
-    }
 
     public static EditMenuItemDialog newInstance(MenuItemModel menuItem) {
         EditMenuItemDialog dialog = new EditMenuItemDialog();
@@ -58,7 +62,6 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private ViewFlipper mEditorFlipper;
     private Toolbar mToolbar;
     private Spinner mTypePicker;
-    private EditMenuItemDismissListener mDismissListener;
 
     public EditMenuItemDialog() {
         // empty constructor required
@@ -71,10 +74,19 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CalypsoTheme);
 
         Bundle args = getArguments();
-        if (args != null && args.containsKey(ORIGINAL_ITEM_ARG)) {
-            mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+        if (args != null) {
+            if (args.containsKey(ORIGINAL_ITEM_ARG)) {
+                mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+            }
+
+            if (args.containsKey(WORKING_ITEM_ARG)) {
+                mWorkingItem = (MenuItemModel) args.getSerializable(WORKING_ITEM_ARG);
+            }
         }
-        mWorkingItem = new MenuItemModel(mOriginalItem);
+
+        if (mWorkingItem == null) {
+            mWorkingItem = new MenuItemModel(mOriginalItem);
+        }
     }
 
     @Override
@@ -100,31 +112,28 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (mDismissListener != null) {
-            mDismissListener.onDismiss(mWorkingItem);
-        }
-    }
-
-    @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.save_item) {
+        if (item.getItemId() == R.id.menu_item_editor_confirm) {
             mCurrentEditor.onSave();
-            return true;
-        } else if (item.getItemId() == R.id.delete_item) {
-            mCurrentEditor.onDelete();
+            if (isCreating() || !mOriginalItem.equals(mCurrentEditor.getMenuItem())) {
+                sendResultToTarget(SAVE_RESULT_CODE, mCurrentEditor.getMenuItem());
+            }
+            dismiss();
             return true;
         }
         return false;
     }
 
-    public boolean isCreating() {
-        return mOriginalItem == null;
+    private void sendResultToTarget(int resultCode, MenuItemModel item) {
+        Fragment fragment = getTargetFragment();
+        if (fragment == null) return;
+        Intent data = new Intent();
+        data.putExtra(EDITED_ITEM_KEY, item);
+        fragment.onActivityResult(getTargetRequestCode(), resultCode, data);
     }
 
-    public void setDismissListener(EditMenuItemDismissListener listener){
-        mDismissListener = listener;
+    public boolean isCreating() {
+        return mOriginalItem == null;
     }
 
     public void setType(String type) {
@@ -185,9 +194,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             }
 
             // no-op
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            @Override public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 
