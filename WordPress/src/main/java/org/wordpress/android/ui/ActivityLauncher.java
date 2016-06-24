@@ -56,7 +56,6 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
-    private static Tweak<Boolean> showMagicLinkSignIn = MixpanelAPI.booleanTweak("Show Magic Link Sign In", false);
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -262,7 +261,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (showMagicLinkSignIn.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
+        if (shouldShowMagicLinkSignIn(activity)) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {
@@ -335,5 +334,10 @@ public class ActivityLauncher {
                 && activity.getIntent().hasExtra(ARG_DID_SLIDE_IN_FROM_RIGHT)) {
             activity.overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_right);
         }
+    }
+
+    private static boolean shouldShowMagicLinkSignIn(Activity activity) {
+        boolean isInMagicLinkABTestGroup = false;
+        return isInMagicLinkABTestGroup && WPActivityUtils.isEmailClientAvailable(activity);
     }
 }
