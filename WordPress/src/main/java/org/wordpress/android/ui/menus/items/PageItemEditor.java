@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.MenuItemTable;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -108,7 +109,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         for (int i=0; i < mFilteredPages.size(); i++) {
             PostsListPost post = mFilteredPages.get(i);
             String remoteId = post.getRemotePostId();
-            if (remoteId != null && Long.valueOf(remoteId) == contentId){
+            if (remoteId != null && (!TextUtils.isEmpty(remoteId)) && Long.valueOf(remoteId) == contentId){
                 mPageListView.setSelection(i);
             }
         }
@@ -127,12 +128,14 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     @Override
     public void onSave() {
-        if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
+        //TODO check with Tony if this is needed
+        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
     }
 
     @Override
     public void onDelete() {
-        if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
+        //TODO check with Tony if this is needed
+        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
     }
 
     //
@@ -154,8 +157,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     public void onEventMainThread(PostEvents.RequestPosts event) {
         // update page list with changes from remote
         if (event.getBlogId() == mLocalBlogId) {
-            refreshFilteredPages("");
-            refreshAdapter();
+            loadPages();
 
             MenuItemModel item = super.getMenuItem();
             if (item != null) {
@@ -170,13 +172,23 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
      */
     private void loadPages() {
         mAllPages = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), true);
+        insertHomePage();
         mFilteredPages = new PostsListPostList();
+        mAllPageTitles.clear();
+        mFilteredPageTitles.clear();
         for (PostsListPost post : mAllPages) {
             mFilteredPages.add(post);
             mAllPageTitles.add(post.getTitle());
             mFilteredPageTitles.add(post.getTitle());
         }
         refreshAdapter();
+    }
+
+    private void insertHomePage(){
+        Post homePost = new Post(WordPress.getCurrentLocalTableBlogId(), true);
+        homePost.setTitle(WordPress.getContext().getString(R.string.menu_item_special_home));
+        PostsListPost homePage = new PostsListPost(homePost);
+        mAllPages.add(0, homePage);
     }
 
 
@@ -219,13 +231,28 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 			"type_family": "post_type",
 			"type_label": "Page",
 			* */
-        menuItem.type = MenuItemEditorFactory.ITEM_TYPE.PAGE.name().toLowerCase(); //default type: POST
-        menuItem.typeFamily = "post_type";
-        menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.PAGE.name();
 
         PostsListPost post = mFilteredPages.get(mPageListView.getCheckedItemPosition());
-        if (post != null && post.getRemotePostId() != null) {
-            menuItem.contentId = Long.valueOf(post.getRemotePostId());
+        if (post != null) {
+
+            if (post.getRemotePostId() != null && !TextUtils.isEmpty(post.getRemotePostId())) {
+                menuItem.contentId = Long.valueOf(post.getRemotePostId());
+
+                menuItem.type = MenuItemEditorFactory.ITEM_TYPE.PAGE.name().toLowerCase(); //default type: PAGE
+                menuItem.typeFamily = "post_type";
+                menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.PAGE.name();
+            } else {
+                // this is the HOME item
+                /*
+                    "type": "custom",
+                    "type_family": "custom",
+                    "type_label": "Custom Link",
+                    * */
+                menuItem.type = MenuItemEditorFactory.ITEM_TYPE.CUSTOM.name().toLowerCase(); //default type: CUSTOM
+                menuItem.typeFamily = "custom";
+                menuItem.typeLabel = "Custom Link";
+                menuItem.url = WordPress.getCurrentBlog().getHomeURL() + "/";
+            }
         }
     }
 

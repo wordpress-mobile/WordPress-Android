@@ -1523,6 +1523,8 @@
     <string name="menu_item_type_tag_empty_list">No tags found</string>
     <string name="menu_item_type_category_empty_list">No categories found</string>
 
+    <string name="menu_item_special_home">Home (site)</string>
+
 
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
