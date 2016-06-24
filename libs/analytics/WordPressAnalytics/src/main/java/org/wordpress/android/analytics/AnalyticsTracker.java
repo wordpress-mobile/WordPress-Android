@@ -257,11 +257,9 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                       int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public static void refreshMetadata(AnalyticsMetadata metadata) {
         for (Tracker tracker : TRACKERS) {
-            tracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
-                    versionCode, username, email);
+            tracker.refreshMetadata(metadata);
         }
     }
 }
