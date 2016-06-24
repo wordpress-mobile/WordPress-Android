@@ -84,38 +84,38 @@ public class PublicizeEvents {
     }
 
     public static class Connection {
-        private URI mProfilePictureUrl;
-        private String mDisplayName;
-        private int mKeychainId;
-        private String mServiceName;
-        private int[] mSites;
+        private URI profilePictureUrl;
+        private String displayName;
+        private int keychainId;
+        private String serviceName;
+        private int[] sites;
 
         public Connection(URI profilePictureUrl, String displayName, int keychainId, String serviceName, int[] sites) {
-            mProfilePictureUrl = profilePictureUrl;
-            mDisplayName = displayName;
-            mKeychainId = keychainId;
-            mServiceName = serviceName;
-            mSites = sites;
+            this.profilePictureUrl = profilePictureUrl;
+            this.displayName = displayName;
+            this.keychainId = keychainId;
+            this.serviceName = serviceName;
+            this.sites = sites;
         }
 
         public URI getProfilePictureUrl() {
-            return mProfilePictureUrl;
+            return profilePictureUrl;
         }
 
         public String getDisplayName() {
-            return mDisplayName;
+            return displayName;
         }
 
         public int getKeychainId() {
-            return mKeychainId;
+            return keychainId;
         }
 
         public String getServiceName() {
-            return mServiceName;
+            return serviceName;
         }
 
         public int[] getSites() {
-            return mSites;
+            return sites;
         }
     }
 }
