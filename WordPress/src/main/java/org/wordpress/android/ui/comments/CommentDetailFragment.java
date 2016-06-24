@@ -66,6 +66,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -231,7 +232,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.getDefault(), "%s%d%d",
+        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
                 AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
                 getRemoteBlogId(), getCommentId()));
 
@@ -820,6 +821,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+
+                        // approve the comment
+                        if (mComment.getStatusEnum() != CommentStatus.APPROVED) {
+                            moderateComment(CommentStatus.APPROVED);
+                        }
                     } else {
                         String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
                         ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);

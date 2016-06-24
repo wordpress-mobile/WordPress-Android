@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.support.annotation.MenuRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,11 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -41,7 +42,6 @@ public class FilteredRecyclerView extends RelativeLayout {
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private View mCustomEmptyView;
-    private LinearLayout mCustomComponentsContainer;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
 
@@ -124,7 +124,6 @@ public class FilteredRecyclerView extends RelativeLayout {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mCustomComponentsContainer = (LinearLayout) findViewById(R.id.custom_components_toolbar_container);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
@@ -278,15 +277,12 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     /*
-     * use this to add custom control/component views to your toolbar. Components are added on the right side of the
-      * toolbar */
-    public void addToolbarCustomControl(View v, OnClickListener clickListener){
-        if (v != null){
-            mCustomComponentsContainer.addView(v);
-            if (clickListener != null){
-                v.setOnClickListener(clickListener);
-            }
-        }
+     * add a menu to the right side of the toolbar, returns the toolbar menu so the caller
+     * can act upon it
+     */
+    public Menu addToolbarMenu(@MenuRes int menuResId) {
+        mToolbar.inflateMenu(menuResId);
+        return mToolbar.getMenu();
     }
 
     public void setToolbarBackgroundColor(int color){

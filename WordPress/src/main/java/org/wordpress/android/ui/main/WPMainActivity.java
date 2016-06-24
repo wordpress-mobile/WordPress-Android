@@ -83,6 +83,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         void onScrollToTop();
     }
 
+    /*
+     * tab fragments implement this and return true if the fragment handles the back button
+     * and doesn't want the activity to handle it as well
+     */
+    public interface OnActivityBackPressedListener {
+        boolean onActivityBackPressed();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
@@ -328,6 +336,23 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // let the fragment handle the back button if it implements our OnParentBackPressedListener
+        Fragment fragment = getActiveFragment();
+        if (fragment instanceof OnActivityBackPressedListener) {
+            boolean handled = ((OnActivityBackPressedListener) fragment).onActivityBackPressed();
+            if (handled) {
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
+    private Fragment getActiveFragment() {
+        return mTabAdapter.getFragment(mViewPager.getCurrentItem());
     }
 
     private void checkMagicLinkSignIn() {

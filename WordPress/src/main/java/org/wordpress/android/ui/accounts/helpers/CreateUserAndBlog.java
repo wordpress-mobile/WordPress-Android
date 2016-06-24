@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.util.AppLog;
@@ -20,7 +21,6 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.Map;
 
 public class CreateUserAndBlog {
@@ -55,13 +55,14 @@ public class CreateUserAndBlog {
         mResponseHandler = new ResponseHandler();
     }
 
-    public static String getDeviceLanguage(Resources resources) {
+    public static String getDeviceLanguage(Context context) {
+        Resources resources = context.getResources();
         XmlResourceParser parser = resources.getXml(R.xml.wpcom_languages);
         Hashtable<String, String> entries = new Hashtable<String, String>();
         String matchedDeviceLanguage = "en - English";
         try {
             int eventType = parser.getEventType();
-            String deviceLanguageCode = Locale.getDefault().getLanguage();
+            String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(context);
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {

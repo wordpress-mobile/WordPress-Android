@@ -18,8 +18,8 @@ apply plugin: 'maven'
 android {
     publishNonDefault true
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         minSdkVersion 14
@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.10.0'
-    compile 'com.automattic:rest:1.0.3'
+    compile 'org.wordpress:utils:1.11.0'
+    compile 'com.automattic:rest:1.0.7'
 }
 
 uploadArchives {
