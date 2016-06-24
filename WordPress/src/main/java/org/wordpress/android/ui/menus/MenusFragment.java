@@ -449,6 +449,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         newItem.name = getString(R.string.menus_item_new_item);
         newItem.flattenedLevel = originalItem.flattenedLevel;
         newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
+        newItem.typeFamily = "post_type";
+        newItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
         switch (where) {
             case TO_CHILDREN:
                 newItem.flattenedLevel++;
