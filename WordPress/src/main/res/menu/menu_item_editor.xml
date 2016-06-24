@@ -5,15 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/save_item"
-        android:icon="@drawable/ic_save_white_24dp"
+        android:id="@+id/menu_item_editor_confirm"
         android:title="@string/save"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/delete_item"
-        android:icon="@drawable/ic_delete_white_24dp"
-        android:title="@string/delete"
         app:showAsAction="never" />
 
 </menu>

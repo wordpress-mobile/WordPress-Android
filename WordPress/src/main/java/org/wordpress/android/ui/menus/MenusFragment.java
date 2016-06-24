@@ -196,7 +196,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                         }
                     }
 
-
                     //only re-set the spinner if it's not a special menu that we have just updated.
                     //otherwise, we would be changing the actual selection (i.e. user selected No Menu, we updated the
                     //last rememebred real menu which is returned in this callback, and we'd be setting
@@ -210,9 +209,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                             mMenusSpinner.setSelection(selectedPos);
                         }
                     }
-
                 }
-
             }
 
             @Override
@@ -323,9 +320,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
             @Override
             public void onMenuUpdate(MenuModel menu) {
-                if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) {
-                    return;
-                }
+                if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) return;
 
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
@@ -430,6 +425,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         if (item != null) {
             FragmentManager fm = getFragmentManager();
             EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
+            dialog.setTargetFragment(this, EditMenuItemDialog.EDIT_REQUEST_CODE);
             dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
         }
     }
