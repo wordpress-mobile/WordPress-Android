@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Utente rimosso correttamente</string>
+	<string name="person_remove_confirmation_message">Se rimuovi %1$s, questo utente non sarà più in grado di accedere a questo sito ma qualsiasi contenuto creato da %1$s rimarrà disponibile sul sito.\n\nVuoi ancora di rimuovere questo utente?</string>
+	<string name="person_removed">\@%1$s rimosso correttamente</string>
+	<string name="person_remove_confirmation_title">Rimuovere %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">I siti in questo elenco non hanno pubblicato nullla di recente</string>
+	<string name="people">Persone</string>
+	<string name="edit_user">Modifica utente</string>
+	<string name="role">Ruolo</string>
+	<string name="error_remove_user">Impossibile rimuovere l\'utente</string>
+	<string name="error_fetch_people_list">Impossibile recuperare gli utenti del sito</string>
+	<string name="error_update_role">Impossibile aggiornare il ruolo utente</string>
 	<string name="gravatar_camera_and_media_permission_required">Autorizzazioni necessarie al fine di selezionare o catturare una foto</string>
 	<string name="error_updating_gravatar">Errore nell\'aggiornamento del tuo Gravatar</string>
 	<string name="error_locating_image">Errore nella localizzazione dell\'immagine ritagliata</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Qualcosa è andato storto. Non è stato possibile richiedere gli acquisti.</string>
 	<string name="delete_site_progress">Cancellazione del sito in corso ...</string>
 	<string name="delete_site_summary">Questa azione è irreversibile. Cancellando il tuo sito rimuoverai tutti i contenuti, collaboratori, e domini.</string>
-	<string name="delete_site_hint">Cancella il sito</string>
+	<string name="delete_site_hint">Elimina il sito</string>
 	<string name="export_site_hint">Esporta il sito in un file XML</string>
 	<string name="are_you_sure">Sei sicuro?</string>
 	<string name="export_site_summary">Se sei sicuro, esporta prima i contenuti perchè non potranno più essere recuperati.</string>

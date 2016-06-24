@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">L’utilisateur a bien été supprimé</string>
+	<string name="person_remove_confirmation_message">Si vous supprimez %1$s, cet utilisateur ne pourras plus accéder à ce site mais tout le contenu ayant été crée par %1$s restera sur le site.\nVoulez vous toujours supprimer cet utilisateur&amp;nbsp;?</string>
+	<string name="person_removed">\@%1$s a bien été supprimé</string>
+	<string name="person_remove_confirmation_title">Supprimer %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">Les sites dans cette liste n’ont rien publié récemment</string>
+	<string name="people">Personnes</string>
+	<string name="edit_user">Modifier l’utilisateur</string>
+	<string name="role">Rôle</string>
+	<string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
+	<string name="error_fetch_people_list">Impossible de retrouver les utilisateurs du site</string>
+	<string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
 	<string name="gravatar_camera_and_media_permission_required">Des permissions sont requises pour sélectionner une photo ou en prendre une</string>
 	<string name="error_updating_gravatar">Erreur lors de la mise à jour de votre Gravatar</string>
 	<string name="error_locating_image">Erreur de la localisation de l\'image recadrée</string>
@@ -7,7 +18,7 @@
 	<string name="gravatar_tip">Nouveau ! Tapez sur votre Gravatar pour le modifier !</string>
 	<string name="error_cropping_image">Erreur lors du recadrage de l\'image</string>
 	<string name="launch_your_email_app">Lancez votre application d\'e-mail</string>
-	<string name="checking_email">Vérification des e-mails</string>
+	<string name="checking_email">Vérification de l\'adresse e-mail</string>
 	<string name="not_on_wordpress_com">Pas de compte WordPress.com ?</string>
 	<string name="magic_link_unavailable_error_message">Actuellement indisponible. Veuillez saisir votre mot de passe</string>
 	<string name="check_your_email">Vérifiez vos e-mails</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Quelque chose s’est mal passé. Impossible de lancer l’achat.</string>
 	<string name="delete_site_progress">Suppression du site...</string>
 	<string name="delete_site_summary">Cette action est irréversible. La suppression de votre site supprimera tout le contenu, les contributeurs et les domaines du site.</string>
-	<string name="delete_site_hint">Supprimez votre site</string>
+	<string name="delete_site_hint">Supprimer le site</string>
 	<string name="export_site_hint">Exportez votre site vers un fichier XML</string>
 	<string name="are_you_sure">Êtes vous sur ?</string>
 	<string name="export_site_summary">Si vous êtes sur, veuillez vous assurer de prendre le temps d\'exporter votre contenu maintenant. Il ne pourras pas être récupéré plus tard.</string>

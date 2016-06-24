@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Benutzer erfolgreich entfernt</string>
+	<string name="person_remove_confirmation_message">Falls du %1$s entfernst, kann dieser Benutzer nicht länger auf die Website zugreifen, aber alle von %1$s erstellten Beiträge verbleiben auf der Website.\n\nMöchtest du diesen Benutzter noch immer entfernen?</string>
+	<string name="person_removed">\@%1$s erfolgreich entfernt</string>
+	<string name="person_remove_confirmation_title">Entferne %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">Die Websites dieser Liste haben keine neuen Beiträge</string>
+	<string name="people">Menschen</string>
+	<string name="edit_user">Benutzer bearbeiten</string>
+	<string name="role">Rolle</string>
+	<string name="error_remove_user">Benutzer konnte nicht entfernt werden</string>
+	<string name="error_fetch_people_list">Website-Benutzer konnten nicht abgerufen werden</string>
+	<string name="error_update_role">Benutzerrolle konnte nicht aktualisiert werden</string>
 	<string name="gravatar_camera_and_media_permission_required">Zum aufnehmen oder auswählen eines Fotos sind die entsprechenden Rechte erforderlich</string>
 	<string name="error_updating_gravatar">Beim Aktualisieren deines Gravatars ist ein Fehler aufgetreten</string>
 	<string name="error_locating_image">Bei der Lokalisierung des zugeschnittenen Bildes ist ein Fehler aufgetreten.</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Es ist ein Fehler aufgetreten. Einkäufe konnten nicht abgefragt werden.</string>
 	<string name="delete_site_progress">Website wird gelöscht &amp;hellip;</string>
 	<string name="delete_site_summary">Diese Aktion kann nicht rückgängig gemacht werden. Wenn du die Website löschst, werden alle Inhalte, Mitarbeiter und Domains von der Website entfernt.</string>
-	<string name="delete_site_hint">Lösche deine Website</string>
+	<string name="delete_site_hint">Website löschen</string>
 	<string name="export_site_hint">Exportiere deine Website in eine XML-Datei</string>
 	<string name="are_you_sure">Bist du sicher?</string>
 	<string name="export_site_summary">Wenn du dir sicher bist, nimm dir jetzt bitte Zeit zum Exportieren deiner Inhalte. Später kannst du sie nicht mehr wiederherstellen.</string>
