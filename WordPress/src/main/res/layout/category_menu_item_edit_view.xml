@@ -27,6 +27,7 @@
         <!-- empty view -->
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/empty_list_view"
+            android:layout_margin="@dimen/content_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
