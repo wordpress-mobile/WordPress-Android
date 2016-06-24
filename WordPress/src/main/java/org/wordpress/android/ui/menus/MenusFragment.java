@@ -32,18 +32,20 @@ import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemAdapter;
 import org.wordpress.android.ui.menus.views.MenuItemsView;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions {
-
+public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemInteractions, SiteSettingsInterface.SiteSettingsListener {
     private static final int BASE_DISPLAY_COUNT_MENUS = -2;
 
+    private SiteSettingsInterface mSiteSettings;
     private boolean mUndoPressed = false;
     private MenusRestWPCom mRestWPCom;
     private MenuAddEditRemoveView mAddEditRemoveControl;
@@ -63,6 +65,9 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), WordPress.getCurrentBlog(), this);
+        mSiteSettings.init(true);
 
         mRestWPCom = new MenusRestWPCom(new MenusRestWPCom.MenusListener() {
             @Override public Context getContext() {
@@ -423,10 +428,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     @Override
     public void onItemClick(MenuItemModel item) {
         if (item != null) {
-            FragmentManager fm = getFragmentManager();
-            EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
-            dialog.setTargetFragment(this, EditMenuItemDialog.EDIT_REQUEST_CODE);
-            dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+            showEditorDialog(item);
         }
     }
 
@@ -469,12 +471,27 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         hdlr.postDelayed(new Runnable() {
             @Override
             public void run() {
-                FragmentManager fm = getFragmentManager();
-                EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
-                dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+                showEditorDialog(newItem);
             }
         }, 350);
+    }
 
+    private ArrayList<String> getItemTypes() {
+        String[] typeArray = getResources().getStringArray(R.array.menu_item_type_spinner_entries);
+        ArrayList<String> typeList = new ArrayList<>(Arrays.asList(typeArray));
+        if (mSiteSettings.getTestimonialsEnabled()) {
+            typeList.add(typeList.size(), getString(R.string.menu_item_type_testimonial));
+        }
+        return typeList;
+    }
+
+    private EditMenuItemDialog mDialog;
+
+    private void showEditorDialog(MenuItemModel item) {
+        FragmentManager fm = getFragmentManager();
+        mDialog = EditMenuItemDialog.newInstance(item, getItemTypes());
+        mDialog.setTargetFragment(this, EditMenuItemDialog.EDIT_REQUEST_CODE);
+        mDialog.show(fm, EditMenuItemDialog.class.getSimpleName());
     }
 
     @Override
@@ -723,5 +740,19 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
             @Override protected void onPostExecute(Boolean result) { }
         }.execute();
+    }
+
+    @Override public void onSettingsUpdated(Exception error) {
+        if (mDialog != null) {
+            mDialog.setTypes(getItemTypes());
+        }
+    }
+
+    @Override public void onSettingsSaved(Exception error) {
+        // no-op
+    }
+
+    @Override public void onCredentialsValidated(Exception error) {
+        // no-op
     }
 }

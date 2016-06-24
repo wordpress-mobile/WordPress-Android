@@ -1509,6 +1509,7 @@
     <string name="menu_item_type_link" translatable="false">@string/link</string>
     <string name="menu_item_type_tag">Tag</string>
     <string name="menu_item_type_category">Category</string>
+    <string name="menu_item_type_testimonial">Testimonial</string>
     <string-array name="menu_item_type_spinner_entries">
         <item>@string/menu_item_type_post</item>
         <item>@string/menu_item_type_page</item>

@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.ViewFlipper;
 
@@ -21,7 +23,10 @@ import org.wordpress.android.ui.menus.items.BaseMenuItemEditor;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory.ITEM_TYPE;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,20 +38,22 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     public static final String EDITED_ITEM_KEY = "edited-item";
 
+    private static final String ITEM_TYPES_ARG = "menu-item-types";
     private static final String ORIGINAL_ITEM_ARG = "original-menu-item";
     private static final String WORKING_ITEM_ARG = "working-menu-item";
 
     private static final String DEFAULT_ITEM_TYPE = ITEM_TYPE.POST.name();
 
-    public static EditMenuItemDialog newInstance(MenuItemModel menuItem) {
+    public static EditMenuItemDialog newInstance(MenuItemModel menuItem, ArrayList<String> types) {
         EditMenuItemDialog dialog = new EditMenuItemDialog();
         Bundle args = new Bundle();
+        addToBundle(args, ITEM_TYPES_ARG, types);
         addToBundle(args, ORIGINAL_ITEM_ARG, menuItem);
         dialog.setArguments(args);
         return dialog;
     }
 
-    private static void addToBundle(Bundle bundle, String key, MenuItemModel item) {
+    private static void addToBundle(Bundle bundle, String key, Serializable item) {
         if (bundle != null && !TextUtils.isEmpty(key) && item != null) {
             bundle.putSerializable(key, item);
         }
@@ -54,6 +61,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     private MenuItemModel mOriginalItem;
     private MenuItemModel mWorkingItem;
+    private List<String> mItemTypes = new ArrayList<>();
     private Map<String, Integer> mItemPositions = new HashMap<>();
 
     // Views
@@ -73,8 +81,16 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CalypsoTheme);
 
         Bundle args = getArguments();
-        if (args != null && args.containsKey(ORIGINAL_ITEM_ARG)) {
-            mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+        if (args != null) {
+            if (args.containsKey(ORIGINAL_ITEM_ARG)) {
+                mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
+            }
+            if (args.containsKey(ITEM_TYPES_ARG)) {
+                ArrayList<String> types = (ArrayList<String>) args.getSerializable(ITEM_TYPES_ARG);
+                if (types != null) {
+                    setTypes(types);
+                }
+            }
         }
         mWorkingItem = new MenuItemModel(mOriginalItem);
     }
@@ -87,8 +103,8 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mToolbar = (Toolbar) dialogView.findViewById(R.id.toolbar);
 
         setupToolbar();
-        fillViewFlipper();
         setupTypePicker();
+        fillViewFlipper();
         setType(isCreating() ? DEFAULT_ITEM_TYPE : mOriginalItem.type);
 
         return dialogView;
@@ -114,6 +130,12 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         return false;
     }
 
+    public void setTypes(@NonNull List<String> types) {
+        if (types.equals(mItemTypes)) return;
+        mItemTypes.clear();
+        mItemTypes.addAll(types);
+    }
+
     private void sendResultToTarget(int resultCode, MenuItemModel item) {
         Fragment fragment = getTargetFragment();
         if (fragment == null) return;
@@ -133,7 +155,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         //mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
         setPickerAndChildViewSelection(type.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
-        mCurrentEditor.setMenuItem(mWorkingItem);
+        if (mCurrentEditor != null) {
+            mCurrentEditor.setMenuItem(mWorkingItem);
+        }
     }
 
     private void fillViewFlipper() {
@@ -172,6 +196,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private void setupTypePicker() {
         if (mTypePicker == null || !isAdded()) return;
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItemTypes);
+        mTypePicker.setAdapter(adapter);
+
         setPickerAndChildViewSelection(mWorkingItem.type.toUpperCase());
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -209,5 +236,4 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             mEditorFlipper.setDisplayedChild(itemIdx);
         }
     }
-
 }
