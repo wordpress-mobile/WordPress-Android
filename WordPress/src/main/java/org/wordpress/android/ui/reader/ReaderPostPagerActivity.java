@@ -69,6 +69,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
@@ -102,13 +108,16 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : R.string.reader_title_post_detail);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            if (mIsRelatedPostView) {
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-            }
+        // for related posts, show an X in the toolbar which closes the activity - using the
+        // back button will navigate through related posts
+        if (mIsRelatedPostView) {
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
         }
 
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
