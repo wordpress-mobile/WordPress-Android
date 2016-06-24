@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.menus;
 
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;

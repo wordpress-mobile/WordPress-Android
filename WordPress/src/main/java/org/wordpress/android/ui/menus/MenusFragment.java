@@ -498,9 +498,11 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             //re-draw menu items
             if (mCurrentMenuItemBeingEdited > -1) {
                 MenuItemModel modifiedItem = (MenuItemModel) data.getSerializableExtra(EditMenuItemDialog.EDITED_ITEM_KEY);
-                List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
-                flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
-                mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+                if (modifiedItem != null) {
+                    List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+                    flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
+                    mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+                }
             }
         }
 
