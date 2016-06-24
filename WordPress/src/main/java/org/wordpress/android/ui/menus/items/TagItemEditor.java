@@ -9,6 +9,7 @@ import android.widget.SearchView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.widgets.RadioButtonListView;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,10 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
 
         ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
         mTagListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
+
+        WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
+        emptyTextView.setText(getContext().getString(R.string.menu_item_type_tag_empty_list));
+        mTagListView.setEmptyView(emptyTextView);
         loadTags();
     }
 

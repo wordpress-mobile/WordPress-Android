@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import org.wordpress.android.models.MenuModel;
 import org.wordpress.android.networking.menus.MenusDataModeler;
 import org.wordpress.android.networking.menus.MenusRestWPCom;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.ui.menus.views.MenuAddEditRemoveView;
 import org.wordpress.android.ui.menus.views.MenuItemAdapter;
 import org.wordpress.android.ui.menus.views.MenuItemsView;
@@ -434,10 +436,49 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
     @Override
     public void onCancelClick() {
+        // no op
     }
 
     @Override
-    public void onAddClick() {
+    public void onAddClick(int position, MenuItemAdapter.ItemAddPosition where) {
+        //the user wants to add a new item <where: above/below/tochildren> relative to <position>
+
+        List<MenuItemModel> items = mItemsView.getCurrentMenuItems();
+        MenuItemModel originalItem = items.get(position);
+        final MenuItemModel newItem = new MenuItemModel();
+        newItem.name = getString(R.string.menus_item_new_item);
+        newItem.flattenedLevel = originalItem.flattenedLevel;
+        newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
+        switch (where) {
+            case TO_CHILDREN:
+                newItem.flattenedLevel++;
+            case BELOW :
+                if (position == items.size() - 1) {
+                    items.add(newItem);
+                    mItemsView.getAdapter().notifyItemInserted(items.size() - 1);
+                } else {
+                    items.add(position+1, newItem);
+                    mItemsView.getAdapter().notifyItemInserted(position+1);
+                }
+                break;
+            case ABOVE :
+            default:
+                items.add(position, newItem);
+                mItemsView.getAdapter().notifyItemInserted(position);
+                break;
+        }
+
+        //enclosed Dialog show in a delayed handler to allow animations to be appreciated
+        Handler hdlr = new Handler();
+        hdlr.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fm = getFragmentManager();
+                EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+                dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+            }
+        }, 350);
+
     }
 
     @Override

@@ -15,7 +15,6 @@ import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.event.MenuEvents;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory.ITEM_TYPE;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPButton;
 
 import java.util.ArrayList;
@@ -28,7 +27,13 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface MenuItemInteractions {
         void onItemClick(MenuItemModel item);
         void onCancelClick();
-        void onAddClick();
+        void onAddClick(int position, ItemAddPosition where);
+    }
+
+    public enum ItemAddPosition {
+        ABOVE,
+        BELOW,
+        TO_CHILDREN
     }
 
     private final LayoutInflater mInflater;
@@ -42,6 +47,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_ADDER = 1;
 
     private boolean mInAddingMode = false;
+    private int mAddingModeStarterPosition = -1;
 
     private final List<MenuItemModel> mFlattenedMenuItems = new ArrayList<>();
 
@@ -92,19 +98,35 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (getItemViewType(position)) {
             case VIEW_TYPE_ADDER: {
                 final AddItem menuItem = (AddItem) mFlattenedMenuItems.get(position);
+                final int adderPosition = position;
                 AddItemHolder holder = (AddItemHolder) viewHolder;
                 holder.txtTitle.setText(Html.fromHtml(menuItem.name));
                 mPadding = mContext.getResources().getDimensionPixelOffset(R.dimen.margin_medium);
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.containerView.getLayoutParams();
                 p.setMargins(menuItem.flattenedLevel * mPadding,0,0,0);
                 holder.containerView.requestLayout();
-                holder.imgAddIcon.setOnClickListener(new View.OnClickListener() {
+
+                View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO here integrate with @tonyhr59's implementation of item creation
-                        ToastUtils.showToast(mContext, "not implemented yet", ToastUtils.Duration.SHORT);
+                        menuItem.editingMode = false;
+                        mInAddingMode = false;
+                        //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in out list
+                        triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);
+                        mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition+1, adderPosition));
+                        Handler hdlr = new Handler();
+                        hdlr.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyDataSetChanged();
+                            }
+                        }, 350);
+
                     }
-                });
+                };
+
+                holder.imgAddIcon.setOnClickListener(clickListener);
+                holder.containerView.setOnClickListener(clickListener);
 
                 break;
             }
@@ -147,23 +169,15 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onClick(View v) {
                             int pos = viewHolder.getAdapterPosition();
-                            mInAddingMode = false;
                             menuItem.editingMode = false;
-                            //eliminate now items above and below
-                            mFlattenedMenuItems.remove(pos + 1);
-                            notifyItemRemoved(pos + 1);
-                            mFlattenedMenuItems.remove(pos + 1);
-                            notifyItemRemoved(pos + 1);
-                            mFlattenedMenuItems.remove(pos - 1);
-                            notifyItemRemoved(pos - 1);
+                            mAddingModeStarterPosition = -1;
+                            mInAddingMode = false;
+                            triggerAddControlRemoveAnimation(pos, false);
 
-                            Handler hdlr = new Handler();
-                            hdlr.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    notifyDataSetChanged();
-                                }
-                            }, 350);
+                            if (mListener != null) {
+                                mListener.onCancelClick();
+                            }
+
                         }
                     });
                 } else {
@@ -204,6 +218,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             }
 
                             mInAddingMode = true;
+                            mAddingModeStarterPosition = pos;
 
                             EventBus.getDefault().post(new MenuEvents.AddMenuClicked(pos));
 
@@ -414,6 +429,41 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 item.flattenedLevel--;
                 lastLevel = item.flattenedLevel;
             }
+        }
+    }
+
+    private void triggerAddControlRemoveAnimation(int pos, boolean removeOnly) {
+        //eliminate now items above and below
+        mFlattenedMenuItems.remove(pos + 1);
+        notifyItemRemoved(pos + 1);
+        mFlattenedMenuItems.remove(pos + 1);
+        notifyItemRemoved(pos + 1);
+        mFlattenedMenuItems.remove(pos - 1);
+        notifyItemRemoved(pos - 1);
+
+        if (!removeOnly) {
+            Handler hdlr = new Handler();
+            hdlr.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            }, 350);
+        }
+    }
+
+
+    private ItemAddPosition getWhereToAddMenuItem(int posOrigin, int posAdderControl){
+
+        if (posAdderControl == posOrigin-1) {
+            return ItemAddPosition.ABOVE;
+        }
+        else if (posAdderControl == posOrigin+1) {
+            return ItemAddPosition.BELOW;
+        } else if (posAdderControl == posOrigin+2) {
+            return ItemAddPosition.TO_CHILDREN;
+        } else { //default: below (should never reach here though)
+            return ItemAddPosition.BELOW;
         }
     }
 

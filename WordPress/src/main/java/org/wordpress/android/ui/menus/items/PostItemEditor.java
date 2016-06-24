@@ -12,6 +12,7 @@ import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.widgets.RadioButtonListView;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,10 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
         ((SearchView) child.findViewById(R.id.single_select_search_view)).setOnQueryTextListener(this);
         mPostListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
+
+        WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
+        emptyTextView.setText(getContext().getString(R.string.menu_item_type_post_empty_list));
+        mPostListView.setEmptyView(emptyTextView);
     }
 
     @Override

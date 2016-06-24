@@ -10,6 +10,7 @@ import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.widgets.RadioButtonListView;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,10 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
         super.onViewAdded(child);
 
         mCategoryListView = (RadioButtonListView) child.findViewById(R.id.category_list);
+
+        WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
+        emptyTextView.setText(getContext().getString(R.string.menu_item_type_category_empty_list));
+        mCategoryListView.setEmptyView(emptyTextView);
     }
 
     @Override

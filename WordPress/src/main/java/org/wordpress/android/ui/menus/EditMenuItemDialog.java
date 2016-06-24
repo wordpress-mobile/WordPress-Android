@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.ViewFlipper;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.items.BaseMenuItemEditor;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
@@ -111,8 +112,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     public void setType(String type) {
         mWorkingItem.type = type;
         mToolbar.setTitle(mWorkingItem.name);
-        mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
-        mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
+        //mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
+        //mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
+        setPickerAndChildViewSelection(type.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         mCurrentEditor.setMenuItem(mWorkingItem);
     }
@@ -123,7 +125,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         // add editor views
         for (int i = 0; i < mTypePicker.getCount(); ++i) {
             String type = mTypePicker.getItemAtPosition(i).toString();
-            ITEM_TYPE itemType = ITEM_TYPE.typeForString(type);
+
+            //type is i18n'ed, so we need to find the canonical type for the loaded array
+            ITEM_TYPE itemType = ITEM_TYPE.typeForIndex(i + 1);
             BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getActivity(), itemType);
             if (editor != null) {
                 mEditorFlipper.addView(editor);
@@ -151,7 +155,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private void setupTypePicker() {
         if (mTypePicker == null || !isAdded()) return;
 
-        mTypePicker.setSelection(mItemPositions.get(mWorkingItem.type.toUpperCase()));
+        setPickerAndChildViewSelection(mWorkingItem.type.toUpperCase());
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -159,7 +163,36 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             }
 
             // no-op
-            @Override public void onNothingSelected(AdapterView<?> parent) { }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
+
+    private void setPickerAndChildViewSelection(String type){
+        Integer itemIdx = mItemPositions.get(type);
+        if (itemIdx == null) {
+            if (ITEM_TYPE.typeForString(type).equals(ITEM_TYPE.CUSTOM)) {
+                //check special cases:
+                //- custom and the url is EQUAL to the blog's home address: show the HOME PAGE icon
+                String homeUrl = WordPress.getCurrentBlog().getHomeURL() + "/";
+                if (!TextUtils.isEmpty(mWorkingItem.url) && !TextUtils.isEmpty(homeUrl) && mWorkingItem.url.equalsIgnoreCase(homeUrl)) {
+                    mTypePicker.setSelection(mItemPositions.get(ITEM_TYPE.PAGE.name().toUpperCase()));
+                    mEditorFlipper.setDisplayedChild(mItemPositions.get(ITEM_TYPE.PAGE.name().toUpperCase()));
+                }
+                else
+                    //check special cases:
+                    //- custom and url different from home: show LINK ICON
+                    if (!TextUtils.isEmpty(mWorkingItem.url) && !TextUtils.isEmpty(homeUrl) && !mWorkingItem.url.equalsIgnoreCase(homeUrl)) {
+                        mTypePicker.setSelection(mItemPositions.get(ITEM_TYPE.LINK.name().toUpperCase()));
+                        mEditorFlipper.setDisplayedChild(mItemPositions.get(ITEM_TYPE.LINK.name().toUpperCase()));
+                    }
+
+            }
+        } else {
+            mTypePicker.setSelection(itemIdx);
+            mEditorFlipper.setDisplayedChild(itemIdx);
+        }
+    }
+
 }
