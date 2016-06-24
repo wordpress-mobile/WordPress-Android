@@ -235,7 +235,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
             renderPost(position, (ReaderPostViewHolder) holder);
         } else if (holder instanceof ReaderXPostViewHolder) {

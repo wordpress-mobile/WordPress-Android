@@ -142,7 +142,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     @Override
-    public void onBindViewHolder(final SiteViewHolder holder, int position) {
+    public void onBindViewHolder(SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
         holder.txtTitle.setText(site.getBlogNameOrHomeURL());
