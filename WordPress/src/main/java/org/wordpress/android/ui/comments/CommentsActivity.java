@@ -250,7 +250,7 @@ public class CommentsActivity extends AppCompatActivity
                         @Override
                         public void onActionResult(CommentActionResult result) {
                             if (isListeningForModerationResult()) {
-                                EventBus.getDefault().postSticky(new CommentEvents.CommentModerationFinishedEvent
+                                EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
                                         (result.isSuccess(), true, comment.commentID, newStatus));
                             }
                         }
@@ -289,7 +289,7 @@ public class CommentsActivity extends AppCompatActivity
                         @Override
                         public void onActionResult(CommentActionResult result) {
                             if (isListeningForModerationResult()) {
-                                EventBus.getDefault().postSticky(new CommentEvents.CommentModerationFinishedEvent
+                                EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
                                         (result.isSuccess(), true, comment.commentID, newStatus));
                             }
                         }

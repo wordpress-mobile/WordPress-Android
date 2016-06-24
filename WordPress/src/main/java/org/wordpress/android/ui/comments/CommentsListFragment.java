@@ -239,31 +239,28 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     }
 
     private void moderateSelectedComments(final CommentStatus newStatus) {
+        if (!NetworkUtils.checkConnection(getActivity())) return;
+
         final CommentList selectedComments = getAdapter().getSelectedComments();
         final CommentList updateComments = new CommentList();
 
         // build list of comments whose status is different than passed
         for (Comment comment : selectedComments) {
-            if (comment.getStatusEnum() != newStatus)
+            if (comment.getStatusEnum() != newStatus) {
+                setCommentIsModerating(comment.commentID, true);
                 updateComments.add(comment);
+            }
+
         }
         if (updateComments.size() == 0) return;
-
-        if (!NetworkUtils.checkConnection(getActivity())) return;
 
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
-                EventBus.getDefault().postSticky(
+                EventBus.getDefault().post(
                         new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false, newStatus));
             }
         };
-
-        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            for (Comment comment : updateComments) {
-                setCommentIsModerating(comment.commentID, true);
-            }
-        }
 
         getAdapter().clearSelectedComments();
         finishActionMode();
@@ -323,30 +320,25 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     private void deleteSelectedComments(boolean deletePermanently) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
-        final int dlgId = deletePermanently ? CommentDialogs.ID_COMMENT_DLG_DELETING : CommentDialogs.ID_COMMENT_DLG_TRASHING;
 
         final CommentList selectedComments = getAdapter().getSelectedComments();
-        getActivity().showDialog(dlgId);
+
+        for (Comment comment : selectedComments) {
+            setCommentIsModerating(comment.commentID, true);
+        }
+
+        final CommentStatus newStatus = deletePermanently ? CommentStatus.DELETE : CommentStatus.TRASH;
+
+
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
-                if (!isAdded()) return;
-
-                finishActionMode();
-                dismissDialog(dlgId);
-                if (deletedComments.size() > 0) {
-                    getAdapter().clearSelectedComments();
-                    getAdapter().deleteComments(deletedComments);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
-                }
+                EventBus.getDefault().post(
+                        new CommentEvents.CommentsBatchModerationFinishedEvent(deletedComments, true, newStatus));
             }
         };
 
-        CommentStatus newStatus = CommentStatus.TRASH;
-        if (deletePermanently) {
-            newStatus = CommentStatus.DELETE;
-        }
+        getAdapter().clearSelectedComments();
         CommentActions.moderateComments(
                 WordPress.getCurrentLocalTableBlogId(), selectedComments, newStatus, listener);
     }
@@ -477,7 +469,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                     public void onDataReadyToSave(List list) {
                         int localBlogId = blog.getLocalTableBlogId();
 
-                        if(!mIsLoadingMore){ //existing comments should be deleted only if we are not "loading more"
+                        if (!mIsLoadingMore) { //existing comments should be deleted only if we are not "loading more"
                             CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
                         }
                         CommentTable.saveComments(localBlogId, (CommentList) list);
@@ -729,7 +721,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -740,8 +732,6 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
     public void onEventMainThread(CommentEvents.CommentModerationFinishedEvent event) {
         if (!isAdded()) return;
-
-        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentModerationFinishedEvent.class);
 
         setCommentIsModerating(event.getCommentId(), false);
 
@@ -756,13 +746,10 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
     public void onEventMainThread(CommentEvents.CommentsBatchModerationFinishedEvent moderatedComments) {
         if (!isAdded()) return;
-        EventBus.getDefault().removeStickyEvent(CommentEvents.CommentsBatchModerationFinishedEvent.class);
 
-        finishActionMode();
         if (moderatedComments.getComments().size() > 0) {
 
             for (Comment comment : moderatedComments.getComments()) {
-
                 setCommentIsModerating(comment.commentID, false);
             }
 
@@ -775,7 +762,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
             // if the new comments status is not the same as the current filter status it means user have switched filter
             // while comment moderation/deletion was in progress and we need to reload comments from DB to reflect changes
-            if (moderatedComments.getNewStatus() != mCommentStatusFilter) {
+            if (moderatedComments.getNewStatus() != mCommentStatusFilter || moderatedComments.isDeleted()) {
                 loadComments();
             }
         } else {
