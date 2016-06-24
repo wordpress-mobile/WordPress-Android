@@ -30,6 +30,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     private static final String VERSION_CODE = "version_code";
     private static final String APP_LOCALE = "app_locale";
     private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
+    private static final String HARDWARE_KEYBOARD = "hardware_keyboard";
 
     public AnalyticsTrackerMixpanel(Context context, String token) throws IllegalArgumentException {
         super(context);
@@ -184,6 +185,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(VERSION_CODE, metadata.getVersionCode());
             properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
+            properties.put(HARDWARE_KEYBOARD, metadata.hasHardwareKeyboard());
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);

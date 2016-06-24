@@ -9,6 +9,7 @@ public class AnalyticsMetadata {
     private int mVersionCode;
     private String mUsername = "";
     private String mEmail = "";
+    private boolean mHasHardwareKeyboard;
 
     public AnalyticsMetadata() {}
 
@@ -74,5 +75,13 @@ public class AnalyticsMetadata {
 
     public void setEmail(String email) {
         this.mEmail = email;
+    }
+
+    public boolean hasHardwareKeyboard() {
+        return mHasHardwareKeyboard;
+    }
+
+    public void setHardwareKeyboard(boolean hasHardwareKeyboard) {
+        this.mHasHardwareKeyboard = hasHardwareKeyboard;
     }
 }

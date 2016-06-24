@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.text.Html;
 
@@ -42,6 +43,9 @@ public class AnalyticsUtils {
         metadata.setUsername(username);
         metadata.setEmail(email);
 
+        Configuration configuration = WordPress.getContext().getResources().getConfiguration();
+        metadata.setHardwareKeyboard(configuration.keyboard != Configuration.KEYBOARD_NOKEYS);
+
         AnalyticsTracker.refreshMetadata(metadata);
     }
 
@@ -61,6 +65,9 @@ public class AnalyticsUtils {
         metadata.setVersionCode(PackageUtils.getVersionCode(WordPress.getContext()));
         metadata.setUsername(AccountHelper.getDefaultAccount().getUserName());
         metadata.setEmail(AccountHelper.getDefaultAccount().getEmail());
+
+        Configuration configuration = WordPress.getContext().getResources().getConfiguration();
+        metadata.setHardwareKeyboard(configuration.keyboard != Configuration.KEYBOARD_NOKEYS);
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
