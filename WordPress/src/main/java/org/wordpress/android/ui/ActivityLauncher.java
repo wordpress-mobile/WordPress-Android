@@ -9,9 +9,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.mixpanel.android.mpmetrics.Tweak;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
