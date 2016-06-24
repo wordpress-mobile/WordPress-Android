@@ -456,7 +456,7 @@ public class ReaderPostDetailFragment extends Fragment
      * request posts related to the current one - only available for wp.com
      */
     private void requestRelatedPosts() {
-        if (hasPost() && mPost.isWP() &&  !mIsLoggedOutReader) {
+        if (hasPost() && mPost.isWP()) {
             ReaderPostActions.requestRelatedPosts(mPost);
         }
     }
