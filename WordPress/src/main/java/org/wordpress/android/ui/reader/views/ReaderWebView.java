@@ -95,10 +95,15 @@ public class ReaderWebView extends WebView {
             this.setWebChromeClient(mReaderChromeClient);
             this.setWebViewClient(new ReaderWebViewClient(this));
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
-            this.getSettings().setDefaultFontSize(
-                    (int) (this.getSettings().getDefaultFontSize() * getResources().getConfiguration().fontScale));
-            this.getSettings().setDefaultFixedFontSize(
-                    (int) (this.getSettings().getDefaultFixedFontSize() * getResources().getConfiguration().fontScale));
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                final float fontScale = getResources().getConfiguration().fontScale;
+
+                this.getSettings().setDefaultFontSize((int) (this.getSettings().getDefaultFontSize() * fontScale));
+                this.getSettings().setDefaultFixedFontSize(
+                        (int) (this.getSettings().getDefaultFixedFontSize() * fontScale));
+            }
+
             // Lollipop disables third-party cookies by default, but we need them in order
             // to support authenticated images
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
