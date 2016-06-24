@@ -29,11 +29,6 @@ public class CustomItemEditor extends BaseMenuItemEditor {
     }
 
     @Override
-    public MenuItemModel getMenuItem() {
-        return null;
-    }
-
-    @Override
     public void onSave() {
     }
 

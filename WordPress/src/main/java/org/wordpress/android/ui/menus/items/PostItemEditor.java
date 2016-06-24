@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -60,7 +61,8 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
+        MenuItemModel menuItem = super.getMenuItem();
+        fillData(menuItem);
         return menuItem;
     }
 
@@ -119,4 +121,10 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         }
         refreshAdapter();
     }
+
+    private void fillData(@NonNull MenuItemModel menuItem) {
+        //TODO check selected item in array and set selected
+
+    }
+
 }

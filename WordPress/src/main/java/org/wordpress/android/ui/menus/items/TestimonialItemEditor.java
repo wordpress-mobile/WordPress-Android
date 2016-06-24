@@ -29,12 +29,6 @@ public class TestimonialItemEditor extends BaseMenuItemEditor {
     }
 
     @Override
-    public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
-        return menuItem;
-    }
-
-    @Override
     public void onSave() {
     }
 

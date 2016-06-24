@@ -63,12 +63,6 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
     }
 
     @Override
-    public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = super.getMenuItem();
-        return menuItem;
-    }
-
-    @Override
     public void onSave() {
         // TODO: save to DB
     }
