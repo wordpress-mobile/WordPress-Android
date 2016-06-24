@@ -25,7 +25,7 @@ import de.greenrobot.event.EventBus;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface MenuItemInteractions {
-        void onItemClick(MenuItemModel item);
+        void onItemClick(MenuItemModel item, int position);
         void onCancelClick();
         void onAddClick(int position, ItemAddPosition where);
     }
@@ -134,6 +134,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             default:
             {
                 final MenuItemModel menuItem = mFlattenedMenuItems.get(position);
+                final int itemPosition = position;
                 MenuItemHolder holder = (MenuItemHolder) viewHolder;
 
                 holder.txtTitle.setText(Html.fromHtml(menuItem.name));
@@ -144,7 +145,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.containerView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mListener.onItemClick(menuItem);
+                        mListener.onItemClick(menuItem, itemPosition);
                     }
                 });
                 ITEM_TYPE itemType = ITEM_TYPE.typeForString(menuItem.type);

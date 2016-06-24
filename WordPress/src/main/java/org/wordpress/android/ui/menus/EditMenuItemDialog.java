@@ -85,14 +85,22 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             if (args.containsKey(ORIGINAL_ITEM_ARG)) {
                 mOriginalItem = (MenuItemModel) args.getSerializable(ORIGINAL_ITEM_ARG);
             }
+
             if (args.containsKey(ITEM_TYPES_ARG)) {
                 ArrayList<String> types = (ArrayList<String>) args.getSerializable(ITEM_TYPES_ARG);
                 if (types != null) {
                     setTypes(types);
                 }
             }
+
+            if (args.containsKey(WORKING_ITEM_ARG)) {
+                mWorkingItem = (MenuItemModel) args.getSerializable(WORKING_ITEM_ARG);
+            }
         }
-        mWorkingItem = new MenuItemModel(mOriginalItem);
+
+        if (mWorkingItem == null) {
+            mWorkingItem = new MenuItemModel(mOriginalItem);
+        }
     }
 
     @Override
@@ -150,12 +158,16 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     public void setType(String type) {
         mWorkingItem.type = type;
         mToolbar.setTitle(mWorkingItem.name);
-        //mTypePicker.setSelection(mItemPositions.get(type.toUpperCase()));
-        //mEditorFlipper.setDisplayedChild(mItemPositions.get(type.toUpperCase()));
         setPickerAndChildViewSelection(type.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         if (mCurrentEditor != null) {
             mCurrentEditor.setMenuItem(mWorkingItem);
+            mCurrentEditor.setMenuItemNameChangeListener(new BaseMenuItemEditor.MenuItemNameChangeListener() {
+                @Override
+                public void onNameChanged(String newName) {
+                    mToolbar.setTitle(newName);
+                }
+            });
         }
     }
 

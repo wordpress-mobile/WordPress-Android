@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPEditText
+        android:id="@+id/menu_item_title_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/MenuNameActiveText"
+        tools:text="Title" />
 
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"

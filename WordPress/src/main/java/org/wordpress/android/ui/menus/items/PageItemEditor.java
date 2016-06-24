@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.menus.items;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -10,8 +11,8 @@ import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.MenuItemTable;
 import org.wordpress.android.models.MenuItemModel;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -29,8 +30,10 @@ import de.greenrobot.event.EventBus;
  */
 public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
     private final int mLocalBlogId;
-    private final List<String> mAllPages;
-    private final List<String> mFilteredPages;
+    private final List<String> mAllPageTitles;
+    private final List<String> mFilteredPageTitles;
+    private PostsListPostList mAllPages;
+    private PostsListPostList mFilteredPages;
 
     private RadioButtonListView mPageListView;
 
@@ -41,15 +44,15 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     public PageItemEditor(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mLocalBlogId = WordPress.getCurrentLocalTableBlogId();
-        mAllPages = new ArrayList<>();
-        mFilteredPages = new ArrayList<>();
+        mAllPageTitles = new ArrayList<>();
+        mFilteredPageTitles = new ArrayList<>();
+        loadPages();
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         EventBus.getDefault().register(this);
-        loadPages();
         fetchPages();
     }
 
@@ -71,11 +74,13 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         mPageListView.setEmptyView(emptyTextView);
 
         mPageListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mWorkingItem.name = mPageListView.getSelectedItem().toString();
             }
 
-            @Override public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
@@ -86,17 +91,39 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     @Override
+    public int getNameEditTextRes() {
+        return R.id.menu_item_title_edit;
+    }
+
+
+    @Override
     public void setMenuItem(MenuItemModel menuItem) {
         super.setMenuItem(menuItem);
         if (!TextUtils.isEmpty(menuItem.name)) {
-            setSelection(menuItem.name);
+            setSelection(menuItem.contentId);
         }
     }
 
-    private void setSelection(String name) {
-        int selectedPosition = mFilteredPages.indexOf(name);
-        if (selectedPosition != -1 && selectedPosition < mPageListView.getCount()) {
-            mPageListView.setSelection(selectedPosition);
+    private void setSelection(long contentId) {
+        boolean selectionMarked = false;
+        for (int i=0; i < mFilteredPages.size(); i++) {
+            PostsListPost post = mFilteredPages.get(i);
+            String remoteId = post.getRemotePostId();
+            if (remoteId != null && (!TextUtils.isEmpty(remoteId)) && Long.valueOf(remoteId) == contentId){
+                mPageListView.setSelection(i);
+                selectionMarked = true;
+                break;
+            }
+        }
+
+        if (!selectionMarked) {
+            //check if home
+            MenuItemModel item = super.getMenuItem();
+            if (item != null) {
+                if (item.url.compareToIgnoreCase(WordPress.getCurrentBlog().getHomeURL() + "/") == 0) {
+                    mPageListView.setSelection(0);
+                }
+            }
         }
     }
 
@@ -105,13 +132,22 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     @Override
+    public MenuItemModel getMenuItem() {
+        MenuItemModel menuItem = super.getMenuItem();
+        fillData(menuItem);
+        return menuItem;
+    }
+
+    @Override
     public void onSave() {
-        if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
+        //TODO check with Tony if this is needed
+        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
     }
 
     @Override
     public void onDelete() {
-        if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
+        //TODO check with Tony if this is needed
+        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
     }
 
     //
@@ -134,6 +170,12 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         // update page list with changes from remote
         if (event.getBlogId() == mLocalBlogId) {
             loadPages();
+
+            MenuItemModel item = super.getMenuItem();
+            if (item != null) {
+                //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                setSelection(item.contentId);
+            }
         }
     }
 
@@ -141,15 +183,26 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
      * Loads locally stored pages
      */
     private void loadPages() {
-        PostsListPostList posts = WordPress.wpDB.getPostsListPosts(mLocalBlogId, true);
-        mAllPages.clear();
-        mFilteredPages.clear();
-        for (PostsListPost post : posts) {
-            mAllPages.add(post.getTitle());
-            mFilteredPages.add(post.getTitle());
+        mAllPages = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), true);
+        insertHomePage();
+        mFilteredPages = new PostsListPostList();
+        mAllPageTitles.clear();
+        mFilteredPageTitles.clear();
+        for (PostsListPost post : mAllPages) {
+            mFilteredPages.add(post);
+            mAllPageTitles.add(post.getTitle());
+            mFilteredPageTitles.add(post.getTitle());
         }
         refreshAdapter();
     }
+
+    private void insertHomePage(){
+        Post homePost = new Post(WordPress.getCurrentLocalTableBlogId(), true);
+        homePost.setTitle(WordPress.getContext().getString(R.string.menu_item_special_home));
+        PostsListPost homePage = new PostsListPost(homePost);
+        mAllPages.add(0, homePage);
+    }
+
 
     /**
      * Fetch remote pages for blog
@@ -166,17 +219,53 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     private void refreshAdapter() {
         if (mPageListView != null) {
-            mPageListView.setAdapter(new RadioButtonListAdapter(getContext(), mFilteredPages));
+            mPageListView.setAdapter(new RadioButtonListAdapter(getContext(), mFilteredPageTitles));
         }
     }
 
     private void refreshFilteredPages(String filter) {
+        mFilteredPageTitles.clear();
         mFilteredPages.clear();
         String upperFiler = filter.toUpperCase();
-        for (String s : mAllPages) {
+        for (int i = 0; i < mAllPageTitles.size(); i++) {
+            String s = mAllPageTitles.get(i);
             if (s.toUpperCase().contains(upperFiler)) {
-                mFilteredPages.add(s);
+                mFilteredPageTitles.add(s);
+                mFilteredPages.add(mAllPages.get(i));
             }
         }
     }
+
+    private void fillData(@NonNull MenuItemModel menuItem) {
+        //check selected item in array and set selected
+        /*
+            "type": "page",
+			"type_family": "post_type",
+			"type_label": "Page",
+			* */
+
+        PostsListPost post = mFilteredPages.get(mPageListView.getCheckedItemPosition());
+        if (post != null) {
+
+            if (post.getRemotePostId() != null && !TextUtils.isEmpty(post.getRemotePostId())) {
+                menuItem.contentId = Long.valueOf(post.getRemotePostId());
+
+                menuItem.type = MenuItemEditorFactory.ITEM_TYPE.PAGE.name().toLowerCase(); //default type: PAGE
+                menuItem.typeFamily = "post_type";
+                menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.PAGE.name();
+            } else {
+                // this is the HOME item
+                /*
+                    "type": "custom",
+                    "type_family": "custom",
+                    "type_label": "Custom Link",
+                    * */
+                menuItem.type = MenuItemEditorFactory.ITEM_TYPE.CUSTOM.name().toLowerCase(); //default type: CUSTOM
+                menuItem.typeFamily = "custom";
+                menuItem.typeLabel = "Custom Link";
+                menuItem.url = WordPress.getCurrentBlog().getHomeURL() + "/";
+            }
+        }
+    }
+
 }

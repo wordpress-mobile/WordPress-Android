@@ -51,9 +51,8 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
     }
 
     @Override
-    public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = super.getMenuItem();
-        return menuItem;
+    public int getNameEditTextRes() {
+        return R.id.menu_item_title_edit;
     }
 
     @Override
