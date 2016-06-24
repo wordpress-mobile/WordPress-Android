@@ -822,7 +822,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
 
                         // approve the comment
-                        moderateComment(CommentStatus.APPROVED);
+                        if (mComment.getStatusEnum() != CommentStatus.APPROVED) {
+                            moderateComment(CommentStatus.APPROVED);
+                        }
                     } else {
                         String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
                         ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);
