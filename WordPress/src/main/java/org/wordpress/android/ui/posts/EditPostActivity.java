@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -720,6 +721,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
+
+        boolean hasHardwareKeyboard = (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
+        properties.put("hardware_keyboard", hasHardwareKeyboard);
+
         AnalyticsUtils.trackWithBlogDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
                 WordPress.getBlog(mPost.getLocalTableBlogId()),
