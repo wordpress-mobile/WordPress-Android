@@ -29,6 +29,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -54,7 +55,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -89,7 +89,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 47;
+    private static final int DATABASE_VERSION = 48;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -232,6 +232,9 @@ public class WordPressDB {
 
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
+
+    // add testimonials flag for menus
+    private static final String ADD_TESTIMONIALS_FLAG = "alter table " + SiteSettingsModel.SETTINGS_TABLE_NAME + " add " + SiteSettingsModel.TESTIMONIALS_ENABLED_COLUMN_NAME + " BOOLEAN default 0;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -429,6 +432,9 @@ public class WordPressDB {
             case 46:
                 AppPrefs.setVisualEditorAvailable(true);
                 AppPrefs.setVisualEditorEnabled(true);
+                currentVersion++;
+            case 47:
+                db.execSQL(ADD_TESTIMONIALS_FLAG);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
