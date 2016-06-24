@@ -470,23 +470,8 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public CommentAdapterState saveAdapterState() {
-        return new CommentAdapterState(
-                mTrashedCommentsId,
-                mSelectedCommentsId,
-                mModeratingCommentsIds);
+        return new CommentAdapterState(mSelectedCommentsId, mModeratingCommentsIds);
     }
-
-    private void removeTrashedComments() {
-        if (!mTrashedCommentsId.isEmpty()) {
-            for (Long trashedCommentId : mTrashedCommentsId) {
-                int index = mComments.indexOfCommentId(trashedCommentId);
-                if (isPositionValid(index)) {
-                    mComments.remove(index);
-                }
-            }
-        }
-    }
-
 
     public void setInitialState(CommentAdapterState adapterState) {
         if (adapterState == null) return;
@@ -500,10 +485,6 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mModeratingCommentsIds.addAll(adapterState.getModeratedCommentsId());
         }
 
-        if (adapterState.hasTrashedComments()) {
-            mTrashedCommentsId.addAll(adapterState.getTrashedCommentId());
-            removeTrashedComments();
-        }
 
 
     }
