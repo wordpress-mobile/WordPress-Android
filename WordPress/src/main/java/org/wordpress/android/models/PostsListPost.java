@@ -18,6 +18,7 @@ import java.util.Date;
 public class PostsListPost {
     private static final int MAX_EXCERPT_LEN = 150;
 
+    private final String remotePostId;
     private final long postId;
     private final long blogId;
     private long dateCreatedGmt;
@@ -36,6 +37,7 @@ public class PostsListPost {
     private transient String featuredImageUrl;
 
     public PostsListPost(Post post) {
+        remotePostId = post.getRemotePostId();
         postId = post.getLocalTablePostId();
         blogId = post.getLocalTableBlogId();
         featuredImageId = post.getFeaturedImageId();
@@ -63,6 +65,10 @@ public class PostsListPost {
 
     public long getBlogId() {
         return blogId;
+    }
+
+    public String getRemotePostId() {
+        return remotePostId;
     }
 
     public String getTitle() {

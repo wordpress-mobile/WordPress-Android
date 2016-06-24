@@ -3,11 +3,13 @@ package org.wordpress.android.ui.menus;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,6 +61,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     private MenusSpinner mMenusSpinner;
     private MenuModel mCurrentMenuForLocation;
     private MenuItemsView mItemsView;
+    private int mCurrentMenuItemBeingEdited = -1;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -421,12 +424,13 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     }
 
     @Override
-    public void onItemClick(MenuItemModel item) {
+    public void onItemClick(MenuItemModel item, int position) {
         if (item != null) {
             FragmentManager fm = getFragmentManager();
             EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(item);
             dialog.setTargetFragment(this, EditMenuItemDialog.EDIT_REQUEST_CODE);
             dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
+            mCurrentMenuItemBeingEdited = position;
         }
     }
 
@@ -445,6 +449,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         newItem.name = getString(R.string.menus_item_new_item);
         newItem.flattenedLevel = originalItem.flattenedLevel;
         newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
+        newItem.typeFamily = "post_type";
+        newItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
         switch (where) {
             case TO_CHILDREN:
                 newItem.flattenedLevel++;
@@ -464,6 +470,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 break;
         }
 
+        mCurrentMenuItemBeingEdited = position;
+
         //enclosed Dialog show in a delayed handler to allow animations to be appreciated
         Handler hdlr = new Handler();
         hdlr.postDelayed(new Runnable() {
@@ -471,6 +479,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             public void run() {
                 FragmentManager fm = getFragmentManager();
                 EditMenuItemDialog dialog = EditMenuItemDialog.newInstance(newItem);
+                dialog.setTargetFragment(MenusFragment.this, EditMenuItemDialog.EDIT_REQUEST_CODE);
                 dialog.show(fm, EditMenuItemDialog.class.getSimpleName());
             }
         }, 350);
@@ -481,6 +490,25 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         updateMenus();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == EditMenuItemDialog.EDIT_REQUEST_CODE) {
+            //here get the modified item from the Intent parcelable and refresh the menu item list
+            //re-draw menu items
+            if (mCurrentMenuItemBeingEdited > -1) {
+                MenuItemModel modifiedItem = (MenuItemModel) data.getSerializableExtra(EditMenuItemDialog.EDITED_ITEM_KEY);
+                if (modifiedItem != null) {
+                    List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+                    flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
+                    mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void updateMenus() {
@@ -584,6 +612,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
      * AsyncTask to load menus from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
 
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
