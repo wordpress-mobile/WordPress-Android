@@ -1509,14 +1509,12 @@
     <string name="menu_item_type_link" translatable="false">@string/link</string>
     <string name="menu_item_type_tag">Tag</string>
     <string name="menu_item_type_category">Category</string>
-    <string name="menu_item_type_testimonial">Testimonial</string>
     <string-array name="menu_item_type_spinner_entries">
         <item>@string/menu_item_type_post</item>
         <item>@string/menu_item_type_page</item>
         <item>@string/menu_item_type_category</item>
         <item>@string/menu_item_type_tag</item>
         <item>@string/menu_item_type_link</item>
-        <item>@string/menu_item_type_testimonial</item>
     </string-array>
 
     <!-- empty menu item adapter views -->
@@ -1524,7 +1522,6 @@
     <string name="menu_item_type_post_empty_list">No posts found</string>
     <string name="menu_item_type_tag_empty_list">No tags found</string>
     <string name="menu_item_type_category_empty_list">No categories found</string>
-    <string name="menu_item_type_testimonial_empty_list">No testimonials found</string>
 
 
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
