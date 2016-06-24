@@ -495,7 +495,10 @@ public abstract class SiteSettingsInterface {
         return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
                 R.string.site_settings_list_editor_summary_one,
                 R.string.site_settings_list_editor_summary_other, count);
+    }
 
+    public boolean getTestimonialsEnabled() {
+        return mSettings.testimonialsEnabled;
     }
 
     public void setTitle(String title) {
