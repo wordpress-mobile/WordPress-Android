@@ -3,12 +3,10 @@ package org.wordpress.android.ui.publicize;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ListViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -20,6 +18,7 @@ import org.wordpress.android.databinding.PublicizeConnectionListItemBinding;
  * Created by Will on 6/19/16.
  */
 public class PublicizeAccountChooserDialogFragment extends DialogFragment {
+    private PublicizeEvents.Connection[] mConnections;
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,7 +43,10 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         ListView listView = (ListView) view.findViewById(R.id.listView);
         PublicizeConnectionListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.publicize_connection_list_item, listView, false);
 
-
         return super.onCreateDialog(savedInstanceState);
+    }
+
+    public void setConnections(PublicizeEvents.Connection[] connections) {
+        mConnections = connections;
     }
 }

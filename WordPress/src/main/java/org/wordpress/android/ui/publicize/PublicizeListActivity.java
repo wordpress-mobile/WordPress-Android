@@ -270,5 +270,8 @@ public class PublicizeListActivity extends AppCompatActivity
 
     public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
         PublicizeEvents.Connection[] connections = event.getConnections();
+        PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
+        dialogFragment.setConnections(connections);
+        dialogFragment.show(getSupportFragmentManager(), "yup");
     }
 }
