@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -194,6 +196,23 @@ public class PublicizeConnection {
         connection.mStatus = json.optString("status");
         connection.mRefreshUrl = json.optString("refresh_URL");
 
+        try {
+            JSONArray jsonSitesArray = json.getJSONArray("sites");
+            connection.mSites = getSitesArrayFromJson(jsonSitesArray);
+        } catch (JSONException e) {
+            connection.mSites = new int[0];
+            e.printStackTrace();
+        }
+
         return connection;
+    }
+
+    private static int[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
+        int[] sitesArray = new int[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            sitesArray[i] = jsonArray.getInt(i);
+        }
+
+        return sitesArray;
     }
 }
