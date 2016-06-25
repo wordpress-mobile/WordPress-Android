@@ -26,7 +26,7 @@ public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
         View rowView = inflater.inflate(R.layout.publicize_connection_list_item, viewGroup, false);
         PublicizeEvents.Connection connection = (PublicizeEvents.Connection)getItem(i);
         WPNetworkImageView imageView = (WPNetworkImageView) rowView.findViewById(R.id.profile_pic);
-        imageView.setImageUrl(connection.getProfilePictureUrl().toString(), WPNetworkImageView.ImageType.AVATAR);
+        imageView.setImageUrl(connection.getProfilePictureUrl().toString(), WPNetworkImageView.ImageType.PHOTO);
 
         TextView name = (TextView) rowView.findViewById(R.id.name);
         name.setText(connection.getDisplayName());
