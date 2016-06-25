@@ -1,51 +1,36 @@
 package org.wordpress.android.ui.publicize;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.databinding.ObservableArrayList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.databinding.PublicizeConnectionListItemBinding;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * Created by Will on 6/24/16.
  */
-public class PublicizeAccountChooserListAdapter extends BaseAdapter {
-    private ObservableArrayList<PublicizeEvents.Connection> list;
-    private LayoutInflater inflater;
+public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
 
-    public PublicizeAccountChooserListAdapter(ObservableArrayList<PublicizeEvents.Connection> list) {
-        this.list = list;
-    }
-
-    @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
+    public PublicizeAccountChooserListAdapter(Context context, int resource, int resource2, PublicizeEvents.Connection[] objects) {
+        super(context, resource, resource2, objects);
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if (inflater == null) {
-            inflater = (LayoutInflater) viewGroup.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.publicize_connection_list_item, viewGroup, false);
+        PublicizeEvents.Connection connection = (PublicizeEvents.Connection)getItem(i);
+        WPNetworkImageView imageView = (WPNetworkImageView) rowView.findViewById(R.id.profile_pic);
+        imageView.setImageUrl(connection.getProfilePictureUrl().toString(), WPNetworkImageView.ImageType.AVATAR);
 
-        PublicizeConnectionListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.publicize_connection_list_item, viewGroup, false);
-        binding.setConnection(list.get(i));
+        TextView name = (TextView) rowView.findViewById(R.id.name);
+        name.setText(connection.getDisplayName());
 
-        return binding.getRoot();
+        return rowView;
     }
 }
