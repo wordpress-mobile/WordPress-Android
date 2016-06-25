@@ -158,13 +158,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
-            // adjust the right padding of the post header to allow right padding of the  "..." icon
-            // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
-            layoutPostHeader.setPadding(
-                    layoutPostHeader.getPaddingLeft(),
-                    layoutPostHeader.getPaddingTop(),
-                    layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
-                    layoutPostHeader.getPaddingBottom());
+            if (shouldShowPostHeader()) {
+                // adjust the right padding of the post header to allow right padding of the  "..." icon
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
+                layoutPostHeader.setPadding(
+                        layoutPostHeader.getPaddingLeft(),
+                        layoutPostHeader.getPaddingTop(),
+                        layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
+                        layoutPostHeader.getPaddingBottom());
+            } else {
+                layoutPostHeader.setVisibility(View.GONE);
+            }
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
         }
@@ -192,6 +196,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
         }
+    }
+
+    /*
+     * post header isn't shown for blog preview
+     */
+    private boolean shouldShowPostHeader() {
+        return getPostListType() != ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
     @Override
@@ -314,8 +325,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtBlogName.setText(null);
         }
 
-        // show blog preview when post header is tapped unless this already is blog preview
-        if (!isBlogPreview()) {
+        // show blog preview when post header is tapped
+        if (shouldShowPostHeader()) {
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
