@@ -118,6 +118,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtDate;
         private final TextView txtTag;
         private final TextView txtWordCount;
+        private final TextView txtDateBelowTitle;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -144,6 +145,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtDate = (TextView) itemView.findViewById(R.id.text_date);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
             txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
+            txtDateBelowTitle = (TextView) itemView.findViewById(R.id.text_date_below_title);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -167,14 +169,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
                         layoutPostHeader.getPaddingBottom());
             } else {
-                // hide the header and add a bit more padding above the title
+                // hide the header
                 layoutPostHeader.setVisibility(View.GONE);
+                // add a bit more padding above the title
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
                 txtTitle.setPadding(
                         txtTitle.getPaddingLeft(),
                         txtTitle.getTotalPaddingTop() + extraPadding,
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
+                // show the dateline that appears below the title (hidden in layout)
+                txtDateBelowTitle.setVisibility(View.VISIBLE);
             }
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
@@ -316,7 +321,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }
-        holder.txtDate.setText(dateLine);
+
+        // when post header is visible, the dateline appears within it - otherwise a separate
+        // dateline appears below the title
+        if (shouldShowPostHeader()) {
+            holder.txtDate.setText(dateLine);
+            // show blog preview when post header is tapped
+            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            });
+        } else {
+            holder.txtDateBelowTitle.setText(dateLine);
+        }
 
         if (post.hasBlogUrl()) {
             String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
@@ -330,16 +349,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtBlogName.setText(post.getAuthorName());
         } else {
             holder.txtBlogName.setText(null);
-        }
-
-        // show blog preview when post header is tapped
-        if (shouldShowPostHeader()) {
-            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            });
         }
 
         if (post.hasExcerpt()) {
