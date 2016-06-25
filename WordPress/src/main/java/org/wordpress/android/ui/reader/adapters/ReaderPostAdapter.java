@@ -169,9 +169,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 // hide the header and add a bit more padding above the title
                 layoutPostHeader.setVisibility(View.GONE);
-                int margin = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
-                txtTitle.setPadding(txtTitle.getPaddingLeft(),
-                        txtTitle.getTotalPaddingTop() + margin,
+                int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
+                txtTitle.setPadding(
+                        txtTitle.getPaddingLeft(),
+                        txtTitle.getTotalPaddingTop() + extraPadding,
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
             }
