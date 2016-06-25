@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.PublicizeConnection;
 
 /**
  * Created by Will on 6/19/16.
  */
 public class PublicizeAccountChooserDialogFragment extends DialogFragment {
-    private PublicizeEvents.Connection[] mConnections;
+    private PublicizeConnection[] mPublicizeConnections;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public void setConnections(PublicizeEvents.Connection[] connections) {
-        mConnections = connections;
+    public void setConnections(PublicizeConnection[] publicizeConnections) {
+        mPublicizeConnections = publicizeConnections;
     }
 }

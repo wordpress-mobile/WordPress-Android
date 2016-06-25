@@ -142,11 +142,11 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private void showWebViewFragment(int siteId,
                                      PublicizeService service,
-                                     PublicizeConnection connection) {
+                                     PublicizeConnection publicizeConnection) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, connection);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, publicizeConnection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
@@ -212,31 +212,31 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     /*
-     * user requested to reconnect a broken connection from the detail fragment
+     * user requested to reconnect a broken publicizeConnection from the detail fragment
      */
     @Override
-    public void onRequestReconnect(PublicizeService service, PublicizeConnection connection) {
-        showWebViewFragment(mSiteId, service, connection);
+    public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
+        showWebViewFragment(mSiteId, service, publicizeConnection);
     }
 
     /*
-     * user requested to disconnect a service connection from the detail fragment
+     * user requested to disconnect a service publicizeConnection from the detail fragment
      */
     @Override
-    public void onRequestDisconnect(PublicizeConnection connection) {
-        confirmDisconnect(connection);
+    public void onRequestDisconnect(PublicizeConnection publicizeConnection) {
+        confirmDisconnect(publicizeConnection);
     }
 
-    private void confirmDisconnect(final PublicizeConnection connection) {
+    private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(
-                String.format(getString(R.string.dlg_confirm_publicize_disconnect), connection.getLabel()));
+                String.format(getString(R.string.dlg_confirm_publicize_disconnect), publicizeConnection.getLabel()));
         builder.setTitle(R.string.share_btn_disconnect);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.share_btn_disconnect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                PublicizeActions.disconnect(connection);
+                PublicizeActions.disconnect(publicizeConnection);
                 reloadDetailFragment();
             }
         });
@@ -269,9 +269,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
-        PublicizeEvents.Connection[] connections = event.getConnections();
+        PublicizeConnection[] publicizeConnections = event.getConnections();
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
-        dialogFragment.setConnections(connections);
+        dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), "yup");
     }
 }

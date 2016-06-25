@@ -15,8 +15,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  */
 public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
 
-    public PublicizeAccountChooserListAdapter(Context context, int resource, int resource2, PublicizeEvents.Connection[] objects) {
         super(context, resource, resource2, objects);
+    public PublicizeAccountChooserListAdapter(Context context, int resource, PublicizeConnection[] objects, boolean isConnected) {
     }
 
     @Override
@@ -24,12 +24,12 @@ public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.publicize_connection_list_item, viewGroup, false);
-        PublicizeEvents.Connection connection = (PublicizeEvents.Connection)getItem(i);
+        PublicizeConnection publicizeConnection = (PublicizeConnection)getItem(i);
         WPNetworkImageView imageView = (WPNetworkImageView) rowView.findViewById(R.id.profile_pic);
-        imageView.setImageUrl(connection.getProfilePictureUrl().toString(), WPNetworkImageView.ImageType.PHOTO);
+        imageView.setImageUrl(publicizeConnection.getExternalProfilePictureUrl().toString(), WPNetworkImageView.ImageType.PHOTO);
 
         TextView name = (TextView) rowView.findViewById(R.id.name);
-        name.setText(connection.getDisplayName());
+        name.setText(publicizeConnection.getExternalDisplayName());
 
         return rowView;
     }
