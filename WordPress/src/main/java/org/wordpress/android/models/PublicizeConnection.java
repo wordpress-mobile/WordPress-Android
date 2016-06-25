@@ -39,6 +39,7 @@ public class PublicizeConnection {
     private String mExternalName;
     private String mExternalDisplayName;
     private String mExternalProfilePictureUrl;
+    private int[] mSites;
 
     // `status` can be `ok` or `broken` -- `broken` means the connection needs to be re-established via the `refresh_URL`
     private String mStatus;
@@ -134,6 +135,14 @@ public class PublicizeConnection {
                 && other.getExternalProfilePictureUrl().equals(this.getExternalProfilePictureUrl())
                 && other.getRefreshUrl().equals(this.getRefreshUrl())
                 && other.getService().equals(this.getService());
+    }
+
+    public void setSites(int[] sites) {
+        mSites = sites;
+    }
+
+    public int[] getSites() {
+        return mSites;
     }
 
     /*
