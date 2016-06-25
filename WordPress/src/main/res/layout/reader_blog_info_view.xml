@@ -20,10 +20,18 @@
         android:paddingTop="@dimen/margin_large"
         tools:targetApi="LOLLIPOP">
 
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_blavatar"
+            style="@style/ReaderImageView.Avatar"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_large"
+            tools:src="@drawable/blavatar_placeholder" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="Loading..." />
@@ -33,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_blog_name"
+            android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
             tools:text="text_domain" />

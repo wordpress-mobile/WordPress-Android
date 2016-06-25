@@ -14,8 +14,11 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 /**
  * topmost view in post adapter when showing blog preview - displays description, follower
@@ -105,6 +108,7 @@ public class ReaderBlogInfoView extends LinearLayout {
         TextView txtDomain = (TextView) layoutInfo.findViewById(R.id.text_domain);
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
+        WPNetworkImageView imgBlavatar = (WPNetworkImageView) layoutInfo.findViewById(R.id.image_blavatar);
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());
@@ -139,6 +143,14 @@ public class ReaderBlogInfoView extends LinearLayout {
                     toggleFollowStatus();
                 }
             });
+        }
+
+        if (blogInfo.hasImageUrl()) {
+            int imageSize = getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), imageSize, imageSize);
+            imgBlavatar.setImageUrl(imageUrl, ImageType.BLAVATAR);
+        } else {
+            imgBlavatar.showDefaultBlavatarImage();
         }
 
         if (layoutInfo.getVisibility() != View.VISIBLE) {
