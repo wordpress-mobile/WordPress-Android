@@ -39,8 +39,10 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
             }
         });
 
-        ListView listView = (ListView) view.findViewById(R.id.listView);
-        PublicizeAccountChooserListAdapter adapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, R.id.name, mConnections);
+        ListView listView = (ListView) view.findViewById(R.id.listView_not_connected);
+        PublicizeAccountChooserListAdapter adapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, mPublicizeConnections, false);
+
+        ListView listViewConnected = (ListView) view.findViewById(R.id.listview_connected);
 
         listView.setAdapter(adapter);
 
