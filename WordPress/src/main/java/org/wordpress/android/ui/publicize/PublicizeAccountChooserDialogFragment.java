@@ -3,6 +3,7 @@ package org.wordpress.android.ui.publicize;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +14,9 @@ import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.databinding.PublicizeConnectionListItemBinding;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Will on 6/19/16.
@@ -39,11 +43,16 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
             }
         });
 
-
         ListView listView = (ListView) view.findViewById(R.id.listView);
-        PublicizeConnectionListItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.publicize_connection_list_item, listView, false);
+        ObservableArrayList<PublicizeEvents.Connection> connectionObservableArrayList = new ObservableArrayList<>();
+        for (int i = 0; i < mConnections.length; i++) {
+            connectionObservableArrayList.add(mConnections[i]);
+        }
+        PublicizeAccountChooserListAdapter listAdapter = new PublicizeAccountChooserListAdapter(connectionObservableArrayList);
+        listView.setAdapter(listAdapter);
 
-        return super.onCreateDialog(savedInstanceState);
+        AlertDialog dialog = builder.create();
+        return dialog;
     }
 
     public void setConnections(PublicizeEvents.Connection[] connections) {
