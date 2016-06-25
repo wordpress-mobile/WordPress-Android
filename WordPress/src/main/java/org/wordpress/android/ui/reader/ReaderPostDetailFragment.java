@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -26,12 +27,16 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
+import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
@@ -46,8 +51,10 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -56,17 +63,22 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
+import de.greenrobot.event.EventBus;
+
 public class ReaderPostDetailFragment extends Fragment
-        implements ScrollDirectionListener,
-        ReaderCustomViewListener,
-        ReaderWebViewPageFinishedListener,
-        ReaderWebViewUrlClickListener {
+        implements WPMainActivity.OnActivityBackPressedListener,
+                   ScrollDirectionListener,
+                   ReaderCustomViewListener,
+                   ReaderWebViewPageFinishedListener,
+                   ReaderWebViewUrlClickListener {
 
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
+
+    private final ReaderPostHistory mPostHistory = new ReaderPostHistory();
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private WPScrollView mScrollView;
@@ -79,6 +91,8 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsLoggedOutReader;
     private boolean mIsWebViewPaused;
+    private boolean mIsRelatedPost;
+
     private int mToolbarHeight;
     private String mErrorMessage;
 
@@ -88,19 +102,20 @@ public class ReaderPostDetailFragment extends Fragment
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
-
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, null);
+        return newInstance(blogId, postId, false, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
+                                                       boolean isRelatedPost,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
+        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -115,6 +130,9 @@ public class ReaderPostDetailFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        if (savedInstanceState != null) {
+            mPostHistory.restoreInstance(savedInstanceState);
+        }
     }
 
     @Override
@@ -123,6 +141,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -242,9 +261,13 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+
+        mPostHistory.saveInstance(outState);
 
         if (!TextUtils.isEmpty(mErrorMessage)) {
             outState.putString(ReaderConstants.KEY_ERROR_MESSAGE, mErrorMessage);
@@ -264,6 +287,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
@@ -278,9 +302,25 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         if (!hasPost()) {
             showPost();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /*
+     * called by the activity when user hits the back button - returns true if the back button
+     * is handled here and should be ignored by the activity
+     */
+    @Override
+    public boolean onActivityBackPressed() {
+        return goBackInPostHistory();
     }
 
     /*
@@ -382,6 +422,120 @@ public class ReaderPostDetailFragment extends Fragment
             startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
+        }
+    }
+
+    /*
+     * replace the current post with the passed one
+     */
+    private void replacePost(long blogId, long postId) {
+        mBlogId = blogId;
+        mPostId = postId;
+        mHasAlreadyRequestedPost = false;
+        mHasAlreadyUpdatedPost = false;
+
+        // hide views that would show info for the previous post - these will be re-displayed
+        // with the correct info once the new post loads
+        getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
+        getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+        mLikingUsersView.setVisibility(View.GONE);
+        mLikingUsersDivider.setVisibility(View.GONE);
+
+        // clear the webView - otherwise it will remain scrolled to where the user scrolled to
+        mReaderWebView.clearContent();
+
+        // make sure the toolbar and footer are showing
+        showToolbar(true);
+        showFooter(true);
+
+        // now show the passed post
+        showPost();
+    }
+
+    /*
+     * request posts related to the current one - only available for wp.com
+     */
+    private void requestRelatedPosts() {
+        if (hasPost() && mPost.isWP()) {
+            ReaderPostActions.requestRelatedPosts(mPost);
+        }
+    }
+
+    /*
+     * related posts were retrieved, so show them
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
+        if (!isAdded() || !hasPost()) return;
+
+        // make sure this is for the current post
+        if (event.getSourcePost().postId == mPostId && event.getSourcePost().blogId == mBlogId) {
+            showRelatedPosts(event.getRelatedPosts());
+        }
+    }
+
+    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts) {
+        // locate the related posts container and remove any existing related post views
+        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_related_posts);
+        container.removeAllViews();
+
+        // add a separate view for each related post
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
+        for (final ReaderRelatedPost relatedPost : relatedPosts) {
+            View postView = inflater.inflate(R.layout.reader_related_post, container, false);
+            TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
+            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
+
+            txtTitle.setText(relatedPost.getTitle());
+            txtSubtitle.setText(relatedPost.getSubtitle());
+
+            imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
+            if (relatedPost.hasFeaturedImage()) {
+                String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setVisibility(View.VISIBLE);
+            }
+
+            // tapping this view should open the related post detail
+            postView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // if we're already viewing a related post, add it to the history stack
+                    // so the user can back-button through the history - otherwise start a
+                    // new detail activity for this related post
+                    if (mIsRelatedPost) {
+                        mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
+                        replacePost(relatedPost.getBlogId(), relatedPost.getPostId());
+                    } else {
+                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), relatedPost.getBlogId(), relatedPost.getPostId(), true);
+                    }
+                }
+            });
+
+            container.addView(postView);
+        }
+
+        View label = getView().findViewById(R.id.text_related_posts_label);
+        if (label.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(label, AniUtils.Duration.MEDIUM);
+        }
+        if (container.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(container, AniUtils.Duration.MEDIUM);
+        }
+    }
+
+    /*
+     * if the fragment is maintaining a backstack of posts, navigate to the previous one
+     */
+    protected boolean goBackInPostHistory() {
+        if (!mPostHistory.isEmpty()) {
+            ReaderBlogIdPostId ids = mPostHistory.pop();
+            replacePost(ids.getBlogId(), ids.getPostId());
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -782,6 +936,7 @@ public class ReaderPostDetailFragment extends Fragment
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
+                        requestRelatedPosts();
                     }
                 }
             }, 300);

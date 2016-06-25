@@ -34,10 +34,17 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        showReaderPostDetail(context, blogId, postId, false);
+    }
+    public static void showReaderPostDetail(Context context,
+                                            long blogId,
+                                            long postId,
+                                            boolean isRelatedPost) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         ActivityLauncher.slideInFromRight(context, intent);
     }
 
