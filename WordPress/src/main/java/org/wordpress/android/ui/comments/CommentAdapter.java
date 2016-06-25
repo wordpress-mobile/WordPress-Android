@@ -52,7 +52,6 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final CommentList mComments = new CommentList();
     private final HashSet<Long> mSelectedCommentsId = new HashSet<>();
     private final HashSet<Long> mModeratingCommentsIds = new HashSet<>();
-    private final HashSet<Long> mTrashedCommentsId = new HashSet<>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
@@ -469,7 +468,7 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    public CommentAdapterState saveAdapterState() {
+    public CommentAdapterState getAdapterState() {
         return new CommentAdapterState(mSelectedCommentsId, mModeratingCommentsIds);
     }
 
@@ -484,8 +483,5 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (adapterState.hasModeratingComments()) {
             mModeratingCommentsIds.addAll(adapterState.getModeratedCommentsId());
         }
-
-
-
     }
 }

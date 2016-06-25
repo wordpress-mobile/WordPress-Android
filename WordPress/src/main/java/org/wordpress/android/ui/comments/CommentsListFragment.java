@@ -58,7 +58,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
     private FilteredRecyclerView mFilteredCommentsView;
-    private CommentAdapter mCommentsAdapter;
+    private CommentAdapter mAdapter;
     private ActionMode mActionMode;
     private CommentStatus mCommentStatusFilter;
 
@@ -70,7 +70,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
 
     private boolean hasAdapter() {
-        return (mCommentsAdapter != null);
+        return (mAdapter != null);
     }
 
     private int getSelectedCommentCount() {
@@ -228,16 +228,6 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         mCommentStatusFilter = statusFilter;
     }
 
-    private void dismissDialog(int id) {
-        if (!isAdded())
-            return;
-        try {
-            getActivity().dismissDialog(id);
-        } catch (IllegalArgumentException e) {
-            // raised when dialog wasn't created
-        }
-    }
-
     private void moderateSelectedComments(final CommentStatus newStatus) {
         if (!NetworkUtils.checkConnection(getActivity())) return;
 
@@ -264,8 +254,6 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
         getAdapter().clearSelectedComments();
         finishActionMode();
-
-        updateEmptyView();
 
         CommentActions.moderateComments(
                 WordPress.getCurrentLocalTableBlogId(),
@@ -540,7 +528,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         }
 
         if (hasAdapter()) {
-            outState.putParcelable(CommentAdapterState.TAG, getAdapter().saveAdapterState());
+            outState.putParcelable(CommentAdapterState.TAG, getAdapter().getAdapterState());
         }
 
         super.onSaveInstanceState(outState);
@@ -648,16 +636,16 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
     }
 
     private CommentAdapter getAdapter() {
-        if (mCommentsAdapter == null) {
-            mCommentsAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
-            mCommentsAdapter.setInitialState(mCommentAdapterState);
-            mCommentsAdapter.setOnCommentPressedListener(this);
-            mCommentsAdapter.setOnDataLoadedListener(this);
-            mCommentsAdapter.setOnLoadMoreListener(this);
-            mCommentsAdapter.setOnSelectedItemsChangeListener(this);
+        if (mAdapter == null) {
+            mAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
+            mAdapter.setInitialState(mCommentAdapterState);
+            mAdapter.setOnCommentPressedListener(this);
+            mAdapter.setOnDataLoadedListener(this);
+            mAdapter.setOnLoadMoreListener(this);
+            mAdapter.setOnSelectedItemsChangeListener(this);
         }
 
-        return mCommentsAdapter;
+        return mAdapter;
     }
 
 

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.HashSet;
 
 /**
- * Used to restore state of {@link CommentAdapter}
+ * Used to store state of {@link CommentAdapter}
  */
 public class CommentAdapterState implements Parcelable {
     public static final String TAG = "comments_adapter_state";
@@ -16,9 +16,6 @@ public class CommentAdapterState implements Parcelable {
     private HashSet<Long> mModeratedCommentsId;
 
     public CommentAdapterState(@NonNull HashSet<Long> selectedComments, @NonNull HashSet<Long> moderatedCommentsId) {
-
-        // I encountered couple of issues when passing HashSets as serializable
-        // so instead they are converted to primitive arrays before going into Parcel
         mSelectedComments = selectedComments;
         mModeratedCommentsId = moderatedCommentsId;
     }
