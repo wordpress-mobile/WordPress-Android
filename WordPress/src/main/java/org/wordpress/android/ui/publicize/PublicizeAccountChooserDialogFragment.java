@@ -8,25 +8,21 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.models.PublicizeConnection;
-import org.wordpress.android.models.PublicizeConnectionList;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 /**
  * Created by Will on 6/19/16.
  */
 public class PublicizeAccountChooserDialogFragment extends DialogFragment {
     private PublicizeConnection[] mPublicizeConnections;
-    private PublicizeConnection[] mNotConnectedAccounts;
-    private PublicizeConnection[] mConnectedAccounts;
+    private ArrayList<PublicizeConnection> mNotConnectedAccounts;
+    private ArrayList<PublicizeConnection> mConnectedAccounts;
     private int mCurrentSite;
 
     @NonNull
@@ -52,6 +48,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         });
 
         ListView listView = (ListView) view.findViewById(R.id.listView_not_connected);
+        ArrayAdapter
         PublicizeAccountChooserListAdapter adapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, mNotConnectedAccounts, false);
 
         ListView listViewConnected = (ListView) view.findViewById(R.id.listview_connected);
@@ -69,28 +66,16 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
     }
 
     private void addConnectionsToLists() {
-        ArrayList<PublicizeConnection> unconnected = new ArrayList<>();
-        ArrayList<PublicizeConnection> connected = new ArrayList<>();
+        mNotConnectedAccounts = new ArrayList<>();
+        mConnectedAccounts = new ArrayList<>();
         for (int i = 0; i < mPublicizeConnections.length; i++) {
             PublicizeConnection connection = mPublicizeConnections[i];
             if (containsCurrentSite(connection.getSites())) {
-                connected.add(connection);
+                mConnectedAccounts.add(connection);
             } else {
-                unconnected.add(connection);
+                mNotConnectedAccounts.add(connection);
             }
         }
-
-        mNotConnectedAccounts = new PublicizeConnection[unconnected.size()];
-        mConnectedAccounts = new PublicizeConnection[connected.size()];
-
-        for (int i = 0; i < unconnected.size(); i++) {
-            mNotConnectedAccounts[i] = unconnected.get(i);
-        }
-
-        for (int i = 0; i < connected.size(); i++) {
-            mConnectedAccounts[i] = connected.get(i);
-        }
-
     }
 
     private boolean containsCurrentSite(int[] array) {
