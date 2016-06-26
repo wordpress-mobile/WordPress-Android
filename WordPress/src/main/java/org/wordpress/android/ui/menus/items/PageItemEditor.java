@@ -119,7 +119,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         if (!selectionMarked) {
             //check if home
             MenuItemModel item = super.getMenuItem();
-            if (item != null) {
+            if (item != null && item.url != null) {
                 if (item.url.compareToIgnoreCase(WordPress.getCurrentBlog().getHomeURL() + "/") == 0) {
                     mPageListView.setSelection(0);
                 }
