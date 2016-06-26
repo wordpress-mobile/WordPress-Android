@@ -269,6 +269,10 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
+        if (isFinishing()) return;
+
+        closeWebViewFragment();
+
         PublicizeConnection[] publicizeConnections = event.getConnections();
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
         Bundle args = new Bundle();
