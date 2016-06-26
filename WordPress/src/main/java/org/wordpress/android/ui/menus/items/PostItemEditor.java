@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 
 import org.wordpress.android.R;
@@ -69,6 +70,18 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
         emptyTextView.setText(getContext().getString(R.string.menu_item_type_post_empty_list));
         mPostListView.setEmptyView(emptyTextView);
+
+        mPostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!mItemNameDirty) {
+                    if (mItemNameEditText != null) {
+                        mItemNameEditText.setText(mFilteredPosts.get(i).getTitle());
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -181,6 +194,8 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     private void loadPostList() {
         mAllPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), false);
         mFilteredPosts = new PostsListPostList();
+        mAllPostTitles.clear();
+        mFilteredPostTitles.clear();
         for (PostsListPost post : mAllPosts) {
             mFilteredPosts.add(post);
             mAllPostTitles.add(post.getTitle());
