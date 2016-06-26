@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
@@ -41,22 +42,34 @@ public class ReaderPostListActivity extends AppCompatActivity {
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            setTitle(R.string.reader_title_blog_preview);
-            if (savedInstanceState == null) {
-                long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                if (feedId != 0) {
-                    showListFragmentForFeed(feedId);
-                } else {
-                    showListFragmentForBlog(blogId);
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            // show an X in the toolbar which closes the activity - if this is tag preview, then
+            // using the back button will navigate through tags if the user explores beyond a single tag
+            toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
                 }
-            }
-        } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            setTitle(R.string.reader_title_tag_preview);
-            ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
-            if (tag != null && savedInstanceState == null) {
-                showListFragmentForTag(tag, mPostListType);
+            });
+
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                setTitle(R.string.reader_title_blog_preview);
+                if (savedInstanceState == null) {
+                    long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
+                    if (feedId != 0) {
+                        showListFragmentForFeed(feedId);
+                    } else {
+                        showListFragmentForBlog(blogId);
+                    }
+                }
+            } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                setTitle(R.string.reader_title_tag_preview);
+                ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+                if (tag != null && savedInstanceState == null) {
+                    showListFragmentForTag(tag, mPostListType);
+                }
             }
         }
     }
