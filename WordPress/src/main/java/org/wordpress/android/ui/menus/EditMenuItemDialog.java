@@ -225,7 +225,17 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     private void setPickerAndChildViewSelection(String type){
         Integer itemIdx = mItemPositions.get(type);
+
+        //special case for tag
+        if (type.compareToIgnoreCase("post_tag") == 0) {
+            itemIdx = mItemPositions.get(ITEM_TYPE.TAG);
+        }
+        else if (type.compareToIgnoreCase("post_type") == 0) {
+            itemIdx = mItemPositions.get(ITEM_TYPE.POST);
+        }
+
         if (itemIdx == null) {
+
             if (ITEM_TYPE.typeForString(type).equals(ITEM_TYPE.CUSTOM)) {
                 //check special cases:
                 //- custom and the url is EQUAL to the blog's home address: show the HOME PAGE icon

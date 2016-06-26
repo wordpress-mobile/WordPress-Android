@@ -140,21 +140,25 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
         WordPress.getRestClientUtilsV1_1().getCategories(String.valueOf(WordPress.getCurrentRemoteBlogId()),
                 new RestRequest.Listener() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
+                    public void onResponse(final JSONObject response) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
 
-                        CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
-                        if (models == null) return;
+                                CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
+                                if (models == null) return;
 
-                        SiteSettingsTable.saveCategories(models);
-                        loadCategories();
+                                SiteSettingsTable.saveCategories(models);
+                                loadCategories();
 
-                        MenuItemModel item = CategoryItemEditor.super.getMenuItem();
-                        if (item != null) {
-                            //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
-                            setSelection(item.contentId);
-                        }
-
+                                MenuItemModel item = CategoryItemEditor.super.getMenuItem();
+                                if (item != null) {
+                                    //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                                    setSelection(item.contentId);
+                                }
+                            }
+                        }.start();
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
