@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeService;
@@ -17,6 +19,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import de.greenrobot.event.EventBus;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
 
@@ -144,7 +148,14 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
             mConnectBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getOnPublicizeActionListener().onRequestConnect(mService);
+                    try {
+                        JSONObject object = new JSONObject("{\"connections\":[{\"ID\":14460414,\"user_ID\":85830968,\"type\":\"publicize\",\"service\":\"facebook\",\"label\":\"Facebook\",\"issued\":\"2016-05-15 23:27:10\",\"expires\":\"2016-07-14 16:47:41\",\"external_ID\":\"122653424811017\",\"external_name\":null,\"external_display\":\"Jason Lee\",\"external_profile_picture\":\"https:\\/\\/scontent.xx.fbcdn.net\\/v\\/t1.0-1\\/c47.0.160.160\\/p160x160\\/10354686_10150004552801856_220367501106153455_n.jpg?oh=b5df82644cdd221e1da17017092c51f5&oe=57E04C49\",\"additional_external_users\":[],\"status\":\"ok\",\"refresh_URL\":\"https:\\/\\/public-api.wordpress.com\\/connect\\/?action=request&kr_nonce=a685796cd6&nonce=1fb9b2d834&refresh=1&for=connect&service=facebook&kr_blog_nonce=dab5dee2b5&magic=keyring&blog=90298630\",\"sites\":[\"90298630\"],\"meta\":{\"links\":{\"self\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14460414\",\"help\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14460414\\/help\",\"service\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/meta\\/external-services\\/facebook\",\"publicize_connections\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/publicize-connections\\/?keyring_connection_ID=14460414\"}}},{\"ID\":14477513,\"user_ID\":85830968,\"type\":\"publicize\",\"service\":\"facebook\",\"label\":\"Facebook\",\"issued\":\"2016-05-17 19:21:32\",\"expires\":\"2016-08-25 17:15:17\",\"external_ID\":\"123585121381948\",\"external_name\":null,\"external_display\":\"Joseph Park\",\"external_profile_picture\":\"https:\\/\\/scontent.xx.fbcdn.net\\/v\\/t1.0-1\\/c47.0.160.160\\/p160x160\\/1379841_10150004552801901_469209496895221757_n.jpg?oh=b2b810118540c28b9a9766b47aed25e8&oe=57F1ED56\",\"additional_external_users\":[],\"status\":\"ok\",\"refresh_URL\":\"https:\\/\\/public-api.wordpress.com\\/connect\\/?action=request&kr_nonce=a685796cd6&nonce=1fb9b2d834&refresh=1&for=connect&service=facebook&kr_blog_nonce=dab5dee2b5&magic=keyring&blog=90298630\",\"sites\":[],\"meta\":{\"links\":{\"self\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14477513\",\"help\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14477513\\/help\",\"service\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/meta\\/external-services\\/facebook\",\"publicize_connections\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/publicize-connections\\/?keyring_connection_ID=14477513\"}}},{\"ID\":14359331,\"user_ID\":85830968,\"type\":\"publicize\",\"service\":\"facebook\",\"label\":\"Facebook\",\"issued\":\"2016-05-03 21:43:25\",\"expires\":\"0000-00-00 00:00:00\",\"external_ID\":\"760048377\",\"external_name\":null,\"external_display\":\"Will Kwon\",\"external_profile_picture\":\"https:\\/\\/scontent.xx.fbcdn.net\\/v\\/t1.0-1\\/c0.11.160.160\\/p160x160\\/12140837_10154338963603378_3978128539399730629_n.jpg?oh=f9fc9fbc4d7b7db211e9eb36b3b073b1&oe=57FC0952\",\"additional_external_users\":[],\"status\":\"ok\",\"refresh_URL\":\"https:\\/\\/public-api.wordpress.com\\/connect\\/?action=request&kr_nonce=a685796cd6&nonce=1fb9b2d834&refresh=1&for=connect&service=facebook&kr_blog_nonce=dab5dee2b5&magic=keyring&blog=90298630\",\"sites\":[\"106611662\"],\"meta\":{\"links\":{\"self\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14359331\",\"help\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/keyring-connections\\/14359331\\/help\",\"service\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/meta\\/external-services\\/facebook\",\"publicize_connections\":\"https:\\/\\/public-api.wordpress.com\\/rest\\/v1.1\\/me\\/publicize-connections\\/?keyring_connection_ID=14359331\"}}}]}");
+                        EventBus.getDefault().post(new PublicizeEvents.ConnectionChooserRequired(object));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    
+//                    getOnPublicizeActionListener().onRequestConnect(mService);
                 }
             });
         }
