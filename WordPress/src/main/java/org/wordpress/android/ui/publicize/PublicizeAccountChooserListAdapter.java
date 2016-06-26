@@ -24,7 +24,7 @@ public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
     }
 
     public PublicizeAccountChooserListAdapter(Context context, int resource, PublicizeConnection[] objects) {
-        this(context, resource, objects, true);
+        this(context, resource, objects, false);
     }
 
     @Override

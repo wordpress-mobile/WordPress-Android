@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.prefs.WPPreference;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
@@ -271,6 +272,9 @@ public class PublicizeListActivity extends AppCompatActivity
     public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
         PublicizeConnection[] publicizeConnections = event.getConnections();
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt("site_id", WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(WordPress.wpDB.getLastBlogId()));
+        dialogFragment.setArguments(args);
         dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), "yup");
     }
