@@ -13,15 +13,20 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.widgets.RadioButtonListView;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  */
 public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
+    private final int mLocalBlogId;
     private final List<String> mAllPostTitles;
     private final List<String> mFilteredPostTitles;
     private PostsListPostList mAllPosts;
@@ -35,9 +40,23 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     public PostItemEditor(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        mLocalBlogId = WordPress.getCurrentLocalTableBlogId();
         mAllPostTitles = new ArrayList<>();
         mFilteredPostTitles = new ArrayList<>();
         loadPostList();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+        fetchPosts();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -111,6 +130,27 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     public boolean onQueryTextChange(String newText) {
         filterAdapter(newText);
         return true;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.RequestPosts event) {
+        // update page list with changes from remote
+        if (event.getBlogId() == mLocalBlogId) {
+            loadPostList();
+
+            MenuItemModel item = super.getMenuItem();
+            if (item != null) {
+                //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                setSelection(item.contentId);
+            }
+        }
+    }
+
+    /**
+     * Fetch remote posts for blog
+     */
+    private void fetchPosts() {
+        PostUpdateService.startServiceForBlog(getContext(), mLocalBlogId, false, false);
     }
 
     private void filterAdapter(String filter) {
