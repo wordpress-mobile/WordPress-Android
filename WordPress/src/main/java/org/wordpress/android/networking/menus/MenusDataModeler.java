@@ -285,7 +285,9 @@ public class MenusDataModeler {
 
         try {
             JSONObject json = new JSONObject();
-            json.put(ITEM_ID_KEY, item.itemId);
+            if (item.itemId > 0) {
+                json.put(ITEM_ID_KEY, item.itemId);
+            }
             json.put(ITEM_CONTENT_ID_KEY, item.contentId);
             json.put(ITEM_TYPE_KEY, item.type);
             json.put(ITEM_TYPE_FAMILY_KEY, item.typeFamily);
