@@ -48,7 +48,6 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         });
 
         ListView listView = (ListView) view.findViewById(R.id.listView_not_connected);
-        ArrayAdapter
         PublicizeAccountChooserListAdapter adapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, mNotConnectedAccounts, false);
 
         ListView listViewConnected = (ListView) view.findViewById(R.id.listview_connected);
