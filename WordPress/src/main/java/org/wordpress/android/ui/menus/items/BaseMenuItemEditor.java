@@ -20,7 +20,8 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
 
     protected MenuItemModel mWorkingItem;
     protected MenuItemNameChangeListener mMenuItemNameChangeListener;
-    private WPEditText mItemNameEditText;
+    protected WPEditText mItemNameEditText;
+    protected boolean mItemNameDirty = false;
 
     public interface MenuItemNameChangeListener {
         void onNameChanged(String newName);
@@ -35,6 +36,7 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
         mWorkingItem = menuItem;
         if (mItemNameEditText != null) {
             mItemNameEditText.setText(mWorkingItem.name);
+            mItemNameDirty = false;
         }
     }
 
@@ -65,9 +67,13 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    mWorkingItem.name = editable.toString();
-                    if (mMenuItemNameChangeListener != null) {
-                        mMenuItemNameChangeListener.onNameChanged(mWorkingItem.name);
+                    if (mWorkingItem.name.compareTo(editable.toString()) != 0) {
+                        if (mItemNameEditText.hasFocus())
+                            mItemNameDirty = true;
+                        mWorkingItem.name = editable.toString();
+                        if (mMenuItemNameChangeListener != null) {
+                            mMenuItemNameChangeListener.onNameChanged(mWorkingItem.name);
+                        }
                     }
                 }
             });

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 
 import org.wordpress.android.R;
@@ -13,15 +14,20 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.ui.posts.services.PostEvents;
+import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.widgets.RadioButtonListView;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  */
 public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQueryTextListener {
+    private final int mLocalBlogId;
     private final List<String> mAllPostTitles;
     private final List<String> mFilteredPostTitles;
     private PostsListPostList mAllPosts;
@@ -35,9 +41,23 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     public PostItemEditor(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        mLocalBlogId = WordPress.getCurrentLocalTableBlogId();
         mAllPostTitles = new ArrayList<>();
         mFilteredPostTitles = new ArrayList<>();
         loadPostList();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+        fetchPosts();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -50,6 +70,18 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
         emptyTextView.setText(getContext().getString(R.string.menu_item_type_post_empty_list));
         mPostListView.setEmptyView(emptyTextView);
+
+        mPostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!mItemNameDirty) {
+                    if (mItemNameEditText != null) {
+                        mItemNameEditText.setText(mFilteredPosts.get(i).getTitle());
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -113,6 +145,27 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         return true;
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.RequestPosts event) {
+        // update page list with changes from remote
+        if (event.getBlogId() == mLocalBlogId) {
+            loadPostList();
+
+            MenuItemModel item = super.getMenuItem();
+            if (item != null) {
+                //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                setSelection(item.contentId);
+            }
+        }
+    }
+
+    /**
+     * Fetch remote posts for blog
+     */
+    private void fetchPosts() {
+        PostUpdateService.startServiceForBlog(getContext(), mLocalBlogId, false, false);
+    }
+
     private void filterAdapter(String filter) {
         if (mPostListView == null) return;
         refreshFilteredPosts(filter);
@@ -141,6 +194,8 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     private void loadPostList() {
         mAllPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), false);
         mFilteredPosts = new PostsListPostList();
+        mAllPostTitles.clear();
+        mFilteredPostTitles.clear();
         for (PostsListPost post : mAllPosts) {
             mFilteredPosts.add(post);
             mAllPostTitles.add(post.getTitle());

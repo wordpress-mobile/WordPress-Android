@@ -73,14 +73,14 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         emptyTextView.setText(getContext().getString(R.string.menu_item_type_page_empty_list));
         mPageListView.setEmptyView(emptyTextView);
 
-        mPageListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mPageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mWorkingItem.name = mPageListView.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!mItemNameDirty) {
+                    if (mItemNameEditText != null) {
+                        mItemNameEditText.setText(mFilteredPages.get(i).getTitle());
+                    }
+                }
             }
         });
     }
@@ -119,7 +119,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         if (!selectionMarked) {
             //check if home
             MenuItemModel item = super.getMenuItem();
-            if (item != null) {
+            if (item != null && item.url != null) {
                 if (item.url.compareToIgnoreCase(WordPress.getCurrentBlog().getHomeURL() + "/") == 0) {
                     mPageListView.setSelection(0);
                 }
