@@ -32,7 +32,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_display_name"
-        style="@style/PersonUsernameAndDisplayName"
+        style="@style/PersonTextView"
         android:layout_alignTop="@id/person_avatar"
         android:layout_toEndOf="@id/person_avatar"
         android:layout_toLeftOf="@id/person_role"
@@ -44,7 +44,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_username"
-        style="@style/PersonUsernameAndDisplayName"
+        style="@style/PersonTextView"
         android:layout_alignLeft="@id/person_display_name"
         android:layout_alignStart="@id/person_display_name"
         android:layout_below="@id/person_display_name"
@@ -54,7 +54,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/follower_subscribed_date"
-        style="@style/PersonUsernameAndDisplayName"
+        style="@style/PersonTextView"
         android:layout_alignLeft="@id/person_display_name"
         android:layout_alignStart="@id/person_display_name"
         android:layout_below="@id/person_username"
@@ -62,6 +62,6 @@
         android:layout_marginTop="@dimen/margin_small"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_small"
-        tools:text="username"/>
+        tools:text="Since {date}"/>
 
 </RelativeLayout>

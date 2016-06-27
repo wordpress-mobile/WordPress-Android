@@ -25,6 +25,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
+
 public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
@@ -39,6 +41,7 @@ public class PersonDetailFragment extends Fragment {
     private TextView mUsernameTextView;
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
+    private TextView mSubscribedTextView;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID, boolean isFollower) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -82,6 +85,7 @@ public class PersonDetailFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
+        mSubscribedTextView = (TextView) rootView.findViewById(R.id.follower_subscribed_date);
 
         Account account = AccountHelper.getDefaultAccount();
         boolean isCurrentUser = account.getUserId() == mPersonID;
@@ -110,8 +114,23 @@ public class PersonDetailFragment extends Fragment {
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
-            mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
+
+            if (!person.getUsername().isEmpty()) {
+                mUsernameTextView.setVisibility(View.VISIBLE);
+                mUsernameTextView.setText(String.format("@%s", person.getUsername()));
+            } else {
+                mUsernameTextView.setVisibility(View.GONE);
+            }
+
+            if (person.isFollower() || person.isEmailFollower()) {
+                mSubscribedTextView.setVisibility(View.VISIBLE);
+                String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                mSubscribedTextView.setText(dateText);
+            } else {
+                mSubscribedTextView.setVisibility(View.GONE);
+            }
 
             if (person.isFollower() || person.isEmailFollower()) {
                 mRoleContainer.setVisibility(View.GONE);
