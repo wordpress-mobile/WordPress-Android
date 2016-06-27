@@ -74,11 +74,11 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/more"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
-                android:contentDescription="@string/more"
                 app:srcCompat="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
@@ -115,6 +115,13 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_word_count" />
+
+        <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
+            android:id="@+id/thumbnail_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <!-- attribution section for discover posts -->
         <LinearLayout

@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
+import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -71,7 +72,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
-    private static final boolean EXCLUDE_TEXT_COLUMN = true;
+    private static final boolean EXCLUDE_TEXT_COLUMN = false;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
     // Longreads says that people can read 250 words per minute
@@ -133,6 +134,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgDiscoverAvatar;
         private final TextView txtDiscover;
 
+        private final ReaderThumbnailStrip thumbnailStrip;
+
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
 
@@ -155,6 +158,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
+
+            thumbnailStrip = (ReaderThumbnailStrip) itemView.findViewById(R.id.thumbnail_strip);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
@@ -406,6 +411,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             holder.layoutDiscover.setVisibility(View.GONE);
         }
+
+        holder.thumbnailStrip.loadThumbnails(post);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
