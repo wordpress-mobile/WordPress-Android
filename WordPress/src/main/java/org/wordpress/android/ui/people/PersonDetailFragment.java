@@ -109,7 +109,7 @@ public class PersonDetailFragment extends Fragment {
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            mDisplayNameTextView.setText(person.getDisplayName());
+            mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             mUsernameTextView.setText(person.getUsername());
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
