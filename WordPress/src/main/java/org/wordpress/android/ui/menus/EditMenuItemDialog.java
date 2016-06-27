@@ -38,6 +38,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     public static final int EDIT_REQUEST_CODE = 10001;
 
     public static final int SAVE_RESULT_CODE = 1;
+    public static final int NOT_SAVED_CODE = 2;
 
     public static final String EDITED_ITEM_KEY = "edited-item";
 
@@ -115,8 +116,12 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
                     if (mCurrentEditor.isDirty()) {
                         showAlertDialog();
                     } else {
+                        sendResultToTarget(NOT_SAVED_CODE, null);
                         super.onBackPressed();
                     }
+                } else {
+                    sendResultToTarget(NOT_SAVED_CODE, null);
+                    super.onBackPressed();
                 }
             }
         };
@@ -165,8 +170,11 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private void sendResultToTarget(int resultCode, MenuItemModel item) {
         Fragment fragment = getTargetFragment();
         if (fragment == null) return;
+
         Intent data = new Intent();
-        data.putExtra(EDITED_ITEM_KEY, item);
+        if (item != null) {
+            data.putExtra(EDITED_ITEM_KEY, item);
+        }
         fragment.onActivityResult(getTargetRequestCode(), resultCode, data);
     }
 
@@ -218,9 +226,11 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
                     if (mCurrentEditor.isDirty()) {
                         showAlertDialog();
                     } else {
+                        sendResultToTarget(NOT_SAVED_CODE, null);
                         dismiss();
                     }
                 } else {
+                    sendResultToTarget(NOT_SAVED_CODE, null);
                     dismiss();
                 }
             }
@@ -270,6 +280,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //go back
+                        sendResultToTarget(NOT_SAVED_CODE, null);
                         EditMenuItemDialog.this.dismiss();
                     }
                 });

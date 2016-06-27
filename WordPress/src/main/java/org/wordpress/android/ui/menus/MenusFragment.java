@@ -63,6 +63,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     private MenuModel mCurrentMenuForLocation;
     private MenuItemsView mItemsView;
     private int mCurrentMenuItemBeingEdited = -1;
+    private boolean mIsNewItem = false;
     private EditMenuItemDialog mDialog;
 
 
@@ -433,6 +434,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     public void onItemClick(MenuItemModel item, int position) {
         if (item != null) {
             showEditorDialog(item);
+            mIsNewItem = false;
             mCurrentMenuItemBeingEdited = position;
         }
     }
@@ -482,6 +484,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         }
 
         mCurrentMenuItemBeingEdited = position;
+        mIsNewItem = true;
 
         if (!emptyList) {
             //enclosed Dialog show in a delayed handler to allow animations to be appreciated
@@ -523,14 +526,27 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == EditMenuItemDialog.EDIT_REQUEST_CODE) {
-            //here get the modified item from the Intent parcelable and refresh the menu item list
-            //re-draw menu items
-            if (mCurrentMenuItemBeingEdited > -1) {
-                MenuItemModel modifiedItem = (MenuItemModel) data.getSerializableExtra(EditMenuItemDialog.EDITED_ITEM_KEY);
-                if (modifiedItem != null) {
-                    List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
-                    flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
-                    mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+
+            if (resultCode == EditMenuItemDialog.NOT_SAVED_CODE) {
+                // here delete the row if this was a new item
+                if (mIsNewItem) {
+                    mIsNewItem = false;
+                    if (mCurrentMenuItemBeingEdited > -1) {
+                        List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+                        flattenedList.remove(mCurrentMenuItemBeingEdited);
+                        mItemsView.getAdapter().notifyItemRemoved(mCurrentMenuItemBeingEdited);
+                    }
+                }
+            } else {
+                //here get the modified item from the Intent parcelable and refresh the menu item list
+                //re-draw menu items
+                if (mCurrentMenuItemBeingEdited > -1) {
+                    MenuItemModel modifiedItem = (MenuItemModel) data.getSerializableExtra(EditMenuItemDialog.EDITED_ITEM_KEY);
+                    if (modifiedItem != null) {
+                        List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
+                        flattenedList.set(mCurrentMenuItemBeingEdited, modifiedItem);
+                        mItemsView.getAdapter().notifyItemChanged(mCurrentMenuItemBeingEdited);
+                    }
                 }
             }
         }
