@@ -39,6 +39,9 @@
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="update_draft">Update draft</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="search">Search</string>
@@ -918,8 +921,9 @@
     editor. Try it out by creating a new post.</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
-    <string name="editor_save_dialog_title">Unsaved local changes</string>
-    <string name="editor_save_dialog_message">Would you like to save them?</string>
+    <string name="editor_save_dialog_title">Local changes</string>
+    <string name="editor_save_dialog_message">There are unsaved changes.</string>
+    <string name="editor_save_dialog_empty_message">The post is empty.</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
@@ -1019,7 +1023,7 @@
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
-    <string name="error_publish_empty_post">Can\'t publish an empty post</string>
+    <string name="error_publish_empty_post">Can\'t publish an empty post. Saved locally.</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>

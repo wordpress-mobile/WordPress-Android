@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -545,7 +544,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
-                saveAndFinish();
+                showSaveDialog();
             }
             return true;
         }
@@ -576,6 +575,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean publishPost() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
+            new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
             return false;
         }
@@ -774,6 +774,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private synchronized void savePostToDb() {
         WordPress.wpDB.updatePost(mPost);
+
+        // update the original post object, so we'll know of new changes
+        mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(mPost.getLocalTablePostId());
     }
 
     @Override
@@ -796,7 +799,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
-            saveAndFinish();
+            showSaveDialog();
         }
     }
 
@@ -810,13 +813,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Fetch post title and content from editor fields and update the Post object
             updatePostObject(false);
 
-            if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
-                // new and empty post? delete it
-                if (mIsNewPost) {
-                    WordPress.wpDB.deletePost(mPost);
-                    return false;
-                }
-            } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
                 // if no changes have been made to the post, set it back to the original don't save it
                 WordPress.wpDB.updatePost(mOriginalPost);
                 return false;
@@ -843,61 +840,65 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
                 i.putExtra(EXTRA_IS_PAGE, mIsPage);
                 setResult(RESULT_OK, i);
-                ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
             }
             finish();
         }
     }
 
-    private void saveAndFinish() {
+    private void showSaveDialog() {
 
-        boolean wasLocalChange = mPost.isLocalChange();
         updatePostObject(false);
 
-        if (isNewPost() && mPost.isPublishable()) {
-            // new post - user just left the editor without publishing, they probably want
-            // to keep the post as a draft
-            mPost.setPostStatus(PostStatus.toString(PostStatus.DRAFT));
-            if (mEditPostSettingsFragment != null) {
-                mEditPostSettingsFragment.updateStatusSpinner();
+        if (mPost.isPublishable()) {
+            if (isNewPost()) {
+                // new post - user just left the editor without publishing, they probably want
+                // to keep the post as a draft
+                mPost.setPostStatus(PostStatus.toString(PostStatus.DRAFT));
+                if (mEditPostSettingsFragment != null) {
+                    mEditPostSettingsFragment.updateStatusSpinner();
+                }
+
+                PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
+                        getString(R.string.editor_save_dialog_message),
+                        getString(R.string.save),
+                        getString(R.string.discard),
+                        SAVE_DIALOG_TAG);
+            } else if (mOriginalPost != null && mPost.hasChanges(mOriginalPost)) {
+                // changes detected
+                if (mPost.getStatusEnum() == PostStatus.DRAFT) {
+                    PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
+                            getString(R.string.editor_save_dialog_message),
+                            getString(R.string.update_draft),
+                            getString(R.string.discard),
+                            SAVE_DIALOG_TAG);
+                } else {
+                    PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
+                            getString(R.string.editor_save_dialog_message),
+                            getString(R.string.keep_editing),
+                            getString(R.string.discard),
+                            SAVE_DIALOG_TAG);
+                }
+            } else {
+                finish();
             }
-
-            showSaveDialog();
-        }
-        else if ((mOriginalPost != null && mPost.hasChanges(mOriginalPost) || wasLocalChange || mPost.isLocalDraft()) && mPost.isPublishable()) {
-            // changed post or has local changes or is a local draft
-            showSaveDialog();
-        }
-        else {
-            // no changes
-            deleteIfNewAndFinish();
-        }
-    }
-
-    private void saveRemotelyIfPossible() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            publishPost();
+        } else if (mOriginalPost != null && mPost.hasChanges(mOriginalPost)) {
+            PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
+                    getString(R.string.editor_save_dialog_empty_message),
+                    getString(R.string.keep_editing),
+                    getString(R.string.discard),
+                    SAVE_DIALOG_TAG);
         } else {
-            new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            finish();
         }
     }
-
-    private void showSaveDialog() {
-        FragmentManager fm = getFragmentManager();
-        WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(SAVE_DIALOG_TAG);
-        if (saveDialog == null) {
-            saveDialog = WPAlertDialogFragment.newConfirmDialog(getString(R.string.editor_save_dialog_title),
-                    getString(R.string.editor_save_dialog_message));
-        }
-        if (!saveDialog.isAdded()) {
-            saveDialog.show(fm, SAVE_DIALOG_TAG);
-        }
-    }
-
 
     @Override
     public void onDialogConfirm() {
-        saveRemotelyIfPossible();
+        // just dismiss the dialog for published posts - users should publish changes using
+        // the Update button
+        if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
+            publishPost();
+        }
     }
 
     @Override
