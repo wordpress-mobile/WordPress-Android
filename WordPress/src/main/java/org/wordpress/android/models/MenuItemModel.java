@@ -1,7 +1,10 @@
 package org.wordpress.android.models;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -42,6 +45,7 @@ public class MenuItemModel implements Serializable {
     public List<MenuItemModel> children;
     public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
     public boolean editingMode;// used for visual representation
+    public String calculatedType; //used for visual representation
 
     public MenuItemModel() {
     }
@@ -66,6 +70,7 @@ public class MenuItemModel implements Serializable {
         }
         flattenedLevel = other.flattenedLevel;
         editingMode = other.editingMode;
+        calculatedType = other.calculatedType;
     }
 
     @Override
@@ -100,5 +105,48 @@ public class MenuItemModel implements Serializable {
     public String getData(@NonNull String key) {
         if (data == null) data = new HashMap<>();
         return data.get(key);
+    }
+
+    public MenuItemEditorFactory.ITEM_TYPE calculateCustomType(){
+
+        if (type != null ) {
+
+            if (type.compareToIgnoreCase("post_tag") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.TAG.name();
+                return MenuItemEditorFactory.ITEM_TYPE.TAG;
+            }
+            else if (type.compareToIgnoreCase("post_type") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.POST.name();
+                return MenuItemEditorFactory.ITEM_TYPE.POST;
+            }
+
+            if (MenuItemEditorFactory.ITEM_TYPE.typeForString(type).equals(MenuItemEditorFactory.ITEM_TYPE.CUSTOM)) {
+
+                String homeUrl = WordPress.getCurrentBlog().getHomeURL() + "/";
+                //check special cases:
+                //- custom and the url is EQUAL to the blog's home address: show the HOME PAGE icon
+                if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(homeUrl) && url.equalsIgnoreCase(homeUrl)) {
+                    calculatedType = MenuItemEditorFactory.ITEM_TYPE.PAGE.name();
+                    return MenuItemEditorFactory.ITEM_TYPE.PAGE;
+                }
+                else
+                    //check special cases:
+                    //- custom and url different from home: show LINK ICON
+                    if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(homeUrl) && !url.equalsIgnoreCase(homeUrl)) {
+                        calculatedType = MenuItemEditorFactory.ITEM_TYPE.LINK.name();
+                        return MenuItemEditorFactory.ITEM_TYPE.LINK;
+                    }
+
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.CUSTOM.name();
+                return MenuItemEditorFactory.ITEM_TYPE.CUSTOM;
+            }
+
+            //default: calculatedtype is same as type
+            calculatedType = type;
+            return MenuItemEditorFactory.ITEM_TYPE.typeForString(type);
+        }
+
+        calculatedType = MenuItemEditorFactory.ITEM_TYPE.NULL.name();
+        return MenuItemEditorFactory.ITEM_TYPE.NULL;
     }
 }

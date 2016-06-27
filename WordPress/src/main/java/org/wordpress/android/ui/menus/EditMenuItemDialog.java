@@ -157,8 +157,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     public void setType(String type) {
         mWorkingItem.type = type;
+        mWorkingItem.calculateCustomType();
         mToolbar.setTitle(mWorkingItem.name);
-        setPickerAndChildViewSelection(type.toUpperCase());
+        setPickerAndChildViewSelection(mWorkingItem.calculatedType.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         if (mCurrentEditor != null) {
             mCurrentEditor.setMenuItem(mWorkingItem);
@@ -211,7 +212,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mTypePicker.setAdapter(adapter);
 
         fillViewFlipper();
-        setPickerAndChildViewSelection(mWorkingItem.type.toUpperCase());
+        setPickerAndChildViewSelection(mWorkingItem.calculatedType.toUpperCase());
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -223,7 +224,13 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         });
     }
 
-    private void setPickerAndChildViewSelection(String type){
+    private void setPickerAndChildViewSelection(String type) {
+        Integer itemIdx = mItemPositions.get(type);
+        mTypePicker.setSelection(itemIdx);
+        mEditorFlipper.setDisplayedChild(itemIdx);
+    }
+
+    private void setPickerAndChildViewSelectionOLD(String type){
         Integer itemIdx = mItemPositions.get(type);
 
         //special case for tag
