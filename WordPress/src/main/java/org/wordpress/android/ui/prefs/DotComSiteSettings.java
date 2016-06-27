@@ -66,16 +66,6 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String SETTINGS_KEY = "settings";
     private static final String UPDATED_KEY = "updated";
 
-    // WP.com REST keys used in response to a categories GET request
-    private static final String CAT_ID_KEY = "ID";
-    private static final String CAT_NAME_KEY = "name";
-    private static final String CAT_SLUG_KEY = "slug";
-    private static final String CAT_DESC_KEY = "description";
-    private static final String CAT_PARENT_ID_KEY = "parent";
-    private static final String CAT_POST_COUNT_KEY = "post_count";
-    private static final String CAT_NUM_POSTS_KEY = "found";
-    private static final String CATEGORIES_KEY = "categories";
-
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
      */
@@ -317,7 +307,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
                         credentialsVerified(true);
 
-                        CategoryModel[] models = deserializeJsonRestResponse(response);
+                        CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
                         if (models == null) return;
 
                         SiteSettingsTable.saveCategories(models);
@@ -333,37 +323,4 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    private CategoryModel deserializeCategoryFromJson(JSONObject category) throws JSONException {
-        if (category == null) return null;
-
-        CategoryModel model = new CategoryModel();
-        model.id = category.getInt(CAT_ID_KEY);
-        model.name = category.getString(CAT_NAME_KEY);
-        model.slug = category.getString(CAT_SLUG_KEY);
-        model.description = category.getString(CAT_DESC_KEY);
-        model.parentId = category.getInt(CAT_PARENT_ID_KEY);
-        model.postCount = category.getInt(CAT_POST_COUNT_KEY);
-
-        return model;
-    }
-
-    private CategoryModel[] deserializeJsonRestResponse(JSONObject response) {
-        try {
-            int num = response.getInt(CAT_NUM_POSTS_KEY);
-            JSONArray categories = response.getJSONArray(CATEGORIES_KEY);
-            CategoryModel[] models = new CategoryModel[num];
-
-            for (int i = 0; i < num; ++i) {
-                JSONObject category = categories.getJSONObject(i);
-                models[i] = deserializeCategoryFromJson(category);
-            }
-
-            AppLog.d(AppLog.T.API, "Successfully fetched WP.com categories");
-
-            return models;
-        } catch (JSONException exception) {
-            AppLog.d(AppLog.T.API, "Error parsing WP.com categories response:" + response);
-            return null;
-        }
-    }
 }
