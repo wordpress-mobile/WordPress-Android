@@ -96,8 +96,10 @@ public class ReaderWebView extends WebView {
             this.setWebViewClient(new ReaderWebViewClient(this));
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                final float fontScale = getResources().getConfiguration().fontScale;
+            // Adjust content font size on APIs 19 and below as those do not do it automatically.
+            //  If fontScale is close to 1, just let it be 1.
+            final float fontScale = getResources().getConfiguration().fontScale;
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT && ((int) (fontScale * 10000)) != 10000) {
 
                 this.getSettings().setDefaultFontSize((int) (this.getSettings().getDefaultFontSize() * fontScale));
                 this.getSettings().setDefaultFixedFontSize(
