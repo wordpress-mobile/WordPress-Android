@@ -446,6 +446,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         final boolean isFollower = person.isFollower();
         final boolean isEmailFollower = person.isEmailFollower();
+        final String displayName = person.getDisplayName();
 
         PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
             @Override
@@ -456,19 +457,12 @@ public class PeopleManagementActivity extends AppCompatActivity
 
                 // remove the person from db, navigate back to list fragment and refresh it
                 Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower);
-                String text;
                 if (person != null) {
                     PeopleTable.deletePerson(personID, localTableBlogId, isFollower);
-                    text = getString(R.string.person_removed, person.getDisplayName());
-                } else {
-                    if (isFollower || isEmailFollower) {
-                        text = getString(R.string.follower_removed_general);
-                    } else {
-                        text = getString(R.string.user_removed_general);
-                    }
                 }
 
-                ToastUtils.showToast(PeopleManagementActivity.this, text, ToastUtils.Duration.LONG);
+                String message = getString(R.string.person_removed, displayName);
+                ToastUtils.showToast(PeopleManagementActivity.this, message, ToastUtils.Duration.LONG);
 
                 navigateBackToPeopleListFragment();
                 refreshPeopleListFragment();

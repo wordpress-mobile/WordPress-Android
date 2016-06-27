@@ -1391,8 +1391,6 @@
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
     <string name="person_removed">Successfully removed %1$s</string>
-    <string name="user_removed_general">User removed successfully</string>
-    <string name="follower_removed_general">Follower removed successfully</string>
     <string name="invite_people">Invite People</string>
     <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite_names_hint">Type an email address or username...</string>
