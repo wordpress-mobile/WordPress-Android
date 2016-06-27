@@ -5,65 +5,59 @@
 -->
 <org.wordpress.android.ui.SlidingRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/person_details"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="@dimen/card_elevation">
+        android:id="@+id/person_details"
+        android:background="@color/color_primary"
+        android:elevation="@dimen/card_elevation"
+        tools:targetApi="LOLLIPOP">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_primary">
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/person_avatar"
+            style="@style/PersonAvatar"/>
 
-            <org.wordpress.android.widgets.WPNetworkImageView
-                android:id="@+id/person_avatar"
-                style="@style/PersonAvatar"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_display_name"
+            style="@style/PersonTextView"
+            android:layout_alignTop="@id/person_avatar"
+            android:layout_toEndOf="@id/person_avatar"
+            android:layout_toRightOf="@id/person_avatar"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textStyle="bold"
+            tools:text="display_name"/>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/person_display_name"
-                style="@style/PersonTextView"
-                android:layout_alignTop="@id/person_avatar"
-                android:layout_toEndOf="@id/person_avatar"
-                android:layout_toRightOf="@id/person_avatar"
-                android:fontFamily="sans-serif-light"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_extra_large"
-                android:textStyle="bold"
-                tools:text="display_name"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_username"
+            style="@style/PersonTextView"
+            android:layout_alignLeft="@id/person_display_name"
+            android:layout_alignStart="@id/person_display_name"
+            android:layout_below="@id/person_display_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="username"/>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/person_username"
-                style="@style/PersonTextView"
-                android:layout_alignLeft="@id/person_display_name"
-                android:layout_alignStart="@id/person_display_name"
-                android:layout_below="@id/person_display_name"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="username"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/follower_subscribed_date"
+            style="@style/PersonTextView"
+            android:layout_alignLeft="@id/person_display_name"
+            android:layout_alignStart="@id/person_display_name"
+            android:layout_below="@id/person_username"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="Since {date}"/>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/follower_subscribed_date"
-                style="@style/PersonTextView"
-                android:layout_alignLeft="@id/person_display_name"
-                android:layout_alignStart="@id/person_display_name"
-                android:layout_below="@id/person_username"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_small"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="Since {date}"/>
-
-        </RelativeLayout>
-
-    </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/person_role_container"
