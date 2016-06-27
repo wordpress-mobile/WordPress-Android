@@ -31,8 +31,6 @@ public class WPStartOverPreference extends WPPreference {
     public WPStartOverPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mButtonTextColor = ContextCompat.getColor(context, R.color.black);
-
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.WPStartOverPreference);
 
         for (int i = 0; i < array.getIndexCount(); ++i) {
@@ -40,7 +38,7 @@ public class WPStartOverPreference extends WPPreference {
             if (index == R.styleable.WPStartOverPreference_buttonText) {
                 mButtonText = array.getString(index);
             } else if (index == R.styleable.WPStartOverPreference_buttonTextColor) {
-                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.grey_dark));
+                mButtonTextColor = array.getColor(index, ContextCompat.getColor(context, R.color.black));
             } else if (index == R.styleable.WPStartOverPreference_buttonTextAllCaps) {
                 mButtonTextAllCaps = array.getBoolean(index, false);
             } else if (index == R.styleable.WPStartOverPreference_preficon) {

@@ -300,6 +300,7 @@
                 app:preficon="@drawable/gridicons_history"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
+                app:buttonTextColor="@color/grey_dark"
                 app:buttonTextAllCaps="true" />
 
         </PreferenceScreen>
