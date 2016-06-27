@@ -63,6 +63,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     private MenuModel mCurrentMenuForLocation;
     private MenuItemsView mItemsView;
     private int mCurrentMenuItemBeingEdited = -1;
+    private EditMenuItemDialog mDialog;
+
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -503,8 +505,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         }
         return typeList;
     }
-
-    private EditMenuItemDialog mDialog;
 
     private void showEditorDialog(MenuItemModel item) {
         FragmentManager fm = getFragmentManager();

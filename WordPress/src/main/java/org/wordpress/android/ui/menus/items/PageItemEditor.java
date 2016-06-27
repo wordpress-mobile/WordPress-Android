@@ -76,6 +76,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         mPageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mOtherDataDirty = true;
                 if (!mItemNameDirty) {
                     if (mItemNameEditText != null) {
                         mItemNameEditText.setText(mFilteredPages.get(i).getTitle());
@@ -105,6 +106,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     private void setSelection(long contentId) {
+        mOtherDataDirty = false;
         boolean selectionMarked = false;
         for (int i=0; i < mFilteredPages.size(); i++) {
             PostsListPost post = mFilteredPages.get(i);

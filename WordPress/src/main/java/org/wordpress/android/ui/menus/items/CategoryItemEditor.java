@@ -64,6 +64,7 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
         mCategoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mOtherDataDirty = true;
                 if (!mItemNameDirty) {
                     if (mItemNameEditText != null) {
                         mItemNameEditText.setText(mCategories.get(i).name);
@@ -93,6 +94,7 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
     }
 
     private void setSelection(long contentId) {
+        mOtherDataDirty = false;
         for (int i=0; i < mCategories.size(); i++) {
             CategoryModel categ = mCategories.get(i);
             int id = categ.id;

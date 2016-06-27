@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.menus;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -104,6 +107,22 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     }
 
     @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getActivity(), getTheme()){
+            @Override
+            public void onBackPressed() {
+                if (mCurrentEditor != null){
+                    if (mCurrentEditor.isDirty()) {
+                        showAlertDialog();
+                    } else {
+                        super.onBackPressed();
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View dialogView = inflater.inflate(R.layout.menu_item_edit_view, container, false);
         mTypePicker = (Spinner) dialogView.findViewById(R.id.menu_item_type_spinner);
@@ -194,7 +213,17 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         // add back arrow that dismisses dialog without saving
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) { dismiss(); }
+            @Override public void onClick(View v) {
+                if (mCurrentEditor != null){
+                    if (mCurrentEditor.isDirty()) {
+                        showAlertDialog();
+                    } else {
+                        dismiss();
+                    }
+                } else {
+                    dismiss();
+                }
+            }
         });
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
@@ -220,7 +249,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             }
 
             // no-op
-            @Override public void onNothingSelected(AdapterView<?> parent) { }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -228,6 +259,26 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         Integer itemIdx = mItemPositions.get(type);
         mTypePicker.setSelection(itemIdx);
         mEditorFlipper.setDisplayedChild(itemIdx);
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.menu_item_changes_not_saved_title));
+        dialogBuilder.setMessage(getResources().getText(R.string.menu_item_changes_not_saved));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //go back
+                        EditMenuItemDialog.this.dismiss();
+                    }
+                });
+        dialogBuilder.setNegativeButton(
+                getResources().getText(R.string.no),
+                null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
+
     }
 
 }

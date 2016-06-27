@@ -74,6 +74,7 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         mPostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mOtherDataDirty = true;
                 if (!mItemNameDirty) {
                     if (mItemNameEditText != null) {
                         mItemNameEditText.setText(mFilteredPosts.get(i).getTitle());
@@ -103,6 +104,7 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     }
 
     private void setSelection(long contentId) {
+        mOtherDataDirty = false;
         for (int i=0; i < mFilteredPosts.size(); i++) {
             PostsListPost post = mFilteredPosts.get(i);
             String remoteId = post.getRemotePostId();
