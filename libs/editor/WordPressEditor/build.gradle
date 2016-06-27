@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -22,8 +22,8 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        versionCode 11
-        versionName "1.1"
+        versionCode 12
+        versionName "1.2"
         minSdkVersion 16
         targetSdkVersion 23
     }

@@ -3,7 +3,10 @@ package org.wordpress.android.util;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -14,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +27,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
+import java.util.List;
 import java.util.Locale;
 
 public class WPActivityUtils {
@@ -38,7 +43,7 @@ public class WPActivityUtils {
             return;
         }
 
-        LinearLayout root = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                 .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
@@ -50,7 +55,6 @@ public class WPActivityUtils {
         titleView.setText(title);
 
         toolbar.setTitle("");
-        toolbar.setContentInsetsAbsolute(0, 0);
         toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,5 +125,18 @@ public class WPActivityUtils {
             }
         }
         return context;
+    }
+
+    public static boolean isEmailClientAvailable(Context context) {
+        if (context == null) {
+            return false;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        return !emailApps.isEmpty();
     }
 }
