@@ -17,6 +17,7 @@
         android:id="@+id/person_details"
         android:background="@color/color_primary"
         android:elevation="@dimen/card_elevation"
+        android:paddingBottom="@dimen/margin_medium"
         tools:targetApi="LOLLIPOP">
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -51,7 +52,6 @@
             android:layout_alignLeft="@id/person_display_name"
             android:layout_alignStart="@id/person_display_name"
             android:layout_below="@id/person_username"
-            android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_small"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_medium"
