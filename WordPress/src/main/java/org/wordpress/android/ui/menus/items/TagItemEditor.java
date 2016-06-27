@@ -44,12 +44,12 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         super(context, attrs);
         mAllTagTitles = new ArrayList<>();
         mFilteredTagTitles = new ArrayList<>();
+        loadTags();
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        loadTags();
         fetchTags();
     }
 
@@ -143,29 +143,24 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         WordPress.getRestClientUtils().get(path, new RestRequest.Listener() {
                     @Override
                     public void onResponse(final JSONObject response) {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                if (response == null) {
-                                    return;
-                                }
+                        if (response == null) {
+                            return;
+                        }
 
-                                JSONArray jsonTags = response.optJSONArray("tags");
-                                List<Tag> tags = Tag.tagListFromJSON(jsonTags, Long.valueOf(remoteBlogId));
-                                if (tags != null) {
-                                    SuggestionTable.insertTagsForSite(Integer.valueOf(remoteBlogId), tags);
+                        JSONArray jsonTags = response.optJSONArray("tags");
+                        List<Tag> tags = Tag.tagListFromJSON(jsonTags, Long.valueOf(remoteBlogId));
+                        if (tags != null) {
+                            SuggestionTable.insertTagsForSite(Integer.valueOf(remoteBlogId), tags);
 
-                                    loadTags();
+                            loadTags();
 
-                                    MenuItemModel item = TagItemEditor.super.getMenuItem();
-                                    if (item != null) {
-                                        //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
-                                        setSelection(item.contentId);
-                                    }
-
-                                }
+                            MenuItemModel item = TagItemEditor.super.getMenuItem();
+                            if (item != null) {
+                                //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                                setSelection(item.contentId);
                             }
-                        }.start();
+
+                        }
                     }
                 },
                 new RestRequest.ErrorListener() {

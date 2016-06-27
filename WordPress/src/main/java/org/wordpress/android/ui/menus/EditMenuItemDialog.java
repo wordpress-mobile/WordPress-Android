@@ -228,10 +228,10 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         //special case for tag
         if (type.compareToIgnoreCase("post_tag") == 0) {
-            itemIdx = mItemPositions.get(ITEM_TYPE.TAG);
+            itemIdx = mItemPositions.get(ITEM_TYPE.TAG.name());
         }
         else if (type.compareToIgnoreCase("post_type") == 0) {
-            itemIdx = mItemPositions.get(ITEM_TYPE.POST);
+            itemIdx = mItemPositions.get(ITEM_TYPE.POST.name());
         }
 
         if (itemIdx == null) {

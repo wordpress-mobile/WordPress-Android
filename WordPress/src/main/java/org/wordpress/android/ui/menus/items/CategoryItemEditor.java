@@ -141,24 +141,19 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(final JSONObject response) {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
+                        AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
 
-                                CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
-                                if (models == null) return;
+                        CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
+                        if (models == null) return;
 
-                                SiteSettingsTable.saveCategories(models);
-                                loadCategories();
+                        SiteSettingsTable.saveCategories(models);
+                        loadCategories();
 
-                                MenuItemModel item = CategoryItemEditor.super.getMenuItem();
-                                if (item != null) {
-                                    //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
-                                    setSelection(item.contentId);
-                                }
-                            }
-                        }.start();
+                        MenuItemModel item = CategoryItemEditor.super.getMenuItem();
+                        if (item != null) {
+                            //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
+                            setSelection(item.contentId);
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
