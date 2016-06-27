@@ -145,6 +145,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
                 //trackCommentsAnalytics();
                 AppPrefs.setCommentsStatusFilter((CommentStatus) criteria);
                 mCommentStatusFilter = (CommentStatus) criteria;
+                finishActionMode();
             }
 
             @Override
