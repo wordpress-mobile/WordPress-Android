@@ -180,25 +180,26 @@ public class PeopleTable {
     public static List<Person> getUsers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(0) };
         String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2";
-        return PeopleTable.getPeople(localTableBlogId, where, args);
+        return PeopleTable.getPeople(localTableBlogId, where, args, true);
     }
 
     public static List<Person> getFollowers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0) };
         String where = "WHERE local_blog_id=? AND is_follower=? AND is_email_follower=?";
-        return PeopleTable.getPeople(localTableBlogId, where, args);
+        return PeopleTable.getPeople(localTableBlogId, where, args, false);
     }
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1)};
         String where = "WHERE local_blog_id=? AND is_follower=? AND is_email_follower=?";
-        return PeopleTable.getPeople(localTableBlogId, where, args);
+        return PeopleTable.getPeople(localTableBlogId, where, args, false);
     }
 
-    private static List<Person> getPeople(int localTableBlogId, String whereStatement, String[] args) {
+    private static List<Person> getPeople(int localTableBlogId, String whereStatement, String[] args, boolean ordered) {
         List<Person> people = new ArrayList<>();
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " " + whereStatement +
-                " ORDER BY lower(display_name), lower(user_name)", args);
+        // order is disabled for followers for now since the API is not supporting it
+        String orderBy = ordered ? " ORDER BY lower(display_name), lower(user_name)" : "";
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " " + whereStatement + orderBy, args);
 
         try {
             while (c.moveToNext()) {
