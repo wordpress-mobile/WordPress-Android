@@ -39,6 +39,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final LayoutInflater mInflater;
     private final Context mContext;
     private int mPadding;
+    private static int ADD_MENU_ITEM_ALONE_ID = -50;
     private static int ADD_MENU_ITEM_ABOVE_ID = -100;
     private static int ADD_MENU_ITEM_BELOW_ID = -200;
     private static int ADD_MENU_ITEM_TO_CHILDREN_ID = -300;
@@ -111,16 +112,21 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         menuItem.editingMode = false;
                         mInAddingMode = false;
-                        //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in our list
-                        triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);
-                        mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition+1, adderPosition));
-                        Handler hdlr = new Handler();
-                        hdlr.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                notifyDataSetChanged();
-                            }
-                        }, 350);
+                        if (mFlattenedMenuItems.size() == 1) {
+                            mFlattenedMenuItems.remove(0);
+                            mListener.onAddClick(0, ItemAddPosition.BELOW);
+                        } else {
+                            //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in our list
+                            triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);
+                            mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition+1, adderPosition));
+                            Handler hdlr = new Handler();
+                            hdlr.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    notifyDataSetChanged();
+                                    }
+                            }, 350);
+                        }
 
                     }
                 };
@@ -375,6 +381,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (menuItems != null) {
             mFlattenedMenuItems.clear();
             mFlattenedMenuItems.addAll(menuItems);
+            if (mFlattenedMenuItems.size() == 0) {
+                AddItemAlone item = new AddItemAlone(mContext);
+                mFlattenedMenuItems.add(item);
+            }
             notifyDataSetChanged();
         }
     }
@@ -487,6 +497,13 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     private abstract class AddItem extends MenuItemModel {
+    }
+
+    private class AddItemAlone extends AddItem {
+        public AddItemAlone(Context context){
+            this.menuId = ADD_MENU_ITEM_ALONE_ID;
+            this.name = context.getString(R.string.menus_add_new_item);
+        }
     }
 
     private class AddItemAbove extends AddItem {
