@@ -293,13 +293,14 @@
             <org.wordpress.android.ui.prefs.WPStartOverPreference
                 android:id="@+id/pref_start_over"
                 android:key="@string/pref_key_site_start_over"
-                android:icon="@drawable/gridicons_history"
                 android:title="@string/let_us_help"
                 android:summary="@string/start_over_text"
                 android:widgetLayout="@layout/start_over_preference_button"
                 android:layout="@layout/start_over_preference"
+                app:preficon="@drawable/gridicons_history"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
+                app:buttonTextColor="@color/grey_dark"
                 app:buttonTextAllCaps="true" />
 
         </PreferenceScreen>
