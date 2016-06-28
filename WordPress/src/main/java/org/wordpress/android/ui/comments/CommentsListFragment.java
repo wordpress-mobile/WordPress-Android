@@ -737,23 +737,17 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         if (!isAdded()) return;
 
         if (moderatedComments.getComments().size() > 0) {
-
             for (Comment comment : moderatedComments.getComments()) {
                 setCommentIsModerating(comment.commentID, false);
             }
 
-            getAdapter().clearSelectedComments();
             if (moderatedComments.isDeleted()) {
                 getAdapter().deleteComments(moderatedComments.getComments());
             } else {
                 getAdapter().replaceComments(moderatedComments.getComments());
             }
 
-            // if the new comments status is not the same as the current filter status it means user have switched filter
-            // while comment moderation/deletion was in progress and we need to reload comments from DB to reflect changes
-            if (moderatedComments.getNewStatus() != mCommentStatusFilter || moderatedComments.isDeleted()) {
-                loadComments();
-            }
+            loadComments();
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
         }
