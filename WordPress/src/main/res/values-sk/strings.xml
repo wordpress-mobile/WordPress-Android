@@ -2,7 +2,6 @@
 <resources>
 	<string name="export_your_content">Exportujem Váš obsah...</string>
 	<string name="exporting_content_progress">Exportujem obsah...</string>
-	<string name="delete_site_hint">Zmazať Vašu stránku</string>
 	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
 	<string name="are_you_sure">Ste si istý?</string>
 	<string name="keep_your_content">Ponechať Váš obsah</string>
