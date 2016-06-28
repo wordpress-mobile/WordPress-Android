@@ -59,13 +59,13 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mCountStr = context.getResources().getString(R.string.reader_label_image_count);
     }
 
-    private void showView() {
+    private void fadeIn() {
         if (mView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
         }
     }
 
-    private void hideView() {
+    private void fadeOut() {
         if (mView.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mView, AniUtils.Duration.SHORT);
         }
@@ -79,7 +79,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
         final ReaderImageList imageList = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
         if (imageList.size() < MIN_IMAGE_COUNT) {
-            hideView();
+            fadeOut();
             return;
         }
 
@@ -94,20 +94,6 @@ public class ReaderThumbnailStrip extends LinearLayout {
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
-            imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderPhotoViewer(
-                            view.getContext(),
-                            imageUrl,
-                            post.getText(),
-                            view,
-                            post.isPrivate,
-                            0,
-                            0);
-                }
-            });
-
             numAdded++;
             if (numAdded >= MAX_IMAGE_COUNT) {
                 break;
@@ -120,8 +106,8 @@ public class ReaderThumbnailStrip extends LinearLayout {
         txtCount.setText(String.format(mCountStr, imageList.size()));
         mContainer.addView(labelView);
 
-        // tapping the label view opens the first image
-        labelView.setOnClickListener(new OnClickListener() {
+        // tapping anywhere opens the first image
+        mView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 ReaderActivityLauncher.showReaderPhotoViewer(
@@ -135,6 +121,6 @@ public class ReaderThumbnailStrip extends LinearLayout {
             }
         });
 
-        showView();
+        fadeIn();
     }
 }
