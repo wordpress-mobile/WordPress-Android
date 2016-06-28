@@ -45,6 +45,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
                 dialogInterface.cancel();
             }
         });
+        builder.setMessage(getString(R.string.connection_chooser_message));
 
         mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
         mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

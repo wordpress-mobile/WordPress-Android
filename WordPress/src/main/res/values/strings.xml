@@ -1363,6 +1363,8 @@
     <string name="share_btn_reconnect">Reconnect</string>
     <string name="share_btn_connect_another_account">Connect another account</string>
     <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
+    <string name="connecting_social_network">Connecting %s</string>
+    <string name="connection_chooser_message">Select the account you wish to authorize. Note that your posts will be shared to the selected account automatically.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
