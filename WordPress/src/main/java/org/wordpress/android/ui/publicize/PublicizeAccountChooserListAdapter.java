@@ -37,7 +37,7 @@ public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<Pub
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PublicizeConnection connection = mConnectionItems.get(position);
         holder.mProfileImageView.setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
-        holder.mNameTextView.setText(connection.getExternalName());
+        holder.mNameTextView.setText(connection.getExternalDisplayName());
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 
         if (!mAreAccountsConnected) {
