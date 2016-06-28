@@ -332,7 +332,7 @@ class ReaderPostRenderer {
         // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
         .append("  p, div" + (isWideDisplay ? ":not(." + galleryOnlyClass + ")" : "") +
-                ", li { line-height: 1.6em; font-size: 0.95em; }")
+                ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
