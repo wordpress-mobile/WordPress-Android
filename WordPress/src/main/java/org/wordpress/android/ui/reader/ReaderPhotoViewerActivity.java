@@ -28,6 +28,8 @@ import org.wordpress.android.widgets.WPViewPager;
 public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
 
+    public static final int MIN_IMAGE_WIDTH = 160;
+
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
@@ -76,7 +78,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             imageList = new ReaderImageList(mIsPrivate);
         } else {
             // otherwise content is HTML so parse images from it
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(MIN_IMAGE_WIDTH);
         }
 
         // make sure initial image is in the list

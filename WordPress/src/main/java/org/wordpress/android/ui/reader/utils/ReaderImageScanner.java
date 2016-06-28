@@ -4,8 +4,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,8 +66,8 @@ public class ReaderImageScanner {
     /*
      * similar to above but only returns images above a certain width
      */
-    public List<String> getImageList(int minImageWidth) {
-        List<String> images = new ArrayList<>();
+    public ReaderImageList getImageList(int minImageWidth) {
+        ReaderImageList imageList = new ReaderImageList(mIsPrivate);
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
@@ -77,10 +75,10 @@ public class ReaderImageScanner {
 
             int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
             if (width > minImageWidth) {
-                images.add(imageUrl);
+                imageList.addImageUrl(imageUrl);
             }
         }
-        return images;
+        return imageList;
     }
 
     /*

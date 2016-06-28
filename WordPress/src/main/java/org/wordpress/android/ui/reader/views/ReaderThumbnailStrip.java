@@ -11,12 +11,12 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderPhotoViewerActivity;
+import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
-
-import java.util.List;
 
 /**
  * displays a row of image thumbnails from a reader post - only shows when two or more images
@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
-    private static final int MIN_IMAGE_WIDTH = 160;
     private static final int MIN_IMAGE_COUNT = 2;
     private static final int MAX_IMAGE_COUNT = 4;
 
@@ -78,8 +77,8 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
         // TODO: it would be more efficient to rely on the attachments
         ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-        final List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(MIN_IMAGE_WIDTH);
-        if (images.size() < MIN_IMAGE_COUNT) {
+        final ReaderImageList imageList = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
+        if (imageList.size() < MIN_IMAGE_COUNT) {
             hideView();
             return;
         }
@@ -87,7 +86,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         // add a separate imageView for each image up to the max
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (final String imageUrl: images) {
+        for (final String imageUrl: imageList) {
             View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
@@ -118,7 +117,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         // add the labels which include the image count
         View labelView = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
         TextView txtCount = (TextView) labelView.findViewById(R.id.text_gallery_count);
-        txtCount.setText(String.format(mCountStr, images.size()));
+        txtCount.setText(String.format(mCountStr, imageList.size()));
         mContainer.addView(labelView);
 
         // tapping the label view opens the first image
@@ -127,7 +126,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             public void onClick(View view) {
                 ReaderActivityLauncher.showReaderPhotoViewer(
                         view.getContext(),
-                        images.get(0),
+                        imageList.get(0),
                         post.getText(),
                         view,
                         post.isPrivate,
