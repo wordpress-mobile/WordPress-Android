@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.menus;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -266,10 +267,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.menus_fragment, container, false);
 
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        setupToolbar();
-
         mAddEditRemoveControl = (MenuAddEditRemoveView) view.findViewById(R.id.menu_add_edit_remove_view);
         mAddEditRemoveControl.setMenuActionListener(new MenuAddEditRemoveView.MenuAddEditRemoveActionListener() {
 
@@ -360,7 +357,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
         mMenusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
                 if (mOriginalMenuSelectionIdx == position) return;
 
@@ -368,7 +365,13 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                     if (!mOriginalFlattenedMenuItems.equals(mItemsView.getAdapter().getCurrentMenuItems())) {
                         //the collections are different
                         mMenusSpinner.setSelection(mOriginalMenuSelectionIdx);
-                        showAlertDialog(position);
+                        showAlertDialog(
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        mMenusSpinner.setSelection(position);
+                                        changeMenuSpinnerSelection(position);
+                                    }
+                                });
                         return;
                     }
                 }
@@ -433,6 +436,15 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         return view;
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mToolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        setupToolbar();
+    }
+
+
     private void changeMenuSpinnerSelection(int position) {
         if (mMenusSpinner.getItems().size() == (position + 1)) {
             //clicked on "add new menu"
@@ -467,13 +479,23 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     }
 
     private void setupToolbar() {
-        if (mToolbar == null || !isAdded()) return;
+        if (mToolbar == null) return;
 
         // add back arrow listener
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                //TODO check if dirty
-
+                if (mOriginalFlattenedMenuItems != null) {
+                    if (!mOriginalFlattenedMenuItems.equals(mItemsView.getAdapter().getCurrentMenuItems())) {
+                        showAlertDialog(
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        getActivity().onBackPressed();
+                                    }
+                                });
+                        return;
+                    }
+                }
+                getActivity().onBackPressed();
             }
         });
     }
@@ -859,18 +881,13 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         // no-op
     }
 
-    private void showAlertDialog(final int position) {
+    private void showAlertDialog(DialogInterface.OnClickListener clickListener) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                 getActivity());
         dialogBuilder.setTitle(getResources().getText(R.string.menu_item_changes_not_saved_title));
         dialogBuilder.setMessage(getResources().getText(R.string.menu_item_changes_not_saved));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        mMenusSpinner.setSelection(position);
-                        changeMenuSpinnerSelection(position);
-                    }
-                });
+                clickListener);
         dialogBuilder.setNegativeButton(
                 getResources().getText(R.string.no),
                 null);
