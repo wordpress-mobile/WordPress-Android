@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">사용자가 성공적으로 제거됨</string>
+	<string name="person_remove_confirmation_message">%1$s을(를) 제거하면 해당 사용자는 이 사이트에 더 이상 액세스할 수 없지만 %1$s 님이 작성한 콘텐츠는 사이트에 남습니다.\n\n그래도 이 사용자를 제거하시겠습니까?</string>
+	<string name="person_removed">\@%1$s이(가) 성공적으로 제거됨</string>
+	<string name="person_remove_confirmation_title">%1$s 제거</string>
+	<string name="reader_empty_posts_in_custom_list">이 목록에 있는 사이트에서 최근 게시된 글이 없습니다.</string>
+	<string name="people">사람</string>
+	<string name="edit_user">사용자 편집</string>
+	<string name="role">역할</string>
+	<string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
+	<string name="error_fetch_people_list">사이트 사용자를 가져올 수 없습니다.</string>
+	<string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
 	<string name="gravatar_camera_and_media_permission_required">사진을 선택하거나 캡처하려면 권한이 필요합니다.</string>
 	<string name="error_updating_gravatar">Gravatar를 업데이트하는 중 오류가 발생했습니다.</string>
 	<string name="error_locating_image">잘린 이미지를 찾는 중 오류가 발생했습니다.</string>
