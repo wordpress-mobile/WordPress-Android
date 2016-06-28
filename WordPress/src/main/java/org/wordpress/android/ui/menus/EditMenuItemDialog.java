@@ -151,7 +151,6 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.menu_item_editor_confirm) {
-            mCurrentEditor.onSave();
             if (isCreating() || !mOriginalItem.equals(mCurrentEditor.getMenuItem())) {
                 sendResultToTarget(SAVE_RESULT_CODE, mCurrentEditor.getMenuItem());
             }

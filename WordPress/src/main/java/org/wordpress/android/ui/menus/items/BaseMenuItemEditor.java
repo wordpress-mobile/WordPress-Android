@@ -15,8 +15,6 @@ import org.wordpress.android.widgets.WPEditText;
 public abstract class BaseMenuItemEditor extends LinearLayout {
     public abstract int getLayoutRes();
     public abstract int getNameEditTextRes();
-    public abstract void onSave();
-    public abstract void onDelete();
 
     protected MenuItemModel mWorkingItem;
     protected MenuItemNameChangeListener mMenuItemNameChangeListener;

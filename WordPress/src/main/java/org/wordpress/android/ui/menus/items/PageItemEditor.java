@@ -140,18 +140,6 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         return menuItem;
     }
 
-    @Override
-    public void onSave() {
-        //TODO check with Tony if this is needed
-        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.saveMenuItem(getMenuItem());
-    }
-
-    @Override
-    public void onDelete() {
-        //TODO check with Tony if this is needed
-        // if (getMenuItem() != null && shouldEdit()) MenuItemTable.deleteMenuItem(getMenuItem().itemId);
-    }
-
     //
     // SearchView query callbacks
     //

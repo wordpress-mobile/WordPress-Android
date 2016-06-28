@@ -27,12 +27,4 @@ public class TestimonialItemEditor extends BaseMenuItemEditor {
     public int getNameEditTextRes() {
         return R.id.menu_item_title_edit;
     }
-
-    @Override
-    public void onSave() {
-    }
-
-    @Override
-    public void onDelete() {
-    }
 }
