@@ -64,7 +64,7 @@ public class ReaderImageScanner {
     }
 
     /*
-     * similar to above but only returns images above a certain width
+     * similar to the above but only returns images above a certain width
      */
     public ReaderImageList getImageList(int minImageWidth) {
         ReaderImageList imageList = new ReaderImageList(mIsPrivate);
@@ -74,7 +74,7 @@ public class ReaderImageScanner {
             String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
 
             int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
-            if (width > minImageWidth) {
+            if (width >= minImageWidth) {
                 imageList.addImageUrl(imageUrl);
             }
         }
