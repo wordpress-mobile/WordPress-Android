@@ -464,6 +464,7 @@ class ReaderPostRenderer {
         .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
+        .append("       text-align: center;")
         .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
