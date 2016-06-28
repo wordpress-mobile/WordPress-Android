@@ -8,7 +8,7 @@
         android:layout="@layout/preference_layout"
         android:title="@string/interface_language" />
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:defaultValue="true"
         android:key="@string/pref_key_send_usage"
         android:layout="@layout/preference_layout"
@@ -20,7 +20,7 @@
         android:layout="@layout/preference_category"
         android:title="@string/preference_editor">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_key_visual_editor_enabled"
             android:layout="@layout/preference_layout"
@@ -34,7 +34,7 @@
         android:persistent="false"
         android:title="@string/passcode_preference_title">
 
-        <Preference
+        <SwitchPreference
             android:key="@string/pref_key_passcode_toggle"
             android:layout="@layout/preference_layout"
             android:persistent="false"

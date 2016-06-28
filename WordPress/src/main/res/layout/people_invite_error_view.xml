@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.widgets.WPTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_large"
+    android:padding="5dp"
+    android:textColor="@color/alert_red"
+    android:textSize="@dimen/text_sz_small"
+    tools:text="Username 'qwer' is not found"/>

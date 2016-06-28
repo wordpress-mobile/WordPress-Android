@@ -21,7 +21,7 @@
                 android:id="@+id/toolbar_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/FilteredRecyclerViewFilterContainer"
+                style="@style/FilteredRecyclerViewToolbar"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <Spinner

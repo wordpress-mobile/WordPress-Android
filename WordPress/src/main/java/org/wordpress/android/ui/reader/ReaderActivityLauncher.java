@@ -14,7 +14,6 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -35,10 +34,17 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
+        showReaderPostDetail(context, blogId, postId, false);
+    }
+    public static void showReaderPostDetail(Context context,
+                                            long blogId,
+                                            long postId,
+                                            boolean isRelatedPost) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
         ActivityLauncher.slideInFromRight(context, intent);
     }
 
@@ -132,7 +138,6 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-
     /*
      * show comments for the passed Ids
      */
@@ -160,17 +165,6 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         ActivityLauncher.slideInFromRight(context, intent);
-    }
-
-    /*
-     * show users who liked the passed comment
-     */
-    public static void showReaderLikingUsers(Context context, ReaderComment comment) {
-        Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, comment.blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, comment.postId);
-        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, comment.commentId);
-        context.startActivity(intent);
     }
 
     /*

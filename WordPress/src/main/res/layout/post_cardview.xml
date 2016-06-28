@@ -1,15 +1,15 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:wp="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:stateListAnimator="@anim/pressed_card"
-    card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="@dimen/card_elevation"
-    tools:targetApi="LOLLIPOP">
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    xmlns:wp="http://schemas.android.com/apk/res-auto"
+                                    android:id="@+id/card_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:stateListAnimator="@anim/pressed_card"
+                                    card_view:cardBackgroundColor="@color/white"
+                                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                                    card_view:cardElevation="@dimen/card_elevation"
+                                    tools:targetApi="LOLLIPOP">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,12 +99,12 @@
                     wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    android:id="@+id/btn_more"
+                    android:id="@+id/btn_publish"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    wp:wpPostButtonType="more" />
+                    wp:wpPostButtonType="publish" />
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_stats"
@@ -127,6 +127,14 @@
                     wp:wpPostButtonType="trash" />
 
                 <org.wordpress.android.widgets.PostListButton
+                    android:id="@+id/btn_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    wp:wpPostButtonType="more" />
+
+                <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_back"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -137,4 +145,20 @@
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/disabled_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucent_white"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"/>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

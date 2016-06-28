@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,18 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
-import com.google.android.gms.auth.api.credentials.CredentialRequest;
-import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.optimizely.Optimizely;
 import com.optimizely.Variable.LiveVariable;
 import com.wordpress.rest.RestRequest;
@@ -54,7 +42,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
@@ -76,7 +63,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.emailchecker.EmailChecker;
+import org.wordpress.emailchecker2.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.EnumSet;
@@ -87,8 +74,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignInFragment extends AbstractFragment implements TextWatcher, ConnectionCallbacks,
-        OnConnectionFailedListener {
+public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
     private static LiveVariable<Boolean> isNotOnWordPressComVariable = Optimizely.booleanForKey("isNotOnWordPressCom", false);
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
@@ -131,21 +117,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
-
-    protected final EmailChecker mEmailChecker;
-    protected GoogleApiClient mCredentialsClient;
-
-    public SignInFragment() {
-        mEmailChecker = new EmailChecker();
-    }
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
-        } else {
-            initSmartLockForPasswords();
         }
     }
 
@@ -229,7 +206,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             showSelfHostedSignInForm();
         }
         autofillFromBuildConfig();
-
         return rootView;
     }
 
@@ -260,10 +236,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
      * Hide toggle button "add self hosted / sign in with WordPress.com" and show self hosted URL
      * edit box
      */
-    public void forceSelfHostedMode() {
+    public void forceSelfHostedMode(String prefillUrl) {
         mUrlButtonLayout.setVisibility(View.VISIBLE);
         mAddSelfHostedButton.setVisibility(View.GONE);
         mCreateAccountButton.setVisibility(View.GONE);
+        mUrlEditText.setText(prefillUrl);
         mSelfHosted = true;
     }
 
@@ -287,10 +264,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         mAddSelfHostedButton.setText(getString(R.string.nux_oops_not_selfhosted_blog));
     }
 
-    protected boolean isSmartLockAvailable() {
-        return isGooglePlayServicesAvailable() && mCredentialsClient != null && mCredentialsClient.isConnected();
-    }
-
     protected void track(Stat stat, Map<String, Boolean> properties) {
         AnalyticsTracker.track(stat, properties);
     }
@@ -308,14 +281,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 }
             }
         });
-    }
-
-    protected boolean isGooglePlayServicesAvailable() {
-        if (getActivity() == null) {
-            return false;
-        }
-        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
-        return status == ConnectionResult.SUCCESS;
     }
 
     private void initInfoButtons(View rootView) {
@@ -357,58 +322,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     }
 
-    private void initSmartLockForPasswords() {
-        if (!isGooglePlayServicesAvailable()) {
-            return;
-        }
-
-        mCredentialsClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .enableAutoManage(getActivity(), this)
-                .addApi(Auth.CREDENTIALS_API)
-                .build();
-    }
-
-    public void smartLockAutoFill() {
-        // We don't want to autofill username and password fields if self hosted has been selected (pre-selected or
-        // user selected).
-        if (!isGooglePlayServicesAvailable() || mCredentialsClient == null || mSelfHosted) {
-            return;
-        }
-        CredentialRequest credentialRequest = new CredentialRequest.Builder()
-                .setSupportsPasswordLogin(true)
-                .build();
-        Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
-                new ResultCallback<CredentialRequestResult>() {
-                    @Override
-                    public void onResult(CredentialRequestResult result) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        Status status = result.getStatus();
-                        if (status.isSuccess()) {
-                            Credential credential = result.getCredential();
-                            onCredentialRetrieved(credential);
-                        } else {
-                            if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
-                                try {
-                                    // Prompt the user to choose a saved credential
-                                    status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_READ);
-                                } catch (IntentSender.SendIntentException e) {
-                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
-                                }
-                            } else {
-                                // The user must create an account or sign in manually.
-                                AppLog.d(T.NUX, "SmartLock: Unsuccessful credential request.");
-                            }
-                        }
-                    }
-                });
+    public boolean canAutofillUsernameAndPassword() {
+        return EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty();
     }
 
     public void onCredentialRetrieved(Credential credential) {
         AppLog.d(T.NUX, "Retrieved username from SmartLock: " + credential.getId());
-        if (EditTextUtils.getText(mUsernameEditText).isEmpty() && EditTextUtils.getText(mPasswordEditText).isEmpty()) {
+        if (canAutofillUsernameAndPassword()) {
             track(Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED, null);
             mUsernameEditText.setText(credential.getId());
             mPasswordEditText.setText(credential.getPassword());
@@ -419,22 +339,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         moveBottomButtons();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        AppLog.d(T.NUX, "Connection result: " + connectionResult);
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        AppLog.d(T.NUX, "Google API client connected");
-        smartLockAutoFill();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        AppLog.d(T.NUX, "Google API client connection suspended");
     }
 
     private void setSecondaryButtonVisible(boolean visible) {
@@ -480,7 +384,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             return;
         }
         // It looks like an email address, then try to correct it
-        String suggest = mEmailChecker.suggestDomainCorrection(email);
+        String suggest = EmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
             mUsernameEditText.setText(suggest);
@@ -515,12 +419,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     private final View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Activity activity = getActivity();
-            if (activity != null) {
-                ActivityLauncher.newAccountForResult(activity);
-            }
+            createUserFragment();
         }
     };
+
+    private void createUserFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        NewUserFragment newUserFragment = NewUserFragment.newInstance();
+        newUserFragment.setTargetFragment(this, NewUserFragment.NEW_USER);
+        transaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        transaction.replace(R.id.fragment_container, newUserFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
     private String getForgotPasswordURL() {
         String baseUrl = DOT_COM_BASE_URL;
@@ -601,6 +513,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         }
     }
 
+    private SmartLockHelper getSmartLockHelper() {
+        if (getActivity() != null && getActivity() instanceof SignInActivity) {
+            return ((SignInActivity) getActivity()).getSmartLockHelper();
+        }
+        return null;
+    }
+
     protected final Callback mFetchBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
@@ -640,7 +559,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                         finishCurrentActivity(userBlogList);
                         String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
                         Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
-                        saveCredentialsInSmartLock(mUsername, mPassword, displayName, profilePicture);
+                        SmartLockHelper smartLockHelper = getSmartLockHelper();
+                        // mUsername and mPassword are null when the user sign in with a magic link
+                        if (smartLockHelper != null && mUsername != null && mPassword != null) {
+                            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, displayName,
+                                    profilePicture);
+                        }
                     }
                 }, null);
             } else {
@@ -723,46 +647,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
-    private void saveCredentialsInSmartLock(String username, String password, String displayName, Uri profilePicture) {
-        if (!isSmartLockAvailable()) {
-            return;
-        }
-        Credential credential = new Credential.Builder(username).setPassword(password)
-                .setName(displayName).setProfilePictureUri(profilePicture).build();
-        Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        if (!status.isSuccess() && status.hasResolution()) {
-                            try {
-                                // This prompt the user to resolve the save request
-                                status.startResolutionForResult(getActivity(), SignInActivity.SMART_LOCK_SAVE);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Could not resolve the request
-                            }
-                        }
-                    }
-                });
-    }
-
-    private void deleteCredentialsInSmartLock() {
-        if (!isSmartLockAvailable()) {
-            return;
-        }
-        Credential credential = new Credential.Builder(mUsername).setPassword(mPassword).build();
-        Auth.CredentialsApi.delete(mCredentialsClient, credential).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        AppLog.i(T.NUX, status.isSuccess() ? "SmartLock: credentials deleted for username: " + mUsername
-                                : "SmartLock: Credentials not deleted for username: " + mUsername );
-                    }
-                });
-    }
-
     private void signInAndFetchBlogListWPCom() {
         LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS, mJetpackBlog);
         login.execute(new LoginAbstract.Callback() {
@@ -777,7 +661,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 mShouldSendTwoStepSMS = false;
                 // Delete credentials only if login failed with an incorrect username/password error
                 if (errorMessageId == R.string.username_or_password_incorrect) {
-                    deleteCredentialsInSmartLock();
+                    SmartLockHelper smartLockHelper = getSmartLockHelper();
+                    if (smartLockHelper != null) {
+                        smartLockHelper.deleteCredentialsInSmartLock(mUsername, mPassword);
+                    }
                 }
             }
         });
@@ -793,7 +680,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
             return;
         }
 
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
         fetchBlogListWPCom.execute(mFetchBlogListCallback);
     }
 
@@ -937,14 +824,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public void signInDotComUser(String username, String password) {
-        if (username != null && password != null) {
-            mUsernameEditText.setText(username);
-            mPasswordEditText.setText(password);
-            signIn();
         }
     }
 
@@ -1112,5 +991,29 @@ public class SignInFragment extends AbstractFragment implements TextWatcher, Con
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_SELF_HOSTED, mSelfHosted);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Autofill username / password if string fields are set (only usefull after an error in sign up).
+        // This can't be done in onCreateView
+        if (mUsername != null) {
+            mUsernameEditText.setText(mUsername);
+        }
+        if (mPassword != null) {
+            mPasswordEditText.setText(mPassword);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NewUserFragment.NEW_USER && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                // Text views will be populated by username/password if these fields are set
+                mUsername = data.getStringExtra("username");
+                mPassword = data.getStringExtra("password");
+            }
+        }
     }
 }

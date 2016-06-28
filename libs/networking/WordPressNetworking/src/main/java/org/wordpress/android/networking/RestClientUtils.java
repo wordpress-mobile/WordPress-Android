@@ -3,6 +3,10 @@
  */
 package org.wordpress.android.networking;
 
+import android.content.Context;
+import android.net.Uri;
+import android.text.TextUtils;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -16,8 +20,10 @@ import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -29,6 +35,7 @@ public class RestClientUtils {
 
     private RestClient mRestClient;
     private Authenticator mAuthenticator;
+    private Context mContext;
 
     /**
      * Socket timeout in milliseconds for rest requests
@@ -54,12 +61,13 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
-        this(queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
+        this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
+        mContext = context;
         mAuthenticator = authenticator;
         mRestClient = RestClientFactory.instantiate(queue, version);
         if (onAuthFailedListener != null) {
@@ -285,7 +293,7 @@ public class RestClientUtils {
     public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         post("auth/send-login-email", params, null, listener, errorListener);
     }
-    
+
     public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
         String path = String.format("is-available/email?q=%s", email);
         get(path, listener, errorListener);
@@ -304,9 +312,20 @@ public class RestClientUtils {
     public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        if (params != null) {
+            paramsWithLocale.putAll(params);
+        }
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null,
-                                                      listener, errorListener);
+        String realPath = getSanitizedPath(path);
+        if (TextUtils.isEmpty(realPath)) {
+            realPath = path;
+        }
+        paramsWithLocale.putAll(getSanitizedParameters(path));
+
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null,
+                listener, errorListener);
+
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         }
@@ -337,7 +356,19 @@ public class RestClientUtils {
     public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy)
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null, future, future);
+
+        HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
+        if (params != null) {
+            paramsWithLocale.putAll(params);
+        }
+
+        String realPath = getSanitizedPath(path);
+        if (TextUtils.isEmpty(realPath)) {
+            realPath = path;
+        }
+        paramsWithLocale.putAll(getSanitizedParameters(path));
+
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(realPath, paramsWithLocale), null, future, future);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -363,7 +394,24 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
+                listener, errorListener);
+        if (retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
+                    REST_BACKOFF_MULT); //Do not retry on failure
+        }
+        request.setRetryPolicy(retryPolicy);
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
+        authCheck.send();
+    }
+
+
+    /**
+     * Make a JSON POST request
+     */
+    public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
+                     ErrorListener errorListener) {
+        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path, getRestLocaleParams(mContext)), params,
                 listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
@@ -375,18 +423,53 @@ public class RestClientUtils {
     }
 
     /**
-     * Make a JSON POST request
+     * Takes a URL and returns the path within, or an empty string (not null)
      */
-    public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
-                     ErrorListener errorListener) {
-        final JsonRestRequest request = mRestClient.makeRequest(mRestClient.getAbsoluteURL(path), params,
-                listener, errorListener);
-        if (retryPolicy == null) {
-            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                    REST_BACKOFF_MULT); //Do not retry on failure
+    public static String getSanitizedPath(String unsanitizedPath){
+        if (unsanitizedPath != null) {
+            int qmarkPos = unsanitizedPath.indexOf('?');
+            if (qmarkPos > -1) { //strip any querystring params off this to obtain the path
+                return unsanitizedPath.substring(0, qmarkPos+1);
+            } else {
+                // return the string as is, consider the whole string as the path
+                return unsanitizedPath;
+            }
         }
-        request.setRetryPolicy(retryPolicy);
-        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
-        authCheck.send();
+        return "";
     }
+
+    /**
+     * Takes a URL with query strings and returns a Map of query string values.
+     */
+    public static HashMap<String, String> getSanitizedParameters(String unsanitizedPath){
+        HashMap<String, String> queryParams = new HashMap<>();
+
+        Uri uri = Uri.parse(unsanitizedPath);
+
+        if (uri.getQueryParameterNames() != null ) {
+            Iterator iter = uri.getQueryParameterNames().iterator();
+            while (iter.hasNext()) {
+                String name = (String)iter.next();
+                String value = uri.getQueryParameter(name);
+                queryParams.put(name, value);
+            }
+        }
+
+        return queryParams;
+    }
+
+    /**
+     * Returns locale parameter used in REST calls which require the response to be localized
+     */
+    public static HashMap<String, String> getRestLocaleParams(Context context) {
+        HashMap<String, String> params = new HashMap<>();
+        String deviceLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode(context);
+        if (!TextUtils.isEmpty(deviceLanguageCode)) {
+            //patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
+            deviceLanguageCode = LanguageUtils.patchDeviceLanguageCode(deviceLanguageCode);
+            params.put("locale", deviceLanguageCode);
+        }
+        return params;
+    }
+
 }

@@ -111,6 +111,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_TAG_PREVIEWED:
                 eventName = "reader_tag_previewed";
                 break;
+            case READER_SEARCH_LOADED:
+                eventName = "reader_search_loaded";
+                break;
             case READER_TAG_UNFOLLOWED:
                 eventName = "reader_reader_tag_unfollowed";
                 break;
@@ -435,6 +438,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case ME_GRAVATAR_TOOLTIP_TAPPED:
                 eventName = "me_gravatar_tooltip_tapped";
                 break;
+            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
+                eventName = "me_gravatar_permissions_interrupted";
+                break;
             case ME_GRAVATAR_PERMISSIONS_DENIED:
                 eventName = "me_gravatar_permissions_denied";
                 break;
@@ -452,6 +458,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case ME_GRAVATAR_UPLOADED:
                 eventName = "me_gravatar_uploaded";
+                break;
+            case ME_GRAVATAR_UPLOAD_UNSUCCESSFUL:
+                eventName = "me_gravatar_upload_unsuccessful";
+                break;
+            case ME_GRAVATAR_UPLOAD_EXCEPTION:
+                eventName = "me_gravatar_upload_exception";
                 break;
             case MY_SITE_ACCESSED:
                 eventName = "my_site_tab_accessed";

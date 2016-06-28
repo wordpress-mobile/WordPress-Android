@@ -61,6 +61,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         return view;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

@@ -7,7 +7,6 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
@@ -18,12 +17,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.List;
 
 /**
  * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
  * username and password of the blog configured for this activity.
  */
-public class WPWebViewClient extends WebViewClient {
+public class WPWebViewClient extends URLFilteredWebViewClient {
     private final Blog mBlog;
     private String mToken;
 
@@ -33,14 +33,10 @@ public class WPWebViewClient extends WebViewClient {
         mToken = AccountHelper.getDefaultAccount().getAccessToken();
     }
 
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        // Found a bug on some pages where there is an incorrect
-        // auto-redirect to file:///android_asset/webkit/.
-        if (!url.equals("file:///android_asset/webkit/")) {
-            view.loadUrl(url);
-        }
-        return true;
+    public WPWebViewClient(Blog blog, List<String> urls) {
+        super(urls);
+        this.mBlog = blog;
+        mToken = AccountHelper.getDefaultAccount().getAccessToken();
     }
 
     @Override

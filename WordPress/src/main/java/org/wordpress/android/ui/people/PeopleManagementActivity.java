@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -33,6 +34,8 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
     private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
     private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
+    private static final String KEY_TITLE = "page-title";
+    private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
     private boolean mPeopleEndOfListReached;
     private boolean mFetchRequestInProgress;
@@ -47,7 +50,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(R.string.people);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -59,10 +61,16 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
+        FragmentManager fragmentManager = getFragmentManager();
+
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
                 PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+            }
+
+            if (actionBar != null) {
+                actionBar.setTitle(R.string.people);
             }
 
             PeopleListFragment peopleListFragment = PeopleListFragment.newInstance(blog.getLocalTableBlogId());
@@ -72,19 +80,27 @@ public class PeopleManagementActivity extends AppCompatActivity
             mPeopleEndOfListReached = false;
             mFetchRequestInProgress = false;
 
-            getFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
             mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
             mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
+            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
-            FragmentManager fragmentManager = getFragmentManager();
-            PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                    .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+            if (actionBar != null && title != null) {
+                actionBar.setTitle(title);
+            }
+
+            PeopleListFragment peopleListFragment = getListFragment();
             if (peopleListFragment != null) {
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
+            }
+
+            PersonDetailFragment personDetailFragment = getDetailFragment();
+            if (personDetailFragment != null && personDetailFragment.isAdded()) {
+                removeToolbarElevation();
             }
         }
     }
@@ -94,6 +110,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
         outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
+        }
     }
 
     @Override
@@ -129,6 +149,26 @@ public class PeopleManagementActivity extends AppCompatActivity
         } else if (item.getItemId() == R.id.remove_person) {
             confirmRemovePerson();
             return true;
+        } else if (item.getItemId() == R.id.invite) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+
+            if (peopleInviteFragment == null) {
+                Blog blog = WordPress.getCurrentBlog();
+                peopleInviteFragment = PeopleInviteFragment.newInstance(blog.getDotComBlogId());
+            }
+            if (!peopleInviteFragment.isAdded()) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        } else if (item.getItemId() == R.id.send_invitation) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
+            if (peopleInviteFragment != null) {
+                ((InvitationSender) peopleInviteFragment).send();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,9 +178,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        final PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        final PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
             peopleListFragment.showLoadingProgress(true);
         }
@@ -176,9 +214,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public void onPersonSelected(Person person) {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        PersonDetailFragment personDetailFragment = getDetailFragment();
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
@@ -190,8 +226,16 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (!personDetailFragment.isAdded()) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
+            fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle("");
+            }
+            // remove the toolbar elevation for larger toolbar look
+            removeToolbarElevation();
+
             fragmentTransaction.commit();
         }
     }
@@ -206,10 +250,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        FragmentManager fragmentManager = getFragmentManager();
-        final PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
+        final PersonDetailFragment personDetailFragment = getDetailFragment();
         if (personDetailFragment != null) {
             // optimistically update the role
             personDetailFragment.changeRole(event.newRole);
@@ -299,38 +340,47 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     // This helper method is used after a successful network request
     private void refreshOnScreenFragmentDetails() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-
-        if (personDetailFragment != null) {
-            personDetailFragment.refreshPersonDetails();
-        }
-
         refreshPeopleListFragment();
+        refreshDetailFragment();
     }
 
     private void refreshPeopleListFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PeopleListFragment peopleListFragment = (PeopleListFragment) fragmentManager
-                .findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
             peopleListFragment.refreshPeopleList();
         }
     }
 
+    private void refreshDetailFragment() {
+        PersonDetailFragment personDetailFragment = getDetailFragment();
+        if (personDetailFragment != null) {
+            personDetailFragment.refreshPersonDetails();
+        }
+    }
+
     private boolean navigateBackToPeopleListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(R.string.people);
+            }
+
+            // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
+            PersonDetailFragment personDetailFragment = getDetailFragment();
+            if (personDetailFragment != null && personDetailFragment.isAdded()) {
+                resetToolbarElevation();
+
+            }
             return true;
         }
         return false;
     }
 
     private Person getCurrentPerson() {
-        FragmentManager fragmentManager = getFragmentManager();
-        PersonDetailFragment personDetailFragment = (PersonDetailFragment) fragmentManager
-                .findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        PersonDetailFragment personDetailFragment = getDetailFragment();
 
         if (personDetailFragment == null) {
             return null;
@@ -353,5 +403,32 @@ public class PeopleManagementActivity extends AppCompatActivity
         Blog blog = WordPress.getCurrentBlog();
         int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
         fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+    }
+
+    private PeopleListFragment getListFragment() {
+        return (PeopleListFragment) getFragmentManager().findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+    }
+
+    private PersonDetailFragment getDetailFragment() {
+        return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+    }
+
+    // Toolbar elevation is removed in detail fragment for larger toolbar look
+    private void removeToolbarElevation() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(0);
+        }
+    }
+
+    private void resetToolbarElevation() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
+        }
+    }
+
+    public interface InvitationSender {
+        void send();
     }
 }

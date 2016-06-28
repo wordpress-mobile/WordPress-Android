@@ -384,6 +384,12 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_reader_tag");
                 instructions.setCurrentDateForPeopleProperty("last_time_unfollowed_reader_tag");
                 break;
+            case READER_SEARCH_LOADED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Loaded Search");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_loaded");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_search_loaded");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
@@ -874,6 +880,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Tapped Gravatar Tooltip");
                 break;
+            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Permissions Interrupted");
+                break;
             case ME_GRAVATAR_PERMISSIONS_DENIED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Gravatar Permissions Denied");
@@ -897,6 +907,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case ME_GRAVATAR_UPLOADED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Me - Gravatar Uploaded");
+                break;
+            case ME_GRAVATAR_UPLOAD_UNSUCCESSFUL:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Upload Unsuccessful");
+                break;
+            case ME_GRAVATAR_UPLOAD_EXCEPTION:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Me - Gravatar Upload Exception");
                 break;
             case MY_SITE_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

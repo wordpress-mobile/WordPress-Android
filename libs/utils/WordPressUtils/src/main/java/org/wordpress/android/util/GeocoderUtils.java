@@ -22,7 +22,7 @@ public final class GeocoderUtils {
         Geocoder gcd;
 
         try {
-            gcd = new Geocoder(context, Locale.getDefault());
+            gcd = new Geocoder(context, LanguageUtils.getCurrentDeviceLanguage(context));
         } catch (NullPointerException cannotIstantiateEx) {
             AppLog.e(AppLog.T.UTILS, "Cannot instantiate Geocoder", cannotIstantiateEx);
             return null;

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
@@ -81,7 +82,6 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -89,7 +89,7 @@ import java.util.TimerTask;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends Application {
+public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static Blog currentBlog;
     public static WordPressDB wpDB;
@@ -111,7 +111,7 @@ public class WordPress extends Application {
     private static BitmapLruCache mBitmapCache;
 
     /**
-     *  Updates Options for the current blog in background.
+     * Updates Options for the current blog in background.
      */
     public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
         protected boolean run() {
@@ -314,7 +314,7 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtils() {
         if (mRestClientUtils == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener);
+            mRestClientUtils = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener);
         }
         return mRestClientUtils;
     }
@@ -331,7 +331,7 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (mRestClientUtilsVersion1_1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
+            mRestClientUtilsVersion1_1 = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return mRestClientUtilsVersion1_1;
     }
@@ -339,7 +339,7 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtilsV1_2() {
         if (mRestClientUtilsVersion1_2 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_2 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
+            mRestClientUtilsVersion1_2 = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return mRestClientUtilsVersion1_2;
     }
@@ -347,7 +347,7 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtilsV1_3() {
         if (mRestClientUtilsVersion1_3 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion1_3 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
+            mRestClientUtilsVersion1_3 = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return mRestClientUtilsVersion1_3;
     }
@@ -355,7 +355,7 @@ public class WordPress extends Application {
     public static RestClientUtils getRestClientUtilsV0() {
         if (mRestClientUtilsVersion0 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtilsVersion0 = new RestClientUtils(requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
+            mRestClientUtilsVersion0 = new RestClientUtils(mContext, requestQueue, authenticator, mOnAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return mRestClientUtilsVersion0;
     }
@@ -479,6 +479,7 @@ public class WordPress extends Application {
 
         if (currentBlog != null && currentBlog.isHidden()) {
             wpDB.setDotComBlogsVisibility(id, true);
+            currentBlog.setHidden(false);
         }
     }
 
@@ -681,18 +682,6 @@ public class WordPress extends Application {
             setCurrentBlogAndSetVisible(blogId);
             wpDB.updateLastBlogId(blogId);
         }
-    }
-
-    /**
-     * Returns locale parameter used in REST calls which require the response to be localized
-     */
-    public static Map<String, String> getRestLocaleParams() {
-        String deviceLanguageCode = Locale.getDefault().getLanguage();
-        Map<String, String> params = new HashMap<>();
-        if (!TextUtils.isEmpty(deviceLanguageCode)) {
-            params.put("locale", deviceLanguageCode);
-        }
-        return params;
     }
 
     /**
