@@ -12,13 +12,16 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderPhotoViewerActivity;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.util.EnumSet;
 
 /**
  * displays a row of image thumbnails from a reader post - only shows when two or more images
@@ -60,6 +63,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
         mCountStr = context.getResources().getString(R.string.reader_label_image_count);
+        // TODO: base max count on width
         mMaxImageCount = DisplayUtils.isLandscape(context) ? 6 : 4;
     }
 
@@ -68,7 +72,8 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mContainer.removeAllViews();
 
         final String content = ReaderPostTable.getPostText(blogId, postId);
-        final ReaderImageList imageList = new ReaderImageScanner(content, isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
+        ReaderImageScanner scanner = new ReaderImageScanner(content, isPrivate);
+        final ReaderImageList imageList = scanner.getImageList(ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
         if (imageList.size() < MIN_IMAGE_COUNT) {
             mView.setVisibility(View.GONE);
             return;
@@ -101,12 +106,16 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                EnumSet<PhotoViewerOption> options = EnumSet.of(PhotoViewerOption.IS_GALLERY_IMAGE);
+                if (isPrivate) {
+                    options.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
+                }
                 ReaderActivityLauncher.showReaderPhotoViewer(
                         view.getContext(),
                         imageList.get(0),
                         content,
                         view,
-                        isPrivate,
+                        options,
                         0,
                         0);
             }

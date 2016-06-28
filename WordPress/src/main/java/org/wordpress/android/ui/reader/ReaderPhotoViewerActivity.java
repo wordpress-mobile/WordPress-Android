@@ -28,10 +28,9 @@ import org.wordpress.android.widgets.WPViewPager;
 public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
 
-    public static final int MIN_IMAGE_WIDTH = 160;
-
     private String mInitialImageUrl;
     private boolean mIsPrivate;
+    private boolean mIsGallery;
     private String mContent;
     private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
@@ -52,10 +51,12 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mIsGallery = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
         } else if (getIntent() != null) {
             mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
+            mIsGallery = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
@@ -78,7 +79,8 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             imageList = new ReaderImageList(mIsPrivate);
         } else {
             // otherwise content is HTML so parse images from it
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(MIN_IMAGE_WIDTH);
+            int minWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(minWidth);
         }
 
         // make sure initial image is in the list
@@ -108,6 +110,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         }
 
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
+        outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mIsGallery);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
 
         super.onSaveInstanceState(outState);
