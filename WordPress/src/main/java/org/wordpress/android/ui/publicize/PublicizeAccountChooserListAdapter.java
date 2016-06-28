@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.publicize;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -12,36 +11,71 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by Will on 6/24/16.
- */
-public class PublicizeAccountChooserListAdapter extends ArrayAdapter {
+public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<PublicizeAccountChooserListAdapter.ViewHolder> {
+    private List<PublicizeConnection> mConnectionItems;
+    private OnPublicizeAccountChooserListener mListener;
     private boolean mAreAccountsConnected;
+    private int mSelectedPosition;
 
-    public PublicizeAccountChooserListAdapter(Context context, int resource, ArrayList<PublicizeConnection> objects, boolean isConnected) {
-        super(context, resource, objects);
+    public PublicizeAccountChooserListAdapter(List<PublicizeConnection> connectionItems, OnPublicizeAccountChooserListener listener, boolean isConnected) {
+        mConnectionItems = connectionItems;
+        mListener = listener;
         mAreAccountsConnected = isConnected;
+        mSelectedPosition = 0;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.publicize_connection_list_item, viewGroup, false);
-        PublicizeConnection publicizeConnection = (PublicizeConnection)getItem(i);
-        WPNetworkImageView imageView = (WPNetworkImageView) rowView.findViewById(R.id.profile_pic);
-        imageView.setImageUrl(publicizeConnection.getExternalProfilePictureUrl().toString(), WPNetworkImageView.ImageType.PHOTO);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_connection_list_item, parent, false);
 
-        TextView name = (TextView) rowView.findViewById(R.id.name);
-        name.setText(publicizeConnection.getExternalDisplayName());
+        return new ViewHolder(view);
+    }
 
-        if (mAreAccountsConnected) {
-            RadioButton radioButton = (RadioButton) rowView.findViewById(R.id.radio_button);
-            radioButton.setVisibility(View.INVISIBLE);
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        final PublicizeConnection connection = mConnectionItems.get(position);
+        holder.mProfileImageView.setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
+        holder.mNameTextView.setText(connection.getExternalName());
+        holder.mRadioButton.setChecked(position == mSelectedPosition);
+
+        if (!mAreAccountsConnected) {
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mSelectedPosition = holder.getAdapterPosition();
+                        mListener.onAccountSelected(connection.keyringConnectionId);
+                    }
+                }
+            });
+        } else {
+            holder.mRadioButton.setVisibility(View.INVISIBLE);
         }
+    }
 
-        return rowView;
+    @Override
+    public int getItemCount() {
+        return mConnectionItems.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final RadioButton mRadioButton;
+        public final WPNetworkImageView mProfileImageView;
+        public final TextView mNameTextView;
+
+        public ViewHolder(View view) {
+            super(view);
+            mView = view;
+            mRadioButton = (RadioButton) view.findViewById(R.id.radio_button);
+            mProfileImageView = (WPNetworkImageView) view.findViewById(R.id.profile_pic);
+            mNameTextView = (TextView) view.findViewById(R.id.name);
+        }
+    }
+
+    public interface OnPublicizeAccountChooserListener {
+        void onAccountSelected(int keyringConnectionId);
     }
 }
