@@ -3,13 +3,12 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -18,14 +17,16 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.List;
 
 /**
- *
+ * displays a row of image thumbnails from a reader post - only shows when two or more images
+ * of a minimum size are found
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
-    private static final int MIN_IMAGE_WIDTH = 320;
+    private static final int MIN_IMAGE_WIDTH = 160;
+    private static final int MIN_IMAGE_COUNT = 2;
 
     private View mView;
-    private ViewGroup mContainer;
+    private LinearLayout mContainer;
     private int mThumbnailSize;
 
     public ReaderThumbnailStrip(Context context) {
@@ -50,7 +51,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
     public void initView(Context context) {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
-        mContainer = (ViewGroup) mView.findViewById(R.id.thumbnail_strip_container);
+        mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
     }
 
@@ -69,15 +70,19 @@ public class ReaderThumbnailStrip extends LinearLayout {
     public void loadThumbnails(@NonNull ReaderPost post) {
         mContainer.removeAllViews();
 
+        // TODO: it would be more efficient to rely on the attachments
         ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
         List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(MIN_IMAGE_WIDTH);
-        if (images.isEmpty()) {
+        if (images.size() < MIN_IMAGE_COUNT) {
             hideView();
             return;
         }
 
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         for (String imageUrl: images) {
-            View view = inflate(getContext(), R.layout.reader_thumbnail_strip_image, mContainer);
+            View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
+            mContainer.addView(view);
+
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
