@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -47,12 +49,13 @@ public class ReaderThumbnailStrip extends LinearLayout {
         initView(context);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ReaderThumbnailStrip(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
 
-    public void initView(Context context) {
+    private void initView(Context context) {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
@@ -76,7 +79,6 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mContainer.removeAllViews();
 
         // TODO: it would be more efficient to rely on the attachments
-        ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
         final ReaderImageList imageList = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
         if (imageList.size() < MIN_IMAGE_COUNT) {
             fadeOut();
