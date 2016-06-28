@@ -412,10 +412,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.layoutDiscover.setVisibility(View.GONE);
         }
 
-        // if this post has attachments, scan it for images and show a thumbnail strip of
-        // them - note that the thumbnail strip will take care of making itself visible
-        // TODO: this doesn't work if all the images are in a gallery
-        if (post.hasAttachments()) {
+        // if this post has attachments or contains a gallery, scan it for images and show a
+        // thumbnail strip of them - note that the thumbnail strip will take care of making
+        // itself visible
+        if (post.hasAttachments() || post.isGallery()) {
             holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
         } else {
             holder.thumbnailStrip.setVisibility(View.GONE);

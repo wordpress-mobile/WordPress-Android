@@ -363,6 +363,11 @@ public class ReaderPost {
         this.format = StringUtils.notNullStr(format);
     }
 
+    public boolean isGallery() {
+        return format != null && format.equals("gallery");
+    }
+
+
     public String getUrl() {
         return StringUtils.notNullStr(url);
     }
