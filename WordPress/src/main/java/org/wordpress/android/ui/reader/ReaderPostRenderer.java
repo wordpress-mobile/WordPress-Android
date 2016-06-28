@@ -74,14 +74,14 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                if (!mResourceVars.canShowTiledGallery) {
+                if (!mResourceVars.isWideDisplay) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
                 final String htmlContent = formatPostContentForWebView(mRenderBuilder
-                        .toString(), mResourceVars.canShowTiledGallery);
+                        .toString(), mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -309,7 +309,7 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
+    private String formatPostContentForWebView(final String content, boolean isWideDisplay) {
         // unique CSS class assigned to the gallery elements for easy selection
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
 
@@ -331,14 +331,14 @@ class ReaderPostRenderer {
 
         // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (isWideDisplay ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", li { line-height: 1.6em; font-size: 0.95em; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
         // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (isWideDisplay ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
@@ -374,9 +374,23 @@ class ReaderPostRenderer {
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
         .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
-        if (renderAsTiledGallery) {
+        if (isWideDisplay) {
             sbHtml
-            .append("  .tiled-gallery {")
+            .append(".alignleft {")
+            .append("    max-width: 100%;")
+            .append("    float: left;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-right: 32px;}")
+            .append(".alignright {")
+            .append("    max-width: 100%;")
+            .append("    float: right;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-left: 32px;}")
+
+            // tiled-gallery related styles
+            .append(".tiled-gallery {")
             .append("    clear:both;")
             .append("    overflow:hidden;}")
             .append(".tiled-gallery img {")
