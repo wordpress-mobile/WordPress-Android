@@ -1077,6 +1077,7 @@
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
@@ -1128,6 +1129,7 @@
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
+    <string name="reader_label_related_posts">Related Reading</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

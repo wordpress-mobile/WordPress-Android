@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Përdoruesi u hoq me sukses</string>
+	<string name="person_removed">U hoq me sukses @%1$s</string>
+	<string name="person_remove_confirmation_message">Nëse e hiqni %1$s, ai përdorues nuk do të jetë më në gjendje të hyjë në këtë sajt, por çfarëdo lënde e krijuar nga %1$s do të mbetet te sajti.\n\nDoni ende ta hiqni këtë përdorues?</string>
+	<string name="person_remove_confirmation_title">Hiqe %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">Sajtet në këtë listë s&amp;#8217;kanë postuar ndonjë gjë tani së fundi</string>
+	<string name="people">Persona</string>
+	<string name="edit_user">Përpunoni Përdoruesin</string>
+	<string name="role">Rol</string>
+	<string name="error_remove_user">S&amp;#8217;e hoqi dot përdoruesin</string>
+	<string name="error_update_role">S&amp;#8217;përditësoi dot rol përdoruesi</string>
+	<string name="error_fetch_people_list">S&amp;#8217;mori dot përdorues sajti</string>
 	<string name="gravatar_camera_and_media_permission_required">Që të mund të përzgjidhni ose bëni një foto, lypset leje</string>
 	<string name="error_updating_gravatar">Gabim teksa përditësohej Gravatari juaj</string>
 	<string name="error_locating_image">Gabim në ngarkimin e figurës së qethur</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Diç shkoi ters. S&amp;#8217;u kërkuan dot blerjet.</string>
 	<string name="delete_site_progress">Po fshihet sajti…</string>
 	<string name="delete_site_summary">Ky veprim s&amp;#8217;mund të zhbëhet. Fshirja e sajtit tuaj do të thotë heqje e krejt lëndës, kontribuesve dhe e përkatësive.</string>
-	<string name="delete_site_hint">Fshini sajtin tuaj</string>
+	<string name="delete_site_hint">Fshije sajtin</string>
 	<string name="export_site_hint">Eksportojeni sajtin tuaj si një kartelë XML</string>
 	<string name="are_you_sure">Jeni i Sigurt?</string>
 	<string name="export_site_summary">Nëse jeni i sigurt, ju lutemi, mos harroni të eksportoni lëndën tuaj tani. Nuk mund të rimerret më në të ardhmen.</string>
