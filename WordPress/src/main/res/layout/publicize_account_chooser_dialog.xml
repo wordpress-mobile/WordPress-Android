@@ -15,18 +15,18 @@
         android:text="New Text"
         android:id="@+id/message" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView_not_connected" />
+        android:id="@+id/not_connected_recyclerview" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Connected" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listview_connected" />
+        android:id="@+id/connected_recyclerview" />
 </LinearLayout>

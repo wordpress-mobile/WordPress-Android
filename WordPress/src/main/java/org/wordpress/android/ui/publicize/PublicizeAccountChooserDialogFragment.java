@@ -6,24 +6,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.PublicizeConnection;
 
 import java.util.ArrayList;
 
-/**
- * Created by Will on 6/19/16.
- */
-public class PublicizeAccountChooserDialogFragment extends DialogFragment {
+public class PublicizeAccountChooserDialogFragment extends DialogFragment implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
+    private RecyclerView mNotConnectedRecyclerView;
     private PublicizeConnection[] mPublicizeConnections;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
-    private int mCurrentSite;
+    private int mSelectedKeychainConnectionId = 0;
+    private int mCurrentSite = 0;
 
     @NonNull
     @Override
@@ -37,7 +36,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                PublicizeActions.connectStepTwo(1, 1);
+                PublicizeActions.connectStepTwo(mCurrentSite, mSelectedKeychainConnectionId);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -47,17 +46,18 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
             }
         });
 
-        ListView listView = (ListView) view.findViewById(R.id.listView_not_connected);
-        PublicizeAccountChooserListAdapter adapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, mNotConnectedAccounts, false);
+        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
+        mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
+        notConnectedAdapter.setHasStableIds(true);
+        mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
 
-        ListView listViewConnected = (ListView) view.findViewById(R.id.listview_connected);
-        PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(getActivity(), R.layout.publicize_connection_list_item, mConnectedAccounts, true);
-
-        listView.setAdapter(adapter);
+        RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
+        listViewConnected.setLayoutManager(new LinearLayoutManager(getContext()));
+        PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
         listViewConnected.setAdapter(connectedAdapter);
 
-        AlertDialog dialog = builder.create();
-        return dialog;
+        return builder.create();
     }
 
     public void setConnections(PublicizeConnection[] publicizeConnections) {
@@ -91,8 +91,12 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment {
         Bundle args = getArguments();
         if (args != null) {
             mCurrentSite = args.getInt("site_id");
-        } else {
-            mCurrentSite = 0;
         }
+    }
+
+    @Override
+    public void onAccountSelected(int keyringConnectionId) {
+        mNotConnectedRecyclerView.getAdapter().notifyDataSetChanged();
+        mSelectedKeychainConnectionId = keyringConnectionId;
     }
 }
