@@ -38,6 +38,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 PublicizeActions.connectStepTwo(mCurrentSite, mSelectedKeychainConnectionId);
+                dialogInterface.dismiss();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
