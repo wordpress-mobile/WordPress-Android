@@ -483,21 +483,38 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
         // add back arrow listener
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (mOriginalFlattenedMenuItems != null) {
-                    if (!mOriginalFlattenedMenuItems.equals(mItemsView.getAdapter().getCurrentMenuItems())) {
-                        showAlertDialog(
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        getActivity().onBackPressed();
-                                    }
-                                });
-                        return;
-                    }
-                }
-                getActivity().onBackPressed();
+            @Override
+            public void onClick(View v) {
+                dismissFragment();
             }
         });
+    }
+
+    public void dismissFragment(){
+        if (mOriginalFlattenedMenuItems != null) {
+            if (!mOriginalFlattenedMenuItems.equals(mItemsView.getAdapter().getCurrentMenuItems())) {
+                showAlertDialog(
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                forceBackPressed();
+                            }
+                        });
+                return;
+            }
+        }
+        forceBackPressed();
+    }
+
+    public void forceBackPressed(){
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            if (getActivity() instanceof MenusActivity) {
+                ((MenusActivity)getActivity()).forceBackPressed();
+            } else {
+                getActivity().onBackPressed();
+            }
+        }
     }
 
     @Override
