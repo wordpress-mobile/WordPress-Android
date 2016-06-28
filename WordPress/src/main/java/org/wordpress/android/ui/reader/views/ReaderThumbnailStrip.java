@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
@@ -24,10 +25,12 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
     private static final int MIN_IMAGE_WIDTH = 160;
     private static final int MIN_IMAGE_COUNT = 2;
+    private static final int MAX_IMAGE_COUNT = 4;
 
     private View mView;
     private LinearLayout mContainer;
     private int mThumbnailSize;
+    private String mCountStr;
 
     public ReaderThumbnailStrip(Context context) {
         super(context);
@@ -53,6 +56,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mView = inflate(context, R.layout.reader_thumbnail_strip, this);
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
+        mCountStr = context.getResources().getString(R.string.reader_label_image_count);
     }
 
     private void showView() {
@@ -68,6 +72,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
     }
 
     public void loadThumbnails(@NonNull ReaderPost post) {
+        // get rid of any views already added
         mContainer.removeAllViews();
 
         // TODO: it would be more efficient to rely on the attachments
@@ -78,15 +83,28 @@ public class ReaderThumbnailStrip extends LinearLayout {
             return;
         }
 
+        // add a separate imageView for each image up to the max
+        int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (String imageUrl: images) {
             View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
+            WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
 
-            WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+
+            numAdded++;
+            if (numAdded >= MAX_IMAGE_COUNT) {
+                break;
+            }
         }
+
+        // add the labels which include the image count
+        View view = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
+        TextView txtCount = (TextView) view.findViewById(R.id.text_gallery_count);
+        txtCount.setText(String.format(mCountStr, images.size()));
+        mContainer.addView(view);
 
         showView();
     }
