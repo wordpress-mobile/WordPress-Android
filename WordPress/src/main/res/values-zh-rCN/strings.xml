@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">已成功删除用户</string>
+	<string name="person_remove_confirmation_message">删除 %1$s 后，该用户将无法再访问此站点，但是 %1$s 创建的所有内容仍会保留在此站点上。\n\n仍要删除此用户吗？</string>
+	<string name="person_removed">已成功删除 @%1$s</string>
+	<string name="person_remove_confirmation_title">删除 %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">此列表中的站点最近未发布任何内容</string>
+	<string name="people">人员</string>
+	<string name="edit_user">编辑用户</string>
+	<string name="role">角色</string>
+	<string name="error_remove_user">无法删除用户</string>
+	<string name="error_fetch_people_list">无法检索站点用户</string>
+	<string name="error_update_role">无法更新用户角色</string>
 	<string name="gravatar_camera_and_media_permission_required">要选择或拍摄照片，请获取权限</string>
 	<string name="error_updating_gravatar">更新 Gravatar 时出错</string>
 	<string name="error_locating_image">查找已裁剪的图像时出错</string>

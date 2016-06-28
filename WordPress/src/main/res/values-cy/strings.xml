@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Defnyddiwr wedi ei dynnu\'n llwyddiannus</string>
+	<string name="person_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
+	<string name="person_removed">Wedi tynnu @%1$s yn llwydiannus</string>
+	<string name="person_remove_confirmation_title">Tynnu %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">Nid yw\'r gwefannau ar y rhestr hon wedi cofnodi dim yn ddiweddar</string>
+	<string name="people">Pobl</string>
+	<string name="edit_user">Golygu Defnyddiwr</string>
+	<string name="role">Rôl</string>
+	<string name="error_remove_user">Methu tynnu defnyddiwr</string>
+	<string name="error_fetch_people_list">Methu adfer defnyddiwr y wefan</string>
+	<string name="error_update_role">Methu diweddaru rôl defnyddiwr</string>
+	<string name="gravatar_camera_and_media_permission_required">Y caniatâd sydd eu hange i ddewis neu gipio llun</string>
 	<string name="error_updating_gravatar">Gwall wrth ddiweddaru eich Gravatar</string>
 	<string name="error_locating_image">Gwall wrth ganfod y ddelwedd wedi ei thocio</string>
 	<string name="error_refreshing_gravatar">Gwall wrth ail-lwytho eich Gravatar</string>
 	<string name="gravatar_tip">Newydd! Tapiwch eich Gravatar i\'w newid!</string>
+	<string name="error_cropping_image">Bu gwall wrth docio eich delwedd.</string>
+	<string name="launch_your_email_app">Cychwyn eich rhaglen e-bost</string>
+	<string name="checking_email">Gwirio e-bost</string>
+	<string name="not_on_wordpress_com">Nid ar WordPress.com?</string>
+	<string name="magic_link_unavailable_error_message">Ddim ar gael ar hyn o bryd. Rhowch eich cyfrinair</string>
+	<string name="check_your_email">Gwiriwch eich e-bost</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Derbyn dolen wedi ei anfon at eich e-bost er mwyn mewngofnodi\'n syth</string>
+	<string name="logging_in">Mewngofnodi</string>
+	<string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
+	<string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
+	<string name="jetpack_not_connected_message">Mae\'r ategyn Jetpack wedi\'i osod, ond heb ei gysylltu â WordPress.com. Ydych chi am gysylltu Jetpack?</string>
+	<string name="username_email">E-bost neu enw defnyddiwr</string>
+	<string name="jetpack_not_connected">Nid yw\'r ategyn jetpack wedi ei gysylltu</string>
+	<string name="new_editor_reflection_error">Nid yw\'r golygydd gweledol yn gydnaws â\'ch dyfais. Cafodd\n         ei analluogi\'n awtomatig.</string>
+	<string name="stats_insights_latest_post_no_title">(dim teit)</string>
+	<string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
 	<string name="plans_post_purchase_text_themes">Mae gennych nawr fynediad diderfyn i themâu Premiwm. Er mwyn cychwyn arni, gallwch gael rhagolwg o unrhyw thema ar eich gwefan.</string>
 	<string name="plans_post_purchase_button_themes">Pori\'r Themâu</string>
 	<string name="plans_post_purchase_title_themes">Canfod y thema Premiwm perffaith</string>
@@ -30,7 +58,6 @@
 	<string name="purchases_request_error">Aeth rhywbeth o\'i le. Methu prynu nwyddau.</string>
 	<string name="delete_site_progress">Wrthi\'n dileu gwefan…</string>
 	<string name="delete_site_summary">Nid oes modd dadwneud y weithred hon. Bydd dileu\'r eich gwefan yn cael gwared ar yr holl gynnwys, cyfranwyr, a pharthau\'r wefan.</string>
-	<string name="delete_site_hint">Dileu eich gwefan</string>
 	<string name="export_site_hint">Allforio eich gwefan i ffeil XML</string>
 	<string name="are_you_sure">Ydych chi\'n Siŵr?</string>
 	<string name="export_site_summary">Os ydych yn siŵr, cymrwch eich amser ac allforio eich cynnwys nawr. Ni fydd modd ei adfer yn y dyfodol.</string>
@@ -418,6 +445,7 @@
 	<string name="me_disconnect_from_wordpress_com">Datgysylltwch o WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Cysylltwch i WordPress.com</string>
 	<string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
+	<string name="account_settings">Gosodiadau\'r Cyfrif</string>
 	<string name="me_btn_support">Cymorth a Chefnogaeth</string>
 	<string name="site_picker_cant_hide_current_site">Nid oedd "%s" wedi ei guddio gan taw hi yw\'r wefan gyfredol</string>
 	<string name="site_picker_create_dotcom">Creu gwefan WordPress.com</string>

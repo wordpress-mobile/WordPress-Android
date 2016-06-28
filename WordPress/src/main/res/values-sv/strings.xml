@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">Användaren togs bort</string>
+	<string name="person_remove_confirmation_message">Om du tar bort %1$s kommer denna användare inte längre att ha åtkomst till den här webbplatsen, men allt innehåll som skapats av %1$s kommer att finnas kvar.\n\nVill du fortfarande ta bort denna användare?</string>
+	<string name="person_removed">Har tagit bort @%1$s</string>
+	<string name="person_remove_confirmation_title">Ta bort %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">Webbplatserna i denna lista har inte publicerat några inlägg på senare tid</string>
+	<string name="people">Människor</string>
+	<string name="edit_user">Redigera användare</string>
+	<string name="role">Roll</string>
+	<string name="error_remove_user">Kunde inte ta bort användare</string>
+	<string name="error_fetch_people_list">Kunde inte hämta webbplatsanvändare</string>
+	<string name="error_update_role">Kunde inte uppdatera användarroll</string>
 	<string name="gravatar_camera_and_media_permission_required">Behörigheter krävs för att välja eller ta ett foto</string>
 	<string name="error_updating_gravatar">Det gick inte att uppdatera din Gravatar</string>
 	<string name="error_locating_image">Det gick inte att hitta den beskurna bilden</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Något gick fel. Kunde inte hämta köp.</string>
 	<string name="delete_site_progress">Raderar webbplats...</string>
 	<string name="delete_site_summary">Denna handling kan inte ångras. När du raderar din webbplats raderas allt innehåll, alla författare, och alla domäner från din webbplats.</string>
-	<string name="delete_site_hint">Ta bort webbplats</string>
+	<string name="delete_site_hint">Radera webbplats</string>
 	<string name="export_site_hint">Exportera din webbplats till XML-fil</string>
 	<string name="are_you_sure">Är du säker?</string>
 	<string name="export_site_summary">Om du är säker, vänligen se till att du tar dig tid att exportera ditt innehåll nu. Ditt innehåll kan inte återskapas i framtiden.</string>
