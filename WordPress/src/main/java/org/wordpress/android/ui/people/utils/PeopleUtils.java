@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PeopleUtils {
+    // We limit followers we display to 1000 to avoid API performance issues
+    public static int FOLLOWER_PAGE_LIMIT = 500;
     public static int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
@@ -83,7 +85,7 @@ public class PeopleUtils {
                                 isEmailFollower);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
-                        boolean isEndOfList = page >= numberOfPages;
+                        boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
                         callback.onSuccess(people, pageFetched, isEndOfList);
                     }
                     catch (JSONException e) {
