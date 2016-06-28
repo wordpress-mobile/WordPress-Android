@@ -22,6 +22,9 @@ import java.util.List;
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
+    private static final int MIN_IMAGE_WIDTH = 320;
+
+    private View mView;
     private ViewGroup mContainer;
     private int mThumbnailSize;
 
@@ -46,29 +49,30 @@ public class ReaderThumbnailStrip extends LinearLayout {
     }
 
     public void initView(Context context) {
-        View view = inflate(context, R.layout.reader_thumbnail_strip_container, this);
-        mContainer = (ViewGroup) view.findViewById(R.id.thumbnail_strip_container);
+        mView = inflate(context, R.layout.reader_thumbnail_strip, this);
+        mContainer = (ViewGroup) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
     }
 
-    private void showContainer() {
-        if (mContainer.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mContainer, AniUtils.Duration.SHORT);
+    private void showView() {
+        if (mView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
         }
     }
 
-    private void hideContainer() {
-        if (mContainer.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(mContainer, AniUtils.Duration.SHORT);
+    private void hideView() {
+        if (mView.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mView, AniUtils.Duration.SHORT);
         }
     }
 
     public void loadThumbnails(@NonNull ReaderPost post) {
         mContainer.removeAllViews();
+
         ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-        List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(MIN_IMAGE_WIDTH);
         if (images.isEmpty()) {
-            hideContainer();
+            hideView();
             return;
         }
 
@@ -79,6 +83,6 @@ public class ReaderThumbnailStrip extends LinearLayout {
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
         }
 
-        showContainer();
+        showView();
     }
 }

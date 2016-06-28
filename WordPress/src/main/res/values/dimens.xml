@@ -86,7 +86,7 @@
     <dimen name="reader_related_post_margin">@dimen/margin_large</dimen>
     <dimen name="reader_related_post_image_size">48dp</dimen>
 
-    <dimen name="reader_thumbnail_strip_image_size">36dp</dimen>
+    <dimen name="reader_thumbnail_strip_image_size">48dp</dimen>
 
     <!-- height of divider between cards -->
     <dimen name="reader_card_gutters">12dp</dimen>
