@@ -25,7 +25,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/margin_large">
 
                     <include
                         layout="@layout/reader_include_post_detail_header"
