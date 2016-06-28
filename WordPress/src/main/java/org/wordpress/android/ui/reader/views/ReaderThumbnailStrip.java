@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -71,13 +72,13 @@ public class ReaderThumbnailStrip extends LinearLayout {
         }
     }
 
-    public void loadThumbnails(@NonNull ReaderPost post) {
+    public void loadThumbnails(@NonNull final ReaderPost post) {
         // get rid of any views already added
         mContainer.removeAllViews();
 
         // TODO: it would be more efficient to rely on the attachments
         ReaderImageScanner scanner = new ReaderImageScanner(post.getText(), post.isPrivate);
-        List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(MIN_IMAGE_WIDTH);
+        final List<String> images = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(MIN_IMAGE_WIDTH);
         if (images.size() < MIN_IMAGE_COUNT) {
             hideView();
             return;
@@ -86,13 +87,27 @@ public class ReaderThumbnailStrip extends LinearLayout {
         // add a separate imageView for each image up to the max
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (String imageUrl: images) {
+        for (final String imageUrl: images) {
             View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
             mContainer.addView(view);
 
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
+
+            imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            view.getContext(),
+                            imageUrl,
+                            post.getText(),
+                            view,
+                            post.isPrivate,
+                            0,
+                            0);
+                }
+            });
 
             numAdded++;
             if (numAdded >= MAX_IMAGE_COUNT) {
@@ -101,10 +116,25 @@ public class ReaderThumbnailStrip extends LinearLayout {
         }
 
         // add the labels which include the image count
-        View view = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
-        TextView txtCount = (TextView) view.findViewById(R.id.text_gallery_count);
+        View labelView = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
+        TextView txtCount = (TextView) labelView.findViewById(R.id.text_gallery_count);
         txtCount.setText(String.format(mCountStr, images.size()));
-        mContainer.addView(view);
+        mContainer.addView(labelView);
+
+        // tapping the label view opens the first image
+        labelView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReaderActivityLauncher.showReaderPhotoViewer(
+                        view.getContext(),
+                        images.get(0),
+                        post.getText(),
+                        view,
+                        post.isPrivate,
+                        0,
+                        0);
+            }
+        });
 
         showView();
     }
