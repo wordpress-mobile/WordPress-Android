@@ -446,7 +446,7 @@ class ReaderPostRenderer {
         }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
-        sbHtml.append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
+        sbHtml
         .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
