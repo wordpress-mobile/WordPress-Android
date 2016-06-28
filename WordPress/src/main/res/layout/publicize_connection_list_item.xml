@@ -9,16 +9,16 @@
         android:id="@+id/radio_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:clickable="false"/>
+        android:clickable="false" />
 
     <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/profile_pic"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/profile_pic"/>
+        android:layout_height="100dp" />
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"/>
+        android:layout_height="wrap_content" />
 
 </org.wordpress.android.widgets.CheckableLinearLayout>
