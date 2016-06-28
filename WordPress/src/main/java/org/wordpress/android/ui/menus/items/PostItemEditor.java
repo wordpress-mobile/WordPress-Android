@@ -71,6 +71,9 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         emptyTextView.setText(getContext().getString(R.string.menu_item_type_post_empty_list));
         mPostListView.setEmptyView(emptyTextView);
 
+        if (mPostListView.getCount() > 0)
+            mPostListView.setSelection(0);
+
         mPostListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -212,9 +215,15 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         menuItem.typeFamily = "post_type";
         menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
 
-        PostsListPost post = mFilteredPosts.get(mPostListView.getCheckedItemPosition());
-        if (post != null && post.getRemotePostId() != null) {
-            menuItem.contentId = Long.valueOf(post.getRemotePostId());
+        if (mPostListView.getCount() > 0) {
+            int selPos = mPostListView.getCheckedItemPosition();
+            if (selPos == -1 ) {
+                selPos = 0;
+            }
+            PostsListPost post = mFilteredPosts.get(selPos);
+            if (post != null && post.getRemotePostId() != null) {
+                menuItem.contentId = Long.valueOf(post.getRemotePostId());
+            }
         }
     }
 

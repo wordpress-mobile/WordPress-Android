@@ -168,7 +168,6 @@ public class MenuItemsView extends RelativeLayout {
         return mItemAdapter.getCurrentMenuItems();
     }
 
-
     private boolean hasAdapter() {
         return (mItemAdapter != null);
     }

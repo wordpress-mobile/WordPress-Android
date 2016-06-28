@@ -3,11 +3,14 @@ package org.wordpress.android.ui.menus;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +68,9 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     private int mCurrentMenuItemBeingEdited = -1;
     private boolean mIsNewItem = false;
     private EditMenuItemDialog mDialog;
+    private Toolbar mToolbar;
+    private List<MenuItemModel> mOriginalFlattenedMenuItems;
+    private int mOriginalMenuSelectionIdx;
 
 
     @Override
@@ -259,6 +265,11 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.menus_fragment, container, false);
+
+        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        setupToolbar();
+
         mAddEditRemoveControl = (MenuAddEditRemoveView) view.findViewById(R.id.menu_add_edit_remove_view);
         mAddEditRemoveControl.setMenuActionListener(new MenuAddEditRemoveView.MenuAddEditRemoveActionListener() {
 
@@ -350,28 +361,20 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         mMenusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mMenusSpinner.getItems().size() == (position + 1)) {
-                    //clicked on "add new menu"
 
-                    //for new menus, given we might be off line, it' best to not try creating a default menu right away
-                    // (as opposed to how the calypso web does this)
-                    //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
-                    //that's why we set the menu within the control to null
-                    mAddEditRemoveControl.setMenu(null);
-                    mItemsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                if (mOriginalMenuSelectionIdx == position) return;
 
-                } else {
-                    MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
-                    mAddEditRemoveControl.setMenu(model);
-
-                    if (!model.isSpecialMenu()) {
-                        mCurrentMenuForLocation = model;
+                if (mOriginalFlattenedMenuItems != null) {
+                    if (!mOriginalFlattenedMenuItems.equals(mItemsView.getAdapter().getCurrentMenuItems())) {
+                        //the collections are different
+                        mMenusSpinner.setSelection(mOriginalMenuSelectionIdx);
+                        showAlertDialog(position);
+                        return;
                     }
-
-                    //show items
-                    mItemsView.hideEmptyView();
-                    mItemsView.setMenu(model);
                 }
+
+                changeMenuSpinnerSelection(position);
+
             }
 
             @Override
@@ -413,8 +416,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
                     if (!bFound) {
                         // select the Default Menu
-                        mMenusSpinner.setSelection(0);
                         mCurrentMenuForLocation = (MenuModel) mMenusSpinner.getItems().get(0);
+                        mMenusSpinner.setSelection(0);
                     }
                 }
             }
@@ -428,6 +431,51 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         mItemsView.setListener(this);
 
         return view;
+    }
+
+    private void changeMenuSpinnerSelection(int position) {
+        if (mMenusSpinner.getItems().size() == (position + 1)) {
+            //clicked on "add new menu"
+
+            //for new menus, given we might be off line, it' best to not try creating a default menu right away
+            // (as opposed to how the calypso web does this)
+            //but wait for the user to enter a name for the menu and click SAVE on the AddRemoveEdit view control
+            //that's why we set the menu within the control to null
+            mAddEditRemoveControl.setMenu(null);
+            mItemsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+
+        } else {
+            MenuModel model = (MenuModel) mMenusSpinner.getItems().get(position);
+            mAddEditRemoveControl.setMenu(model);
+
+            if (!model.isSpecialMenu()) {
+                mCurrentMenuForLocation = model;
+            }
+
+            //show items
+            mItemsView.hideEmptyView();
+            mItemsView.setMenu(model);
+            mOriginalFlattenedMenuItems = copyFlattenedMenuItemList(mItemsView.getCurrentMenuItems());
+            mOriginalMenuSelectionIdx = position;
+        }
+    }
+
+    private List<MenuItemModel> copyFlattenedMenuItemList(List<MenuItemModel> origList) {
+        ArrayList<MenuItemModel> copyList = new ArrayList<>();
+        copyList.addAll(origList);
+        return copyList;
+    }
+
+    private void setupToolbar() {
+        if (mToolbar == null || !isAdded()) return;
+
+        // add back arrow listener
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                //TODO check if dirty
+
+            }
+        });
     }
 
     @Override
@@ -810,4 +858,25 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
     @Override public void onCredentialsValidated(Exception error) {
         // no-op
     }
+
+    private void showAlertDialog(final int position) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.menu_item_changes_not_saved_title));
+        dialogBuilder.setMessage(getResources().getText(R.string.menu_item_changes_not_saved));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mMenusSpinner.setSelection(position);
+                        changeMenuSpinnerSelection(position);
+                    }
+                });
+        dialogBuilder.setNegativeButton(
+                getResources().getText(R.string.no),
+                null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
+
+    }
+
 }

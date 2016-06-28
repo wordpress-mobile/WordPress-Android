@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import org.wordpress.android.util.CollectionUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +24,24 @@ public class MenuModel implements NameInterface {
     public static final long ADD_MENU_ID = -1;
     public static final long DEFAULT_MENU_ID = -2;
     public static final long NO_MENU_ID = -3;
+
+    public MenuModel () {
+    }
+
+    public MenuModel (MenuModel orig) {
+        siteId = orig.siteId;
+        menuId = orig.menuId;
+        name = orig.name;
+        details = orig.details;
+        if (orig.locations != null) {
+            locations = new ArrayList<>();
+            locations.addAll(orig.locations);
+        }
+        if (orig.menuItems != null) {
+            menuItems = new ArrayList<>();
+            menuItems.addAll(orig.menuItems);
+        }
+    }
 
     @Override
     public boolean equals(Object other) {
