@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,6 +15,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
@@ -60,9 +62,13 @@ public class ReaderWebView extends WebView {
 
     private boolean mIsDestroyed;
 
+    private final int mBoundedWidth;
 
     public ReaderWebView(Context context) {
         super(context);
+
+        mBoundedWidth = 0;
+
         init();
     }
 
@@ -78,11 +84,21 @@ public class ReaderWebView extends WebView {
 
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BoundedWidth);
+        mBoundedWidth = a.getDimensionPixelSize(R.styleable.BoundedWidth_bounded_width, 0);
+        a.recycle();
+
         init();
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BoundedWidth);
+        mBoundedWidth = a.getDimensionPixelSize(R.styleable.BoundedWidth_bounded_width, 0);
+        a.recycle();
+
         init();
     }
 
@@ -112,6 +128,16 @@ public class ReaderWebView extends WebView {
                 CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
             }
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if(mBoundedWidth > 0 && mBoundedWidth < MeasureSpec.getSize(widthMeasureSpec)) {
+            int measureMode = MeasureSpec.getMode(widthMeasureSpec);
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(mBoundedWidth, measureMode);
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public void clearContent() {

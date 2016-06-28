@@ -82,4 +82,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="BoundedWidth">
+        <attr name="bounded_width" format="dimension" />
+    </declare-styleable>
+
 </resources>
