@@ -22,7 +22,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
     private String mSocialNetwork;
-    private int mSelectedKeychainConnectionId = 0;
+    private int mSelectedIndex = 0;
     private int mCurrentSite = 0;
 
     @NonNull
@@ -37,8 +37,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                PublicizeActions.connectStepTwo(mCurrentSite, mSelectedKeychainConnectionId);
-                dialogInterface.dismiss();
+                connectAndDismiss(dialogInterface);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -99,9 +98,15 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         }
     }
 
+    private void connectAndDismiss(DialogInterface dialogInterface) {
+        int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
+        PublicizeActions.connectStepTwo(mCurrentSite, keychainId);
+        dialogInterface.dismiss();
+    }
+
     @Override
-    public void onAccountSelected(int keyringConnectionId) {
+    public void onAccountSelected(int selectedIndex) {
+        mSelectedIndex = selectedIndex;
         mNotConnectedRecyclerView.getAdapter().notifyDataSetChanged();
-        mSelectedKeychainConnectionId = keyringConnectionId;
     }
 }

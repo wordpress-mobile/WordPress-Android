@@ -46,7 +46,7 @@ public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<Pub
                 public void onClick(View view) {
                     if (mListener != null) {
                         mSelectedPosition = holder.getAdapterPosition();
-                        mListener.onAccountSelected(connection.connectionId);
+                        mListener.onAccountSelected(mSelectedPosition);
                     }
                 }
             });
@@ -76,6 +76,6 @@ public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<Pub
     }
 
     public interface OnPublicizeAccountChooserListener {
-        void onAccountSelected(int keyringConnectionId);
+        void onAccountSelected(int selectedIndex);
     }
 }
