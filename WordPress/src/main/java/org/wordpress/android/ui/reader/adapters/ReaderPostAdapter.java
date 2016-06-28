@@ -72,7 +72,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
-    private static final boolean EXCLUDE_TEXT_COLUMN = false;
+    private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
     // Longreads says that people can read 250 words per minute
@@ -412,7 +412,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.layoutDiscover.setVisibility(View.GONE);
         }
 
-        holder.thumbnailStrip.loadThumbnails(post);
+        // if this post has attachments, scan it for images and show a thumbnail strip of
+        // them - note that the thumbnail strip will take care of making itself visible
+        if (post.hasAttachments()) {
+            holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
+        } else {
+            holder.thumbnailStrip.setVisibility(View.GONE);
+        }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

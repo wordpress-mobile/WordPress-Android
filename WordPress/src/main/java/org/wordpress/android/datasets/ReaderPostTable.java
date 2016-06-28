@@ -283,6 +283,13 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static String getPostText(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT text FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                args);
+    }
+
     public static boolean postExists(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),

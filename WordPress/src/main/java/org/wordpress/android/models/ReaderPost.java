@@ -452,7 +452,7 @@ public class ReaderPost {
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
     }
-    boolean hasAttachments() {
+    public boolean hasAttachments() {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 

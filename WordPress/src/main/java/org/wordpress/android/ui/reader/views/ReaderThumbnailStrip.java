@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPhotoViewerActivity;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -27,11 +27,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderThumbnailStrip extends LinearLayout {
 
     private static final int MIN_IMAGE_COUNT = 2;
-    private static final int MAX_IMAGE_COUNT = 4;
 
     private View mView;
     private LinearLayout mContainer;
     private int mThumbnailSize;
+    private int mMaxImageCount;
     private String mCountStr;
 
     public ReaderThumbnailStrip(Context context) {
@@ -60,28 +60,17 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
         mCountStr = context.getResources().getString(R.string.reader_label_image_count);
+        mMaxImageCount = DisplayUtils.isLandscape(context) ? 6 : 4;
     }
 
-    private void fadeIn() {
-        if (mView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
-        }
-    }
-
-    private void fadeOut() {
-        if (mView.getVisibility() == View.VISIBLE) {
-            AniUtils.fadeOut(mView, AniUtils.Duration.SHORT);
-        }
-    }
-
-    public void loadThumbnails(@NonNull final ReaderPost post) {
+    public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
         // get rid of any views already added
         mContainer.removeAllViews();
 
-        // TODO: it would be more efficient to rely on the attachments
-        final ReaderImageList imageList = new ReaderImageScanner(post.getText(), post.isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
+        final String content = ReaderPostTable.getPostText(blogId, postId);
+        final ReaderImageList imageList = new ReaderImageScanner(content, isPrivate).getImageList(ReaderPhotoViewerActivity.MIN_IMAGE_WIDTH);
         if (imageList.size() < MIN_IMAGE_COUNT) {
-            fadeOut();
+            mView.setVisibility(View.GONE);
             return;
         }
 
@@ -97,7 +86,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
             numAdded++;
-            if (numAdded >= MAX_IMAGE_COUNT) {
+            if (numAdded >= mMaxImageCount) {
                 break;
             }
         }
@@ -115,14 +104,16 @@ public class ReaderThumbnailStrip extends LinearLayout {
                 ReaderActivityLauncher.showReaderPhotoViewer(
                         view.getContext(),
                         imageList.get(0),
-                        post.getText(),
+                        content,
                         view,
-                        post.isPrivate,
+                        isPrivate,
                         0,
                         0);
             }
         });
 
-        fadeIn();
+        if (mView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);
+        }
     }
 }
