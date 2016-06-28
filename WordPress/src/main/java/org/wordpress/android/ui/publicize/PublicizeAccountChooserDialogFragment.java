@@ -21,6 +21,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private PublicizeConnection[] mPublicizeConnections;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
+    private String mSocialNetwork;
     private int mSelectedKeychainConnectionId = 0;
     private int mCurrentSite = 0;
 
@@ -45,6 +46,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
                 dialogInterface.cancel();
             }
         });
+        builder.setTitle(getString(R.string.connecting_social_network, mSocialNetwork));
         builder.setMessage(getString(R.string.connection_chooser_message));
 
         mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
@@ -92,6 +94,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         Bundle args = getArguments();
         if (args != null) {
             mCurrentSite = args.getInt("site_id");
+            mSocialNetwork = args.getString("social_network");
         }
     }
 
