@@ -424,7 +424,7 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         if (mUsernameButtons.size() == 0) {
-            ToastUtils.showToast(getActivity(), R.string.invite_error_no_usenames);
+            ToastUtils.showToast(getActivity(), R.string.invite_error_no_usernames);
             return;
         }
 
@@ -437,8 +437,8 @@ public class PeopleInviteFragment extends Fragment implements
 
         if (invalidCount > 0) {
             ToastUtils.showToast(getActivity(), StringUtils.getQuantityString(getActivity(), 0,
-                    R.string.invite_error_invalid_usenames_one,
-                    R.string.invite_error_invalid_usenames_multiple, invalidCount));
+                    R.string.invite_error_invalid_usernames_one,
+                    R.string.invite_error_invalid_usernames_multiple, invalidCount));
             return;
         }
 
