@@ -60,16 +60,14 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     }
 
     private void configureRecyclerViews(View view) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
         mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
-        mNotConnectedRecyclerView.setLayoutManager(linearLayoutManager);
+        mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
         notConnectedAdapter.setHasStableIds(true);
         mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
 
         RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
-        listViewConnected.setLayoutManager(linearLayoutManager);
+        listViewConnected.setLayoutManager(new LinearLayoutManager(getActivity()));
         PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
         listViewConnected.setAdapter(connectedAdapter);
     }
