@@ -165,6 +165,9 @@ public class PeopleListFragment extends Fragment {
                                     stringId = R.string.error_fetch_followers_list;
                                     break;
                                 case EMAIL_FOLLOWERS:
+                                    stringId = R.string.error_fetch_email_followers_list;
+                                    break;
+                                case VIEWERS:
                                     stringId = R.string.error_fetch_viewers_list;
                                     break;
                             }
