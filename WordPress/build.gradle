@@ -22,7 +22,7 @@ apply plugin: 'io.fabric'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    
+
     dexOptions {
         jumboMode = true
         javaMaxHeapSize = "4g"
