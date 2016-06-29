@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
@@ -90,6 +92,11 @@ public class PeopleListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
+
+                Blog blog = WordPress.getBlog(mLocalTableBlogID);
+                if (blog == null || !blog.isPrivate()) {
+                    list.remove(PeopleListFilter.VIEWERS);
+                }
                 return list;
             }
 
@@ -126,6 +133,8 @@ public class PeopleListFragment extends Fragment {
                                 return getString(R.string.people_empty_list_filtered_followers);
                             case EMAIL_FOLLOWERS:
                                 return getString(R.string.people_empty_list_filtered_email_followers);
+                            case VIEWERS:
+                                return getString(R.string.people_empty_list_filtered_viewers);
                             default:
                                 // A site should always have at least 1 user, assuming there is an error, return empty
                                 return "";
@@ -150,7 +159,7 @@ public class PeopleListFragment extends Fragment {
                                     stringId = R.string.error_fetch_followers_list;
                                     break;
                                 case EMAIL_FOLLOWERS:
-                                    stringId = R.string.error_fetch_email_followers_list;
+                                    stringId = R.string.error_fetch_viewers_list;
                                     break;
                             }
                             break;
