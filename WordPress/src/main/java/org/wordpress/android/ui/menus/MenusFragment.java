@@ -94,7 +94,10 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 // make sure we don't intercept another create request
                 if (requestId != mCurrentCreateRequestId) return;
 
-                // TODO: will local-only changes be affected when refreshing menus?
+                //reset original flattened menu items
+                mOriginalFlattenedMenuItems = copyFlattenedMenuItemList(mItemsView.getCurrentMenuItems());
+                mOriginalMenuSelectionIdx = mMenusSpinner.getSelectedItemPosition();
+
                 //save new menu to local DB here
                 saveMenuBackground(menu);
 
@@ -106,7 +109,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 addMenuToCurrentList(menu);
                 // enable the action UI elements
                 mAddEditRemoveControl.setActive(true);
-                // TODO: should updating the menu be handled here or in MenusRestWPCom?
+
                 //now update the menu so the menu location will be saved server-side
                 mCurrentUpdateRequestId = mRestWPCom.updateMenu(menu);
             }
@@ -193,6 +196,10 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 if (requestId != mCurrentUpdateRequestId) return;
                 //update menu in local DB here
                 saveMenuBackground(menu);
+
+                //reset original flattened menu items
+                mOriginalFlattenedMenuItems = copyFlattenedMenuItemList(mItemsView.getCurrentMenuItems());
+                mOriginalMenuSelectionIdx = mMenusSpinner.getSelectedItemPosition();
 
                 if (!isAdded()) return;
 
