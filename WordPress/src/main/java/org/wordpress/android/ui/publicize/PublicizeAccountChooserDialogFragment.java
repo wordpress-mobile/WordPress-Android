@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -61,6 +62,15 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         listViewConnected.setAdapter(connectedAdapter);
 
         return builder.create();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        Activity activity = getActivity();
+        if (activity != null && activity instanceof DialogInterface.OnDismissListener) {
+            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+        }
     }
 
     public void setConnections(PublicizeConnection[] publicizeConnections) {
