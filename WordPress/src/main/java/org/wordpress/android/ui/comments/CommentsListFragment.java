@@ -98,7 +98,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         }
 
         if (savedInstanceState != null) {
-            mCommentAdapterState = savedInstanceState.getParcelable(CommentAdapterState.TAG);
+            mCommentAdapterState = savedInstanceState.getParcelable(CommentAdapterState.KEY);
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -529,7 +529,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         }
 
         if (hasAdapter()) {
-            outState.putParcelable(CommentAdapterState.TAG, getAdapter().getAdapterState());
+            outState.putParcelable(CommentAdapterState.KEY, getAdapter().getAdapterState());
         }
 
         super.onSaveInstanceState(outState);

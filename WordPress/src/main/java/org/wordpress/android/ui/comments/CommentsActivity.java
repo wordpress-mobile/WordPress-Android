@@ -235,8 +235,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final int accountId, final Comment comment,
-                                  final CommentStatus newStatus) {
+    public void onModerateComment(final int accountId, final Comment comment, final CommentStatus newStatus) {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
@@ -249,10 +248,8 @@ public class CommentsActivity extends AppCompatActivity
                     new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(CommentActionResult result) {
-                            if (isListeningForModerationResult()) {
-                                EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
-                                        (result.isSuccess(), true, comment.commentID, newStatus));
-                            }
+                            EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
+                                    (result.isSuccess(), true, comment.commentID, newStatus));
                         }
                     });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETE) {
@@ -288,10 +285,8 @@ public class CommentsActivity extends AppCompatActivity
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(CommentActionResult result) {
-                            if (isListeningForModerationResult()) {
-                                EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
-                                        (result.isSuccess(), true, comment.commentID, newStatus));
-                            }
+                            EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
+                                    (result.isSuccess(), true, comment.commentID, newStatus));
                         }
                     });
                 }
@@ -320,10 +315,6 @@ public class CommentsActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private boolean isListeningForModerationResult() {
-        return EventBus.getDefault().hasSubscriberForEvent(CommentEvents.CommentModerationFinishedEvent.class);
     }
 
 }

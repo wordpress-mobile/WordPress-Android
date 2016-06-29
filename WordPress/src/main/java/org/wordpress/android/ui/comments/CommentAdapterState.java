@@ -10,7 +10,7 @@ import java.util.HashSet;
  * Used to store state of {@link CommentAdapter}
  */
 public class CommentAdapterState implements Parcelable {
-    public static final String TAG = "comments_adapter_state";
+    public static final String KEY = "comments_adapter_state";
 
     private HashSet<Long> mSelectedComments;
     private HashSet<Long> mModeratedCommentsId;
