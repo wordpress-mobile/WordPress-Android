@@ -37,7 +37,8 @@ public class PeopleTable {
                 + "subscribed              TEXT,"
                 + "is_follower             BOOLEAN DEFAULT false,"
                 + "is_email_follower       BOOLEAN DEFAULT false,"
-                + "PRIMARY KEY (person_id, local_blog_id, is_follower)"
+                + "is_viewer               BOOLEAN DEFAULT false,"
+                + "PRIMARY KEY (person_id, local_blog_id, is_follower, is_viewer)"
                 + ");");
     }
 
@@ -69,6 +70,7 @@ public class PeopleTable {
         values.put("subscribed", person.getSubscribed());
         values.put("is_follower", person.isFollower());
         values.put("is_email_follower", person.isEmailFollower());
+        values.put("is_viewer", person.isViewer());
         database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -130,17 +132,20 @@ public class PeopleTable {
 
     public static void deleteUsersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 " +
+                "AND is_email_follower=?2 AND is_viewer=?2", args);
     }
 
     public static void deleteFollowersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND is_follower=? AND is_email_follower=?", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 " +
+                "AND is_email_follower=?3 AND is_viewer=?3", args);
     }
 
     public static void deleteEmailFollowersForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=? AND is_follower=? AND is_email_follower=?", args);
+        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 " +
+                "AND is_viewer=?2", args);
     }
 
     public static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
@@ -161,7 +166,7 @@ public class PeopleTable {
     public static int getUsersCountForLocalBlogId(int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
         String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE
-                + " WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2";
+                + " WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2 AND is_viewer=?2";
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
@@ -171,27 +176,27 @@ public class PeopleTable {
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
-    public static void deletePerson(long personID, int localTableBlogId, boolean isFollower) {
+    public static void deletePerson(long personID, int localTableBlogId, boolean isFollower, boolean isViewer) {
         String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId),
-                Integer.toString(isFollower ? 1 : 0)};
-        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=? AND is_follower=?", args);
+                Integer.toString(isFollower ? 1 : 0), Integer.toString(isViewer ? 1 : 0)};
+        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=? AND is_follower=? AND is_viewer=?", args);
     }
 
     public static List<Person> getUsers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(0) };
-        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2";
+        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2 AND is_viewer=?2";
         return PeopleTable.getPeople(localTableBlogId, where, args, true);
     }
 
     public static List<Person> getFollowers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0) };
-        String where = "WHERE local_blog_id=? AND is_follower=? AND is_email_follower=?";
+        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 AND is_viewer=?3";
         return PeopleTable.getPeople(localTableBlogId, where, args, false);
     }
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
         String[] args = { Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1)};
-        String where = "WHERE local_blog_id=? AND is_follower=? AND is_email_follower=?";
+        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 AND is_viewer=?2";
         return PeopleTable.getPeople(localTableBlogId, where, args, false);
     }
 
@@ -220,11 +225,11 @@ public class PeopleTable {
      * @param isFollower - if the person is a follower
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId, int localTableBlogId, boolean isFollower) {
+    public static Person getPerson(long personId, int localTableBlogId, boolean isFollower, boolean isViewer) {
         String[] args = { Long.toString(personId), Integer.toString(localTableBlogId),
-                Integer.toString(isFollower ? 1 : 0)};
+                Integer.toString(isFollower ? 1 : 0), Integer.toString(isViewer ? 1 : 0)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE person_id=? AND local_blog_id=? AND is_follower=?", args);
+                " WHERE person_id=?1 AND local_blog_id=?2 AND is_follower=?3 AND is_viewer=?4", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -249,6 +254,7 @@ public class PeopleTable {
         person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
         person.setFollower(c.getInt(c.getColumnIndex("is_follower")) > 0);
         person.setEmailFollower(c.getInt(c.getColumnIndex("is_email_follower")) > 0);
+        person.setViewer(c.getInt(c.getColumnIndex("is_viewer")) > 0);
 
         return person;
     }
