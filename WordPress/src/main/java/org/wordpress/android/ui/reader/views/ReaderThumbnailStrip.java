@@ -65,16 +65,14 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
         // base max image count on display width
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        if (displayWidth <= 640) {
+        if (displayWidth <= 800) {
             mMaxImageCount = 2;
-        } else if (displayWidth <= 800) {
-            mMaxImageCount = 3;
         } else if (displayWidth <= 1024) {
-            mMaxImageCount = 4;
+            mMaxImageCount = 3;
         } else if (displayWidth <= 1440) {
-            mMaxImageCount = 5;
+            mMaxImageCount = 4;
         } else {
-            mMaxImageCount = 6;
+            mMaxImageCount = 5;
         }
     }
 
