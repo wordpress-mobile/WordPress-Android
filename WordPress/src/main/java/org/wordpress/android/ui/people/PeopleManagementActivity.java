@@ -351,8 +351,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
         boolean isFollower = person.isFollower();
+        boolean isViewer = person.isViewer();
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, isFollower);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, isFollower, isViewer);
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -378,8 +379,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        // You can't change a follower's role, so it's always false
-        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId, false);
+        // You can't change a follower's or viewer's role, so it's always false
+        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId, false, false);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
@@ -446,19 +447,20 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         final boolean isFollower = person.isFollower();
         final boolean isEmailFollower = person.isEmailFollower();
+        final boolean isViewer = person.isViewer();
         final String displayName = person.getDisplayName();
 
         PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
-                if (!isFollower && !isEmailFollower) {
+                if (!isFollower && !isEmailFollower && !isViewer) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower);
+                Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower, isViewer);
                 if (person != null) {
-                    PeopleTable.deletePerson(personID, localTableBlogId, isFollower);
+                    PeopleTable.deletePerson(personID, localTableBlogId, isFollower, isViewer);
                 }
 
                 String message = getString(R.string.person_removed, displayName);
