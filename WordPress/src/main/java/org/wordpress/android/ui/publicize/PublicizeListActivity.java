@@ -282,7 +282,7 @@ public class PublicizeListActivity extends AppCompatActivity
         mProgressDialog.show();
     }
 
-    public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
+    public void onEventMainThread(PublicizeEvents.ActionRequestChooseAccount event) {
         if (isFinishing()) return;
 
         closeWebViewFragment();

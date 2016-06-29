@@ -53,11 +53,11 @@ public class PublicizeEvents {
         }
     }
 
-    public static class ConnectionChooserRequired {
+    public static class ActionRequestChooseAccount {
         private JSONObject mJsonObject;
         private PublicizeConnection[] mPublicizeConnections;
 
-        public ConnectionChooserRequired(JSONObject jsonObject) {
+        public ActionRequestChooseAccount(JSONObject jsonObject) {
             mJsonObject = jsonObject;
             try {
                 mPublicizeConnections = convertJsonToConnections();
