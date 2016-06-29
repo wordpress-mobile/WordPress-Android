@@ -10,7 +10,6 @@ public class PublicizeConstants {
         CONNECT,
         DISCONNECT,
         RECONNECT,
-        CONNECT_ANOTHER_ACCOUNT,
-        CHOOSE_ACCOUNT
+        CONNECT_ANOTHER_ACCOUNT
     }
 }
