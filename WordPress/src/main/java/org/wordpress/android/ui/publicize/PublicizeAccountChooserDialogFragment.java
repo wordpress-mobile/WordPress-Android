@@ -25,47 +25,22 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private PublicizeConnection[] mPublicizeConnections;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
-    private String mSocialNetwork;
+    private String mConnectionName = "";
     private int mSelectedIndex = 0;
-    private int mCurrentSite = 0;
+    private int mSiteId = 0;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        retrieveCurrentSite();
+        retrieveCurrentSiteFromArgs();
         addConnectionsToLists();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
-        builder.setView(view);
-        builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mCurrentSite, keychainId));
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                ToastUtils.showToast(getActivity(), getActivity().getString(R.string.cannot_connect_account_error, mSocialNetwork));
-            }
-        });
-        builder.setTitle(getString(R.string.connecting_social_network, mSocialNetwork));
-        builder.setMessage(getString(R.string.connection_chooser_message));
 
-        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
-        mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
-        notConnectedAdapter.setHasStableIds(true);
-        mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
-
-        RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
-        listViewConnected.setLayoutManager(new LinearLayoutManager(getContext()));
-        PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
-        listViewConnected.setAdapter(connectedAdapter);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        configureAlertDialog(view, builder);
+        configureRecyclerViews(view);
 
         return builder.create();
     }
@@ -83,12 +58,47 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         mPublicizeConnections = publicizeConnections;
     }
 
+    private void configureRecyclerViews(View view) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
+        mNotConnectedRecyclerView.setLayoutManager(linearLayoutManager);
+        PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
+        notConnectedAdapter.setHasStableIds(true);
+        mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
+
+        RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
+        listViewConnected.setLayoutManager(linearLayoutManager);
+        PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
+        listViewConnected.setAdapter(connectedAdapter);
+    }
+
+    private void configureAlertDialog(View view, AlertDialog.Builder builder) {
+        builder.setView(view);
+        builder.setTitle(getString(R.string.connecting_social_network, mConnectionName));
+        builder.setMessage(getString(R.string.connection_chooser_message));
+        builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
+                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSiteId, keychainId));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+                ToastUtils.showToast(getActivity(), getActivity().getString(R.string.cannot_connect_account_error, mConnectionName));
+            }
+        });
+    }
+
     private void addConnectionsToLists() {
         mNotConnectedAccounts = new ArrayList<>();
         mConnectedAccounts = new ArrayList<>();
-        for (int i = 0; i < mPublicizeConnections.length; i++) {
-            PublicizeConnection connection = mPublicizeConnections[i];
-            if (containsCurrentSite(connection.getSites())) {
+        for (PublicizeConnection connection : mPublicizeConnections) {
+            if (containsSiteId(connection.getSites())) {
                 mConnectedAccounts.add(connection);
             } else {
                 mNotConnectedAccounts.add(connection);
@@ -96,9 +106,9 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         }
     }
 
-    private boolean containsCurrentSite(int[] array) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == mCurrentSite) {
+    private boolean containsSiteId(int[] array) {
+        for (int a : array) {
+            if (a == mSiteId) {
                 return true;
             }
         }
@@ -106,11 +116,11 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         return false;
     }
 
-    private void retrieveCurrentSite() {
+    private void retrieveCurrentSiteFromArgs() {
         Bundle args = getArguments();
         if (args != null) {
-            mCurrentSite = args.getInt("site_id");
-            mSocialNetwork = args.getString("social_network");
+            mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mConnectionName = args.getString(PublicizeConstants.ARG_CONNECTION_NAME);
         }
     }
 

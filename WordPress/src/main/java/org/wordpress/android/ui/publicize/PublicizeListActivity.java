@@ -290,8 +290,8 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeConnection[] publicizeConnections = event.getConnections();
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
         Bundle args = new Bundle();
-        args.putString("social_network", publicizeConnections[0].getService());
-        args.putInt("site_id", WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(WordPress.wpDB.getLastBlogId()));
+        args.putString(PublicizeConstants.ARG_CONNECTION_NAME, publicizeConnections[0].getService());
+        args.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         dialogFragment.setArguments(args);
         dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), "yup");

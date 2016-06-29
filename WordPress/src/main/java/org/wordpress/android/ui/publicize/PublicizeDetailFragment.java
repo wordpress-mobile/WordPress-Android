@@ -23,7 +23,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import de.greenrobot.event.EventBus;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
-
     private int mSiteId;
     private String mServiceId;
 
