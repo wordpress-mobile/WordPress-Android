@@ -18,6 +18,8 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+
 public class PublicizeAccountChooserDialogFragment extends DialogFragment implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
     private RecyclerView mNotConnectedRecyclerView;
     private PublicizeConnection[] mPublicizeConnections;
@@ -39,14 +41,16 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                connectAndDismiss(dialogInterface);
+                dialogInterface.dismiss();
+                int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
+                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mCurrentSite, keychainId));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
-                ToastUtils.showToast(getActivity(), "You must select an account to connect");
+                ToastUtils.showToast(getActivity(), getActivity().getString(R.string.cannot_connect_account_error, mSocialNetwork));
             }
         });
         builder.setTitle(getString(R.string.connecting_social_network, mSocialNetwork));
@@ -108,12 +112,6 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             mCurrentSite = args.getInt("site_id");
             mSocialNetwork = args.getString("social_network");
         }
-    }
-
-    private void connectAndDismiss(DialogInterface dialogInterface) {
-        int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-        PublicizeActions.connectStepTwo(mCurrentSite, keychainId);
-        dialogInterface.dismiss();
     }
 
     @Override

@@ -1546,5 +1546,6 @@
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
     <string name="connected">Connected</string>
+    <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
 
 </resources>

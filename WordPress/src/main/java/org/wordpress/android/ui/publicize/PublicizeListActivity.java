@@ -27,8 +27,7 @@ import de.greenrobot.event.EventBus;
 public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
-        PublicizeServiceAdapter.OnServiceClickListener,
-        DialogInterface.OnDismissListener {
+        PublicizeServiceAdapter.OnServiceClickListener {
 
     private int mSiteId;
     private ProgressDialog mProgressDialog;
@@ -274,6 +273,15 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
+    public void onEventMainThread(PublicizeEvents.ActionAccountChosen event) {
+        if (isFinishing()) return;
+
+        PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Connecting account");
+        mProgressDialog.show();
+    }
+
     public void onEventMainThread(PublicizeEvents.ConnectionChooserRequired event) {
         if (isFinishing()) return;
 
@@ -287,12 +295,5 @@ public class PublicizeListActivity extends AppCompatActivity
         dialogFragment.setArguments(args);
         dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), "yup");
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Connecting account");
-        mProgressDialog.show();
     }
 }

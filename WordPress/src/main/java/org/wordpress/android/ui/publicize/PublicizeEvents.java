@@ -35,6 +35,24 @@ public class PublicizeEvents {
         }
     }
 
+    public static class ActionAccountChosen {
+        private int mSiteId;
+        private int mKeychainId;
+
+        public ActionAccountChosen(int siteId, int keychainId) {
+            mSiteId = siteId;
+            mKeychainId = keychainId;
+        }
+
+        public int getSiteId() {
+            return mSiteId;
+        }
+
+        public int getKeychainId() {
+            return mKeychainId;
+        }
+    }
+
     public static class ConnectionChooserRequired {
         private JSONObject mJsonObject;
         private PublicizeConnection[] mPublicizeConnections;
