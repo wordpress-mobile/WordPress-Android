@@ -3,6 +3,7 @@ package org.wordpress.android.ui.publicize;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -26,9 +27,11 @@ import de.greenrobot.event.EventBus;
 public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
-        PublicizeServiceAdapter.OnServiceClickListener {
+        PublicizeServiceAdapter.OnServiceClickListener,
+        DialogInterface.OnDismissListener {
 
     private int mSiteId;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -261,6 +264,9 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         closeWebViewFragment();
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
         reloadDetailFragment();
 
         if (!event.didSucceed()) {
@@ -281,5 +287,12 @@ public class PublicizeListActivity extends AppCompatActivity
         dialogFragment.setArguments(args);
         dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), "yup");
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Connecting account");
+        mProgressDialog.show();
     }
 }
