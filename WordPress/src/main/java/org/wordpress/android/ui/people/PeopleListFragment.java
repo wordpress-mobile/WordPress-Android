@@ -81,6 +81,8 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        final Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        final boolean isPrivate = blog != null && blog.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -92,9 +94,7 @@ public class PeopleListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
-
-                Blog blog = WordPress.getBlog(mLocalTableBlogID);
-                if (blog == null || !blog.isPrivate()) {
+                if (!isPrivate) {
                     list.remove(PeopleListFilter.VIEWERS);
                 }
                 return list;
@@ -108,6 +108,12 @@ public class PeopleListFragment extends Fragment {
             @Override
             public FilterCriteria onRecallSelection() {
                 mPeopleListFilter = AppPrefs.getPeopleListFilter();
+
+                // if viewers is not available for this blog, set the filter to TEAM
+                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
+                    mPeopleListFilter = PeopleListFilter.TEAM;
+                    AppPrefs.setPeopleListFilter(mPeopleListFilter);
+                }
                 return mPeopleListFilter;
             }
 
