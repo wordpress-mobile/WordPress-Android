@@ -287,13 +287,11 @@ public class PublicizeListActivity extends AppCompatActivity
 
         closeWebViewFragment();
 
-        PublicizeConnection[] publicizeConnections = event.getConnections();
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
         Bundle args = new Bundle();
-        args.putString(PublicizeConstants.ARG_CONNECTION_NAME, publicizeConnections[0].getService());
+        args.putString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON, event.getJSONObject().toString());
         args.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         dialogFragment.setArguments(args);
-        dialogFragment.setConnections(publicizeConnections);
         dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
     }
 }

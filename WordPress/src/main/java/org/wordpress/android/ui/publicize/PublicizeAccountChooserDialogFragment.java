@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.util.ToastUtils;
@@ -23,7 +26,6 @@ import de.greenrobot.event.EventBus;
 public class PublicizeAccountChooserDialogFragment extends DialogFragment implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
     public static String TAG = "publicize-account-chooser-dialog-fragment";
     private RecyclerView mNotConnectedRecyclerView;
-    private PublicizeConnection[] mPublicizeConnections;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
     private String mConnectionName = "";
@@ -34,7 +36,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         retrieveCurrentSiteFromArgs();
-        addConnectionsToLists();
+        configureConnectionName();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
@@ -53,10 +55,6 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         if (activity != null && activity instanceof DialogInterface.OnDismissListener) {
             ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
         }
-    }
-
-    public void setConnections(PublicizeConnection[] publicizeConnections) {
-        mPublicizeConnections = publicizeConnections;
     }
 
     private void configureRecyclerViews(View view) {
@@ -92,19 +90,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             }
         });
     }
-
-    private void addConnectionsToLists() {
-        mNotConnectedAccounts = new ArrayList<>();
-        mConnectedAccounts = new ArrayList<>();
-        for (PublicizeConnection connection : mPublicizeConnections) {
-            if (containsSiteId(connection.getSites())) {
-                mConnectedAccounts.add(connection);
-            } else {
-                mNotConnectedAccounts.add(connection);
-            }
-        }
-    }
-
+    
     private boolean containsSiteId(int[] array) {
         for (int a : array) {
             if (a == mSiteId) {
@@ -119,7 +105,34 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         Bundle args = getArguments();
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
-            mConnectionName = args.getString(PublicizeConstants.ARG_CONNECTION_NAME);
+            String jsonString = args.getString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON);
+            addConnectionsToLists(jsonString);
+        }
+    }
+
+    private void addConnectionsToLists(String jsonString) {
+        mNotConnectedAccounts = new ArrayList<>();
+        mConnectedAccounts = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray("connections");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
+                if (containsSiteId(connection.getSites())) {
+                    mConnectedAccounts.add(connection);
+                } else {
+                    mNotConnectedAccounts.add(connection);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void configureConnectionName() {
+        PublicizeConnection connection = mNotConnectedAccounts.get(0);
+        if (connection != null) {
+            mConnectionName = connection.getLabel();
         }
     }
 

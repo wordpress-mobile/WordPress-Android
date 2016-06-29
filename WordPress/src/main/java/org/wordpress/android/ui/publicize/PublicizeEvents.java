@@ -54,31 +54,14 @@ public class PublicizeEvents {
     }
 
     public static class ActionRequestChooseAccount {
-        private JSONObject mJsonObject;
-        private PublicizeConnection[] mPublicizeConnections;
+        private JSONObject mJSONObject;
 
         public ActionRequestChooseAccount(JSONObject jsonObject) {
-            mJsonObject = jsonObject;
-            try {
-                mPublicizeConnections = convertJsonToConnections();
-            } catch (JSONException e) {
-                mPublicizeConnections = new PublicizeConnection[0];
-                e.printStackTrace();
-            }
+            mJSONObject = jsonObject;
         }
 
-        public PublicizeConnection[] getConnections() {
-            return mPublicizeConnections;
-        }
-
-        private PublicizeConnection[] convertJsonToConnections() throws JSONException {
-            JSONArray jsonArray = mJsonObject.getJSONArray("connections");
-            PublicizeConnection[] publicizeConnectionArray = new PublicizeConnection[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++) {
-                publicizeConnectionArray[i] = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
-            }
-
-            return publicizeConnectionArray;
+        public JSONObject getJSONObject() {
+            return mJSONObject;
         }
     }
 }
