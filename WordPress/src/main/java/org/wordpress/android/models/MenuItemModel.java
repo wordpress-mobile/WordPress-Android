@@ -119,6 +119,10 @@ public class MenuItemModel implements Serializable {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.POST.name();
                 return MenuItemEditorFactory.ITEM_TYPE.POST;
             }
+            else if (type.compareToIgnoreCase("jetpack-testimonial") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL;
+            }
 
             if (MenuItemEditorFactory.ITEM_TYPE.typeForString(type).equals(MenuItemEditorFactory.ITEM_TYPE.CUSTOM)) {
 
