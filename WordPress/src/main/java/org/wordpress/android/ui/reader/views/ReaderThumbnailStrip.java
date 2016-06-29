@@ -62,8 +62,20 @@ public class ReaderThumbnailStrip extends LinearLayout {
         mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
         mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
         mCountStr = context.getResources().getString(R.string.reader_label_image_count);
-        // TODO: base max count on width
-        mMaxImageCount = DisplayUtils.isLandscape(context) ? 6 : 4;
+
+        // base max image count on display width
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+        if (displayWidth <= 640) {
+            mMaxImageCount = 2;
+        } else if (displayWidth <= 800) {
+            mMaxImageCount = 3;
+        } else if (displayWidth <= 1024) {
+            mMaxImageCount = 4;
+        } else if (displayWidth <= 1440) {
+            mMaxImageCount = 5;
+        } else {
+            mMaxImageCount = 6;
+        }
     }
 
     public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
