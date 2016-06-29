@@ -501,6 +501,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.testimonialsEnabled;
     }
 
+    public boolean getPortfolioEnabled() {
+        return mSettings.portfolioEnabled;
+    }
+
     public void setTitle(String title) {
         mSettings.title = title;
     }

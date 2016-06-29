@@ -123,6 +123,14 @@ public class MenuItemModel implements Serializable {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL.name();
                 return MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL;
             }
+            else if (type.compareToIgnoreCase("jetpack-portfolio") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO;
+            }
+            else if (type.compareToIgnoreCase("jetpack-comic") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC;
+            }
 
             if (MenuItemEditorFactory.ITEM_TYPE.typeForString(type).equals(MenuItemEditorFactory.ITEM_TYPE.CUSTOM)) {
 

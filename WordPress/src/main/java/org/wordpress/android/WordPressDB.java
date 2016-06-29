@@ -233,8 +233,11 @@ public class WordPressDB {
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
 
-    // add testimonials flag for menus
+    // add jetpack testimonials flag for menus
     private static final String ADD_TESTIMONIALS_FLAG = "alter table " + SiteSettingsModel.SETTINGS_TABLE_NAME + " add " + SiteSettingsModel.TESTIMONIALS_ENABLED_COLUMN_NAME + " BOOLEAN default 0;";
+
+    // add jetpack portfolio flag for menus
+    private static final String ADD_PORTFOLIOS_FLAG = "alter table " + SiteSettingsModel.SETTINGS_TABLE_NAME + " add " + SiteSettingsModel.PORTFOLIOS_ENABLED_COLUMN_NAME + " BOOLEAN default 0;";
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
@@ -435,6 +438,9 @@ public class WordPressDB {
                 currentVersion++;
             case 47:
                 db.execSQL(ADD_TESTIMONIALS_FLAG);
+                currentVersion++;
+            case 48:
+                db.execSQL(ADD_PORTFOLIOS_FLAG);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

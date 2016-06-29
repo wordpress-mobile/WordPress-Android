@@ -17,6 +17,8 @@ public class MenuItemEditorFactory {
         TAG,
         LINK,
         JETPACK_TESTIMONIAL,
+        JETPACK_PORTFOLIO,
+        JETPACK_COMIC,
         CUSTOM;
 
         public static ITEM_TYPE typeForString(String typeName) {
@@ -29,6 +31,8 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(LINK.name())) return LINK;
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
             else if (typeName.equalsIgnoreCase(JETPACK_TESTIMONIAL.name())) return JETPACK_TESTIMONIAL;
+            else if (typeName.equalsIgnoreCase(JETPACK_PORTFOLIO.name())) return JETPACK_PORTFOLIO;
+            else if (typeName.equalsIgnoreCase(JETPACK_COMIC.name())) return JETPACK_COMIC;
 
             //special case for tag
             // This is a weird behavior of the API and is not documented.
@@ -40,6 +44,12 @@ public class MenuItemEditorFactory {
             }
             else if (typeName.compareToIgnoreCase("jetpack-testimonial") == 0) {
                 return JETPACK_TESTIMONIAL;
+            }
+            else if (typeName.compareToIgnoreCase("jetpack-portfolio") == 0) {
+                return JETPACK_PORTFOLIO;
+            }
+            else if (typeName.compareToIgnoreCase("jetpack-comic") == 0) {
+                return JETPACK_COMIC;
             }
 
             else return NULL;
@@ -53,6 +63,8 @@ public class MenuItemEditorFactory {
             if (TAG.ordinal() == index) return TAG;
             if (LINK.ordinal() == index) return LINK;
             if (JETPACK_TESTIMONIAL.ordinal() == index) return JETPACK_TESTIMONIAL;
+            if (JETPACK_PORTFOLIO.ordinal() == index) return JETPACK_PORTFOLIO;
+            if (JETPACK_COMIC.ordinal() == index) return JETPACK_COMIC;
             if (CUSTOM.ordinal() == index) return CUSTOM;
 
             return NULL;
@@ -72,6 +84,8 @@ public class MenuItemEditorFactory {
             case LINK:
                 return R.drawable.gridicon_link;
             case JETPACK_TESTIMONIAL:
+            case JETPACK_PORTFOLIO:
+            case JETPACK_COMIC:
                 return R.drawable.my_site_icon_posts;
             default:
                 return -1;
@@ -91,7 +105,12 @@ public class MenuItemEditorFactory {
             case LINK:
                 return new LinkItemEditor(context);
             case JETPACK_TESTIMONIAL:
-                return new JetpackTestimonialItemEditor(context);
+            case JETPACK_PORTFOLIO:
+            case JETPACK_COMIC:
+                JetpackCustomItemEditor editor = new JetpackCustomItemEditor(context);
+                editor.setJetpackCustomType(type);
+                return editor;
+
             default:
                 return null;
         }

@@ -594,6 +594,9 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         if (mSiteSettings.getTestimonialsEnabled()) {
             typeList.add(typeList.size(), getString(R.string.menu_item_type_testimonial));
         }
+        if (mSiteSettings.getPortfolioEnabled()) {
+            typeList.add(typeList.size(), getString(R.string.menu_item_type_portfolio));
+        }
         return typeList;
     }
 
