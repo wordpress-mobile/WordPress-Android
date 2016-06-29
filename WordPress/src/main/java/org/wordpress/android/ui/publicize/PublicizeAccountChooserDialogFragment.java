@@ -14,6 +14,7 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.PublicizeConnection;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
+                ToastUtils.showToast(getActivity(), "You must select an account to connect");
             }
         });
         builder.setTitle(getString(R.string.connecting_social_network, mSocialNetwork));
