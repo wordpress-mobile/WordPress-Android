@@ -24,6 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -310,6 +311,11 @@ class ReaderPostRenderer {
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
     private String formatPostContentForWebView(final String content, boolean isWideDisplay) {
+        // determine whether a tiled-gallery exists in the content
+        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(content).find();
+
+        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
+
         // unique CSS class assigned to the gallery elements for easy selection
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
 
@@ -331,14 +337,14 @@ class ReaderPostRenderer {
 
         // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (isWideDisplay ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", li { line-height: 1.6em; font-size: 0.95em; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
         // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (isWideDisplay ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
@@ -374,7 +380,7 @@ class ReaderPostRenderer {
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
         .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
-        if (isWideDisplay) {
+        if (renderAsTiledGallery) {
             sbHtml
             .append("  .tiled-gallery {")
             .append("    clear:both;")
