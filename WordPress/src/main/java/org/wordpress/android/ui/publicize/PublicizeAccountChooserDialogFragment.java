@@ -121,7 +121,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             for (int i = 0; i < jsonArray.length(); i++) {
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
                 if (connection.getService().equals(mServiceId)) {
-                    if (containsSiteId(connection.getSites())) {
+                    if (connection.isInSite(mSiteId)) {
                         mConnectedAccounts.add(connection);
                     } else {
                         mNotConnectedAccounts.add(connection);

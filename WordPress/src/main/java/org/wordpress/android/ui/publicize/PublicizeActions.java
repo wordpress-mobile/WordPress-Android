@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -83,7 +84,7 @@ public class PublicizeActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                if (hasMoreThanOneConnectedAccount(jsonObject)) {
+                if (shouldShowChooserDialog(siteId, serviceId, jsonObject)) {
                     // show dialog showing multiple options
                     EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
@@ -132,9 +133,26 @@ public class PublicizeActions {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    private static boolean hasMoreThanOneConnectedAccount(JSONObject jsonObject) {
+    private static boolean shouldShowChooserDialog(int siteId, String serviceId, JSONObject jsonObject) {
         JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
-        return jsonConnectionList != null && jsonConnectionList.length() > 1;
+        if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
+            return false;
+        }
+
+        int totalAccounts = 0;
+        try {
+            for (int i = 0; i < jsonConnectionList.length(); i++) {
+                JSONObject connectionObject = jsonConnectionList.getJSONObject(i);
+                PublicizeConnection publicizeConnection = PublicizeConnection.fromJson(connectionObject);
+                if (publicizeConnection.getService().equals(serviceId) && !publicizeConnection.isInSite(siteId)) {
+                    totalAccounts++;
+                }
+            }
+
+            return totalAccounts > 0;
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
     /*

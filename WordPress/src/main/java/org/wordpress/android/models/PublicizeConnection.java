@@ -147,6 +147,16 @@ public class PublicizeConnection {
         return mSites;
     }
 
+    public boolean isInSite(int siteId) {
+        for (int i = 0; i < mSites.length; i++) {
+            if (siteId == mSites[i]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /*
      * passed JSON is a single connection from the response to sites/%d/publicize-connections
        {"ID":12783250,
