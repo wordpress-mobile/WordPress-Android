@@ -233,6 +233,9 @@ public class PeopleListFragment extends Fragment {
             case EMAIL_FOLLOWERS:
                 peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
                 break;
+            case VIEWERS:
+                peopleList = PeopleTable.getViewers(mLocalTableBlogID);
+                break;
             default:
                 peopleList = new ArrayList<>();
                 break;

@@ -200,6 +200,12 @@ public class PeopleTable {
         return PeopleTable.getPeople(localTableBlogId, where, args, false);
     }
 
+    public static List<Person> getViewers(int localTableBlogId) {
+        String[] args = { Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1) };
+        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2 AND is_viewer=?3";
+        return PeopleTable.getPeople(localTableBlogId, where, args, false);
+    }
+
     private static List<Person> getPeople(int localTableBlogId, String whereStatement, String[] args, boolean ordered) {
         List<Person> people = new ArrayList<>();
         // order is disabled for followers for now since the API is not supporting it
