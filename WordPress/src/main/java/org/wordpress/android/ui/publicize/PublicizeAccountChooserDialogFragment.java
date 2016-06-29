@@ -29,6 +29,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
     private String mConnectionName = "";
+    private String mServiceId = "";
     private int mSelectedIndex = 0;
     private int mSiteId = 0;
 
@@ -105,6 +106,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         Bundle args = getArguments();
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
             String jsonString = args.getString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON);
             addConnectionsToLists(jsonString);
         }
@@ -118,10 +120,12 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             JSONArray jsonArray = jsonObject.getJSONArray("connections");
             for (int i = 0; i < jsonArray.length(); i++) {
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
-                if (containsSiteId(connection.getSites())) {
-                    mConnectedAccounts.add(connection);
-                } else {
-                    mNotConnectedAccounts.add(connection);
+                if (connection.getService().equals(mServiceId)) {
+                    if (containsSiteId(connection.getSites())) {
+                        mConnectedAccounts.add(connection);
+                    } else {
+                        mNotConnectedAccounts.add(connection);
+                    }
                 }
             }
         } catch (JSONException e) {

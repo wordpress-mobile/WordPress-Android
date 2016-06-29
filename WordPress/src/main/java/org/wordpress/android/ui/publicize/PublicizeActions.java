@@ -85,7 +85,7 @@ public class PublicizeActions {
             public void onResponse(JSONObject jsonObject) {
                 if (hasMoreThanOneConnectedAccount(jsonObject)) {
                     // show dialog showing multiple options
-                    EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(jsonObject));
+                    EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
                     connectStepTwo(siteId, keyringConnectionId);

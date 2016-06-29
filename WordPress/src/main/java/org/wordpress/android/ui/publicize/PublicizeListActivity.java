@@ -290,7 +290,8 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
         Bundle args = new Bundle();
         args.putString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON, event.getJSONObject().toString());
-        args.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        args.putInt(PublicizeConstants.ARG_SITE_ID, event.getSiteId());
+        args.putString(PublicizeConstants.ARG_SERVICE_ID, event.getServiceId());
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
     }

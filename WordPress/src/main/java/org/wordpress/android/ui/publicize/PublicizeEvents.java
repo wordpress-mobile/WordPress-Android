@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 
 /**
@@ -54,14 +51,26 @@ public class PublicizeEvents {
     }
 
     public static class ActionRequestChooseAccount {
+        private int mSiteId;
+        private String mServiceId;
         private JSONObject mJSONObject;
 
-        public ActionRequestChooseAccount(JSONObject jsonObject) {
+        public ActionRequestChooseAccount(int siteId, String serviceId, JSONObject jsonObject) {
+            mSiteId = siteId;
+            mServiceId = serviceId;
             mJSONObject = jsonObject;
         }
 
         public JSONObject getJSONObject() {
             return mJSONObject;
+        }
+
+        public int getSiteId() {
+            return mSiteId;
+        }
+
+        public String getServiceId() {
+            return mServiceId;
         }
     }
 }
