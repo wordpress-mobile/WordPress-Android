@@ -356,6 +356,7 @@ public class ReaderPost {
         this.excerpt = StringUtils.notNullStr(excerpt);
     }
 
+    // https://codex.wordpress.org/Post_Formats
     public String getFormat() {
         return StringUtils.notNullStr(format);
     }

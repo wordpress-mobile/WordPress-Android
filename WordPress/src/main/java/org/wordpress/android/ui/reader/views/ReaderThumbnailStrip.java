@@ -13,7 +13,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
@@ -71,9 +70,10 @@ public class ReaderThumbnailStrip extends LinearLayout {
         // get rid of any views already added
         mContainer.removeAllViews();
 
+        // get this post's content and scan it for images suitable in a gallery
         final String content = ReaderPostTable.getPostText(blogId, postId);
-        ReaderImageScanner scanner = new ReaderImageScanner(content, isPrivate);
-        final ReaderImageList imageList = scanner.getImageList(ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
+        final ReaderImageList imageList =
+                new ReaderImageScanner(content, isPrivate).getGalleryImageList();
         if (imageList.size() < MIN_IMAGE_COUNT) {
             mView.setVisibility(View.GONE);
             return;

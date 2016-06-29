@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 
 import java.util.regex.Matcher;
@@ -46,8 +47,14 @@ public class ReaderImageScanner {
 
     /*
      * returns a list of all image URLs in the content above a certain width - pass zero
-     * for the min width to include all images regardless of size
+     * for the min to include all images regardless of size
      */
+    public ReaderImageList getImageList() {
+        return getImageList(0);
+    }
+    public ReaderImageList getGalleryImageList() {
+        return getImageList(ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
+    }
     public ReaderImageList getImageList(int minImageWidth) {
         ReaderImageList imageList = new ReaderImageList(mIsPrivate);
 
@@ -59,6 +66,7 @@ public class ReaderImageScanner {
         while (imgMatcher.find()) {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
             String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
+
             if (minImageWidth == 0) {
                 imageList.addImageUrl(imageUrl);
             } else {
@@ -68,6 +76,7 @@ public class ReaderImageScanner {
                 }
             }
         }
+
         return imageList;
     }
 

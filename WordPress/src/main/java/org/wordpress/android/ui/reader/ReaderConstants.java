@@ -11,8 +11,9 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;                 // min width for an image to be suitable featured image
 
-    // min size for images in post content to be shown in a gallery (thumbnail strip)
-    public static int MIN_GALLERY_IMAGE_WIDTH = 144;
+    // min size for images in post content to be shown in a gallery (thumbnail strip) - matches
+    // the Calypso web reader
+    public static int MIN_GALLERY_IMAGE_WIDTH  = 144;
 
     public static final String HTTP_REFERER_URL = "https://wordpress.com";  // referrer url for reader posts opened in a browser
 

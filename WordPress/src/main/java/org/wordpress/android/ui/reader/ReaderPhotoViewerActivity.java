@@ -73,14 +73,15 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     }
 
     private void loadImageList() {
+        // content will be empty when viewing a single image, otherwise content is HTML
+        // so parse images from it
         final ReaderImageList imageList;
         if (TextUtils.isEmpty(mContent)) {
-            // content will be empty when we're viewing a single image
             imageList = new ReaderImageList(mIsPrivate);
+        } else if (mIsGallery) {
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getGalleryImageList();
         } else {
-            // otherwise content is HTML so parse images from it
-            int minWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(minWidth);
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
         }
 
         // make sure initial image is in the list
