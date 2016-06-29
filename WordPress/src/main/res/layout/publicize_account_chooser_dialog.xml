@@ -24,8 +24,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="10dp"
+            android:layout_height="@dimen/publicize_divider_height"
+            android:layout_marginLeft="@dimen/publicize_default_margin"
             android:layout_gravity="center_vertical"
             android:background="@color/reader_divider_grey" />
 
