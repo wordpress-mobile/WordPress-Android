@@ -103,7 +103,6 @@ public class ReaderBlogInfoView extends LinearLayout {
         mBlogInfo = blogInfo;
 
         ViewGroup layoutInfo = (ViewGroup) findViewById(R.id.layout_blog_info);
-        ViewGroup layoutDescription = (ViewGroup) layoutInfo.findViewById(R.id.layout_blog_description);
         TextView txtBlogName = (TextView) layoutInfo.findViewById(R.id.text_blog_name);
         TextView txtDomain = (TextView) layoutInfo.findViewById(R.id.text_domain);
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
@@ -125,9 +124,9 @@ public class ReaderBlogInfoView extends LinearLayout {
 
         if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
-            layoutDescription.setVisibility(View.VISIBLE);
+            txtDescription.setVisibility(View.VISIBLE);
         } else {
-            layoutDescription.setVisibility(View.GONE);
+            txtDescription.setVisibility(View.GONE);
         }
 
         txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
