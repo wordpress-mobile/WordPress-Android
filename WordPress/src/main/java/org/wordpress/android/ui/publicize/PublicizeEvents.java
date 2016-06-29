@@ -80,14 +80,5 @@ public class PublicizeEvents {
 
             return publicizeConnectionArray;
         }
-
-        private int[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
-            int[] sitesArray = new int[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++) {
-                sitesArray[i] = jsonArray.getInt(i);
-            }
-
-            return sitesArray;
-        }
     }
 }
