@@ -160,7 +160,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
-            if (shouldShowPostHeader()) {
+            // post header isn't shown for blog preview
+            if (!isBlogPreview()) {
                 // adjust the right padding of the post header to allow right padding of the  "..." icon
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
                 layoutPostHeader.setPadding(
@@ -208,13 +209,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
         }
-    }
-
-    /*
-     * post header isn't shown for blog preview
-     */
-    private boolean shouldShowPostHeader() {
-        return getPostListType() != ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
     @Override
@@ -322,9 +316,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }
 
-        // when post header is visible, the dateline appears within it - otherwise a separate
-        // dateline appears below the title
-        if (shouldShowPostHeader()) {
+        // when post header is visible (which it shouldn't be for blog preview), the dateline
+        // appears within it - otherwise a separate dateline appears below the title
+        if (!isBlogPreview()) {
             holder.txtDate.setText(dateLine);
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
