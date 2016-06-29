@@ -18,14 +18,14 @@ repositories {
 android {
     publishNonDefault true
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         versionCode 12
         versionName "1.2"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
     }
     buildTypes {
         release {
@@ -45,9 +45,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:design:24.0.0'
     compile 'org.wordpress:utils:1.10.0'
 
     // Test libraries
