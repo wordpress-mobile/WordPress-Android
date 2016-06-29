@@ -115,8 +115,25 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             }
 
             @Override public void onMenusReceived(int requestId, final List<MenuModel> menus, final List<MenuLocationModel> locations) {
+
                 // make sure we don't intercept another load request
                 if (requestId != mCurrentLoadRequestId) return;
+
+                //save menus to local DB here
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override protected Boolean doInBackground(Void... params) {
+                        //make a copy of the menu array and strip off the default and add menu "menus"
+                        List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
+                        MenuTable.saveMenus(userMenusOnly);
+                        MenuLocationTable.saveMenuLocations(locations);
+                        return null;
+                    }
+
+                    @Override protected void onPostExecute(Boolean result) { }
+                }.execute();
+
+                if (!isAdded()) return;
+
                 boolean bSpinnersUpdated = false;
                 if (locations != null) {
                     if (!CollectionUtils.areListsEqual(locations, mMenuLocationsSpinner.getItems())) {
@@ -128,19 +145,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
                 if (menus != null) {
                     if (!CollectionUtils.areListsEqual(menus, mMenusSpinner.getItems())) {
-                        //make a copy of the menu array and strip off the default and add menu "menus"
-                        final List<MenuModel> userMenusOnly = getUserMenusOnly(menus);
-
-                        //save menus to local DB here
-                        new AsyncTask<Void, Void, Boolean>() {
-                            @Override protected Boolean doInBackground(Void... params) {
-                                MenuTable.saveMenus(userMenusOnly);
-                                MenuLocationTable.saveMenuLocations(locations);
-                                return null;
-                            }
-
-                            @Override protected void onPostExecute(Boolean result) { }
-                        }.execute();
 
                         if (locations != null) {
                             addSpecialMenus(locations.get(0), menus);
@@ -149,10 +153,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                         mMenusSpinner.setItems(menus, BASE_DISPLAY_COUNT_MENUS);
                         bSpinnersUpdated = true;
                     }
-                }
-
-                if (!isAdded()) {
-                    return;
                 }
 
                 if (bSpinnersUpdated) {
@@ -238,7 +238,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
             @Override
             public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
-                // load menus
+                if (!isAdded()) return;
+
                 if (error == MenusRestWPCom.REST_ERROR.FETCH_ERROR) {
                     if (mMenuLocationsSpinner.getCount() == 0 || mMenusSpinner.getCount() == 0) {
                         Toast.makeText(getActivity(), getString(R.string.could_not_load_menus), Toast.LENGTH_SHORT).show();

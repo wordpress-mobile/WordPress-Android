@@ -71,20 +71,7 @@ public class JetpackCustomItemEditor extends BaseMenuItemEditor implements Searc
         mJetpackCustomPostsListView = (RadioButtonListView) child.findViewById(R.id.single_select_list_view);
 
         WPTextView emptyTextView = (WPTextView) child.findViewById(R.id.empty_list_view);
-        switch (mJetpackCustomType) {
-            case JETPACK_TESTIMONIAL :
-                emptyTextView.setText(getContext().getString(R.string.menu_item_type_testimonial_empty_list));
-                break;
-            case JETPACK_PORTFOLIO:
-                emptyTextView.setText(getContext().getString(R.string.menu_item_type_portfolio_empty_list));
-                break;
-            case JETPACK_COMIC:
-                emptyTextView.setText(getContext().getString(R.string.menu_item_type_comic_empty_list));
-                break;
-            default:
-                emptyTextView.setText(getContext().getString(R.string.menu_item_type_custom_empty_list));
-                break;
-        }
+        emptyTextView.setText(getContext().getString(R.string.menu_item_type_custom_empty_list));
         mJetpackCustomPostsListView.setEmptyView(emptyTextView);
 
         mJetpackCustomPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
