@@ -823,7 +823,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
 
                         // approve the comment
-                        if (mComment.getStatusEnum() != CommentStatus.APPROVED) {
+                        if (mComment != null && mComment.getStatusEnum() != CommentStatus.APPROVED) {
                             moderateComment(CommentStatus.APPROVED);
                         }
                     } else {
