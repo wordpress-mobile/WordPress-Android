@@ -216,8 +216,10 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
         }
     }
-    public static void showReaderPhotoViewer(Context context, String imageUrl, boolean isPrivate) {
-        showReaderPhotoViewer(context, imageUrl, null, null, null, 0, 0);
+    public static void showReaderPhotoViewer(Context context,
+                                             String imageUrl,
+                                             EnumSet<PhotoViewerOption> imageOptions) {
+        showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
     }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
