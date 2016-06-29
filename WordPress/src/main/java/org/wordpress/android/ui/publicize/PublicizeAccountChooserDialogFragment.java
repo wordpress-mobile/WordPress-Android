@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import de.greenrobot.event.EventBus;
 
 public class PublicizeAccountChooserDialogFragment extends DialogFragment implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
+    public static String TAG = "publicize-account-chooser-dialog-fragment";
     private RecyclerView mNotConnectedRecyclerView;
     private PublicizeConnection[] mPublicizeConnections;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;

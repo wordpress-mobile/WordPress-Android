@@ -278,7 +278,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
         PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Connecting account");
+        mProgressDialog.setMessage(getString(R.string.connecting_account));
         mProgressDialog.show();
     }
 
@@ -294,6 +294,6 @@ public class PublicizeListActivity extends AppCompatActivity
         args.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         dialogFragment.setArguments(args);
         dialogFragment.setConnections(publicizeConnections);
-        dialogFragment.show(getSupportFragmentManager(), "yup");
+        dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
     }
 }
