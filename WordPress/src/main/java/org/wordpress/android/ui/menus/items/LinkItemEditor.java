@@ -87,12 +87,8 @@ public class LinkItemEditor extends BaseMenuItemEditor {
         menuItem.typeLabel = "Custom Link";
         menuItem.url = getUrl();
 
-        if (mUrlEditText != null) {
-            menuItem.addData(LINK_URL_KEY, String.valueOf(mUrlEditText.getText()));
-        }
         if (shouldOpenNewTab()) {
             menuItem.linkTarget = "_blank";
-            menuItem.addData(LINK_NEW_TAB_KEY, String.valueOf(mOpenNewTabCheckBox.isChecked()));
         }
     }
 }

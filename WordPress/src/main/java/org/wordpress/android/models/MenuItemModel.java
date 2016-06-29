@@ -1,6 +1,5 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -10,9 +9,7 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Menu Items define content that a Menu displays. They can be of type Page, Link, Post, Category,
@@ -41,7 +38,6 @@ public class MenuItemModel implements Serializable {
     public String type;
     public String typeFamily;
     public String typeLabel;
-    public Map<String, String> data;
     public List<MenuItemModel> children;
     public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
     public boolean editingMode;// used for visual representation
@@ -62,9 +58,6 @@ public class MenuItemModel implements Serializable {
         type = other.type;
         typeFamily = other.typeFamily;
         typeLabel = other.typeLabel;
-        if (other.data != null) {
-            data = new HashMap<>(other.data);
-        }
         if (other.children != null) {
             children = new ArrayList<>(other.children);
         }
@@ -95,16 +88,6 @@ public class MenuItemModel implements Serializable {
 
     public boolean hasChildren() {
         return children != null && children.size() > 0;
-    }
-
-    public void addData(@NonNull String key, String value) {
-        if (data == null) data = new HashMap<>();
-        data.put(key, value);
-    }
-
-    public String getData(@NonNull String key) {
-        if (data == null) data = new HashMap<>();
-        return data.get(key);
     }
 
     public MenuItemEditorFactory.ITEM_TYPE calculateCustomType(){
