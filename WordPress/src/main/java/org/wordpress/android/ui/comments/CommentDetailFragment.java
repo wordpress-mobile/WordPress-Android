@@ -238,6 +238,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
 
+        View replyBox = mLayoutReply.findViewById(R.id.reply_box);
+        if (mComment.getStatusEnum() == CommentStatus.SPAM ||
+                mComment.getStatusEnum() == CommentStatus.TRASH ||
+                mComment.getStatusEnum() == CommentStatus.DELETE) {
+            replyBox.setVisibility(View.GONE);
+        } else {
+            replyBox.setVisibility(View.VISIBLE);
+        }
+
         // hide comment like button until we know it can be enabled in showCommentForNote()
         mBtnLikeComment.setVisibility(View.GONE);
 
@@ -821,6 +830,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
                         mEditReply.setText(null);
                         mEditReply.getAutoSaveTextHelper().clearSavedText(mEditReply);
+
+                        // approve the comment
+                        if (mComment.getStatusEnum() != CommentStatus.APPROVED) {
+                            moderateComment(CommentStatus.APPROVED);
+                        }
                     } else {
                         String errorMessage = TextUtils.isEmpty(result.getMessage()) ? getString(R.string.reply_failed) : result.getMessage();
                         ToastUtils.showToast(getActivity(), errorMessage, ToastUtils.Duration.LONG);

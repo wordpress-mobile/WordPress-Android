@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">تمت إزالة المستخدم بنجاح</string>
+	<string name="person_remove_confirmation_message">إذا قمت بإزالة %1$s، فلن يعود هذا المستخدم قادرًا على الوصول إلى هذا الموقع، ومع ذلك سيبقى أي محتوى تم إنشاؤه بواسطة %1$s على الموقع.\n\nهل لا تزال ترغب في إزالة هذا المستخدم؟</string>
+	<string name="person_removed">تمت الإزالة بنجاح @%1$s</string>
+	<string name="person_remove_confirmation_title">إزالة %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">لم تنشر المواقع الموجودة في هذه القائمة أي شيء مؤخرًا</string>
+	<string name="people">أشخاص</string>
+	<string name="edit_user">تحرير إعدادات العضو</string>
+	<string name="role">الدور</string>
+	<string name="error_remove_user">تعذرت إزالة المستخدم</string>
+	<string name="error_fetch_people_list">تعذر استرداد مستخدمي الموقع</string>
+	<string name="error_update_role">تعذر تحديث دور المستخدم</string>
 	<string name="gravatar_camera_and_media_permission_required">يلزم الحصول على الإذن لتتمكن من تحديد صورة أو التقاطها</string>
 	<string name="error_updating_gravatar">حدث خطأ أثناء تحديث جرافتار</string>
 	<string name="error_locating_image">حدث خطأ أثناء تحديد موقع الصورة التي تم اقتصاصها</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">حدث خطأ. تعذر طلب عمليات الشراء.</string>
 	<string name="delete_site_progress">جارٍ حذف الموقع…</string>
 	<string name="delete_site_summary">يتعذر التراجع عن هذا الإجراء. سيؤدي حذف موقعك إلى إزالة جميع المحتويات والمساهمين والنطاقات من الموقع.</string>
-	<string name="delete_site_hint">حذف موقعك</string>
+	<string name="delete_site_hint">حذف الموقع</string>
 	<string name="export_site_hint">تصدير موقعك إلى ملف XML</string>
 	<string name="are_you_sure">هل أنت متأكد؟</string>
 	<string name="export_site_summary">إذا كنت متأكدًا، فاستغرق وقتًا، من فضلك، وقم بتصدير المحتوى الآن. سيتعذر استرداده في المستقبل.</string>
