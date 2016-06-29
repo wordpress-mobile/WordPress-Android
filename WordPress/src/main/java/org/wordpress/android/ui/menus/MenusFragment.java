@@ -588,14 +588,22 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         }
     }
 
-    private ArrayList<String> getItemTypes() {
-        String[] typeArray = getResources().getStringArray(R.array.menu_item_type_spinner_entries);
-        ArrayList<String> typeList = new ArrayList<>(Arrays.asList(typeArray));
+    private ArrayList<MenuItemEditorFactory.ITEM_TYPE> getItemTypes() {
+        ArrayList<MenuItemEditorFactory.ITEM_TYPE> typeList = new ArrayList<>();
+
+        //add basic values first - all blogs have these
+        typeList.add(MenuItemEditorFactory.ITEM_TYPE.POST);
+        typeList.add(MenuItemEditorFactory.ITEM_TYPE.PAGE);
+        typeList.add(MenuItemEditorFactory.ITEM_TYPE.CATEGORY);
+        typeList.add(MenuItemEditorFactory.ITEM_TYPE.TAG);
+        typeList.add(MenuItemEditorFactory.ITEM_TYPE.LINK);
+
+        //now add optionally enabled values
         if (mSiteSettings.getTestimonialsEnabled()) {
-            typeList.add(typeList.size(), getString(R.string.menu_item_type_testimonial));
+            typeList.add(MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL);
         }
         if (mSiteSettings.getPortfolioEnabled()) {
-            typeList.add(typeList.size(), getString(R.string.menu_item_type_portfolio));
+            typeList.add(MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO);
         }
         return typeList;
     }

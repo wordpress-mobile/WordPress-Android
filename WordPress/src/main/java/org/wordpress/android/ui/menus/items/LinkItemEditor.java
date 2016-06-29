@@ -31,12 +31,8 @@ public class LinkItemEditor extends BaseMenuItemEditor {
     @Override
     public void onViewAdded(View child) {
         super.onViewAdded(child);
-
-        if (child.getId() == R.id.link_editor_url_input) {
-            mUrlEditText = (EditText) child;
-        } else if (child.getId() == R.id.link_editor_open_new_tab_checkbox) {
-            mOpenNewTabCheckBox = (CheckBox) child;
-        }
+        mUrlEditText = (EditText) child.findViewById(R.id.link_editor_url_input);
+        mOpenNewTabCheckBox = (CheckBox) child.findViewById(R.id.link_editor_open_new_tab_checkbox);
     }
 
     @Override
@@ -51,9 +47,18 @@ public class LinkItemEditor extends BaseMenuItemEditor {
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
+        MenuItemModel menuItem = super.getMenuItem();
         fillData(menuItem);
         return menuItem;
+    }
+
+    @Override
+    public void setMenuItem(MenuItemModel menuItem) {
+        super.setMenuItem(menuItem);
+        if (menuItem != null) {
+            setUrl(menuItem.url);
+            setOpenInNewTab(menuItem.linkTarget != null && menuItem.linkTarget.equals("_blank"));
+        }
     }
 
     public void setUrl(String url) {
@@ -77,10 +82,16 @@ public class LinkItemEditor extends BaseMenuItemEditor {
     }
 
     private void fillData(@NonNull MenuItemModel menuItem) {
+        menuItem.type = MenuItemEditorFactory.ITEM_TYPE.CUSTOM.name().toLowerCase(); //default type: CUSTOM
+        menuItem.typeFamily = "custom";
+        menuItem.typeLabel = "Custom Link";
+        menuItem.url = getUrl();
+
         if (mUrlEditText != null) {
             menuItem.addData(LINK_URL_KEY, String.valueOf(mUrlEditText.getText()));
         }
-        if (mOpenNewTabCheckBox != null) {
+        if (shouldOpenNewTab()) {
+            menuItem.linkTarget = "_blank";
             menuItem.addData(LINK_NEW_TAB_KEY, String.valueOf(mOpenNewTabCheckBox.isChecked()));
         }
     }

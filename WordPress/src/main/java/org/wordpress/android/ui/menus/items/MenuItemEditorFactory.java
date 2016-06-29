@@ -21,6 +21,40 @@ public class MenuItemEditorFactory {
         JETPACK_COMIC,
         CUSTOM;
 
+        public static String stringForType(ITEM_TYPE type) {
+            String name = "";
+            switch (type) {
+                case POST:
+                    name = "post";
+                    break;
+                case PAGE:
+                    name = "page";
+                    break;
+                case CATEGORY:
+                    name = "category";
+                    break;
+                case TAG:
+                    name = "tag";
+                    break;
+                case LINK:
+                    name = "custom";
+                    break;
+                case JETPACK_TESTIMONIAL:
+                    name = "jetpack-testimonial";
+                    break;
+                case JETPACK_PORTFOLIO:
+                    name = "jetpack-portfolio";
+                    break;
+                case JETPACK_COMIC:
+                    name = "jetpack-comic";
+                    break;
+                case CUSTOM:
+                    name = "custom";
+                    break;
+            }
+            return name;
+        }
+
         public static ITEM_TYPE typeForString(String typeName) {
             if (TextUtils.isEmpty(typeName)) return NULL;
 
@@ -55,20 +89,45 @@ public class MenuItemEditorFactory {
             else return NULL;
         }
 
-        public static ITEM_TYPE typeForIndex(int index){
-            if (NULL.ordinal() == index) return NULL;
-            if (POST.ordinal() == index) return POST;
-            if (PAGE.ordinal() == index) return PAGE;
-            if (CATEGORY.ordinal() == index) return CATEGORY;
-            if (TAG.ordinal() == index) return TAG;
-            if (LINK.ordinal() == index) return LINK;
-            if (JETPACK_TESTIMONIAL.ordinal() == index) return JETPACK_TESTIMONIAL;
-            if (JETPACK_PORTFOLIO.ordinal() == index) return JETPACK_PORTFOLIO;
-            if (JETPACK_COMIC.ordinal() == index) return JETPACK_COMIC;
-            if (CUSTOM.ordinal() == index) return CUSTOM;
+        public static String nameForItemType(Context context, ITEM_TYPE itemType) {
+            String name = "";
 
-            return NULL;
+            switch (itemType) {
+                case POST:
+                    name = context.getString(R.string.menu_item_type_post);
+                    break;
+                case PAGE:
+                    name = context.getString(R.string.menu_item_type_page);
+                    break;
+                case CATEGORY:
+                    name = context.getString(R.string.menu_item_type_category);
+                    break;
+                case TAG:
+                    name = context.getString(R.string.menu_item_type_tag);
+                    break;
+                case LINK:
+                    name = context.getString(R.string.menu_item_type_link);
+                    break;
+                case JETPACK_TESTIMONIAL:
+                    name = context.getString(R.string.menu_item_type_testimonial);
+                    break;
+                case JETPACK_PORTFOLIO:
+                    name = context.getString(R.string.menu_item_type_portfolio);
+                    break;
+                case JETPACK_COMIC:
+                    name = context.getString(R.string.menu_item_type_comic);
+                    break;
+                case NULL:
+                    name = "";
+                    break;
+                case CUSTOM:
+                    name = "";
+                    break;
+            }
+
+            return name;
         }
+
     }
 
     public static int getIconDrawableRes(ITEM_TYPE type) {

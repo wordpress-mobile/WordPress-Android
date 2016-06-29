@@ -1512,13 +1512,7 @@
     <string name="menu_item_type_category">Category</string>
     <string name="menu_item_type_testimonial">Testimonial</string>
     <string name="menu_item_type_portfolio">Portfolio</string>
-    <string-array name="menu_item_type_spinner_entries">
-        <item>@string/menu_item_type_post</item>
-        <item>@string/menu_item_type_page</item>
-        <item>@string/menu_item_type_category</item>
-        <item>@string/menu_item_type_tag</item>
-        <item>@string/menu_item_type_link</item>
-    </string-array>
+    <string name="menu_item_type_comic">Comic</string>
 
     <!-- empty menu item adapter views -->
     <string name="menu_item_type_page_empty_list">No pages found</string>

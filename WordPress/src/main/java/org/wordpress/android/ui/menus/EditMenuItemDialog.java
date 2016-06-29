@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.ViewFlipper;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.ui.menus.items.BaseMenuItemEditor;
 import org.wordpress.android.ui.menus.items.MenuItemEditorFactory;
@@ -46,9 +45,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private static final String ORIGINAL_ITEM_ARG = "original-menu-item";
     private static final String WORKING_ITEM_ARG = "working-menu-item";
 
-    private static final String DEFAULT_ITEM_TYPE = ITEM_TYPE.POST.name();
+    private static final ITEM_TYPE DEFAULT_ITEM_TYPE = ITEM_TYPE.POST;
 
-    public static EditMenuItemDialog newInstance(MenuItemModel menuItem, ArrayList<String> types) {
+    public static EditMenuItemDialog newInstance(MenuItemModel menuItem, ArrayList<MenuItemEditorFactory.ITEM_TYPE> types) {
         EditMenuItemDialog dialog = new EditMenuItemDialog();
         Bundle args = new Bundle();
         addToBundle(args, ITEM_TYPES_ARG, types);
@@ -65,7 +64,8 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     private MenuItemModel mOriginalItem;
     private MenuItemModel mWorkingItem;
-    private List<String> mItemTypes = new ArrayList<>();
+    private List<MenuItemEditorFactory.ITEM_TYPE> mItemTypes = new ArrayList<>();
+    private List<String> mItemTypeNames = new ArrayList<>();
     private Map<String, Integer> mItemPositions = new HashMap<>();
 
     // Views
@@ -91,7 +91,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
             }
 
             if (args.containsKey(ITEM_TYPES_ARG)) {
-                ArrayList<String> types = (ArrayList<String>) args.getSerializable(ITEM_TYPES_ARG);
+                ArrayList<MenuItemEditorFactory.ITEM_TYPE> types = (ArrayList<MenuItemEditorFactory.ITEM_TYPE>) args.getSerializable(ITEM_TYPES_ARG);
                 if (types != null) {
                     setTypes(types);
                 }
@@ -136,7 +136,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         setupToolbar();
         setupTypePicker();
-        setType(isCreating() ? DEFAULT_ITEM_TYPE : mOriginalItem.type);
+        setType(isCreating() ? DEFAULT_ITEM_TYPE.name() : mOriginalItem.type);
 
         return dialogView;
     }
@@ -160,10 +160,15 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         return false;
     }
 
-    public void setTypes(@NonNull List<String> types) {
+    public void setTypes(@NonNull List<MenuItemEditorFactory.ITEM_TYPE> types) {
         if (types.equals(mItemTypes)) return;
         mItemTypes.clear();
         mItemTypes.addAll(types);
+
+        mItemTypeNames.clear();
+        for (MenuItemEditorFactory.ITEM_TYPE type : mItemTypes) {
+            mItemTypeNames.add(MenuItemEditorFactory.ITEM_TYPE.nameForItemType(getActivity(), type));
+        }
     }
 
     private void sendResultToTarget(int resultCode, MenuItemModel item) {
@@ -203,9 +208,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         // add editor views
         for (int i = 0; i < mTypePicker.getCount(); ++i) {
-
-            //type is i18n'ed, so we need to find the canonical type for the loaded array
-            ITEM_TYPE itemType = ITEM_TYPE.typeForIndex(i + 1);
+            ITEM_TYPE itemType = mItemTypes.get(i);
             BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getActivity(), itemType);
             if (editor != null) {
                 mEditorFlipper.addView(editor);
@@ -245,7 +248,8 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     private void setupTypePicker() {
         if (mTypePicker == null || !isAdded()) return;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItemTypes);
+        //get names to be shown
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mItemTypeNames);
         mTypePicker.setAdapter(adapter);
 
         fillViewFlipper();
@@ -253,7 +257,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ITEM_TYPE itemType = ITEM_TYPE.typeForIndex(position + 1);
+                ITEM_TYPE itemType = mItemTypes.get(position);
                 setType(itemType.name().toUpperCase());
             }
 
