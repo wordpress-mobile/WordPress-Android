@@ -47,7 +47,6 @@
 	<string name="purchases_request_error">Κάτι πήγε στραβά. Αδυναμία αναζήτησης αγορών.</string>
 	<string name="delete_site_progress">Διαγραφή ιστοτόπου...</string>
 	<string name="delete_site_summary">Αυτή η ενέργεια δεν μπορεί να αναιρεθεί. Η διαγραφή του ιστοτόπου σας θα αφαιρέσει όλο το περιεχόμενο, τους συντελεστές και τους τομείς από τον ιστότοπο.</string>
-	<string name="delete_site_hint">Διαγράψτε τον ιστότοπό σας</string>
 	<string name="export_site_hint">Εξαγωγή του ιστοτόπου σας σε αρχείο XML</string>
 	<string name="are_you_sure">Είστε σίγουροι;</string>
 	<string name="export_site_summary">Αν είστε σίγουροι, παρακαλούμε αφιερώστε λίγο χρόνο να εξάγετε τώρα το περιεχόμενο του ιστοτόπου σας. Δεν μπορεί να ανακτηθεί μελλοντικά.</string>

@@ -19,6 +19,7 @@
     </declare-styleable>
 
     <declare-styleable name="WPStartOverPreference">
+        <attr name="preficon" format="reference" />
         <attr name="buttonText" format="string" />
         <attr name="buttonTextColor" format="reference|color" />
         <attr name="buttonTextAllCaps" format="boolean" />

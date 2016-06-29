@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">User removed successfully</string>
+	<string name="person_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
+	<string name="person_removed">Successfully removed @%1$s</string>
+	<string name="person_remove_confirmation_title">Remove %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
+	<string name="people">People</string>
+	<string name="edit_user">Edit User</string>
+	<string name="role">Role</string>
+	<string name="error_remove_user">Couldn\'t remove user</string>
+	<string name="error_fetch_people_list">Couldn\'t retrieve site users</string>
+	<string name="error_update_role">Couldn\'t update user role</string>
 	<string name="gravatar_camera_and_media_permission_required">Permissions required in order to select or capture a photo</string>
 	<string name="error_updating_gravatar">Error updating your Gravatar</string>
 	<string name="error_locating_image">Error locating the cropped image</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
 	<string name="delete_site_progress">Deleting site…</string>
 	<string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
-	<string name="delete_site_hint">Delete your site</string>
+	<string name="delete_site_hint">Delete site</string>
 	<string name="export_site_hint">Export your site to an XML file</string>
 	<string name="are_you_sure">Are You Sure?</string>
 	<string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>

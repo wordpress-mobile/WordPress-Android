@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="person_removed_general">הסרת בהצלחה את המשתמש</string>
+	<string name="person_remove_confirmation_message">לאחר הסרת %1$s, משתמש זה לא יקבל יותר גישה לאתר זה אך כל התוכן שנוצר על ידי %1$s יישאר באתר.\n\nבחרת להסיר משתמש זה - האם ההחלטה סופית?</string>
+	<string name="person_removed">הסרת בהצלחה את @%1$s</string>
+	<string name="person_remove_confirmation_title">הסרת %1$s</string>
+	<string name="reader_empty_posts_in_custom_list">האתרים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
+	<string name="people">אנשים</string>
+	<string name="edit_user">עריכת פרטי משתמש</string>
+	<string name="role">תפקיד</string>
+	<string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
+	<string name="error_fetch_people_list">לא הצלחנו לאחזר את משתמשי האתר</string>
+	<string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
 	<string name="gravatar_camera_and_media_permission_required">דרושות הרשאות לבחירה או לכידה של תמונה</string>
 	<string name="error_updating_gravatar">שגיאה בעדכון ה-gravatar שלך</string>
 	<string name="error_locating_image">שגיאה באיתור התמונה החתוכה</string>
@@ -47,7 +58,7 @@
 	<string name="purchases_request_error">משהו השתבש. לא ניתן לבקש רכישות.</string>
 	<string name="delete_site_progress">מוחק אתר…</string>
 	<string name="delete_site_summary">לא ניתן לבטל פעולה זו. מחיקת האתר שלך תסיר את כל התוכן, המשתתפים והדומיינים מהאתר.</string>
-	<string name="delete_site_hint">מחיקת האתר שלך</string>
+	<string name="delete_site_hint">מחיקת אתר</string>
 	<string name="export_site_hint">יצוא האתר שלך לקובץ XML</string>
 	<string name="are_you_sure">ההחלטה הסופית?</string>
 	<string name="export_site_summary">אם ההחלטה שלך סופית, זה הזמן לייצא את התוכן שלך. לא ניתן יהיה לשחזר אותו בעתיד.</string>
