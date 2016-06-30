@@ -666,16 +666,16 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
     @Override
     public void onCommentPressed(int position, View view) {
+        // if the comment is being moderated ignore the press
         Comment comment = getAdapter().getItem(position);
-        if (comment == null) {
+        if (!isCommentSelectable(comment)) {
             return;
         }
+
         if (mActionMode == null) {
-            if (!getAdapter().isModeratingCommentId(comment.commentID)) {
-                mFilteredCommentsView.invalidate();
-                if (getActivity() instanceof OnCommentSelectedListener) {
-                    ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
-                }
+            mFilteredCommentsView.invalidate();
+            if (getActivity() instanceof OnCommentSelectedListener) {
+                ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.commentID);
             }
         } else {
             getAdapter().toggleItemSelected(position, view);
@@ -684,6 +684,12 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
 
     @Override
     public void onCommentLongPressed(int position, View view) {
+        // if the comment is being moderated ignore the press
+        Comment comment = getAdapter().getItem(position);
+        if (!isCommentSelectable(comment)) {
+            return;
+        }
+        
         // enable CAB if it's not already enabled
         if (mActionMode == null) {
             if (getActivity() instanceof AppCompatActivity) {
@@ -694,6 +700,10 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         } else {
             getAdapter().toggleItemSelected(position, view);
         }
+    }
+
+    private boolean isCommentSelectable(Comment comment){
+        return comment != null && !getAdapter().isModeratingCommentId(comment.commentID);
     }
 
     private boolean shouldRestoreCab() {
