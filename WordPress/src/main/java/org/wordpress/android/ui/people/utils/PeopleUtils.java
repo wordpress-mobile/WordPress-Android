@@ -89,7 +89,8 @@ public class PeopleUtils {
                         callback.onSuccess(people, pageFetched, isEndOfList);
                     }
                     catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
+                                "sites/%s/stats/followers: " + e);
                         callback.onError();
                     }
                 }
