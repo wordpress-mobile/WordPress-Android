@@ -103,6 +103,10 @@ public class ReaderWebView extends WebView {
         }
     }
 
+    public void clearContent() {
+        loadUrl("about:blank");
+    }
+
     private ReaderWebViewUrlClickListener getUrlClickListener() {
         return mUrlClickListener;
     }

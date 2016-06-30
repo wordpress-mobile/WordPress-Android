@@ -136,6 +136,7 @@
     <!-- Misc -->
     <color name="pressed_wordpress">@color/semi_transparent_blue_light</color>
     <color name="background_grey">@color/grey_lighten_30</color>
+    <color name="translucent_white">#A6FFFFFF</color>
 
     <!--Me-->
     <color name="me_divider">#D8E3EA</color>
