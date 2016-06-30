@@ -62,14 +62,12 @@ public class ReaderWebView extends WebView {
 
     private boolean mIsDestroyed;
 
-    private final int mBoundedWidth;
+    private int mBoundedWidth;
 
     public ReaderWebView(Context context) {
         super(context);
 
-        mBoundedWidth = 0;
-
-        init();
+        init(context, null);
     }
 
     @Override
@@ -85,26 +83,22 @@ public class ReaderWebView extends WebView {
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.wpBoundedWidth);
-        mBoundedWidth = a.getDimensionPixelSize(R.styleable.wpBoundedWidth_bounded_width, 0);
-        a.recycle();
-
-        init();
+        init(context, null);
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.wpBoundedWidth);
-        mBoundedWidth = a.getDimensionPixelSize(R.styleable.wpBoundedWidth_bounded_width, 0);
-        a.recycle();
-
-        init();
+        init(context, null);
     }
 
     @SuppressLint("NewApi")
-    private void init() {
+    private void init(Context context, AttributeSet attrs) {
         if (!isInEditMode()) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.wpBoundedWidth);
+            mBoundedWidth = a.getDimensionPixelSize(R.styleable.wpBoundedWidth_bounded_width, 0);
+            a.recycle();
+
             mToken = AccountHelper.getDefaultAccount().getAccessToken();
 
             mReaderChromeClient = new ReaderWebChromeClient(this);
