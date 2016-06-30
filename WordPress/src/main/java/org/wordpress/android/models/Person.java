@@ -83,6 +83,31 @@ public class Person {
         return null;
     }
 
+    @Nullable
+    public static Person viewerFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+        if (json == null) {
+            return null;
+        }
+
+        // Same response parameters in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            Person person = new Person(personID, blogId, localTableBlogId);
+            person.setUsername(json.optString("login"));
+            person.setFirstName(json.optString("first_name"));
+            person.setLastName(json.optString("last_name"));
+            person.setDisplayName(json.optString("name"));
+            person.setAvatarUrl(json.optString("avatar_URL"));
+            person.setViewer(true);
+
+            return person;
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
+    }
+
     public long getPersonID() {
         return personID;
     }
