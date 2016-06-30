@@ -1077,6 +1077,7 @@
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
@@ -1128,6 +1129,7 @@
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
+    <string name="reader_label_related_posts">Related Reading</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1163,12 +1165,6 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
-    <string name="editor_toast_invalid_path">Invalid file path</string>
-    <string name="editor_toast_changes_saved">Changes saved</string>
-    <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
-        your post in this state. Would you like to remove all failed media?</string>
-    <string name="editor_remove_failed_uploads">Remove failed uploads</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
@@ -1275,7 +1271,14 @@
     <string name="auth_required">Sign in again to continue.</string>
     <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
         in. Try to sign in with your newly created username and password.</string>
-
+    <string name="send_link">Send link</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="logging_in">Logging in</string>
+    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="launch_your_email_app">Launch your email app</string>
+    <string name="checking_email">Checking email</string>
+    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1527,15 +1530,6 @@
     <string name="menu_item_changes_not_saved">Your local changes haven\'t been saved. Are you sure you want to go back and discard changes?</string>
     <string name="menu_item_changes_not_saved_title">Your changes</string>
 
-
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
-    <string name="logging_in">Logging in</string>
-    <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
-    <string name="check_your_email">Check your email</string>
-    <string name="launch_your_email_app">Launch your email app</string>
-    <string name="checking_email">Checking email</string>
-    <string name="not_on_wordpress_com">Not on WordPress.com?</string>
-
     <!-- gravatar -->
     <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
     <string name="error_cropping_image">Error cropping the image</string>
@@ -1543,4 +1537,52 @@
     <string name="error_refreshing_gravatar">Error reloading your Gravatar</string>
     <string name="error_updating_gravatar">Error updating your Gravatar</string>
     <string name="gravatar_camera_and_media_permission_required">Permissions required in order to select or capture a photo</string>
+
+    <!-- Editor -->
+    <string name="discard">Discard</string>
+    <string name="edit">Edit</string>
+    <string name="tap_to_try_again">Tap to try again!</string>
+    <string name="uploading">Uploading…</string>
+    <string name="uploading_gallery_placeholder">Uploading gallery…</string>
+
+    <string name="alert_insert_image_html_mode">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
+    <string name="alert_error_adding_media">An error occurred while inserting media</string>
+
+    <string name="stop_upload_dialog_title">Stop uploading?</string>
+    <string name="stop_upload_button">Stop Upload</string>
+
+    <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
+    <string name="image_settings_save_toast">Changes saved</string>
+
+    <string name="image_caption">Caption</string>
+    <string name="image_alt_text">Alt text</string>
+    <string name="image_link_to">Link to</string>
+    <string name="image_width">Width</string>
+
+    <!-- Editor: Accessibility - format bar button descriptions -->
+    <string name="format_bar_description_bold">Bold</string>
+    <string name="format_bar_description_italic">Italic</string>
+    <string name="format_bar_description_underline">Underline</string>
+    <string name="format_bar_description_strike">Strikethrough</string>
+    <string name="format_bar_description_quote">Block quote</string>
+    <string name="format_bar_description_link">Insert link</string>
+    <string name="format_bar_description_more">Insert more</string>
+    <string name="format_bar_description_media">Insert media</string>
+    <string name="format_bar_description_ul">Unordered list</string>
+    <string name="format_bar_description_ol">Ordered list</string>
+    <string name="format_bar_description_html">HTML mode</string>
+    <string name="visual_editor">Visual editor</string>
+    <string name="image_thumbnail">Image thumbnail</string>
+
+    <!-- Editor: Errors -->
+    <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
+        in this state. Remove all failed uploads and continue?</string>
+    <string name="editor_toast_invalid_path">Invalid file path</string>
+    <string name="editor_toast_changes_saved">Changes saved</string>
+    <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
+    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
+        your post in this state. Would you like to remove all failed media?</string>
+    <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+
 </resources>

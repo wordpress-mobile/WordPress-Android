@@ -62,7 +62,7 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     private OnSiteClickListener mSiteSelectedListener;
     private OnSelectedCountChangedListener mSelectedCountListener;
 
-    static class SiteViewHolder extends RecyclerView.ViewHolder {
+    class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
         private final TextView txtTitle;
         private final TextView txtDomain;
@@ -78,6 +78,18 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int clickedPosition = getAdapterPosition();
+                    if (mIsMultiSelectEnabled) {
+                        toggleSelection(clickedPosition);
+                    } else if (mSiteSelectedListener != null) {
+                        mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                    }
+                }
+            });
         }
     }
 
@@ -130,23 +142,12 @@ class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.SiteViewH
     }
 
     @Override
-    public void onBindViewHolder(SiteViewHolder holder, final int position) {
+    public void onBindViewHolder(SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
         holder.txtTitle.setText(site.getBlogNameOrHomeURL());
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsMultiSelectEnabled) {
-                    toggleSelection(position);
-                } else if (mSiteSelectedListener != null) {
-                    mSiteSelectedListener.onSiteClick(getItem(position));
-                }
-            }
-        });
 
         if (site.localId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
             holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);

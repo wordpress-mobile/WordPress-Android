@@ -8,24 +8,19 @@ read on.
 
 ## Build Instructions ##
 
-The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need to generate the
-local.properties (replace YOUR_SDK_DIR with your actual android SDK directory)
-file and create the gradle.properties file. The easiest way is to copy
-our example:
+You first need to generate the `local.properties` (replace YOUR_SDK_DIR with
+your actual android SDK directory) file and create the `gradle.properties` file:
 
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
     $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
 
 Note: this is the default `./WordPress/gradle.properties` file. If you
-want to use WordPress.com functions (login to a WordPress.com account,
+want to use WordPress.com features (login to a WordPress.com account,
 access the Reader and Stats for example), you'll have to get a WordPress.com
 OAuth2 ID and secret. Please read the
 [OAuth2 Authentication](#oauth2-authentication) section.
 
-The previous command creates a `libs/` directory and clones all dependencies needed
-by the main WordPress for Android project. You can now build, install and
-test the project:
+You can now build, install and test the project:
 
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
@@ -48,7 +43,8 @@ Then, from a Windows command prompt:
 
     mklink /D [PROJECT_ROOT]\libs\editor\WordPressEditor\src\main\assets %PROJECT_ROOT%\libs\editor\libs\editor-common\assets
 
-Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink locally:
+Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink
+locally:
 
     # editor assets symlink
     libs/editor/WordPressEditor/src/main/assets
@@ -123,7 +119,8 @@ daemon: `buckd`.
 ## FAQ ##
 
 * Q: I can't build/test/package the project because of a `PermGen space` error.
-* A: Create a `build.properties` file in the project root directory with the following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
+* A: Create a `build.properties` file in the project root directory with the
+following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
 
 ## License ##
 
@@ -133,7 +130,6 @@ in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
 [4]: https://make.wordpress.org/chat/
 [5]: https://developer.wordpress.com/apps/

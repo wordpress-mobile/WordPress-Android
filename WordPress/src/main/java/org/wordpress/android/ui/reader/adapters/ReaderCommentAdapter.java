@@ -314,7 +314,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0 ? null : mComments.get(position - NUM_HEADERS);
     }
 
-    private void showLikeStatus(final CommentHolder holder, final int position) {
+    private void showLikeStatus(final CommentHolder holder, int position) {
         ReaderComment comment = getItem(position);
         if (comment == null) {
             return;
@@ -331,7 +331,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.countLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleLike(v.getContext(), holder, position);
+                        int clickedPosition = holder.getAdapterPosition();
+                        toggleLike(v.getContext(), holder, clickedPosition);
                     }
                 });
             }
