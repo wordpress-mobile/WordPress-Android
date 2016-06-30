@@ -83,13 +83,13 @@ public class ReaderWebView extends WebView {
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        init(context, null);
+        init(context, attrs);
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        init(context, null);
+        init(context, attrs);
     }
 
     @SuppressLint("NewApi")
