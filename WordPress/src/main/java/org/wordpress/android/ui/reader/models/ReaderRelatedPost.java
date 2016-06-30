@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.models;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 
 /**
@@ -23,14 +25,18 @@ public class ReaderRelatedPost {
         mFeaturedImage = post.getFeaturedImage();
 
         if (post.hasAuthorName() && post.hasBlogName()) {
-            mSubtitle = post.getAuthorName() + ", " + post.getBlogName();
+            mSubtitle = formatAuthorName(post.getAuthorName()) + ", " + post.getBlogName();
         } else if (post.hasAuthorName()) {
-            mSubtitle = post.getAuthorName();
+            mSubtitle = formatAuthorName(post.getAuthorName());
         } else if (post.hasBlogName()) {
             mSubtitle = post.getBlogName();
         } else {
             mSubtitle = "";
         }
+    }
+
+    private static String formatAuthorName(@NonNull String authorName) {
+        return String.format(WordPress.getContext().getString(R.string.reader_label_related_posts_author), authorName);
     }
 
     public long getPostId() {
