@@ -12,8 +12,8 @@ import java.util.HashSet;
 public class CommentAdapterState implements Parcelable {
     public static final String KEY = "comments_adapter_state";
 
-    private HashSet<Long> mSelectedComments;
-    private HashSet<Long> mModeratedCommentsId;
+    private final HashSet<Long> mSelectedComments;
+    private final HashSet<Long> mModeratedCommentsId;
 
     public CommentAdapterState(@NonNull HashSet<Long> selectedComments, @NonNull HashSet<Long> moderatedCommentsId) {
         mSelectedComments = selectedComments;
@@ -38,7 +38,7 @@ public class CommentAdapterState implements Parcelable {
     }
 
     @SuppressWarnings("unchecked")
-    protected CommentAdapterState(Parcel in) {
+    private CommentAdapterState(Parcel in) {
         mSelectedComments = (HashSet<Long>) in.readSerializable();
         mModeratedCommentsId = (HashSet<Long>) in.readSerializable();
     }

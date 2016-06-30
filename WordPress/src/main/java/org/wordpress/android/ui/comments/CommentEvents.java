@@ -6,14 +6,12 @@ import org.wordpress.android.models.CommentStatus;
 class CommentEvents {
 
     public static class CommentsBatchModerationFinishedEvent {
-        private CommentList mComments;
-        private boolean mIsDeleted;
-        private CommentStatus mNewStatus;
+        private final CommentList mComments;
+        private final boolean mIsDeleted;
 
-        public CommentsBatchModerationFinishedEvent(CommentList comments, boolean isDeleted, CommentStatus newStatus) {
+        public CommentsBatchModerationFinishedEvent(CommentList comments, boolean isDeleted) {
             mComments = comments;
             mIsDeleted = isDeleted;
-            mNewStatus = newStatus;
         }
 
         public CommentList getComments() {
@@ -24,17 +22,13 @@ class CommentEvents {
             return mIsDeleted;
         }
 
-        public CommentStatus getNewStatus() {
-            return mNewStatus;
-        }
-
     }
 
     public static class CommentModerationFinishedEvent {
-        private boolean mIsSuccess;
-        private boolean mIsCommentsRefreshRequired;
-        private long mCommentId;
-        private CommentStatus mNewStatus;
+        private final boolean mIsSuccess;
+        private final boolean mIsCommentsRefreshRequired;
+        private final long mCommentId;
+        private final CommentStatus mNewStatus;
 
         public CommentModerationFinishedEvent(boolean isSuccess, boolean isCommentsRefreshRequired, long commentId, CommentStatus newStatus) {
             mIsSuccess = isSuccess;

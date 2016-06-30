@@ -249,7 +249,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
                 EventBus.getDefault().post(
-                        new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false, newStatus));
+                        new CommentEvents.CommentsBatchModerationFinishedEvent(moderatedComments, false));
             }
         };
 
@@ -323,7 +323,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
                 EventBus.getDefault().post(
-                        new CommentEvents.CommentsBatchModerationFinishedEvent(deletedComments, true, newStatus));
+                        new CommentEvents.CommentsBatchModerationFinishedEvent(deletedComments, true));
             }
         };
 
@@ -719,6 +719,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         super.onStop();
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(CommentEvents.CommentModerationFinishedEvent event) {
         if (!isAdded()) return;
 
@@ -733,6 +734,7 @@ public class CommentsListFragment extends Fragment implements CommentAdapter.OnD
         }
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(CommentEvents.CommentsBatchModerationFinishedEvent moderatedComments) {
         if (!isAdded()) return;
 
