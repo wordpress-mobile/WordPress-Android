@@ -97,6 +97,18 @@
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_date_below_title"
+            style="@style/ReaderTextView.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:visibility="gone"
+            tools:text="text_dateline_below_title"
+            tools:visibility="visible" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
