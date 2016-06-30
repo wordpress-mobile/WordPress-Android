@@ -5,8 +5,8 @@ import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +45,7 @@ public class PlansActivity extends AppCompatActivity {
     private WPViewPager mViewPager;
     private PlansPagerAdapter mPageAdapter;
     private TabLayout mTabLayout;
+    private ViewGroup mFramePurchase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class PlansActivity extends AppCompatActivity {
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mFramePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,13 +90,6 @@ public class PlansActivity extends AppCompatActivity {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                updatePurchaseUI(position);
-            }
-        });
 
         // Download plans if not already available
         if (mAvailablePlans == null) {
@@ -158,6 +153,18 @@ public class PlansActivity extends AppCompatActivity {
                 mViewPager.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
             }
+        }
+
+        // animate in upgrade/manage view after a short delay the first time around
+        if (mFramePurchase.getVisibility() != View.VISIBLE) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        AniUtils.animateBottomBar(mFramePurchase, true);
+                    }
+                }
+            }, 1000l);
         }
     }
 
