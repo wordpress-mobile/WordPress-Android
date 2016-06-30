@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.plans;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -143,19 +143,20 @@ public class PlansActivity extends AppCompatActivity {
             } else {
                 mViewPager.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
+                showBottomBar();
             }
         }
+    }
 
-        // animate in upgrade/manage view after a short delay the first time around
+    private void showBottomBar() {
         if (mManageBar.getVisibility() != View.VISIBLE) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        AniUtils.animateBottomBar(mManageBar, true);
-                    }
-                }
-            }, 1000l);
+            AniUtils.animateBottomBar(mManageBar, true);
+        }
+    }
+
+    private void hideBottomBar() {
+        if (mManageBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mManageBar, false);
         }
     }
 
@@ -175,6 +176,14 @@ public class PlansActivity extends AppCompatActivity {
                 Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius, endRadius);
                 anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
                 anim.setInterpolator(new AccelerateInterpolator());
+
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        showBottomBar();
+                    }
+                });
 
                 mViewPager.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
