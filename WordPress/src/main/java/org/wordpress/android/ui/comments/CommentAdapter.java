@@ -277,16 +277,13 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         for (Long commentId : mSelectedCommentsId) {
-            if (isCommentIdValid(commentId))
-                comments.add(mComments.get(indexOfCommentId(commentId)));
+            int commentIndex = indexOfCommentId(commentId);
+            if (commentIndex > -1) {
+                comments.add(mComments.get(commentIndex));
+            }
         }
 
         return comments;
-    }
-
-
-    private boolean isCommentIdValid(long commentId) {
-        return indexOfCommentId(commentId) != -1;
     }
 
     private boolean isItemSelected(int position) {
@@ -476,11 +473,13 @@ class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (adapterState == null) return;
 
         if (adapterState.hasSelectedComments()) {
+            mSelectedCommentsId.clear();
             mSelectedCommentsId.addAll(adapterState.getSelectedComments());
             setEnableSelection(true);
         }
 
         if (adapterState.hasModeratingComments()) {
+            mModeratingCommentsIds.clear();
             mModeratingCommentsIds.addAll(adapterState.getModeratedCommentsId());
         }
     }
