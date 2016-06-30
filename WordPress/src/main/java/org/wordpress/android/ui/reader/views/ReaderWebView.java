@@ -85,8 +85,8 @@ public class ReaderWebView extends WebView {
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BoundedWidth);
-        mBoundedWidth = a.getDimensionPixelSize(R.styleable.BoundedWidth_bounded_width, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.wpBoundedWidth);
+        mBoundedWidth = a.getDimensionPixelSize(R.styleable.wpBoundedWidth_bounded_width, 0);
         a.recycle();
 
         init();
@@ -95,8 +95,8 @@ public class ReaderWebView extends WebView {
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BoundedWidth);
-        mBoundedWidth = a.getDimensionPixelSize(R.styleable.BoundedWidth_bounded_width, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.wpBoundedWidth);
+        mBoundedWidth = a.getDimensionPixelSize(R.styleable.wpBoundedWidth_bounded_width, 0);
         a.recycle();
 
         init();
