@@ -140,7 +140,7 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
         WordPress.getRestClientUtilsV1_1().getCategories(String.valueOf(WordPress.getCurrentRemoteBlogId()),
                 new RestRequest.Listener() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(final JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Categories REST request.");
 
                         CategoryModel[] models = CategoryModel.deserializeJsonRestResponse(response);
@@ -154,7 +154,6 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
                             //super.getMenuItem() called on purpose to avoid any processing, we just want the working item
                             setSelection(item.contentId);
                         }
-
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override

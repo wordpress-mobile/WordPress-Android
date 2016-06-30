@@ -28,8 +28,9 @@ public class SuggestionTable {
                 + " );");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TAXONOMY_TABLE + " ("
                 + "    site_id              INTEGER DEFAULT 0,"
+                + "    tag_id               INTEGER DEFAULT 0,"
                 + "    tag                  TEXT,"
-                + "    PRIMARY KEY (site_id, tag)"
+                + "    PRIMARY KEY (site_id, tag_id)"
                 + " );");
     }
 
@@ -132,6 +133,7 @@ public class SuggestionTable {
 
         ContentValues values = new ContentValues();
         values.put("site_id",           tag.siteID);
+        values.put("tag_id",            tag.id);
         values.put("tag",               tag.getTag());
 
         getWritableDb().insertWithOnConflict(TAXONOMY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -165,9 +167,11 @@ public class SuggestionTable {
         final String tag = c.getString(c.getColumnIndex("tag"));
 
         int siteId = c.getInt(c.getColumnIndex("site_id"));
+        int tagId = c.getInt(c.getColumnIndex("tag_id"));
 
         return new Tag(
                 siteId,
+                tagId,
                 tag);
     }
 }
