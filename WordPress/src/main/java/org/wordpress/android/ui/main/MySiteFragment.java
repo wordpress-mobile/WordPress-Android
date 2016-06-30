@@ -36,6 +36,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -260,10 +261,10 @@ public class MySiteFragment extends Fragment
     }
 
     /*
-     * plans is a work-in-progress and is currently only exposed to alpha testers
+     * plans is a work-in-progress and isn't exposed yet
      */
     private static boolean isPlansEnabled() {
-        return AppPrefs.isInAppBillingAvailable();
+        return PackageUtils.isDebugBuild();
     }
 
     private void showSitePicker() {
