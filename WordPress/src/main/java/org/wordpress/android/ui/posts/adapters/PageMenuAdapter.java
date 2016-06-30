@@ -68,7 +68,7 @@ public class PageMenuAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         PageMenuHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.popup_menu_item, parent, false);

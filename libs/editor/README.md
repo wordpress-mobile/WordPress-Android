@@ -44,7 +44,9 @@ With npm and Mocha installed, from within `libs/editor-common/assets/test`, run:
 
     npm install chai
 
-It should now be possible to run the tests using `mocha` inside `libs/editor-common/assets`.
+And then run `mocha` inside `libs/editor-common/assets`:
+
+    cd libs/editor-common/assets; mocha; cd -
 
 ## LICENSE ##
 

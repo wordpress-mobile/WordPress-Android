@@ -50,7 +50,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
     private OnSiteClickListener mSiteSelectedListener;
 
-    static class SiteViewHolder extends RecyclerView.ViewHolder {
+    class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
         private final TextView txtTitle;
         private final TextView txtDomain;
@@ -66,6 +66,16 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
             imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
             divider = view.findViewById(R.id.divider);
             isSiteHidden = null;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mSiteSelectedListener != null) {
+                        int clickedPosition = getAdapterPosition();
+                        mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                    }
+                }
+            });
         }
     }
 
@@ -111,19 +121,12 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
     }
 
     @Override
-    public void onBindViewHolder(SiteViewHolder holder, final int position) {
+    public void onBindViewHolder(SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
         holder.txtTitle.setText(site.getBlogNameOrHomeURL());
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSiteSelectedListener.onSiteClick(getItem(position));
-            }
-        });
 
         if (site.localId == mCurrentLocalId) {
             holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
