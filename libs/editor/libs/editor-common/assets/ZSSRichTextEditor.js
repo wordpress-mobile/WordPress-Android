@@ -1942,11 +1942,15 @@ ZSSEditor.updateCurrentImageMeta = function( imageMetaString ) {
     // in certain cases, modify the current and inserted markup depending on what
     // elements surround the targeted node.  This approach is safer.
     var node = ZSSEditor.findImageCaptionNode( ZSSEditor.currentEditingImage );
+    var parent = node.parentNode;
+
     node.insertAdjacentHTML( 'afterend', html );
     // Use {node}.{parent}.removeChild() instead of {node}.remove(), since Android API<19 doesn't support Node.remove()
     node.parentNode.removeChild(node);
 
     ZSSEditor.currentEditingImage = null;
+
+    ZSSEditor.setFocusAfterElement(parent);
 }
 
 ZSSEditor.applyImageSelectionFormatting = function( imageNode ) {
@@ -2148,7 +2152,7 @@ ZSSEditor.createImageFromMeta = function( props ) {
         html = wp.shortcode.string({
             tag:     'caption',
             attrs:   shortcode,
-            content: html + ' ' + props.caption
+            content: html + props.caption
         });
 
         html = Formatter.applyVisualFormatting( html );
@@ -3227,6 +3231,9 @@ ZSSField.prototype.handleKeyDownEvent = function(e) {
             } else if (sel.isCollapsed && sel.baseOffset == 0 && parentNode && parentNode.nodeName == 'BLOCKQUOTE') {
                 e.preventDefault();
                 ZSSEditor.setBlockquote();
+            // When pressing enter inside an image caption, clear the caption styling from the new line
+            } else if (parentNode.nodeName == NodeName.SPAN && $(parentNode).hasClass('wp-caption')) {
+                setTimeout(this.handleCaptionNewLine, 100);
             }
         }
     }
@@ -3634,6 +3641,32 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
             }
         }
     }
+};
+
+/**
+ *  @brief      Called when enter is pressed inside an image caption. Clears away the span and label tags the new line
+ *              inherits from the caption styling.
+ */
+ZSSField.prototype.handleCaptionNewLine = function() {
+    var selectedNode = document.getSelection().baseNode;
+
+    var contentsNode;
+    if (selectedNode.firstChild != null) {
+        contentsNode = selectedNode.firstChild.cloneNode();
+    } else {
+        contentsNode = selectedNode.cloneNode();
+    }
+
+    var parentSpan = selectedNode.parentNode.parentNode;
+    var parentDiv = parentSpan.parentNode;
+
+    var paragraph = document.createElement("div");
+    paragraph.appendChild(contentsNode);
+
+    parentDiv.insertBefore(paragraph, parentSpan);
+    parentDiv.removeChild(parentSpan);
+
+    ZSSEditor.giveFocusToElement(contentsNode);
 };
 
 // MARK: - i18n

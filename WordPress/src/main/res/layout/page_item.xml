@@ -36,60 +36,83 @@
             android:background="@color/grey_lighten_20" />
     </LinearLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/btn_more"
-            android:orientation="vertical">
+            android:background="?android:selectableItemBackground"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_large">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_date"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_large"
-                app:wpFontFamily="merriweather"
-                tools:text="text_title" />
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btn_more"
+                android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_status"
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_date"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    app:wpFontFamily="merriweather"
+                    tools:text="text_title" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/grey_darken_10"
+                    android:textSize="@dimen/text_sz_small"
+                    android:visibility="gone"
+                    tools:drawableLeft="@drawable/noticon_scheduled"
+                    tools:text="text_status"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_more"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:background="?android:selectableItemBackground"
+                android:padding="@dimen/margin_medium"
+                android:contentDescription="@string/more"
+                app:srcCompat="@drawable/ic_action_more" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/disabled_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent_white"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@color/grey_darken_10"
-                android:textSize="@dimen/text_sz_small"
-                android:visibility="gone"
-                tools:drawableLeft="@drawable/noticon_scheduled"
-                tools:text="text_status"
-                tools:visibility="visible" />
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:indeterminate="true"/>
+        </RelativeLayout>
+    </FrameLayout>
 
-        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/btn_more"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_medium"
-            android:contentDescription="@string/more"
-            app:srcCompat="@drawable/ic_action_more" />
-    </RelativeLayout>
 
     <View
         android:id="@+id/divider_bottom"
