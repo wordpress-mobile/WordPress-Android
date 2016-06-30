@@ -45,7 +45,7 @@ public class PlansActivity extends AppCompatActivity {
     private WPViewPager mViewPager;
     private PlansPagerAdapter mPageAdapter;
     private TabLayout mTabLayout;
-    private ViewGroup mFramePurchase;
+    private ViewGroup mManageBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class PlansActivity extends AppCompatActivity {
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mFramePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
+        mManageBar = (ViewGroup) findViewById(R.id.frame_manage);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -118,15 +118,6 @@ public class PlansActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    private void updatePurchaseUI(final int position) {
-        final Plan plan = getPageAdapter().getPlan(position);
-
-        ViewGroup framePurchase = (ViewGroup) findViewById(R.id.frame_purchase);
-        if (framePurchase.getVisibility() != View.VISIBLE) {
-            AniUtils.animateBottomBar(framePurchase, true);
-        }
-    }
-
     private void setupPlansUI() {
         if (mAvailablePlans == null || mAvailablePlans.length == 0) {
             // This should never be called with empty plans.
@@ -156,12 +147,12 @@ public class PlansActivity extends AppCompatActivity {
         }
 
         // animate in upgrade/manage view after a short delay the first time around
-        if (mFramePurchase.getVisibility() != View.VISIBLE) {
+        if (mManageBar.getVisibility() != View.VISIBLE) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!isFinishing()) {
-                        AniUtils.animateBottomBar(mFramePurchase, true);
+                        AniUtils.animateBottomBar(mManageBar, true);
                     }
                 }
             }, 1000l);
