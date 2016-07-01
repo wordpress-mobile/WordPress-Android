@@ -85,7 +85,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deletePeopleExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
             if (actionBar != null) {
@@ -350,10 +350,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
-        boolean isFollower = person.isFollower();
-        boolean isViewer = person.isViewer();
+
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, isFollower, isViewer);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -380,7 +379,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         // You can't change a follower's or viewer's role, so it's always false
-        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId, false, false);
+        final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
         }
@@ -396,7 +395,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(Person person) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
-                PeopleTable.save(person);
+                PeopleTable.saveUser(person);
                 refreshOnScreenFragmentDetails();
             }
 
@@ -447,20 +446,19 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         final boolean isFollower = person.isFollower();
         final boolean isEmailFollower = person.isEmailFollower();
-        final boolean isViewer = person.isViewer();
         final String displayName = person.getDisplayName();
 
         PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
-                if (!isFollower && !isEmailFollower && !isViewer) {
+                if (!isFollower && !isEmailFollower) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower, isViewer);
+                Person person = PeopleTable.getUser(personID, localTableBlogId);
                 if (person != null) {
-                    PeopleTable.deletePerson(personID, localTableBlogId, isFollower, isViewer);
+                    PeopleTable.deleteUser(personID, localTableBlogId);
                 }
 
                 String message = getString(R.string.person_removed, displayName);

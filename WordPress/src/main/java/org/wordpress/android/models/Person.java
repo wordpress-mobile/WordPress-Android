@@ -19,7 +19,6 @@ public class Person {
     private String role;
     private boolean isFollower;
     private boolean isEmailFollower;
-    private boolean isViewer;
     private String subscribed;
 
     public Person(long personID, String blogId, int localTableBlogId) {
@@ -137,14 +136,6 @@ public class Person {
 
     public void setEmailFollower(boolean emailFollower) {
         isEmailFollower = emailFollower;
-    }
-
-    public boolean isViewer() {
-        return isViewer;
-    }
-
-    public void setViewer(boolean viewer) {
-        isViewer = viewer;
     }
 
     public String getSubscribed() {

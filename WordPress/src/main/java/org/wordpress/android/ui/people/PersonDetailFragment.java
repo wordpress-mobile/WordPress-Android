@@ -30,13 +30,9 @@ import java.text.SimpleDateFormat;
 public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-    private static String ARG_IS_FOLLOWER = "is_follower";
-    private static String ARG_IS_VIEWER = "is_viewer";
 
     private long mPersonID;
     private int mLocalTableBlogID;
-    private boolean mIsFollower;
-    private boolean mIsViewer;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -45,14 +41,11 @@ public class PersonDetailFragment extends Fragment {
     private TextView mRoleTextView;
     private TextView mSubscribedTextView;
 
-    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, boolean isFollower,
-                                                   boolean isViewer) {
+    public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(ARG_PERSON_ID, personID);
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
-        bundle.putBoolean(ARG_IS_FOLLOWER, isFollower);
-        bundle.putBoolean(ARG_IS_VIEWER, isViewer);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
     }
@@ -82,8 +75,6 @@ public class PersonDetailFragment extends Fragment {
 
         mPersonID = getArguments().getLong(ARG_PERSON_ID);
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        mIsFollower = getArguments().getBoolean(ARG_IS_FOLLOWER);
-        mIsViewer = getArguments().getBoolean(ARG_IS_VIEWER);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
@@ -202,6 +193,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public Person loadPerson() {
-        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mIsFollower, mIsViewer);
+        return PeopleTable.getUser(mPersonID, mLocalTableBlogID);
     }
 }

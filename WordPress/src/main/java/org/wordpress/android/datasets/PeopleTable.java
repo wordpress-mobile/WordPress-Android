@@ -71,11 +71,11 @@ public class PeopleTable {
         createTables(db);
     }
 
-    public static void save(String table, Person person) {
-        save(table, person, getWritableDb());
+    public static void saveUser(Person person) {
+        save(TEAM_TABLE, person, getWritableDb());
     }
 
-    public static void save(String table, Person person, SQLiteDatabase database) {
+    private static void save(String table, Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonID());
         values.put("local_blog_id", person.getLocalTableBlogId());
@@ -109,7 +109,7 @@ public class PeopleTable {
             }
 
             for (Person person : peopleList) {
-                PeopleTable.save(table, person);
+                PeopleTable.save(table, person, getWritableDb());
             }
             getWritableDb().setTransactionSuccessful();
         } finally {
