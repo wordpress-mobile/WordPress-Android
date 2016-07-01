@@ -211,7 +211,7 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
 
     private void fillData(@NonNull MenuItemModel menuItem) {
         //check selected item in array and set selected
-        menuItem.type = "post_tag";
+        menuItem.type = MenuItemModel.TAG_TYPE_NAME;
         menuItem.typeFamily = "taxonomy";
         menuItem.typeLabel = "Tag";
 
