@@ -79,11 +79,22 @@ public class PeopleTable {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonID());
         values.put("local_blog_id", person.getLocalTableBlogId());
-        values.put("user_name", person.getUsername());
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
-        values.put("role", person.getRole());
-        values.put("subscribed", person.getSubscribed());
+
+        switch (table) {
+            case TEAM_TABLE:
+                values.put("user_name", person.getUsername());
+                values.put("role", person.getRole());
+                break;
+            case FOLLOWERS_TABLE:
+                values.put("user_name", person.getUsername());
+                values.put("subscribed", person.getSubscribed());
+                break;
+            case EMAIL_FOLLOWERS_TABLE:
+                values.put("subscribed", person.getSubscribed());
+                break;
+        }
 
         database.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
