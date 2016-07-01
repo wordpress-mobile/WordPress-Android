@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +38,6 @@ public class PlansActivity extends AppCompatActivity {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
-    private static final int PURCHASE_PLAN_REQUEST = 0;
 
     private int mLocalBlogID = -1;
     private Plan[] mAvailablePlans;
@@ -131,8 +131,9 @@ public class PlansActivity extends AppCompatActivity {
         mViewPager.setAdapter(getPageAdapter());
 
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-        int normalColor = getResources().getColor(R.color.blue_light);
-        int selectedColor = getResources().getColor(R.color.white);
+
+        int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+        int selectedColor = ContextCompat.getColor(this, R.color.white);
         mTabLayout.setTabTextColors(normalColor, selectedColor);
         mTabLayout.setupWithViewPager(mViewPager);
 
@@ -151,12 +152,6 @@ public class PlansActivity extends AppCompatActivity {
     private void showBottomBar() {
         if (mManageBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mManageBar, true);
-        }
-    }
-
-    private void hideBottomBar() {
-        if (mManageBar.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mManageBar, false);
         }
     }
 

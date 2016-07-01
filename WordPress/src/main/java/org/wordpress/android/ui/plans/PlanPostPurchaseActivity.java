@@ -36,7 +36,7 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     static final int PAGE_NUMBER_VIDEO      = 2;
     static final int PAGE_NUMBER_THEMES     = 3; // business only
 
-    static final String ARG_IS_BUSINESS_PLAN = "is_business_plan";
+    private static final String ARG_IS_BUSINESS_PLAN = "is_business_plan";
 
     private ViewPager mViewPager;
     private PageAdapter mPageAdapter;
