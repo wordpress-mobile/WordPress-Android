@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
@@ -797,8 +796,7 @@ public class StatsActivity extends AppCompatActivity
                     && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
                 if (mAccountStore.hasAccessToken()) {
                     // Let's try the global wpcom credentials them first
-                    String username = AccountHelper.getDefaultAccount().getUserName();
-                    currentBlog.setDotcom_username(username);
+                    currentBlog.setDotcom_username(mAccountStore.getAccount().getUserName());
                     WordPress.wpDB.saveBlog(currentBlog);
                     createFragments(true);
                 } else {

@@ -26,9 +26,11 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
@@ -78,6 +80,7 @@ public interface AppComponent {
     void inject(CommentDetailFragment object);
 
     void inject(MeFragment object);
+    void inject(MyProfileActivity object);
     void inject(AccountSettingsFragment object);
     void inject(MySiteFragment object);
     void inject(SitePickerActivity object);
@@ -106,6 +109,7 @@ public interface AppComponent {
     void inject(ReaderWebView object);
 
     void inject(WPWebViewActivity object);
+    void inject(PostPreviewFragment object);
 
     // WPDelayedHurlStack will burn in hell as soon as we have all the XMLRPC based stores ready.
     void inject(WPDelayedHurlStack object);

@@ -5,7 +5,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.StringUtils;
 
-// TODO: STORES: kill this
+// TODO: STORES: kill this when we don't need any other rest client
 public class OAuthAuthenticator implements Authenticator {
     public static String getAccessToken(final String siteId) {
         String token = AccountHelper.getDefaultAccount().getAccessToken();

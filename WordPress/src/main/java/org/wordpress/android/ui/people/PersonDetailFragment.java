@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import android.accounts.Account;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;

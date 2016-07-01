@@ -8,7 +8,6 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 
@@ -27,16 +26,16 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     private final Blog mBlog;
     private String mToken;
 
-    public WPWebViewClient(Blog blog) {
+    public WPWebViewClient(Blog blog, String token) {
         super();
-        this.mBlog = blog;
-        mToken = AccountHelper.getDefaultAccount().getAccessToken();
+        mBlog = blog;
+        mToken = token;
     }
 
-    public WPWebViewClient(Blog blog, List<String> urls) {
+    public WPWebViewClient(Blog blog, List<String> urls, String token) {
         super(urls);
-        this.mBlog = blog;
-        mToken = AccountHelper.getDefaultAccount().getAccessToken();
+        mBlog = blog;
+        mToken = token;
     }
 
     @Override

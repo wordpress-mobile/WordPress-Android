@@ -12,15 +12,19 @@ import android.webkit.WebView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
-public class PostPreviewFragment extends Fragment {
+import javax.inject.Inject;
 
+public class PostPreviewFragment extends Fragment {
     private int mLocalBlogId;
     private long mLocalPostId;
     private WebView mWebView;
+
+    @Inject AccountStore mAccountStore;
 
     public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
         Bundle args = new Bundle();
@@ -41,6 +45,8 @@ public class PostPreviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
             mLocalBlogId = savedInstanceState.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
             mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
@@ -59,7 +65,8 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId));
+        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId),
+                mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
 
         return view;

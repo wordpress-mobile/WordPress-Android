@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.AccountLegacy;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountModelLegacy;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -20,10 +23,11 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
-
     private final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
@@ -31,9 +35,13 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,7 +107,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         super.onResume();
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
+            mDispatcher.dispatch(AccountAction.FETCH_SETTINGS);
         }
     }
 
@@ -113,7 +121,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     private void refreshDetails() {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         updateLabel(mFirstName, account != null ? StringUtils.unescapeHTML(account.getFirstName()) : null);
         updateLabel(mLastName, account != null ? StringUtils.unescapeHTML(account.getLastName()) : null);
         updateLabel(mDisplayName, account != null ? StringUtils.unescapeHTML(account.getDisplayName()) : null);
@@ -123,15 +131,15 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     private void updateMyProfileForLabel(TextView textView) {
         Map<String, String> params = new HashMap<>();
         params.put(restParamForTextView(textView), textView.getText().toString());
-        AccountHelper.getDefaultAccount().postAccountSettings(params);
+        // TODO: WPSTORES: POST_UPDATE_SETTINGS
+        // AccountHelper.getDefaultAccount().postAccountSettings(params);
     }
 
     private void updateLabel(WPTextView textView, String text) {
         textView.setText(text);
         if (TextUtils.isEmpty(text)) {
             if (textView == mDisplayName) {
-                AccountLegacy account = AccountHelper.getDefaultAccount();
-                mDisplayName.setText(account.getUserName());
+                mDisplayName.setText(mAccountStore.getAccount().getUserName());
             } else {
                 textView.setVisibility(View.GONE);
             }

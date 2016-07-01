@@ -78,6 +78,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
+    public static final String USE_GLOBAL_WPCOM_USER = "USE_GLOBAL_WPCOM_USER";
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
@@ -95,6 +96,10 @@ public class WPWebViewActivity extends WebViewActivity {
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
         openWPCOMURL(context, url, user);
+    }
+
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
+        openWPCOMURL(context, url);
     }
 
     // Note: The webview has links disabled!!
@@ -154,16 +159,35 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user) {
+    private static boolean checkContextAndUrl(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
-            return;
+            return false;
         }
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
             Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private static void openWPCOMURL(Context context, String url) {
+        if (!checkContextAndUrl(context, url)) {
+            return;
+        }
+
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        context.startActivity(intent);
+    }
+
+    private static void openWPCOMURL(Context context, String url, String user) {
+        if (!checkContextAndUrl(context, url)) {
             return;
         }
 
@@ -209,7 +233,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(blog, allowedURL);
+            webViewClient = new WPWebViewClient(blog, allowedURL, mAccountStore.getAccessToken());
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -232,6 +256,9 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
+        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
+            username = mAccountStore.getAccount().getUserName();
+        }
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");

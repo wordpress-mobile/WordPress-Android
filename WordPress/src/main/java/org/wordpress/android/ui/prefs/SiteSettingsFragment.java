@@ -45,7 +45,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
@@ -740,7 +739,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showExportContentDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.export_your_content);
-        String email = AccountHelper.getDefaultAccount().getEmail();
+        String email = mAccountStore.getAccount().getEmail();
         builder.setMessage(getString(R.string.export_your_content_message, email));
         builder.setPositiveButton(R.string.site_settings_export_content_title, new DialogInterface.OnClickListener() {
             @Override
@@ -815,7 +814,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 AnalyticsUtils.trackWithCurrentBlogDetails(
                         AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED);
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL,
-                        AccountHelper.getDefaultAccount().getUserName());
+                        mAccountStore.getAccount().getUserName());
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

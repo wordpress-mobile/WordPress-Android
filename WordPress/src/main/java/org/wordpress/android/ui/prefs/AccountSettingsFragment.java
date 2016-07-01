@@ -14,13 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountLegacy;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.AccountModelLegacy;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -44,6 +48,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private EditTextPreferenceWithValidation mWebAddressPreference;
     private Snackbar mEmailSnackbar;
 
+    @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -71,6 +76,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.setOnPreferenceChangeListener(this);
 
         // load site list asynchronously
+        // TODO: STORES: call the site store here
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -94,7 +100,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onResume() {
         super.onResume();
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
+            mDispatcher.dispatch(AccountAction.FETCH_SETTINGS);
         }
     }
 
@@ -142,7 +148,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void refreshAccountDetails() {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
@@ -154,7 +160,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void checkIfEmailChangeIsPending() {
-        final AccountLegacy account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
         } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()){
@@ -191,7 +197,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private void cancelPendingEmailChange() {
         Map<String, String> params = new HashMap<>();
         params.put(AccountModelLegacy.RestParam.EMAIL_CHANGE_PENDING.getDescription(), "false");
-        AccountHelper.getDefaultAccount().postAccountSettings(params);
+        // TODO: WPSTORES: POST_UPDATE_SETTINGS
+        // AccountHelper.getDefaultAccount().postAccountSettings(params);
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
@@ -207,44 +214,42 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void updateEmail(String newEmail) {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
         params.put(AccountModelLegacy.RestParam.EMAIL.getDescription(), newEmail);
-        account.postAccountSettings(params);
+        // TODO: WPSTORES: POST_UPDATE_SETTINGS
+        // account.postAccountSettings(params);
     }
 
     private void updatePrimaryBlog(String blogId) {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
         params.put(AccountModelLegacy.RestParam.PRIMARY_BLOG.getDescription(), blogId);
-        account.postAccountSettings(params);
+        // TODO: WPSTORES: POST_UPDATE_SETTINGS
+        // account.postAccountSettings(params);
     }
 
     public void updateWebAddress(String newWebAddress) {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
         Map<String, String> params = new HashMap<>();
         params.put(AccountModelLegacy.RestParam.WEB_ADDRESS.getDescription(), newWebAddress);
-        account.postAccountSettings(params);
+        // TODO: WPSTORES: POST_UPDATE_SETTINGS
+        // account.postAccountSettings(params);
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
         if (isAdded()) {
+            // TODO: STORES: manage errors
             refreshAccountDetails();
         }
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsPostSuccess event) {
-        if (isAdded()) {
-            refreshAccountDetails();
-        }
-    }
-
+    // TODO: STORES: manage errors - function below should be killed
     public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
         }
     }
 
+    // TODO: STORES: manage errors - function below should be killed
     public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
@@ -257,6 +262,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
+    // TODO: STORES: class below will be replaced by a store call
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
