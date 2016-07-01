@@ -589,9 +589,8 @@ public class WordPress extends MultiDexApplication {
             AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
-        // TODO: STORES: remove wpcom sites
         // delete wpcom sites
-        wpDB.deleteWordPressComBlogs(context);
+        mDispatcher.dispatch(SiteAction.LOGOUT_WPCOM);
 
         // reset default account
         mDispatcher.dispatch(AccountAction.SIGN_OUT);
