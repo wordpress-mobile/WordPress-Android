@@ -10,7 +10,6 @@ import org.wordpress.android.util.StringUtils;
 
 public class Person {
     private long personID;
-    private String blogId;
     private int localTableBlogId;
 
     private String username;
@@ -21,14 +20,13 @@ public class Person {
     private boolean isEmailFollower;
     private String subscribed;
 
-    public Person(long personID, String blogId, int localTableBlogId) {
+    public Person(long personID, int localTableBlogId) {
         this.personID = personID;
-        this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
     }
 
     @Nullable
-    public static Person userFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person userFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -36,7 +34,7 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
@@ -53,7 +51,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person followerFromJSON(JSONObject json, String blogId, int localTableBlogId, boolean isEmailFollower)
+    public static Person followerFromJSON(JSONObject json, int localTableBlogId, boolean isEmailFollower)
             throws JSONException {
         if (json == null) {
             return null;
@@ -62,7 +60,7 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/stats/followers/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setDisplayName(json.optString("label"));
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
@@ -80,10 +78,6 @@ public class Person {
 
     public long getPersonID() {
         return personID;
-    }
-
-    public String getBlogId() {
-        return StringUtils.notNullStr(blogId);
     }
 
     public int getLocalTableBlogId() {

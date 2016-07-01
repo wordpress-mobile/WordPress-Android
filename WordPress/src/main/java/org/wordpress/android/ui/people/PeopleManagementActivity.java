@@ -384,13 +384,18 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
+            return;
+        }
+
         final PersonDetailFragment personDetailFragment = getDetailFragment();
         if (personDetailFragment != null) {
             // optimistically update the role
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
@@ -444,6 +449,11 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
+            return;
+        }
+
         final boolean isFollower = person.isFollower();
         final boolean isEmailFollower = person.isEmailFollower();
         final String displayName = person.getDisplayName();
@@ -477,10 +487,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         };
 
         if (isFollower || isEmailFollower) {
-            PeopleUtils.removeFollower(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(),
+            PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
                     isEmailFollower, callback);
         } else {
-            PeopleUtils.removeUser(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(), callback);
+            PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         }
     }
 
