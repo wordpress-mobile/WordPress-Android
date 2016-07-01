@@ -4,6 +4,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -57,6 +58,7 @@ public class PeopleInviteFragment extends Fragment implements
     private Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
+    private boolean mInviteOperationInProgress = false;
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -72,6 +74,12 @@ public class PeopleInviteFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.people_invite, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of save menu item
+        super.onPrepareOptionsMenu(menu);
     }
 
     /**
@@ -423,6 +431,10 @@ public class PeopleInviteFragment extends Fragment implements
             return;
         }
 
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
         if (mUsernameButtons.size() == 0) {
             ToastUtils.showToast(getActivity(), R.string.invite_error_no_usernames);
             return;
@@ -441,6 +453,10 @@ public class PeopleInviteFragment extends Fragment implements
                     R.string.invite_error_invalid_usernames_multiple, invalidCount));
             return;
         }
+
+        //set the  "SEND" option disabled
+        mInviteOperationInProgress = true;
+        getActivity().invalidateOptionsMenu();
 
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
         PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
@@ -469,6 +485,10 @@ public class PeopleInviteFragment extends Fragment implements
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
                         }
+
+                        //set the  "SEND" option enabled again
+                        mInviteOperationInProgress = false;
+                        getActivity().invalidateOptionsMenu();
                     }
 
                     @Override
@@ -478,6 +498,11 @@ public class PeopleInviteFragment extends Fragment implements
                         }
 
                         ToastUtils.showToast(getActivity(), R.string.invite_error_sending);
+
+                        //set the  "SEND" option enabled again
+                        mInviteOperationInProgress = false;
+                        getActivity().invalidateOptionsMenu();
+
                     }
                 });
     }
