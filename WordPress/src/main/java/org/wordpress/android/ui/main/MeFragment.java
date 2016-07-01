@@ -40,7 +40,6 @@ import com.yalantis.ucrop.UCropActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
@@ -696,8 +695,8 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("Accept-Ranges", "bytes");
         entry.responseHeaders.put("Access-Control-Allow-Origin", "*");
         entry.responseHeaders.put("Cache-Control", "max-age=300");
-        entry.responseHeaders.put("Content-Disposition", "inline; filename=\"" + AccountHelper.getDefaultAccount()
-                .getAvatarUrl() + ".jpeg\"");
+        entry.responseHeaders.put("Content-Disposition", "inline; filename=\""
+                + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
         entry.responseHeaders.put("Content-Length", String.valueOf(file.length()));
         entry.responseHeaders.put("Content-Type", "image/jpeg");
         entry.responseHeaders.put("Date", sdf.format(currentTime));

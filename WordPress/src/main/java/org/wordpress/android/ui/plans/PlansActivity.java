@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
@@ -361,7 +360,7 @@ public class PlansActivity extends AppCompatActivity {
         JSONObject extraData = new JSONObject();
         try {
             extraData.put("blog_id", currentBlog.getDotComBlogId());
-            extraData.put("user_id", AccountHelper.getDefaultAccount().getUserId());
+            extraData.put("user_id", mAccountStore.getAccount().getUserId());
         } catch (JSONException e) {
             AppLog.e(AppLog.T.PLANS, "Can't add extra info to purchase data!", e);
             return;

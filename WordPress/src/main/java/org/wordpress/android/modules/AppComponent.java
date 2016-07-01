@@ -11,7 +11,9 @@ import org.wordpress.android.stores.module.ReleaseStoreModule;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
+import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -42,7 +44,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
-import org.wordpress.android.util.HelpshiftHelper;
 
 import javax.inject.Singleton;
 
@@ -61,6 +62,7 @@ public interface AppComponent {
     void inject(WPMainActivity object);
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
+    void inject(SignInDialogFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsActivity object);
@@ -71,7 +73,7 @@ public interface AppComponent {
     void inject(DeepLinkingIntentReceiverActivity object);
     void inject(ShareIntentReceiverActivity object);
 
-    void inject(HelpshiftHelper object);
+    void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
 

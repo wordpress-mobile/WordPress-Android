@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
@@ -18,10 +19,16 @@ import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
+import javax.inject.Inject;
+
 public class HelpActivity extends AppCompatActivity {
+    @Inject AccountStore mAccountStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         initHelpshiftLayout();
 
         ActionBar actionBar = getSupportActionBar();
@@ -86,7 +93,8 @@ public class HelpActivity extends AppCompatActivity {
                             SignInFragment.ENTERED_USERNAME_KEY));
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                 }
-                HelpshiftHelper.getInstance().showConversation(HelpActivity.this, origin);
+                HelpshiftHelper.getInstance().showConversation(HelpActivity.this, origin,
+                        mAccountStore.getAccount().getUserName());
             }
         });
 
@@ -99,7 +107,8 @@ public class HelpActivity extends AppCompatActivity {
                 if (extras != null) {
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                 }
-                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, origin);
+                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, origin,
+                        mAccountStore.getAccount().getUserName());
             }
         });
     }

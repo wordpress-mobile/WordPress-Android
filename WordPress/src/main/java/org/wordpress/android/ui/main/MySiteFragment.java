@@ -20,8 +20,6 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountLegacy;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
@@ -35,6 +33,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -422,13 +421,10 @@ public class MySiteFragment extends Fragment
         if (!blog.isDotcomFlag()) {
             return false;
         } else {
-            // TODO: STORES: https://github.com/wordpress-mobile/WordPress-Stores-Android/issues/31
-            AccountLegacy account = AccountHelper.getDefaultAccount();
-
-            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
+            Date dateCreated = DateTimeUtils.iso8601ToJavaDate(mAccountStore.getAccount().getDate());
+            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
+                    HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
-
-            Date dateCreated = account.getDateCreated();
             return dateCreated != null && dateCreated.after(calendar.getTime());
         }
     }
