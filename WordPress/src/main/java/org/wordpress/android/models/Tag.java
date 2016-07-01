@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -43,7 +42,7 @@ public class Tag {
             return null;
         }
 
-        ArrayList<Tag> suggestions = new ArrayList<Tag>(jsonArray.length());
+        ArrayList<Tag> suggestions = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
             Tag suggestion = Tag.fromJSON(jsonArray.optJSONObject(i), siteID);
@@ -56,9 +55,4 @@ public class Tag {
     public String getTag() {
         return StringUtils.notNullStr(tag);
     }
-
-    public long getId() {
-        return id;
-    }
-
 }
