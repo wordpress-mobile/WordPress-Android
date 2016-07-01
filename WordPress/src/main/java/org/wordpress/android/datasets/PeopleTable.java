@@ -234,18 +234,24 @@ public class PeopleTable {
 
     private static Person getPersonFromCursor(Cursor c, String table, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
-        String blogId = c.getString(c.getColumnIndex("blog_id"));
 
-        Person person = new Person(personId, blogId, localTableBlogId);
-        person.setUsername(c.getString(c.getColumnIndex("user_name")));
+        Person person = new Person(personId, localTableBlogId);
         person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
         person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
-        person.setRole(c.getString(c.getColumnIndex("role")));
-        person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
-        if (table.equals(FOLLOWERS_TABLE)) {
-            person.setFollower(true);
-        } else if (table.equals(EMAIL_FOLLOWERS_TABLE)) {
-            person.setEmailFollower(true);
+        switch (table) {
+            case TEAM_TABLE:
+                person.setUsername(c.getString(c.getColumnIndex("user_name")));
+                person.setRole(c.getString(c.getColumnIndex("role")));
+                break;
+            case FOLLOWERS_TABLE:
+                person.setUsername(c.getString(c.getColumnIndex("user_name")));
+                person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
+                person.setFollower(true);
+                break;
+            case EMAIL_FOLLOWERS_TABLE:
+                person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
+                person.setEmailFollower(true);
+                break;
         }
 
         return person;
