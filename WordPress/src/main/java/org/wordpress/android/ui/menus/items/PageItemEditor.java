@@ -253,7 +253,7 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
                 menuItem.contentId = Long.valueOf(post.getRemotePostId());
 
                 menuItem.type = MenuItemEditorFactory.ITEM_TYPE.PAGE.name().toLowerCase(); //default type: PAGE
-                menuItem.typeFamily = "post_type";
+                menuItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
                 menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.PAGE.name();
             } else {
                 // this is the HOME item
