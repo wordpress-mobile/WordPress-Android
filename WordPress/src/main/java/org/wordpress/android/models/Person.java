@@ -9,6 +9,8 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
+    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER }
+
     private long personID;
     private int localTableBlogId;
 
@@ -16,9 +18,8 @@ public class Person {
     private String displayName;
     private String avatarUrl;
     private String role;
-    private boolean isFollower;
-    private boolean isEmailFollower;
     private String subscribed;
+    private PersonType personType;
 
     public Person(long personID, int localTableBlogId) {
         this.personID = personID;
@@ -38,6 +39,7 @@ public class Person {
             person.setUsername(json.optString("login"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
+            person.personType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
@@ -65,8 +67,7 @@ public class Person {
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
             person.setSubscribed(json.optString("date_subscribed"));
-            person.setFollower(!isEmailFollower);
-            person.setEmailFollower(isEmailFollower);
+            person.personType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
 
             return person;
         } catch (NumberFormatException e) {
@@ -116,22 +117,6 @@ public class Person {
         this.avatarUrl = avatarUrl;
     }
 
-    public boolean isFollower() {
-        return isFollower;
-    }
-
-    public void setFollower(boolean follower) {
-        isFollower = follower;
-    }
-
-    public boolean isEmailFollower() {
-        return isEmailFollower;
-    }
-
-    public void setEmailFollower(boolean emailFollower) {
-        isEmailFollower = emailFollower;
-    }
-
     public String getSubscribed() {
         return StringUtils.notNullStr(subscribed);
     }
@@ -148,5 +133,13 @@ public class Person {
         if (dtSubscribed == null)
             dtSubscribed = DateTimeUtils.iso8601ToJavaDate(subscribed);
         return dtSubscribed;
+    }
+
+    public PersonType getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(PersonType personType) {
+        this.personType = personType;
     }
 }

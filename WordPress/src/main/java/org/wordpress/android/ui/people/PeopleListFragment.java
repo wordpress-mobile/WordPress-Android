@@ -323,13 +323,13 @@ public class PeopleListFragment extends Fragment {
                 } else {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
-                if (person.isFollower() || person.isEmailFollower()) {
+                if (person.getPersonType() == Person.PersonType.USER) {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
+                } else {
                     peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
                     String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                     String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
                     peopleViewHolder.txtSubscribed.setText(dateText);
-                } else {
-                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
                 }
             }
 

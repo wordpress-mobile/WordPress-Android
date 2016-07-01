@@ -119,20 +119,21 @@ public class PersonDetailFragment extends Fragment {
                 mUsernameTextView.setVisibility(View.GONE);
             }
 
-            if (person.isFollower() || person.isEmailFollower()) {
+            if (person.getPersonType() == Person.PersonType.USER) {
+                mSubscribedTextView.setVisibility(View.GONE);
+            }
+            else {
                 mSubscribedTextView.setVisibility(View.VISIBLE);
                 String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                 String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
                 mSubscribedTextView.setText(dateText);
-            } else {
-                mSubscribedTextView.setVisibility(View.GONE);
             }
 
-            if (person.isFollower() || person.isEmailFollower()) {
-                mRoleContainer.setVisibility(View.GONE);
-            } else {
+            if (person.getPersonType() == Person.PersonType.USER) {
                 mRoleContainer.setVisibility(View.VISIBLE);
                 setupRoleContainerForCapability();
+            } else {
+                mRoleContainer.setVisibility(View.GONE);
             }
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID

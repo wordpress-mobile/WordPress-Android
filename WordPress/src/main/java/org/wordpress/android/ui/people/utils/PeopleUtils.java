@@ -184,7 +184,7 @@ public class PeopleUtils {
     }
 
     public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
-                                      boolean isEmailFollower, final RemoveUserCallback callback) {
+                                      Person.PersonType personType, final RemoveUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -211,7 +211,7 @@ public class PeopleUtils {
         };
 
         String path;
-        if (isEmailFollower) {
+        if (personType == Person.PersonType.EMAIL_FOLLOWER) {
             path = String.format("sites/%s/email-followers/%d/delete", blogId, personID);
         } else {
             path = String.format("sites/%s/followers/%d/delete", blogId, personID);

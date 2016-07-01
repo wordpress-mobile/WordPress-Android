@@ -425,10 +425,10 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
-        if (person.isFollower() || person.isEmailFollower()) {
-            builder.setMessage(R.string.follower_remove_confirmation_message);
-        } else {
+        if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        } else {
+            builder.setMessage(R.string.follower_remove_confirmation_message);
         }
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
@@ -454,14 +454,13 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        final boolean isFollower = person.isFollower();
-        final boolean isEmailFollower = person.isEmailFollower();
+        final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
 
         PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
-                if (!isFollower && !isEmailFollower) {
+                if (personType == Person.PersonType.USER) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
@@ -486,9 +485,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             }
         };
 
-        if (isFollower || isEmailFollower) {
+        if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
             PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
-                    isEmailFollower, callback);
+                    personType, callback);
         } else {
             PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         }

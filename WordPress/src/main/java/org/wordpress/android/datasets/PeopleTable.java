@@ -242,15 +242,16 @@ public class PeopleTable {
             case TEAM_TABLE:
                 person.setUsername(c.getString(c.getColumnIndex("user_name")));
                 person.setRole(c.getString(c.getColumnIndex("role")));
+                person.setPersonType(Person.PersonType.USER);
                 break;
             case FOLLOWERS_TABLE:
                 person.setUsername(c.getString(c.getColumnIndex("user_name")));
                 person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
-                person.setFollower(true);
+                person.setPersonType(Person.PersonType.FOLLOWER);
                 break;
             case EMAIL_FOLLOWERS_TABLE:
                 person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
-                person.setEmailFollower(true);
+                person.setPersonType(Person.PersonType.EMAIL_FOLLOWER);
                 break;
         }
 
