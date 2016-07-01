@@ -215,10 +215,13 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         menuItem.typeFamily = "taxonomy";
         menuItem.typeLabel = "Tag";
 
+        // no list item is checked when creating a new tag item
+        int selectedIndex = mTagListView.getCheckedItemPosition();
+        if (selectedIndex < 0) return;
+
         Tag tag = mFilteredTags.get(mTagListView.getCheckedItemPosition());
         if (tag != null && tag.id > 0) {
             menuItem.contentId = tag.id;
         }
     }
-
 }
