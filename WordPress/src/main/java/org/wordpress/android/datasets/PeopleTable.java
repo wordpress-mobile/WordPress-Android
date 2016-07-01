@@ -162,14 +162,6 @@ public class PeopleTable {
         deletePerson(TEAM_TABLE, personID, localTableBlogId);
     }
 
-    public static void deleteFollower(long personID, int localTableBlogId) {
-        deletePerson(FOLLOWERS_TABLE, personID, localTableBlogId);
-    }
-
-    public static void deleteEmailFollower(long personID, int localTableBlogId) {
-        deletePerson(EMAIL_FOLLOWERS_TABLE, personID, localTableBlogId);
-    }
-
     private static void deletePerson(String table, long personID, int localTableBlogId) {
         String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId)};
         getWritableDb().delete(table, "person_id=? AND local_blog_id=?", args);
@@ -206,14 +198,6 @@ public class PeopleTable {
 
     public static Person getUser(long personId, int localTableBlogId) {
         return getPerson(TEAM_TABLE, personId, localTableBlogId);
-    }
-
-    public static Person getFollower(long personId, int localTableBlogId) {
-        return getPerson(FOLLOWERS_TABLE, personId, localTableBlogId);
-    }
-
-    public static Person getEmailFollower(long personId, int localTableBlogId) {
-        return getPerson(EMAIL_FOLLOWERS_TABLE, personId, localTableBlogId);
     }
 
     /**
