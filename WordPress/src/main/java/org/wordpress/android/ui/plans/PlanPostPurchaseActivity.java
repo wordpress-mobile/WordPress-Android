@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * post-purchase "on-boarding" experience after user purchases premium or business plan
+ * post-purchase "on-boarding" for future use after user purchases premium or business plan
  */
 public class PlanPostPurchaseActivity extends AppCompatActivity {
 

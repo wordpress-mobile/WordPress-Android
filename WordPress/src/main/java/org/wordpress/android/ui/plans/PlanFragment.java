@@ -20,6 +20,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.models.PlanFeaturesHighlightSection;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.widgets.WPScrollView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class PlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.plan_fragment, container, false);
         mPlanContainerView = (LinearLayout) rootView.findViewById(R.id.plan_container);
+        if (getActivity() instanceof WPScrollView.ScrollDirectionListener) {
+            WPScrollView scrollView = (WPScrollView) rootView.findViewById(R.id.scroll_view);
+            scrollView.setScrollDirectionListener((WPScrollView.ScrollDirectionListener) getActivity());
+        }
         return rootView;
     }
 

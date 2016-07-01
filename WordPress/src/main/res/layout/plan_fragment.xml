@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
@@ -54,4 +54,4 @@
             android:background="@color/divider_grey" />
 
     </LinearLayout>
-</ScrollView>
+</org.wordpress.android.widgets.WPScrollView>

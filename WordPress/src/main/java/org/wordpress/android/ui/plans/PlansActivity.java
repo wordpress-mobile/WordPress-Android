@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -34,7 +36,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class PlansActivity extends AppCompatActivity {
+public class PlansActivity extends AppCompatActivity implements WPScrollView.ScrollDirectionListener {
 
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
@@ -144,14 +146,22 @@ public class PlansActivity extends AppCompatActivity {
             } else {
                 mViewPager.setVisibility(View.VISIBLE);
                 mTabLayout.setVisibility(View.VISIBLE);
-                showBottomBar();
+                postInitViewPager();
             }
         }
+
+
     }
 
     private void showBottomBar() {
         if (mManageBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mManageBar, true);
+        }
+    }
+
+    private void hideBottomBar() {
+        if (mManageBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mManageBar, false);
         }
     }
 
@@ -176,7 +186,7 @@ public class PlansActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        showBottomBar();
+                        postInitViewPager();
                     }
                 });
 
@@ -184,6 +194,19 @@ public class PlansActivity extends AppCompatActivity {
                 mTabLayout.setVisibility(View.VISIBLE);
 
                 anim.start();
+            }
+        });
+    }
+
+    /*
+     * called after plans have appeared - ensures the bottom bar appears once plans are loaded
+     */
+    private void postInitViewPager() {
+        showBottomBar();
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                showBottomBar();
             }
         });
     }
@@ -264,5 +287,20 @@ public class PlansActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onScrollUp(float distanceY) {
+        showBottomBar();
+    }
+
+    @Override
+    public void onScrollDown(float distanceY) {
+        hideBottomBar();
+    }
+
+    @Override
+    public void onScrollCompleted() {
+        // noop
     }
 }
