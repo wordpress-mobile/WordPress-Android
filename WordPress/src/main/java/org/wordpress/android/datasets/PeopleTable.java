@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PeopleTable {
-    private static final String PEOPLE_TABLE = "people";
+    private static final String TEAM_TABLE = "people_team";
+    private static final String FOLLOWERS_TABLE = "people_followers";
+    private static final String EMAIL_FOLLOWERS_TABLE = "people_email_followers";
 
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
@@ -23,32 +25,44 @@ public class PeopleTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    /**
-     * We use people table to store users, followers, email followers & viewers. A person can belong to multiple sites
-     * and can be a user, follower and viewer of a site at the same time. So, a combination of `person_id`,
-     * `local_blog_id`, `is_follower` and `is_viewer` columns is required to identify a record.
-     */
     public static void createTables(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
+        db.execSQL("CREATE TABLE " + TEAM_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
-                + "blog_id                 TEXT,"
                 + "local_blog_id           INTEGER DEFAULT 0,"
                 + "user_name               TEXT,"
-                + "first_name              TEXT,"
-                + "last_name               TEXT,"
                 + "display_name            TEXT,"
                 + "avatar_url              TEXT,"
                 + "role                    TEXT,"
+                + "PRIMARY KEY (person_id, local_blog_id)"
+                + ");");
+
+        db.execSQL("CREATE TABLE " + FOLLOWERS_TABLE + " ("
+                + "person_id               INTEGER DEFAULT 0,"
+                + "local_blog_id           INTEGER DEFAULT 0,"
+                + "user_name               TEXT,"
+                + "display_name            TEXT,"
+                + "avatar_url              TEXT,"
                 + "subscribed              TEXT,"
-                + "is_follower             BOOLEAN DEFAULT false,"
-                + "is_email_follower       BOOLEAN DEFAULT false,"
-                + "is_viewer               BOOLEAN DEFAULT false,"
-                + "PRIMARY KEY (person_id, local_blog_id, is_follower, is_viewer)"
+                + "PRIMARY KEY (person_id, local_blog_id)"
+                + ");");
+
+        db.execSQL("CREATE TABLE " + EMAIL_FOLLOWERS_TABLE + " ("
+                + "person_id               INTEGER DEFAULT 0,"
+                + "local_blog_id           INTEGER DEFAULT 0,"
+                + "display_name            TEXT,"
+                + "avatar_url              TEXT,"
+                + "subscribed              TEXT,"
+                + "PRIMARY KEY (person_id, local_blog_id)"
                 + ");");
     }
 
     private static void dropTables(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + PEOPLE_TABLE);
+        // People table is not used anymore, each filter now has it's own table
+        db.execSQL("DROP TABLE IF EXISTS PEOPLE");
+
+        db.execSQL("DROP TABLE IF EXISTS " + TEAM_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + FOLLOWERS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + EMAIL_FOLLOWERS_TABLE);
     }
 
     public static void reset(SQLiteDatabase db) {
@@ -57,72 +71,45 @@ public class PeopleTable {
         createTables(db);
     }
 
-    public static void save(Person person) {
-        save(person, getWritableDb());
+    public static void save(String table, Person person) {
+        save(table, person, getWritableDb());
     }
 
-    public static void save(Person person, SQLiteDatabase database) {
+    public static void save(String table, Person person, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         values.put("person_id", person.getPersonID());
-        values.put("blog_id", person.getBlogId());
         values.put("local_blog_id", person.getLocalTableBlogId());
         values.put("user_name", person.getUsername());
-        values.put("first_name", person.getFirstName());
-        values.put("last_name", person.getLastName());
         values.put("display_name", person.getDisplayName());
         values.put("avatar_url", person.getAvatarUrl());
         values.put("role", person.getRole());
         values.put("subscribed", person.getSubscribed());
-        values.put("is_follower", person.isFollower());
-        values.put("is_email_follower", person.isEmailFollower());
-        values.put("is_viewer", person.isViewer());
-        database.insertWithOnConflict(PEOPLE_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        database.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     public static void saveUsers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        getWritableDb().beginTransaction();
-        try {
-            // We have a fresh list, remove the previous list of users in case it was deleted on remote
-            if (isFreshList) {
-                PeopleTable.deleteUsersForLocalBlogId(localTableBlogId);
-            }
-
-            for (Person person : peopleList) {
-                PeopleTable.save(person);
-            }
-            getWritableDb().setTransactionSuccessful();
-        } finally {
-            getWritableDb().endTransaction();
-        }
+        savePeople(TEAM_TABLE, peopleList, localTableBlogId, isFreshList);
     }
 
     public static void saveFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        getWritableDb().beginTransaction();
-        try {
-            // We have a fresh list, remove the previous list of followers in case it was deleted on remote
-            if (isFreshList) {
-                PeopleTable.deleteFollowersForLocalBlogId(localTableBlogId);
-            }
-
-            for (Person person : peopleList) {
-                PeopleTable.save(person);
-            }
-            getWritableDb().setTransactionSuccessful();
-        } finally {
-            getWritableDb().endTransaction();
-        }
+        savePeople(FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
     }
 
     public static void saveEmailFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+        savePeople(EMAIL_FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    }
+
+    private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
             // We have a fresh list, remove the previous list of email followers in case it was deleted on remote
             if (isFreshList) {
-                PeopleTable.deleteEmailFollowersForLocalBlogId(localTableBlogId);
+                PeopleTable.deletePeople(table, localTableBlogId);
             }
 
             for (Person person : peopleList) {
-                PeopleTable.save(person);
+                PeopleTable.save(table, person);
             }
             getWritableDb().setTransactionSuccessful();
         } finally {
@@ -131,136 +118,149 @@ public class PeopleTable {
     }
 
     public static void deletePeopleForLocalBlogId(int localTableBlogId) {
+        deletePeople(TEAM_TABLE, localTableBlogId);
+        deletePeople(FOLLOWERS_TABLE, localTableBlogId);
+        deletePeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
+    }
+
+    private static void deletePeople(String table, int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?", args);
+        getWritableDb().delete(table, "local_blog_id=?1", args);
     }
 
-    public static void deleteUsersForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 " +
-                "AND is_email_follower=?2 AND is_viewer=?2", args);
-    }
-
-    public static void deleteFollowersForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 " +
-                "AND is_email_follower=?3 AND is_viewer=?3", args);
-    }
-
-    public static void deleteEmailFollowersForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1)};
-        getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 " +
-                "AND is_viewer=?2", args);
-    }
-
-    public static void deletePeopleForLocalBlogIdExceptForFirstPage(int localTableBlogId) {
-        int size = getPeopleCountForLocalBlogId(localTableBlogId);
+    /**
+     * In order to avoid syncing issues, this method will be called when People page is created. We only keep
+     * the first page of users, so we don't show an empty screen. When fresh data is received, it'll replace
+     * the existing page.
+     * @param localTableBlogId - the local blog id people will be deleted from
+     */
+    public static void deletePeopleExceptForFirstPage(int localTableBlogId) {
         int fetchLimit = PeopleUtils.FETCH_LIMIT;
-        if (size > fetchLimit) {
-            int deleteCount = size - fetchLimit;
-            String[] args = new String[] {
-                    Integer.toString(localTableBlogId),
-                    Integer.toString(deleteCount)
-            };
-            getWritableDb().delete(PEOPLE_TABLE, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                    + PEOPLE_TABLE + " WHERE local_blog_id=?1 " +
-                    "ORDER BY display_name DESC LIMIT ?2)", args);
+        String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE};
+        for (String table : tables) {
+            int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
+            if (size > fetchLimit) {
+                int deleteCount = size - fetchLimit;
+                String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
+                getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
+                        + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+            }
         }
     }
 
     public static int getUsersCountForLocalBlogId(int localTableBlogId) {
-        String[] args = new String[]{Integer.toString(localTableBlogId), Integer.toString(0)};
-        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE
-                + " WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2 AND is_viewer=?2";
-        return SqlUtils.intForQuery(getReadableDb(), sql, args);
+        return getPeopleCountForLocalBlogId(TEAM_TABLE, localTableBlogId);
     }
 
-    private static int getPeopleCountForLocalBlogId(int localTableBlogId) {
+    private static int getPeopleCountForLocalBlogId(String table, int localTableBlogId) {
         String[] args = new String[]{Integer.toString(localTableBlogId)};
-        String sql = "SELECT COUNT(*) FROM " + PEOPLE_TABLE + " WHERE local_blog_id=?";
+        String sql = "SELECT COUNT(*) FROM " + table + " WHERE local_blog_id=?";
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
-    public static void deletePerson(long personID, int localTableBlogId, boolean isFollower, boolean isViewer) {
-        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId),
-                Integer.toString(isFollower ? 1 : 0), Integer.toString(isViewer ? 1 : 0)};
-        getWritableDb().delete(PEOPLE_TABLE, "person_id=? AND local_blog_id=? AND is_follower=? AND is_viewer=?", args);
+    public static void deleteUser(long personID, int localTableBlogId) {
+        deletePerson(TEAM_TABLE, personID, localTableBlogId);
+    }
+
+    public static void deleteFollower(long personID, int localTableBlogId) {
+        deletePerson(FOLLOWERS_TABLE, personID, localTableBlogId);
+    }
+
+    public static void deleteEmailFollower(long personID, int localTableBlogId) {
+        deletePerson(EMAIL_FOLLOWERS_TABLE, personID, localTableBlogId);
+    }
+
+    private static void deletePerson(String table, long personID, int localTableBlogId) {
+        String[] args = new String[]{Long.toString(personID), Integer.toString(localTableBlogId)};
+        getWritableDb().delete(table, "person_id=? AND local_blog_id=?", args);
     }
 
     public static List<Person> getUsers(int localTableBlogId) {
-        String[] args = { Integer.toString(localTableBlogId), Integer.toString(0) };
-        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?2 AND is_viewer=?2";
-        return PeopleTable.getPeople(localTableBlogId, where, args, true);
+        return PeopleTable.getPeople(TEAM_TABLE, localTableBlogId);
     }
 
     public static List<Person> getFollowers(int localTableBlogId) {
-        String[] args = { Integer.toString(localTableBlogId), Integer.toString(1), Integer.toString(0) };
-        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 AND is_viewer=?3";
-        return PeopleTable.getPeople(localTableBlogId, where, args, false);
+        return PeopleTable.getPeople(FOLLOWERS_TABLE, localTableBlogId);
     }
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
-        String[] args = { Integer.toString(localTableBlogId), Integer.toString(0), Integer.toString(1)};
-        String where = "WHERE local_blog_id=?1 AND is_follower=?2 AND is_email_follower=?3 AND is_viewer=?2";
-        return PeopleTable.getPeople(localTableBlogId, where, args, false);
+        return PeopleTable.getPeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
     }
 
-    private static List<Person> getPeople(int localTableBlogId, String whereStatement, String[] args, boolean ordered) {
-        List<Person> people = new ArrayList<>();
-        // order is disabled for followers for now since the API is not supporting it
-        String orderBy = ordered ? " ORDER BY lower(display_name), lower(user_name)" : "";
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE + " " + whereStatement + orderBy, args);
+    private static List<Person> getPeople(String table, int localTableBlogId) {
+        String[] args = {Integer.toString(localTableBlogId)};
+        String orderBy = orderByString(table);
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
 
+        List<Person> people = new ArrayList<>();
         try {
             while (c.moveToNext()) {
-                Person person = getPersonFromCursor(c, localTableBlogId);
+                Person person = getPersonFromCursor(c, table, localTableBlogId);
                 people.add(person);
             }
-
-            return people;
         } finally {
             SqlUtils.closeCursor(c);
         }
+        return people;
+    }
+
+    public static Person getUser(long personId, int localTableBlogId) {
+        return getPerson(TEAM_TABLE, personId, localTableBlogId);
+    }
+
+    public static Person getFollower(long personId, int localTableBlogId) {
+        return getPerson(FOLLOWERS_TABLE, personId, localTableBlogId);
+    }
+
+    public static Person getEmailFollower(long personId, int localTableBlogId) {
+        return getPerson(EMAIL_FOLLOWERS_TABLE, personId, localTableBlogId);
     }
 
     /**
-     * retrieve a single person
+     * retrieve a person
+     * @param table - sql table the person record is in
      * @param personId - id of a person in a particular blog
      * @param localTableBlogId - the local blog id the user belongs to
-     * @param isFollower - if the person is a follower
      * @return Person if found, null otherwise
      */
-    public static Person getPerson(long personId, int localTableBlogId, boolean isFollower, boolean isViewer) {
-        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId),
-                Integer.toString(isFollower ? 1 : 0), Integer.toString(isViewer ? 1 : 0)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + PEOPLE_TABLE +
-                " WHERE person_id=?1 AND local_blog_id=?2 AND is_follower=?3 AND is_viewer=?4", args);
+    private static Person getPerson(String table, long personId, int localTableBlogId) {
+        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId)};
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table +
+                " WHERE person_id=? AND local_blog_id=?", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
             }
-            return getPersonFromCursor(c, localTableBlogId);
+            return getPersonFromCursor(c, table, localTableBlogId);
         } finally {
             SqlUtils.closeCursor(c);
         }
     }
 
-    private static Person getPersonFromCursor(Cursor c, int localTableBlogId) {
+    private static Person getPersonFromCursor(Cursor c, String table, int localTableBlogId) {
         long personId = c.getInt(c.getColumnIndex("person_id"));
         String blogId = c.getString(c.getColumnIndex("blog_id"));
 
         Person person = new Person(personId, blogId, localTableBlogId);
         person.setUsername(c.getString(c.getColumnIndex("user_name")));
-        person.setFirstName(c.getString(c.getColumnIndex("first_name")));
-        person.setLastName(c.getString(c.getColumnIndex("last_name")));
         person.setDisplayName(c.getString(c.getColumnIndex("display_name")));
         person.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
         person.setRole(c.getString(c.getColumnIndex("role")));
         person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
-        person.setFollower(c.getInt(c.getColumnIndex("is_follower")) > 0);
-        person.setEmailFollower(c.getInt(c.getColumnIndex("is_email_follower")) > 0);
-        person.setViewer(c.getInt(c.getColumnIndex("is_viewer")) > 0);
+        if (table.equals(FOLLOWERS_TABLE)) {
+            person.setFollower(true);
+        } else if (table.equals(EMAIL_FOLLOWERS_TABLE)) {
+            person.setEmailFollower(true);
+        }
 
         return person;
+    }
+
+    // order is disabled for followers for now since the API is not supporting it
+    private static String orderByString(String table) {
+        if (table.equals(FOLLOWERS_TABLE) || table.equals(EMAIL_FOLLOWERS_TABLE)) {
+            return "";
+        }
+        return " ORDER BY lower(display_name), lower(user_name)";
     }
 }
