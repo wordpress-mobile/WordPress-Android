@@ -268,5 +268,10 @@ public class MenuAddEditRemoveView extends LinearLayout {
         this.mActionListener = listener;
     }
 
+    public String getCurrentMenuNameInEditText() {
+        return mMenuEditText.getText().toString();
+    }
+
+
 
 }

@@ -67,6 +67,7 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         mTagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mOtherDataDirty = true;
                 if (!mItemNameDirty) {
                     if (mItemNameEditText != null) {
                         mItemNameEditText.setText(mFilteredTagTitles.get(i));
@@ -96,6 +97,7 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
     }
 
     private void setSelection(long contentId) {
+        mOtherDataDirty = false;
         for (int i=0; i < mFilteredTags.size(); i++) {
             Tag tagModel = mFilteredTags.get(i);
             long tagId = tagModel.id;

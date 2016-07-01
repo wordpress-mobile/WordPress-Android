@@ -22,6 +22,7 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
     protected MenuItemNameChangeListener mMenuItemNameChangeListener;
     protected WPEditText mItemNameEditText;
     protected boolean mItemNameDirty = false;
+    protected boolean mOtherDataDirty = false;
 
     public interface MenuItemNameChangeListener {
         void onNameChanged(String newName);
@@ -46,6 +47,10 @@ public abstract class BaseMenuItemEditor extends LinearLayout {
 
     public void setMenuItemNameChangeListener(MenuItemNameChangeListener listener){
         mMenuItemNameChangeListener = listener;
+    }
+
+    public boolean isDirty() {
+        return mItemNameDirty || mOtherDataDirty;
     }
 
     protected void init() {

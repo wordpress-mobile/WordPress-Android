@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.menus;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -64,11 +65,21 @@ public class MenusActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+        Fragment fragment =  getFragmentManager()
+                .findFragmentByTag(MENUS_FRAGMENT_KEY);
+        if (fragment != null && fragment.isVisible()) {
+            ((MenusFragment) fragment).dismissFragment();
         } else {
-            super.onBackPressed();
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
+    }
+
+    public void forceBackPressed() {
+        super.onBackPressed();
     }
 
     @Override

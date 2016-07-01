@@ -114,7 +114,8 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mInAddingMode = false;
                         if (mFlattenedMenuItems.size() == 1) {
                             mFlattenedMenuItems.remove(0);
-                            mListener.onAddClick(0, ItemAddPosition.BELOW);
+                            notifyItemRemoved(0);
+                            mListener.onAddClick(0, ItemAddPosition.ABOVE);
                         } else {
                             //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in our list
                             triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);

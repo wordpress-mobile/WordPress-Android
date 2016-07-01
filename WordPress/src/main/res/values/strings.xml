@@ -1527,8 +1527,9 @@
     <string name="menu_item_type_post_empty_list">No posts found</string>
     <string name="menu_item_type_tag_empty_list">No tags found</string>
     <string name="menu_item_type_category_empty_list">No categories found</string>
-
     <string name="menu_item_special_home">Home (site)</string>
+    <string name="menu_item_changes_not_saved">Your local changes haven\'t been saved. Are you sure you want to go back and discard changes?</string>
+    <string name="menu_item_changes_not_saved_title">Your changes</string>
 
     <!-- gravatar -->
     <string name="gravatar_tip">New! Tap your Gravatar to change it!</string>
