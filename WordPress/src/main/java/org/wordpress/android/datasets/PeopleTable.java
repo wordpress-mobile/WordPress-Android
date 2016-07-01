@@ -23,6 +23,11 @@ public class PeopleTable {
         return WordPress.wpDB.getDatabase();
     }
 
+    /**
+     * We use people table to store users, followers, email followers & viewers. A person can belong to multiple sites
+     * and can be a user, follower and viewer of a site at the same time. So, a combination of `person_id`,
+     * `local_blog_id`, `is_follower` and `is_viewer` columns is required to identify a record.
+     */
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + PEOPLE_TABLE + " ("
                 + "person_id               INTEGER DEFAULT 0,"
