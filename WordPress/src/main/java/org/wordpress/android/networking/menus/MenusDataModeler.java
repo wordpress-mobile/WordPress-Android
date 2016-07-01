@@ -374,6 +374,7 @@ public class MenusDataModeler {
         if (hierarchyList != null) {
             for (MenuItemModel item : hierarchyList) {
                 item.flattenedLevel = currentLevel;
+                item.calculateCustomType();
                 flattenedList.add(item);
                 if (item.hasChildren()) {
                     List<MenuItemModel> tmpList = flattenMenuItemModelList(item.children, currentLevel+1);

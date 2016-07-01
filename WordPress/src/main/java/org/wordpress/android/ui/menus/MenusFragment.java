@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -451,7 +450,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         newItem.name = getString(R.string.menus_item_new_item);
         newItem.flattenedLevel = originalItem.flattenedLevel;
         newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
-        newItem.typeFamily = "post_type";
+        newItem.calculateCustomType();
+        newItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
         newItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
         switch (where) {
             case TO_CHILDREN:

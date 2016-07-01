@@ -157,8 +157,9 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
     public void setType(String type) {
         mWorkingItem.type = type;
+        mWorkingItem.calculateCustomType();
         mToolbar.setTitle(mWorkingItem.name);
-        setPickerAndChildViewSelection(type.toUpperCase());
+        setPickerAndChildViewSelection(mWorkingItem.calculatedType.toUpperCase());
         mCurrentEditor = (BaseMenuItemEditor) mEditorFlipper.getCurrentView();
         if (mCurrentEditor != null) {
             mCurrentEditor.setMenuItem(mWorkingItem);
@@ -211,7 +212,7 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mTypePicker.setAdapter(adapter);
 
         fillViewFlipper();
-        setPickerAndChildViewSelection(mWorkingItem.type.toUpperCase());
+        setPickerAndChildViewSelection(mWorkingItem.calculatedType.toUpperCase());
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -223,39 +224,10 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         });
     }
 
-    private void setPickerAndChildViewSelection(String type){
+    private void setPickerAndChildViewSelection(String type) {
         Integer itemIdx = mItemPositions.get(type);
-
-        //special case for tag
-        if (type.compareToIgnoreCase("post_tag") == 0) {
-            itemIdx = mItemPositions.get(ITEM_TYPE.TAG.name());
-        }
-        else if (type.compareToIgnoreCase("post_type") == 0) {
-            itemIdx = mItemPositions.get(ITEM_TYPE.POST.name());
-        }
-
-        if (itemIdx == null) {
-
-            if (ITEM_TYPE.typeForString(type).equals(ITEM_TYPE.CUSTOM)) {
-                //check special cases:
-                //- custom and the url is EQUAL to the blog's home address: show the HOME PAGE icon
-                String homeUrl = WordPress.getCurrentBlog().getHomeURL() + "/";
-                if (!TextUtils.isEmpty(mWorkingItem.url) && !TextUtils.isEmpty(homeUrl) && mWorkingItem.url.equalsIgnoreCase(homeUrl)) {
-                    mTypePicker.setSelection(mItemPositions.get(ITEM_TYPE.PAGE.name().toUpperCase()));
-                    mEditorFlipper.setDisplayedChild(mItemPositions.get(ITEM_TYPE.PAGE.name().toUpperCase()));
-                }
-                else
-                    //check special cases:
-                    //- custom and url different from home: show LINK ICON
-                    if (!TextUtils.isEmpty(mWorkingItem.url) && !TextUtils.isEmpty(homeUrl) && !mWorkingItem.url.equalsIgnoreCase(homeUrl)) {
-                        mTypePicker.setSelection(mItemPositions.get(ITEM_TYPE.LINK.name().toUpperCase()));
-                        mEditorFlipper.setDisplayedChild(mItemPositions.get(ITEM_TYPE.LINK.name().toUpperCase()));
-                    }
-
-            }
-        } else {
-            mTypePicker.setSelection(itemIdx);
-            mEditorFlipper.setDisplayedChild(itemIdx);
-        }
+        mTypePicker.setSelection(itemIdx);
+        mEditorFlipper.setDisplayedChild(itemIdx);
     }
+
 }

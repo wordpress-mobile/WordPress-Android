@@ -111,7 +111,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         menuItem.editingMode = false;
                         mInAddingMode = false;
-                        //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in out list
+                        //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in our list
                         triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);
                         mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition+1, adderPosition));
                         Handler hdlr = new Handler();
@@ -148,12 +148,16 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mListener.onItemClick(menuItem, itemPosition);
                     }
                 });
-                ITEM_TYPE itemType = ITEM_TYPE.typeForString(menuItem.type);
+                ITEM_TYPE itemType = ITEM_TYPE.typeForString(menuItem.calculatedType != null ? menuItem.calculatedType : menuItem.type);
                 if (itemType != ITEM_TYPE.NULL) {
                     int itemRes = MenuItemEditorFactory.getIconDrawableRes(itemType);
                     if (itemRes != -1) {
                         holder.imgMenuItemType.setImageResource(itemRes);
+                    } else {
+                        holder.imgMenuItemType.setImageResource(0);
                     }
+                } else {
+                    holder.imgMenuItemType.setImageResource(0);
                 }
 
                 if (mInAddingMode) {
@@ -161,8 +165,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     holder.containerButtons.setVisibility(View.GONE);
                     if (menuItem.editingMode) {
                         holder.containerCancel.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         holder.containerCancel.setVisibility(View.GONE);
                     }
 
