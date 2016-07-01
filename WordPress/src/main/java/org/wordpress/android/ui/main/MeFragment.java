@@ -41,6 +41,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.networking.GravatarApi;
+import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
@@ -103,6 +104,7 @@ public class MeFragment extends Fragment {
 
     private boolean mIsUpdatingGravatar;
 
+    @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -288,10 +290,14 @@ public class MeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(mAccountStore);
+        mDispatcher.register(mSiteStore);
     }
 
     @Override
     public void onStop() {
+        mDispatcher.unregister(mSiteStore);
+        mDispatcher.unregister(mAccountStore);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
