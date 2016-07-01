@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
+import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -134,6 +135,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgDiscoverAvatar;
         private final TextView txtDiscover;
 
+        private final ReaderThumbnailStrip thumbnailStrip;
+
         public ReaderPostViewHolder(View itemView) {
             super(itemView);
 
@@ -157,6 +160,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
             txtDiscover = (TextView) layoutDiscover.findViewById(R.id.text_discover);
+
+            thumbnailStrip = (ReaderThumbnailStrip) itemView.findViewById(R.id.thumbnail_strip);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
@@ -426,6 +431,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             showDiscoverData(holder, post);
         } else {
             holder.layoutDiscover.setVisibility(View.GONE);
+        }
+
+        // if this post has attachments or contains a gallery, scan it for images and show a
+        // thumbnail strip of them - note that the thumbnail strip will take care of making
+        // itself visible
+        if (post.hasAttachments() || post.isGallery()) {
+            holder.thumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
+        } else {
+            holder.thumbnailStrip.setVisibility(View.GONE);
         }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
