@@ -445,10 +445,16 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         //the user wants to add a new item <where: above/below/tochildren> relative to <position>
 
         List<MenuItemModel> items = mItemsView.getCurrentMenuItems();
-        MenuItemModel originalItem = items.get(position);
+        int originalItemFlattenedLevel = 0;
+        boolean emptyList = true;
+        if (items.size() > 0) {
+            MenuItemModel originalItem = items.get(position);
+            originalItemFlattenedLevel = originalItem.flattenedLevel;
+            emptyList = false;
+        }
         final MenuItemModel newItem = new MenuItemModel();
         newItem.name = getString(R.string.menus_item_new_item);
-        newItem.flattenedLevel = originalItem.flattenedLevel;
+        newItem.flattenedLevel = originalItemFlattenedLevel;
         newItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
         newItem.calculateCustomType();
         newItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
@@ -475,14 +481,18 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
         mCurrentMenuItemBeingEdited = position;
 
-        //enclosed Dialog show in a delayed handler to allow animations to be appreciated
-        Handler hdlr = new Handler();
-        hdlr.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showEditorDialog(newItem);
-            }
-        }, 350);
+        if (!emptyList) {
+            //enclosed Dialog show in a delayed handler to allow animations to be appreciated
+            Handler hdlr = new Handler();
+            hdlr.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showEditorDialog(newItem);
+                }
+            }, 350);
+        } else {
+            showEditorDialog(newItem);
+        }
     }
 
     private ArrayList<String> getItemTypes() {
