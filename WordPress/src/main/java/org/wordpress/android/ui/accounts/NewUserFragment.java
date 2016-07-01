@@ -24,12 +24,8 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -42,12 +38,10 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO: STORES: replace this by wpstores
 public class NewUserFragment extends AbstractFragment implements TextWatcher {
     public static final int NEW_USER = 1;
     private EditText mSiteUrlTextField;
@@ -289,7 +283,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                     public void onSuccess(JSONObject createSiteResponse) {
                         // User has been created. From this point, all errors should close this screen and display the
                         // sign in screen
-                        AnalyticsUtils.refreshMetadata(mUsername, email);
+                        AnalyticsUtils.refreshMetadata(mUsername, email, true, true, false, 1);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         // Save credentials to smart lock
                         SmartLockHelper smartLockHelper = getSmartLockHelper();
@@ -320,8 +314,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         login.execute(new LoginAbstract.Callback() {
             @Override
             public void onSuccess() {
-                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
-                fetchBlogListWPCom.execute(mFetchBlogListCallback);
+                // TODO: STORES: use wpstores
             }
 
             @Override
@@ -363,32 +356,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         getFragmentManager().popBackStack();
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
     }
-
-    protected final Callback mFetchBlogListCallback = new Callback() {
-        @Override
-        public void onSuccess(final List<Map<String, Object>> userBlogList) {
-            if (!isAdded()) {
-                return;
-            }
-            if (userBlogList != null) {
-                BlogUtils.addBlogs(userBlogList, mUsername);
-            }
-
-            // get reader tags so they're available as soon as the Reader is accessed - done for
-            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
-            // uses the application context since the activity is finished immediately below
-            ReaderUpdateService.startService(getActivity().getApplicationContext(),
-                    EnumSet.of(UpdateTask.TAGS));
-            finishCurrentActivity();
-        }
-
-        @Override
-        public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
-                            final boolean erroneousSslCertificate, final String clientResponse) {
-            // Should not happen (excepted for a timeout), go back to the sign in screen
-            finishAndShowSignInScreen();
-        }
-    };
 
     private void autocorrectEmail() {
         if (mEmailAutoCorrected) {

@@ -48,7 +48,8 @@ public class ReaderPostActions {
      * like/unlike the passed post
      */
     public static boolean performLikeAction(final ReaderPost post,
-                                            final boolean isAskingToLike) {
+                                            final boolean isAskingToLike,
+                                            final long wpComUserId) {
         // do nothing if post's like state is same as passed
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         if (isCurrentlyLiked == isAskingToLike) {
@@ -63,7 +64,7 @@ public class ReaderPostActions {
             newNumLikes = 0;
         }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
-        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
+        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike, wpComUserId);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
@@ -91,7 +92,7 @@ public class ReaderPostActions {
                 }
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
-                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser);
+                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
             }
         };
 

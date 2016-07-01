@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,8 +21,10 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
@@ -30,7 +32,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -55,9 +58,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     private Spinner mImageWidthSpinner;
     private EditText mScaledImageWidthET;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         Integer id = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, -1);
         blog = WordPress.getBlog(id);
@@ -333,20 +340,22 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     private void removeBlog() {
         if (WordPress.wpDB.deleteBlog(this, blog.getLocalTableBlogId())) {
             StatsTable.deleteStatsForBlog(this,blog.getLocalTableBlogId()); // Remove stats data
-            AnalyticsUtils.refreshMetadata();
+            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             ToastUtils.showToast(this, R.string.blog_removed_successfully);
             WordPress.wpDB.deleteLastBlogId();
             WordPress.currentBlog = null;
             mBlogDeleted = true;
             setResult(RESULT_BLOG_REMOVED);
 
+            // TODO: STORES: this shouldn't exist, WPMainActivity should listen for OnSiteChanged() and check
+            // mAccountStore.isSignedIn() there
             // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
-            if (!AccountHelper.isSignedIn()) {
+            if (!mAccountStore.isSignedIn()) {
                 EventBus.getDefault().post(new UserSignedOutCompletely());
             }
 
             // Checks for stats widgets that were synched with a blog that could be gone now.
-            StatsWidgetProvider.updateWidgetsOnLogout(this);
+            StatsWidgetProvider.refreshAllWidgets(this);
 
             finish();
         } else {

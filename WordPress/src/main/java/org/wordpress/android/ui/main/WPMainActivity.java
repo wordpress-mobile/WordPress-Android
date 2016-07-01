@@ -25,12 +25,12 @@ import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -60,18 +60,21 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPOptimizelyEventListener;
 import org.wordpress.android.widgets.WPViewPager;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
-
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private int  mAppBarElevation;
+
+    @Inject AccountStore mAccountStore;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -94,6 +97,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
+        ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
@@ -187,7 +191,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (AccountHelper.isSignedIn()) {
+            if (mAccountStore.isSignedIn()) {
                 startOptimizely(true);
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
@@ -457,7 +461,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!AccountHelper.isSignedIn()) {
+                } else if (!mAccountStore.isSignedIn()) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -528,11 +532,13 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     // Events
 
+    // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
     }
 
+    // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutCompletely event) {
         ActivityLauncher.showSignInForResult(this);
@@ -586,7 +592,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void handleBlogRemoved() {
-        if (!AccountHelper.isSignedIn()) {
+        if (!mAccountStore.isSignedIn()) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             Blog blog = WordPress.getCurrentBlog();

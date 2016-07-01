@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.plans.util.IabHelper;
@@ -42,10 +43,11 @@ import org.wordpress.android.widgets.WPViewPager;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class PlansActivity extends AppCompatActivity {
-
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
     private static final int PURCHASE_PLAN_REQUEST = 0;
@@ -60,9 +62,12 @@ public class PlansActivity extends AppCompatActivity {
     private IabHelper mIabHelper;
     private boolean mIABSetupDone = false;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.plans_activity);
 
@@ -377,7 +382,7 @@ public class PlansActivity extends AppCompatActivity {
                                         without a manual action on backend side.
                                      */
                                     AppPrefs.setInAppPurchaseRefreshRequired(true);
-                                    PlansUtils.synchIAPsWordPressCom();
+                                    PlansUtils.synchIAPsWordPressCom(mAccountStore.hasAccessToken());
                                     AppLog.d(AppLog.T.PLANS, "Purchase: " + info.toString());
                                     AppLog.d(AppLog.T.PLANS, "You have bought the " + info.getSku() + ". Excellent choice, adventurer!");
                                     boolean isBusinessPlan = (mViewPager.getCurrentItem() == mViewPager.getAdapter().getCount() - 1);

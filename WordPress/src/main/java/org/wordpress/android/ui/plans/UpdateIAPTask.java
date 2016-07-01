@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.plans.util.IabException;
 import org.wordpress.android.ui.plans.util.IabHelper;
 import org.wordpress.android.ui.plans.util.IabResult;
@@ -42,10 +41,6 @@ public class UpdateIAPTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... args) {
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
-            return null;
-        }
-
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
         mIabHelper = new IabHelper(this.mContext, BuildConfig.APP_LICENSE_KEY);

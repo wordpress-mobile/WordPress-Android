@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AccountLegacy;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.SqlUtils;
 
@@ -58,11 +58,11 @@ public class AccountTable {
         db.execSQL("DROP TABLE IF EXISTS " + ACCOUNT_TABLE);
     }
 
-    public static void save(Account account) {
+    public static void save(AccountLegacy account) {
         save(account, getWritableDb());
     }
 
-    public static void save(Account account, SQLiteDatabase database) {
+    public static void save(AccountLegacy account, SQLiteDatabase database) {
         ContentValues values = new ContentValues();
         // we only support one wpcom user at the moment: local_id is always 0
         values.put("local_id", 0);
@@ -86,12 +86,12 @@ public class AccountTable {
         database.insertWithOnConflict(ACCOUNT_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static Account getDefaultAccount() {
+    public static AccountLegacy getDefaultAccount() {
         return getAccountByLocalId(0);
     }
 
-    private static Account getAccountByLocalId(long localId) {
-        Account account = new Account();
+    private static AccountLegacy getAccountByLocalId(long localId) {
+        AccountLegacy account = new AccountLegacy();
 
         String[] args = {Long.toString(localId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + ACCOUNT_TABLE + " WHERE local_id=?", args);

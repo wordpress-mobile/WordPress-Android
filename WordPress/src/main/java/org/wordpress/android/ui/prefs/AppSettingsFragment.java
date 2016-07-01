@@ -20,6 +20,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.WPPrefUtils;
@@ -28,6 +30,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class AppSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
@@ -35,9 +39,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
 
+    @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.app_settings);
@@ -151,7 +159,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
-        AnalyticsUtils.refreshMetadata();
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         // Refresh the app
         Intent refresh = new Intent(getActivity(), getActivity().getClass());

@@ -13,7 +13,6 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -212,14 +211,16 @@ public class ReaderActivityLauncher {
     }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
-    public static void openUrl(Context context, String url) {
-        openUrl(context, url, OpenUrlType.INTERNAL);
+
+    public static void openUrl(Context context, String url, String wpComUsername) {
+        openUrl(context, url, OpenUrlType.INTERNAL, wpComUsername);
     }
-    public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
+
+    public static void openUrl(Context context, String url, OpenUrlType openUrlType, String wpComUsername) {
         if (context == null || TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            openUrlInternal(context, url);
+            openUrlInternal(context, url, wpComUsername);
         } else {
             openUrlExternal(context, url);
         }
@@ -228,11 +229,10 @@ public class ReaderActivityLauncher {
     /*
      * open the passed url in the app's internal WebView activity
      */
-    private static void openUrlInternal(Context context, @NonNull String url) {
+    private static void openUrlInternal(Context context, @NonNull String url, String wpComUsername) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                    AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url, wpComUsername);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }

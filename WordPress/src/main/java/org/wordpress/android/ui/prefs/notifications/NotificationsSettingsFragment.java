@@ -33,6 +33,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
@@ -44,6 +45,8 @@ import org.wordpress.android.util.WPActivityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -65,9 +68,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
@@ -151,6 +157,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
         if (hasNotificationsSettings()) {
             updateUIForNotificationsEnabledState();
+        }
+
+        if (!mAccountStore.hasAccessToken()) {
+            return;
         }
 
         NotificationsUtils.getPushNotificationSettings(getActivity(), new RestRequest.Listener() {

@@ -18,7 +18,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Class for managing logged in user informations.
  */
-public class Account extends AccountModel {
+public class AccountLegacy extends AccountModelLegacy {
     public void fetchAccountDetails() {
         if (!hasAccessToken()) {
             AppLog.e(T.API, "User is not logged in with WordPress.com, ignoring the fetch account details request");

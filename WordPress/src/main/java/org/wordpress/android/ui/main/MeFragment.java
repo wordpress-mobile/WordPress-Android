@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.github.xizzhu.simpletooltip.ToolTip;
-import com.github.xizzhu.simpletooltip.ToolTipView;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropActivity;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,12 +30,21 @@ import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.github.xizzhu.simpletooltip.ToolTip;
+import com.github.xizzhu.simpletooltip.ToolTipView;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.networking.GravatarApi;
+import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -69,6 +71,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -100,6 +104,9 @@ public class MeFragment extends Fragment {
 
     private boolean mIsUpdatingGravatar;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     public static MeFragment newInstance() {
         return new MeFragment();
     }
@@ -107,6 +114,7 @@ public class MeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             mMediaCapturePath = savedInstanceState.getString(MEDIA_CAPTURE_PATH);
@@ -126,7 +134,7 @@ public class MeFragment extends Fragment {
     }
 
     private void showGravatarTooltipIfNeeded() {
-        if (!isAdded() || !AccountHelper.isSignedInWordPressDotCom() || !AppPrefs.isGravatarChangePromoRequired() ||
+        if (!isAdded() || !mAccountStore.hasAccessToken() || !AppPrefs.isGravatarChangePromoRequired() ||
                 !mIsUserVisible || mGravatarToolTipView != null) {
             return;
         }
@@ -241,7 +249,7 @@ public class MeFragment extends Fragment {
         rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AccountHelper.isSignedInWordPressDotCom()) {
+                if (mAccountStore.hasAccessToken()) {
                     signOutWordPressComWithConfirmation();
                 } else {
                     ActivityLauncher.showSignInForResult(getActivity());
@@ -324,8 +332,8 @@ public class MeFragment extends Fragment {
 
     private void refreshAccountDetails() {
         // we only want to show user details for WordPress.com users
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            Account defaultAccount = AccountHelper.getDefaultAccount();
+        if (mAccountStore.hasAccessToken()) {
+            AccountModel defaultAccount = mAccountStore.getAccount();
 
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
@@ -334,7 +342,7 @@ public class MeFragment extends Fragment {
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
 
-            final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
+            final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, null);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
@@ -364,7 +372,7 @@ public class MeFragment extends Fragment {
         mIsUpdatingGravatar = isUpdating;
     }
 
-    private String constructGravatarUrl(Account account) {
+    private String constructGravatarUrl(AccountModel account) {
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
     }
@@ -402,8 +410,8 @@ public class MeFragment extends Fragment {
     }
 
     private void signOutWordPressComWithConfirmation() {
-        String message = String.format(getString(R.string.sign_out_wpcom_confirm), AccountHelper.getDefaultAccount()
-                .getUserName());
+        String message = String.format(getString(R.string.sign_out_wpcom_confirm),
+                mAccountStore.getAccount().getUserName());
 
         new AlertDialog.Builder(getActivity())
                 .setMessage(message)
@@ -612,17 +620,18 @@ public class MeFragment extends Fragment {
 
         showGravatarProgressBar(true);
 
-        GravatarApi.uploadGravatar(file, new GravatarApi.GravatarUploadListener() {
-            @Override
-            public void onSuccess() {
-                EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
-            }
+        GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
+                new GravatarApi.GravatarUploadListener() {
+                    @Override
+                    public void onSuccess() {
+                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
+                    }
 
-            @Override
-            public void onError() {
-                EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
-            }
-        });
+                    @Override
+                    public void onError() {
+                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
+                    }
+                });
     }
 
     static public class GravatarUploadFinished {
@@ -638,7 +647,7 @@ public class MeFragment extends Fragment {
     public void onEventMainThread(GravatarUploadFinished event) {
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
-            final String avatarUrl = constructGravatarUrl(AccountHelper.getDefaultAccount());
+            final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, event.filePath);
         } else {
             showGravatarProgressBar(false);
@@ -725,7 +734,7 @@ public class MeFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             Context context = mWeakContext.get();
             if (context != null) {
-                WordPress.WordPressComSignOut(context);
+                ((WordPress) getActivity().getApplication()).wordPressComSignOut();
             }
             return null;
         }

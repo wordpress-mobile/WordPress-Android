@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,10 +10,12 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -38,6 +39,8 @@ public abstract class StatsAbstractFragment extends Fragment {
     protected abstract void showPlaceholderUI();
     protected abstract void updateUI();
     protected abstract void showErrorUI(String label);
+
+    @Inject AccountStore mAccountStore;
 
     /**
      * Wheter or not previous data is available.
@@ -89,8 +92,8 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         // Check credentials for jetpack blogs first
-        if (!currentBlog.isDotcomFlag()
-                && !currentBlog.hasValidJetpackCredentials() && !AccountHelper.isSignedInWordPressDotCom()) {
+        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials()
+                && !mAccountStore.hasAccessToken()) {
             AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack blog without valid .com credentials stored");
             return;
         }
@@ -126,7 +129,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > onCreate");
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARGS_TIMEFRAME)) {
@@ -137,9 +140,6 @@ public abstract class StatsAbstractFragment extends Fragment {
             }
             restoreStatsData(savedInstanceState); // Each fragment will override this to restore fragment dependant data
         }
-
-      //  AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
-      //  AppLog.d(AppLog.T.STATS, "mDate: " + mDate);
     }
 
     @Override

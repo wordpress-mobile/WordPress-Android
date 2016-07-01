@@ -447,7 +447,7 @@ public class StatsService extends Service {
         while (it.hasNext()) {
             Request<JSONObject> req = it.next();
             if (!req.hasHadResponseDelivered() && !req.isCanceled() &&
-                    absoluteRequestPath.equals(req.getOriginUrl())) {
+                    absoluteRequestPath.equals(req.getUrl())) {
                 return false;
             }
         }

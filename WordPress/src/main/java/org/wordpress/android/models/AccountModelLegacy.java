@@ -9,7 +9,7 @@ import org.wordpress.android.util.StringUtils;
 
 import java.util.Date;
 
-public class AccountModel {
+public class AccountModelLegacy {
     // WordPress.com only - data fetched from the REST API endpoint
     private String mUserName;
     private long mUserId;
@@ -29,7 +29,7 @@ public class AccountModel {
     private boolean mPendingEmailChange;
     private String mWebAddress;
 
-    public AccountModel() {
+    public AccountModelLegacy() {
         init();
     }
 

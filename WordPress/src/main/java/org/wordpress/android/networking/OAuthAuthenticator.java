@@ -5,6 +5,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.StringUtils;
 
+// TODO: STORES: kill this
 public class OAuthAuthenticator implements Authenticator {
     public static String getAccessToken(final String siteId) {
         String token = AccountHelper.getDefaultAccount().getAccessToken();

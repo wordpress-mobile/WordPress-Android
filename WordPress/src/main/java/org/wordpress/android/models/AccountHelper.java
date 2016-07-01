@@ -1,51 +1,26 @@
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
-
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.AccountTable;
 
 /**
  * The app supports only one WordPress.com account at the moment, so we might use getDefaultAccount() everywhere we
  * need the account data.
  */
+// TODO: STORES: kill this - this is just a mock object used to pass access token to legacy code (rest client mostly)
 public class AccountHelper {
-    private static Account sAccount;
+    private static AccountLegacy sAccount;
     private final static Object mLock = new Object();
 
-    public static Account getDefaultAccount() {
+    public static AccountLegacy getDefaultAccount() {
         if (sAccount == null) {
             // Singleton pattern in concurrent env.
-            synchronized(mLock) {
+            synchronized (mLock) {
+                sAccount = AccountTable.getDefaultAccount();
                 if (sAccount == null) {
-                    sAccount = AccountTable.getDefaultAccount();
-                    if (sAccount == null) {
-                        sAccount = new Account();
-                    }
+                    sAccount = new AccountLegacy();
                 }
             }
         }
         return sAccount;
-    }
-
-    public static boolean isSignedIn() {
-        return getDefaultAccount().hasAccessToken() || (WordPress.wpDB.getNumVisibleBlogs() != 0);
-    }
-
-    public static boolean isSignedInWordPressDotCom() {
-        return getDefaultAccount().hasAccessToken();
-    }
-
-    public static boolean isJetPackUser() {
-        return WordPress.wpDB.hasAnyJetpackBlogs();
-    }
-
-    public static String getCurrentUsernameForBlog(Blog blog) {
-        if (!TextUtils.isEmpty(getDefaultAccount().getUserName())) {
-            return getDefaultAccount().getUserName();
-        } else if (blog != null) {
-            return blog.getUsername();
-        }
-        return "";
     }
 }

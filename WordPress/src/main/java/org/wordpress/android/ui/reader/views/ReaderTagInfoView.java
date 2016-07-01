@@ -7,13 +7,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
@@ -23,8 +27,11 @@ public class ReaderTagInfoView extends LinearLayout {
     private ReaderFollowButton mFollowButton;
     private ReaderTag mCurrentTag;
 
+    @Inject AccountStore mAccountStore;
+
     public ReaderTagInfoView(Context context) {
         super(context);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
@@ -51,7 +58,7 @@ public class ReaderTagInfoView extends LinearLayout {
         TextView txtTagName = (TextView) findViewById(R.id.text_tag);
         txtTagName.setText(ReaderUtils.makeHashTag(tag.getTagSlug()));
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
         } else {
             mFollowButton.setVisibility(View.VISIBLE);
