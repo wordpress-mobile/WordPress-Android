@@ -281,7 +281,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverDotOrg);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
-        List<SiteModel> restApiSites = SiteSqlUtils.getAllRestApiSites();
+        List<SiteModel> restApiSites = SiteSqlUtils.getAllWPComSites();
 
         assertEquals(2, restApiSites.size());
         for (SiteModel site : restApiSites) {
