@@ -14,8 +14,6 @@ public class Person {
     private int localTableBlogId;
 
     private String username;
-    private String firstName;
-    private String lastName;
     private String displayName;
     private String avatarUrl;
     private String role;
@@ -41,8 +39,6 @@ public class Person {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, blogId, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setFirstName(json.optString("first_name"));
-            person.setLastName(json.optString("last_name"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
@@ -101,22 +97,6 @@ public class Person {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getFirstName() {
-        return StringUtils.notNullStr(firstName);
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return StringUtils.notNullStr(lastName);
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getDisplayName() {
