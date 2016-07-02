@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:scrollbarStyle="outsideInset" >
 
     <RelativeLayout
         android:layout_width="match_parent"
