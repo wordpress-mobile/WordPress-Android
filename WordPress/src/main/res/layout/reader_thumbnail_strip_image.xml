@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.wordpress.android.widgets.WPNetworkImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/thumbnail_strip_image"
+    android:layout_width="@dimen/reader_thumbnail_strip_image_size"
+    android:layout_height="@dimen/reader_thumbnail_strip_image_size"
+    android:layout_marginLeft="@dimen/margin_small"
+    android:layout_marginRight="@dimen/margin_small"
+    android:scaleType="centerCrop" />
