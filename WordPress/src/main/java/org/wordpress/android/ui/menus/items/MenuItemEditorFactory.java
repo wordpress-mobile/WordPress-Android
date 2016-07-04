@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.MenuItemModel;
 
 /**
  * Provides appropriate {@link BaseMenuItemEditor} subclasses.
@@ -16,6 +17,7 @@ public class MenuItemEditorFactory {
         CATEGORY,
         TAG,
         LINK,
+        JETPACK_TESTIMONIAL,
         CUSTOM;
 
         public static ITEM_TYPE typeForString(String typeName) {
@@ -27,14 +29,18 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(TAG.name())) return TAG;
             else if (typeName.equalsIgnoreCase(LINK.name())) return LINK;
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
+            else if (typeName.equalsIgnoreCase(JETPACK_TESTIMONIAL.name())) return JETPACK_TESTIMONIAL;
 
             //special case for tag
             // This is a weird behavior of the API and is not documented.
-            if (typeName.compareToIgnoreCase("post_tag") == 0) {
+            if (typeName.compareToIgnoreCase(MenuItemModel.TAG_TYPE_NAME) == 0) {
                 return TAG;
             }
             else if (typeName.compareToIgnoreCase("post_type") == 0) {
                 return POST;
+            }
+            else if (typeName.compareToIgnoreCase("jetpack-testimonial") == 0) {
+                return JETPACK_TESTIMONIAL;
             }
 
             else return NULL;
@@ -47,6 +53,7 @@ public class MenuItemEditorFactory {
             if (CATEGORY.ordinal() == index) return CATEGORY;
             if (TAG.ordinal() == index) return TAG;
             if (LINK.ordinal() == index) return LINK;
+            if (JETPACK_TESTIMONIAL.ordinal() == index) return JETPACK_TESTIMONIAL;
             if (CUSTOM.ordinal() == index) return CUSTOM;
 
             return NULL;
@@ -65,6 +72,8 @@ public class MenuItemEditorFactory {
                 return R.drawable.gridicon_tag;
             case LINK:
                 return R.drawable.gridicon_link;
+            case JETPACK_TESTIMONIAL:
+                return R.drawable.my_site_icon_posts;
             default:
                 return -1;
         }
@@ -82,6 +91,8 @@ public class MenuItemEditorFactory {
                 return new TagItemEditor(context);
             case LINK:
                 return new LinkItemEditor(context);
+            case JETPACK_TESTIMONIAL:
+                return new JetpackTestimonialItemEditor(context);
             default:
                 return null;
         }

@@ -20,7 +20,8 @@ import java.util.Map;
  */
 
 public class MenuItemModel implements Serializable {
-    public static final String SELECTED_POST_KEY = "selected-post";
+    public static final String POST_TYPE_NAME = "post_type";
+    public static final String TAG_TYPE_NAME = "post_tag";
 
     //
     // Primary key attributes (cannot be null)
@@ -111,13 +112,17 @@ public class MenuItemModel implements Serializable {
 
         if (type != null ) {
 
-            if (type.compareToIgnoreCase("post_tag") == 0) {
+            if (type.compareToIgnoreCase(TAG_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.TAG.name();
                 return MenuItemEditorFactory.ITEM_TYPE.TAG;
             }
-            else if (type.compareToIgnoreCase("post_type") == 0) {
+            else if (type.compareToIgnoreCase(POST_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.POST.name();
                 return MenuItemEditorFactory.ITEM_TYPE.POST;
+            }
+            else if (type.compareToIgnoreCase("jetpack-testimonial") == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL;
             }
 
             if (MenuItemEditorFactory.ITEM_TYPE.typeForString(type).equals(MenuItemEditorFactory.ITEM_TYPE.CUSTOM)) {
