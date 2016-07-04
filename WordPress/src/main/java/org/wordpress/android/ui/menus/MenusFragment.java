@@ -559,6 +559,9 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
         newItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
         newItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
         switch (where) {
+            case ZERO:
+                // keep add item in list in case user cancels, if they save it is overwritten
+                break;
             case TO_CHILDREN:
                 newItem.flattenedLevel++;
             case BELOW :
@@ -572,7 +575,7 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                     mItemsView.getAdapter().notifyItemInserted(position);
                 }
                 break;
-            case ABOVE :
+            case ABOVE:
             default:
                 items.add(position, newItem);
                 mItemsView.getAdapter().notifyItemInserted(position);
@@ -631,14 +634,12 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == EditMenuItemDialog.EDIT_REQUEST_CODE) {
-
             if (resultCode == EditMenuItemDialog.NOT_SAVED_CODE) {
                 // here delete the row if this was a new item
                 if (mIsNewItem) {
                     mIsNewItem = false;
-                    if (mCurrentMenuItemBeingEdited > -1) {
+                    if (mCurrentMenuItemBeingEdited > -1 && !mItemsView.getAdapter().isEmptyList()) {
                         List<MenuItemModel> flattenedList = mItemsView.getAdapter().getCurrentMenuItems();
                         flattenedList.remove(mCurrentMenuItemBeingEdited);
                         mItemsView.getAdapter().notifyItemRemoved(mCurrentMenuItemBeingEdited);
@@ -930,7 +931,5 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                 null);
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
-
     }
-
 }

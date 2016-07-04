@@ -31,6 +31,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public enum ItemAddPosition {
+        ZERO,
         ABOVE,
         BELOW,
         TO_CHILDREN
@@ -83,12 +84,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        if (mFlattenedMenuItems != null){
-            MenuItemModel item = mFlattenedMenuItems.get(position);
-            if (item != null) {
-                if (item instanceof AddItem) {
-                    return VIEW_TYPE_ADDER;
-                }
+        if (mFlattenedMenuItems.size() == 0) return VIEW_TYPE_ADDER;
+
+        MenuItemModel item = mFlattenedMenuItems.get(position);
+        if (item != null) {
+            if (item instanceof AddItem) {
+                return VIEW_TYPE_ADDER;
             }
         }
         return VIEW_TYPE_NORMAL;
@@ -112,14 +113,13 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onClick(View v) {
                         menuItem.editingMode = false;
                         mInAddingMode = false;
-                        if (mFlattenedMenuItems.size() == 1) {
-                            mFlattenedMenuItems.remove(0);
-                            notifyItemRemoved(0);
-                            mListener.onAddClick(0, ItemAddPosition.ABOVE);
+                        if (isEmptyList()) {
+                            mAddingModeStarterPosition = 0;
+                            mListener.onAddClick(0, ItemAddPosition.ZERO);
                         } else {
                             //mAddingModeStarterPosition plus one as at this very moment we have the 3 adder control buttons in our list
                             triggerAddControlRemoveAnimation(mAddingModeStarterPosition + 1, true);
-                            mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition+1, adderPosition));
+                            mListener.onAddClick(mAddingModeStarterPosition, getWhereToAddMenuItem(mAddingModeStarterPosition + 1, adderPosition));
                             Handler hdlr = new Handler();
                             hdlr.postDelayed(new Runnable() {
                                 @Override
@@ -128,7 +128,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     }
                             }, 350);
                         }
-
                     }
                 };
 
@@ -168,7 +167,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
 
                 if (mInAddingMode) {
-
                     holder.containerButtons.setVisibility(View.GONE);
                     if (menuItem.editingMode) {
                         holder.containerCancel.setVisibility(View.VISIBLE);
@@ -203,12 +201,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             //insert items above and below
                             menuItem.editingMode = true;
 
-                            AddItemAbove above = new AddItemAbove(mContext);
+                            AddItem above = new AddItem(ADD_MENU_ITEM_ABOVE_ID, mContext.getString(R.string.menus_add_item_above));
                             above.flattenedLevel = menuItem.flattenedLevel;
                             mFlattenedMenuItems.add(pos, above);
                             notifyItemInserted(pos);
 
-                            AddItemBelow below = new AddItemBelow(mContext);
+                            AddItem below = new AddItem(ADD_MENU_ITEM_BELOW_ID, mContext.getString(R.string.menus_add_item_below));
                             below.flattenedLevel = menuItem.flattenedLevel;
                             if (pos == mFlattenedMenuItems.size() - 1) {
                                 mFlattenedMenuItems.add(below);
@@ -218,7 +216,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 notifyItemInserted(pos + 2);
                             }
 
-                            AddItemToChildren toChildren = new AddItemToChildren(mContext);
+                            AddItem toChildren = new AddItem(ADD_MENU_ITEM_TO_CHILDREN_ID, mContext.getString(R.string.menus_add_item_to_children));
                             toChildren.flattenedLevel = menuItem.flattenedLevel + 1;
                             if (pos == mFlattenedMenuItems.size() - 1) {
                                 mFlattenedMenuItems.add(toChildren);
@@ -349,6 +347,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public boolean isEmptyList() {
+        return mFlattenedMenuItems.size() == 1 && mFlattenedMenuItems.get(0).itemId == ADD_MENU_ITEM_ALONE_ID;
+    }
+
     public MenuItemModel getItem(int position) {
         if (isPositionValid(position)) {
             return mFlattenedMenuItems.get(position);
@@ -383,16 +385,11 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mFlattenedMenuItems.clear();
             mFlattenedMenuItems.addAll(menuItems);
             if (mFlattenedMenuItems.size() == 0) {
-                AddItemAlone item = new AddItemAlone(mContext);
+                AddItem item = new AddItem(ADD_MENU_ITEM_ALONE_ID, mContext.getString(R.string.menus_add_new_item));
                 mFlattenedMenuItems.add(item);
             }
             notifyDataSetChanged();
         }
-    }
-
-    void deleteMenuItem(MenuItemModel menuItem) {
-        mFlattenedMenuItems.remove(menuItem);
-        notifyDataSetChanged();
     }
 
     void deleteMenuItem(int index) {
@@ -448,13 +445,15 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void triggerAddControlRemoveAnimation(int pos, boolean removeOnly) {
-        //eliminate now items above and below
-        mFlattenedMenuItems.remove(pos + 1);
-        notifyItemRemoved(pos + 1);
-        mFlattenedMenuItems.remove(pos + 1);
-        notifyItemRemoved(pos + 1);
-        mFlattenedMenuItems.remove(pos - 1);
-        notifyItemRemoved(pos - 1);
+        if (!isEmptyList()) {
+            //eliminate now items above and below
+            mFlattenedMenuItems.remove(pos + 1);
+            notifyItemRemoved(pos + 1);
+            mFlattenedMenuItems.remove(pos + 1);
+            notifyItemRemoved(pos + 1);
+            mFlattenedMenuItems.remove(pos - 1);
+            notifyItemRemoved(pos - 1);
+        }
 
         if (!removeOnly) {
             Handler hdlr = new Handler();
@@ -467,28 +466,18 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-
-    private ItemAddPosition getWhereToAddMenuItem(int posOrigin, int posAdderControl){
-
-        if (posAdderControl == posOrigin-1) {
+    private ItemAddPosition getWhereToAddMenuItem(int posOrigin, int posAdderControl) {
+        if (isEmptyList()) {
+            return ItemAddPosition.ZERO;
+        } else if (posAdderControl == posOrigin - 1) {
             return ItemAddPosition.ABOVE;
         }
-        else if (posAdderControl == posOrigin+1) {
+        else if (posAdderControl == posOrigin + 1) {
             return ItemAddPosition.BELOW;
-        } else if (posAdderControl == posOrigin+2) {
+        } else if (posAdderControl == posOrigin + 2) {
             return ItemAddPosition.TO_CHILDREN;
         } else { //default: below (should never reach here though)
             return ItemAddPosition.BELOW;
-        }
-    }
-
-    /*
-     * clear all menu items
-     */
-    public void clearMenuItems() {
-        if (mFlattenedMenuItems != null){
-            mFlattenedMenuItems.clear();
-            notifyDataSetChanged();
         }
     }
 
@@ -496,35 +485,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mFlattenedMenuItems;
     }
 
-
-    private abstract class AddItem extends MenuItemModel {
-    }
-
-    private class AddItemAlone extends AddItem {
-        public AddItemAlone(Context context){
-            this.menuId = ADD_MENU_ITEM_ALONE_ID;
-            this.name = context.getString(R.string.menus_add_new_item);
-        }
-    }
-
-    private class AddItemAbove extends AddItem {
-        public AddItemAbove(Context context){
-            this.menuId = ADD_MENU_ITEM_ABOVE_ID;
-            this.name = context.getString(R.string.menus_add_item_above);
-        }
-    }
-
-    private class AddItemBelow extends AddItem {
-        public AddItemBelow(Context context){
-            this.menuId = ADD_MENU_ITEM_BELOW_ID;
-            this.name = context.getString(R.string.menus_add_item_below);
-        }
-    }
-
-    private class AddItemToChildren extends AddItem {
-        public AddItemToChildren(Context context){
-            this.menuId = ADD_MENU_ITEM_TO_CHILDREN_ID;
-            this.name = context.getString(R.string.menus_add_item_to_children);
+    private class AddItem extends MenuItemModel {
+        public AddItem(long id, String name) {
+            this.itemId = id;
+            this.name = name;
         }
     }
 
