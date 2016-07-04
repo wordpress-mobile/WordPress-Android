@@ -137,6 +137,7 @@ public class PeopleListFragment extends Fragment {
                                 stringId = R.string.people_empty_list_filtered_email_followers;
                                 break;
                         }
+                        break;
                     case GENERIC_ERROR:
                         switch (mPeopleListFilter) {
                             case TEAM:
