@@ -22,40 +22,6 @@ public class MenuItemEditorFactory {
         JETPACK_COMIC,
         CUSTOM;
 
-        public static String stringForType(ITEM_TYPE type) {
-            String name = "";
-            switch (type) {
-                case POST:
-                    name = "post";
-                    break;
-                case PAGE:
-                    name = "page";
-                    break;
-                case CATEGORY:
-                    name = "category";
-                    break;
-                case TAG:
-                    name = "tag";
-                    break;
-                case LINK:
-                    name = "custom";
-                    break;
-                case JETPACK_TESTIMONIAL:
-                    name = "jetpack-testimonial";
-                    break;
-                case JETPACK_PORTFOLIO:
-                    name = "jetpack-portfolio";
-                    break;
-                case JETPACK_COMIC:
-                    name = "jetpack-comic";
-                    break;
-                case CUSTOM:
-                    name = "custom";
-                    break;
-            }
-            return name;
-        }
-
         public static ITEM_TYPE typeForString(String typeName) {
             if (TextUtils.isEmpty(typeName)) return NULL;
 
@@ -114,11 +80,7 @@ public class MenuItemEditorFactory {
                 case JETPACK_COMIC:
                     name = context.getString(R.string.menu_item_type_comic);
                     break;
-                case NULL:
-                    name = "";
-                    break;
-                case CUSTOM:
-                    name = "";
+                default:
                     break;
             }
 
