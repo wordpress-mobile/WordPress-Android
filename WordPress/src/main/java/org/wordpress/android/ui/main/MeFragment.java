@@ -34,6 +34,7 @@ import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.github.xizzhu.simpletooltip.ToolTip;
 import com.github.xizzhu.simpletooltip.ToolTipView;
+import com.squareup.otto.Subscribe;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -44,12 +45,12 @@ import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.PrefsEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
@@ -290,6 +291,7 @@ public class MeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
         mDispatcher.register(mAccountStore);
         mDispatcher.register(mSiteStore);
     }
@@ -298,6 +300,7 @@ public class MeFragment extends Fragment {
     public void onStop() {
         mDispatcher.unregister(mSiteStore);
         mDispatcher.unregister(mAccountStore);
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -754,7 +757,8 @@ public class MeFragment extends Fragment {
         }
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
         refreshAccountDetails();
     }
 }
