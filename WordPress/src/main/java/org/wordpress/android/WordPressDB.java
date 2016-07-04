@@ -89,7 +89,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 48;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -233,10 +233,8 @@ public class WordPressDB {
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
 
-    // add jetpack testimonials flag for menus
+    // add jetpack testimonial and portfolio flags for menus
     private static final String ADD_TESTIMONIALS_FLAG = "alter table " + SiteSettingsModel.SETTINGS_TABLE_NAME + " add " + SiteSettingsModel.TESTIMONIALS_ENABLED_COLUMN_NAME + " BOOLEAN default 0;";
-
-    // add jetpack portfolio flag for menus
     private static final String ADD_PORTFOLIOS_FLAG = "alter table " + SiteSettingsModel.SETTINGS_TABLE_NAME + " add " + SiteSettingsModel.PORTFOLIOS_ENABLED_COLUMN_NAME + " BOOLEAN default 0;";
 
     // used for migration
@@ -438,8 +436,6 @@ public class WordPressDB {
                 currentVersion++;
             case 47:
                 db.execSQL(ADD_TESTIMONIALS_FLAG);
-                currentVersion++;
-            case 48:
                 db.execSQL(ADD_PORTFOLIOS_FLAG);
                 currentVersion++;
         }
