@@ -32,10 +32,9 @@
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/reader_webview_width"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_author"
-        app:bounded_width="@dimen/webview_max_width"
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
