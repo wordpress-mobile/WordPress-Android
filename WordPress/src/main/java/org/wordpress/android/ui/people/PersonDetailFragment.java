@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -112,7 +113,7 @@ public class PersonDetailFragment extends Fragment {
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
-            if (!person.getUsername().isEmpty()) {
+            if (!TextUtils.isEmpty(person.getUsername())) {
                 mUsernameTextView.setVisibility(View.VISIBLE);
                 mUsernameTextView.setText(String.format("@%s", person.getUsername()));
             } else {
