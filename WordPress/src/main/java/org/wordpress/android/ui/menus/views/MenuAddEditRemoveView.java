@@ -20,7 +20,7 @@ import org.wordpress.android.widgets.WPTextView;
 /**
  * Menu add/remove control used in menus editing
  */
-public class MenuAddEditRemoveView extends LinearLayout {
+public class MenuAddEditRemoveView extends LinearLayout implements MenuSaveProgressListener {
     private LinearLayout mMenuInactiveStateView;
     private WPTextView mMenuInactiveTitleText;
     private WPEditText mMenuEditText;
@@ -272,6 +272,16 @@ public class MenuAddEditRemoveView extends LinearLayout {
         return mMenuEditText.getText().toString();
     }
 
+    @Override
+    public void onSaveCompleted(boolean successfully) {
+        mMenuSave.setEnabled(true);
+        mMenuSave.setText(R.string.save);
+    }
 
+    @Override
+    public void onSaveStarted(MenuModel menu) {
+        mMenuSave.setEnabled(false);
+        mMenuSave.setText(R.string.saving);
+    }
 
 }

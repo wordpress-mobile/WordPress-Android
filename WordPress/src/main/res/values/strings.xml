@@ -1517,6 +1517,7 @@
     <string name="menu_item_type_portfolio">Portfolio</string>
     <string name="menu_item_type_comic">Comic</string>
 
+
     <!-- empty menu item adapter views -->
     <string name="menu_item_type_page_empty_list">No pages found</string>
     <string name="menu_item_type_post_empty_list">No posts found</string>
