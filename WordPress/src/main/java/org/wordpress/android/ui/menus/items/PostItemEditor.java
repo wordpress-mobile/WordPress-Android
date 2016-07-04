@@ -202,7 +202,7 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
     private void fillData(@NonNull MenuItemModel menuItem) {
         //check selected item in array and set selected
         menuItem.type = MenuItemEditorFactory.ITEM_TYPE.POST.name().toLowerCase(); //default type: POST
-        menuItem.typeFamily = "post_type";
+        menuItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
         menuItem.typeLabel = MenuItemEditorFactory.ITEM_TYPE.POST.name();
 
         if (mPostListView.getCount() > 0) {

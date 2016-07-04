@@ -100,7 +100,7 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         mOtherDataDirty = false;
         for (int i=0; i < mFilteredTags.size(); i++) {
             Tag tagModel = mFilteredTags.get(i);
-            long tagId = tagModel.getId();
+            long tagId = tagModel.id;
             if (tagId == contentId){
                 mTagListView.setSelection(i);
                 break;
@@ -205,14 +205,17 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
 
     private void fillData(@NonNull MenuItemModel menuItem) {
         //check selected item in array and set selected
-        menuItem.type = "post_tag";
+        menuItem.type = MenuItemModel.TAG_TYPE_NAME;
         menuItem.typeFamily = "taxonomy";
         menuItem.typeLabel = "Tag";
 
+        // no list item is checked when creating a new tag item
+        int selectedIndex = mTagListView.getCheckedItemPosition();
+        if (selectedIndex < 0) return;
+
         Tag tag = mFilteredTags.get(mTagListView.getCheckedItemPosition());
-        if (tag != null && tag.getId() > 0) {
-            menuItem.contentId = tag.getId();
+        if (tag != null && tag.id > 0) {
+            menuItem.contentId = tag.id;
         }
     }
-
 }
