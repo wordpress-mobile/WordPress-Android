@@ -117,46 +117,41 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
-                    if (mPeopleListFilter == null) {
-                        return "";
-                    } else {
+                int stringId = 0;
+                switch (emptyViewMsgType) {
+                    case LOADING:
+                        stringId = R.string.people_fetching;
+                        break;
+                    case NETWORK_ERROR:
+                        stringId = R.string.no_network_message;
+                        break;
+                    case NO_CONTENT:
                         switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.people_empty_list_filtered_users;
+                                break;
                             case FOLLOWERS:
-                                return getString(R.string.people_empty_list_filtered_followers);
+                                stringId = R.string.people_empty_list_filtered_followers;
+                                break;
                             case EMAIL_FOLLOWERS:
-                                return getString(R.string.people_empty_list_filtered_email_followers);
-                            default:
-                                // A site should always have at least 1 user, assuming there is an error, return empty
-                                return "";
+                                stringId = R.string.people_empty_list_filtered_email_followers;
+                                break;
                         }
-                    }
-
-                } else {
-                    int stringId = 0;
-                    switch (emptyViewMsgType) {
-                        case LOADING:
-                            stringId = R.string.people_fetching;
-                            break;
-                        case NETWORK_ERROR:
-                            stringId = R.string.no_network_message;
-                            break;
-                        case GENERIC_ERROR:
-                            switch (mPeopleListFilter) {
-                                case TEAM:
-                                    stringId = R.string.error_fetch_users_list;
-                                    break;
-                                case FOLLOWERS:
-                                    stringId = R.string.error_fetch_followers_list;
-                                    break;
-                                case EMAIL_FOLLOWERS:
-                                    stringId = R.string.error_fetch_email_followers_list;
-                                    break;
-                            }
-                            break;
-                    }
-                    return getString(stringId);
+                    case GENERIC_ERROR:
+                        switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.error_fetch_users_list;
+                                break;
+                            case FOLLOWERS:
+                                stringId = R.string.error_fetch_followers_list;
+                                break;
+                            case EMAIL_FOLLOWERS:
+                                stringId = R.string.error_fetch_email_followers_list;
+                                break;
+                        }
+                        break;
                 }
+                return getString(stringId);
             }
 
             @Override
