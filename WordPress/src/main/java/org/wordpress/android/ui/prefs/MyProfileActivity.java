@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountModelLegacy;
@@ -15,17 +17,16 @@ import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
     private final String DIALOG_TAG = "DIALOG";
@@ -91,15 +92,16 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+        mDispatcher.unregister(mAccountStore);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
+        mDispatcher.register(mAccountStore);
     }
 
     @Override
@@ -129,10 +131,10 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     private void updateMyProfileForLabel(TextView textView) {
-        Map<String, String> params = new HashMap<>();
-        params.put(restParamForTextView(textView), textView.getText().toString());
-        // TODO: WPSTORES: POST_UPDATE_SETTINGS
-        // AccountHelper.getDefaultAccount().postAccountSettings(params);
+        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put(restParamForTextView(textView), textView.getText().toString());
+        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
     }
 
     private void updateLabel(WPTextView textView, String text) {
@@ -178,8 +180,10 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         return null;
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
         if (!isFinishing()) {
+            // TODO: STORES: manage errors
             refreshDetails();
         }
     }
