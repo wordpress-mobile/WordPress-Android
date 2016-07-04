@@ -61,6 +61,7 @@ public class ReaderPost {
 
     private String attachmentsJson;
     private String discoverJson;
+    private String format;
 
     public long xpostPostId;
     public long xpostBlogId;
@@ -88,6 +89,7 @@ public class ReaderPost {
 
         post.text = JSONUtils.getString(json, "content");
         post.title = JSONUtils.getStringDecoded(json, "title");
+        post.format = JSONUtils.getString(json, "format");
         post.url = JSONUtils.getString(json, "URL");
         post.shortUrl = JSONUtils.getString(json, "short_URL");
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
@@ -354,6 +356,19 @@ public class ReaderPost {
         this.excerpt = StringUtils.notNullStr(excerpt);
     }
 
+    // https://codex.wordpress.org/Post_Formats
+    public String getFormat() {
+        return StringUtils.notNullStr(format);
+    }
+    public void setFormat(String format) {
+        this.format = StringUtils.notNullStr(format);
+    }
+
+    public boolean isGallery() {
+        return format != null && format.equals("gallery");
+    }
+
+
     public String getUrl() {
         return StringUtils.notNullStr(url);
     }
@@ -452,7 +467,7 @@ public class ReaderPost {
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
     }
-    boolean hasAttachments() {
+    public boolean hasAttachments() {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 
