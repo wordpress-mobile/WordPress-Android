@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
+import com.squareup.otto.Subscribe;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
@@ -539,31 +540,44 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     // Events
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    // TODO: STORES: remove this when we drop legacy REST clients
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    // TODO: STORES: remove this when we drop legacy REST clients
+    @SuppressWarnings("unused")
+    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
+        AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
     // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutWordPressCom event) {
         resetFragments();
     }
 
-    // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutCompletely event) {
-        ActivityLauncher.showSignInForResult(this);
+    @Subscribe
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        if (event.isError) {
+            AuthenticationDialogUtils.showAuthErrorView(this);
+        }
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
+        if (!mAccountStore.isSignedIn()) {
+            // User signed out
+            ActivityLauncher.showSignInForResult(this);
+        }
     }
 
     @SuppressWarnings("unused")

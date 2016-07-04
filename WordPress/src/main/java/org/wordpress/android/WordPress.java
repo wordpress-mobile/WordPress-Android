@@ -598,11 +598,10 @@ public class WordPress extends MultiDexApplication {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                // delete wpcom sites
-                mDispatcher.dispatch(SiteAction.LOGOUT_WPCOM);
-
                 // reset default account
                 mDispatcher.dispatch(AccountAction.SIGN_OUT);
+                // delete wpcom sites
+                mDispatcher.dispatch(SiteAction.REMOVE_WPCOM_SITES);
             }
         });
 

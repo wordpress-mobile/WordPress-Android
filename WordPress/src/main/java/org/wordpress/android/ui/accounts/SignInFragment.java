@@ -123,6 +123,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
 
+    protected boolean mSitesFetched = false;
+    protected boolean mAccountSettingsFetched = false;
+    protected boolean mAccountFetched = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -882,15 +886,20 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @Override
     public void onStop() {
         super.onStop();
-        mDispatcher.unregister(mSiteStore);
         mDispatcher.unregister(mAccountStore);
+        mDispatcher.unregister(mSiteStore);
         mDispatcher.unregister(this);
     }
 
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
-        // TODO: STORES: We should probably wait for this and onSiteChanged before finishing the current activity
+        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
+        mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
+        // Finish activity if sites have been fetched
+        if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
+            finishCurrentActivity();
+        }
     }
 
     @Subscribe
@@ -914,7 +923,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         // Login Successful
         trackAnalyticsSignIn();
-        finishCurrentActivity();
+        mSitesFetched = true;
+        // Finish activity if account settings have been fetched
+        if (mAccountSettingsFetched && mAccountFetched) {
+            finishCurrentActivity();
+        }
     }
 
     @Override
