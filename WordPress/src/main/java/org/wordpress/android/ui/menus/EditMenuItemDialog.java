@@ -151,7 +151,6 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.menu_item_editor_confirm) {
-            mCurrentEditor.onSave();
             if (isCreating() || !mOriginalItem.equals(mCurrentEditor.getMenuItem())) {
                 sendResultToTarget(SAVE_RESULT_CODE, mCurrentEditor.getMenuItem());
             }
@@ -204,14 +203,13 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
 
         // add editor views
         for (int i = 0; i < mTypePicker.getCount(); ++i) {
-            String type = mTypePicker.getItemAtPosition(i).toString();
 
             //type is i18n'ed, so we need to find the canonical type for the loaded array
             ITEM_TYPE itemType = ITEM_TYPE.typeForIndex(i + 1);
             BaseMenuItemEditor editor = MenuItemEditorFactory.getEditor(getActivity(), itemType);
             if (editor != null) {
                 mEditorFlipper.addView(editor);
-                mItemPositions.put(type.toUpperCase(), i);
+                mItemPositions.put(itemType.name().toUpperCase(), i);
             }
         }
     }
@@ -255,7 +253,8 @@ public class EditMenuItemDialog extends DialogFragment implements Toolbar.OnMenu
         mTypePicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setType(mTypePicker.getItemAtPosition(position).toString());
+                ITEM_TYPE itemType = ITEM_TYPE.typeForIndex(position + 1);
+                setType(itemType.name().toUpperCase());
             }
 
             // no-op

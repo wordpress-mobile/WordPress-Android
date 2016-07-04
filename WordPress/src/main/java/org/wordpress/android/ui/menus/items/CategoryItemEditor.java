@@ -106,16 +106,6 @@ public class CategoryItemEditor extends BaseMenuItemEditor {
     }
 
     @Override
-    public void onSave() {
-        // TODO: save to DB
-    }
-
-    @Override
-    public void onDelete() {
-        // TODO: remove from DB
-    }
-
-    @Override
     public MenuItemModel getMenuItem() {
         MenuItemModel menuItem = super.getMenuItem();
         fillData(menuItem);

@@ -115,14 +115,6 @@ public class TagItemEditor extends BaseMenuItemEditor implements SearchView.OnQu
         return menuItem;
     }
 
-    @Override
-    public void onSave() {
-    }
-
-    @Override
-    public void onDelete() {
-    }
-
     //
     // SearchView query callbacks
     //

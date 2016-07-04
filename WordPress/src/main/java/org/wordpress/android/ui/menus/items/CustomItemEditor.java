@@ -28,11 +28,4 @@ public class CustomItemEditor extends BaseMenuItemEditor {
         return R.id.menu_item_title_edit;
     }
 
-    @Override
-    public void onSave() {
-    }
-
-    @Override
-    public void onDelete() {
-    }
 }

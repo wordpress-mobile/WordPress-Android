@@ -125,16 +125,6 @@ public class PostItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         return menuItem;
     }
 
-    @Override
-    public void onSave() {
-        // TODO: save to DB
-    }
-
-    @Override
-    public void onDelete() {
-        // TODO: remove from DB
-    }
-
     //
     // SearchView query callbacks
     //

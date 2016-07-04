@@ -56,16 +56,6 @@ public class LinkItemEditor extends BaseMenuItemEditor {
         return menuItem;
     }
 
-    @Override
-    public void onSave() {
-        // TODO: save to DB
-    }
-
-    @Override
-    public void onDelete() {
-        // TODO: remove from DB
-    }
-
     public void setUrl(String url) {
         if (mUrlEditText != null) {
             mUrlEditText.setText(url);
