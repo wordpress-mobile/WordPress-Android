@@ -73,21 +73,17 @@ public class MenuItemEditorFactory {
             // This is a weird behavior of the API and is not documented.
             if (typeName.compareToIgnoreCase(MenuItemModel.TAG_TYPE_NAME) == 0) {
                 return TAG;
-            }
-            else if (typeName.compareToIgnoreCase("post_type") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.POST_TYPE_NAME) == 0) {
                 return POST;
-            }
-            else if (typeName.compareToIgnoreCase("jetpack-testimonial") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.TESTIMONIAL_TYPE_NAME) == 0) {
                 return JETPACK_TESTIMONIAL;
-            }
-            else if (typeName.compareToIgnoreCase("jetpack-portfolio") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.PORTFOLIO_TYPE_NAME) == 0) {
                 return JETPACK_PORTFOLIO;
-            }
-            else if (typeName.compareToIgnoreCase("jetpack-comic") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.COMIC_TYPE_NAME) == 0) {
                 return JETPACK_COMIC;
             }
 
-            else return NULL;
+            return NULL;
         }
 
         public static String nameForItemType(Context context, ITEM_TYPE itemType) {
@@ -128,13 +124,10 @@ public class MenuItemEditorFactory {
 
             return name;
         }
-
     }
 
     public static int getIconDrawableRes(ITEM_TYPE type) {
         switch (type) {
-            case POST:
-                return R.drawable.my_site_icon_posts;
             case PAGE:
                 return R.drawable.my_site_icon_pages;
             case CATEGORY:
@@ -143,6 +136,7 @@ public class MenuItemEditorFactory {
                 return R.drawable.gridicon_tag;
             case LINK:
                 return R.drawable.gridicon_link;
+            case POST:
             case JETPACK_TESTIMONIAL:
             case JETPACK_PORTFOLIO:
             case JETPACK_COMIC:
@@ -170,7 +164,6 @@ public class MenuItemEditorFactory {
                 JetpackCustomItemEditor editor = new JetpackCustomItemEditor(context);
                 editor.setJetpackCustomType(type);
                 return editor;
-
             default:
                 return null;
         }

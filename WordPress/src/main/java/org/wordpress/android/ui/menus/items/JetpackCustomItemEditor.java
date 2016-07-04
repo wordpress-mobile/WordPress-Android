@@ -148,14 +148,14 @@ public class JetpackCustomItemEditor extends BaseMenuItemEditor implements Searc
         Map<String, String> params = new HashMap<>();
         switch(mJetpackCustomType) {
             case JETPACK_PORTFOLIO:
-                params.put("type", "jetpack-portfolio");
+                params.put("type", MenuItemModel.PORTFOLIO_TYPE_NAME);
                 break;
             case JETPACK_COMIC:
-                params.put("type", "jetpack-comic");
+                params.put("type", MenuItemModel.COMIC_TYPE_NAME);
                 break;
             case JETPACK_TESTIMONIAL:
             default:
-                params.put("type", "jetpack-testimonial");
+                params.put("type", MenuItemModel.TESTIMONIAL_TYPE_NAME);
                 break;
         }
 
@@ -228,22 +228,21 @@ public class JetpackCustomItemEditor extends BaseMenuItemEditor implements Searc
 
     private void fillData(@NonNull MenuItemModel menuItem) {
         //check selected item in array and set selected
-
         switch (mJetpackCustomType) {
             case JETPACK_PORTFOLIO:
-                menuItem.type = "jetpack-portfolio";
-                menuItem.typeFamily = "post_type";
+                menuItem.type = MenuItemModel.PORTFOLIO_TYPE_NAME;
+                menuItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
                 menuItem.typeLabel = "Portfolio";
                 break;
             case JETPACK_COMIC:
-                menuItem.type = "jetpack-comic";
-                menuItem.typeFamily = "post_type";
+                menuItem.type = MenuItemModel.COMIC_TYPE_NAME;
+                menuItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
                 menuItem.typeLabel = "Comic";
                 break;
             case JETPACK_TESTIMONIAL:
             default:
-                menuItem.type = "jetpack-testimonial";
-                menuItem.typeFamily = "post_type";
+                menuItem.type = MenuItemModel.TESTIMONIAL_TYPE_NAME;
+                menuItem.typeFamily = MenuItemModel.POST_TYPE_NAME;
                 menuItem.typeLabel = "Testimonial";
                 break;
         }

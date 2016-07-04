@@ -19,6 +19,9 @@ import java.util.List;
 public class MenuItemModel implements Serializable {
     public static final String POST_TYPE_NAME = "post_type";
     public static final String TAG_TYPE_NAME = "post_tag";
+    public static final String TESTIMONIAL_TYPE_NAME = "jetpack-testimonial";
+    public static final String PORTFOLIO_TYPE_NAME = "jetpack-portfolio";
+    public static final String COMIC_TYPE_NAME = "jetpack-comic";
 
     //
     // Primary key attributes (cannot be null)
@@ -94,24 +97,19 @@ public class MenuItemModel implements Serializable {
     public MenuItemEditorFactory.ITEM_TYPE calculateCustomType(){
 
         if (type != null ) {
-
             if (type.compareToIgnoreCase(TAG_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.TAG.name();
                 return MenuItemEditorFactory.ITEM_TYPE.TAG;
-            }
-            else if (type.compareToIgnoreCase(POST_TYPE_NAME) == 0) {
+            } else if (type.compareToIgnoreCase(POST_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.POST.name();
                 return MenuItemEditorFactory.ITEM_TYPE.POST;
-            }
-            else if (type.compareToIgnoreCase("jetpack-testimonial") == 0) {
+            } else if (type.compareToIgnoreCase(TESTIMONIAL_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL.name();
                 return MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL;
-            }
-            else if (type.compareToIgnoreCase("jetpack-portfolio") == 0) {
+            } else if (type.compareToIgnoreCase(PORTFOLIO_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO.name();
                 return MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO;
-            }
-            else if (type.compareToIgnoreCase("jetpack-comic") == 0) {
+            } else if (type.compareToIgnoreCase(COMIC_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC.name();
                 return MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC;
             }
