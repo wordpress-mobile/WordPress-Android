@@ -34,7 +34,6 @@ public class JetpackCustomItemEditor extends BaseMenuItemEditor implements Searc
     private final List<String> mFilteredJetpackCustomTitles;
     private ReaderPostList mAllJetpackCustomPosts;
     private ReaderPostList mFilteredJetpackCustomPosts;
-    private boolean mSetSelectionOnceDataLoaded = true;
 
     private RadioButtonListView mJetpackCustomPostsListView;
 
@@ -220,7 +219,7 @@ public class JetpackCustomItemEditor extends BaseMenuItemEditor implements Searc
         }
         refreshAdapter();
 
-        if (mSetSelectionOnceDataLoaded && mWorkingItem != null) {
+        if (mWorkingItem != null) {
             setSelection(mWorkingItem.contentId);
         }
 
