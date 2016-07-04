@@ -202,6 +202,9 @@ public class WordPress extends MultiDexApplication {
                 .build();
         component().inject(this);
 
+        // TODO: STORES: This is needed for legacy REST clients
+        OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+
         mContext = this;
         ProfilingUtils.start("App Startup");
         // Enable log recording

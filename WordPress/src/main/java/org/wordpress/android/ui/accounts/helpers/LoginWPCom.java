@@ -12,10 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountLegacy;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.VolleyUtils;
@@ -88,16 +86,6 @@ public class LoginWPCom extends LoginAbstract {
     }
 
     private void configureAccountOnSuccess(Oauth.Token token) {
-        AccountLegacy account = AccountHelper.getDefaultAccount();
-
-        if (mJetpackBlog == null) {
-            // Store token in global account
-            account.setAccessToken(token.toString());
-            account.setUserName(mUsername);
-            account.save();
-            account.fetchAccountDetails();
-        }
-
         // Once we have a token, start up Simperium
         SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 

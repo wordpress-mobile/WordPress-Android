@@ -12,7 +12,6 @@ import com.squareup.otto.Subscribe;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountModelLegacy;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.model.AccountModel;
@@ -169,13 +168,13 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
         if (textView == mFirstName) {
-            return AccountModelLegacy.RestParam.FIRST_NAME.getDescription();
+            return "first_name";
         } else if (textView == mLastName) {
-            return AccountModelLegacy.RestParam.LAST_NAME.getDescription();
+            return "last_name";
         } else if (textView == mDisplayName) {
-            return AccountModelLegacy.RestParam.DISPLAY_NAME.getDescription();
+            return "display_name";
         } else if (textView == mAboutMe) {
-            return AccountModelLegacy.RestParam.ABOUT_ME.getDescription();
+            return "description";
         }
         return null;
     }

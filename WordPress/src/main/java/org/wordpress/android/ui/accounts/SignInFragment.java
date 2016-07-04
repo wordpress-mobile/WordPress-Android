@@ -38,6 +38,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
@@ -899,10 +900,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // TODO: STORES: adapt this method to take a parameter
             showAuthErrorMessage();
             endProgress();
-            return;
         } else {
             // Fetch user infos
             mDispatcher.dispatch(AccountAction.FETCH);
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         }
     }
 

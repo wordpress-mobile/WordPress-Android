@@ -30,7 +30,10 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -51,7 +54,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
-import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -75,6 +77,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private int  mAppBarElevation;
 
     @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -312,12 +315,16 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+        mDispatcher.unregister(mAccountStore);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mDispatcher.register(mAccountStore);
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
