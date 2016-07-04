@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.MenuItemModel;
 
 /**
  * Provides appropriate {@link BaseMenuItemEditor} subclasses.
@@ -70,7 +71,7 @@ public class MenuItemEditorFactory {
 
             //special case for tag
             // This is a weird behavior of the API and is not documented.
-            if (typeName.compareToIgnoreCase("post_tag") == 0) {
+            if (typeName.compareToIgnoreCase(MenuItemModel.TAG_TYPE_NAME) == 0) {
                 return TAG;
             }
             else if (typeName.compareToIgnoreCase("post_type") == 0) {
