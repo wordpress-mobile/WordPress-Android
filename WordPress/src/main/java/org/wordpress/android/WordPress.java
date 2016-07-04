@@ -11,6 +11,8 @@ import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
@@ -589,11 +591,17 @@ public class WordPress extends MultiDexApplication {
             AppLog.e(T.NOTIFS, "Could not delete GCM Token", e);
         }
 
-        // delete wpcom sites
-        mDispatcher.dispatch(SiteAction.LOGOUT_WPCOM);
 
-        // reset default account
-        mDispatcher.dispatch(AccountAction.SIGN_OUT);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                // delete wpcom sites
+                mDispatcher.dispatch(SiteAction.LOGOUT_WPCOM);
+
+                // reset default account
+                mDispatcher.dispatch(AccountAction.SIGN_OUT);
+            }
+        });
 
         // reset all reader-related prefs & data
         AppPrefs.reset();
