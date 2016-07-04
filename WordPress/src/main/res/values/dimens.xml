@@ -114,6 +114,8 @@
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_more_icon">48dp</dimen>
 
+    <dimen name="reader_detail_tag_height">48dp</dimen>
+
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
