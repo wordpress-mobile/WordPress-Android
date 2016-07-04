@@ -14,8 +14,7 @@ import org.wordpress.android.models.MenuItemModel;
 /**
  */
 public class LinkItemEditor extends BaseMenuItemEditor {
-    public static final String LINK_URL_KEY = "url";
-    public static final String LINK_NEW_TAB_KEY = "open-new-tab";
+    public static final String NEW_TAB_LINK_TARGET = "_blank";
 
     private EditText mUrlEditText;
     private CheckBox mOpenNewTabCheckBox;
@@ -31,12 +30,8 @@ public class LinkItemEditor extends BaseMenuItemEditor {
     @Override
     public void onViewAdded(View child) {
         super.onViewAdded(child);
-
-        if (child.getId() == R.id.link_editor_url_input) {
-            mUrlEditText = (EditText) child;
-        } else if (child.getId() == R.id.link_editor_open_new_tab_checkbox) {
-            mOpenNewTabCheckBox = (CheckBox) child;
-        }
+        mUrlEditText = (EditText) child.findViewById(R.id.link_editor_url_input);
+        mOpenNewTabCheckBox = (CheckBox) child.findViewById(R.id.link_editor_open_new_tab_checkbox);
     }
 
     @Override
@@ -51,9 +46,18 @@ public class LinkItemEditor extends BaseMenuItemEditor {
 
     @Override
     public MenuItemModel getMenuItem() {
-        MenuItemModel menuItem = new MenuItemModel();
+        MenuItemModel menuItem = super.getMenuItem();
         fillData(menuItem);
         return menuItem;
+    }
+
+    @Override
+    public void setMenuItem(MenuItemModel menuItem) {
+        super.setMenuItem(menuItem);
+        if (menuItem != null) {
+            setUrl(menuItem.url);
+            setOpenInNewTab(NEW_TAB_LINK_TARGET.equals(menuItem.linkTarget));
+        }
     }
 
     public void setUrl(String url) {
@@ -77,11 +81,10 @@ public class LinkItemEditor extends BaseMenuItemEditor {
     }
 
     private void fillData(@NonNull MenuItemModel menuItem) {
-        if (mUrlEditText != null) {
-            menuItem.addData(LINK_URL_KEY, String.valueOf(mUrlEditText.getText()));
-        }
-        if (mOpenNewTabCheckBox != null) {
-            menuItem.addData(LINK_NEW_TAB_KEY, String.valueOf(mOpenNewTabCheckBox.isChecked()));
-        }
+        menuItem.type = MenuItemEditorFactory.ITEM_TYPE.CUSTOM.name().toLowerCase(); //default type: CUSTOM
+        menuItem.typeFamily = "custom";
+        menuItem.typeLabel = "Custom Link";
+        menuItem.url = getUrl();
+        menuItem.linkTarget = shouldOpenNewTab() ? NEW_TAB_LINK_TARGET : "";
     }
 }

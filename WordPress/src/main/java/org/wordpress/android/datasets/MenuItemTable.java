@@ -65,6 +65,12 @@ public class MenuItemTable {
         ContentValues row = serializeToDatabase(item);
         WordPress.wpDB.getDatabase().insertWithOnConflict(
                 MENU_ITEMS_TABLE_NAME, null, row, SQLiteDatabase.CONFLICT_REPLACE);
+
+        if (item.hasChildren()) {
+            for (MenuItemModel child : item.children) {
+                saveMenuItem(child);
+            }
+        }
     }
 
     public static int deleteMenuItemForMenuId(long menuId) {

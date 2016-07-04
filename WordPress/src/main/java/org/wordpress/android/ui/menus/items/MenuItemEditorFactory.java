@@ -18,6 +18,8 @@ public class MenuItemEditorFactory {
         TAG,
         LINK,
         JETPACK_TESTIMONIAL,
+        JETPACK_PORTFOLIO,
+        JETPACK_COMIC,
         CUSTOM;
 
         public static ITEM_TYPE typeForString(String typeName) {
@@ -30,40 +32,64 @@ public class MenuItemEditorFactory {
             else if (typeName.equalsIgnoreCase(LINK.name())) return LINK;
             else if (typeName.equalsIgnoreCase(CUSTOM.name())) return CUSTOM;
             else if (typeName.equalsIgnoreCase(JETPACK_TESTIMONIAL.name())) return JETPACK_TESTIMONIAL;
+            else if (typeName.equalsIgnoreCase(JETPACK_PORTFOLIO.name())) return JETPACK_PORTFOLIO;
+            else if (typeName.equalsIgnoreCase(JETPACK_COMIC.name())) return JETPACK_COMIC;
 
             //special case for tag
             // This is a weird behavior of the API and is not documented.
             if (typeName.compareToIgnoreCase(MenuItemModel.TAG_TYPE_NAME) == 0) {
                 return TAG;
-            }
-            else if (typeName.compareToIgnoreCase("post_type") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.POST_TYPE_NAME) == 0) {
                 return POST;
-            }
-            else if (typeName.compareToIgnoreCase("jetpack-testimonial") == 0) {
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.TESTIMONIAL_TYPE_NAME) == 0) {
                 return JETPACK_TESTIMONIAL;
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.PORTFOLIO_TYPE_NAME) == 0) {
+                return JETPACK_PORTFOLIO;
+            } else if (typeName.compareToIgnoreCase(MenuItemModel.COMIC_TYPE_NAME) == 0) {
+                return JETPACK_COMIC;
             }
-
-            else return NULL;
-        }
-
-        public static ITEM_TYPE typeForIndex(int index){
-            if (NULL.ordinal() == index) return NULL;
-            if (POST.ordinal() == index) return POST;
-            if (PAGE.ordinal() == index) return PAGE;
-            if (CATEGORY.ordinal() == index) return CATEGORY;
-            if (TAG.ordinal() == index) return TAG;
-            if (LINK.ordinal() == index) return LINK;
-            if (JETPACK_TESTIMONIAL.ordinal() == index) return JETPACK_TESTIMONIAL;
-            if (CUSTOM.ordinal() == index) return CUSTOM;
 
             return NULL;
+        }
+
+        public static String nameForItemType(Context context, ITEM_TYPE itemType) {
+            String name = "";
+
+            switch (itemType) {
+                case POST:
+                    name = context.getString(R.string.menu_item_type_post);
+                    break;
+                case PAGE:
+                    name = context.getString(R.string.menu_item_type_page);
+                    break;
+                case CATEGORY:
+                    name = context.getString(R.string.menu_item_type_category);
+                    break;
+                case TAG:
+                    name = context.getString(R.string.menu_item_type_tag);
+                    break;
+                case LINK:
+                    name = context.getString(R.string.menu_item_type_link);
+                    break;
+                case JETPACK_TESTIMONIAL:
+                    name = context.getString(R.string.menu_item_type_testimonial);
+                    break;
+                case JETPACK_PORTFOLIO:
+                    name = context.getString(R.string.menu_item_type_portfolio);
+                    break;
+                case JETPACK_COMIC:
+                    name = context.getString(R.string.menu_item_type_comic);
+                    break;
+                default:
+                    break;
+            }
+
+            return name;
         }
     }
 
     public static int getIconDrawableRes(ITEM_TYPE type) {
         switch (type) {
-            case POST:
-                return R.drawable.my_site_icon_posts;
             case PAGE:
                 return R.drawable.my_site_icon_pages;
             case CATEGORY:
@@ -72,7 +98,10 @@ public class MenuItemEditorFactory {
                 return R.drawable.gridicon_tag;
             case LINK:
                 return R.drawable.gridicon_link;
+            case POST:
             case JETPACK_TESTIMONIAL:
+            case JETPACK_PORTFOLIO:
+            case JETPACK_COMIC:
                 return R.drawable.my_site_icon_posts;
             default:
                 return -1;
@@ -92,7 +121,11 @@ public class MenuItemEditorFactory {
             case LINK:
                 return new LinkItemEditor(context);
             case JETPACK_TESTIMONIAL:
-                return new JetpackTestimonialItemEditor(context);
+            case JETPACK_PORTFOLIO:
+            case JETPACK_COMIC:
+                JetpackCustomItemEditor editor = new JetpackCustomItemEditor(context);
+                editor.setJetpackCustomType(type);
+                return editor;
             default:
                 return null;
         }

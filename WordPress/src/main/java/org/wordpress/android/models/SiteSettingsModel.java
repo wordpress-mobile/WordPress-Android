@@ -53,6 +53,7 @@ public class SiteSettingsModel {
     public static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
     public static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
     public static final String TESTIMONIALS_ENABLED_COLUMN_NAME = "testimonialsEnabled";
+    public static final String PORTFOLIOS_ENABLED_COLUMN_NAME = "portfoliosEnabled";
     public static final String WHITELIST_COLUMN_NAME = "whitelist";
     public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
     public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
@@ -130,6 +131,7 @@ public class SiteSettingsModel {
     public boolean commentAutoApprovalKnownUsers;
     public int maxLinks;
     public boolean testimonialsEnabled;
+    public boolean portfolioEnabled;
     public List<String> holdForModeration;
     public List<String> blacklist;
 
@@ -165,6 +167,7 @@ public class SiteSettingsModel {
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
                 testimonialsEnabled == otherModel.testimonialsEnabled &&
+                portfolioEnabled == otherModel.portfolioEnabled &&
                 CollectionUtils.areListsEqual(holdForModeration, otherModel.holdForModeration) &&
                 CollectionUtils.areListsEqual(blacklist, otherModel.blacklist);
     }
@@ -210,6 +213,7 @@ public class SiteSettingsModel {
         commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
         maxLinks = other.maxLinks;
         testimonialsEnabled = other.testimonialsEnabled;
+        portfolioEnabled = other.portfolioEnabled;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -251,6 +255,7 @@ public class SiteSettingsModel {
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
         testimonialsEnabled = getBooleanFromCursor(cursor, TESTIMONIALS_ENABLED_COLUMN_NAME);
+        portfolioEnabled = getBooleanFromCursor(cursor, PORTFOLIOS_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -327,6 +332,7 @@ public class SiteSettingsModel {
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
         values.put(TESTIMONIALS_ENABLED_COLUMN_NAME, testimonialsEnabled);
+        values.put(PORTFOLIOS_ENABLED_COLUMN_NAME, portfolioEnabled);
 
         String moderationKeys = "";
         if (holdForModeration != null) {

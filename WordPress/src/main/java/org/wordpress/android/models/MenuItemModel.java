@@ -1,6 +1,5 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -10,9 +9,7 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Menu Items define content that a Menu displays. They can be of type Page, Link, Post, Category,
@@ -22,6 +19,9 @@ import java.util.Map;
 public class MenuItemModel implements Serializable {
     public static final String POST_TYPE_NAME = "post_type";
     public static final String TAG_TYPE_NAME = "post_tag";
+    public static final String TESTIMONIAL_TYPE_NAME = "jetpack-testimonial";
+    public static final String PORTFOLIO_TYPE_NAME = "jetpack-portfolio";
+    public static final String COMIC_TYPE_NAME = "jetpack-comic";
 
     //
     // Primary key attributes (cannot be null)
@@ -42,7 +42,6 @@ public class MenuItemModel implements Serializable {
     public String type;
     public String typeFamily;
     public String typeLabel;
-    public Map<String, String> data;
     public List<MenuItemModel> children;
     public int flattenedLevel; //might be 0 for root, 1 for first level, 2 for second, etc.
     public boolean editingMode;// used for visual representation
@@ -63,9 +62,6 @@ public class MenuItemModel implements Serializable {
         type = other.type;
         typeFamily = other.typeFamily;
         typeLabel = other.typeLabel;
-        if (other.data != null) {
-            data = new HashMap<>(other.data);
-        }
         if (other.children != null) {
             children = new ArrayList<>(other.children);
         }
@@ -98,31 +94,24 @@ public class MenuItemModel implements Serializable {
         return children != null && children.size() > 0;
     }
 
-    public void addData(@NonNull String key, String value) {
-        if (data == null) data = new HashMap<>();
-        data.put(key, value);
-    }
-
-    public String getData(@NonNull String key) {
-        if (data == null) data = new HashMap<>();
-        return data.get(key);
-    }
-
     public MenuItemEditorFactory.ITEM_TYPE calculateCustomType(){
 
         if (type != null ) {
-
             if (type.compareToIgnoreCase(TAG_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.TAG.name();
                 return MenuItemEditorFactory.ITEM_TYPE.TAG;
-            }
-            else if (type.compareToIgnoreCase(POST_TYPE_NAME) == 0) {
+            } else if (type.compareToIgnoreCase(POST_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.POST.name();
                 return MenuItemEditorFactory.ITEM_TYPE.POST;
-            }
-            else if (type.compareToIgnoreCase("jetpack-testimonial") == 0) {
+            } else if (type.compareToIgnoreCase(TESTIMONIAL_TYPE_NAME) == 0) {
                 calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL.name();
                 return MenuItemEditorFactory.ITEM_TYPE.JETPACK_TESTIMONIAL;
+            } else if (type.compareToIgnoreCase(PORTFOLIO_TYPE_NAME) == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_PORTFOLIO;
+            } else if (type.compareToIgnoreCase(COMIC_TYPE_NAME) == 0) {
+                calculatedType = MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC.name();
+                return MenuItemEditorFactory.ITEM_TYPE.JETPACK_COMIC;
             }
 
             if (MenuItemEditorFactory.ITEM_TYPE.typeForString(type).equals(MenuItemEditorFactory.ITEM_TYPE.CUSTOM)) {

@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MenuItemModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -270,7 +271,7 @@ public class PostUploadService extends Service {
                 }
             }
 
-            contentStruct.put("post_type", (mPost.isPage()) ? "page" : "post");
+            contentStruct.put(MenuItemModel.POST_TYPE_NAME, (mPost.isPage()) ? "page" : "post");
             contentStruct.put("title", mPost.getTitle());
             long pubDate = mPost.getDate_created_gmt();
             if (pubDate != 0) {

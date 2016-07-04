@@ -1514,19 +1514,17 @@
     <string name="menu_item_type_tag">Tag</string>
     <string name="menu_item_type_category">Category</string>
     <string name="menu_item_type_testimonial">Testimonial</string>
-    <string-array name="menu_item_type_spinner_entries">
-        <item>@string/menu_item_type_post</item>
-        <item>@string/menu_item_type_page</item>
-        <item>@string/menu_item_type_category</item>
-        <item>@string/menu_item_type_tag</item>
-        <item>@string/menu_item_type_link</item>
-    </string-array>
+    <string name="menu_item_type_portfolio">Portfolio</string>
+    <string name="menu_item_type_comic">Comic</string>
 
     <!-- empty menu item adapter views -->
     <string name="menu_item_type_page_empty_list">No pages found</string>
     <string name="menu_item_type_post_empty_list">No posts found</string>
     <string name="menu_item_type_tag_empty_list">No tags found</string>
     <string name="menu_item_type_testimonial_empty_list">No testimonials found</string>
+    <string name="menu_item_type_portfolio_empty_list">No portfolio posts found</string>
+    <string name="menu_item_type_comic_empty_list">No comic posts found</string>
+    <string name="menu_item_type_custom_empty_list">No custom posts found</string>
     <string name="menu_item_type_category_empty_list">No categories found</string>
     <string name="menu_item_special_home">Home (site)</string>
     <string name="menu_item_changes_not_saved">Your local changes haven\'t been saved. Are you sure you want to go back and discard changes?</string>

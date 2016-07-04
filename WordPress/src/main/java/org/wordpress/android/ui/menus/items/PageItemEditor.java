@@ -129,10 +129,6 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
         }
     }
 
-    public boolean shouldEdit() {
-        return false;
-    }
-
     @Override
     public MenuItemModel getMenuItem() {
         MenuItemModel menuItem = super.getMenuItem();
@@ -228,12 +224,6 @@ public class PageItemEditor extends BaseMenuItemEditor implements SearchView.OnQ
 
     private void fillData(@NonNull MenuItemModel menuItem) {
         //check selected item in array and set selected
-        /*
-            "type": "page",
-			"type_family": "post_type",
-			"type_label": "Page",
-			* */
-
         PostsListPost post = mFilteredPages.get(mPageListView.getCheckedItemPosition());
         if (post != null) {
 
