@@ -10,7 +10,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/margin_medium"
         android:scrollbars="vertical"/>
 
     <ProgressBar
