@@ -75,14 +75,15 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                if (!mResourceVars.isWideDisplay) {
+                final boolean renderAsTiledGallery = shouldRenderAsTiledGallery();
+
+                if (!renderAsTiledGallery) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder
-                        .toString(), mResourceVars.isWideDisplay);
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), renderAsTiledGallery);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -92,6 +93,14 @@ class ReaderPostRenderer {
                 });
             }
         }.start();
+    }
+
+    public boolean shouldRenderAsTiledGallery() {
+        // determine whether a tiled-gallery exists in the content
+        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(mRenderBuilder.toString())
+                .find();
+
+        return hasTiledGallery && mResourceVars.isWideDisplay;
     }
 
     /*
@@ -310,12 +319,7 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean isWideDisplay) {
-        // determine whether a tiled-gallery exists in the content
-        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(content).find();
-
-        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
-
+    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
         // unique CSS class assigned to the gallery elements for easy selection
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
 
