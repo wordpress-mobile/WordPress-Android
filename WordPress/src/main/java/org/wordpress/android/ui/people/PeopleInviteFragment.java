@@ -43,6 +43,7 @@ public class PeopleInviteFragment extends Fragment implements
     private static final String KEY_USERNAME_RESULTS = "KEY_USERNAME_RESULTS";
     private static final String KEY_ROLE = "KEY_ROLE";
     private static final String KEY_CUSTOM_MESSAGE = "KEY_CUSTOM_MESSAGE";
+    private static final String KEY_INVITE_IN_PROGRESS = "KEY_INVITE_IN_PROGRESS";
 
     private static final String FLAG_SUCCESS = "SUCCESS";
 
@@ -101,6 +102,7 @@ public class PeopleInviteFragment extends Fragment implements
         outState.putSerializable(KEY_USERNAME_RESULTS, mUsernameResults);
         outState.putString(KEY_ROLE, mRole);
         outState.putString(KEY_CUSTOM_MESSAGE, mCustomMessage);
+        outState.putBoolean(KEY_INVITE_IN_PROGRESS, mInviteOperationInProgress);
 
         super.onSaveInstanceState(outState);
     }
@@ -126,6 +128,8 @@ public class PeopleInviteFragment extends Fragment implements
             populateUsernameButtons(usernames);
 
             role = savedInstanceState.getString(KEY_ROLE);
+
+            mInviteOperationInProgress = savedInstanceState.getBoolean(KEY_INVITE_IN_PROGRESS);
         }
 
         if (role == null) {
