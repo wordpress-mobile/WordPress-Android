@@ -46,17 +46,6 @@
             android:textSize="@dimen/text_sz_large"
             tools:text="username"/>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/follower_subscribed_date"
-            style="@style/PersonTextView"
-            android:layout_alignLeft="@id/person_display_name"
-            android:layout_alignStart="@id/person_display_name"
-            android:layout_below="@id/person_username"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="Since {date}"/>
-
     </RelativeLayout>
 
     <LinearLayout
@@ -94,6 +83,42 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
             tools:text="@string/role"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/subscribed_date_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/person_role_container"
+        android:layout_alignLeft="@id/person_role_container"
+        android:layout_below="@id/person_role_container"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/subscribed_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="@string/title_follower"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/subscribed_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="Since {date}"/>
 
     </LinearLayout>
 

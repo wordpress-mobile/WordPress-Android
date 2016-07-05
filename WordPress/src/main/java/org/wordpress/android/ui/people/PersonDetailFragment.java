@@ -42,7 +42,9 @@ public class PersonDetailFragment extends Fragment {
     private TextView mUsernameTextView;
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
-    private TextView mSubscribedTextView;
+    private LinearLayout mSubscribedDateContainer;
+    private TextView mSubscribedDateTitleView;
+    private TextView mSubscribedDateTextView;
 
     public static PersonDetailFragment newInstance(long personID, int localTableBlogID, Person.PersonType personType) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
@@ -86,7 +88,9 @@ public class PersonDetailFragment extends Fragment {
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-        mSubscribedTextView = (TextView) rootView.findViewById(R.id.follower_subscribed_date);
+        mSubscribedDateContainer = (LinearLayout) rootView.findViewById(R.id.subscribed_date_container);
+        mSubscribedDateTitleView = (TextView) rootView.findViewById(R.id.subscribed_date_title);
+        mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
 
         Account account = AccountHelper.getDefaultAccount();
         boolean isCurrentUser = account.getUserId() == mPersonID;
@@ -118,27 +122,25 @@ public class PersonDetailFragment extends Fragment {
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
             if (!TextUtils.isEmpty(person.getUsername())) {
-                mUsernameTextView.setVisibility(View.VISIBLE);
                 mUsernameTextView.setText(String.format("@%s", person.getUsername()));
-            } else {
-                mUsernameTextView.setVisibility(View.GONE);
             }
 
-            if (person.getPersonType() == Person.PersonType.USER) {
-                mSubscribedTextView.setVisibility(View.GONE);
-            }
-            else {
-                mSubscribedTextView.setVisibility(View.VISIBLE);
-                String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
-                String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
-                mSubscribedTextView.setText(dateText);
-            }
-
-            if (person.getPersonType() == Person.PersonType.USER) {
+            if (mPersonType == Person.PersonType.USER) {
                 mRoleContainer.setVisibility(View.VISIBLE);
                 setupRoleContainerForCapability();
-            } else {
+                mSubscribedDateContainer.setVisibility(View.GONE);
+            }
+            else {
                 mRoleContainer.setVisibility(View.GONE);
+                mSubscribedDateContainer.setVisibility(View.VISIBLE);
+                if (mPersonType == Person.PersonType.FOLLOWER) {
+                    mSubscribedDateTitleView.setText(R.string.title_follower);
+                } else if (mPersonType == Person.PersonType.EMAIL_FOLLOWER) {
+                    mSubscribedDateTitleView.setText(R.string.title_email_follower);
+                }
+                String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                mSubscribedDateTextView.setText(dateText);
             }
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
