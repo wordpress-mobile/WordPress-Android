@@ -424,30 +424,41 @@ public class PeopleInviteFragment extends Fragment implements
             return;
         }
 
+        enableSendButton(false);
+
         if (mUsernameEditText.getText().toString().length() > 0) {
             addUsername(mUsernameEditText, new ValidationEndListener() {
                 @Override
                 public void onValidationEnd() {
-                    checkAndSend();
+                    if (!checkAndSend()){
+                        //re-enable SEND button if validation failed
+                        enableSendButton(true);
+                    }
                 }
             });
         } else {
-            checkAndSend();
+            if (!checkAndSend()){
+                //re-enable SEND button if validation failed
+                enableSendButton(true);
+            }
         }
     }
 
-    private void checkAndSend() {
+    /*
+    * returns true if send is attempted, false if validation failed
+    * */
+    private boolean checkAndSend() {
         if (!isAdded()) {
-            return;
+            return false;
         }
 
         if (!NetworkUtils.checkConnection(getActivity())) {
-            return;
+            return false;
         }
 
         if (mUsernameButtons.size() == 0) {
             ToastUtils.showToast(getActivity(), R.string.invite_error_no_usernames);
-            return;
+            return false;
         }
 
         int invalidCount = 0;
@@ -461,12 +472,11 @@ public class PeopleInviteFragment extends Fragment implements
             ToastUtils.showToast(getActivity(), StringUtils.getQuantityString(getActivity(), 0,
                     R.string.invite_error_invalid_usernames_one,
                     R.string.invite_error_invalid_usernames_multiple, invalidCount));
-            return;
+            return false;
         }
 
         //set the  "SEND" option disabled
-        mInviteOperationInProgress = true;
-        getActivity().invalidateOptionsMenu();
+        enableSendButton(false);
 
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
         PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
@@ -497,8 +507,7 @@ public class PeopleInviteFragment extends Fragment implements
                         }
 
                         //set the  "SEND" option enabled again
-                        mInviteOperationInProgress = false;
-                        getActivity().invalidateOptionsMenu();
+                        enableSendButton(true);
                     }
 
                     @Override
@@ -510,10 +519,16 @@ public class PeopleInviteFragment extends Fragment implements
                         ToastUtils.showToast(getActivity(), R.string.invite_error_sending);
 
                         //set the  "SEND" option enabled again
-                        mInviteOperationInProgress = false;
-                        getActivity().invalidateOptionsMenu();
+                        enableSendButton(true);
 
                     }
                 });
+
+        return true;
+    }
+
+    private void enableSendButton(boolean enable){
+        mInviteOperationInProgress = !enable;
+        getActivity().invalidateOptionsMenu();
     }
 }
