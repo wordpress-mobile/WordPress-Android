@@ -74,11 +74,11 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/more"
                 android:paddingBottom="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_large"
-                android:contentDescription="@string/more"
                 app:srcCompat="@drawable/ic_action_more_grey" />
 
         </RelativeLayout>
@@ -95,6 +95,18 @@
             android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginTop="@dimen/margin_large"
             tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_date_below_title"
+            style="@style/ReaderTextView.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:visibility="gone"
+            tools:text="text_dateline_below_title"
+            tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
@@ -115,6 +127,16 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_word_count" />
+
+        <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
+            android:id="@+id/thumbnail_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:layout_marginTop="@dimen/margin_large"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <!-- attribution section for discover posts -->
         <LinearLayout
