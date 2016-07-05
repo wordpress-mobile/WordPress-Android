@@ -207,6 +207,22 @@ public class PeopleTable {
         return people;
     }
 
+    public static Person getPerson(long personId, int localTableBlogId, Person.PersonType personType) {
+        String table = null;
+        switch (personType) {
+            case USER:
+                table = TEAM_TABLE;
+                break;
+            case FOLLOWER:
+                table = FOLLOWERS_TABLE;
+                break;
+            case EMAIL_FOLLOWER:
+                table = EMAIL_FOLLOWERS_TABLE;
+                break;
+        }
+        return getPerson(table, personId, localTableBlogId);
+    }
+
     public static Person getUser(long personId, int localTableBlogId) {
         return getPerson(TEAM_TABLE, personId, localTableBlogId);
     }
