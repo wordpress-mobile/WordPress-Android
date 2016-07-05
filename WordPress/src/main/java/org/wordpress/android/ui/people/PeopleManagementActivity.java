@@ -352,7 +352,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         int localTableBlogID = person.getLocalTableBlogId();
 
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }

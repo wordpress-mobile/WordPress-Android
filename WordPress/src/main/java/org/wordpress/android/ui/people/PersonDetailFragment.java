@@ -31,9 +31,11 @@ import java.text.SimpleDateFormat;
 public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static String ARG_PERSON_TYPE = "person_type";
 
     private long mPersonID;
     private int mLocalTableBlogID;
+    private Person.PersonType mPersonType;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -42,11 +44,12 @@ public class PersonDetailFragment extends Fragment {
     private TextView mRoleTextView;
     private TextView mSubscribedTextView;
 
-    public static PersonDetailFragment newInstance(long personID, int localTableBlogID) {
+    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, Person.PersonType personType) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(ARG_PERSON_ID, personID);
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        bundle.putSerializable(ARG_PERSON_TYPE, personType);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
     }
@@ -76,6 +79,7 @@ public class PersonDetailFragment extends Fragment {
 
         mPersonID = getArguments().getLong(ARG_PERSON_ID);
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
@@ -195,6 +199,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public Person loadPerson() {
-        return PeopleTable.getUser(mPersonID, mLocalTableBlogID);
+        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mPersonType);
     }
 }
