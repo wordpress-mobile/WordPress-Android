@@ -71,6 +71,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setElevation(0);
         }
 
         Blog blog = WordPress.getCurrentBlog();
@@ -133,11 +134,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (peopleListFragment != null) {
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
-            }
-
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                removeToolbarElevation();
             }
         }
     }
@@ -366,8 +362,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (actionBar != null) {
                 actionBar.setTitle("");
             }
-            // remove the toolbar elevation for larger toolbar look
-            removeToolbarElevation();
 
             fragmentTransaction.commit();
         }
@@ -522,13 +516,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (actionBar != null) {
                 actionBar.setTitle(R.string.people);
             }
-
-            // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                resetToolbarElevation();
-
-            }
             return true;
         }
         return false;
@@ -581,21 +568,6 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     private PersonDetailFragment getDetailFragment() {
         return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-    }
-
-    // Toolbar elevation is removed in detail fragment for larger toolbar look
-    private void removeToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0);
-        }
-    }
-
-    private void resetToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
-        }
     }
 
     public interface InvitationSender {
