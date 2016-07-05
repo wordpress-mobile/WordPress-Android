@@ -142,6 +142,11 @@ public class PersonDetailFragment extends Fragment {
                 String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
                 mSubscribedDateTextView.setText(dateText);
             }
+
+            // Adds extra padding to display name for email followers to make it vertically centered
+            int padding = mPersonType == Person.PersonType.EMAIL_FOLLOWER
+                    ? (int) getResources().getDimension(R.dimen.margin_small) : 0;
+            changeDisplayNameTopPadding(padding);
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -198,6 +203,13 @@ public class PersonDetailFragment extends Fragment {
         } else {
             mRoleContainer.setBackground(null);
         }
+    }
+
+    private void changeDisplayNameTopPadding(int newPadding) {
+        if (mDisplayNameTextView == null) {
+            return;
+        }
+        mDisplayNameTextView.setPadding(0, newPadding, 0 , 0);
     }
 
     public Person loadPerson() {
