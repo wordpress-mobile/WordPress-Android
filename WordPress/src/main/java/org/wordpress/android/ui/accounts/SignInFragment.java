@@ -879,15 +879,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mPasswordEditText.setText(mPassword);
         }
         mDispatcher.register(this);
-        mDispatcher.register(mSiteStore);
-        mDispatcher.register(mAccountStore);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mDispatcher.unregister(mAccountStore);
-        mDispatcher.unregister(mSiteStore);
         mDispatcher.unregister(this);
     }
 

@@ -292,14 +292,10 @@ public class MeFragment extends Fragment {
         super.onStart();
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
-        mDispatcher.register(mAccountStore);
-        mDispatcher.register(mSiteStore);
     }
 
     @Override
     public void onStop() {
-        mDispatcher.unregister(mSiteStore);
-        mDispatcher.unregister(mAccountStore);
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
@@ -309,7 +305,6 @@ public class MeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshAccountDetails();
-
         showGravatarTooltipIfNeeded();
     }
 
@@ -339,6 +334,9 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
+        if (!mAccountStore.isSignedIn()) {
+            return;
+        }
         // we only want to show user details for WordPress.com users
         if (mAccountStore.hasAccessToken()) {
             AccountModel defaultAccount = mAccountStore.getAccount();

@@ -92,7 +92,6 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     @Override
     protected void onStop() {
         mDispatcher.unregister(this);
-        mDispatcher.unregister(mAccountStore);
         super.onStop();
     }
 
@@ -100,7 +99,6 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     protected void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        mDispatcher.register(mAccountStore);
     }
 
     @Override

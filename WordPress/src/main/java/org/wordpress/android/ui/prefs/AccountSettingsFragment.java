@@ -108,14 +108,12 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        mDispatcher.register(mAccountStore);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        mDispatcher.unregister(mAccountStore);
         mDispatcher.unregister(this);
         super.onStop();
     }

@@ -317,14 +317,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
-        mDispatcher.unregister(mAccountStore);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mDispatcher.register(mAccountStore);
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
