@@ -79,7 +79,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of save menu item
+        menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
     }
 
