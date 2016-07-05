@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,15 +60,29 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     }
 
     private void configureRecyclerViews(View view) {
-        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
-        mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
         notConnectedAdapter.setHasStableIds(true);
+        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
+        mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
 
+        if (mConnectedAccounts.isEmpty()) {
+            hideConnectedView(view);
+        } else {
+            populateConnectedListView(view);
+        }
+    }
+
+    private void hideConnectedView(View view) {
+        LinearLayout connectedHeader = (LinearLayout) view.findViewById(R.id.connected_recyclerview);
+        connectedHeader.setVisibility(View.GONE);
+    }
+
+    private void populateConnectedListView(View view) {
         RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
-        listViewConnected.setLayoutManager(new LinearLayoutManager(getActivity()));
         PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
+
+        listViewConnected.setLayoutManager(new LinearLayoutManager(getActivity()));
         listViewConnected.setAdapter(connectedAdapter);
     }
 

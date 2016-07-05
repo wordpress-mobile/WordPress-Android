@@ -12,6 +12,7 @@
         android:id="@+id/not_connected_recyclerview" />
 
     <LinearLayout
+        android:id="@+id/connected_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
