@@ -85,6 +85,14 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
+        mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredRecyclerView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
+
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
