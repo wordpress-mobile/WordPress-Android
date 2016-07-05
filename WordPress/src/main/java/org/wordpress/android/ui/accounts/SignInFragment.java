@@ -51,6 +51,7 @@ import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.stores.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.stores.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -906,6 +907,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             showAuthErrorMessage();
             endProgress();
         } else {
+            if (mAccountStore.hasAccessToken()) {
+                // On WordPress.com login, configure Simperium
+                AppLog.i(T.NOTIFS, "Configuring Simperium");
+                SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
+            }
             // Fetch user infos
             mDispatcher.dispatch(AccountAction.FETCH);
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
