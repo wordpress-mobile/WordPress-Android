@@ -374,7 +374,7 @@ class ReaderPostRenderer {
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
 
         // make sure images aren't wider than the display, strictly enforced for images without size
-        .append("  img { max-width: 100%; }")
+        .append("  img { max-width: 100%; width: auto; height: auto; }")
         .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
         // center large/medium images, provide a small bottom margin, and add a background color
