@@ -31,6 +31,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -66,6 +67,7 @@ import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
 import javax.inject.Inject;
+import java.util.EnumSet;
 
 import de.greenrobot.event.EventBus;
 
@@ -671,13 +673,17 @@ public class ReaderPostDetailFragment extends Fragment
 
         String postContent = (mRenderer != null ? mRenderer.getRenderedHtml() : null);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
+        EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
+        if (isPrivatePost) {
+            options.add(ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE);
+        }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
                 imageUrl,
                 postContent,
                 sourceView,
-                isPrivatePost,
+                options,
                 startX,
                 startY);
 
