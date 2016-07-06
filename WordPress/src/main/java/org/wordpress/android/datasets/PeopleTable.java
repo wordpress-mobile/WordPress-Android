@@ -66,7 +66,7 @@ public class PeopleTable {
                 + "avatar_url              TEXT,"
                 + "PRIMARY KEY (person_id, local_blog_id)"
                 + ");");
-
+    }
 
     private static void dropTables(SQLiteDatabase db) {
         // People table is not used anymore, each filter now has it's own table
@@ -205,6 +205,10 @@ public class PeopleTable {
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
         return PeopleTable.getPeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
+    }
+
+    public static List<Person> getViewers(int localTableBlogId) {
+        return PeopleTable.getPeople(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
