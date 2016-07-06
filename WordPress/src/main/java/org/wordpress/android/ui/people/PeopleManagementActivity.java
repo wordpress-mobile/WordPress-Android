@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
@@ -32,13 +33,31 @@ public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
-    private static final String KEY_END_OF_LIST_REACHED = "end-of-list-reached";
-    private static final String KEY_FETCH_REQUEST_IN_PROGRESS = "fetch-request-in-progress";
+    private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
+    private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_USERS = "can-refresh-users";
+    private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
+    private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
+    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
+    private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
+    private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_EMAIL_FOLLOWERS = "can-refresh-email-followers";
+    private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page";
     private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
 
-    private boolean mPeopleEndOfListReached;
-    private boolean mFetchRequestInProgress;
+    private boolean mUsersEndOfListReached;
+    private boolean mUsersFetchRequestInProgress;
+    private boolean mCanRefreshUsers;
+    private boolean mFollowersEndOfListReached;
+    private boolean mFollowersFetchRequestInProgress;
+    private boolean mCanRefreshFollowers;
+    private int mFollowersLastFetchedPage;
+    private boolean mEmailFollowersEndOfListReached;
+    private boolean mEmailFollowersFetchRequestInProgress;
+    private boolean mCanRefreshEmailFollowers;
+    private int mEmailFollowersLastFetchedPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +71,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setElevation(0);
         }
 
         Blog blog = WordPress.getCurrentBlog();
@@ -66,7 +86,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deletePeopleExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
             if (actionBar != null) {
@@ -77,15 +97,33 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.setOnPersonSelectedListener(this);
             peopleListFragment.setOnFetchPeopleListener(this);
 
-            mPeopleEndOfListReached = false;
-            mFetchRequestInProgress = false;
+            mUsersEndOfListReached = false;
+            mUsersFetchRequestInProgress = false;
+            mCanRefreshUsers = true;
+            mFollowersEndOfListReached = false;
+            mFollowersFetchRequestInProgress = false;
+            mCanRefreshFollowers = true;
+            mFollowersLastFetchedPage = 0;
+            mEmailFollowersEndOfListReached = false;
+            mEmailFollowersFetchRequestInProgress = false;
+            mCanRefreshEmailFollowers = true;
+            mEmailFollowersLastFetchedPage = 0;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
-            mPeopleEndOfListReached = savedInstanceState.getBoolean(KEY_END_OF_LIST_REACHED);
-            mFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FETCH_REQUEST_IN_PROGRESS);
+            mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_USERS_END_OF_LIST_REACHED);
+            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshUsers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_USERS);
+            mFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED);
+            mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_FOLLOWERS);
+            mFollowersLastFetchedPage = savedInstanceState.getInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE);
+            mEmailFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED);
+            mEmailFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshEmailFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS);
+            mEmailFollowersLastFetchedPage = savedInstanceState.getInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -97,19 +135,23 @@ public class PeopleManagementActivity extends AppCompatActivity
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
             }
-
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                removeToolbarElevation();
-            }
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_END_OF_LIST_REACHED, mPeopleEndOfListReached);
-        outState.putBoolean(KEY_FETCH_REQUEST_IN_PROGRESS, mFetchRequestInProgress);
+        outState.putBoolean(KEY_USERS_END_OF_LIST_REACHED, mUsersEndOfListReached);
+        outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_USERS, mCanRefreshUsers);
+        outState.putBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED, mFollowersEndOfListReached);
+        outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_FOLLOWERS, mCanRefreshFollowers);
+        outState.putInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE, mFollowersLastFetchedPage);
+        outState.putBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED, mEmailFollowersEndOfListReached);
+        outState.putBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mEmailFollowersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS, mCanRefreshEmailFollowers);
+        outState.putInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE, mEmailFollowersLastFetchedPage);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -173,43 +215,126 @@ public class PeopleManagementActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
-        if (mPeopleEndOfListReached || mFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
-            return;
+    private boolean fetchUsersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        if (mUsersEndOfListReached || mUsersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return false;
         }
 
-        final PeopleListFragment peopleListFragment = getListFragment();
-        if (peopleListFragment != null) {
-            peopleListFragment.showLoadingProgress(true);
-        }
-
-        mFetchRequestInProgress = true;
+        mUsersFetchRequestInProgress = true;
 
         PeopleUtils.fetchUsers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
-                mPeopleEndOfListReached = isEndOfList;
-                PeopleTable.savePeople(peopleList, localTableBlogId, isFreshList);
-                refreshOnScreenFragmentDetails();
+                mUsersEndOfListReached = isEndOfList;
+                PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
 
-                mFetchRequestInProgress = false;
+                PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.showLoadingProgress(false);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFreshList, true);
                 }
+
+                refreshOnScreenFragmentDetails();
+                mUsersFetchRequestInProgress = false;
             }
 
             @Override
             public void onError() {
-                mFetchRequestInProgress = false;
+                PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.showLoadingProgress(false);
+                    boolean isFirstPage = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage, false);
                 }
+                mUsersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_fetch_people_list,
-                        ToastUtils.Duration.LONG);
+                        R.string.error_fetch_users_list,
+                        ToastUtils.Duration.SHORT);
             }
         });
+
+        return true;
+    }
+
+    private boolean fetchFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+        if (mFollowersEndOfListReached || mFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return false;
+        }
+
+        mFollowersFetchRequestInProgress = true;
+
+        PeopleUtils.fetchFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
+            @Override
+            public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
+                boolean isFreshList = (page == 1);
+                mFollowersLastFetchedPage = pageFetched;
+                mFollowersEndOfListReached = isEndOfList;
+                PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
+
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFreshList, true);
+                }
+
+                refreshOnScreenFragmentDetails();
+                mFollowersFetchRequestInProgress = false;
+            }
+
+            @Override
+            public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, false);
+                }
+                mFollowersFetchRequestInProgress = false;
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_followers_list,
+                        ToastUtils.Duration.SHORT);
+            }
+        });
+
+        return true;
+    }
+
+    private boolean fetchEmailFollowersList(String dotComBlogId, final int localTableBlogId, final int page) {
+        if (mEmailFollowersEndOfListReached || mEmailFollowersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return false;
+        }
+
+        mEmailFollowersFetchRequestInProgress = true;
+
+        PeopleUtils.fetchEmailFollowers(dotComBlogId, localTableBlogId, page, new PeopleUtils.FetchFollowersCallback() {
+            @Override
+            public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
+                boolean isFreshList = (page == 1);
+                mEmailFollowersLastFetchedPage = pageFetched;
+                mEmailFollowersEndOfListReached = isEndOfList;
+                PeopleTable.saveEmailFollowers(peopleList, localTableBlogId, isFreshList);
+
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFreshList, true);
+                }
+
+                refreshOnScreenFragmentDetails();
+                mEmailFollowersFetchRequestInProgress = false;
+            }
+
+            @Override
+            public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFirstPage, false);
+                }
+                mEmailFollowersFetchRequestInProgress = false;
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_email_followers_list,
+                        ToastUtils.Duration.SHORT);
+            }
+        });
+
+        return true;
     }
 
     @Override
@@ -218,8 +343,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
+
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -233,8 +359,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (actionBar != null) {
                 actionBar.setTitle("");
             }
-            // remove the toolbar elevation for larger toolbar look
-            removeToolbarElevation();
 
             fragmentTransaction.commit();
         }
@@ -245,8 +369,14 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId);
+        // You can't change a follower's or viewer's role, so it's always false
+        final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
+            return;
+        }
+
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
             return;
         }
 
@@ -256,12 +386,12 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
-                PeopleTable.save(person);
+                PeopleTable.saveUser(person);
                 refreshOnScreenFragmentDetails();
             }
 
@@ -286,7 +416,11 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
-        builder.setMessage(getString(R.string.person_remove_confirmation_message, person.getDisplayName()));
+        if (person.getPersonType() == Person.PersonType.USER) {
+            builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        } else {
+            builder.setMessage(R.string.follower_remove_confirmation_message);
+        }
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
@@ -306,36 +440,48 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
-        PeopleUtils.removePerson(person.getBlogId(),
-                person.getPersonID(),
-                person.getLocalTableBlogId(),
-                new PeopleUtils.RemoveUserCallback() {
-                    @Override
-                    public void onSuccess(long personID, int localTableBlogId) {
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
-                        // remove the person from db, navigate back to list fragment and refresh it
-                        Person person = PeopleTable.getPerson(personID, localTableBlogId);
-                        String text;
-                        if (person != null) {
-                            PeopleTable.deletePerson(personID, localTableBlogId);
-                            text = getString(R.string.person_removed, person.getUsername());
-                        } else {
-                            text = getString(R.string.person_removed_general);
-                        }
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
+            return;
+        }
 
-                        ToastUtils.showToast(PeopleManagementActivity.this, text, ToastUtils.Duration.LONG);
+        final Person.PersonType personType = person.getPersonType();
+        final String displayName = person.getDisplayName();
 
-                        navigateBackToPeopleListFragment();
-                        refreshPeopleListFragment();
-                    }
+        PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
+            @Override
+            public void onSuccess(long personID, int localTableBlogId) {
+                if (personType == Person.PersonType.USER) {
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
+                }
 
-                    @Override
-                    public void onError() {
-                        ToastUtils.showToast(PeopleManagementActivity.this,
-                                R.string.error_remove_user,
-                                ToastUtils.Duration.LONG);
-                    }
-                });
+                // remove the person from db, navigate back to list fragment and refresh it
+                Person person = PeopleTable.getUser(personID, localTableBlogId);
+                if (person != null) {
+                    PeopleTable.deleteUser(personID, localTableBlogId);
+                }
+
+                String message = getString(R.string.person_removed, displayName);
+                ToastUtils.showToast(PeopleManagementActivity.this, message, ToastUtils.Duration.LONG);
+
+                navigateBackToPeopleListFragment();
+                refreshPeopleListFragment();
+            }
+
+            @Override
+            public void onError() {
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_remove_user,
+                        ToastUtils.Duration.LONG);
+            }
+        };
+
+        if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
+            PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
+                    personType, callback);
+        } else {
+            PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
+        }
     }
 
     // This helper method is used after a successful network request
@@ -347,7 +493,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     private void refreshPeopleListFragment() {
         PeopleListFragment peopleListFragment = getListFragment();
         if (peopleListFragment != null) {
-            peopleListFragment.refreshPeopleList();
+            peopleListFragment.refreshPeopleList(false);
         }
     }
 
@@ -367,13 +513,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (actionBar != null) {
                 actionBar.setTitle(R.string.people);
             }
-
-            // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                resetToolbarElevation();
-
-            }
             return true;
         }
         return false;
@@ -390,19 +529,34 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFetchFirstPage() {
+    public boolean onFetchFirstPage(PeopleListFilter filter) {
         Blog blog = WordPress.getCurrentBlog();
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+        if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
+            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
+        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers){
+            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && mCanRefreshEmailFollowers){
+            return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+        }
+        return false;
     }
 
     @Override
-    public void onFetchMorePeople() {
-        if (mPeopleEndOfListReached) {
-            return;
+    public boolean onFetchMorePeople(PeopleListFilter filter) {
+        if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int count = PeopleTable.getUsersCountForLocalBlogId(blog.getLocalTableBlogId());
+            return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+        } else if (filter == PeopleListFilter.FOLLOWERS && !mFollowersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int pageToFetch = mFollowersLastFetchedPage + 1;
+            return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mEmailFollowersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int pageToFetch = mEmailFollowersLastFetchedPage + 1;
+            return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
         }
-        Blog blog = WordPress.getCurrentBlog();
-        int count = PeopleTable.getPeopleCountForLocalBlogId(blog.getLocalTableBlogId());
-        fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
+        return false;
     }
 
     private PeopleListFragment getListFragment() {
@@ -411,21 +565,6 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     private PersonDetailFragment getDetailFragment() {
         return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-    }
-
-    // Toolbar elevation is removed in detail fragment for larger toolbar look
-    private void removeToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0);
-        }
-    }
-
-    private void resetToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
-        }
     }
 
     public interface InvitationSender {
