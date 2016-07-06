@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,9 +31,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.xmlrpc.android.ApiHelper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -262,15 +258,9 @@ public class PostPreviewActivity extends AppCompatActivity {
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
-                Map<String, Object> properties = new HashMap<>();
-
-                Configuration configuration = WordPress.getContext().getResources().getConfiguration();
-                properties.put("hardware_keyboard", configuration.keyboard != Configuration.KEYBOARD_NOKEYS);
-
                 AnalyticsUtils.trackWithBlogDetails(
                         AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                        WordPress.getBlog(mPost.getLocalTableBlogId()),
-                        properties
+                        WordPress.getBlog(mPost.getLocalTableBlogId())
                 );
             }
 

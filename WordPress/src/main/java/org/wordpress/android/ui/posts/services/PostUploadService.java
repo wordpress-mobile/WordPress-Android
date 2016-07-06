@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -443,10 +442,6 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getKeywords())) {
                 properties.put("with_tags", true);
             }
-
-            boolean hasHardwareKeyboard = (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
-            properties.put("hardware_keyboard", hasHardwareKeyboard);
-
             properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
             AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
         }

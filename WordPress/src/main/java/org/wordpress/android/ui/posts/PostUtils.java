@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.content.res.Configuration;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Post;
@@ -92,18 +90,12 @@ public class PostUtils {
 
     public static void trackSavePostAnalytics(Post post) {
         PostStatus status = post.getStatusEnum();
-        Map<String, Object> properties = new HashMap<>();
-
-        Configuration configuration = WordPress.getContext().getResources().getConfiguration();
-        properties.put("hardware_keyboard", configuration.keyboard != Configuration.KEYBOARD_NOKEYS);
-
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
                     AnalyticsUtils.trackWithBlogDetails(
                             AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                            WordPress.getBlog(post.getLocalTableBlogId()),
-                            properties
+                            WordPress.getBlog(post.getLocalTableBlogId())
                     );
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
@@ -113,10 +105,10 @@ public class PostUtils {
                 if (!post.isLocalDraft()) {
                     AnalyticsUtils.trackWithBlogDetails(
                             AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                            WordPress.getBlog(post.getLocalTableBlogId()),
-                            properties
+                            WordPress.getBlog(post.getLocalTableBlogId())
                     );
                 } else {
+                    Map<String, Object> properties = new HashMap<String, Object>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     AnalyticsUtils.trackWithBlogDetails(
                             AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
@@ -128,8 +120,7 @@ public class PostUtils {
             case DRAFT:
                 AnalyticsUtils.trackWithBlogDetails(
                         AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT,
-                        WordPress.getBlog(post.getLocalTableBlogId()),
-                        properties
+                        WordPress.getBlog(post.getLocalTableBlogId())
                 );
                 break;
             default:
