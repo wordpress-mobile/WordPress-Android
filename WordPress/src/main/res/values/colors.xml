@@ -110,6 +110,8 @@
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>
+    <color name="reader_follow">@color/grey_dark</color>
+    <color name="reader_following">@color/alert_green</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
 
     <!-- Comment Status -->
