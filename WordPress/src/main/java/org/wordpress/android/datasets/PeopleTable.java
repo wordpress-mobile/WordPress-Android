@@ -17,6 +17,7 @@ public class PeopleTable {
     private static final String TEAM_TABLE = "people_team";
     private static final String FOLLOWERS_TABLE = "people_followers";
     private static final String EMAIL_FOLLOWERS_TABLE = "people_email_followers";
+    private static final String VIEWERS_TABLE = "people_viewers";
 
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
@@ -56,6 +57,17 @@ public class PeopleTable {
                 + ");");
     }
 
+    public static void createViewersTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + VIEWERS_TABLE + " ("
+                + "person_id               INTEGER DEFAULT 0,"
+                + "local_blog_id           INTEGER DEFAULT 0,"
+                + "user_name               TEXT,"
+                + "display_name            TEXT,"
+                + "avatar_url              TEXT,"
+                + "PRIMARY KEY (person_id, local_blog_id)"
+                + ");");
+
+
     private static void dropTables(SQLiteDatabase db) {
         // People table is not used anymore, each filter now has it's own table
         db.execSQL("DROP TABLE IF EXISTS PEOPLE");
@@ -63,6 +75,7 @@ public class PeopleTable {
         db.execSQL("DROP TABLE IF EXISTS " + TEAM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FOLLOWERS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + EMAIL_FOLLOWERS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + VIEWERS_TABLE);
     }
 
     public static void reset(SQLiteDatabase db) {
@@ -93,6 +106,9 @@ public class PeopleTable {
                 break;
             case EMAIL_FOLLOWERS_TABLE:
                 values.put("subscribed", person.getSubscribed());
+                break;
+            case VIEWERS_TABLE:
+                values.put("user_name", person.getUsername());
                 break;
         }
 
@@ -132,6 +148,7 @@ public class PeopleTable {
         deletePeople(TEAM_TABLE, localTableBlogId);
         deletePeople(FOLLOWERS_TABLE, localTableBlogId);
         deletePeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
+        deletePeople(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static void deletePeople(String table, int localTableBlogId) {
@@ -219,6 +236,9 @@ public class PeopleTable {
             case EMAIL_FOLLOWER:
                 table = EMAIL_FOLLOWERS_TABLE;
                 break;
+            case VIEWER:
+                table = VIEWERS_TABLE;
+                break;
         }
         return getPerson(table, personId, localTableBlogId);
     }
@@ -268,6 +288,10 @@ public class PeopleTable {
             case EMAIL_FOLLOWERS_TABLE:
                 person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
                 person.setPersonType(Person.PersonType.EMAIL_FOLLOWER);
+                break;
+            case VIEWERS_TABLE:
+                person.setUsername(c.getString(c.getColumnIndex("user_name")));
+                person.setPersonType(Person.PersonType.VIEWER);
                 break;
         }
 
