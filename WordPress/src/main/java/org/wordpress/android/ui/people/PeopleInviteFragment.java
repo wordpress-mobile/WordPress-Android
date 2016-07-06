@@ -108,13 +108,6 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // retain this fragment across configuration changes
-        setRetainInstance(true);
-    }
-
-    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.people_invite_fragment, container, false);
