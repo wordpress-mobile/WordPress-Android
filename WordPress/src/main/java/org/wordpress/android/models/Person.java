@@ -9,7 +9,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER }
+    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER }
 
     private long personID;
     private int localTableBlogId;
@@ -90,6 +90,7 @@ public class Person {
             person.setUsername(json.optString("login"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
+            person.setPersonType(PersonType.VIEWER);
 
             return person;
         } catch (NumberFormatException e) {
