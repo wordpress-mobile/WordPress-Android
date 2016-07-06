@@ -40,6 +40,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
     private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
+    private static final String KEY_VIEWERS_END_OF_LIST_REACHED = "viewers-end-of-list-reached";
+    private static final String KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS = "viewers-fetch-request-in-progress";
+    private static final String KEY_CAN_REFRESH_VIEWERS = "can-refresh-viewers";
     private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
     private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
     private static final String KEY_CAN_REFRESH_EMAIL_FOLLOWERS = "can-refresh-email-followers";
@@ -58,6 +61,9 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean mEmailFollowersFetchRequestInProgress;
     private boolean mCanRefreshEmailFollowers;
     private int mEmailFollowersLastFetchedPage;
+    private boolean mViewersEndOfListReached;
+    private boolean mViewersFetchRequestInProgress;
+    private boolean mCanRefreshViewers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +114,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersFetchRequestInProgress = false;
             mCanRefreshEmailFollowers = true;
             mEmailFollowersLastFetchedPage = 0;
+            mViewersEndOfListReached = false;
+            mViewersFetchRequestInProgress = false;
+            mCanRefreshViewers = true;
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
@@ -124,6 +133,9 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
             mCanRefreshEmailFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS);
             mEmailFollowersLastFetchedPage = savedInstanceState.getInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE);
+            mViewersEndOfListReached = savedInstanceState.getBoolean(KEY_VIEWERS_END_OF_LIST_REACHED);
+            mViewersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS);
+            mCanRefreshViewers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_VIEWERS);
             CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
 
             if (actionBar != null && title != null) {
@@ -152,6 +164,9 @@ public class PeopleManagementActivity extends AppCompatActivity
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mEmailFollowersFetchRequestInProgress);
         outState.putBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS, mCanRefreshEmailFollowers);
         outState.putInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE, mEmailFollowersLastFetchedPage);
+        outState.putBoolean(KEY_VIEWERS_END_OF_LIST_REACHED, mViewersEndOfListReached);
+        outState.putBoolean(KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS, mViewersFetchRequestInProgress);
+        outState.putBoolean(KEY_CAN_REFRESH_VIEWERS, mCanRefreshViewers);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
