@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spanned;
 
@@ -140,6 +141,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onSettingsClicked();
         void onAddMediaClicked();
+        void onMediaDropped(Uri mediaUri);
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);
         void onFeaturedImageChanged(long mediaId);

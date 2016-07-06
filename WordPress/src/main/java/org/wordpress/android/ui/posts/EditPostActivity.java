@@ -2035,6 +2035,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
+    public void onMediaDropped(Uri mediaUri) {
+        fetchMedia(mediaUri);
+    }
+
+    @Override
     public void onMediaRetryClicked(String mediaId) {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);

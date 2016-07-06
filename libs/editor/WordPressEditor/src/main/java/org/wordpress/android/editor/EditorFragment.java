@@ -19,6 +19,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -151,6 +152,30 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
         mWebView.setAuthHeaderRequestListener(this);
+
+        mWebView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                switch (dragEvent.getAction()) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        // do nothing
+                        break;
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        // would be nice to start marking the place the item will drop
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        // clear any drop marking maybe
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                        break;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        // clear any drop marking maybe
+                    default:
+                        break;
+                }
+                return true;            }
+        });
 
         if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
             for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
