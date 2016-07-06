@@ -128,10 +128,14 @@ public class PersonDetailFragment extends Fragment {
             if (mPersonType == Person.PersonType.USER) {
                 mRoleContainer.setVisibility(View.VISIBLE);
                 setupRoleContainerForCapability();
+            } else {
+                mRoleContainer.setVisibility(View.GONE);
+            }
+
+            if (mPersonType == Person.PersonType.USER || mPersonType == Person.PersonType.VIEWER) {
                 mSubscribedDateContainer.setVisibility(View.GONE);
             }
             else {
-                mRoleContainer.setVisibility(View.GONE);
                 mSubscribedDateContainer.setVisibility(View.VISIBLE);
                 if (mPersonType == Person.PersonType.FOLLOWER) {
                     mSubscribedDateTitleView.setText(R.string.title_follower);
