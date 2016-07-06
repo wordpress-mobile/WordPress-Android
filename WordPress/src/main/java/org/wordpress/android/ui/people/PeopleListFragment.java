@@ -89,6 +89,14 @@ public class PeopleListFragment extends Fragment {
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
+        mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredRecyclerView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
+
         mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
@@ -130,51 +138,48 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-                if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
-                    if (mPeopleListFilter == null) {
-                        return "";
-                    } else {
+                int stringId = 0;
+                switch (emptyViewMsgType) {
+                    case LOADING:
+                        stringId = R.string.people_fetching;
+                        break;
+                    case NETWORK_ERROR:
+                        stringId = R.string.no_network_message;
+                        break;
+                    case NO_CONTENT:
                         switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.people_empty_list_filtered_users;
+                                break;
                             case FOLLOWERS:
-                                return getString(R.string.people_empty_list_filtered_followers);
+                                stringId = R.string.people_empty_list_filtered_followers;
+                                break;
                             case EMAIL_FOLLOWERS:
-                                return getString(R.string.people_empty_list_filtered_email_followers);
+                                stringId = R.string.people_empty_list_filtered_email_followers;
+                                break;
                             case VIEWERS:
-                                return getString(R.string.people_empty_list_filtered_viewers);
-                            default:
-                                // A site should always have at least 1 user, assuming there is an error, return empty
-                                return "";
+                                stringId = R.string.people_empty_list_filtered_viewers;
+                                break;
                         }
-                    }
-
-                } else {
-                    int stringId = 0;
-                    switch (emptyViewMsgType) {
-                        case LOADING:
-                            stringId = R.string.people_fetching;
-                            break;
-                        case NETWORK_ERROR:
-                            stringId = R.string.no_network_message;
-                            break;
-                        case GENERIC_ERROR:
-                            switch (mPeopleListFilter) {
-                                case TEAM:
-                                    stringId = R.string.error_fetch_users_list;
-                                    break;
-                                case FOLLOWERS:
-                                    stringId = R.string.error_fetch_followers_list;
-                                    break;
-                                case EMAIL_FOLLOWERS:
-                                    stringId = R.string.error_fetch_email_followers_list;
-                                    break;
-                                case VIEWERS:
-                                    stringId = R.string.error_fetch_viewers_list;
-                                    break;
-                            }
-                            break;
-                    }
-                    return getString(stringId);
+                        break;
+                    case GENERIC_ERROR:
+                        switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.error_fetch_users_list;
+                                break;
+                            case FOLLOWERS:
+                                stringId = R.string.error_fetch_followers_list;
+                                break;
+                            case EMAIL_FOLLOWERS:
+                                stringId = R.string.error_fetch_email_followers_list;
+                                break;
+                            case VIEWERS:
+                                stringId = R.string.error_fetch_viewers_list;
+                                break;
+                        }
+                        break;
                 }
+                return getString(stringId);
             }
 
             @Override
@@ -344,13 +349,13 @@ public class PeopleListFragment extends Fragment {
                 } else {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
-                if (person.isFollower() || person.isEmailFollower()) {
+                if (person.getPersonType() == Person.PersonType.USER) {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
+                } else {
                     peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
                     String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                     String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
                     peopleViewHolder.txtSubscribed.setText(dateText);
-                } else {
-                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
                 }
             }
 

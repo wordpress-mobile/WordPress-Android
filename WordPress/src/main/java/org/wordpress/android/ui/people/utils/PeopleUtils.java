@@ -31,8 +31,7 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, false, false,
-                                false);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, false, false);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -82,15 +81,16 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId, !isEmailFollower,
-                                isEmailFollower, false);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, !isEmailFollower,
+                                isEmailFollower);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
                         callback.onSuccess(people, pageFetched, isEndOfList);
                     }
                     catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
+                                "sites/%s/stats/followers: " + e);
                         callback.onError();
                     }
                 }
@@ -163,7 +163,7 @@ public class PeopleUtils {
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
-                        Person person = Person.userFromJSON(jsonObject, blogId, localTableBlogId);
+                        Person person = Person.userFromJSON(jsonObject, localTableBlogId);
                         if (person != null) {
                             callback.onSuccess(person);
                         } else {
@@ -225,7 +225,7 @@ public class PeopleUtils {
     }
 
     public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
-                                      boolean isEmailFollower, final RemoveUserCallback callback) {
+                                      Person.PersonType personType, final RemoveUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -252,7 +252,7 @@ public class PeopleUtils {
         };
 
         String path;
-        if (isEmailFollower) {
+        if (personType == Person.PersonType.EMAIL_FOLLOWER) {
             path = String.format("sites/%s/email-followers/%d/delete", blogId, personID);
         } else {
             path = String.format("sites/%s/followers/%d/delete", blogId, personID);
@@ -260,9 +260,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    private static List<Person> peopleListFromJSON(JSONArray jsonArray, String blogId, int localTableBlogId,
-                                                   boolean isFollower, boolean isEmailFollower,
-                                                   boolean isViewer) throws JSONException {
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId, boolean isFollower,
+                                                   boolean isEmailFollower, boolean isViewer) throws JSONException {
         if (jsonArray == null) {
             return null;
         }
@@ -272,11 +271,11 @@ public class PeopleUtils {
         for (int i = 0; i < jsonArray.length(); i++) {
             Person person;
             if (isFollower || isEmailFollower) {
-                person = Person.followerFromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId, isEmailFollower);
+                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, isEmailFollower);
             } else if (isViewer) {
-                person = Person.viewerFromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId);
+                person = Person.viewerFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
             } else {
-                person = Person.userFromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId);
+                person = Person.userFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
             }
             if (person != null) {
                 peopleList.add(person);

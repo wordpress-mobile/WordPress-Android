@@ -9,29 +9,25 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
+    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER }
+
     private long personID;
-    private String blogId;
     private int localTableBlogId;
 
     private String username;
-    private String firstName;
-    private String lastName;
     private String displayName;
     private String avatarUrl;
     private String role;
-    private boolean isFollower;
-    private boolean isEmailFollower;
-    private boolean isViewer;
     private String subscribed;
+    private PersonType personType;
 
-    public Person(long personID, String blogId, int localTableBlogId) {
+    public Person(long personID, int localTableBlogId) {
         this.personID = personID;
-        this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
     }
 
     @Nullable
-    public static Person userFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person userFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -39,12 +35,11 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setFirstName(json.optString("first_name"));
-            person.setLastName(json.optString("last_name"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
+            person.personType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
@@ -58,7 +53,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person followerFromJSON(JSONObject json, String blogId, int localTableBlogId, boolean isEmailFollower)
+    public static Person followerFromJSON(JSONObject json, int localTableBlogId, boolean isEmailFollower)
             throws JSONException {
         if (json == null) {
             return null;
@@ -67,13 +62,12 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/stats/followers/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setDisplayName(json.optString("label"));
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
             person.setSubscribed(json.optString("date_subscribed"));
-            person.setFollower(!isEmailFollower);
-            person.setEmailFollower(isEmailFollower);
+            person.personType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
 
             return person;
         } catch (NumberFormatException e) {
@@ -84,7 +78,7 @@ public class Person {
     }
 
     @Nullable
-    public static Person viewerFromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person viewerFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -92,13 +86,10 @@ public class Person {
         // Same response parameters in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setFirstName(json.optString("first_name"));
-            person.setLastName(json.optString("last_name"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
-            person.setViewer(true);
 
             return person;
         } catch (NumberFormatException e) {
@@ -112,10 +103,6 @@ public class Person {
         return personID;
     }
 
-    public String getBlogId() {
-        return StringUtils.notNullStr(blogId);
-    }
-
     public int getLocalTableBlogId() {
         return localTableBlogId;
     }
@@ -126,22 +113,6 @@ public class Person {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getFirstName() {
-        return StringUtils.notNullStr(firstName);
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return StringUtils.notNullStr(lastName);
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getDisplayName() {
@@ -168,30 +139,6 @@ public class Person {
         this.avatarUrl = avatarUrl;
     }
 
-    public boolean isFollower() {
-        return isFollower;
-    }
-
-    public void setFollower(boolean follower) {
-        isFollower = follower;
-    }
-
-    public boolean isEmailFollower() {
-        return isEmailFollower;
-    }
-
-    public void setEmailFollower(boolean emailFollower) {
-        isEmailFollower = emailFollower;
-    }
-
-    public boolean isViewer() {
-        return isViewer;
-    }
-
-    public void setViewer(boolean viewer) {
-        isViewer = viewer;
-    }
-
     public String getSubscribed() {
         return StringUtils.notNullStr(subscribed);
     }
@@ -208,5 +155,13 @@ public class Person {
         if (dtSubscribed == null)
             dtSubscribed = DateTimeUtils.iso8601ToJavaDate(subscribed);
         return dtSubscribed;
+    }
+
+    public PersonType getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(PersonType personType) {
+        this.personType = personType;
     }
 }

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,29 +31,27 @@ import java.text.SimpleDateFormat;
 public class PersonDetailFragment extends Fragment {
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-    private static String ARG_IS_FOLLOWER = "is_follower";
-    private static String ARG_IS_VIEWER = "is_viewer";
+    private static String ARG_PERSON_TYPE = "person_type";
 
     private long mPersonID;
     private int mLocalTableBlogID;
-    private boolean mIsFollower;
-    private boolean mIsViewer;
+    private Person.PersonType mPersonType;
 
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private LinearLayout mRoleContainer;
     private TextView mRoleTextView;
-    private TextView mSubscribedTextView;
+    private LinearLayout mSubscribedDateContainer;
+    private TextView mSubscribedDateTitleView;
+    private TextView mSubscribedDateTextView;
 
-    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, boolean isFollower,
-                                                   boolean isViewer) {
+    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, Person.PersonType personType) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(ARG_PERSON_ID, personID);
         bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
-        bundle.putBoolean(ARG_IS_FOLLOWER, isFollower);
-        bundle.putBoolean(ARG_IS_VIEWER, isViewer);
+        bundle.putSerializable(ARG_PERSON_TYPE, personType);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
     }
@@ -82,15 +81,16 @@ public class PersonDetailFragment extends Fragment {
 
         mPersonID = getArguments().getLong(ARG_PERSON_ID);
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        mIsFollower = getArguments().getBoolean(ARG_IS_FOLLOWER);
-        mIsViewer = getArguments().getBoolean(ARG_IS_VIEWER);
+        mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.person_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.person_username);
         mRoleContainer = (LinearLayout) rootView.findViewById(R.id.person_role_container);
         mRoleTextView = (TextView) rootView.findViewById(R.id.person_role);
-        mSubscribedTextView = (TextView) rootView.findViewById(R.id.follower_subscribed_date);
+        mSubscribedDateContainer = (LinearLayout) rootView.findViewById(R.id.subscribed_date_container);
+        mSubscribedDateTitleView = (TextView) rootView.findViewById(R.id.subscribed_date_title);
+        mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
 
         Account account = AccountHelper.getDefaultAccount();
         boolean isCurrentUser = account.getUserId() == mPersonID;
@@ -121,28 +121,32 @@ public class PersonDetailFragment extends Fragment {
             mDisplayNameTextView.setText(StringUtils.unescapeHTML(person.getDisplayName()));
             mRoleTextView.setText(StringUtils.capitalize(person.getRole()));
 
-            if (!person.getUsername().isEmpty()) {
-                mUsernameTextView.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(person.getUsername())) {
                 mUsernameTextView.setText(String.format("@%s", person.getUsername()));
-            } else {
-                mUsernameTextView.setVisibility(View.GONE);
             }
 
-            if (person.isFollower() || person.isEmailFollower()) {
-                mSubscribedTextView.setVisibility(View.VISIBLE);
-                String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
-                String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
-                mSubscribedTextView.setText(dateText);
-            } else {
-                mSubscribedTextView.setVisibility(View.GONE);
-            }
-
-            if (person.isFollower() || person.isEmailFollower()) {
-                mRoleContainer.setVisibility(View.GONE);
-            } else {
+            if (mPersonType == Person.PersonType.USER) {
                 mRoleContainer.setVisibility(View.VISIBLE);
                 setupRoleContainerForCapability();
+                mSubscribedDateContainer.setVisibility(View.GONE);
             }
+            else {
+                mRoleContainer.setVisibility(View.GONE);
+                mSubscribedDateContainer.setVisibility(View.VISIBLE);
+                if (mPersonType == Person.PersonType.FOLLOWER) {
+                    mSubscribedDateTitleView.setText(R.string.title_follower);
+                } else if (mPersonType == Person.PersonType.EMAIL_FOLLOWER) {
+                    mSubscribedDateTitleView.setText(R.string.title_email_follower);
+                }
+                String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                mSubscribedDateTextView.setText(dateText);
+            }
+
+            // Adds extra padding to display name for email followers to make it vertically centered
+            int padding = mPersonType == Person.PersonType.EMAIL_FOLLOWER
+                    ? (int) getResources().getDimension(R.dimen.margin_small) : 0;
+            changeDisplayNameTopPadding(padding);
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
                     + " & localTableBlogID: " + mLocalTableBlogID);
@@ -201,7 +205,14 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
+    private void changeDisplayNameTopPadding(int newPadding) {
+        if (mDisplayNameTextView == null) {
+            return;
+        }
+        mDisplayNameTextView.setPadding(0, newPadding, 0 , 0);
+    }
+
     public Person loadPerson() {
-        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mIsFollower, mIsViewer);
+        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mPersonType);
     }
 }

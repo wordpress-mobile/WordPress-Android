@@ -71,6 +71,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setElevation(0);
         }
 
         Blog blog = WordPress.getCurrentBlog();
@@ -85,7 +86,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
             if (NetworkUtils.isNetworkAvailable(this)) {
-                PeopleTable.deletePeopleForLocalBlogIdExceptForFirstPage(blog.getLocalTableBlogId());
+                PeopleTable.deletePeopleExceptForFirstPage(blog.getLocalTableBlogId());
             }
 
             if (actionBar != null) {
@@ -133,11 +134,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (peopleListFragment != null) {
                 peopleListFragment.setOnPersonSelectedListener(this);
                 peopleListFragment.setOnFetchPeopleListener(this);
-            }
-
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                removeToolbarElevation();
             }
         }
     }
@@ -350,10 +346,9 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         long personID = person.getPersonID();
         int localTableBlogID = person.getLocalTableBlogId();
-        boolean isFollower = person.isFollower();
-        boolean isViewer = person.isViewer();
+
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, isFollower, isViewer);
+            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
@@ -367,8 +362,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (actionBar != null) {
                 actionBar.setTitle("");
             }
-            // remove the toolbar elevation for larger toolbar look
-            removeToolbarElevation();
 
             fragmentTransaction.commit();
         }
@@ -380,8 +373,13 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
         // You can't change a follower's or viewer's role, so it's always false
-        final Person person = PeopleTable.getPerson(event.personID, event.localTableBlogId, false, false);
+        final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
+            return;
+        }
+
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
             return;
         }
 
@@ -391,12 +389,12 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.changeRole(event.newRole);
         }
 
-        PeopleUtils.updateRole(person.getBlogId(), person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(blogId, person.getPersonID(), event.newRole, event.localTableBlogId,
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
                 AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
-                PeopleTable.save(person);
+                PeopleTable.saveUser(person);
                 refreshOnScreenFragmentDetails();
             }
 
@@ -421,10 +419,10 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
-        if (person.isFollower() || person.isEmailFollower()) {
-            builder.setMessage(R.string.follower_remove_confirmation_message);
-        } else {
+        if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        } else {
+            builder.setMessage(R.string.follower_remove_confirmation_message);
         }
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
@@ -445,22 +443,25 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
-        final boolean isFollower = person.isFollower();
-        final boolean isEmailFollower = person.isEmailFollower();
-        final boolean isViewer = person.isViewer();
+        String blogId = WordPress.getCurrentRemoteBlogId();
+        if (blogId == null) {
+            return;
+        }
+
+        final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
 
         PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
-                if (!isFollower && !isEmailFollower && !isViewer) {
+                if (personType == Person.PersonType.USER) {
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getPerson(personID, localTableBlogId, isFollower, isViewer);
+                Person person = PeopleTable.getUser(personID, localTableBlogId);
                 if (person != null) {
-                    PeopleTable.deletePerson(personID, localTableBlogId, isFollower, isViewer);
+                    PeopleTable.deleteUser(personID, localTableBlogId);
                 }
 
                 String message = getString(R.string.person_removed, displayName);
@@ -478,11 +479,11 @@ public class PeopleManagementActivity extends AppCompatActivity
             }
         };
 
-        if (isFollower || isEmailFollower) {
-            PeopleUtils.removeFollower(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(),
-                    isEmailFollower, callback);
+        if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
+            PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
+                    personType, callback);
         } else {
-            PeopleUtils.removeUser(person.getBlogId(), person.getPersonID(), person.getLocalTableBlogId(), callback);
+            PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         }
     }
 
@@ -514,13 +515,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle(R.string.people);
-            }
-
-            // We need to reset the toolbar elevation if the user is navigating back from PersonDetailFragment
-            PersonDetailFragment personDetailFragment = getDetailFragment();
-            if (personDetailFragment != null && personDetailFragment.isAdded()) {
-                resetToolbarElevation();
-
             }
             return true;
         }
@@ -574,21 +568,6 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     private PersonDetailFragment getDetailFragment() {
         return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
-    }
-
-    // Toolbar elevation is removed in detail fragment for larger toolbar look
-    private void removeToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(0);
-        }
-    }
-
-    private void resetToolbarElevation() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setElevation(getResources().getDimension(R.dimen.appbar_elevation));
-        }
     }
 
     public interface InvitationSender {
