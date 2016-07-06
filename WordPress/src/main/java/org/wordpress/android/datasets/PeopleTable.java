@@ -127,6 +127,10 @@ public class PeopleTable {
         savePeople(EMAIL_FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
     }
 
+    public static void saveViewers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+        savePeople(VIEWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    }
+
     private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
@@ -178,6 +182,10 @@ public class PeopleTable {
 
     public static int getUsersCountForLocalBlogId(int localTableBlogId) {
         return getPeopleCountForLocalBlogId(TEAM_TABLE, localTableBlogId);
+    }
+
+    public static int getViewersCountForLocalBlogId(int localTableBlogId) {
+        return getPeopleCountForLocalBlogId(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static int getPeopleCountForLocalBlogId(String table, int localTableBlogId) {

@@ -115,7 +115,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    private static void fetchViewers(final String blogId, final int localTableBlogId, final int offset,
+    public static void fetchViewers(final String blogId, final int localTableBlogId, final int offset,
                                      final FetchViewersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

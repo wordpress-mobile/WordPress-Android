@@ -355,6 +355,46 @@ public class PeopleManagementActivity extends AppCompatActivity
         return true;
     }
 
+    private boolean fetchViewersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        if (mViewersEndOfListReached || mViewersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return false;
+        }
+
+        mViewersFetchRequestInProgress = true;
+
+        PeopleUtils.fetchViewers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchViewersCallback() {
+            @Override
+            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+                boolean isFreshList = (offset == 0);
+                mViewersEndOfListReached = isEndOfList;
+                PeopleTable.saveViewers(peopleList, localTableBlogId, isFreshList);
+
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFreshList, true);
+                }
+
+                refreshOnScreenFragmentDetails();
+                mViewersFetchRequestInProgress = false;
+            }
+
+            @Override
+            public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFirstPage, false);
+                }
+                mViewersFetchRequestInProgress = false;
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_viewers_list,
+                        ToastUtils.Duration.SHORT);
+            }
+        });
+
+        return true;
+    }
+
     @Override
     public void onPersonSelected(Person person) {
         PersonDetailFragment personDetailFragment = getDetailFragment();
@@ -551,10 +591,12 @@ public class PeopleManagementActivity extends AppCompatActivity
         Blog blog = WordPress.getCurrentBlog();
         if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
             return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
-        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers){
+        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers) {
             return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && mCanRefreshEmailFollowers){
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && mCanRefreshEmailFollowers) {
             return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+        } else if (filter == PeopleListFilter.VIEWERS && mCanRefreshViewers) {
+            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         }
         return false;
     }
@@ -573,6 +615,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             Blog blog = WordPress.getCurrentBlog();
             int pageToFetch = mEmailFollowersLastFetchedPage + 1;
             return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+        } else if (filter == PeopleListFilter.VIEWERS && !mViewersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int count = PeopleTable.getViewersCountForLocalBlogId(blog.getLocalTableBlogId());
+            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
         }
         return false;
     }
