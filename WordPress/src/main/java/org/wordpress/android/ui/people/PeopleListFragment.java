@@ -349,7 +349,8 @@ public class PeopleListFragment extends Fragment {
                 } else {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
-                if (person.getPersonType() == Person.PersonType.USER) {
+                if (person.getPersonType() == Person.PersonType.USER
+                        || person.getPersonType() == Person.PersonType.VIEWER) {
                     peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
                 } else {
                     peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
