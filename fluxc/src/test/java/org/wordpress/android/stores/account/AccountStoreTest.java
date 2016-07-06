@@ -22,6 +22,8 @@ import org.wordpress.android.stores.persistence.AccountSqlUtils;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.stores.store.AccountStore;
 
+import java.lang.reflect.Method;
+
 @RunWith(RobolectricTestRunner.class)
 public class AccountStoreTest {
     private Context mContext;
@@ -72,7 +74,7 @@ public class AccountStoreTest {
     }
 
     @Test
-    public void testSignOut() {
+    public void testSignOut() throws Exception {
         AccountModel testAccount = new AccountModel();
         AccessToken testToken = new AccessToken(mContext);
         testToken.set("TESTTOKEN");
@@ -81,7 +83,10 @@ public class AccountStoreTest {
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), testToken);
         Assert.assertTrue(testStore.isSignedIn());
-        testStore.signOut();
+        // Signout is private (and it should remain private)
+        Method privateMethod = AccountStore.class.getDeclaredMethod("signOut");
+        privateMethod.setAccessible(true);
+        privateMethod.invoke(testStore);
         Assert.assertFalse(testStore.isSignedIn());
         Assert.assertNull(AccountSqlUtils.getAccountByLocalId(testAccount.getId()));
     }
