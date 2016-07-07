@@ -272,7 +272,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetRWPComSites() {
+    public void testGetWPComSites() {
         SiteModel dotComSite = generateDotComSite();
         SiteModel jetpackSiteOverDotOrg = generateJetpackSite();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
