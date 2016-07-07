@@ -38,7 +38,6 @@ public class AnalyticsUtils {
         metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
         metadata.setJetpackUser(AccountHelper.isJetPackUser());
         metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
-        metadata.setVersionCode(PackageUtils.getVersionCode(WordPress.getContext()));
         metadata.setUsername(username);
         metadata.setEmail(email);
 
@@ -58,7 +57,6 @@ public class AnalyticsUtils {
         metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
         metadata.setJetpackUser(AccountHelper.isJetPackUser());
         metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
-        metadata.setVersionCode(PackageUtils.getVersionCode(WordPress.getContext()));
         metadata.setUsername(AccountHelper.getDefaultAccount().getUserName());
         metadata.setEmail(AccountHelper.getDefaultAccount().getEmail());
 

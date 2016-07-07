@@ -6,7 +6,6 @@ public class AnalyticsMetadata {
     private boolean mIsJetpackUser;
     private int mSessionCount;
     private int mNumBlogs;
-    private int mVersionCode;
     private String mUsername = "";
     private String mEmail = "";
 
@@ -50,14 +49,6 @@ public class AnalyticsMetadata {
 
     public void setNumBlogs(int numBlogs) {
         this.mNumBlogs = numBlogs;
-    }
-
-    public int getVersionCode() {
-        return mVersionCode;
-    }
-
-    public void setVersionCode(int versionCode) {
-        this.mVersionCode = versionCode;
     }
 
     public String getUsername() {

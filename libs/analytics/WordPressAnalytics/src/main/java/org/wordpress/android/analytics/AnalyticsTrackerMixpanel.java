@@ -27,7 +27,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
-    private static final String VERSION_CODE = "version_code";
     private static final String APP_LOCALE = "app_locale";
     private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
 
@@ -182,7 +181,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             properties.put(DOTCOM_USER, metadata.isUserConnected());
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, metadata.getNumBlogs());
-            properties.put(VERSION_CODE, metadata.getVersionCode());
             properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
