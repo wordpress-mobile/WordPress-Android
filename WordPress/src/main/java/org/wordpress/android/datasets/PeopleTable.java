@@ -70,7 +70,7 @@ public class PeopleTable {
 
     private static void dropTables(SQLiteDatabase db) {
         // People table is not used anymore, each filter now has it's own table
-        db.execSQL("DROP TABLE IF EXISTS PEOPLE");
+        db.execSQL("DROP TABLE IF EXISTS people");
 
         db.execSQL("DROP TABLE IF EXISTS " + TEAM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FOLLOWERS_TABLE);
