@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import org.wordpress.android.R;
-import org.wordpress.android.ui.people.utils.PeopleUtils;
-import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
-import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
-
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.Fragment;
@@ -25,6 +18,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.wordpress.android.R;
+import org.wordpress.android.ui.people.utils.PeopleUtils;
+import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.MultiUsernameEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class PeopleInviteFragment extends Fragment implements
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
     private ViewGroup mUsernamesContainer;
-    private EditText mUsernameEditText;
+    private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
@@ -57,6 +58,7 @@ public class PeopleInviteFragment extends Fragment implements
     private Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
+    private boolean mAddingUsername = false;
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -124,15 +126,33 @@ public class PeopleInviteFragment extends Fragment implements
             role = loadDefaultRole();
         }
 
-        mUsernameEditText = (EditText) getView().findViewById(R.id.invite_usernames);
+        mUsernameEditText = (MultiUsernameEditText) getView().findViewById(R.id.invite_usernames);
+        mUsernameEditText.setOnSelectionChangeListener(new MultiUsernameEditText.OnSelectionChangeListener() {
+            @Override
+            public void onSelectionChanged(int selStart, int selEnd) {
+                if (selEnd == 0) {
+                    if (mUsernameEditText.getText().toString().length() == 0) {
+                        List<String> list = new ArrayList<>(mUsernameButtons.keySet());
+                        if (!list.isEmpty()) {
+                            String username = list.get(list.size() - 1);
+                            removeUsername(username);
+                        }
+                        mUsernameEditText.setText(" ");
+                    }
+                    mUsernameEditText.setSelection(1);
+                }
+            }
+        });
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mUsernameEditText.getText().toString().endsWith(" ")) {
+                if (!mAddingUsername && mUsernameEditText.getText().toString().endsWith(" ")) {
+                    mAddingUsername = true;
                     addUsername(mUsernameEditText, null);
+                    mAddingUsername = false;
                 }
             }
 
@@ -247,7 +267,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     private void addUsername(EditText editText, ValidationEndListener validationEndListener) {
         String username = editText.getText().toString().trim();
-        editText.setText("");
+        editText.setText(" ");
 
         if (username.isEmpty() || mUsernameButtons.keySet().contains(username)) {
             if (validationEndListener != null) {
