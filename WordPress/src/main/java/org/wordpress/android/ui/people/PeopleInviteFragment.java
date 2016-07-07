@@ -318,11 +318,6 @@ public class PeopleInviteFragment extends Fragment implements
 
         if (usernamesToCheck.size() > 0) {
 
-            if (!NetworkUtils.checkConnection(getActivity())) {
-                enableSendButton(true);
-                return;
-            }
-
             String dotComBlogId = getArguments().getString(ARG_BLOGID);
             PeopleUtils.validateUsernames(usernamesToCheck, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
@@ -420,6 +415,11 @@ public class PeopleInviteFragment extends Fragment implements
     @Override
     public void send() {
         if (!isAdded()) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            enableSendButton(true);
             return;
         }
 
