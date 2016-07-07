@@ -528,6 +528,8 @@ public class PeopleInviteFragment extends Fragment implements
 
     private void enableSendButton(boolean enable){
         mInviteOperationInProgress = !enable;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 }
