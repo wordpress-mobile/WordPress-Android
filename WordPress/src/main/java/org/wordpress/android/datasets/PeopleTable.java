@@ -134,7 +134,7 @@ public class PeopleTable {
     private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
-            // We have a fresh list, remove the previous list of email followers in case it was deleted on remote
+            // We have a fresh list, remove the previous list of people in case it was deleted on remote
             if (isFreshList) {
                 PeopleTable.deletePeople(table, localTableBlogId);
             }
