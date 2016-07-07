@@ -39,11 +39,6 @@ import java.util.Map;
 public class PeopleInviteFragment extends Fragment implements
         RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
-    private static final String KEY_USERNAMES = "KEY_USERNAMES";
-    private static final String KEY_USERNAME_RESULTS = "KEY_USERNAME_RESULTS";
-    private static final String KEY_ROLE = "KEY_ROLE";
-    private static final String KEY_CUSTOM_MESSAGE = "KEY_CUSTOM_MESSAGE";
-    private static final String KEY_INVITE_IN_PROGRESS = "KEY_INVITE_IN_PROGRESS";
 
     private static final String FLAG_SUCCESS = "SUCCESS";
 
@@ -97,14 +92,15 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
-        outState.putSerializable(KEY_USERNAME_RESULTS, mUsernameResults);
-        outState.putString(KEY_ROLE, mRole);
-        outState.putString(KEY_CUSTOM_MESSAGE, mCustomMessage);
-        outState.putBoolean(KEY_INVITE_IN_PROGRESS, mInviteOperationInProgress);
-
-        super.onSaveInstanceState(outState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment across configuration changes
+        // WARNING: use setRetainInstance wisely. In this case we need this to be able to get the
+        // results of network connections in the same fragment if going through a configuration change
+        // (for example, device rotation occurs). Given the simplicity of this particular use case
+        // (the fragment state keeps only a couple of EditText components and the SAVE button, it is
+        // OK to use it here.
+        setRetainInstance(true);
     }
 
     @Override
@@ -119,18 +115,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         mUsernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames);
 
-        String role = null;
-        if (savedInstanceState != null) {
-            ArrayList<String> usernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
-            mUsernameResults = (HashMap<String, String>) savedInstanceState.getSerializable(KEY_USERNAME_RESULTS);
-
-            populateUsernameButtons(usernames);
-
-            role = savedInstanceState.getString(KEY_ROLE);
-
-            mInviteOperationInProgress = savedInstanceState.getBoolean(KEY_INVITE_IN_PROGRESS);
-        }
-
+        String role = mRole;
         if (role == null) {
             role = loadDefaultRole();
         }
@@ -178,6 +163,11 @@ public class PeopleInviteFragment extends Fragment implements
                 EditTextUtils.showSoftInput(mUsernameEditText);
             }
         });
+
+        if (mUsernameButtons != null && mUsernameButtons.size() > 0) {
+            ArrayList<String> usernames = new ArrayList<>(mUsernameButtons.keySet());
+            populateUsernameButtons(usernames);
+        }
 
         View roleContainer = getView().findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
