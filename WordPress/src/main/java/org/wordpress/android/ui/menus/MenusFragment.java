@@ -233,12 +233,17 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
                             mMenusSpinner.setSelection(selectedPos);
                         }
                     }
+
+                    mAddEditRemoveControl.onSaveCompleted(true);
+
                 }
             }
 
             @Override
             public void onErrorResponse(int requestId, MenusRestWPCom.REST_ERROR error) {
                 if (!isAdded()) return;
+
+                mAddEditRemoveControl.onSaveCompleted(false);
 
                 if (error == MenusRestWPCom.REST_ERROR.FETCH_ERROR) {
                     if (mMenuLocationsSpinner.getCount() == 0 || mMenusSpinner.getCount() == 0) {
@@ -281,6 +286,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             @Override
             public void onMenuCreate(MenuModel menu) {
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity()) ) return;
+
+                mAddEditRemoveControl.onSaveStarted(menu);
 
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
@@ -347,6 +354,8 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
             @Override
             public void onMenuUpdate(MenuModel menu) {
                 if (!isAdded() || !NetworkUtils.checkConnection(getActivity())) return;
+
+                mAddEditRemoveControl.onSaveStarted(menu);
 
                 //set the menu's current configuration now
                 MenuModel menuToUpdate = setMenuLocation(menu);
@@ -763,7 +772,6 @@ public class MenusFragment extends Fragment implements MenuItemAdapter.MenuItemI
      * AsyncTask to load menus from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
-
 
     private class LoadMenusTask extends AsyncTask<Void, Void, Boolean> {
         List<MenuModel> tmpMenus;
