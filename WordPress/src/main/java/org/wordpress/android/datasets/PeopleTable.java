@@ -169,14 +169,21 @@ public class PeopleTable {
     public static void deletePeopleExceptForFirstPage(int localTableBlogId) {
         int fetchLimit = PeopleUtils.FETCH_LIMIT;
         String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE};
-        for (String table : tables) {
-            int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
-            if (size > fetchLimit) {
-                int deleteCount = size - fetchLimit;
-                String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
-                getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                        + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+
+        getWritableDb().beginTransaction();
+        try {
+            for (String table : tables) {
+                int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
+                if (size > fetchLimit) {
+                    int deleteCount = size - fetchLimit;
+                    String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
+                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
+                            + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+                }
             }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
         }
     }
 
