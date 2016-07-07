@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +15,19 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnSer
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
+import org.wordpress.android.widgets.WPButton;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
+    public interface PublicizeManageConnectionsListener {
+        void onManageConnectionsClicked();
+    }
+
+    private PublicizeManageConnectionsListener mListener;
     private int mSiteId;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
+    private WPButton mManageButton;
 
     public static PublicizeListFragment newInstance(int siteId) {
         Bundle args = new Bundle();
@@ -71,12 +79,39 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
+        mManageButton = (WPButton) rootView.findViewById(R.id.manage_button);
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
         mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
+        mManageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onManageConnectionsClicked();
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof PublicizeManageConnectionsListener) {
+            mListener = (PublicizeManageConnectionsListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement PublicizeManageConnectionsListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     private final OnAdapterLoadedListener mAdapterLoadedListener = new OnAdapterLoadedListener() {

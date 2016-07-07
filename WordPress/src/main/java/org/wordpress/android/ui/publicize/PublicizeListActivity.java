@@ -27,7 +27,8 @@ import de.greenrobot.event.EventBus;
 public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
-        PublicizeServiceAdapter.OnServiceClickListener {
+        PublicizeServiceAdapter.OnServiceClickListener,
+        PublicizeListFragment.PublicizeManageConnectionsListener {
 
     private int mSiteId;
     private ProgressDialog mProgressDialog;
@@ -294,5 +295,10 @@ public class PublicizeListActivity extends AppCompatActivity
         args.putString(PublicizeConstants.ARG_SERVICE_ID, event.getServiceId());
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
+    }
+
+    @Override
+    public void onManageConnectionsClicked() {
+        
     }
 }
