@@ -246,8 +246,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = offset == 0;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFreshList, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -288,8 +287,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFreshList, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -330,8 +328,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFirstPage, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFreshList, true);
                 }
 
                 refreshOnScreenFragmentDetails();
