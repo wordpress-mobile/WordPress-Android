@@ -33,14 +33,14 @@ public class AccountSqlUtilsTest {
 
     @Test
     public void testInsertNullAccount() {
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(null));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(null));
         Assert.assertTrue(AccountSqlUtils.getAllAccounts().isEmpty());
     }
 
     @Test
     public void testInsertAndRetrieveAccount() {
         AccountModel testAccount = getTestAccount();
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         AccountModel dbAccount = AccountSqlUtils.getAccountByLocalId(testAccount.getId());
         Assert.assertNotNull(dbAccount);
         Assert.assertEquals(testAccount, dbAccount);
@@ -50,9 +50,9 @@ public class AccountSqlUtilsTest {
     public void testUpdateAccount() {
         AccountModel testAccount = getTestAccount();
         testAccount.setUserName("test0");
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         testAccount.setUserName("test1");
-        Assert.assertEquals(1, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(1, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         AccountModel dbAccount = AccountSqlUtils.getAccountByLocalId(testAccount.getId());
         Assert.assertEquals(testAccount, dbAccount);
     }
@@ -60,7 +60,7 @@ public class AccountSqlUtilsTest {
     @Test
     public void testUpdateSpecificFields() {
         AccountModel testAccount = getTestAccount();
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         String testAboutMe = "New About Me";
         String testEmail = "newEmail";
         ContentValues testFields = new ContentValues();
@@ -78,8 +78,8 @@ public class AccountSqlUtilsTest {
         AccountModel testAccount0 = getTestAccount();
         AccountModel testAccount1 = getTestAccount();
         testAccount1.setId(testAccount0.getId() + 1);
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount0));
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount1));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount0, testAccount0.getId()));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount1, testAccount1.getId()));
         List<AccountModel> allAccounts = AccountSqlUtils.getAllAccounts();
         Assert.assertNotNull(allAccounts);
         Assert.assertEquals(2, allAccounts.size());
@@ -88,7 +88,7 @@ public class AccountSqlUtilsTest {
     @Test
     public void getDefaultAccount() {
         AccountModel testAccount = getTestAccount();
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         AccountModel defaultAccount = AccountSqlUtils.getDefaultAccount();
         Assert.assertNotNull(defaultAccount);
         Assert.assertEquals(testAccount.getUserId(), defaultAccount.getUserId());
@@ -97,7 +97,7 @@ public class AccountSqlUtilsTest {
     @Test
     public void testDeleteAccount() {
         AccountModel testAccount = getTestAccount();
-        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateAccount(testAccount));
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
         Assert.assertEquals(1, AccountSqlUtils.deleteAccount(testAccount));
         Assert.assertNull(AccountSqlUtils.getAccountByLocalId(testAccount.getId()));
     }

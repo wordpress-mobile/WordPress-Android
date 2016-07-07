@@ -40,7 +40,7 @@ public class AccountStoreTest {
         AccountModel testAccount = new AccountModel();
         testAccount.setPrimaryBlogId(100);
         testAccount.setAboutMe("testAboutMe");
-        AccountSqlUtils.insertOrUpdateAccount(testAccount);
+        AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), getMockAccessToken(true));
         Assert.assertEquals(testAccount, testStore.getAccount());
@@ -60,12 +60,12 @@ public class AccountStoreTest {
     public void testIsSignedIn() {
         AccountModel testAccount = new AccountModel();
         testAccount.setVisibleSiteCount(0);
-        AccountSqlUtils.insertOrUpdateAccount(testAccount);
+        AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertFalse(testStore.isSignedIn());
         testAccount.setVisibleSiteCount(1);
-        AccountSqlUtils.insertOrUpdateAccount(testAccount);
+        AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertTrue(testStore.isSignedIn());
@@ -77,7 +77,7 @@ public class AccountStoreTest {
         AccessToken testToken = new AccessToken(mContext);
         testToken.set("TESTTOKEN");
         testAccount.setUserId(24);
-        AccountSqlUtils.insertOrUpdateAccount(testAccount);
+        AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
                 getMockAuthenticator(), testToken);
         Assert.assertTrue(testStore.isSignedIn());
