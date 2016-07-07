@@ -9,6 +9,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -60,6 +61,9 @@ public class AppPrefs {
 
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
+
+        // index of the last active people list filter in People Management activity
+        PEOPLE_LIST_FILTER_INDEX,
     }
 
     /**
@@ -232,6 +236,25 @@ public class AppPrefs {
         } else {
             prefs().edit()
                     .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
+                    .apply();
+        }
+    }
+
+    public static PeopleListFilter getPeopleListFilter() {
+        int idx = getInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX);
+        PeopleListFilter[] values = PeopleListFilter.values();
+        if (values.length < idx) {
+            return values[0];
+        } else {
+            return values[idx];
+        }
+    }
+    public static void setPeopleListFilter(PeopleListFilter peopleListFilter) {
+        if (peopleListFilter != null) {
+            setInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX, peopleListFilter.ordinal());
+        } else {
+            prefs().edit()
+                    .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
                     .apply();
         }
     }
