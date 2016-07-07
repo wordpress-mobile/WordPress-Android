@@ -272,7 +272,7 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testGetRestApiSites() {
+    public void testGetRWPComSites() {
         SiteModel dotComSite = generateDotComSite();
         SiteModel jetpackSiteOverDotOrg = generateJetpackSite();
         SiteModel jetpackSiteOverRestOnly = generateJetpackSiteOverRestOnly();
@@ -281,10 +281,10 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverDotOrg);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
-        List<SiteModel> restApiSites = SiteSqlUtils.getAllWPComSites();
+        List<SiteModel> wpComSites = SiteSqlUtils.getAllWPComSites();
 
-        assertEquals(2, restApiSites.size());
-        for (SiteModel site : restApiSites) {
+        assertEquals(2, wpComSites.size());
+        for (SiteModel site : wpComSites) {
             assertNotEquals(jetpackSiteOverDotOrg.getId(), site.getId());
         }
     }
