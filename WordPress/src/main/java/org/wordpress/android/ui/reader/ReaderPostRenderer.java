@@ -21,6 +21,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.regex.Pattern;
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -71,14 +72,14 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                if (!mResourceVars.canShowTiledGallery) {
+                if (!mResourceVars.isWideDisplay) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder
-                        .toString(), mResourceVars.canShowTiledGallery);
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(),
+                        shouldRenderAsTiledGallery());
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -88,6 +89,14 @@ class ReaderPostRenderer {
                 });
             }
         }.start();
+    }
+
+    public boolean shouldRenderAsTiledGallery() {
+        // determine whether a tiled-gallery exists in the content
+        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(mRenderBuilder.toString())
+                .find();
+
+        return hasTiledGallery && mResourceVars.isWideDisplay;
     }
 
     /*
@@ -358,7 +367,7 @@ class ReaderPostRenderer {
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
 
         // make sure images aren't wider than the display, strictly enforced for images without size
-        .append("  img { max-width: 100%; }")
+        .append("  img { max-width: 100%; width: auto; height: auto; }")
         .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
         // center large/medium images, provide a small bottom margin, and add a background color
