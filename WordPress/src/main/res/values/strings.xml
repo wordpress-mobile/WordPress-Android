@@ -1361,7 +1361,7 @@
     <string name="theme_activation_error">Something went wrong. Could not activate theme</string>
     <string name="selected_theme">Selected Theme</string>
     <string name="could_not_load_theme">Could not load theme</string>
-    
+
     <!--People Management-->
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
@@ -1439,6 +1439,7 @@
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
+    <string name="send_link">Send Link</string>
     <string name="check_your_email">Check your email</string>
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
