@@ -455,11 +455,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
-                // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getUser(personID, localTableBlogId);
-                if (person != null) {
-                    PeopleTable.deleteUser(personID, localTableBlogId);
-                }
+                PeopleTable.deletePerson(personID, localTableBlogId, personType);
 
                 String message = getString(R.string.person_removed, displayName);
                 ToastUtils.showToast(PeopleManagementActivity.this, message, ToastUtils.Duration.LONG);
