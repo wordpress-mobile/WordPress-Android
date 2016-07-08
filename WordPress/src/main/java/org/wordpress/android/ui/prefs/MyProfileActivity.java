@@ -13,7 +13,7 @@ import com.squareup.otto.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
@@ -106,7 +106,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         super.onResume();
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            mDispatcher.dispatch(AccountAction.FETCH_SETTINGS);
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 
@@ -131,7 +131,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
-        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
     private void updateLabel(WPTextView textView, String text) {

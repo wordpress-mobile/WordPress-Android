@@ -20,7 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
@@ -100,7 +100,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onResume() {
         super.onResume();
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            mDispatcher.dispatch(AccountAction.FETCH_SETTINGS);
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 
@@ -208,7 +208,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_email_change_pending", "false");
-        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
@@ -218,21 +218,21 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_email", newEmail);
-        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
     private void updatePrimaryBlog(String blogId) {
         PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("primary_site_ID", blogId);
-        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
     public void updateWebAddress(String newWebAddress) {
         PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_URL", newWebAddress);
-        mDispatcher.dispatch(AccountAction.POST_SETTINGS, payload);
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
     @Subscribe

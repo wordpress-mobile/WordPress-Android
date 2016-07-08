@@ -42,8 +42,9 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
-import org.wordpress.android.stores.action.AuthenticationAction;
-import org.wordpress.android.stores.action.SiteAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
@@ -565,12 +566,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPCom() {
         // TODO: STORES: mTwoStepCode
         // TODO: STORES: mShouldSendTwoStepSMS
-        AuthenticatePayload payload = new AuthenticatePayload();
-        payload.username = mUsername;
-        payload.password = mPassword;
+        AuthenticatePayload payload = new AuthenticatePayload(mUsername, mPassword);
         // Next action will be dispatched if authentication is successful
-        payload.nextAction = mDispatcher.createAction(SiteAction.FETCH_SITES);
-        mDispatcher.dispatch(AuthenticationAction.AUTHENTICATE, payload);
+        payload.nextAction = SiteActionBuilder.newFetchSitesAction();
+        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     protected void configureAccountAfterSuccessfulSignIn() {
@@ -582,8 +581,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             getActivity().finish();
             return;
         }
-
-        mDispatcher.dispatch(SiteAction.FETCH_SITES);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
     private void signInAndFetchBlogListWPOrg() {
@@ -595,7 +593,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         payload.xmlrpcEndpoint = url;
         mSelfhostedPayload = payload;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
-        mDispatcher.dispatch(SiteAction.FETCH_SITES_XMLRPC, payload);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(payload));
     }
 
     private boolean checkNetworkConnectivity() {
@@ -913,7 +911,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
             }
             // Fetch user infos
-            mDispatcher.dispatch(AccountAction.FETCH);
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
             OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         }
     }

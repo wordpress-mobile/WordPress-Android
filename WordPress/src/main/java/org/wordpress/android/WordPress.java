@@ -50,8 +50,8 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.action.AccountAction;
-import org.wordpress.android.stores.action.SiteAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
 import org.wordpress.android.stores.module.AppContextModule;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.stores.store.AccountStore;
@@ -154,7 +154,7 @@ public class WordPress extends MultiDexApplication {
         protected boolean run() {
             if (mAccountStore.hasAccessToken()) {
                 // TODO: STORES: we should only update WPCOM SITES
-                mDispatcher.dispatch(SiteAction.FETCH_SITES);
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
             }
             return true;
         }
@@ -295,7 +295,7 @@ public class WordPress extends MultiDexApplication {
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
-            mDispatcher.dispatch(AccountAction.FETCH_ACCOUNT);
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
         }
     }
 
@@ -599,9 +599,9 @@ public class WordPress extends MultiDexApplication {
             @Override
             public void run() {
                 // reset default account
-                mDispatcher.dispatch(AccountAction.SIGN_OUT);
+                mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
                 // delete wpcom sites
-                mDispatcher.dispatch(SiteAction.REMOVE_WPCOM_SITES);
+                mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomSitesAction());
             }
         });
 

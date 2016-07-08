@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.accounts.SignInFragment;
@@ -245,15 +245,16 @@ public class MagicLinkSignInFragment extends SignInFragment {
     private void saveUsernameAndTokenToAccount() {
         AccountModel accountModel = mAccountStore.getAccount();
         accountModel.setUserName(mUsername);
-        mDispatcher.dispatch(AccountAction.UPDATE, accountModel);
-        mDispatcher.dispatch(AccountAction.UPDATE_ACCESS_TOKEN, new AccountStore.UpdateTokenPayload(mToken));
-        mDispatcher.dispatch(AccountAction.FETCH_ACCOUNT);
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(
+                new AccountStore.UpdateTokenPayload(mToken)));
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }
 
     public void saveEmailToAccount(String email) {
         AccountModel accountModel = mAccountStore.getAccount();
         accountModel.setUserName(email);
-        mDispatcher.dispatch(AccountAction.UPDATE, accountModel);
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
     }
     @Override
     public void onCredentialRetrieved(Credential credential) {
