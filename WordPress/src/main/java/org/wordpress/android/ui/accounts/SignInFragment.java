@@ -47,6 +47,7 @@ import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
 import org.wordpress.android.stores.generated.SiteActionBuilder;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.stores.store.AccountStore.AuthenticationError;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.stores.store.SiteStore;
@@ -832,32 +833,38 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         endProgress();
     }
-
-    protected void signInError(int messageId, String clientResponse) {
+    private void showGenericErrorDialog(String errorMessage) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
-            handleInvalidUsernameOrPassword(messageId);
-            return;
-        } else if (messageId == R.string.invalid_verification_code) {
-            endProgress();
-            showTwoStepCodeError(messageId);
-            return;
-        } else if (messageId == org.wordpress.android.R.string.invalid_site_url_message) {
-            showUrlError(messageId);
-            endProgress();
-            return;
-        } else {
-            AppLog.e(T.NUX, "Server response: " + clientResponse);
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(messageId), R.drawable.noticon_alert_big, 3,
-                    getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
-                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                    SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
-        }
+
+        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                errorMessage, R.drawable.noticon_alert_big, 3,
+                getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
+                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
+
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
-        endProgress();
+    }
+
+    private void showAuthError(AuthenticationError error, String errorMessage) {
+        switch (error) {
+            case INCORRECT_USERNAME_OR_PASSWORD:
+                handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
+                break;
+            case INVALID_OTP:
+                showTwoStepCodeError(R.string.invalid_verification_code);
+                break;
+            case NEEDS_2FA:
+                // TODO: STORES: 2fa support
+            case INVALID_REQUEST:
+                // TOOD: STORES: could be specific?
+            default:
+                // For all other kind of error, show a dialog with API Response error message
+                AppLog.e(T.NUX, "Server response: " + errorMessage);
+                showGenericErrorDialog(errorMessage);
+                break;
+        }
     }
 
     @Override
@@ -886,6 +893,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.unregister(this);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NewUserFragment.NEW_USER && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                // Text views will be populated by username/password if these fields are set
+                mUsername = data.getStringExtra("username");
+                mPassword = data.getStringExtra("password");
+            }
+        }
+    }
+
+    // OnChanged events
+
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
@@ -901,19 +921,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
-            // TODO: STORES: adapt this method to take a parameter
-            showAuthErrorMessage();
+            showAuthError(event.errorType, event.errorMessage);
             endProgress();
-        } else {
-            if (mAccountStore.hasAccessToken()) {
-                // On WordPress.com login, configure Simperium
-                AppLog.i(T.NOTIFS, "Configuring Simperium");
-                SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
-            }
-            // Fetch user infos
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
-            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+            return;
         }
+        if (mAccountStore.hasAccessToken()) {
+            // On WordPress.com login, configure Simperium
+            AppLog.i(T.NOTIFS, "Configuring Simperium");
+            SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
+        }
+        // Fetch user infos
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+        OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
     }
 
     @Subscribe
@@ -927,17 +946,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Finish activity if account settings have been fetched
         if (mAccountSettingsFetched && mAccountFetched) {
             finishCurrentActivity();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NewUserFragment.NEW_USER && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                // Text views will be populated by username/password if these fields are set
-                mUsername = data.getStringExtra("username");
-                mPassword = data.getStringExtra("password");
-            }
         }
     }
 }
