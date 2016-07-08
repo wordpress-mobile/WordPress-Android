@@ -96,7 +96,7 @@ public class MagicLinkRequestFragment extends Fragment {
         if (context instanceof OnMagicLinkFragmentInteraction) {
             mListener = (OnMagicLinkFragmentInteraction) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement PublicizePreferenceListener");
         }
     }
 

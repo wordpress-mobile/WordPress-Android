@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.publicize;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import org.wordpress.android.R;
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment {
-    private OnFragmentInteractionListener mListener;
+    private PublicizePreferenceListener mListener;
 
     public PublicizeManageConnectionsFragment() {
     }
@@ -22,10 +21,10 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof PublicizePreferenceListener) {
+            mListener = (PublicizePreferenceListener) context;
         } else {
-//            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement PublicizePreferenceListener");
         }
     }
 
@@ -35,7 +34,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface PublicizePreferenceListener {
+        void onPreferenceUpdated();
     }
 }

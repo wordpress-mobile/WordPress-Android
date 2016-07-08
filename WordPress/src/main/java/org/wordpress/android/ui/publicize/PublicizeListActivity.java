@@ -28,7 +28,8 @@ public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
-        PublicizeListFragment.PublicizeManageConnectionsListener {
+        PublicizeListFragment.PublicizeManageConnectionsListener,
+        PublicizeManageConnectionsFragment.PublicizePreferenceListener {
 
     private int mSiteId;
     private ProgressDialog mProgressDialog;
@@ -303,5 +304,10 @@ public class PublicizeListActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onPreferenceUpdated() {
+
     }
 }
