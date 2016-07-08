@@ -3,6 +3,7 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
@@ -169,8 +170,11 @@ public class PeopleTable {
         return SqlUtils.intForQuery(getReadableDb(), sql, args);
     }
 
-    public static void deleteUser(long personID, int localTableBlogId) {
-        deletePerson(TEAM_TABLE, personID, localTableBlogId);
+    public static void deletePerson(long personID, int localTableBlogId, Person.PersonType personType) {
+        String table = getTableForPersonType(personType);
+        if (table != null) {
+            deletePerson(table, personID, localTableBlogId);
+        }
     }
 
     private static void deletePerson(String table, long personID, int localTableBlogId) {
@@ -207,20 +211,13 @@ public class PeopleTable {
         return people;
     }
 
+    @Nullable
     public static Person getPerson(long personId, int localTableBlogId, Person.PersonType personType) {
-        String table = null;
-        switch (personType) {
-            case USER:
-                table = TEAM_TABLE;
-                break;
-            case FOLLOWER:
-                table = FOLLOWERS_TABLE;
-                break;
-            case EMAIL_FOLLOWER:
-                table = EMAIL_FOLLOWERS_TABLE;
-                break;
+        String table = getTableForPersonType(personType);
+        if (table != null) {
+            return getPerson(table, personId, localTableBlogId);
         }
-        return getPerson(table, personId, localTableBlogId);
+        return null;
     }
 
     public static Person getUser(long personId, int localTableBlogId) {
@@ -280,5 +277,18 @@ public class PeopleTable {
             return "";
         }
         return " ORDER BY lower(display_name), lower(user_name)";
+    }
+
+    @Nullable
+    private static String getTableForPersonType(Person.PersonType personType) {
+        switch (personType) {
+            case USER:
+                return TEAM_TABLE;
+            case FOLLOWER:
+                return FOLLOWERS_TABLE;
+            case EMAIL_FOLLOWER:
+                return EMAIL_FOLLOWERS_TABLE;
+        }
+        return null;
     }
 }
