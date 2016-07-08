@@ -489,12 +489,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     };
 
-
-    private void refreshAndSelectSite(Map<String, Object> site) {
-        WordPress.setCurrentBlog((Integer) site.get("id"));
-    }
-
-
     private void trackAnalyticsSignIn() {
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
