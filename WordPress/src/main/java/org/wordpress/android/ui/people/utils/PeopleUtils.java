@@ -194,7 +194,7 @@ public class PeopleUtils {
     }
 
     public static void removeUser(String blogId, final long personID, final int localTableBlogId,
-                                  final RemoveUserCallback callback) {
+                                  final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -225,7 +225,7 @@ public class PeopleUtils {
     }
 
     public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
-                                      Person.PersonType personType, final RemoveUserCallback callback) {
+                                      Person.PersonType personType, final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -297,7 +297,7 @@ public class PeopleUtils {
         void onSuccess(List<Person> peopleList, boolean isEndOfList);
     }
 
-    public interface RemoveUserCallback extends Callback {
+    public interface RemovePersonCallback extends Callback {
         void onSuccess(long personID, int localTableBlogId);
     }
 
