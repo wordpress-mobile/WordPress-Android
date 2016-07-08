@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="publicize_label"
+        android:layout="@layout/preference_layout"
+        android:persistent="false"
+        android:title="Label" />
+
+</PreferenceScreen>
