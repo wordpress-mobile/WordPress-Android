@@ -634,23 +634,22 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public void refreshMetadata(AnalyticsMetadata metadata) {
         if (mNosaraClient == null) {
             return;
         }
 
         try {
             JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            properties.put(JETPACK_USER, metadata.isJetpackUser());
+            properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (isUserConnected && isWordPressComUser) {
-            setWordPressComUserName(username);
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+            setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
                 mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
