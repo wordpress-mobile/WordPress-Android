@@ -299,6 +299,9 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onManageConnectionsClicked() {
-        
+        PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
+        fragmentTransaction.commit();
     }
 }
