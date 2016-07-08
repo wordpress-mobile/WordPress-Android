@@ -448,7 +448,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
 
-        PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
+        PeopleUtils.RemovePersonCallback callback = new PeopleUtils.RemovePersonCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
                 if (personType == Person.PersonType.USER) {
