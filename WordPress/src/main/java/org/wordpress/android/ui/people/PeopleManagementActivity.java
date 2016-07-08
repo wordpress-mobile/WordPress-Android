@@ -455,6 +455,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
                 }
 
+                // remove the person from db, navigate back to list fragment and refresh it
                 PeopleTable.deletePerson(personID, localTableBlogId, personType);
 
                 String message = getString(R.string.person_removed, displayName);
