@@ -260,6 +260,37 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
+    public static void removeViewer(String blogId, final long personID, final int localTableBlogId,
+                                    final RemovePersonCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    // check if the call was successful
+                    boolean success = jsonObject.optBoolean("deleted");
+                    if (success) {
+                        callback.onSuccess(personID, localTableBlogId);
+                    } else {
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path = String.format("sites/%s/viewers/%d/delete", blogId, personID);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+    }
+
     private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId, boolean isFollower,
                                                    boolean isEmailFollower, boolean isViewer) throws JSONException {
         if (jsonArray == null) {
