@@ -50,6 +50,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String SHARING_LABEL_KEY = "sharing_label";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -189,6 +190,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
+        mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
@@ -315,6 +317,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
             } else {
                 params.put(BLACKLIST_KEYS_KEY, "");
             }
+        }
+
+        if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
+            params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
 
         return params;

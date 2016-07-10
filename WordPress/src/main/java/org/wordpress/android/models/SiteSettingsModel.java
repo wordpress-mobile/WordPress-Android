@@ -51,6 +51,7 @@ public class SiteSettingsModel {
     public static final String WHITELIST_COLUMN_NAME = "whitelist";
     public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
     public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
+    public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -87,7 +88,8 @@ public class SiteSettingsModel {
                     USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
-                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
+                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
+                    SHARING_LABEL_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;
@@ -126,6 +128,7 @@ public class SiteSettingsModel {
     public int maxLinks;
     public List<String> holdForModeration;
     public List<String> blacklist;
+    public String sharingLabel;
 
     @Override
     public boolean equals(Object other) {
@@ -159,7 +162,8 @@ public class SiteSettingsModel {
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
                 holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
-                blacklist != null && blacklist.equals(otherModel.blacklist);
+                blacklist != null && blacklist.equals(otherModel.blacklist) &&
+                sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel);
     }
 
     /**
@@ -208,6 +212,9 @@ public class SiteSettingsModel {
         if (other.blacklist != null) {
             blacklist = new ArrayList<>(other.blacklist);
         }
+        if (other.sharingLabel != null) {
+            sharingLabel = other.sharingLabel;
+        }
     }
 
     /**
@@ -253,6 +260,8 @@ public class SiteSettingsModel {
         if (!TextUtils.isEmpty(blacklistKeys)) {
             Collections.addAll(blacklist, blacklistKeys.split("\n"));
         }
+
+        sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -332,6 +341,7 @@ public class SiteSettingsModel {
         }
         values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
         values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
+        values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
 
         return values;
     }

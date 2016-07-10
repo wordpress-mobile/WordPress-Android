@@ -489,6 +489,10 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
+    public String getSharingLabel() {
+        return mSettings.sharingLabel;
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
