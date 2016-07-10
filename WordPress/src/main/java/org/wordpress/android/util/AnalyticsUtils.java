@@ -7,6 +7,7 @@ import android.text.Html;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
@@ -28,32 +29,38 @@ public class AnalyticsUtils {
      * @param email WordPress.com email address
      */
     public static void refreshMetadata(String username, String email) {
+        AnalyticsMetadata metadata = new AnalyticsMetadata();
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
-        boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getNumBlogs();
-        int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
-        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
-                versionCode, username, email);
+
+        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
+        metadata.setUserConnected(AccountHelper.isSignedIn());
+        metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
+        metadata.setJetpackUser(AccountHelper.isJetPackUser());
+        metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
+        metadata.setUsername(username);
+        metadata.setEmail(email);
+
+        AnalyticsTracker.refreshMetadata(metadata);
     }
 
     /**
      * Utility method to refresh mixpanel metadata.
      */
     public static void refreshMetadata() {
+        AnalyticsMetadata metadata = new AnalyticsMetadata();
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        boolean isUserConnected = AccountHelper.isSignedIn();
-        boolean isWordPressComUser = AccountHelper.isSignedInWordPressDotCom();
-        boolean isJetpackUser = AccountHelper.isJetPackUser();
-        int numBlogs = WordPress.wpDB.getNumBlogs();
-        int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
-        String username = AccountHelper.getDefaultAccount().getUserName();
-        String email = AccountHelper.getDefaultAccount().getEmail();
-        AnalyticsTracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
-                versionCode, username, email);
+
+        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
+        metadata.setUserConnected(AccountHelper.isSignedIn());
+        metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
+        metadata.setJetpackUser(AccountHelper.isJetPackUser());
+        metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
+        metadata.setUsername(AccountHelper.getDefaultAccount().getUserName());
+        metadata.setEmail(AccountHelper.getDefaultAccount().getEmail());
+
+        AnalyticsTracker.refreshMetadata(metadata);
     }
 
     public static int getWordCount(String content) {
