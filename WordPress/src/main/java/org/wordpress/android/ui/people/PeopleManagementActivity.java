@@ -448,7 +448,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
 
-        PeopleUtils.RemoveUserCallback callback = new PeopleUtils.RemoveUserCallback() {
+        PeopleUtils.RemovePersonCallback callback = new PeopleUtils.RemovePersonCallback() {
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
                 if (personType == Person.PersonType.USER) {
@@ -456,10 +456,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it
-                Person person = PeopleTable.getUser(personID, localTableBlogId);
-                if (person != null) {
-                    PeopleTable.deleteUser(personID, localTableBlogId);
-                }
+                PeopleTable.deletePerson(personID, localTableBlogId, personType);
 
                 String message = getString(R.string.person_removed, displayName);
                 ToastUtils.showToast(PeopleManagementActivity.this, message, ToastUtils.Duration.LONG);
