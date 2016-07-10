@@ -1,8 +1,11 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <org.wordpress.android.ui.prefs.SummaryEditTextPreference
         android:key="publicize_label"
         android:layout="@layout/preference_layout"
-        android:persistent="false"
+        app:summaryLines="1"
+        app:maxSummaryLines="2"
         android:title="Label" />
 
 </PreferenceScreen>
