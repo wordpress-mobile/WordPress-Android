@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
-    public static int FOLLOWER_PAGE_LIMIT = 500;
+    public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
