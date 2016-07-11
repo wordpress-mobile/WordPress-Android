@@ -34,7 +34,7 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
     @Override
     public void onEditorFragmentInitialized() {
         mEditorFragment.setTitle("A title");
-        mEditorFragment.setContent(Utils.getHtmlFromFile(this, "example-content.html"));
+        mEditorFragment.setContent(Utils.getHtmlFromFile(this, "example/example-content.html"));
     }
 
     @Override

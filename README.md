@@ -29,26 +29,6 @@ You can now build, install and test the project:
 
 You can use [Android Studio][3] by importing the project as a Gradle project.
 
-### Additional Build Instructions for Windows ###
-
-The [visual editor][10] uses a linux-style symlink for its [assets folder][11],
-which has to be converted to a Windows symlink.
-
-From git bash, inside the project root:
-
-    $ rm libs/editor/WordPressEditor/src/main/assets
-    $ git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
-
-Then, from a Windows command prompt:
-
-    mklink /D [PROJECT_ROOT]\libs\editor\WordPressEditor\src\main\assets %PROJECT_ROOT%\libs\editor\libs\editor-common\assets
-
-Finally, update `[PROJECT_ROOT]\.git\info\exclude` to ignore the symlink
-locally:
-
-    # editor assets symlink
-    libs/editor/WordPressEditor/src/main/assets
-
 ## Directory structure ##
 
     |-- libs                    # dependencies used to build debug variants
@@ -137,5 +117,3 @@ be covered by a different license compatible with the GPLv2.
 [7]: https://developer.wordpress.com/docs/api/
 [8]: https://facebook.github.io/buck
 [9]: https://facebook.github.io/watchman/docs/install.html
-[10]: https://github.com/wordpress-mobile/WordPress-Editor-Android
-[11]: https://github.com/wordpress-mobile/WordPress-Android/blob/develop/libs/editor/WordPressEditor/src/main/assets
