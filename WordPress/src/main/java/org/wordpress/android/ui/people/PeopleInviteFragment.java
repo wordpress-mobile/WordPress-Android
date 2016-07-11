@@ -50,6 +50,7 @@ public class PeopleInviteFragment extends Fragment implements
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
     private static final int MAX_NUMBER_OF_INVITEES = 10;
+    private final String[] USERNAME_DELIMITERS = {" ", ","};
 
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
@@ -135,6 +136,11 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
+
+        //to detect backspace press in mUsernameEditText we need to maintain permanent whitespace in it
+        mUsernameEditText.setText(" ");
+        mUsernameEditText.setSelection(1);
+
         mUsernameEditText.setOnSelectionChangeListener(new MultiUsernameEditText.OnSelectionChangeListener() {
             @Override
             public void onSelectionChanged(int selStart, int selEnd) {
@@ -151,6 +157,7 @@ public class PeopleInviteFragment extends Fragment implements
                 }
             }
         });
+
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
             private boolean shouldIgnoreChanges = false;
 
@@ -167,7 +174,7 @@ public class PeopleInviteFragment extends Fragment implements
                     shouldIgnoreChanges = true;
                     mUsernameEditText.setText(" ");
                     shouldIgnoreChanges = false;
-                } else if (mUsernameEditText.getText().toString().endsWith(" ")) {
+                } else if (isUsernameContainsDelimiter(mUsernameEditText.getText().toString())) {
                     shouldIgnoreChanges = true;
                     addUsername(mUsernameEditText, null);
                     shouldIgnoreChanges = false;
@@ -178,6 +185,7 @@ public class PeopleInviteFragment extends Fragment implements
             public void afterTextChanged(Editable s) {
             }
         });
+
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -190,6 +198,7 @@ public class PeopleInviteFragment extends Fragment implements
                 }
             }
         });
+
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -198,7 +207,6 @@ public class PeopleInviteFragment extends Fragment implements
                 }
             }
         });
-
 
 
         View roleContainer = getView().findViewById(R.id.role_container);
@@ -232,6 +240,30 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
+    }
+
+    private boolean isUsernameContainsDelimiter(String username) {
+        if (TextUtils.isEmpty(username)) return false;
+
+        for (String usernameDelimiter : USERNAME_DELIMITERS) {
+            if (username.endsWith(usernameDelimiter)) return true;
+        }
+
+        return false;
+    }
+
+    private String removeDelimiterFromUsername(String username) {
+        if (TextUtils.isEmpty(username)) return username;
+
+        username = username.trim();
+
+        for (String usernameDelimiter : USERNAME_DELIMITERS) {
+            if (username.endsWith(usernameDelimiter)) {
+                return username.substring(0, username.length() - usernameDelimiter.length());
+            }
+        }
+
+        return username;
     }
 
     private String loadDefaultRole() {
@@ -281,7 +313,7 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private void addUsername(EditText editText, ValidationEndListener validationEndListener) {
-        String username = editText.getText().toString().trim();
+        String username = removeDelimiterFromUsername(editText.getText().toString());
         editText.setText(" ");
 
         if (username.isEmpty() || mUsernameButtons.keySet().contains(username)) {
