@@ -48,7 +48,7 @@ public class PeopleInviteFragment extends Fragment implements
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
     private static final int MAX_NUMBER_OF_INVITEES = 10;
-    private final String[] USERNAME_DELIMITERS = {" ", ","};
+    private static final String[] USERNAME_DELIMITERS = {" ", ",","..."};
 
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
@@ -133,8 +133,6 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
-
-        //to detect backspace press in mUsernameEditText we need to maintain permanent whitespace in it
         mUsernameEditText.setText(" ");
         mUsernameEditText.setSelection(1);
 
@@ -143,6 +141,7 @@ public class PeopleInviteFragment extends Fragment implements
             public void onSelectionChanged(int selStart, int selEnd) {
                 if (selEnd == 0) {
                     if (TextUtils.isEmpty(mUsernameEditText.getText())) {
+                        //removing the last username
                         List<String> list = new ArrayList<>(mUsernameButtons.keySet());
                         if (!list.isEmpty()) {
                             String username = list.get(list.size() - 1);
@@ -167,15 +166,13 @@ public class PeopleInviteFragment extends Fragment implements
                 if (shouldIgnoreChanges) //used to avoid double call after calling setText from this method
                     return;
 
+                shouldIgnoreChanges = true;
                 if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
-                    shouldIgnoreChanges = true;
                     mUsernameEditText.setText(" ");
-                    shouldIgnoreChanges = false;
                 } else if (isUsernameContainsDelimiter(mUsernameEditText.getText().toString())) {
-                    shouldIgnoreChanges = true;
                     addUsername(mUsernameEditText, null);
-                    shouldIgnoreChanges = false;
                 }
+                shouldIgnoreChanges = false;
             }
 
             @Override

@@ -6,9 +6,13 @@ import android.util.AttributeSet;
 
 /**
  *  Used to handle backspace in People Management username field
- *   http://stackoverflow.com/a/24624767/569430/
+ *  http://stackoverflow.com/a/24624767/569430/
  */
 public class MultiUsernameEditText extends WPEditText {
+
+    private OnSelectionChangeListener mOnSelectionChangeListener;
+
+
     public MultiUsernameEditText(Context context) {
         super(context);
     }
@@ -26,17 +30,16 @@ public class MultiUsernameEditText extends WPEditText {
     protected void onSelectionChanged(int selStart, int selEnd) {
         super.onSelectionChanged(selStart, selEnd);
 
-        if (onSelectionChangeListener != null)
-            onSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+        if (mOnSelectionChangeListener != null)
+            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+    }
+
+    public void setOnSelectionChangeListener(OnSelectionChangeListener onSelectionChangeListener) {
+        this.mOnSelectionChangeListener = onSelectionChangeListener;
     }
 
     public interface OnSelectionChangeListener {
         void onSelectionChanged(int selStart, int selEnd);
     }
 
-    private OnSelectionChangeListener onSelectionChangeListener;
-
-    public void setOnSelectionChangeListener(OnSelectionChangeListener onSelectionChangeListener) {
-        this.onSelectionChangeListener = onSelectionChangeListener;
-    }
 }
