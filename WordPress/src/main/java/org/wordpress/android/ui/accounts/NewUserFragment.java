@@ -283,7 +283,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                     public void onSuccess(JSONObject createSiteResponse) {
                         // User has been created. From this point, all errors should close this screen and display the
                         // sign in screen
-                        AnalyticsUtils.refreshMetadata(mUsername, email, true, true, false, 1);
+                        AnalyticsUtils.refreshMetadataNewUser(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         // Save credentials to smart lock
                         SmartLockHelper smartLockHelper = getSmartLockHelper();

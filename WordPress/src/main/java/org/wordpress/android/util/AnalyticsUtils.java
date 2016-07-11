@@ -7,6 +7,7 @@ import android.text.Html;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.stores.store.AccountStore;
@@ -26,22 +27,32 @@ public class AnalyticsUtils {
      * Utility methods to refresh Tracks and Mixpanel metadata.
      */
     public static void refreshMetadata(AccountStore accountStore, SiteStore siteStore) {
-        refreshMetadata(
-                accountStore.getAccount().getUserName(),
-                accountStore.getAccount().getEmail(),
-                accountStore.isSignedIn(),
-                accountStore.hasAccessToken(),
-                siteStore.hasJetpackSite(),
-                siteStore.getSitesCount());
+        AnalyticsMetadata metadata = new AnalyticsMetadata();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+
+        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
+        metadata.setUserConnected(accountStore.isSignedIn());
+        metadata.setWordPressComUser(accountStore.hasAccessToken());
+        metadata.setJetpackUser(siteStore.hasJetpackSite());
+        metadata.setNumBlogs(siteStore.getSitesCount());
+        metadata.setUsername(accountStore.getAccount().getUserName());
+        metadata.setEmail(accountStore.getAccount().getEmail());
+
+        AnalyticsTracker.refreshMetadata(metadata);
     }
 
-    public static void refreshMetadata(String username, String email, boolean isUserConnected,
-                                       boolean isWpComUser, boolean isJetpackUser, int siteCount) {
+    public static void refreshMetadataNewUser(String username, String email) {
+        AnalyticsMetadata metadata = new AnalyticsMetadata();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        int sessionCount = preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0);
-        int versionCode = PackageUtils.getVersionCode(WordPress.getContext());
-        AnalyticsTracker.refreshMetadata(isUserConnected, isWpComUser, isJetpackUser, sessionCount, siteCount,
-                versionCode, username, email);
+        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
+        metadata.setUserConnected(true);
+        metadata.setWordPressComUser(true);
+        metadata.setJetpackUser(false);
+        metadata.setNumBlogs(1);
+        metadata.setUsername(username);
+        metadata.setEmail(email);
+        AnalyticsTracker.refreshMetadata(metadata);
     }
 
     public static int getWordCount(String content) {

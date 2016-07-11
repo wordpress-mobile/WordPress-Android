@@ -463,8 +463,8 @@ public class WPHtml {
 
             if (!caption.equals("")) {
                 content = String.format(Locale.US,
-                        "[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                        alignment, width, TextUtils.htmlEncode(caption), content);
+                        "[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
+                        alignment, width, content, TextUtils.htmlEncode(caption));
             }
         }
 
