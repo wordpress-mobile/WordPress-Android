@@ -1414,7 +1414,7 @@
     <string name="invite_error_some_failed">Invite sent but error(s) occurred!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
-    
+
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
