@@ -241,6 +241,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
+                mCanRefreshUsers = false;
                 mUsersEndOfListReached = isEndOfList;
                 PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
 
@@ -281,6 +282,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
+                mCanRefreshFollowers = false;
                 mFollowersLastFetchedPage = pageFetched;
                 mFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
@@ -322,6 +324,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
+                mCanRefreshEmailFollowers = false;
                 mEmailFollowersLastFetchedPage = pageFetched;
                 mEmailFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveEmailFollowers(peopleList, localTableBlogId, isFreshList);
@@ -363,6 +366,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
+                mCanRefreshViewers = false;
                 mViewersEndOfListReached = isEndOfList;
                 PeopleTable.saveViewers(peopleList, localTableBlogId, isFreshList);
 
