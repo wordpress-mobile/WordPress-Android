@@ -562,8 +562,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // TODO: STORES: mTwoStepCode
         // TODO: STORES: mShouldSendTwoStepSMS
         AuthenticatePayload payload = new AuthenticatePayload(mUsername, mPassword);
-        // Next action will be dispatched if authentication is successful
-        payload.nextAction = SiteActionBuilder.newFetchSitesAction();
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
@@ -923,10 +921,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // On WordPress.com login, configure Simperium
             AppLog.i(T.NOTIFS, "Configuring Simperium");
             SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
+            // Fetch user infos
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+            // Fetch sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            // Setup legacy access token storage
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
         }
-        // Fetch user infos
-        mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
-        OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
     }
 
     @Subscribe
