@@ -13,13 +13,18 @@ public class Person {
 
     private long personID;
     private int localTableBlogId;
-
-    private String username;
     private String displayName;
     private String avatarUrl;
-    private String role;
-    private String subscribed;
     private PersonType personType;
+
+    // Only users have a role
+    private String role;
+
+    // Users, followers & viewers has a username, email followers don't
+    private String username;
+
+    // Only followers & email followers have a subscribed date
+    private String subscribed;
 
     public Person(long personID, int localTableBlogId) {
         this.personID = personID;
