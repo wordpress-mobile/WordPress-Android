@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.accounts.helpers;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -12,15 +10,12 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 public class CreateUserAndBlog {
@@ -55,51 +50,7 @@ public class CreateUserAndBlog {
         mResponseHandler = new ResponseHandler();
     }
 
-    public static String getDeviceLanguage(Context context) {
-        Resources resources = context.getResources();
-        XmlResourceParser parser = resources.getXml(R.xml.wpcom_languages);
-        Hashtable<String, String> entries = new Hashtable<String, String>();
-        String matchedDeviceLanguage = "en - English";
-        try {
-            int eventType = parser.getEventType();
-            String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(context);
 
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    String name = parser.getName();
-                    if (name.equals("language")) {
-                        String currentID = null;
-                        boolean currentLangIsDeviceLanguage = false;
-                        int i = 0;
-                        while (i < parser.getAttributeCount()) {
-                            if (parser.getAttributeName(i).equals("id")) {
-                                currentID = parser.getAttributeValue(i);
-                            }
-                            if (parser.getAttributeName(i).equals("code") &&
-                                parser.getAttributeValue(i).equalsIgnoreCase(deviceLanguageCode)) {
-                                currentLangIsDeviceLanguage = true;
-                            }
-                            i++;
-                        }
-
-                        while (eventType != XmlPullParser.END_TAG) {
-                            if (eventType == XmlPullParser.TEXT) {
-                                entries.put(parser.getText(), currentID);
-                                if (currentLangIsDeviceLanguage) {
-                                    matchedDeviceLanguage = parser.getText();
-                                }
-                            }
-                            eventType = parser.next();
-                        }
-                    }
-                }
-                eventType = parser.next();
-            }
-        } catch (Exception e) {
-            // do nothing
-        }
-        return matchedDeviceLanguage;
-    }
 
     public void startCreateUserAndBlogProcess() {
         validateUser();

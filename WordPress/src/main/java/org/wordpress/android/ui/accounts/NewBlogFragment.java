@@ -25,6 +25,7 @@ import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -177,7 +178,9 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
+        final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
+
+
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
                 getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {

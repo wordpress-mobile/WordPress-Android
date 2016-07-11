@@ -19,18 +19,37 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import com.squareup.otto.Subscribe;
+
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
-import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
+import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.stores.store.AccountStore.NewAccountPayload;
+import org.wordpress.android.stores.store.AccountStore.NewUserError;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.stores.store.AccountStore.OnNewUserCreated;
+import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.stores.store.SiteStore.NewSitePayload;
+import org.wordpress.android.stores.store.SiteStore.OnNewSiteCreated;
+import org.wordpress.android.stores.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.stores.store.SiteStore.SiteVisibility;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
@@ -55,6 +74,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl;
     private String mUsername;
+    private String mEmail;
     private String mPassword;
 
     private NewSitePayload mNewSitePayload;
@@ -118,6 +138,13 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.setEnabled(true);
     }
 
+    protected void clearErrors() {
+        mEmailTextField.setError(null);
+        mUsernameTextField.setError(null);
+        mPasswordTextField.setError(null);
+        mSiteUrlTextField.setError(null);
+    }
+
     protected boolean isUserDataValid() {
         // try to create the user
         final String email = EditTextUtils.getText(mEmailTextField).trim();
@@ -127,54 +154,54 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         boolean retValue = true;
 
         if (email.equals("")) {
-            showEmailError(R.string.required_field);
+            showEmailError(getString(R.string.required_field));
             retValue = false;
         }
 
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
         if (!matcher.find() || email.length() > 100) {
-            showEmailError(R.string.invalid_email_message);
+            showEmailError(getString(R.string.invalid_email_message));
             retValue = false;
         }
 
         if (username.equals("")) {
-            showUsernameError(R.string.required_field);
+            showUsernameError(getString(R.string.required_field));
             retValue = false;
         }
 
         if (username.length() < 4) {
-            showUsernameError(R.string.invalid_username_too_short);
+            showUsernameError(getString(R.string.invalid_username_too_short));
             retValue = false;
         }
 
         if (username.length() > 60) {
-            showUsernameError(R.string.invalid_username_too_long);
+            showUsernameError(getString(R.string.invalid_username_too_long));
             retValue = false;
         }
 
         if (username.contains(" ")) {
-            showUsernameError(R.string.invalid_username_no_spaces);
+            showUsernameError(getString(R.string.invalid_username_no_spaces));
             retValue = false;
         }
 
         if (siteUrl.contains(" ")) {
-            showSiteUrlError(R.string.blog_name_no_spaced_allowed);
+            showSiteUrlError(getString(R.string.blog_name_no_spaced_allowed));
             retValue = false;
         }
 
         if (siteUrl.length() < 4) {
-            showSiteUrlError(R.string.blog_name_must_be_at_least_four_characters);
+            showSiteUrlError(getString(R.string.blog_name_must_be_at_least_four_characters));
             retValue = false;
         }
 
         if (password.equals("")) {
-            showPasswordError(R.string.required_field);
+            showPasswordError(getString(R.string.required_field));
             retValue = false;
         }
 
         if (password.length() < 4) {
-            showPasswordError(R.string.invalid_password_message);
+            showPasswordError(getString(R.string.invalid_password_message));
             retValue = false;
         }
 
@@ -203,43 +230,66 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return siteUrl;
     }
 
-    protected boolean specificShowError(int messageId) {
-        switch (getErrorType(messageId)) {
-            case USERNAME:
-                showUsernameError(messageId);
-                return true;
-            case PASSWORD:
-                showPasswordError(messageId);
-                return true;
-            case EMAIL:
-                showEmailError(messageId);
-                return true;
-            case SITE_URL:
-                showSiteUrlError(messageId);
-                return true;
-        }
-        return false;
-    }
-
-    private void showPasswordError(int messageId) {
-        mPasswordTextField.setError(getString(messageId));
+    private void showPasswordError(String message) {
+        mPasswordTextField.setError(message);
         mPasswordTextField.requestFocus();
     }
 
-    private void showEmailError(int messageId) {
-        mEmailTextField.setError(getString(messageId));
+    private void showEmailError(String message) {
+        mEmailTextField.setError(message);
         mEmailTextField.requestFocus();
     }
 
-    private void showUsernameError(int messageId) {
-        mUsernameTextField.setError(getString(messageId));
+    private void showUsernameError(String message) {
+        mUsernameTextField.setError(message);
         mUsernameTextField.requestFocus();
     }
 
-    private void showSiteUrlError(int messageId) {
-        mSiteUrlTextField.setError(getString(messageId));
+    private void showSiteUrlError(String message) {
+        mSiteUrlTextField.setError(message);
         mSiteUrlTextField.requestFocus();
     }
+
+    private void showSiteError(String message) {
+        if (!isAdded()) {
+            return;
+        }
+        showSiteUrlError(message);
+    }
+
+    private void showUserError(NewUserError newUserError, String message) {
+        if (!isAdded()) {
+            return;
+        }
+        switch (newUserError) {
+            case USERNAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS:
+            case USERNAME_REQUIRED:
+            case USERNAME_NOT_ALLOWED:
+            case USERNAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS:
+            case USERNAME_CONTAINS_INVALID_CHARACTERS:
+            case USERNAME_MUST_INCLUDE_LETTERS:
+            case USERNAME_RESERVED_BUT_MAY_BE_AVAILABLE:
+            case USERNAME_INVALID:
+                showUsernameError(message);
+                break;
+            case USERNAME_EXISTS: // Returned error message for username_exists is too vague ("Invalid user input")
+                showUsernameError(getString(R.string.username_exists));
+                break;
+            case PASSWORD_INVALID:
+                showPasswordError(message);
+                break;
+            case EMAIL_CANT_BE_USED_TO_SIGNUP:
+            case EMAIL_INVALID:
+            case EMAIL_NOT_ALLOWED:
+            case EMAIL_EXISTS:
+            case EMAIL_RESERVED:
+                showEmailError(message);
+                break;
+            default:
+                break;
+        }
+    }
+
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
@@ -257,85 +307,27 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
 
         startProgress(getString(R.string.validating_user_data));
+        clearErrors();
 
-        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        final String email = EditTextUtils.getText(mEmailTextField).trim();
+        mSitesFetched = false;
+        mAccountSettingsFetched = false;
+        mAccountFetched = false;
+
+        String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
+        mEmail = EditTextUtils.getText(mEmailTextField).trim();
         mUsername = EditTextUtils.getText(mUsernameTextField).trim();
         mPassword = EditTextUtils.getText(mPasswordTextField).trim();
-        final String siteName = siteUrlToSiteName(siteUrl);
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
+        String siteName = siteUrlToSiteName(siteUrl);
+        String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, mUsername, mPassword,
-                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
-                new CreateUserAndBlog.Callback() {
-                    @Override
-                    public void onStepFinished(CreateUserAndBlog.Step step) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        switch (step) {
-                            case VALIDATE_USER:
-                                updateProgress(getString(R.string.validating_site_data));
-                                break;
-                            case VALIDATE_SITE:
-                                updateProgress(getString(R.string.creating_your_account));
-                                break;
-                            case CREATE_USER:
-                                updateProgress(getString(R.string.creating_your_site));
-                                break;
-                            case CREATE_SITE:
-                                // no messages
-                            case AUTHENTICATE_USER:
-                            default:
-                                break;
-                        }
-                    }
+        mNewAccountPayload = new NewAccountPayload(mUsername, mPassword, mEmail, true);
+        mNewSitePayload = new NewSitePayload(siteName, siteUrl, language, SiteVisibility.PUBLIC, true);
 
-                    @Override
-                    public void onSuccess(JSONObject createSiteResponse) {
-                        // User has been created. From this point, all errors should close this screen and display the
-                        // sign in screen
-                        AnalyticsUtils.refreshMetadataNewUser(mUsername, email);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                        // Save credentials to smart lock
-                        SmartLockHelper smartLockHelper = getSmartLockHelper();
-                        if (smartLockHelper != null) {
-                            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
-                        }
-                        if (isAdded()) {
-                            signInAndFetchBlogListWPCom();
-                        }
-                    }
+        mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+        updateProgress(getString(R.string.validating_site_data));
 
-                    @Override
-                    public void onError(int messageId) {
-                        endProgress();
-                        if (isAdded()) {
-                            showError(getString(messageId));
-                        }
-                    }
-                });
-        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + email
+        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + mEmail
                 + ", site name: " + siteName + ", site URL: " + siteUrl);
-        createUserAndBlog.startCreateUserAndBlogProcess();
-    }
-
-    private void signInAndFetchBlogListWPCom() {
-        updateProgress(getString(R.string.signing_in));
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword, null, false, null);
-        login.execute(new LoginAbstract.Callback() {
-            @Override
-            public void onSuccess() {
-                // TODO: STORES: use wpstores
-            }
-
-            @Override
-            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired,
-                                boolean erroneousSslCertificate) {
-                // Should not happen (excepted for a timeout), go back to the sign in screen
-                finishAndShowSignInScreen();
-            }
-        });
     }
 
     private void finishCurrentActivity() {
@@ -528,5 +520,104 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             return ((SignInActivity) getActivity()).getSmartLockHelper();
         }
         return null;
+    }
+
+    private void fetchSiteAndAccount() {
+        // User has been created. From this point, all errors should close this screen and display the
+        // sign in screen
+        AnalyticsUtils.refreshMetadataNewUser(mUsername, mEmail);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+        // Save credentials to smart lock
+        SmartLockHelper smartLockHelper = getSmartLockHelper();
+        if (smartLockHelper != null) {
+            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
+        }
+        // Fetch user infos
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+        // Fetch sites
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+    }
+
+    // OnChanged events
+
+    @Subscribe
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        if (event.isError) {
+            endProgress();
+            finishAndShowSignInScreen();
+            return;
+        }
+        if (mAccountStore.hasAccessToken()) {
+            // Account created and user authenticated, now create the site
+            updateProgress(getString(R.string.creating_your_site));
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+
+            // On WordPress.com login, configure Simperium
+            AppLog.i(T.NOTIFS, "Configuring Simperium");
+            SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
+            // Setup legacy access token storage
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        }
+    }
+
+    @Subscribe
+    public void onNewUserCreated(OnNewUserCreated event) {
+        AppLog.i(T.NUX, event.toString());
+        if (event.isError) {
+            endProgress();
+            showUserError(event.errorType, event.errorMessage);
+            return;
+        }
+        if (event.dryRun) {
+            // User Validated, now try to validate site creation
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            updateProgress(getString(R.string.validating_site_data));
+            return;
+        }
+        // User created, now authenticate the newly created user
+        AuthenticatePayload payload = new AuthenticatePayload(mNewAccountPayload.username, mNewAccountPayload.password);
+        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+    }
+
+    @Subscribe
+    public void onNewSiteCreated(OnNewSiteCreated event) {
+        AppLog.i(T.NUX, event.toString());
+        if (event.isError) {
+            endProgress();
+            showSiteError(event.errorMessage);
+            return;
+        }
+        if (event.dryRun) {
+            // User and Site validated, dispatch the same actions with dryRun disabled
+            updateProgress(getString(R.string.creating_your_account));
+            mNewSitePayload.dryRun = false;
+            mNewAccountPayload.dryRun = false;
+            mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+            return;
+        }
+        // Site created, time to wrap up
+        fetchSiteAndAccount();
+    }
+
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
+        mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
+        // Finish activity if sites have been fetched
+        if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
+            finishCurrentActivity();
+        }
+    }
+
+    @Subscribe
+    public void onSiteChanged(OnSiteChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        mSitesFetched = true;
+        // Finish activity if account settings have been fetched
+        if (mAccountSettingsFetched && mAccountFetched) {
+            finishCurrentActivity();
+        }
     }
 }
