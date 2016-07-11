@@ -614,6 +614,10 @@ public abstract class SiteSettingsInterface {
         mSettings.blacklist = keys;
     }
 
+    public void setSharingLabel(String sharingLabel) {
+        mSettings.sharingLabel = sharingLabel;
+    }
+
     public void setDefaultCategory(int category) {
         mSettings.defaultCategory = category;
     }

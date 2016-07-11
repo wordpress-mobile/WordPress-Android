@@ -14,10 +14,13 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
+import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
+import de.greenrobot.event.EventBus;
 
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, SiteSettingsInterface.SiteSettingsListener {
@@ -85,13 +88,15 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     @Override
     public boolean onPreferenceChange(Preference preference, Object o) {
         if (preference == mLabelPreference) {
+            mSiteSettings.setSharingLabel(o.toString());
             changeEditTextPreferenceValue(mLabelPreference, o.toString());
+        } else {
+            return false;
         }
-        return false;
-    }
 
-    private void syncSettings() {
+        mSiteSettings.saveSettings();
 
+        return true;
     }
 
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
@@ -154,7 +159,17 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     @Override
     public void onSettingsSaved(Exception error) {
+        if (error != null) {
+            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
+            return;
+        }
+        mBlog.setBlogName(mSiteSettings.getTitle());
+        WordPress.wpDB.saveBlog(mBlog);
 
+        // update the global current Blog so WordPress.getCurrentBlog() callers will get the updated object
+        WordPress.setCurrentBlog(mBlog.getLocalTableBlogId());
+
+        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
     }
 
     @Override
