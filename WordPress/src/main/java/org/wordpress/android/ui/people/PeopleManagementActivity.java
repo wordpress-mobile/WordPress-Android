@@ -424,7 +424,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        // You can't change a follower's or viewer's role, so it's always false
         final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
