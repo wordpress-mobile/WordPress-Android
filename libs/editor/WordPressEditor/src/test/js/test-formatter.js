@@ -1,5 +1,5 @@
 var assert = require('chai').assert;
-var underscore = require('../underscore-min.js');
+var underscore = require('../../main/assets/libs/underscore-min.js');
 
 // Set up globals needed by shortcode, wpload, and wpsave
 global.window = {};
@@ -7,11 +7,11 @@ global._ = underscore;
 global.wp = {};
 
 // wp-admin libraries
-var shortcode = require("../shortcode.js");
-var wpload = require("../wpload.js");
-var wpsave = require("../wpsave.js");
+var shortcode = require("../../main/assets/libs/shortcode.js");
+var wpload = require("../../main/assets/libs/wpload.js");
+var wpsave = require("../../main/assets/libs/wpsave.js");
 
-var formatterlib = require("../editor-utils-formatter.js");
+var formatterlib = require("../../main/assets/editor-utils-formatter.js");
 var formatter = formatterlib.Formatter;
 
 // Media strings
