@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -48,17 +49,18 @@ public class PeopleInviteFragment extends Fragment implements
 
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
+    private static final int MAX_NUMBER_OF_INVITEES = 10;
+
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
     private EditText mCustomMessageEditText;
 
-    private Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
+    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
     private HashMap<String, String> mUsernameResults = new HashMap<>();
-    private Map<String, View> mUsernameErrorViews = new Hashtable<>();
+    private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
-    private boolean mAddingUsername = false;
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -110,7 +112,13 @@ public class PeopleInviteFragment extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mUsernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames);
+        mUsernamesContainer = (ViewGroup) view.findViewById(R.id.usernames);
+        mUsernamesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditTextUtils.showSoftInput(mUsernameEditText);
+            }
+        });
 
         String role = null;
         if (savedInstanceState != null) {
@@ -126,12 +134,12 @@ public class PeopleInviteFragment extends Fragment implements
             role = loadDefaultRole();
         }
 
-        mUsernameEditText = (MultiUsernameEditText) getView().findViewById(R.id.invite_usernames);
+        mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
         mUsernameEditText.setOnSelectionChangeListener(new MultiUsernameEditText.OnSelectionChangeListener() {
             @Override
             public void onSelectionChanged(int selStart, int selEnd) {
                 if (selEnd == 0) {
-                    if (mUsernameEditText.getText().toString().length() == 0) {
+                    if (TextUtils.isEmpty(mUsernameEditText.getText())) {
                         List<String> list = new ArrayList<>(mUsernameButtons.keySet());
                         if (!list.isEmpty()) {
                             String username = list.get(list.size() - 1);
@@ -144,20 +152,31 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
+            private boolean shouldIgnoreChanges = false;
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!mAddingUsername && mUsernameEditText.getText().toString().endsWith(" ")) {
-                    mAddingUsername = true;
+                if (shouldIgnoreChanges) //used to avoid double call after calling setText from this method
+                    return;
+
+                if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
+                    shouldIgnoreChanges = true;
+                    mUsernameEditText.setText(" ");
+                    shouldIgnoreChanges = false;
+                } else if (mUsernameEditText.getText().toString().endsWith(" ")) {
+                    shouldIgnoreChanges = true;
                     addUsername(mUsernameEditText, null);
-                    mAddingUsername = false;
+                    shouldIgnoreChanges = false;
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -180,13 +199,7 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
 
-        View usernamesContainer = getView().findViewById(R.id.usernames);
-        usernamesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditTextUtils.showSoftInput(mUsernameEditText);
-            }
-        });
+
 
         View roleContainer = getView().findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +218,8 @@ public class PeopleInviteFragment extends Fragment implements
         mCustomMessageEditText = (EditText) getView().findViewById(R.id.message);
         mCustomMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -214,7 +228,8 @@ public class PeopleInviteFragment extends Fragment implements
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
     }
@@ -280,7 +295,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         mUsernameButtons.put(username, usernameButton);
 
-        validateAndStyleUsername(Arrays.asList(new String[]{ username }), validationEndListener);
+        validateAndStyleUsername(Arrays.asList(new String[]{username}), validationEndListener);
     }
 
     private void removeUsername(String username) {
@@ -380,7 +395,9 @@ public class PeopleInviteFragment extends Fragment implements
         }
     }
 
-    private @Nullable String getValidationErrorString(String username, ValidationResult validationResult) {
+    private
+    @Nullable
+    String getValidationErrorString(String username, ValidationResult validationResult) {
         switch (validationResult) {
             case USER_NOT_FOUND:
                 return getString(R.string.invite_username_not_found, username);
