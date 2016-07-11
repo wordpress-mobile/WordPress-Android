@@ -41,7 +41,8 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: STORES: replace this by wpstores
+import javax.inject.Inject;
+
 public class NewUserFragment extends AbstractFragment implements TextWatcher {
     public static final int NEW_USER = 1;
     private EditText mSiteUrlTextField;
@@ -55,6 +56,17 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private boolean mAutoCompleteUrl;
     private String mUsername;
     private String mPassword;
+
+    private NewSitePayload mNewSitePayload;
+    private NewAccountPayload mNewAccountPayload;
+
+    protected boolean mSitesFetched = false;
+    protected boolean mAccountSettingsFetched = false;
+    protected boolean mAccountFetched = false;
+
+    protected @Inject SiteStore mSiteStore;
+    protected @Inject AccountStore mAccountStore;
+    protected @Inject Dispatcher mDispatcher;
 
     public static NewUserFragment newInstance() {
         return new NewUserFragment();
@@ -379,6 +391,24 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                 startActivity(newAccountIntent);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
+import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -65,6 +66,7 @@ public interface AppComponent {
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
+    void inject(NewUserFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsActivity object);
