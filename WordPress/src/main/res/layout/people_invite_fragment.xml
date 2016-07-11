@@ -43,7 +43,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/invites_border"
-                android:layout_marginBottom="@dimen/margin_small"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:paddingBottom="@dimen/margin_large"
@@ -67,6 +66,15 @@
                     android:imeOptions="actionDone"
                     android:minWidth="40dp" />
             </org.wordpress.android.widgets.FlowLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/grey_lighten_10"
+                android:textSize="@dimen/text_sz_small"
+                android:textStyle="italic"
+                android:text="@string/invite_message_usernames_limit"/>
         </LinearLayout>
 
         <LinearLayout
@@ -138,8 +146,7 @@
                 android:layout_below="@+id/message"
                 android:padding="5dp"
                 android:textColor="@color/grey_lighten_10"
-                android:textSize="@dimen/text_sz_small"
-                tools:text="@string/invite_message_remaining"/>
+                android:textSize="@dimen/text_sz_small"/>
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
