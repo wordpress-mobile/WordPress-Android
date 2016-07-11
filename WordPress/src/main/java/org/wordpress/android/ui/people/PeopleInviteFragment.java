@@ -140,6 +140,7 @@ public class PeopleInviteFragment extends Fragment implements
             @Override
             public void onSelectionChanged(int selStart, int selEnd) {
                 if (selEnd == 0) {
+                    //whitespace was removed from EditText
                     if (TextUtils.isEmpty(mUsernameEditText.getText())) {
                         //removing the last username
                         List<String> list = new ArrayList<>(mUsernameButtons.keySet());
@@ -147,6 +148,7 @@ public class PeopleInviteFragment extends Fragment implements
                             String username = list.get(list.size() - 1);
                             removeUsername(username);
                         }
+                        //return the whitespace
                         mUsernameEditText.setText(" ");
                     }
                     mUsernameEditText.setSelection(1);
@@ -254,15 +256,15 @@ public class PeopleInviteFragment extends Fragment implements
     private String removeDelimiterFromUsername(String username) {
         if (TextUtils.isEmpty(username)) return username;
 
-        username = username.trim();
+        String trimmedUsername = username.trim();
 
         for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (username.endsWith(usernameDelimiter)) {
-                return username.substring(0, username.length() - usernameDelimiter.length());
+            if (trimmedUsername.endsWith(usernameDelimiter)) {
+                return trimmedUsername.substring(0, trimmedUsername.length() - usernameDelimiter.length());
             }
         }
 
-        return username;
+        return trimmedUsername;
     }
 
     private String loadDefaultRole() {
