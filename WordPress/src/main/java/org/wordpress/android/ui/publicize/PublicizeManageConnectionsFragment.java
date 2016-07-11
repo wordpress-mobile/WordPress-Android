@@ -86,10 +86,10 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     }
 
     @Override
-    public boolean onPreferenceChange(Preference preference, Object o) {
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference == mLabelPreference) {
-            mSiteSettings.setSharingLabel(o.toString());
-            changeEditTextPreferenceValue(mLabelPreference, o.toString());
+            mSiteSettings.setSharingLabel(newValue.toString());
+            changeEditTextPreferenceValue(mLabelPreference, newValue.toString());
         } else {
             return false;
         }
