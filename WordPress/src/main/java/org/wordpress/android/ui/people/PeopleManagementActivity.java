@@ -337,7 +337,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                     }
                 });
     }
-
+ 
     // This helper method is used after a successful network request
     private void refreshOnScreenFragmentDetails() {
         refreshPeopleListFragment();
