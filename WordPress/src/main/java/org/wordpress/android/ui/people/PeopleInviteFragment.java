@@ -48,7 +48,7 @@ public class PeopleInviteFragment extends Fragment implements
     private static final String ARG_BLOGID = "ARG_BLOGID";
 
     private static final int MAX_NUMBER_OF_INVITEES = 10;
-    private static final String[] USERNAME_DELIMITERS = {" ", ",","..."};
+    private static final String[] USERNAME_DELIMITERS = {" ", ","};
 
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
