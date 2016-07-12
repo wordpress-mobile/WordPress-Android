@@ -88,7 +88,8 @@ public class Person {
             return null;
         }
 
-        // Same response parameters in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        // Similar response parameters in:
+        // https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
             Person person = new Person(personID, localTableBlogId);
