@@ -1130,6 +1130,7 @@
     <string name="reader_label_post_search_explainer">Search all public WordPress.com blogs</string>
     <string name="reader_label_post_search_running">Searching…</string>
     <string name="reader_label_related_posts">Related Reading</string>
+    <string name="reader_label_related_posts_author">By %s</string>
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count">%d images</string>
 
