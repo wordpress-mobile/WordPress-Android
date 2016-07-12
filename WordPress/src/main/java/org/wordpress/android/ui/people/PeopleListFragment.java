@@ -102,6 +102,7 @@ public class PeopleListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
+                // Only a private blog can have viewers
                 if (!isPrivate) {
                     list.remove(PeopleListFilter.VIEWERS);
                 }
