@@ -476,6 +476,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
         if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        } else if(person.getPersonType() == Person.PersonType.VIEWER) {
+            builder.setMessage(R.string.viewer_remove_confirmation_message);
         } else {
             builder.setMessage(R.string.follower_remove_confirmation_message);
         }
@@ -534,6 +536,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
             PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
                     personType, callback);
+        } else if(personType == Person.PersonType.VIEWER) {
+            PeopleUtils.removeViewer(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         } else {
             PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         }
