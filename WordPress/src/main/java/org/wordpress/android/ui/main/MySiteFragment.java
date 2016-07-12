@@ -36,7 +36,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -185,14 +184,12 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        if (isPlansEnabled()) {
-            mPlanContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
-                }
-            });
-        }
+        mPlanContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+            }
+        });
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,13 +255,6 @@ public class MySiteFragment extends Fragment
         });
 
         return rootView;
-    }
-
-    /*
-     * plans is a work-in-progress and isn't exposed yet
-     */
-    private static boolean isPlansEnabled() {
-        return PackageUtils.isDebugBuild();
     }
 
     private void showSitePicker() {
@@ -386,15 +376,11 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
 
-        // Hide the Plan item if the Plans feature is not available.
-        if (isPlansEnabled()) {
-            String planShortName = blog.getPlanShortName();
-            if (!TextUtils.isEmpty(planShortName)) {
-                mCurrentPlanNameTextView.setText(planShortName);
-                mPlanContainer.setVisibility(View.VISIBLE);
-            } else {
-                mPlanContainer.setVisibility(View.GONE);
-            }
+        // Hide the Plan item if the Plans feature is not available for this blog
+        String planShortName = blog.getPlanShortName();
+        if (!TextUtils.isEmpty(planShortName)) {
+            mCurrentPlanNameTextView.setText(planShortName);
+            mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
