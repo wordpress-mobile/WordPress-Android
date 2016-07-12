@@ -485,7 +485,9 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderRelatedPost relatedPost : relatedPosts) {
+        for (int index = 0; index < relatedPosts.size(); index++) {
+            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
+
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
             TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
@@ -518,6 +520,12 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             container.addView(postView);
+
+            // add a divider below all but the last related post
+            if (index < relatedPosts.size() - 1) {
+                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
+                container.addView(dividerView);
+            }
         }
 
         View label = getView().findViewById(R.id.text_related_posts_label);
