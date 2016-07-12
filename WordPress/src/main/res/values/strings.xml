@@ -1034,6 +1034,8 @@
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
+    <string name="error_remove_follower">Couldn\'t remove follower</string>
+    <string name="error_remove_viewer">Couldn\'t remove viewer</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>

@@ -527,8 +527,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
+                int errorMessageRes;
+                switch (personType) {
+                    case USER:
+                        errorMessageRes = R.string.error_remove_user;
+                        break;
+                    case VIEWER:
+                        errorMessageRes = R.string.error_remove_viewer;
+                        break;
+                    default:
+                        errorMessageRes = R.string.error_remove_follower;
+                        break;
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_remove_user,
+                        errorMessageRes,
                         ToastUtils.Duration.LONG);
             }
         };
