@@ -19,16 +19,19 @@ import java.util.List;
 import java.util.Map;
 
 public class PeopleUtils {
-    public static int FETCH_USERS_LIMIT = 20;
+    // We limit followers we display to 1000 to avoid API performance issues
+    public static int FOLLOWER_PAGE_LIMIT = 500;
+    public static int FETCH_LIMIT = 20;
 
-    public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset, final FetchUsersCallback callback) {
+    public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
+                                  final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, blogId, localTableBlogId);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, false, false);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -52,11 +55,63 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("number", Integer.toString(PeopleUtils.FETCH_USERS_LIMIT));
+        params.put("number", Integer.toString(PeopleUtils.FETCH_LIMIT));
         params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");
         String path = String.format("sites/%s/users", blogId);
+        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+    }
+
+    public static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
+                                      final FetchFollowersCallback callback) {
+        fetchFollowers(blogId, localTableBlogId, page, callback, false);
+    }
+
+    public static void fetchEmailFollowers(final String blogId, final int localTableBlogId, final int page,
+                                           final FetchFollowersCallback callback) {
+        fetchFollowers(blogId, localTableBlogId, page, callback, true);
+    }
+
+    private static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
+                                       final FetchFollowersCallback callback, final boolean isEmailFollower) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    try {
+                        JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, !isEmailFollower,
+                                isEmailFollower);
+                        int pageFetched = jsonObject.optInt("page");
+                        int numberOfPages = jsonObject.optInt("pages");
+                        boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
+                        callback.onSuccess(people, pageFetched, isEndOfList);
+                    }
+                    catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
+                                "sites/%s/stats/followers: " + e);
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("max", Integer.toString(FETCH_LIMIT));
+        params.put("page", Integer.toString(page));
+        params.put("type", isEmailFollower ? "email" : "wp_com");
+        String path = String.format("sites/%s/stats/followers", blogId);
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
@@ -67,7 +122,7 @@ public class PeopleUtils {
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
-                        Person person = Person.fromJSON(jsonObject, blogId, localTableBlogId);
+                        Person person = Person.userFromJSON(jsonObject, localTableBlogId);
                         if (person != null) {
                             callback.onSuccess(person);
                         } else {
@@ -97,8 +152,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    public static void removePerson(String blogId, final long personID, final int localTableBlogId,
-                                    final RemoveUserCallback callback) {
+    public static void removeUser(String blogId, final long personID, final int localTableBlogId,
+                                  final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -128,8 +183,44 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    private static List<Person> peopleListFromJSON(JSONArray jsonArray, String blogId, int localTableBlogId)
-            throws JSONException {
+    public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
+                                      Person.PersonType personType, final RemovePersonCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    // check if the call was successful
+                    boolean success = jsonObject.optBoolean("deleted");
+                    if (success) {
+                        callback.onSuccess(personID, localTableBlogId);
+                    } else {
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        String path;
+        if (personType == Person.PersonType.EMAIL_FOLLOWER) {
+            path = String.format("sites/%s/email-followers/%d/delete", blogId, personID);
+        } else {
+            path = String.format("sites/%s/followers/%d/delete", blogId, personID);
+        }
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
+    }
+
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId, boolean isFollower,
+                                                   boolean isEmailFollower) throws JSONException {
         if (jsonArray == null) {
             return null;
         }
@@ -137,7 +228,12 @@ public class PeopleUtils {
         ArrayList<Person> peopleList = new ArrayList<>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Person person = Person.fromJSON(jsonArray.optJSONObject(i), blogId, localTableBlogId);
+            Person person;
+            if (isFollower || isEmailFollower) {
+                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, isEmailFollower);
+            } else {
+                person = Person.userFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
+            }
             if (person != null) {
                 peopleList.add(person);
             }
@@ -150,7 +246,11 @@ public class PeopleUtils {
         void onSuccess(List<Person> peopleList, boolean isEndOfList);
     }
 
-    public interface RemoveUserCallback extends Callback {
+    public interface FetchFollowersCallback extends Callback {
+        void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList);
+    }
+
+    public interface RemovePersonCallback extends Callback {
         void onSuccess(long personID, int localTableBlogId);
     }
 
@@ -263,8 +363,8 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId, final
-            InvitationsSendCallback callback) {
+    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId,
+                                       final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

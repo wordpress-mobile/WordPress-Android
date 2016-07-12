@@ -1028,7 +1028,9 @@
     <string name="error_fetch_remote_site_settings">Couldn\'t retrieve site info</string>
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_open_list_from_notification">This post or page was published on another site</string>
-    <string name="error_fetch_people_list">Couldn\'t retrieve site users</string>
+    <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
+    <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
+    <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
 
@@ -1388,10 +1390,11 @@
     <string name="people">People</string>
     <string name="edit_user">Edit User</string>
     <string name="role">Role</string>
+    <string name="follower_subscribed_since">Since %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
-    <string name="person_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
-    <string name="person_removed">Successfully removed @%1$s</string>
-    <string name="person_removed_general">User removed successfully</string>
+    <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
+    <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
+    <string name="person_removed">Successfully removed %1$s</string>
     <string name="invite_people">Invite People</string>
     <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite">Invite</string>
@@ -1411,6 +1414,16 @@
     <string name="invite_error_some_failed">Invite sent but error(s) occurred!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
+
+    <string name="people_dropdown_item_team">Team</string>
+    <string name="people_dropdown_item_followers">Followers</string>
+    <string name="people_dropdown_item_email_followers">Email Followers</string>
+    <string name="people_empty_list_filtered_users">You don\'t have any users yet.</string>
+    <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
+    <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
+    <string name="people_fetching">Fetching users..</string>
+    <string name="title_follower">Follower</string>
+    <string name="title_email_follower">Email Follower</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
