@@ -4,6 +4,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -38,10 +39,6 @@ import java.util.Map;
 public class PeopleInviteFragment extends Fragment implements
         RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
-    private static final String KEY_USERNAMES = "KEY_USERNAMES";
-    private static final String KEY_USERNAME_RESULTS = "KEY_USERNAME_RESULTS";
-    private static final String KEY_ROLE = "KEY_ROLE";
-    private static final String KEY_CUSTOM_MESSAGE = "KEY_CUSTOM_MESSAGE";
 
     private static final String FLAG_SUCCESS = "SUCCESS";
 
@@ -57,6 +54,7 @@ public class PeopleInviteFragment extends Fragment implements
     private Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
+    private boolean mInviteOperationInProgress = false;
 
     public static PeopleInviteFragment newInstance(String dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -74,6 +72,12 @@ public class PeopleInviteFragment extends Fragment implements
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
+        super.onPrepareOptionsMenu(menu);
+    }
+
     /**
      * Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
      * changes, this method is used instead of FragmentTransaction for the animation.
@@ -88,19 +92,20 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
-        outState.putSerializable(KEY_USERNAME_RESULTS, mUsernameResults);
-        outState.putString(KEY_ROLE, mRole);
-        outState.putString(KEY_CUSTOM_MESSAGE, mCustomMessage);
-
-        super.onSaveInstanceState(outState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment across configuration changes
+        // WARNING: use setRetainInstance wisely. In this case we need this to be able to get the
+        // results of network connections in the same fragment if going through a configuration change
+        // (for example, device rotation occurs). Given the simplicity of this particular use case
+        // (the fragment state keeps only a couple of EditText components and the SAVE button, it is
+        // OK to use it here.
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-
         return inflater.inflate(R.layout.people_invite_fragment, container, false);
     }
 
@@ -110,16 +115,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         mUsernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames);
 
-        String role = null;
-        if (savedInstanceState != null) {
-            ArrayList<String> usernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
-            mUsernameResults = (HashMap<String, String>) savedInstanceState.getSerializable(KEY_USERNAME_RESULTS);
-
-            populateUsernameButtons(usernames);
-
-            role = savedInstanceState.getString(KEY_ROLE);
-        }
-
+        String role = mRole;
         if (role == null) {
             role = loadDefaultRole();
         }
@@ -167,6 +163,11 @@ public class PeopleInviteFragment extends Fragment implements
                 EditTextUtils.showSoftInput(mUsernameEditText);
             }
         });
+
+        if (mUsernameButtons != null && mUsernameButtons.size() > 0) {
+            ArrayList<String> usernames = new ArrayList<>(mUsernameButtons.keySet());
+            populateUsernameButtons(usernames);
+        }
 
         View roleContainer = getView().findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
@@ -306,6 +307,7 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         if (usernamesToCheck.size() > 0) {
+
             String dotComBlogId = getArguments().getString(ARG_BLOGID);
             PeopleUtils.validateUsernames(usernamesToCheck, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
@@ -406,26 +408,46 @@ public class PeopleInviteFragment extends Fragment implements
             return;
         }
 
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            enableSendButton(true);
+            return;
+        }
+
+        enableSendButton(false);
+
         if (mUsernameEditText.getText().toString().length() > 0) {
             addUsername(mUsernameEditText, new ValidationEndListener() {
                 @Override
                 public void onValidationEnd() {
-                    checkAndSend();
+                    if (!checkAndSend()){
+                        //re-enable SEND button if validation failed
+                        enableSendButton(true);
+                    }
                 }
             });
         } else {
-            checkAndSend();
+            if (!checkAndSend()){
+                //re-enable SEND button if validation failed
+                enableSendButton(true);
+            }
         }
     }
 
-    private void checkAndSend() {
+    /*
+    * returns true if send is attempted, false if validation failed
+    * */
+    private boolean checkAndSend() {
         if (!isAdded()) {
-            return;
+            return false;
+        }
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return false;
         }
 
         if (mUsernameButtons.size() == 0) {
-            ToastUtils.showToast(getActivity(), R.string.invite_error_no_usenames);
-            return;
+            ToastUtils.showToast(getActivity(), R.string.invite_error_no_usernames);
+            return false;
         }
 
         int invalidCount = 0;
@@ -437,10 +459,13 @@ public class PeopleInviteFragment extends Fragment implements
 
         if (invalidCount > 0) {
             ToastUtils.showToast(getActivity(), StringUtils.getQuantityString(getActivity(), 0,
-                    R.string.invite_error_invalid_usenames_one,
-                    R.string.invite_error_invalid_usenames_multiple, invalidCount));
-            return;
+                    R.string.invite_error_invalid_usernames_one,
+                    R.string.invite_error_invalid_usernames_multiple, invalidCount));
+            return false;
         }
+
+        //set the  "SEND" option disabled
+        enableSendButton(false);
 
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
         PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
@@ -469,6 +494,9 @@ public class PeopleInviteFragment extends Fragment implements
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
                         }
+
+                        //set the  "SEND" option enabled again
+                        enableSendButton(true);
                     }
 
                     @Override
@@ -478,7 +506,20 @@ public class PeopleInviteFragment extends Fragment implements
                         }
 
                         ToastUtils.showToast(getActivity(), R.string.invite_error_sending);
+
+                        //set the  "SEND" option enabled again
+                        enableSendButton(true);
+
                     }
                 });
+
+        return true;
+    }
+
+    private void enableSendButton(boolean enable){
+        mInviteOperationInProgress = !enable;
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 }
