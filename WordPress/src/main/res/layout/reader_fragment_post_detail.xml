@@ -71,8 +71,6 @@
                         android:layout_marginRight="@dimen/reader_detail_margin"
                         android:background="@drawable/reader_related_posts_background"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/reader_related_post_margin"
-                        android:paddingTop="@dimen/reader_related_post_margin"
                         android:visibility="gone"
                         tools:visibility="visible" />
 
