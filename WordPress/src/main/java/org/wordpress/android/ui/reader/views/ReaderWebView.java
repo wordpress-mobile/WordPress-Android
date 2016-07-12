@@ -357,8 +357,6 @@ public class ReaderWebView extends WebView {
 
             mCustomView = null;
             mCustomViewCallback = null;
-
-            mReaderWebView.onPause();
         }
 
         boolean isCustomViewShowing() {
