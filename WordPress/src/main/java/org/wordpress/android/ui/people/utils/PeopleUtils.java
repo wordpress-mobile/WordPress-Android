@@ -148,7 +148,7 @@ public class PeopleUtils {
             }
         };
 
-        int page = (int) Math.floor(offset / FETCH_LIMIT) + 1;
+        int page = (offset / FETCH_LIMIT) + 1;
         Map<String, String> params = new HashMap<>();
         params.put("number", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
