@@ -60,9 +60,9 @@ public class ReaderWebView extends WebView {
 
     private boolean mIsDestroyed;
 
-
     public ReaderWebView(Context context) {
         super(context);
+
         init();
     }
 
@@ -78,11 +78,13 @@ public class ReaderWebView extends WebView {
 
     public ReaderWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         init();
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         init();
     }
 
