@@ -951,8 +951,8 @@ public class ReaderPostDetailFragment extends Fragment
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
-                        requestRelatedPosts();
                     }
+                    requestRelatedPosts();
                 }
             }, 300);
         } else {

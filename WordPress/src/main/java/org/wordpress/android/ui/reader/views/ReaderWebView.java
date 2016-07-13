@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -60,20 +62,27 @@ public class ReaderWebView extends WebView {
     private static boolean mBlogSchemeIsHttps;
 
     private boolean mIsDestroyed;
-
     @Inject AccountStore mAccountStore;
 
     public ReaderWebView(Context context) {
-        this(context, null);
+        super(context);
+        init(context);
     }
 
     public ReaderWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init(context);
     }
 
     public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context);
+    }
+
+    @SuppressLint("NewApi")
+    private void init(Context context) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
+
         if (!isInEditMode()) {
             mToken = mAccountStore.getAccessToken();
 
@@ -354,8 +363,6 @@ public class ReaderWebView extends WebView {
 
             mCustomView = null;
             mCustomViewCallback = null;
-
-            mReaderWebView.onPause();
         }
 
         boolean isCustomViewShowing() {

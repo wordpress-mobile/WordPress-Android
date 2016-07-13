@@ -21,6 +21,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 /**
@@ -72,14 +73,16 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                if (!mResourceVars.isWideDisplay) {
+                final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
+
+                if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(),
-                        shouldRenderAsTiledGallery());
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), hasTiledGallery,
+                        mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -91,12 +94,9 @@ class ReaderPostRenderer {
         }.start();
     }
 
-    public boolean shouldRenderAsTiledGallery() {
+    public static boolean hasTiledGallery(String text) {
         // determine whether a tiled-gallery exists in the content
-        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(mRenderBuilder.toString())
-                .find();
-
-        return hasTiledGallery && mResourceVars.isWideDisplay;
+        return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find();
     }
 
     /*
@@ -315,7 +315,12 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
+    private String formatPostContentForWebView(final String content, boolean hasTiledGallery, boolean isWideDisplay) {
+        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
+
+        // unique CSS class assigned to the gallery elements for easy selection
+        final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
+
         @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -334,8 +339,8 @@ class ReaderPostRenderer {
 
         // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
-                ", li { line-height: 1.6em; font-size: 0.95em; }")
+        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+                ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
@@ -348,19 +353,19 @@ class ReaderPostRenderer {
         .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
-        .append("      margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("  p { margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
+        .append("      margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }")
         .append("  p:first-child { margin-top: 0px; }")
 
         // add background color and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         .append("  pre { overflow-x: scroll;")
         .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-        .append("        padding: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
 
         // add a left border to blockquotes
-        .append("  blockquote { margin-left: ").append(mResourceVars.marginSmallPx).append("px; ")
-        .append("               padding-left: ").append(mResourceVars.marginSmallPx).append("px; ")
+        .append("  blockquote { margin-left: ").append(mResourceVars.marginMediumPx).append("px; ")
+        .append("               padding-left: ").append(mResourceVars.marginMediumPx).append("px; ")
         .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
@@ -375,11 +380,28 @@ class ReaderPostRenderer {
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
+        .append("     margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
+
+        if (isWideDisplay) {
+            sbHtml
+            .append(".alignleft {")
+            .append("    max-width: 100%;")
+            .append("    float: left;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-right: 32px;}")
+            .append(".alignright {")
+            .append("    max-width: 100%;")
+            .append("    float: right;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-left: 32px;}");
+        }
 
         if (renderAsTiledGallery) {
+            // tiled-gallery related styles
             sbHtml
-            .append("  .tiled-gallery {")
+            .append(".tiled-gallery {")
             .append("    clear:both;")
             .append("    overflow:hidden;}")
             .append(".tiled-gallery img {")
@@ -449,16 +471,17 @@ class ReaderPostRenderer {
         }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
-        sbHtml.append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
+        sbHtml
         .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
-        .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
+        .append("       text-align: center;")
+        .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
         // attribution for Discover posts
         .append("  div#discover { ")
-        .append("       margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
+        .append("       margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
         .append("       font-family: sans-serif;")
         .append(" }")
 
