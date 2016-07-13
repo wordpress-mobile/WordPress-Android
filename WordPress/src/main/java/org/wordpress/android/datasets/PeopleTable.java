@@ -169,7 +169,7 @@ public class PeopleTable {
      */
     public static void deletePeopleExceptForFirstPage(int localTableBlogId) {
         int fetchLimit = PeopleUtils.FETCH_LIMIT;
-        String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE};
+        String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE, VIEWERS_TABLE};
 
         getWritableDb().beginTransaction();
         try {
