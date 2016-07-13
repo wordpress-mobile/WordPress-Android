@@ -239,7 +239,9 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private boolean endsWithDelimiter(String string) {
-        if (TextUtils.isEmpty(string)) return false;
+        if (TextUtils.isEmpty(string)){
+            return false;
+        }
 
         for (String usernameDelimiter : USERNAME_DELIMITERS) {
             if (string.endsWith(usernameDelimiter)) return true;

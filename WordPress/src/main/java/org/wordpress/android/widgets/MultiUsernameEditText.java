@@ -52,11 +52,6 @@ public class MultiUsernameEditText extends WPEditText {
         }
 
         @Override
-        public boolean reportFullscreenMode(boolean enabled) {
-            return true;
-        }
-
-        @Override
         public boolean sendKeyEvent(KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
                 if (mOnBackspacePressedListener != null){
