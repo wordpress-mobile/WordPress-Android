@@ -144,14 +144,12 @@ public class PeopleInviteFragment extends Fragment implements
             }
         });
 
-
         mUsernameEditText.setOnBackspacePressedListener(new MultiUsernameEditText.OnBackspacePressedListener() {
             @Override
             public boolean onBackspacePressed() {
                 return removeLastEnteredUsername();
             }
         });
-
 
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
             private boolean shouldIgnoreChanges = false;
@@ -353,10 +351,8 @@ public class PeopleInviteFragment extends Fragment implements
         usernamesContainer.removeView(removedErrorView);
     }
 
-
     /**
      * Deletes the last entered username.
-     *
      * @return true if the username was deleted
      */
     private boolean removeLastEnteredUsername() {
