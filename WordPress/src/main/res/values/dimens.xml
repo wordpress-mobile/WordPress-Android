@@ -69,6 +69,9 @@
     <dimen name="margin_extra_large">16dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
 
+    <item name="wp_match_parent" type="dimen">-1</item>
+    <dimen name="reader_webview_width">@dimen/wp_match_parent</dimen>
+
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_normal_landscape">48dp</dimen>
@@ -112,6 +115,8 @@
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_more_icon">48dp</dimen>
+
+    <dimen name="reader_detail_tag_height">48dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
