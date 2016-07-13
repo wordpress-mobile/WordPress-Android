@@ -18,6 +18,7 @@ public class PeopleTable {
     private static final String TEAM_TABLE = "people_team";
     private static final String FOLLOWERS_TABLE = "people_followers";
     private static final String EMAIL_FOLLOWERS_TABLE = "people_email_followers";
+    private static final String VIEWERS_TABLE = "people_viewers";
 
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
@@ -57,13 +58,25 @@ public class PeopleTable {
                 + ");");
     }
 
+    public static void createViewersTable(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE " + VIEWERS_TABLE + " ("
+                + "person_id               INTEGER DEFAULT 0,"
+                + "local_blog_id           INTEGER DEFAULT 0,"
+                + "user_name               TEXT,"
+                + "display_name            TEXT,"
+                + "avatar_url              TEXT,"
+                + "PRIMARY KEY (person_id, local_blog_id)"
+                + ");");
+    }
+
     private static void dropTables(SQLiteDatabase db) {
         // People table is not used anymore, each filter now has it's own table
-        db.execSQL("DROP TABLE IF EXISTS PEOPLE");
+        db.execSQL("DROP TABLE IF EXISTS people");
 
         db.execSQL("DROP TABLE IF EXISTS " + TEAM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FOLLOWERS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + EMAIL_FOLLOWERS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + VIEWERS_TABLE);
     }
 
     public static void reset(SQLiteDatabase db) {
@@ -95,6 +108,9 @@ public class PeopleTable {
             case EMAIL_FOLLOWERS_TABLE:
                 values.put("subscribed", person.getSubscribed());
                 break;
+            case VIEWERS_TABLE:
+                values.put("user_name", person.getUsername());
+                break;
         }
 
         database.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -112,10 +128,14 @@ public class PeopleTable {
         savePeople(EMAIL_FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
     }
 
+    public static void saveViewers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+        savePeople(VIEWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    }
+
     private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
         getWritableDb().beginTransaction();
         try {
-            // We have a fresh list, remove the previous list of email followers in case it was deleted on remote
+            // We have a fresh list, remove the previous list of people in case it was deleted on remote
             if (isFreshList) {
                 PeopleTable.deletePeople(table, localTableBlogId);
             }
@@ -133,6 +153,7 @@ public class PeopleTable {
         deletePeople(TEAM_TABLE, localTableBlogId);
         deletePeople(FOLLOWERS_TABLE, localTableBlogId);
         deletePeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
+        deletePeople(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static void deletePeople(String table, int localTableBlogId) {
@@ -148,20 +169,31 @@ public class PeopleTable {
      */
     public static void deletePeopleExceptForFirstPage(int localTableBlogId) {
         int fetchLimit = PeopleUtils.FETCH_LIMIT;
-        String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE};
-        for (String table : tables) {
-            int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
-            if (size > fetchLimit) {
-                int deleteCount = size - fetchLimit;
-                String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
-                getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                        + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+        String[] tables = {TEAM_TABLE, FOLLOWERS_TABLE, EMAIL_FOLLOWERS_TABLE, VIEWERS_TABLE};
+
+        getWritableDb().beginTransaction();
+        try {
+            for (String table : tables) {
+                int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
+                if (size > fetchLimit) {
+                    int deleteCount = size - fetchLimit;
+                    String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
+                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
+                            + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+                }
             }
+            getWritableDb().setTransactionSuccessful();
+        } finally {
+            getWritableDb().endTransaction();
         }
     }
 
     public static int getUsersCountForLocalBlogId(int localTableBlogId) {
         return getPeopleCountForLocalBlogId(TEAM_TABLE, localTableBlogId);
+    }
+
+    public static int getViewersCountForLocalBlogId(int localTableBlogId) {
+        return getPeopleCountForLocalBlogId(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static int getPeopleCountForLocalBlogId(String table, int localTableBlogId) {
@@ -192,6 +224,10 @@ public class PeopleTable {
 
     public static List<Person> getEmailFollowers(int localTableBlogId) {
         return PeopleTable.getPeople(EMAIL_FOLLOWERS_TABLE, localTableBlogId);
+    }
+
+    public static List<Person> getViewers(int localTableBlogId) {
+        return PeopleTable.getPeople(VIEWERS_TABLE, localTableBlogId);
     }
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
@@ -266,6 +302,10 @@ public class PeopleTable {
                 person.setSubscribed(c.getString(c.getColumnIndex("subscribed")));
                 person.setPersonType(Person.PersonType.EMAIL_FOLLOWER);
                 break;
+            case VIEWERS_TABLE:
+                person.setUsername(c.getString(c.getColumnIndex("user_name")));
+                person.setPersonType(Person.PersonType.VIEWER);
+                break;
         }
 
         return person;
@@ -288,6 +328,8 @@ public class PeopleTable {
                 return FOLLOWERS_TABLE;
             case EMAIL_FOLLOWER:
                 return EMAIL_FOLLOWERS_TABLE;
+            case VIEWER:
+                return VIEWERS_TABLE;
         }
         return null;
     }
