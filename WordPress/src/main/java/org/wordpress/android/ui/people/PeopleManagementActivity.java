@@ -38,18 +38,18 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
     private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
-    private static final String KEY_VIEWERS_END_OF_LIST_REACHED = "viewers-end-of-list-reached";
     private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
+    private static final String KEY_VIEWERS_END_OF_LIST_REACHED = "viewers-end-of-list-reached";
 
     private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
     private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
-    private static final String KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS = "viewers-fetch-request-in-progress";
     private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
+    private static final String KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS = "viewers-fetch-request-in-progress";
 
-    private static final String KEY_CAN_REFRESH_USERS = "can-refresh-users";
-    private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
-    private static final String KEY_CAN_REFRESH_VIEWERS = "can-refresh-viewers";
-    private static final String KEY_CAN_REFRESH_EMAIL_FOLLOWERS = "can-refresh-email-followers";
+    private static final String KEY_HAS_REFRESHED_USERS = "has-refreshed-users";
+    private static final String KEY_HAS_REFRESHED_FOLLOWERS = "has-refreshed-followers";
+    private static final String KEY_HAS_REFRESHED_EMAIL_FOLLOWERS = "has-refreshed-email-followers";
+    private static final String KEY_HAS_REFRESHED_VIEWERS = "has-refreshed-viewers";
 
     private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
     private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page";
@@ -61,10 +61,10 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean mViewersEndOfListReached;
 
     // We only allow the lists to be refreshed once to avoid syncing and jumping animation issues
-    private boolean mCanRefreshUsers;
-    private boolean mCanRefreshFollowers;
-    private boolean mCanRefreshEmailFollowers;
-    private boolean mCanRefreshViewers;
+    private boolean mHasRefreshedUsers;
+    private boolean mHasRefreshedFollowers;
+    private boolean mHasRefreshedEmailFollowers;
+    private boolean mHasRefreshedViewers;
 
     // If we are currently making a request for a certain filter
     private boolean mUsersFetchRequestInProgress;
@@ -119,10 +119,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersEndOfListReached = false;
             mViewersEndOfListReached = false;
 
-            mCanRefreshUsers = true;
-            mCanRefreshFollowers = true;
-            mCanRefreshEmailFollowers = true;
-            mCanRefreshViewers = true;
+            mHasRefreshedUsers = false;
+            mHasRefreshedFollowers = false;
+            mHasRefreshedEmailFollowers = false;
+            mHasRefreshedViewers = false;
 
             mUsersFetchRequestInProgress = false;
             mFollowersFetchRequestInProgress = false;
@@ -141,10 +141,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED);
             mViewersEndOfListReached = savedInstanceState.getBoolean(KEY_VIEWERS_END_OF_LIST_REACHED);
 
-            mCanRefreshUsers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_USERS);
-            mCanRefreshFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_FOLLOWERS);
-            mCanRefreshEmailFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS);
-            mCanRefreshViewers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_VIEWERS);
+            mHasRefreshedUsers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_USERS);
+            mHasRefreshedFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_FOLLOWERS);
+            mHasRefreshedEmailFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS);
+            mHasRefreshedViewers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_VIEWERS);
 
             mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
             mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
@@ -175,10 +175,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED, mEmailFollowersEndOfListReached);
         outState.putBoolean(KEY_VIEWERS_END_OF_LIST_REACHED, mViewersEndOfListReached);
 
-        outState.putBoolean(KEY_CAN_REFRESH_USERS, mCanRefreshUsers);
-        outState.putBoolean(KEY_CAN_REFRESH_FOLLOWERS, mCanRefreshFollowers);
-        outState.putBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS, mCanRefreshEmailFollowers);
-        outState.putBoolean(KEY_CAN_REFRESH_VIEWERS, mCanRefreshViewers);
+        outState.putBoolean(KEY_HAS_REFRESHED_USERS, mHasRefreshedUsers);
+        outState.putBoolean(KEY_HAS_REFRESHED_FOLLOWERS, mHasRefreshedFollowers);
+        outState.putBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS, mHasRefreshedEmailFollowers);
+        outState.putBoolean(KEY_HAS_REFRESHED_VIEWERS, mHasRefreshedViewers);
 
         outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
         outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
@@ -262,7 +262,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
-                mCanRefreshUsers = false;
+                mHasRefreshedUsers = true;
                 mUsersEndOfListReached = isEndOfList;
                 PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
 
@@ -303,7 +303,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
-                mCanRefreshFollowers = false;
+                mHasRefreshedFollowers = true;
                 mFollowersLastFetchedPage = pageFetched;
                 mFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
@@ -345,7 +345,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
-                mCanRefreshEmailFollowers = false;
+                mHasRefreshedEmailFollowers = true;
                 mEmailFollowersLastFetchedPage = pageFetched;
                 mEmailFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveEmailFollowers(peopleList, localTableBlogId, isFreshList);
@@ -387,7 +387,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
-                mCanRefreshViewers = false;
+                mHasRefreshedViewers = true;
                 mViewersEndOfListReached = isEndOfList;
                 PeopleTable.saveViewers(peopleList, localTableBlogId, isFreshList);
 
@@ -623,13 +623,13 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public boolean onFetchFirstPage(PeopleListFilter filter) {
         Blog blog = WordPress.getCurrentBlog();
-        if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
+        if (filter == PeopleListFilter.TEAM && !mHasRefreshedUsers) {
             return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
-        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers) {
+        } else if (filter == PeopleListFilter.FOLLOWERS && !mHasRefreshedFollowers) {
             return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && mCanRefreshEmailFollowers) {
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mHasRefreshedEmailFollowers) {
             return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
-        } else if (filter == PeopleListFilter.VIEWERS && mCanRefreshViewers) {
+        } else if (filter == PeopleListFilter.VIEWERS && !mHasRefreshedViewers) {
             return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         }
         return false;
