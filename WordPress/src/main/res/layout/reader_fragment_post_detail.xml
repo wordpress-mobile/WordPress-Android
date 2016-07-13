@@ -39,7 +39,7 @@
 
                     <include
                         layout="@layout/reader_include_post_detail_content"
-                        android:layout_below="@+id/container_related_posts"
+                        android:layout_below="@+id/layout_post_detail_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -50,7 +50,7 @@
                         android:id="@+id/text_related_posts_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_post_detail_header"
+                        android:layout_below="@+id/layout_post_detail_content"
                         android:layout_alignLeft="@+id/layout_post_detail_content"
                         android:layout_alignRight="@+id/layout_post_detail_content"
                         android:layout_marginBottom="@dimen/reader_related_post_margin"

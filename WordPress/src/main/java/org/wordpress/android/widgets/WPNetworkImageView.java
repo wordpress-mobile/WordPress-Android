@@ -426,7 +426,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 case ROUNDED:
                     return ImageUtils.getRoundedEdgeBitmap(bitmap, mRoundedCornerRadiusPx);
                 default:
-                    return null;
+                    return bitmap;
             }
         }
 
