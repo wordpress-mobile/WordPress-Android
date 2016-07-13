@@ -15,6 +15,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.stores.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.stores.network.rest.wpcom.auth.Authenticator;
@@ -44,16 +45,16 @@ public class AccountStoreTest {
         testAccount.setAboutMe("testAboutMe");
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockAuthenticator(), getMockAccessToken(true));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(true));
         Assert.assertEquals(testAccount, testStore.getAccount());
     }
 
     @Test
     public void testHasAccessToken() {
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockAuthenticator(), getMockAccessToken(true));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(true));
         Assert.assertTrue(testStore.hasAccessToken());
-        testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
+        testStore = new AccountStore(new Dispatcher(), getMockRestClient(), getMockSelfHostedEndpointFinder(),
                 getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertFalse(testStore.hasAccessToken());
     }
@@ -64,11 +65,11 @@ public class AccountStoreTest {
         testAccount.setVisibleSiteCount(0);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockAuthenticator(), getMockAccessToken(false));
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertFalse(testStore.isSignedIn());
         testAccount.setVisibleSiteCount(1);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
-        testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
+        testStore = new AccountStore(new Dispatcher(), getMockRestClient(), getMockSelfHostedEndpointFinder(),
                 getMockAuthenticator(), getMockAccessToken(false));
         Assert.assertTrue(testStore.isSignedIn());
     }
@@ -81,7 +82,7 @@ public class AccountStoreTest {
         testAccount.setUserId(24);
         AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount);
         AccountStore testStore = new AccountStore(new Dispatcher(), getMockRestClient(),
-                getMockAuthenticator(), testToken);
+                getMockSelfHostedEndpointFinder(), getMockAuthenticator(), testToken);
         Assert.assertTrue(testStore.isSignedIn());
         // Signout is private (and it should remain private)
         Method privateMethod = AccountStore.class.getDeclaredMethod("signOut");
@@ -103,5 +104,9 @@ public class AccountStoreTest {
         AccessToken mock = Mockito.mock(AccessToken.class);
         Mockito.when(mock.exists()).thenReturn(exists);
         return mock;
+    }
+
+    private SelfHostedEndpointFinder getMockSelfHostedEndpointFinder() {
+        return Mockito.mock(SelfHostedEndpointFinder.class);
     }
 }
