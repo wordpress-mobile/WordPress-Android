@@ -31,8 +31,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -56,7 +56,7 @@ public class PeopleInviteFragment extends Fragment implements
     private EditText mCustomMessageEditText;
 
     private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
-    private HashMap<String, String> mUsernameResults = new HashMap<>();
+    private final HashMap<String, String> mUsernameResults = new HashMap<>();
     private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
     private String mRole;
     private String mCustomMessage = "";
@@ -133,28 +133,22 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
-        mUsernameEditText.setText(" ");
-        mUsernameEditText.setSelection(1);
-
-        mUsernameEditText.setOnSelectionChangeListener(new MultiUsernameEditText.OnSelectionChangeListener() {
+        mUsernameEditText.setOnBackspacePressedListener(new MultiUsernameEditText.OnBackspacePressedListener() {
             @Override
-            public void onSelectionChanged(int selStart, int selEnd) {
-                if (selEnd == 0) {
-                    //whitespace was removed from EditText
-                    if (TextUtils.isEmpty(mUsernameEditText.getText())) {
-                        //removing the last username
-                        List<String> list = new ArrayList<>(mUsernameButtons.keySet());
-                        if (!list.isEmpty()) {
-                            String username = list.get(list.size() - 1);
-                            removeUsername(username);
-                        }
-                        //return the whitespace
-                        mUsernameEditText.setText(" ");
-                    }
-                    mUsernameEditText.setSelection(1);
+            public void onBackspacePressed() {
+                if (!TextUtils.isEmpty(mUsernameEditText.getText())) {
+                    return;
+                }
+
+                //try and remove the last entered username
+                List<String> list = new ArrayList<>(mUsernameButtons.keySet());
+                if (!list.isEmpty()) {
+                    String username = list.get(list.size() - 1);
+                    removeUsername(username);
                 }
             }
         });
+
 
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
             private boolean shouldIgnoreChanges = false;
@@ -165,13 +159,14 @@ public class PeopleInviteFragment extends Fragment implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (shouldIgnoreChanges) //used to avoid double call after calling setText from this method
+                if (shouldIgnoreChanges) { //used to avoid double call after calling setText from this method
                     return;
+                }
 
                 shouldIgnoreChanges = true;
                 if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
-                    mUsernameEditText.setText(" ");
-                } else if (isUsernameContainsDelimiter(mUsernameEditText.getText().toString())) {
+                    resetEditTextContent(mUsernameEditText);
+                } else if (endsWithDelimiter(mUsernameEditText.getText().toString())) {
                     addUsername(mUsernameEditText, null);
                 }
                 shouldIgnoreChanges = false;
@@ -205,26 +200,26 @@ public class PeopleInviteFragment extends Fragment implements
         });
 
 
-        if (mUsernameButtons != null && mUsernameButtons.size() > 0) {
+        if (mUsernameButtons.size() > 0) {
             ArrayList<String> usernames = new ArrayList<>(mUsernameButtons.keySet());
             populateUsernameButtons(usernames);
         }
 
-        View roleContainer = getView().findViewById(R.id.role_container);
+        View roleContainer = view.findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0);
             }
         });
-        mRoleTextView = (TextView) getView().findViewById(R.id.role);
+        mRoleTextView = (TextView) view.findViewById(R.id.role);
 
         setRole(role);
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
-        final TextView remainingCharsTextView = (TextView) getView().findViewById(R.id.message_remaining);
+        final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
 
-        mCustomMessageEditText = (EditText) getView().findViewById(R.id.message);
+        mCustomMessageEditText = (EditText) view.findViewById(R.id.message);
         mCustomMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -243,11 +238,11 @@ public class PeopleInviteFragment extends Fragment implements
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
     }
 
-    private boolean isUsernameContainsDelimiter(String username) {
-        if (TextUtils.isEmpty(username)) return false;
+    private boolean endsWithDelimiter(String string) {
+        if (TextUtils.isEmpty(string)) return false;
 
         for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (username.endsWith(usernameDelimiter)) return true;
+            if (string.endsWith(usernameDelimiter)) return true;
         }
 
         return false;
@@ -265,6 +260,10 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         return trimmedUsername;
+    }
+
+    private void resetEditTextContent(EditText editText) {
+        editText.setText("");
     }
 
     private String loadDefaultRole() {
@@ -315,7 +314,7 @@ public class PeopleInviteFragment extends Fragment implements
 
     private void addUsername(EditText editText, ValidationEndListener validationEndListener) {
         String username = removeDelimiterFromUsername(editText.getText().toString());
-        editText.setText(" ");
+        resetEditTextContent(editText);
 
         if (username.isEmpty() || mUsernameButtons.keySet().contains(username)) {
             if (validationEndListener != null) {
@@ -328,7 +327,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         mUsernameButtons.put(username, usernameButton);
 
-        validateAndStyleUsername(Arrays.asList(new String[]{username}), validationEndListener);
+        validateAndStyleUsername(Collections.singletonList(username), validationEndListener);
     }
 
     private void removeUsername(String username) {
@@ -590,5 +589,14 @@ public class PeopleInviteFragment extends Fragment implements
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
+        //content from being converted to username
+        if (mUsernameEditText != null)
+            mUsernameEditText.setOnFocusChangeListener(null);
     }
 }

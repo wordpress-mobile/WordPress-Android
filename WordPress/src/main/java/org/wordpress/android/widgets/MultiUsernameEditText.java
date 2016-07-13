@@ -2,15 +2,19 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 
 /**
- *  Used to handle backspace in People Management username field
- *  http://stackoverflow.com/a/24624767/569430/
+ * Used to handle backspace in People Management username field
  */
 public class MultiUsernameEditText extends WPEditText {
 
-    private OnSelectionChangeListener mOnSelectionChangeListener;
+    private OnBackspacePressedListener mOnBackspacePressedListener;
 
 
     public MultiUsernameEditText(Context context) {
@@ -25,21 +29,53 @@ public class MultiUsernameEditText extends WPEditText {
         super(context, attrs, defStyle);
     }
 
+    public void setOnBackspacePressedListener(OnBackspacePressedListener onBackspacePressedListener) {
+        this.mOnBackspacePressedListener = onBackspacePressedListener;
+    }
+
+    public interface OnBackspacePressedListener {
+        void onBackspacePressed();
+    }
 
     @Override
-    protected void onSelectionChanged(int selStart, int selEnd) {
-        super.onSelectionChanged(selStart, selEnd);
-
-        if (mOnSelectionChangeListener != null)
-            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        //in this case it makes sense to not change EditText to fullscreen mode at landscape
+        outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
+        return new MultiUsernameEditTextInputConnection(this, false);
     }
 
-    public void setOnSelectionChangeListener(OnSelectionChangeListener onSelectionChangeListener) {
-        this.mOnSelectionChangeListener = onSelectionChangeListener;
-    }
 
-    public interface OnSelectionChangeListener {
-        void onSelectionChanged(int selStart, int selEnd);
+
+    private class MultiUsernameEditTextInputConnection extends BaseInputConnection {
+
+        public MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
+            super(targetView, fullEditor);
+        }
+
+        @Override
+        public boolean reportFullscreenMode(boolean enabled) {
+            return true;
+        }
+
+        @Override
+        public boolean sendKeyEvent(KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                if (mOnBackspacePressedListener != null)
+                    mOnBackspacePressedListener.onBackspacePressed();
+            }
+            return super.sendKeyEvent(event);
+        }
+
+        @Override
+        public boolean deleteSurroundingText(int beforeLength, int afterLength) {
+            if (beforeLength == 1 && afterLength == 0) {
+                return sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
+                        && sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+            }
+
+            return super.deleteSurroundingText(beforeLength, afterLength);
+        }
+
     }
 
 }
