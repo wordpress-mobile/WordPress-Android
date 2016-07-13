@@ -1369,6 +1369,26 @@
     <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
     <string name="connecting_social_network">Connecting %s</string>
     <string name="connection_chooser_message">Select the account you wish to authorize. Note that your posts will be shared to the selected account automatically.</string>
+    <string name="icon_and_text_display">Icon &amp; Text</string>
+    <string name="icon_only_display">Icon Only</string>
+    <string name="text_only_display">Text Only</string>
+    <string name="official_buttons_display">Official Buttons</string>
+    <string-array name="sharing_button_style_display_array" translatable="false">
+        <item>@string/icon_and_text_display</item>
+        <item>@string/icon_only_display</item>
+        <item>@string/text_only_display</item>
+        <item>@string/official_buttons_display</item>
+    </string-array>
+    <string name="icon_text" translatable="false">icon-text</string>
+    <string name="icon" translatable="false">icon</string>
+    <string name="text" translatable="false">text</string>
+    <string name="official" translatable="false">official</string>
+    <string-array name="sharing_button_style_array" translatable="false">
+        <item>@string/icon_text</item>
+        <item>@string/icon</item>
+        <item>@string/text</item>
+        <item>@string/official</item>
+    </string-array>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
