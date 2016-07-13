@@ -1,0 +1,13 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="@dimen/reader_button_icon"
+    android:width="@dimen/reader_button_icon"
+    android:viewportHeight="512.0"
+    android:viewportWidth="512.0" >
+
+    <path
+        android:fillColor="@color/reader_follow"
+        android:pathData="M490.7,341.3V384h-64v64H384v-64h-64v-42.7h64v-64h42.7v64H490.7zM426.7,42.7v192h-85.3v64h-64V384h-192c-23.5,0 -42.7,-19.2 -42.7,-42.7V42.7H426.7zM170.7,277.3V256H85.3v21.3H170.7zM234.7,213.3H85.3v21.3h149.3V213.3zM234.7,170.7H85.3V192h149.3V170.7zM384,85.3H85.3V128H384V85.3z" >
+    </path>
+
+</vector>
