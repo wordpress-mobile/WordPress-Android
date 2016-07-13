@@ -244,14 +244,18 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (string.endsWith(usernameDelimiter)) return true;
+            if (string.endsWith(usernameDelimiter)){
+                return true;
+            }
         }
 
         return false;
     }
 
     private String removeDelimiterFromUsername(String username) {
-        if (TextUtils.isEmpty(username)) return username;
+        if (TextUtils.isEmpty(username)){
+            return username;
+        }
 
         String trimmedUsername = username.trim();
 
