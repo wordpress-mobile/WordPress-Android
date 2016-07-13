@@ -171,7 +171,4 @@ public class PlanFragment extends Fragment {
         mPlanDetails = sitePlan;
     }
 
-    public Plan getSitePlan() {
-        return mPlanDetails;
-    }
 }

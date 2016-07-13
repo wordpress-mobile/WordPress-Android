@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
@@ -79,6 +81,8 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        final Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        final boolean isPrivate = blog != null && blog.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -98,6 +102,10 @@ public class PeopleListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
+                // Only a private blog can have viewers
+                if (!isPrivate) {
+                    list.remove(PeopleListFilter.VIEWERS);
+                }
                 return list;
             }
 
@@ -109,6 +117,12 @@ public class PeopleListFragment extends Fragment {
             @Override
             public FilterCriteria onRecallSelection() {
                 mPeopleListFilter = AppPrefs.getPeopleListFilter();
+
+                // if viewers is not available for this blog, set the filter to TEAM
+                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
+                    mPeopleListFilter = PeopleListFilter.TEAM;
+                    AppPrefs.setPeopleListFilter(mPeopleListFilter);
+                }
                 return mPeopleListFilter;
             }
 
@@ -144,6 +158,9 @@ public class PeopleListFragment extends Fragment {
                             case EMAIL_FOLLOWERS:
                                 stringId = R.string.people_empty_list_filtered_email_followers;
                                 break;
+                            case VIEWERS:
+                                stringId = R.string.people_empty_list_filtered_viewers;
+                                break;
                         }
                         break;
                     case GENERIC_ERROR:
@@ -156,6 +173,9 @@ public class PeopleListFragment extends Fragment {
                                 break;
                             case EMAIL_FOLLOWERS:
                                 stringId = R.string.error_fetch_email_followers_list;
+                                break;
+                            case VIEWERS:
+                                stringId = R.string.error_fetch_viewers_list;
                                 break;
                         }
                         break;
@@ -218,6 +238,9 @@ public class PeopleListFragment extends Fragment {
                 break;
             case EMAIL_FOLLOWERS:
                 peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
+                break;
+            case VIEWERS:
+                peopleList = PeopleTable.getViewers(mLocalTableBlogID);
                 break;
             default:
                 peopleList = new ArrayList<>();
@@ -327,7 +350,8 @@ public class PeopleListFragment extends Fragment {
                 } else {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
-                if (person.getPersonType() == Person.PersonType.USER) {
+                if (person.getPersonType() == Person.PersonType.USER
+                        || person.getPersonType() == Person.PersonType.VIEWER) {
                     peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
                 } else {
                     peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);

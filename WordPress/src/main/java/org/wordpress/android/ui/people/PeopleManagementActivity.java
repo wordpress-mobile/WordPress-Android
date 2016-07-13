@@ -36,30 +36,47 @@ public class PeopleManagementActivity extends AppCompatActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";
-    private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
-    private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
-    private static final String KEY_CAN_REFRESH_USERS = "can-refresh-users";
-    private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
-    private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
-    private static final String KEY_CAN_REFRESH_FOLLOWERS = "can-refresh-followers";
-    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
-    private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
-    private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
-    private static final String KEY_CAN_REFRESH_EMAIL_FOLLOWERS = "can-refresh-email-followers";
-    private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page";
-    private static final String KEY_TITLE = "page-title";
     private static final String KEY_PEOPLE_INVITE_FRAGMENT = "people-invite-fragment";
+    private static final String KEY_TITLE = "page-title";
 
+    private static final String KEY_USERS_END_OF_LIST_REACHED = "users-end-of-list-reached";
+    private static final String KEY_FOLLOWERS_END_OF_LIST_REACHED = "followers-end-of-list-reached";
+    private static final String KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED = "email-followers-end-of-list-reached";
+    private static final String KEY_VIEWERS_END_OF_LIST_REACHED = "viewers-end-of-list-reached";
+
+    private static final String KEY_USERS_FETCH_REQUEST_IN_PROGRESS = "users-fetch-request-in-progress";
+    private static final String KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "followers-fetch-request-in-progress";
+    private static final String KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS = "email-followers-fetch-request-in-progress";
+    private static final String KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS = "viewers-fetch-request-in-progress";
+
+    private static final String KEY_HAS_REFRESHED_USERS = "has-refreshed-users";
+    private static final String KEY_HAS_REFRESHED_FOLLOWERS = "has-refreshed-followers";
+    private static final String KEY_HAS_REFRESHED_EMAIL_FOLLOWERS = "has-refreshed-email-followers";
+    private static final String KEY_HAS_REFRESHED_VIEWERS = "has-refreshed-viewers";
+
+    private static final String KEY_FOLLOWERS_LAST_FETCHED_PAGE = "followers-last-fetched-page";
+    private static final String KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE = "email-followers-last-fetched-page";
+
+    // End of list reached variables will be true when there is no more data to fetch
     private boolean mUsersEndOfListReached;
-    private boolean mUsersFetchRequestInProgress;
-    private boolean mCanRefreshUsers;
     private boolean mFollowersEndOfListReached;
-    private boolean mFollowersFetchRequestInProgress;
-    private boolean mCanRefreshFollowers;
-    private int mFollowersLastFetchedPage;
     private boolean mEmailFollowersEndOfListReached;
+    private boolean mViewersEndOfListReached;
+
+    // We only allow the lists to be refreshed once to avoid syncing and jumping animation issues
+    private boolean mHasRefreshedUsers;
+    private boolean mHasRefreshedFollowers;
+    private boolean mHasRefreshedEmailFollowers;
+    private boolean mHasRefreshedViewers;
+
+    // If we are currently making a request for a certain filter
+    private boolean mUsersFetchRequestInProgress;
+    private boolean mFollowersFetchRequestInProgress;
     private boolean mEmailFollowersFetchRequestInProgress;
-    private boolean mCanRefreshEmailFollowers;
+    private boolean mViewersFetchRequestInProgress;
+
+    // Keep track of the last page we received from remote
+    private int mFollowersLastFetchedPage;
     private int mEmailFollowersLastFetchedPage;
 
     @Inject AccountStore mAccountStore;
@@ -104,34 +121,46 @@ public class PeopleManagementActivity extends AppCompatActivity
             peopleListFragment.setOnFetchPeopleListener(this);
 
             mUsersEndOfListReached = false;
-            mUsersFetchRequestInProgress = false;
-            mCanRefreshUsers = true;
             mFollowersEndOfListReached = false;
-            mFollowersFetchRequestInProgress = false;
-            mCanRefreshFollowers = true;
-            mFollowersLastFetchedPage = 0;
             mEmailFollowersEndOfListReached = false;
+            mViewersEndOfListReached = false;
+
+            mHasRefreshedUsers = false;
+            mHasRefreshedFollowers = false;
+            mHasRefreshedEmailFollowers = false;
+            mHasRefreshedViewers = false;
+
+            mUsersFetchRequestInProgress = false;
+            mFollowersFetchRequestInProgress = false;
             mEmailFollowersFetchRequestInProgress = false;
-            mCanRefreshEmailFollowers = true;
+            mViewersFetchRequestInProgress = false;
+            mFollowersLastFetchedPage = 0;
             mEmailFollowersLastFetchedPage = 0;
+
 
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, peopleListFragment, KEY_PEOPLE_LIST_FRAGMENT)
                     .commit();
         } else {
             mUsersEndOfListReached = savedInstanceState.getBoolean(KEY_USERS_END_OF_LIST_REACHED);
-            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
-            mCanRefreshUsers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_USERS);
             mFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED);
-            mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
-            mCanRefreshFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_FOLLOWERS);
-            mFollowersLastFetchedPage = savedInstanceState.getInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE);
             mEmailFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED);
-            mEmailFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
-            mCanRefreshEmailFollowers = savedInstanceState.getBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS);
-            mEmailFollowersLastFetchedPage = savedInstanceState.getInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE);
-            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
+            mViewersEndOfListReached = savedInstanceState.getBoolean(KEY_VIEWERS_END_OF_LIST_REACHED);
 
+            mHasRefreshedUsers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_USERS);
+            mHasRefreshedFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_FOLLOWERS);
+            mHasRefreshedEmailFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS);
+            mHasRefreshedViewers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_VIEWERS);
+
+            mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
+            mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
+            mEmailFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
+            mViewersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS);
+
+            mFollowersLastFetchedPage = savedInstanceState.getInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE);
+            mEmailFollowersLastFetchedPage = savedInstanceState.getInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE);
+
+            CharSequence title = savedInstanceState.getCharSequence(KEY_TITLE);
             if (actionBar != null && title != null) {
                 actionBar.setTitle(title);
             }
@@ -148,16 +177,23 @@ public class PeopleManagementActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_USERS_END_OF_LIST_REACHED, mUsersEndOfListReached);
-        outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
-        outState.putBoolean(KEY_CAN_REFRESH_USERS, mCanRefreshUsers);
         outState.putBoolean(KEY_FOLLOWERS_END_OF_LIST_REACHED, mFollowersEndOfListReached);
-        outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
-        outState.putBoolean(KEY_CAN_REFRESH_FOLLOWERS, mCanRefreshFollowers);
-        outState.putInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE, mFollowersLastFetchedPage);
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED, mEmailFollowersEndOfListReached);
+        outState.putBoolean(KEY_VIEWERS_END_OF_LIST_REACHED, mViewersEndOfListReached);
+
+        outState.putBoolean(KEY_HAS_REFRESHED_USERS, mHasRefreshedUsers);
+        outState.putBoolean(KEY_HAS_REFRESHED_FOLLOWERS, mHasRefreshedFollowers);
+        outState.putBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS, mHasRefreshedEmailFollowers);
+        outState.putBoolean(KEY_HAS_REFRESHED_VIEWERS, mHasRefreshedViewers);
+
+        outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
+        outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mEmailFollowersFetchRequestInProgress);
-        outState.putBoolean(KEY_CAN_REFRESH_EMAIL_FOLLOWERS, mCanRefreshEmailFollowers);
+        outState.putBoolean(KEY_VIEWERS_FETCH_REQUEST_IN_PROGRESS, mViewersFetchRequestInProgress);
+
+        outState.putInt(KEY_FOLLOWERS_LAST_FETCHED_PAGE, mFollowersLastFetchedPage);
         outState.putInt(KEY_EMAIL_FOLLOWERS_LAST_FETCHED_PAGE, mEmailFollowersLastFetchedPage);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             outState.putCharSequence(KEY_TITLE, actionBar.getTitle());
@@ -232,6 +268,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
                 boolean isFreshList = (offset == 0);
+                mHasRefreshedUsers = true;
                 mUsersEndOfListReached = isEndOfList;
                 PeopleTable.saveUsers(peopleList, localTableBlogId, isFreshList);
 
@@ -272,6 +309,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
+                mHasRefreshedFollowers = true;
                 mFollowersLastFetchedPage = pageFetched;
                 mFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveFollowers(peopleList, localTableBlogId, isFreshList);
@@ -313,6 +351,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
                 boolean isFreshList = (page == 1);
+                mHasRefreshedEmailFollowers = true;
                 mEmailFollowersLastFetchedPage = pageFetched;
                 mEmailFollowersEndOfListReached = isEndOfList;
                 PeopleTable.saveEmailFollowers(peopleList, localTableBlogId, isFreshList);
@@ -336,6 +375,47 @@ public class PeopleManagementActivity extends AppCompatActivity
                 mEmailFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
                         R.string.error_fetch_email_followers_list,
+                        ToastUtils.Duration.SHORT);
+            }
+        });
+
+        return true;
+    }
+
+    private boolean fetchViewersList(String dotComBlogId, final int localTableBlogId, final int offset) {
+        if (mViewersEndOfListReached || mViewersFetchRequestInProgress || !NetworkUtils.checkConnection(this)) {
+            return false;
+        }
+
+        mViewersFetchRequestInProgress = true;
+
+        PeopleUtils.fetchViewers(dotComBlogId, localTableBlogId, offset, new PeopleUtils.FetchViewersCallback() {
+            @Override
+            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
+                boolean isFreshList = (offset == 0);
+                mHasRefreshedViewers = true;
+                mViewersEndOfListReached = isEndOfList;
+                PeopleTable.saveViewers(peopleList, localTableBlogId, isFreshList);
+
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFreshList, true);
+                }
+
+                refreshOnScreenFragmentDetails();
+                mViewersFetchRequestInProgress = false;
+            }
+
+            @Override
+            public void onError() {
+                PeopleListFragment peopleListFragment = getListFragment();
+                if (peopleListFragment != null) {
+                    boolean isFirstPage = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFirstPage, false);
+                }
+                mViewersFetchRequestInProgress = false;
+                ToastUtils.showToast(PeopleManagementActivity.this,
+                        R.string.error_fetch_viewers_list,
                         ToastUtils.Duration.SHORT);
             }
         });
@@ -376,7 +456,6 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        // You can't change a follower's or viewer's role, so it's always false
         final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
         if (person == null || event.newRole == null || event.newRole.equalsIgnoreCase(person.getRole())) {
             return;
@@ -425,6 +504,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
         if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));
+        } else if(person.getPersonType() == Person.PersonType.VIEWER) {
+            builder.setMessage(R.string.viewer_remove_confirmation_message);
         } else {
             builder.setMessage(R.string.follower_remove_confirmation_message);
         }
@@ -474,8 +555,20 @@ public class PeopleManagementActivity extends AppCompatActivity
 
             @Override
             public void onError() {
+                int errorMessageRes;
+                switch (personType) {
+                    case USER:
+                        errorMessageRes = R.string.error_remove_user;
+                        break;
+                    case VIEWER:
+                        errorMessageRes = R.string.error_remove_viewer;
+                        break;
+                    default:
+                        errorMessageRes = R.string.error_remove_follower;
+                        break;
+                }
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_remove_user,
+                        errorMessageRes,
                         ToastUtils.Duration.LONG);
             }
         };
@@ -483,6 +576,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (personType == Person.PersonType.FOLLOWER || personType == Person.PersonType.EMAIL_FOLLOWER) {
             PeopleUtils.removeFollower(blogId, person.getPersonID(), person.getLocalTableBlogId(),
                     personType, callback);
+        } else if(personType == Person.PersonType.VIEWER) {
+            PeopleUtils.removeViewer(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         } else {
             PeopleUtils.removeUser(blogId, person.getPersonID(), person.getLocalTableBlogId(), callback);
         }
@@ -535,12 +630,14 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Override
     public boolean onFetchFirstPage(PeopleListFilter filter) {
         Blog blog = WordPress.getCurrentBlog();
-        if (filter == PeopleListFilter.TEAM && mCanRefreshUsers) {
+        if (filter == PeopleListFilter.TEAM && !mHasRefreshedUsers) {
             return fetchUsersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
-        } else if (filter == PeopleListFilter.FOLLOWERS && mCanRefreshFollowers){
+        } else if (filter == PeopleListFilter.FOLLOWERS && !mHasRefreshedFollowers) {
             return fetchFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && mCanRefreshEmailFollowers){
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mHasRefreshedEmailFollowers) {
             return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 1);
+        } else if (filter == PeopleListFilter.VIEWERS && !mHasRefreshedViewers) {
+            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), 0);
         }
         return false;
     }
@@ -559,6 +656,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             Blog blog = WordPress.getCurrentBlog();
             int pageToFetch = mEmailFollowersLastFetchedPage + 1;
             return fetchEmailFollowersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), pageToFetch);
+        } else if (filter == PeopleListFilter.VIEWERS && !mViewersEndOfListReached) {
+            Blog blog = WordPress.getCurrentBlog();
+            int count = PeopleTable.getViewersCountForLocalBlogId(blog.getLocalTableBlogId());
+            return fetchViewersList(blog.getDotComBlogId(), blog.getLocalTableBlogId(), count);
         }
         return false;
     }

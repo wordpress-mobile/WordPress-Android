@@ -9,17 +9,22 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER }
+    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER }
 
     private long personID;
     private int localTableBlogId;
-
-    private String username;
     private String displayName;
     private String avatarUrl;
-    private String role;
-    private String subscribed;
     private PersonType personType;
+
+    // Only users have a role
+    private String role;
+
+    // Users, followers & viewers has a username, email followers don't
+    private String username;
+
+    // Only followers & email followers have a subscribed date
+    private String subscribed;
 
     public Person(long personID, int localTableBlogId) {
         this.personID = personID;
@@ -68,6 +73,30 @@ public class Person {
             person.setAvatarUrl(json.optString("avatar"));
             person.setSubscribed(json.optString("date_subscribed"));
             person.personType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
+
+            return person;
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Person viewerFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
+        if (json == null) {
+            return null;
+        }
+
+        // Similar response parameters in:
+        // https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            Person person = new Person(personID, localTableBlogId);
+            person.setUsername(json.optString("login"));
+            person.setDisplayName(json.optString("name"));
+            person.setAvatarUrl(json.optString("avatar_URL"));
+            person.setPersonType(PersonType.VIEWER);
 
             return person;
         } catch (NumberFormatException e) {

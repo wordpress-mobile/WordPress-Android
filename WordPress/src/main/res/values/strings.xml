@@ -1031,8 +1031,11 @@
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
     <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
+    <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
+    <string name="error_remove_follower">Couldn\'t remove follower</string>
+    <string name="error_remove_viewer">Couldn\'t remove viewer</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
@@ -1394,6 +1397,7 @@
     <string name="person_remove_confirmation_title">Remove %1$s</string>
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
+    <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="invite_people">Invite People</string>
     <string name="invite_names_title">Usernames or Emails</string>
@@ -1418,9 +1422,11 @@
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
+    <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_users">You don\'t have any users yet.</string>
     <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
     <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
+    <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
     <string name="people_fetching">Fetching users..</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
@@ -1475,7 +1481,7 @@
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Unable to load plans</string>
-    <string name="plan_purchase_now">Purchase Now</string>
+    <string name="plans_manage">Manage your plan at\nWordPress.com/plans</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
 
     <!-- Plans business post-purchase -->
