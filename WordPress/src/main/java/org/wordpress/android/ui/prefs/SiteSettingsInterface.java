@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -92,6 +93,11 @@ public abstract class SiteSettingsInterface {
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
+     * Key used to access the sharing button style stored in {@link SharedPreferences}.
+     */
+    public static final String SHARING_BUTTON_STYLE_PREF_KEY = "site-settings-sharing-button-style-pref";
+
+    /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
     public static final int ASCENDING_SORT = 0;
@@ -110,6 +116,11 @@ public abstract class SiteSettingsInterface {
      * Key for the Standard post format. Used as default if post format is not set/known.
      */
     private static final String STANDARD_POST_FORMAT_KEY = "standard";
+
+    /**
+     * Standard sharing button style value. Used as default value if button style is unknown.
+     */
+    private static final String STANDARD_SHARING_BUTTON_STYLE = "icon-text";
 
     /**
      * Standard post format value. Used as default display value if post format is unknown.
@@ -314,6 +325,17 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
+    public @NonNull String getDefaultSharingButtonStyle(Context context) {
+        if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
+            mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
+        }
+        return mSettings.sharingButtonStyle;
+    }
+
+    public @NonNull String getDefaultSharingButtonStyleDisplay(Context context) {
+        return context.getResources().getStringArray(R.array.sharing_button_style_display_array)[0];
+    }
+
     public @NonNull String getDefaultPostFormat() {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
@@ -493,6 +515,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingLabel;
     }
 
+    public String getSharingButtonStyle(Context context) {
+        return siteSettingsPreferences(context).getString(SHARING_BUTTON_STYLE_PREF_KEY, "");
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
@@ -618,8 +644,12 @@ public abstract class SiteSettingsInterface {
         mSettings.sharingLabel = sharingLabel;
     }
 
-    public void setButtonStyle() {
-
+    public void setSharingButtonStyle(String sharingButtonStyle) {
+        if (TextUtils.isEmpty(sharingButtonStyle)) {
+            mSettings.sharingButtonStyle = STANDARD_SHARING_BUTTON_STYLE;
+        } else {
+            mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase();
+        }
     }
 
     public void setDefaultCategory(int category) {
