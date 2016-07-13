@@ -3,6 +3,8 @@ package org.wordpress.android.models;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -39,6 +41,7 @@ public class PublicizeConnection {
     private String mExternalName;
     private String mExternalDisplayName;
     private String mExternalProfilePictureUrl;
+    private int[] mSites;
 
     // `status` can be `ok` or `broken` -- `broken` means the connection needs to be re-established via the `refresh_URL`
     private String mStatus;
@@ -136,6 +139,24 @@ public class PublicizeConnection {
                 && other.getService().equals(this.getService());
     }
 
+    public void setSites(int[] sites) {
+        mSites = sites;
+    }
+
+    public int[] getSites() {
+        return mSites;
+    }
+
+    public boolean isInSite(int siteId) {
+        for (int i = 0; i < mSites.length; i++) {
+            if (siteId == mSites[i]) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /*
      * passed JSON is a single connection from the response to sites/%d/publicize-connections
        {"ID":12783250,
@@ -185,6 +206,23 @@ public class PublicizeConnection {
         connection.mStatus = json.optString("status");
         connection.mRefreshUrl = json.optString("refresh_URL");
 
+        try {
+            JSONArray jsonSitesArray = json.getJSONArray("sites");
+            connection.mSites = getSitesArrayFromJson(jsonSitesArray);
+        } catch (JSONException e) {
+            connection.mSites = new int[0];
+            e.printStackTrace();
+        }
+
         return connection;
+    }
+
+    private static int[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
+        int[] sitesArray = new int[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            sitesArray[i] = jsonArray.getInt(i);
+        }
+
+        return sitesArray;
     }
 }

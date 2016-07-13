@@ -21,6 +21,7 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WebViewUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -119,9 +120,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     /*
-         * display the current connect URL for this service - this will ask the user to
-         * authorize the connection via the external service
-         */
+     * display the current connect URL for this service - this will ask the user to
+     * authorize the connection via the external service
+     */
     private void loadConnectUrl() {
         if (!isAdded()) return;
 
@@ -174,6 +175,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
                     // call the endpoint to make the actual connection
                     PublicizeActions.connect(mSiteId, mServiceId);
+                    WebViewUtils.clearCookiesAsync();
                 }
             }
         }
