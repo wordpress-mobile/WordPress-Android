@@ -8,8 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.stores.Dispatcher;

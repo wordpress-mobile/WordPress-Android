@@ -30,8 +30,8 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.optimizely.Optimizely;
 import com.optimizely.Variable.LiveVariable;
-import com.squareup.otto.Subscribe;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -583,7 +583,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
         payload.username = mUsername;
         payload.password = mPassword;
-        payload.xmlrpcEndpoint = url;
+        payload.url = url;
         mSelfhostedPayload = payload;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(payload));

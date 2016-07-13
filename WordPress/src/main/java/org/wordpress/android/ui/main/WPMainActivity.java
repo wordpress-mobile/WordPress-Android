@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
-import com.squareup.otto.Subscribe;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
