@@ -52,6 +52,7 @@ public class SiteSettingsModel {
     public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
     public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
     public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
+    public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -89,7 +90,8 @@ public class SiteSettingsModel {
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
-                    SHARING_LABEL_COLUMN_NAME + " TEXT" +
+                    SHARING_LABEL_COLUMN_NAME + " TEXT," +
+                    SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;
@@ -129,6 +131,7 @@ public class SiteSettingsModel {
     public List<String> holdForModeration;
     public List<String> blacklist;
     public String sharingLabel;
+    public String sharingButtonStyle;
 
     @Override
     public boolean equals(Object other) {
@@ -163,7 +166,8 @@ public class SiteSettingsModel {
                 maxLinks == otherModel.maxLinks &&
                 holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
                 blacklist != null && blacklist.equals(otherModel.blacklist) &&
-                sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel);
+                sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
+                sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle);
     }
 
     /**
@@ -215,6 +219,9 @@ public class SiteSettingsModel {
         if (other.sharingLabel != null) {
             sharingLabel = other.sharingLabel;
         }
+        if (other.sharingButtonStyle != null) {
+            sharingButtonStyle = other.sharingButtonStyle;
+        }
     }
 
     /**
@@ -262,6 +269,7 @@ public class SiteSettingsModel {
         }
 
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME);
+        sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -342,6 +350,7 @@ public class SiteSettingsModel {
         values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
         values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
         values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
+        values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
 
         return values;
     }
