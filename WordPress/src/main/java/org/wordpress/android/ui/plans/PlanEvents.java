@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Plan-related EventBus event classes
  */
-public class PlanEvents {
+class PlanEvents {
 
     public static class PlansUpdated {
         private final List<Plan> mPlans;
