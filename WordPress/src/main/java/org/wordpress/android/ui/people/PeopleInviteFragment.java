@@ -263,7 +263,9 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private void resetEditTextContent(EditText editText) {
-        editText.setText("");
+        if (editText != null){
+            editText.setText("");
+        }
     }
 
     private String loadDefaultRole() {
@@ -465,8 +467,7 @@ public class PeopleInviteFragment extends Fragment implements
 
         if (mUsernameButtons.size() == 0) {
             setRole(loadDefaultRole());
-
-            mCustomMessageEditText.setText("");
+            resetEditTextContent(mCustomMessageEditText);
         }
     }
 
@@ -596,7 +597,8 @@ public class PeopleInviteFragment extends Fragment implements
         super.onDestroyView();
         //we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
         //content from being converted to username
-        if (mUsernameEditText != null)
+        if (mUsernameEditText != null){
             mUsernameEditText.setOnFocusChangeListener(null);
+        }
     }
 }

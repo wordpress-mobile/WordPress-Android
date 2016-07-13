@@ -45,7 +45,6 @@ public class MultiUsernameEditText extends WPEditText {
     }
 
 
-
     private class MultiUsernameEditTextInputConnection extends BaseInputConnection {
 
         public MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
@@ -60,8 +59,9 @@ public class MultiUsernameEditText extends WPEditText {
         @Override
         public boolean sendKeyEvent(KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                if (mOnBackspacePressedListener != null)
+                if (mOnBackspacePressedListener != null){
                     mOnBackspacePressedListener.onBackspacePressed();
+                }
             }
             return super.sendKeyEvent(event);
         }
