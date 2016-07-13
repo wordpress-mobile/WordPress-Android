@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -258,10 +259,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                new CircularizeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             } else if (mImageType == ImageType.PHOTO_ROUNDED) {
-                new CircularizeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             }
 
@@ -311,7 +312,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     private int getColorRes(@ColorRes int resId) {
-        return getContext().getResources().getColor(resId);
+        return ContextCompat.getColor(getContext(), resId);
     }
 
     public void setDefaultImageResId(@DrawableRes int resourceId) {
@@ -377,7 +378,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void showDefaultGravatarImage() {
         if (getContext() == null) return;
-        new CircularizeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+        new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
@@ -398,15 +399,20 @@ public class WPNetworkImageView extends AppCompatImageView {
         alpha.start();
     }
 
-    // Circularizes a bitmap in a background thread
+    // Circularizes or rounds the corners of a bitmap in a background thread
     private enum ShapeType { CIRCLE, ROUNDED }
-    private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
-        private ImageLoadListener mImageLoadListener;
-        private ShapeType mShapeType;
+    private class ShapeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
+        private final ImageLoadListener mImageLoadListener;
+        private final ShapeType mShapeType;
+        private int mRoundedCornerRadiusPx;
+        private static final int ROUNDED_CORNER_RADIUS_DP = 2;
 
-        public CircularizeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
+        public ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
             mImageLoadListener = imageLoadListener;
             mShapeType = shapeType;
+            if (mShapeType == ShapeType.ROUNDED) {
+                mRoundedCornerRadiusPx = DisplayUtils.dpToPx(getContext(), ROUNDED_CORNER_RADIUS_DP);
+            }
         }
 
         @Override
@@ -418,8 +424,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 case CIRCLE:
                     return ImageUtils.getCircularBitmap(bitmap);
                 case ROUNDED:
-                    int radius = DisplayUtils.dpToPx(getContext(), 2);
-                    return ImageUtils.getRoundedEdgeBitmap(bitmap, radius);
+                    return ImageUtils.getRoundedEdgeBitmap(bitmap, mRoundedCornerRadiusPx);
                 default:
                     return null;
             }
