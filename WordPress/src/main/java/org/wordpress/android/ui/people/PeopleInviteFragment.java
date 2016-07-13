@@ -133,19 +133,22 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
+
+        //handle key preses from hardware keyboard
+        mUsernameEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                return keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL
+                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                        && removeLastEnteredUsername();
+            }
+        });
+
+
         mUsernameEditText.setOnBackspacePressedListener(new MultiUsernameEditText.OnBackspacePressedListener() {
             @Override
-            public void onBackspacePressed() {
-                if (!TextUtils.isEmpty(mUsernameEditText.getText())) {
-                    return;
-                }
-
-                //try and remove the last entered username
-                List<String> list = new ArrayList<>(mUsernameButtons.keySet());
-                if (!list.isEmpty()) {
-                    String username = list.get(list.size() - 1);
-                    removeUsername(username);
-                }
+            public boolean onBackspacePressed() {
+                return removeLastEnteredUsername();
             }
         });
 
@@ -239,12 +242,12 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private boolean endsWithDelimiter(String string) {
-        if (TextUtils.isEmpty(string)){
+        if (TextUtils.isEmpty(string)) {
             return false;
         }
 
         for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (string.endsWith(usernameDelimiter)){
+            if (string.endsWith(usernameDelimiter)) {
                 return true;
             }
         }
@@ -253,7 +256,7 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private String removeDelimiterFromUsername(String username) {
-        if (TextUtils.isEmpty(username)){
+        if (TextUtils.isEmpty(username)) {
             return username;
         }
 
@@ -269,7 +272,7 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private void resetEditTextContent(EditText editText) {
-        if (editText != null){
+        if (editText != null) {
             editText.setText("");
         }
     }
@@ -348,6 +351,27 @@ public class PeopleInviteFragment extends Fragment implements
         final ViewGroup usernamesContainer = (ViewGroup) getView().findViewById(R.id.usernames_container);
         View removedErrorView = mUsernameErrorViews.remove(username);
         usernamesContainer.removeView(removedErrorView);
+    }
+
+
+    /**
+     * Deletes the last entered username.
+     *
+     * @return true if the username was deleted
+     */
+    private boolean removeLastEnteredUsername() {
+        if (!TextUtils.isEmpty(mUsernameEditText.getText())) {
+            return false;
+        }
+
+        //try and remove the last entered username
+        List<String> list = new ArrayList<>(mUsernameButtons.keySet());
+        if (!list.isEmpty()) {
+            String username = list.get(list.size() - 1);
+            removeUsername(username);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -603,7 +627,7 @@ public class PeopleInviteFragment extends Fragment implements
         super.onDestroyView();
         //we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
         //content from being converted to username
-        if (mUsernameEditText != null){
+        if (mUsernameEditText != null) {
             mUsernameEditText.setOnFocusChangeListener(null);
         }
     }

@@ -34,7 +34,7 @@ public class MultiUsernameEditText extends WPEditText {
     }
 
     public interface OnBackspacePressedListener {
-        void onBackspacePressed();
+        boolean onBackspacePressed();
     }
 
     @Override
@@ -54,8 +54,9 @@ public class MultiUsernameEditText extends WPEditText {
         @Override
         public boolean sendKeyEvent(KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                if (mOnBackspacePressedListener != null){
-                    mOnBackspacePressedListener.onBackspacePressed();
+                if (mOnBackspacePressedListener != null) {
+                    //if username was not deleted pass event to parent method and return the result
+                    return !mOnBackspacePressedListener.onBackspacePressed() && super.sendKeyEvent(event);
                 }
             }
             return super.sendKeyEvent(event);
