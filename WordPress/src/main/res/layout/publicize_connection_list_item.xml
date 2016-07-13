@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/publicize_default_margin"
+    android:paddingTop="@dimen/publicize_default_margin"
+    android:background="?attr/selectableItemBackground">
+
+    <RadioButton
+        android:id="@+id/radio_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:clickable="false" />
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/publicize_pic_width"
+        android:layout_height="@dimen/publicize_pic_width" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/publicize_name_size"
+        android:layout_marginLeft="@dimen/publicize_name_margin"/>
+
+</LinearLayout>

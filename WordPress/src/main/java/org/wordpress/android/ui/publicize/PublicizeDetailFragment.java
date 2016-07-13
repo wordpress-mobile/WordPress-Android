@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeService;
@@ -18,8 +20,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
+import de.greenrobot.event.EventBus;
 
+public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
     private int mSiteId;
     private String mServiceId;
 
@@ -134,10 +137,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         if (!isAdded()) return;
 
         mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mConnectBtn.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
 
-        if (isEmpty && hasOnPublicizeActionListener()) {
-            mConnectBtn.setAction(ConnectAction.CONNECT);
+        if (hasOnPublicizeActionListener()) {
+            if (isEmpty) {
+                mConnectBtn.setAction(ConnectAction.CONNECT);
+            } else {
+                mConnectBtn.setAction(ConnectAction.CONNECT_ANOTHER_ACCOUNT);
+            }
             mConnectBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

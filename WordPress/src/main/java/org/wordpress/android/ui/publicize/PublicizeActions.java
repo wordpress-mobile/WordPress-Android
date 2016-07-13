@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -83,8 +84,13 @@ public class PublicizeActions {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
-                connectStepTwo(siteId, keyringConnectionId);
+                if (shouldShowChooserDialog(siteId, serviceId, jsonObject)) {
+                    // show dialog showing multiple options
+                    EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
+                } else {
+                    int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
+                    connectStepTwo(siteId, keyringConnectionId);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -103,7 +109,7 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    private static void connectStepTwo(int siteId, int keyringConnectionId) {
+    public static void connectStepTwo(int siteId, int keyringConnectionId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -125,6 +131,28 @@ public class PublicizeActions {
         params.put("keyring_connection_ID", Integer.toString(keyringConnectionId));
         String path = String.format("/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    private static boolean shouldShowChooserDialog(int siteId, String serviceId, JSONObject jsonObject) {
+        JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
+        if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
+            return false;
+        }
+
+        int totalAccounts = 0;
+        try {
+            for (int i = 0; i < jsonConnectionList.length(); i++) {
+                JSONObject connectionObject = jsonConnectionList.getJSONObject(i);
+                PublicizeConnection publicizeConnection = PublicizeConnection.fromJson(connectionObject);
+                if (publicizeConnection.getService().equals(serviceId) && !publicizeConnection.isInSite(siteId)) {
+                    totalAccounts++;
+                }
+            }
+
+            return totalAccounts > 0;
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
     /*

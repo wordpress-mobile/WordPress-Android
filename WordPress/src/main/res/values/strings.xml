@@ -1365,7 +1365,10 @@
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
+    <string name="share_btn_connect_another_account">Connect another account</string>
     <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
+    <string name="connecting_social_network">Connecting %s</string>
+    <string name="connection_chooser_message">Select the account you wish to authorize. Note that your posts will be shared to the selected account automatically.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -1556,5 +1559,8 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="connected">Connected</string>
+    <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
+    <string name="connecting_account">Connecting account</string>
 
 </resources>

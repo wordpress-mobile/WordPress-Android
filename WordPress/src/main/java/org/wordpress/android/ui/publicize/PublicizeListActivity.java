@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeServiceAdapter.OnServiceClickListener {
 
     private int mSiteId;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,11 +144,11 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private void showWebViewFragment(int siteId,
                                      PublicizeService service,
-                                     PublicizeConnection connection) {
+                                     PublicizeConnection publicizeConnection) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, connection);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, publicizeConnection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
@@ -212,31 +214,31 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     /*
-     * user requested to reconnect a broken connection from the detail fragment
+     * user requested to reconnect a broken publicizeConnection from the detail fragment
      */
     @Override
-    public void onRequestReconnect(PublicizeService service, PublicizeConnection connection) {
-        showWebViewFragment(mSiteId, service, connection);
+    public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
+        showWebViewFragment(mSiteId, service, publicizeConnection);
     }
 
     /*
-     * user requested to disconnect a service connection from the detail fragment
+     * user requested to disconnect a service publicizeConnection from the detail fragment
      */
     @Override
-    public void onRequestDisconnect(PublicizeConnection connection) {
-        confirmDisconnect(connection);
+    public void onRequestDisconnect(PublicizeConnection publicizeConnection) {
+        confirmDisconnect(publicizeConnection);
     }
 
-    private void confirmDisconnect(final PublicizeConnection connection) {
+    private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(
-                String.format(getString(R.string.dlg_confirm_publicize_disconnect), connection.getLabel()));
+                String.format(getString(R.string.dlg_confirm_publicize_disconnect), publicizeConnection.getLabel()));
         builder.setTitle(R.string.share_btn_disconnect);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.share_btn_disconnect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                PublicizeActions.disconnect(connection);
+                PublicizeActions.disconnect(publicizeConnection);
                 reloadDetailFragment();
             }
         });
@@ -261,10 +263,36 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         closeWebViewFragment();
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
         reloadDetailFragment();
 
         if (!event.didSucceed()) {
             ToastUtils.showToast(this, R.string.error_generic);
         }
+    }
+
+    public void onEventMainThread(PublicizeEvents.ActionAccountChosen event) {
+        if (isFinishing()) return;
+
+        PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.connecting_account));
+        mProgressDialog.show();
+    }
+
+    public void onEventMainThread(PublicizeEvents.ActionRequestChooseAccount event) {
+        if (isFinishing()) return;
+
+        closeWebViewFragment();
+
+        PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON, event.getJSONObject().toString());
+        args.putInt(PublicizeConstants.ARG_SITE_ID, event.getSiteId());
+        args.putString(PublicizeConstants.ARG_SERVICE_ID, event.getServiceId());
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
     }
 }

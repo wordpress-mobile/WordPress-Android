@@ -290,4 +290,12 @@
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_list_divider_height">1dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
+
+    <!--publicize-->
+    <dimen name="publicize_divider_height">1dp</dimen>
+    <dimen name="publicize_default_margin">10dp</dimen>
+    <dimen name="publicize_pic_width">40dp</dimen>
+    <dimen name="publicize_name_size">16sp</dimen>
+    <dimen name="publicize_name_margin">8dp</dimen>
+
 </resources>
