@@ -24,7 +24,7 @@ import org.wordpress.android.util.WPPrefUtils;
 import de.greenrobot.event.EventBus;
 
 
-public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, SiteSettingsInterface.SiteSettingsListener {
+public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, SiteSettingsInterface.SiteSettingsListener {
     private PublicizePreferenceListener mListener;
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
@@ -47,7 +47,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
-        setDetailListPreferenceValue(mButtonStylePreference, String.valueOf(mSiteSettings.getButtonStyle()));
+        mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
+        mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
 
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
     }
@@ -101,6 +102,11 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         if (preference == mLabelPreference) {
             mSiteSettings.setSharingLabel(newValue.toString());
             changeEditTextPreferenceValue(mLabelPreference, newValue.toString());
+        } else if (preference == mButtonStylePreference) {
+            mSiteSettings.setDefaultFormat(newValue.toString());
+            setDetailListPreferenceValue(mButtonStylePreference,
+                    newValue.toString(),
+                    mSiteSettings.getSharingButtonStyle(getActivity()));
         } else {
             return false;
         }
@@ -123,6 +129,11 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     private void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
+
+    }
+
+    private boolean shouldShowListPreference(DetailListPreference preference) {
+        return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
 
     @Override
@@ -148,6 +159,15 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     @Override
     public void onCredentialsValidated(Exception error) {
 
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == mButtonStylePreference) {
+            return !shouldShowListPreference((DetailListPreference) preference);
+        } else {
+            return false;
+        }
     }
 
     public interface PublicizePreferenceListener {
