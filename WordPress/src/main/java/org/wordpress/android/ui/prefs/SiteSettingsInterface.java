@@ -618,6 +618,10 @@ public abstract class SiteSettingsInterface {
         mSettings.sharingLabel = sharingLabel;
     }
 
+    public void setButtonStyle() {
+
+    }
+
     public void setDefaultCategory(int category) {
         mSettings.defaultCategory = category;
     }

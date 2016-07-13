@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
@@ -27,6 +28,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private PublicizePreferenceListener mListener;
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
+    private DetailListPreference mButtonStylePreference;
     private Blog mBlog;
 
     public PublicizeManageConnectionsFragment() {
@@ -44,7 +46,16 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         }
 
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
+        mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
+        setDetailListPreferenceValue(mButtonStylePreference, String.valueOf(mSiteSettings.getButtonStyle()));
+
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
+    }
+
+    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+        pref.setValue(value);
+        pref.setSummary(summary);
+        pref.refreshAdapter();
     }
 
     @Override
@@ -112,44 +123,6 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     private void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
-//        mLocationPref.setChecked(mSiteSettings.getLocation());
-//        changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
-//        changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
-//        changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
-//        changeEditTextPreferenceValue(mUsernamePref, mSiteSettings.getUsername());
-//        changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
-//        changeLanguageValue(mSiteSettings.getLanguageCode());
-//        setDetailListPreferenceValue(mPrivacyPref,
-//                String.valueOf(mSiteSettings.getPrivacy()),
-//                mSiteSettings.getPrivacyDescription());
-//        setDetailListPreferenceValue(mImageWidthPref,
-//                mBlog.getMaxImageWidth(),
-//                mBlog.getMaxImageWidth());
-//        setCategories();
-//        setPostFormats();
-//        setAllowComments(mSiteSettings.getAllowComments());
-//        setSendPingbacks(mSiteSettings.getSendPingbacks());
-//        setReceivePingbacks(mSiteSettings.getReceivePingbacks());
-//        setDetailListPreferenceValue(mSortByPref,
-//                String.valueOf(mSiteSettings.getCommentSorting()),
-//                mSiteSettings.getSortingDescription());
-//        int approval = mSiteSettings.getManualApproval() ?
-//                mSiteSettings.getUseCommentWhitelist() ? 0
-//                        : -1 : 1;
-//        setDetailListPreferenceValue(mWhitelistPref, String.valueOf(approval), getWhitelistSummary(approval));
-//        String s = StringUtils.getQuantityString(getActivity(), R.string.site_settings_multiple_links_summary_zero,
-//                R.string.site_settings_multiple_links_summary_one,
-//                R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
-//        mMultipleLinksPref.setSummary(s);
-//        mUploadAndLinkPref.setChecked(mBlog.isFullSizeImage());
-//        mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
-//        mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
-//        mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
-//        mCloseAfterPref.setSummary(mSiteSettings.getCloseAfterDescriptionForPeriod());
-//        mPagingPref.setSummary(mSiteSettings.getPagingDescription());
-//        mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
-//        mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-//        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
     }
 
     @Override

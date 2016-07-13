@@ -2,10 +2,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-        android:key="publicize_label"
+        android:key="@string/publicize_label"
         android:layout="@layout/preference_layout"
         app:summaryLines="1"
-        app:maxSummaryLines="2"
+        app:maxSummaryLines="1"
         android:title="Label" />
+
+    <org.wordpress.android.ui.prefs.DetailListPreference
+        android:id="@+id/pref_publicize_button_style"
+        android:key="@string/publicize_button_style"
+        android:title="Button Style"
+        android:entries="@array/publicize_button_style_etries"
+        android:entryValues="@array/publicize_button_style_values"
+        android:defaultValue="-2" />
 
 </PreferenceScreen>

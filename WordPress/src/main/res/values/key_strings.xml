@@ -82,6 +82,7 @@
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
 
     <string name="publicize_label" translatable="false">publicize_label</string>
+    <string name="publicize_button_style" translatable="false">publicize_button_style</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
@@ -253,8 +254,26 @@
         <item>11</item>
     </string-array>
 
+    <string-array name="publicize_button_style_etries">
+        <item>@string/publicize_official_buttons</item>
+        <item>@string/publicize_icon_only</item>
+        <item>@string/publicize_icon_and_text</item>
+        <item>@string/publicize_text_only</item>
+    </string-array>
+
+    <string-array name="publicize_button_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
     <!-- Smart Lock for Passwords -->
     <string name="asset_statements" translatable="false">
         [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
     </string>
+    <string name="publicize_official_buttons">Official Buttons</string>
+    <string name="publicize_icon_only">Icon Only</string>
+    <string name="publicize_icon_and_text"><![CDATA[Icon & Text]]></string>
+    <string name="publicize_text_only">Text Only</string>
 </resources>
