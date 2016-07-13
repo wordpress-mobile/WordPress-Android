@@ -499,7 +499,7 @@ public class ReaderPostDetailFragment extends Fragment
             imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (relatedPost.hasFeaturedImage()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
                 imgFeatured.setVisibility(View.VISIBLE);
             }
 

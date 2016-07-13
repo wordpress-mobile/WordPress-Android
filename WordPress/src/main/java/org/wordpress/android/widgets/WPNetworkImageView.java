@@ -22,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -38,6 +39,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     public enum ImageType {
         NONE,
         PHOTO,
+        PHOTO_ROUNDED,
         VIDEO,
         AVATAR,
         BLAVATAR,
@@ -256,7 +258,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                new CircularizeBitmapTask(imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                new CircularizeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                return;
+            } else if (mImageType == ImageType.PHOTO_ROUNDED) {
+                new CircularizeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             }
 
@@ -372,7 +377,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void showDefaultGravatarImage() {
         if (getContext() == null) return;
-        new CircularizeBitmapTask(null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+        new CircularizeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
@@ -394,11 +399,14 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     // Circularizes a bitmap in a background thread
+    private enum ShapeType { CIRCLE, ROUNDED }
     private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
         private ImageLoadListener mImageLoadListener;
+        private ShapeType mShapeType;
 
-        public CircularizeBitmapTask(ImageLoadListener imageLoadListener) {
+        public CircularizeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
             mImageLoadListener = imageLoadListener;
+            mShapeType = shapeType;
         }
 
         @Override
@@ -406,7 +414,15 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (params == null || params.length == 0) return null;
 
             Bitmap bitmap = params[0];
-            return ImageUtils.getCircularBitmap(bitmap);
+            switch (mShapeType) {
+                case CIRCLE:
+                    return ImageUtils.getCircularBitmap(bitmap);
+                case ROUNDED:
+                    int radius = DisplayUtils.dpToPx(getContext(), 2);
+                    return ImageUtils.getRoundedEdgeBitmap(bitmap, radius);
+                default:
+                    return null;
+            }
         }
 
         @Override
