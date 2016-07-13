@@ -74,7 +74,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     }
 
     private void hideConnectedView(View view) {
-        LinearLayout connectedHeader = (LinearLayout) view.findViewById(R.id.connected_recyclerview);
+        LinearLayout connectedHeader = (LinearLayout) view.findViewById(R.id.connected_header);
         connectedHeader.setVisibility(View.GONE);
     }
 
