@@ -31,7 +31,7 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, false, false, false);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, Person.PersonType.USER);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -81,8 +81,9 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, !isEmailFollower,
-                                isEmailFollower, false);
+                        Person.PersonType personType = isEmailFollower ?
+                                Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, personType);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
@@ -123,8 +124,7 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("viewers");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, false, false,
-                                true);
+                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, Person.PersonType.VIEWER);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -291,8 +291,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId, boolean isFollower,
-                                                   boolean isEmailFollower, boolean isViewer) throws JSONException {
+    private static List<Person> peopleListFromJSON(JSONArray jsonArray, int localTableBlogId,
+                                                   Person.PersonType personType) throws JSONException {
         if (jsonArray == null) {
             return null;
         }
@@ -301,12 +301,13 @@ public class PeopleUtils {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             Person person;
-            if (isFollower || isEmailFollower) {
-                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, isEmailFollower);
-            } else if (isViewer) {
+            if (personType == Person.PersonType.USER) {
+                person = Person.userFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
+            } else if (personType == Person.PersonType.VIEWER) {
                 person = Person.viewerFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
             } else {
-                person = Person.userFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
+                boolean isEmailFollower = (personType == Person.PersonType.EMAIL_FOLLOWER);
+                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, isEmailFollower);
             }
             if (person != null) {
                 peopleList.add(person);
