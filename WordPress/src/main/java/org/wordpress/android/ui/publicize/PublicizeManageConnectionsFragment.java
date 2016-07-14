@@ -104,7 +104,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             mSiteSettings.setSharingLabel(newValue.toString());
             changeEditTextPreferenceValue(mLabelPreference, newValue.toString());
         } else if (preference == mButtonStylePreference) {
-            mSiteSettings.setDefaultFormat(newValue.toString());
+            mSiteSettings.setSharingButtonStyle(newValue.toString());
             setDetailListPreferenceValue(mButtonStylePreference,
                     mSiteSettings.getSharingButtonStyle(getActivity()),
                     mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
