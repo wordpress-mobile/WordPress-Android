@@ -45,12 +45,13 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             return;
         }
 
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
+
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
+        setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
-
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
@@ -105,8 +106,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         } else if (preference == mButtonStylePreference) {
             mSiteSettings.setDefaultFormat(newValue.toString());
             setDetailListPreferenceValue(mButtonStylePreference,
-                    newValue.toString(),
-                    mSiteSettings.getSharingButtonStyle(getActivity()));
+                    mSiteSettings.getSharingButtonStyle(getActivity()),
+                    mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         } else {
             return false;
         }

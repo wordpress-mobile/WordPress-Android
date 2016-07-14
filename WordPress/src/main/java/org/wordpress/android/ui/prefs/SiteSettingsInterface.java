@@ -325,17 +325,6 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    public @NonNull String getDefaultSharingButtonStyle(Context context) {
-        if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
-            mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
-        }
-        return mSettings.sharingButtonStyle;
-    }
-
-    public @NonNull String getDefaultSharingButtonStyleDisplay(Context context) {
-        return context.getResources().getStringArray(R.array.sharing_button_style_display_array)[0];
-    }
-
     public @NonNull String getDefaultPostFormat() {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
@@ -515,8 +504,25 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingLabel;
     }
 
-    public String getSharingButtonStyle(Context context) {
-        return siteSettingsPreferences(context).getString(SHARING_BUTTON_STYLE_PREF_KEY, "");
+    public @NonNull String getSharingButtonStyle(Context context) {
+        if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
+            mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
+        }
+
+        return mSettings.sharingButtonStyle;
+    }
+
+    public @NonNull String getSharingButtonStyleDisplayText(Context context) {
+        String sharingButtonStyle = getSharingButtonStyle(context);
+        String[] styleArray = context.getResources().getStringArray(R.array.sharing_button_style_array);
+        String[] styleDisplayArray = context.getResources().getStringArray(R.array.sharing_button_style_display_array);
+        for (int i = 0; i < styleArray.length; i++) {
+            if (sharingButtonStyle.equals(styleArray[i])) {
+                return styleDisplayArray[i];
+            }
+        }
+
+        return styleDisplayArray[0];
     }
 
     public @NonNull String getKeysDescription(int count) {
