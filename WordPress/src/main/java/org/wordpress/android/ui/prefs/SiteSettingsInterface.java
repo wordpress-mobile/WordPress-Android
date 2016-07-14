@@ -525,6 +525,10 @@ public abstract class SiteSettingsInterface {
         return styleDisplayArray[0];
     }
 
+    public Boolean getAllowReblogButton() {
+        return mSettings.allowReblogButton;
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
@@ -656,6 +660,10 @@ public abstract class SiteSettingsInterface {
         } else {
             mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase();
         }
+    }
+
+    public void setAllowReblogButton(Boolean allowReblogButton) {
+        mSettings.allowReblogButton = allowReblogButton;
     }
 
     public void setDefaultCategory(int category) {

@@ -53,6 +53,7 @@ public class SiteSettingsModel {
     public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
     public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
     public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
+    public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -91,7 +92,8 @@ public class SiteSettingsModel {
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
                     SHARING_LABEL_COLUMN_NAME + " TEXT," +
-                    SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT" +
+                    SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
+                    ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN" +
                     ");";
 
     public boolean isInLocalTable;
@@ -132,6 +134,7 @@ public class SiteSettingsModel {
     public List<String> blacklist;
     public String sharingLabel;
     public String sharingButtonStyle;
+    public Boolean allowReblogButton;
 
     @Override
     public boolean equals(Object other) {
@@ -167,7 +170,8 @@ public class SiteSettingsModel {
                 holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
                 blacklist != null && blacklist.equals(otherModel.blacklist) &&
                 sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
-                sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle);
+                sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
+                allowReblogButton != null && allowReblogButton.equals(otherModel.allowReblogButton);
     }
 
     /**
@@ -222,6 +226,7 @@ public class SiteSettingsModel {
         if (other.sharingButtonStyle != null) {
             sharingButtonStyle = other.sharingButtonStyle;
         }
+        allowReblogButton = other.allowReblogButton;
     }
 
     /**
@@ -270,6 +275,7 @@ public class SiteSettingsModel {
 
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME);
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME);
+        allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -351,6 +357,7 @@ public class SiteSettingsModel {
         values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
         values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
+        values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);
 
         return values;
     }

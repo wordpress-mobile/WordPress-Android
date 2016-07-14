@@ -15,6 +15,7 @@ import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
+import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -29,6 +30,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
+    private WPSwitchPreference mReblogButtonPreference;
     private Blog mBlog;
 
     public PublicizeManageConnectionsFragment() {
@@ -48,10 +50,13 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
 
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
+
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
+
+        mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.id.pref_reblog);
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
@@ -108,6 +113,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             setDetailListPreferenceValue(mButtonStylePreference,
                     mSiteSettings.getSharingButtonStyle(getActivity()),
                     mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        } else if (preference == mReblogButtonPreference) {
+            mSiteSettings.setAllowReblogButton((Boolean) newValue);
         } else {
             return false;
         }
@@ -130,7 +137,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     private void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
-
+        setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
     }
 
     private boolean shouldShowListPreference(DetailListPreference preference) {

@@ -16,4 +16,21 @@
         android:entryValues="@array/publicize_button_style_values"
         android:defaultValue="-2" />
 
+    <PreferenceCategory
+        android:id="@+id/pref_sharing_reblog_and_like"
+        android:key="@string/pref_key_sharing_reblog_and_like"
+        android:title="@string/site_settings_reblog_and_like_header">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_reblog"
+            android:key="@string/pref_key_reblog"
+            android:title="@string/site_settings_reblog" />
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_like"
+            android:key="@string/pref_key_like"
+            android:title="@string/site_settings_like" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
