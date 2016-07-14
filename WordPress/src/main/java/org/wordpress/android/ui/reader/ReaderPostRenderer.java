@@ -75,15 +75,16 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                final boolean renderAsTiledGallery = shouldRenderAsTiledGallery();
+                final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
 
-                if (!renderAsTiledGallery) {
+                if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), renderAsTiledGallery);
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), hasTiledGallery,
+                        mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -95,12 +96,9 @@ class ReaderPostRenderer {
         }.start();
     }
 
-    public boolean shouldRenderAsTiledGallery() {
+    public static boolean hasTiledGallery(String text) {
         // determine whether a tiled-gallery exists in the content
-        final boolean hasTiledGallery = Pattern.compile("tiled-gallery[\\s\"']").matcher(mRenderBuilder.toString())
-                .find();
-
-        return hasTiledGallery && mResourceVars.isWideDisplay;
+        return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find();
     }
 
     /*
@@ -319,7 +317,9 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
+    private String formatPostContentForWebView(final String content, boolean hasTiledGallery, boolean isWideDisplay) {
+        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
+
         // unique CSS class assigned to the gallery elements for easy selection
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
 

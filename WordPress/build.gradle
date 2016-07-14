@@ -40,19 +40,16 @@ android {
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla {} // used for release and beta
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
-            buildConfigField "boolean", "IN_APP_BILLING_AVAILABLE", "true"
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
