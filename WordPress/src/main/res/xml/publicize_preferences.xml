@@ -33,11 +33,16 @@
 
     </PreferenceCategory>
 
-    <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-        android:key="@string/pref_key_twitter_username"
-        android:layout="@layout/preference_layout"
-        app:summaryLines="1"
-        app:maxSummaryLines="1"
-        android:title="Twitter Username" />
+    <PreferenceCategory
+        android:title="Twitter">
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:key="@string/pref_key_twitter_username"
+            android:layout="@layout/preference_layout"
+            app:summaryLines="1"
+            app:maxSummaryLines="1"
+            android:title="Twitter Username" />
+    </PreferenceCategory>
+
+
 
 </PreferenceScreen>
