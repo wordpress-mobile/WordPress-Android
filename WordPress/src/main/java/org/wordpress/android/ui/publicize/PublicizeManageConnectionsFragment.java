@@ -32,6 +32,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private WPSwitchPreference mReblogButtonPreference;
     private WPSwitchPreference mLikeButtonPreference;
     private Blog mBlog;
+    private boolean mShouldFetch;
 
     public PublicizeManageConnectionsFragment() {
     }
@@ -47,16 +48,15 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             return;
         }
 
+        mShouldFetch = true;
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
         setRetainInstance(true);
 
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
-
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
-
         mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
         mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
     }
@@ -74,7 +74,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         // always load cached settings
         mSiteSettings.init(false);
 
-        if (true) {
+        if (mShouldFetch) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -82,6 +82,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
                     mSiteSettings.init(true);
                 }
             }, 1000);
+            mShouldFetch = false;
         }
     }
 
@@ -172,7 +173,9 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     @Override
     public void onCredentialsValidated(Exception error) {
-
+        if (error != null) {
+            ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
+        }
     }
 
     @Override
