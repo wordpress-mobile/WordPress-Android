@@ -94,7 +94,8 @@ public class SiteSettingsModel {
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
                     SHARING_LABEL_COLUMN_NAME + " TEXT," +
                     SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
-                    ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN" +
+                    ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN," +
+                    ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN" +
                     ");";
 
     public boolean isInLocalTable;
