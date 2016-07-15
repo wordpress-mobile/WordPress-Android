@@ -171,7 +171,7 @@ public class SiteSettingsModel {
                 blacklist != null && blacklist.equals(otherModel.blacklist) &&
                 sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
                 sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
-                allowReblogButton != null && allowReblogButton.equals(otherModel.allowReblogButton);
+                allowReblogButton == otherModel.allowReblogButton;
     }
 
     /**
