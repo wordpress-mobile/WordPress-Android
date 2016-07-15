@@ -53,6 +53,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String SHARING_LABEL_KEY = "sharing_label";
     public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
     public static final String SHARING_REBLOG_KEY = "social_notifications_reblog";
+    public static final String SHARING_LIKE_KEY = "social_notifications_like";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -195,6 +196,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, "icon-only");
         mRemoteSettings.allowReblogButton = settingsObject.optBoolean(SHARING_REBLOG_KEY, false);
+        mRemoteSettings.allowLikeButton = settingsObject.optBoolean(SHARING_LIKE_KEY, false);
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {

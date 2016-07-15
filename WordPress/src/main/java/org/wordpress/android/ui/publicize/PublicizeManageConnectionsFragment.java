@@ -10,7 +10,6 @@ import android.preference.PreferenceFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -31,6 +30,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
     private WPSwitchPreference mReblogButtonPreference;
+    private WPSwitchPreference mLikeButtonPreference;
     private Blog mBlog;
 
     public PublicizeManageConnectionsFragment() {
@@ -117,6 +117,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
                     mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         } else if (preference == mReblogButtonPreference) {
             mSiteSettings.setAllowReblogButton((Boolean) newValue);
+        } else if (preference == mLikeButtonPreference) {
+            mSiteSettings.setAllowLikeButton((Boolean) newValue);
         } else {
             return false;
         }
@@ -141,6 +143,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
+        mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
     }
 
     private boolean shouldShowListPreference(DetailListPreference preference) {

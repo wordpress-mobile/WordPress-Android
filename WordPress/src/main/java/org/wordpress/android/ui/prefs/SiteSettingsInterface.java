@@ -529,6 +529,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.allowReblogButton;
     }
 
+    public boolean getAllowLikeButton() {
+        return mSettings.allowLikeButton;
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
@@ -662,8 +666,12 @@ public abstract class SiteSettingsInterface {
         }
     }
 
-    public void setAllowReblogButton(Boolean allowReblogButton) {
+    public void setAllowReblogButton(boolean allowReblogButton) {
         mSettings.allowReblogButton = allowReblogButton;
+    }
+
+    public void setAllowLikeButton(boolean allowLikeButton) {
+        mSettings.allowLikeButton = allowLikeButton;
     }
 
     public void setDefaultCategory(int category) {

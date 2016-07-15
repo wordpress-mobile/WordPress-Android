@@ -54,6 +54,7 @@ public class SiteSettingsModel {
     public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
     public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
     public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
+    public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -135,6 +136,7 @@ public class SiteSettingsModel {
     public String sharingLabel;
     public String sharingButtonStyle;
     public boolean allowReblogButton;
+    public boolean allowLikeButton;
 
     @Override
     public boolean equals(Object other) {
@@ -171,7 +173,8 @@ public class SiteSettingsModel {
                 blacklist != null && blacklist.equals(otherModel.blacklist) &&
                 sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
                 sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
-                allowReblogButton == otherModel.allowReblogButton;
+                allowReblogButton == otherModel.allowReblogButton &&
+                allowLikeButton == otherModel.allowLikeButton;
     }
 
     /**
@@ -227,6 +230,7 @@ public class SiteSettingsModel {
             sharingButtonStyle = other.sharingButtonStyle;
         }
         allowReblogButton = other.allowReblogButton;
+        allowLikeButton = other.allowLikeButton;
     }
 
     /**
@@ -276,6 +280,7 @@ public class SiteSettingsModel {
         sharingLabel = getStringFromCursor(cursor, SHARING_LABEL_COLUMN_NAME);
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME);
         allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME);
+        allowLikeButton = getBooleanFromCursor(cursor, ALLOW_LIKE_BUTTON_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -358,6 +363,7 @@ public class SiteSettingsModel {
         values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
         values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);
+        values.put(ALLOW_LIKE_BUTTON_COLUMN_NAME, allowLikeButton);
 
         return values;
     }
