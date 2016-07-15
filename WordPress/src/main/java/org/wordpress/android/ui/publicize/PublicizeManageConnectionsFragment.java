@@ -56,7 +56,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
 
-        mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.id.pref_reblog);
+        mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
+        mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
