@@ -48,6 +48,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         }
 
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
+        setRetainInstance(true);
 
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
 
