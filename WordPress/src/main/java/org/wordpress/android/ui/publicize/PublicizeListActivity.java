@@ -303,6 +303,7 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
