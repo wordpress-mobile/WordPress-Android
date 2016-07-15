@@ -31,6 +31,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private DetailListPreference mButtonStylePreference;
     private WPSwitchPreference mReblogButtonPreference;
     private WPSwitchPreference mLikeButtonPreference;
+    private SummaryEditTextPreference mTwitterUsernamePreference;
     private Blog mBlog;
     private boolean mShouldFetch;
 
@@ -59,6 +60,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
         mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
         mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
+        mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
@@ -120,6 +122,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             mSiteSettings.setAllowReblogButton((Boolean) newValue);
         } else if (preference == mLikeButtonPreference) {
             mSiteSettings.setAllowLikeButton((Boolean) newValue);
+        } else if (preference == mTwitterUsernamePreference) {
+            saveAndSetTwitterUsername(newValue.toString());
         } else {
             return false;
         }
@@ -129,8 +133,25 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         return true;
     }
 
+    private void saveAndSetTwitterUsername(String username) {
+        if (username == null) {
+            return;
+        }
+
+        if (username.startsWith("@")) {
+            username = username.substring(1, username.length());
+        }
+
+        mSiteSettings.setTwitterUsername(username);
+        changeEditTextPreferenceValue(mLabelPreference, username);
+    }
+
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
+
+        if (pref == mTwitterUsernamePreference && !newValue.isEmpty()) {
+            newValue = "@" + newValue;
+        }
 
         if (!newValue.equals(pref.getSummary())) {
             String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(SiteSettingsFragment.ADDRESS_FORMAT_REGEX, ""));
@@ -145,6 +166,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
         mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
+        changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());
     }
 
     private boolean shouldShowListPreference(DetailListPreference preference) {

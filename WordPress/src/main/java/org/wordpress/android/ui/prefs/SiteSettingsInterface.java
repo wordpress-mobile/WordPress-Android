@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -533,6 +532,13 @@ public abstract class SiteSettingsInterface {
         return mSettings.allowLikeButton;
     }
 
+    public @NonNull String getTwitterUsername() {
+        if (mSettings.twitterUsername == null) {
+            mSettings.twitterUsername = "";
+        }
+        return mSettings.twitterUsername;
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
@@ -672,6 +678,10 @@ public abstract class SiteSettingsInterface {
 
     public void setAllowLikeButton(boolean allowLikeButton) {
         mSettings.allowLikeButton = allowLikeButton;
+    }
+
+    public void setTwitterUsername(String twitterUsername) {
+        mSettings.twitterUsername = twitterUsername;
     }
 
     public void setDefaultCategory(int category) {

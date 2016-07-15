@@ -55,6 +55,7 @@ public class SiteSettingsModel {
     public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
     public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
     public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
+    public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -95,7 +96,8 @@ public class SiteSettingsModel {
                     SHARING_LABEL_COLUMN_NAME + " TEXT," +
                     SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
                     ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN," +
-                    ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN" +
+                    ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN," +
+                    TWITTER_USERNAME_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;
@@ -138,6 +140,7 @@ public class SiteSettingsModel {
     public String sharingButtonStyle;
     public boolean allowReblogButton;
     public boolean allowLikeButton;
+    public String twitterUsername;
 
     @Override
     public boolean equals(Object other) {
@@ -175,7 +178,8 @@ public class SiteSettingsModel {
                 sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
                 sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
                 allowReblogButton == otherModel.allowReblogButton &&
-                allowLikeButton == otherModel.allowLikeButton;
+                allowLikeButton == otherModel.allowLikeButton &&
+                twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
     /**
@@ -232,6 +236,9 @@ public class SiteSettingsModel {
         }
         allowReblogButton = other.allowReblogButton;
         allowLikeButton = other.allowLikeButton;
+        if (other.twitterUsername != null) {
+            twitterUsername = other.twitterUsername;
+        }
     }
 
     /**
@@ -282,6 +289,7 @@ public class SiteSettingsModel {
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME);
         allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME);
         allowLikeButton = getBooleanFromCursor(cursor, ALLOW_LIKE_BUTTON_COLUMN_NAME);
+        twitterUsername = getStringFromCursor(cursor, TWITTER_USERNAME_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
 
@@ -365,6 +373,7 @@ public class SiteSettingsModel {
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
         values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);
         values.put(ALLOW_LIKE_BUTTON_COLUMN_NAME, allowLikeButton);
+        values.put(TWITTER_USERNAME_COLUMN_NAME, twitterUsername);
 
         return values;
     }
