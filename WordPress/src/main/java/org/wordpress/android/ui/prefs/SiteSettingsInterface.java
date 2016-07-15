@@ -525,7 +525,7 @@ public abstract class SiteSettingsInterface {
         return styleDisplayArray[0];
     }
 
-    public Boolean getAllowReblogButton() {
+    public boolean getAllowReblogButton() {
         return mSettings.allowReblogButton;
     }
 

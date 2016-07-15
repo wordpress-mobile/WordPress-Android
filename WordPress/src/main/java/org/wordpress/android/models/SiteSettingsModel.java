@@ -134,7 +134,7 @@ public class SiteSettingsModel {
     public List<String> blacklist;
     public String sharingLabel;
     public String sharingButtonStyle;
-    public Boolean allowReblogButton;
+    public boolean allowReblogButton;
 
     @Override
     public boolean equals(Object other) {
