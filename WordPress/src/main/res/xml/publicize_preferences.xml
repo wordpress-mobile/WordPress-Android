@@ -33,6 +33,10 @@
 
     </PreferenceCategory>
 
+    <org.wordpress.android.ui.prefs.WPSwitchPreference
+        android:key="@string/pref_key_comment_likes"
+        android:title="Comment Likes" />
+
     <PreferenceCategory
         android:title="Twitter">
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference

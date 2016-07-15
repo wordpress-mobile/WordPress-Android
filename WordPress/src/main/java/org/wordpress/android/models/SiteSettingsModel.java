@@ -55,6 +55,7 @@ public class SiteSettingsModel {
     public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
     public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
     public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
+    private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
@@ -140,6 +141,7 @@ public class SiteSettingsModel {
     public String sharingButtonStyle;
     public boolean allowReblogButton;
     public boolean allowLikeButton;
+    public boolean allowCommentLikes;
     public String twitterUsername;
 
     @Override
@@ -179,6 +181,7 @@ public class SiteSettingsModel {
                 sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
                 allowReblogButton == otherModel.allowReblogButton &&
                 allowLikeButton == otherModel.allowLikeButton &&
+                allowCommentLikes == otherModel.allowCommentLikes &&
                 twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
@@ -236,6 +239,7 @@ public class SiteSettingsModel {
         }
         allowReblogButton = other.allowReblogButton;
         allowLikeButton = other.allowLikeButton;
+        allowCommentLikes = other.allowCommentLikes;
         if (other.twitterUsername != null) {
             twitterUsername = other.twitterUsername;
         }
@@ -289,6 +293,7 @@ public class SiteSettingsModel {
         sharingButtonStyle = getStringFromCursor(cursor, SHARING_BUTTON_STYLE_COLUMN_NAME);
         allowReblogButton = getBooleanFromCursor(cursor, ALLOW_REBLOG_BUTTON_COLUMN_NAME);
         allowLikeButton = getBooleanFromCursor(cursor, ALLOW_LIKE_BUTTON_COLUMN_NAME);
+        allowCommentLikes = getBooleanFromCursor(cursor, ALLOW_COMMENT_LIKES_COLUMN_NAME);
         twitterUsername = getStringFromCursor(cursor, TWITTER_USERNAME_COLUMN_NAME);
 
         setRelatedPostsFlags(Math.max(0, getIntFromCursor(cursor, RELATED_POSTS_COLUMN_NAME)));
@@ -373,6 +378,7 @@ public class SiteSettingsModel {
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
         values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);
         values.put(ALLOW_LIKE_BUTTON_COLUMN_NAME, allowLikeButton);
+        values.put(ALLOW_COMMENT_LIKES_COLUMN_NAME, allowCommentLikes);
         values.put(TWITTER_USERNAME_COLUMN_NAME, twitterUsername);
 
         return values;

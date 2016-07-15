@@ -31,6 +31,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private DetailListPreference mButtonStylePreference;
     private WPSwitchPreference mReblogButtonPreference;
     private WPSwitchPreference mLikeButtonPreference;
+    private WPSwitchPreference mCommentLikesPreference;
     private SummaryEditTextPreference mTwitterUsernamePreference;
     private Blog mBlog;
     private boolean mShouldFetch;
@@ -60,6 +61,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
         mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
         mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
+        mCommentLikesPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_comment_likes);
         mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
     }
 
@@ -122,6 +124,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             mSiteSettings.setAllowReblogButton((Boolean) newValue);
         } else if (preference == mLikeButtonPreference) {
             mSiteSettings.setAllowLikeButton((Boolean) newValue);
+        } else if (preference == mCommentLikesPreference) {
+            mSiteSettings.setAllowCommentLikes((Boolean) newValue);
         } else if (preference == mTwitterUsernamePreference) {
             saveAndSetTwitterUsername(newValue.toString());
         } else {
@@ -166,6 +170,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
         mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
+        mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
         changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());
     }
 

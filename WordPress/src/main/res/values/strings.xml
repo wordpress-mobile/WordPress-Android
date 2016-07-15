@@ -1596,5 +1596,5 @@
     <string name="site_settings_like">Show Like Button</string>
     <string name="pref_key_like" translatable="false">wp_pref_sharing_like</string>
     <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
-
+    <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
 </resources>

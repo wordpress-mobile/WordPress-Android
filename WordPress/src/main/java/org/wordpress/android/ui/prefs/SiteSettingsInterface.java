@@ -532,6 +532,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.allowLikeButton;
     }
 
+    public boolean getAllowCommentLikes() {
+        return mSettings.allowCommentLikes;
+    }
+
     public @NonNull String getTwitterUsername() {
         if (mSettings.twitterUsername == null) {
             mSettings.twitterUsername = "";
@@ -678,6 +682,10 @@ public abstract class SiteSettingsInterface {
 
     public void setAllowLikeButton(boolean allowLikeButton) {
         mSettings.allowLikeButton = allowLikeButton;
+    }
+
+    public void setAllowCommentLikes(boolean allowCommentLikes) {
+        mSettings.allowCommentLikes = allowCommentLikes;
     }
 
     public void setTwitterUsername(String twitterUsername) {
