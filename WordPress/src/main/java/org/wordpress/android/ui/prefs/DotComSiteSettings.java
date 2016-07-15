@@ -329,6 +329,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
 
+        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
+            params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
+        }
+
+        if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
+            params.put(SHARING_REBLOG_KEY, String.valueOf(mSettings.allowReblogButton));
+        }
+
+        if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
+            params.put(SHARING_LIKE_KEY, String.valueOf(mSettings.allowLikeButton));
+        }
+
         return params;
     }
 
