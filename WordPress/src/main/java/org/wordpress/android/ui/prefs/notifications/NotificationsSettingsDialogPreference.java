@@ -61,8 +61,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
     @Override
     protected View onCreateDialogView() {
 
-        ScrollView outterView = new ScrollView(getContext());
-        outterView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        ScrollView outerView = new ScrollView(getContext());
+        outerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         LinearLayout innerView = new LinearLayout(getContext());
         innerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -73,10 +73,10 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
         innerView.addView(spacerView);
 
-        outterView.addView(innerView);
+        outerView.addView(innerView);
         configureLayoutForView(innerView);
 
-        return outterView;
+        return outerView;
     }
 
     private View configureLayoutForView(LinearLayout view) {
