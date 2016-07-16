@@ -25,7 +25,6 @@ import de.greenrobot.event.EventBus;
 
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, SiteSettingsInterface.SiteSettingsListener {
-    private PublicizePreferenceListener mListener;
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
@@ -88,22 +87,6 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             }, 1000);
             mShouldFetch = false;
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof PublicizePreferenceListener) {
-            mListener = (PublicizePreferenceListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement PublicizePreferenceListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     private Preference getChangePref(int id) {
@@ -212,9 +195,5 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         } else {
             return false;
         }
-    }
-
-    public interface PublicizePreferenceListener {
-        void onPreferenceUpdated();
     }
 }
