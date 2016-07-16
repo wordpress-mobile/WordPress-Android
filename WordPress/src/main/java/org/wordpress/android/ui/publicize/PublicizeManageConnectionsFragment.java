@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
@@ -25,6 +24,7 @@ import de.greenrobot.event.EventBus;
 
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, SiteSettingsInterface.SiteSettingsListener {
+    private static final String TWITTER_PREFIX = "@";
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
@@ -125,7 +125,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             return;
         }
 
-        if (username.startsWith("@")) {
+        if (username.startsWith(TWITTER_PREFIX)) {
             username = username.substring(1, username.length());
         }
 
@@ -137,7 +137,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
         if (pref == mTwitterUsernamePreference && !newValue.isEmpty()) {
-            newValue = "@" + newValue;
+            newValue = TWITTER_PREFIX + newValue;
         }
 
         if (!newValue.equals(pref.getSummary())) {
