@@ -190,10 +190,6 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if (preference == mButtonStylePreference) {
-            return !shouldShowListPreference((DetailListPreference) preference);
-        } else {
-            return false;
-        }
+        return preference == mButtonStylePreference && !shouldShowListPreference((DetailListPreference) preference);
     }
 }
