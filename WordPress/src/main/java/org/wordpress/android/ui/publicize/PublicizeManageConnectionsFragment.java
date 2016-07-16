@@ -130,7 +130,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         }
 
         mSiteSettings.setTwitterUsername(username);
-        changeEditTextPreferenceValue(mLabelPreference, username);
+        changeEditTextPreferenceValue(mTwitterUsernamePreference, username);
     }
 
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
