@@ -1,20 +1,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <org.wordpress.android.ui.prefs.SummaryEditTextPreference
-        android:key="@string/publicize_label"
-        android:layout="@layout/preference_layout"
-        app:summaryLines="1"
-        app:maxSummaryLines="1"
-        android:title="Label" />
+    <PreferenceCategory
+        android:title="Visual">
 
-    <org.wordpress.android.ui.prefs.DetailListPreference
-        android:id="@+id/pref_publicize_button_style"
-        android:key="@string/publicize_button_style"
-        android:title="Button Style"
-        android:entries="@array/publicize_button_style_etries"
-        android:entryValues="@array/publicize_button_style_values"
-        android:defaultValue="-2" />
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:key="@string/publicize_label"
+            android:layout="@layout/preference_layout"
+            app:summaryLines="1"
+            app:maxSummaryLines="1"
+            android:title="Label" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_publicize_button_style"
+            android:key="@string/publicize_button_style"
+            android:title="Button Style"
+            android:entries="@array/publicize_button_style_etries"
+            android:entryValues="@array/publicize_button_style_values"
+            android:defaultValue="-2" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:id="@+id/pref_sharing_reblog_and_like"
@@ -33,10 +38,11 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory>
+    <PreferenceCategory
+        android:title="Likes">
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_comment_likes"
-            android:title="Comment Likes" />
+            android:title="Allow Comment Likes" />
     </PreferenceCategory>
 
     <PreferenceCategory
