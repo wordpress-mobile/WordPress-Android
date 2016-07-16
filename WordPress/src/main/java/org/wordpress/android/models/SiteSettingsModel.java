@@ -55,7 +55,7 @@ public class SiteSettingsModel {
     public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
     public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
     public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
-    private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
+    public static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
@@ -98,6 +98,7 @@ public class SiteSettingsModel {
                     SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
                     ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN," +
                     ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN," +
+                    ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN," +
                     TWITTER_USERNAME_COLUMN_NAME + " TEXT" +
                     ");";
 
