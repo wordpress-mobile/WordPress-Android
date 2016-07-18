@@ -127,7 +127,7 @@ dependencies {
     // Simperium
     compile 'com.simperium.android:simperium:0.6.8'
 
-    compile ('com.github.wordpress-mobile.WordPress-Stores-Android:stores:tmp-max-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-Stores-Android:stores:develop-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
