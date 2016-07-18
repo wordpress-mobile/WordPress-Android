@@ -850,7 +850,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             case NEEDS_2FA:
                 // TODO: STORES: 2fa support
             case INVALID_REQUEST:
-                // TOOD: STORES: could be specific?
+                // TODO: STORES: could be specific?
             default:
                 // For all other kind of error, show a dialog with API Response error message
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
