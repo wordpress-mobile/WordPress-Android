@@ -2,12 +2,15 @@ package org.wordpress.android.networking;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.StringUtils;
 
+// TODO: STORES: kill this when we don't need any other rest client
 public class OAuthAuthenticator implements Authenticator {
+    // TODO: STORES: accessToken here is only used as a way to authenticate legacy network clients
+    public static String sAccessToken;
+
     public static String getAccessToken(final String siteId) {
-        String token = AccountHelper.getDefaultAccount().getAccessToken();
+        String token = sAccessToken;
 
         if (siteId != null) {
             // Get the token for a Jetpack site if needed

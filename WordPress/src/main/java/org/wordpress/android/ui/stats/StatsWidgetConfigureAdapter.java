@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -40,6 +39,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
     private SiteList mSites = new SiteList();
     private final int mCurrentLocalId;
+    private final long mPrimarySiteId;
 
     private final Drawable mSelectedItemBackground;
 
@@ -79,12 +79,13 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         }
     }
 
-    public StatsWidgetConfigureAdapter(Context context, int currentLocalBlogId) {
+    public StatsWidgetConfigureAdapter(Context context, int currentLocalBlogId, long primarySiteId) {
         super();
 
         setHasStableIds(true);
 
         mCurrentLocalId = currentLocalBlogId;
+        mPrimarySiteId = primarySiteId;
         mInflater = LayoutInflater.from(context);
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
@@ -182,13 +183,12 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
             SiteList sites = new SiteList(blogs);
 
             // sort by blog/host
-            final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
-                    if (primaryBlogId > 0) {
-                        if (site1.blogId == primaryBlogId) {
+                    if (mPrimarySiteId > 0) {
+                        if (site1.blogId == mPrimarySiteId) {
                             return -1;
-                        } else if (site2.blogId == primaryBlogId) {
+                        } else if (site2.blogId == mPrimarySiteId) {
                             return 1;
                         }
                     }

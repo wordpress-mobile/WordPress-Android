@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
@@ -77,19 +76,11 @@ public class StatsViewHolder {
                             }
                             AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
                             // Let's try the global wpcom credentials
-                            String statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
-                            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                                // Still empty. Do not eat the event, but let's open the default Web Browser.
-
-                            }
-                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(),
-                                    url, statsAuthenticatedUser);
-
+                            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(view.getContext(), url);
                         } else if (url.startsWith("https") || url.startsWith("http")) {
                             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
                             WPWebViewActivity.openURL(view.getContext(), url);
                         }
-
                     }
                 }
         );

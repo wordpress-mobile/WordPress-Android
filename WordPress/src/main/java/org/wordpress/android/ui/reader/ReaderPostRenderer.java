@@ -21,8 +21,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -339,16 +337,16 @@ class ReaderPostRenderer {
         .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
-        // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
+        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
         .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
+        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
@@ -495,21 +493,9 @@ class ReaderPostRenderer {
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        .append("</style>");
-
-        // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
-        final List<String> classAmendRegexes = Arrays.asList(
-                "(tiled-gallery)([\\s\"\'])",
-                "(gallery-row)([\\s\"'])",
-                "(gallery-group)([\\s\"'])",
-                "(tiled-gallery-item)([\\s\"'])");
-        String contentCustomised = content;
-        for (String classToAmend : classAmendRegexes) {
-            contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
-        }
-
-        sbHtml.append("</head><body>")
-        .append(contentCustomised)
+        .append("</style>")
+        .append("</head><body>")
+        .append(content)
         .append("</body></html>");
 
         return sbHtml.toString();

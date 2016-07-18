@@ -6,7 +6,6 @@ import android.text.style.URLSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -59,13 +58,7 @@ class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                     }
                     AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
                     // Let's try the global wpcom credentials
-                    String statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
-                    if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                        // Still empty. Do not eat the event, but let's open the default Web Browser.
-                        return super.onTouchEvent(widget, buffer, event);
-                    }
-                    WPWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
-                            url, statsAuthenticatedUser);
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(widget.getContext(), url);
                     return true;
                 } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

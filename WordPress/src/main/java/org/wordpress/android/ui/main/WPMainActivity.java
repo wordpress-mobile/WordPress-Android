@@ -19,18 +19,23 @@ import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -51,14 +56,16 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
-import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPOptimizelyEventListener;
+import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPViewPager;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -66,12 +73,15 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
-
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
     private int  mAppBarElevation;
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -94,6 +104,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
+        ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
@@ -187,7 +198,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (AccountHelper.isSignedIn()) {
+            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 startOptimizely(true);
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
@@ -308,12 +319,14 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
 
@@ -457,7 +470,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!AccountHelper.isSignedIn()) {
+                } else if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -529,28 +542,43 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     // Events
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutWordPressCom event) {
-        resetFragments();
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(UserSignedOutCompletely event) {
-        ActivityLauncher.showSignInForResult(this);
-    }
-
-    @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
         AuthenticationDialogUtils.showAuthErrorView(this);
     }
 
+    // TODO: STORES: remove this when we drop legacy REST clients
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
         AuthenticationDialogUtils.showAuthErrorView(this);
     }
 
+    // TODO: STORES: remove this when we drop legacy REST clients
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
         AuthenticationDialogUtils.showAuthErrorView(this);
+    }
+
+    // TODO: STORES: this must be replaced by onAuthenticationChanged
+    @SuppressWarnings("unused")
+    public void onEventMainThread(UserSignedOutWordPressCom event) {
+        resetFragments();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        if (event.isError) {
+            AuthenticationDialogUtils.showAuthErrorView(this);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            // User signed out
+            ActivityLauncher.showSignInForResult(this);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -586,7 +614,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void handleBlogRemoved() {
-        if (!AccountHelper.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             Blog blog = WordPress.getCurrentBlog();

@@ -15,21 +15,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
@@ -40,7 +40,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -51,6 +50,8 @@ import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -79,9 +80,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mCommentId;
     private int mRestorePosition;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -135,10 +139,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.getAutoSaveTextHelper().setUniqueId(
-                String.format(LanguageUtils.getCurrentDeviceLanguage(this),
-                        "%s%d%d",
-                        AccountHelper.getCurrentUsernameForBlog(null), mPostId, mBlogId));
+        mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
         mSubmitReplyBtn = mCommentBox.findViewById(R.id.btn_submit_reply);
 
         if (!loadPost()) {
@@ -269,7 +270,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             return false;
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
+        if (!mAccountStore.hasAccessToken()) {
             mCommentBox.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
         } else if (mPost.isCommentsOpen) {
@@ -522,12 +524,14 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             }
         };
 
+        long wpComUserId = mAccountStore.getAccount().getUserId();
         ReaderComment newComment = ReaderCommentActions.submitPostComment(
                 getPost(),
                 fakeCommentId,
                 commentText,
                 mReplyToCommentId,
-                actionListener);
+                actionListener,
+                wpComUserId);
 
         if (newComment != null) {
             mEditComment.setText(null);

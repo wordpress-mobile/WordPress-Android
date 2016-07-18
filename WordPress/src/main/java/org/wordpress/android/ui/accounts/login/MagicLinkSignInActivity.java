@@ -10,8 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.SignInActivity;
 
 public class MagicLinkSignInActivity extends SignInActivity
@@ -64,8 +62,7 @@ public class MagicLinkSignInActivity extends SignInActivity
 
     @Override
     public void onMagicLinkRequestSuccess(String email) {
-        saveEmailToAccount(email);
-
+        getSignInFragment().saveEmailToAccount(email);
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
         slideInFragment(magicLinkRequestFragment);
     }
@@ -104,12 +101,6 @@ public class MagicLinkSignInActivity extends SignInActivity
                     }
                 });
         mProgressDialog.show();
-    }
-
-    private void saveEmailToAccount(String email) {
-        Account account = AccountHelper.getDefaultAccount();
-        account.setUserName(email);
-        account.save();
     }
 
     private void popBackStackToSignInFragment() {

@@ -37,12 +37,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -66,7 +67,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -77,6 +77,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -118,10 +120,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     /*
-         * Used to request a comment from a note using its site and comment ids, rather than build
-         * the comment with the content in the note. See showComment()
-         */
+     * Used to request a comment from a note using its site and comment ids, rather than build
+     * the comment with the content in the note. See showComment()
+     */
     private boolean mShouldRequestCommentFromNote = false;
 
     private boolean mIsSubmittingReply = false;
@@ -174,6 +179,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
                 // The note will be set in onResume() because Simperium will be running there
@@ -232,21 +239,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(LanguageUtils.getCurrentDeviceLanguage(getActivity()), "%s%d%d",
-                AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
-                getRemoteBlogId(), getCommentId()));
+        mEditReply.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", getRemoteBlogId(),
+                getCommentId()));
 
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
-
-        View replyBox = mLayoutReply.findViewById(R.id.reply_box);
-        if (mComment != null &&
-                (mComment.getStatusEnum() == CommentStatus.SPAM ||
-                        mComment.getStatusEnum() == CommentStatus.TRASH ||
-                        mComment.getStatusEnum() == CommentStatus.DELETE)) {
-            replyBox.setVisibility(View.GONE);
-        } else {
-            replyBox.setVisibility(View.VISIBLE);
-        }
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
         mBtnLikeComment.setVisibility(View.GONE);
@@ -604,7 +600,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
+                    ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl(), mAccountStore.getAccount()
+                            .getUserName());
                 }
             };
             imgAvatar.setOnClickListener(authorListener);
@@ -672,7 +669,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
-        boolean canRequestPost = isDotComOrJetpack && AccountHelper.isSignedInWordPressDotCom();
+        boolean canRequestPost = isDotComOrJetpack && mAccountStore.hasAccessToken();
 
         final String title;
         final boolean hasTitle;

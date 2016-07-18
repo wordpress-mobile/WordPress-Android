@@ -18,13 +18,17 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
@@ -33,10 +37,13 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private RecyclerView mRecycleView;
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -57,7 +64,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         // If not signed into WordPress inform the user
-        if (!AccountHelper.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
@@ -121,7 +128,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private void setNewAdapter() {
         Blog blog = WordPress.getCurrentBlog();
         int localBlogId = (blog != null ? blog.getLocalTableBlogId() : 0);
-        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId);
+        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId, mAccountStore.getAccount().getPrimaryBlogId());
         mAdapter.setOnSiteClickListener(this);
     }
 

@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -27,6 +28,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
@@ -64,6 +66,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 
+import javax.inject.Inject;
 import java.util.EnumSet;
 
 import de.greenrobot.event.EventBus;
@@ -105,6 +108,8 @@ public class ReaderPostDetailFragment extends Fragment
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
+    @Inject AccountStore mAccountStore;
+
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false, null);
     }
@@ -132,7 +137,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         if (savedInstanceState != null) {
             mPostHistory.restoreInstance(savedInstanceState);
         }
@@ -243,7 +249,8 @@ public class ReaderPostDetailFragment extends Fragment
         int i = item.getItemId();
         if (i == R.id.menu_browse) {
             if (hasPost()) {
-                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL,
+                        mAccountStore.getAccount().getUserName());
             }
             return true;
         } else if (i == R.id.menu_share) {
@@ -339,7 +346,8 @@ public class ReaderPostDetailFragment extends Fragment
         likeCount.setSelected(isAskingToLike);
         ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-        boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+        boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+                mAccountStore.getAccount().getUserId());
         if (!success) {
             likeCount.setSelected(!isAskingToLike);
             return;
@@ -1024,7 +1032,7 @@ public class ReaderPostDetailFragment extends Fragment
         } else {
             openUrlType = OpenUrlType.INTERNAL;
         }
-        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
+        ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType, mAccountStore.getAccount().getUserName());
         return true;
     }
 

@@ -12,10 +12,11 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -36,6 +37,8 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class NotificationsDetailActivity extends AppCompatActivity implements
@@ -43,9 +46,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
         setContentView(R.layout.notifications_detail_activity);
@@ -193,7 +199,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (isFinishing() || url == null) return;
 
         if (url.contains(DOMAIN_WPCOM)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, mAccountStore.getAccount().getUserName());
         } else {
             WPWebViewActivity.openURL(this, url);
         }

@@ -22,8 +22,8 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -32,6 +32,8 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -57,6 +59,8 @@ public class NotificationsListFragment extends Fragment
 
     private Bucket<Note> mBucket;
 
+    @Inject AccountStore mAccountStore;
+
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
     }
@@ -66,6 +70,12 @@ public class NotificationsListFragment extends Fragment
      */
     public interface OnNoteClickListener {
         void onClickNote(String noteId);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -152,7 +162,7 @@ public class NotificationsListFragment extends Fragment
                 mRecyclerView.setAdapter(mNotesAdapter);
             }
         } else {
-            if (!AccountHelper.isSignedInWordPressDotCom()) {
+            if (!mAccountStore.hasAccessToken()) {
                 // let user know that notifications require a wp.com account and enable sign-in
                 showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
                 mFilterRadioGroup.setVisibility(View.GONE);
@@ -324,7 +334,7 @@ public class NotificationsListFragment extends Fragment
 
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
-        if (!AccountHelper.isSignedInWordPressDotCom()) return;
+        if (!mAccountStore.hasAccessToken()) return;
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_all) {
@@ -369,7 +379,7 @@ public class NotificationsListFragment extends Fragment
     private void performActionForActiveFilter() {
         if (mFilterRadioGroup == null || !isAdded()) return;
 
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
+        if (!mAccountStore.hasAccessToken()) {
             ActivityLauncher.showSignInForResult(getActivity());
             return;
         }

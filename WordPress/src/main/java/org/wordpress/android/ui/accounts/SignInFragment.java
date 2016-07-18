@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -31,25 +30,30 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.optimizely.Optimizely;
 import com.optimizely.Variable.LiveVariable;
-import com.wordpress.rest.RestRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
-import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
-import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
-import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService;
-import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.action.AccountAction;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
+import org.wordpress.android.stores.store.AccountStore.AuthenticationError;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.stores.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.stores.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -57,22 +61,20 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
-import org.xmlrpc.android.ApiHelper;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String TAG = "sign_in_fragment_tag";
@@ -117,10 +119,22 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected WPTextView mJetpackAuthLabel;
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
-    
+
+    private RefreshSitesXMLRPCPayload mSelfhostedPayload;
+
+    protected @Inject SiteStore mSiteStore;
+    protected @Inject AccountStore mAccountStore;
+    protected @Inject Dispatcher mDispatcher;
+
+    protected boolean mSitesFetched = false;
+    protected boolean mAccountSettingsFetched = false;
+    protected boolean mAccountFetched = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
         }
@@ -475,36 +489,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     };
 
-    private void refreshAndSelectSite(Map<String, Object> site) {
-        refreshBlogContent(site);
-        WordPress.setCurrentBlog((Integer) site.get("id"));
-    }
-
-    private void setPrimaryBlog(JSONObject jsonObject) {
-        try {
-            String primarySiteId = jsonObject.getString("primary_blog");
-            boolean hideJetpackWithoutCredentials = true;
-            // Look for a visible site that is not a "non active" Jetpack site with this id in the DB
-            // TODO: when we support Jetpack sites by wpcom login, we should change that
-            List<Map<String, Object>> sites = WordPress.wpDB.getBlogsBy("isHidden = 0 AND blogId = " + primarySiteId,
-                    null, 1, hideJetpackWithoutCredentials);
-            if (sites != null && !sites.isEmpty()) {
-                refreshAndSelectSite(sites.get(0));
-            } else {
-                // Primary blog not found or hidden (can happen if it's a "non active" Jetpack site)
-                // Select the first visible site if it exists
-                sites = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 1, hideJetpackWithoutCredentials);
-                if (sites != null && !sites.isEmpty()) {
-                    refreshAndSelectSite(sites.get(0));
-                }
-            }
-        } catch (JSONException e) {
-            AppLog.e(T.NUX, e);
-        }
-    }
-
     private void trackAnalyticsSignIn() {
-        AnalyticsUtils.refreshMetadata();
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         Map<String, Boolean> properties = new HashMap<String, Boolean>();
         properties.put("dotcom_user", isWPComLogin());
         track(Stat.SIGNED_IN, properties);
@@ -513,100 +499,25 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    private void finishCurrentActivity() {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
+        });
+    }
+
     private SmartLockHelper getSmartLockHelper() {
         if (getActivity() != null && getActivity() instanceof SignInActivity) {
             return ((SignInActivity) getActivity()).getSmartLockHelper();
         }
         return null;
     }
-
-    protected final Callback mFetchBlogListCallback = new Callback() {
-        @Override
-        public void onSuccess(final List<Map<String, Object>> userBlogList) {
-            if (!isAdded()) {
-                return;
-            }
-            if (userBlogList != null) {
-                if (isWPComLogin()) {
-                    BlogUtils.addBlogs(userBlogList, mUsername);
-                } else {
-                    BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
-                }
-
-                // refresh the first 5 blogs
-                refreshFirstFiveBlogsContent();
-            }
-
-            trackAnalyticsSignIn();
-            Optimizely.trackEvent("Signed In");
-
-            // get reader tags so they're available as soon as the Reader is accessed - done for
-            // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
-            // uses the application context since the activity is finished immediately below
-            ReaderUpdateService.startService(getActivity().getApplicationContext(),
-                    EnumSet.of(UpdateTask.TAGS));
-
-            if (isWPComLogin()) {
-                //Update previous stats widgets
-                StatsWidgetProvider.updateWidgetsOnLogin(getActivity().getApplicationContext());
-
-                // Fire off a synchronous request to get the primary blog
-                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        // Set primary blog
-                        setPrimaryBlog(jsonObject);
-                        finishCurrentActivity(userBlogList);
-                        String displayName = JSONUtils.getStringDecoded(jsonObject, "display_name");
-                        Uri profilePicture = Uri.parse(JSONUtils.getString(jsonObject, "avatar_URL"));
-                        SmartLockHelper smartLockHelper = getSmartLockHelper();
-                        // mUsername and mPassword are null when the user sign in with a magic link
-                        if (smartLockHelper != null && mUsername != null && mPassword != null) {
-                            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, displayName,
-                                    profilePicture);
-                        }
-                    }
-                }, null);
-            } else {
-                finishCurrentActivity(userBlogList);
-            }
-        }
-
-        @Override
-        public void onError(final int messageId, final boolean twoStepCodeRequired, final boolean httpAuthRequired,
-                            final boolean erroneousSslCertificate, final String clientResponse) {
-            if (!isAdded()) {
-                return;
-            }
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (twoStepCodeRequired) {
-                        setTwoStepAuthVisibility(true);
-                        endProgress();
-                        return;
-                    }
-
-                    if (erroneousSslCertificate) {
-                        askForSslTrust();
-                        return;
-                    }
-                    if (httpAuthRequired) {
-                        askForHttpAuthCredentials();
-                        return;
-                    }
-                    if (messageId != 0) {
-                        signInError(messageId, clientResponse);
-                        return;
-                    }
-
-                    endProgress();
-                }
-            });
-
-            track(Stat.LOGIN_FAILED, null);
-        }
-    };
 
     public void showAuthErrorMessage() {
         if (mJetpackAuthLabel != null) {
@@ -648,26 +559,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPCom() {
-        LoginWPCom login = new LoginWPCom(mUsername, mPassword, mTwoStepCode, mShouldSendTwoStepSMS, mJetpackBlog);
-        login.execute(new LoginAbstract.Callback() {
-            @Override
-            public void onSuccess() {
-                configureAccountAfterSuccessfulSignIn();
-            }
-
-            @Override
-            public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mFetchBlogListCallback.onError(errorMessageId, twoStepCodeRequired, httpAuthRequired, erroneousSslCertificate, "");
-                mShouldSendTwoStepSMS = false;
-                // Delete credentials only if login failed with an incorrect username/password error
-                if (errorMessageId == R.string.username_or_password_incorrect) {
-                    SmartLockHelper smartLockHelper = getSmartLockHelper();
-                    if (smartLockHelper != null) {
-                        smartLockHelper.deleteCredentialsInSmartLock(mUsername, mPassword);
-                    }
-                }
-            }
-        });
+        // TODO: STORES: mTwoStepCode
+        // TODO: STORES: mShouldSendTwoStepSMS
+        AuthenticatePayload payload = new AuthenticatePayload(mUsername, mPassword);
+        mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     protected void configureAccountAfterSuccessfulSignIn() {
@@ -679,18 +574,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             getActivity().finish();
             return;
         }
-
-        FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom(getActivity());
-        fetchBlogListWPCom.execute(mFetchBlogListCallback);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
     private void signInAndFetchBlogListWPOrg() {
         String url = EditTextUtils.getText(mUrlEditText).trim();
-        FetchBlogListWPOrg fetchBlogListWPOrg = new FetchBlogListWPOrg(mUsername, mPassword, url);
-        if (mHttpUsername != null && mHttpPassword != null) {
-            fetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
-        }
-        fetchBlogListWPOrg.execute(mFetchBlogListCallback);
+
+        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
+        payload.username = mUsername;
+        payload.password = mPassword;
+        payload.url = url;
+        mSelfhostedPayload = payload;
+        // Self Hosted don't have any "Authentication" request, try to list sites with user/password
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(payload));
     }
 
     private boolean checkNetworkConnectivity() {
@@ -929,61 +825,37 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         endProgress();
     }
-
-    protected void signInError(int messageId, String clientResponse) {
+    private void showGenericErrorDialog(String errorMessage) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert;
-        if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
-            handleInvalidUsernameOrPassword(messageId);
-            return;
-        } else if (messageId == R.string.invalid_verification_code) {
-            endProgress();
-            showTwoStepCodeError(messageId);
-            return;
-        } else if (messageId == org.wordpress.android.R.string.invalid_site_url_message) {
-            showUrlError(messageId);
-            endProgress();
-            return;
-        } else {
-            AppLog.e(T.NUX, "Server response: " + clientResponse);
-            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                    getString(messageId), R.drawable.noticon_alert_big, 3,
-                    getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
-                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
-                    SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
-        }
+
+        nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                errorMessage, R.drawable.noticon_alert_big, 3,
+                getString(R.string.cancel), getString(R.string.contact_us), getString(R.string.reader_title_applog),
+                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
+                SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG);
+
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
-        endProgress();
     }
 
-    private void refreshBlogContent(Map<String, Object> blogMap) {
-        String blogId = blogMap.get("blogId").toString();
-        String xmlRpcUrl = blogMap.get("url").toString();
-        int intBlogId = StringUtils.stringToInt(blogId, -1);
-        if (intBlogId == -1) {
-            AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
-            return;
-        }
-        int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(intBlogId, xmlRpcUrl);
-        Blog firstBlog = WordPress.wpDB.instantiateBlogByLocalId(blogLocalId);
-        new ApiHelper.RefreshBlogContentTask(firstBlog, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false);
-    }
-
-    /**
-     * Get the first five blogs and call RefreshBlogContentTask. First blog will be autoselected when user login.
-     * Also when a user add a new self hosted blog, userBlogList contains only one element.
-     * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
-     * user selects it.
-     */
-    private void refreshFirstFiveBlogsContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getBlogsBy("isHidden = 0", null, 5, true);
-        if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
-            int numberOfBlogsBeingRefreshed = Math.min(5, visibleBlogs.size());
-            for (int i = 0; i < numberOfBlogsBeingRefreshed; i++) {
-                Map<String, Object> currentBlog = visibleBlogs.get(i);
-                refreshBlogContent(currentBlog);
-            }
+    private void showAuthError(AuthenticationError error, String errorMessage) {
+        switch (error) {
+            case INCORRECT_USERNAME_OR_PASSWORD:
+                handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
+                break;
+            case INVALID_OTP:
+                showTwoStepCodeError(R.string.invalid_verification_code);
+                break;
+            case NEEDS_2FA:
+                // TODO: STORES: 2fa support
+            case INVALID_REQUEST:
+                // TODO: STORES: could be specific?
+            default:
+                // For all other kind of error, show a dialog with API Response error message
+                AppLog.e(T.NUX, "Server response: " + errorMessage);
+                showGenericErrorDialog(errorMessage);
+                break;
         }
     }
 
@@ -1004,6 +876,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mPassword != null) {
             mPasswordEditText.setText(mPassword);
         }
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mDispatcher.unregister(this);
     }
 
     @Override
@@ -1014,6 +893,55 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 mUsername = data.getStringExtra("username");
                 mPassword = data.getStringExtra("password");
             }
+        }
+    }
+
+    // OnChanged events
+
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
+        mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
+        // Finish activity if sites have been fetched
+        if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
+            finishCurrentActivity();
+        }
+    }
+
+    @Subscribe
+    public void onAuthenticationChanged(OnAuthenticationChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        if (event.isError) {
+            showAuthError(event.errorType, event.errorMessage);
+            endProgress();
+            return;
+        }
+        if (mAccountStore.hasAccessToken()) {
+            // On WordPress.com login, configure Simperium
+            AppLog.i(T.NOTIFS, "Configuring Simperium");
+            SimperiumUtils.configureSimperium(getContext().getApplicationContext(),
+                    mAccountStore.getAccessToken());
+            // Fetch user infos
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+            // Fetch sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+            // Setup legacy access token storage
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        }
+    }
+
+    @Subscribe
+    public void onSiteChanged(OnSiteChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        // Sites updated, login step is successful. Note: the user can have zero sites.
+
+        // Login Successful
+        trackAnalyticsSignIn();
+        mSitesFetched = true;
+        // Finish activity if account settings have been fetched or if it's a wporg site
+        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
+            finishCurrentActivity();
         }
     }
 }

@@ -20,11 +20,10 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
@@ -45,6 +45,8 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -79,6 +81,8 @@ public class MySiteFragment extends Fragment
 
     private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
 
+    @Inject AccountStore mAccountStore;
+
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
@@ -92,7 +96,7 @@ public class MySiteFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
     }
 
@@ -250,7 +254,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SitePickerActivity.addSite(getActivity());
+                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken());
             }
         });
 
@@ -404,12 +408,10 @@ public class MySiteFragment extends Fragment
         if (!blog.isDotcomFlag()) {
             return false;
         } else {
-            Account account = AccountHelper.getDefaultAccount();
-
-            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH, HIDE_WP_ADMIN_DAY);
+            Date dateCreated = DateTimeUtils.iso8601ToJavaDate(mAccountStore.getAccount().getDate());
+            GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
+                    HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
-
-            Date dateCreated = account.getDateCreated();
             return dateCreated != null && dateCreated.after(calendar.getTime());
         }
     }

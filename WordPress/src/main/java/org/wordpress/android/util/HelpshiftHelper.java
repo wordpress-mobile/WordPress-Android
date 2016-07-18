@@ -15,7 +15,6 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.AccountHelper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -125,7 +124,7 @@ public class HelpshiftHelper {
      * Show conversation activity
      * Automatically add default metadata to this conversation
      */
-    public void showConversation(Activity activity, Tag origin) {
+    public void showConversation(Activity activity, Tag origin, String wpComUsername) {
         if (origin == null) {
             origin = Tag.ORIGIN_UNKNOWN;
         }
@@ -136,7 +135,7 @@ public class HelpshiftHelper {
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
-        HashMap config = getHelpshiftConfig(activity);
+        HashMap config = getHelpshiftConfig(activity, wpComUsername);
         Support.showConversation(activity, config);
     }
 
@@ -144,7 +143,7 @@ public class HelpshiftHelper {
      * Show FAQ activity
      * Automatically add default metadata to this conversation (users can start a conversation from FAQ screen).
      */
-    public void showFAQ(Activity activity, Tag origin) {
+    public void showFAQ(Activity activity, Tag origin, String wpComUsername) {
         if (origin == null) {
             origin = Tag.ORIGIN_UNKNOWN;
         }
@@ -155,7 +154,7 @@ public class HelpshiftHelper {
         AnalyticsTracker.track(Stat.SUPPORT_OPENED_HELPSHIFT_SCREEN, properties);
         // Add tags to Helpshift metadata
         addTags(new Tag[]{origin});
-        HashMap config = getHelpshiftConfig(activity);
+        HashMap config = getHelpshiftConfig(activity, wpComUsername);
         Support.showFAQs(activity, config);
     }
 
@@ -202,7 +201,7 @@ public class HelpshiftHelper {
         return mMetadata.get(key.toString());
     }
 
-    private void addDefaultMetaData(Context context) {
+    private void addDefaultMetaData(Context context, String wpComUsername) {
         // Use plain text log (unfortunately Helpshift can't display this correctly)
         mMetadata.put("log", AppLog.toPlainText(context));
 
@@ -215,10 +214,10 @@ public class HelpshiftHelper {
         }
 
         // wpcom user
-        mMetadata.put("wpcom-username", AccountHelper.getDefaultAccount().getUserName());
+        mMetadata.put("wpcom-username", wpComUsername);
     }
 
-    private HashMap getHelpshiftConfig(Context context) {
+    private HashMap getHelpshiftConfig(Context context, String wpComUsername) {
         String emailAddress = UserEmailUtils.getPrimaryEmail(context);
         // Use the user entered username to pre-fill name
         String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
@@ -230,7 +229,7 @@ public class HelpshiftHelper {
             }
         }
         Core.setNameAndEmail(name, emailAddress);
-        addDefaultMetaData(context);
+        addDefaultMetaData(context, wpComUsername);
         HashMap config = new HashMap ();
         config.put(Support.CustomMetadataKey, mMetadata);
         return config;

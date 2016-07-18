@@ -13,12 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -42,6 +44,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
@@ -86,6 +90,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
+
+    @Inject AccountStore mAccountStore;
 
     /*
      * cross-post
@@ -320,21 +326,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }
-
-        // when post header is visible (which it shouldn't be for blog preview), the dateline
-        // appears within it - otherwise a separate dateline appears below the title
-        if (!isBlogPreview()) {
-            holder.txtDate.setText(dateLine);
-            // show blog preview when post header is tapped
-            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            });
-        } else {
-            holder.txtDateBelowTitle.setText(dateLine);
-        }
+        holder.txtDate.setText(dateLine);
 
         if (post.hasBlogUrl()) {
             String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
@@ -348,6 +340,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtBlogName.setText(post.getAuthorName());
         } else {
             holder.txtBlogName.setText(null);
+        }
+
+        // show blog preview when post header is tapped unless this already is blog preview
+        if (!isBlogPreview()) {
+            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            });
         }
 
         if (post.hasExcerpt()) {
@@ -512,7 +514,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     v.getContext(),
                                     discoverData.getBlogId());
                         } else if (discoverData.hasBlogUrl()) {
-                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
+                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl(),
+                                    mAccountStore.getAccount().getUserName());
                         }
                     }
                 });
@@ -529,12 +532,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
 
         mWordCountFmtStr = context.getString(R.string.reader_label_word_count);
         mReadingTimeFmtStr = context.getString(R.string.reader_label_reading_time_in_minutes);
@@ -757,7 +761,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }

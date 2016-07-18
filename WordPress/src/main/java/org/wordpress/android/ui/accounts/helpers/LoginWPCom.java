@@ -12,14 +12,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.VolleyUtils;
 
+// TODO: STORES: kill this
 public class LoginWPCom extends LoginAbstract {
 
     private String mTwoStepCode;
@@ -87,23 +86,6 @@ public class LoginWPCom extends LoginAbstract {
     }
 
     private void configureAccountOnSuccess(Oauth.Token token) {
-        if (mJetpackBlog != null) {
-            // Store token in blog object for Jetpack sites
-            mJetpackBlog.setApi_key(token.toString());
-            mJetpackBlog.setDotcom_username(mUsername);
-            WordPress.wpDB.saveBlog(mJetpackBlog);
-        }
-
-        Account account = AccountHelper.getDefaultAccount();
-
-        if (mJetpackBlog == null) {
-            // Store token in global account
-            account.setAccessToken(token.toString());
-            account.setUserName(mUsername);
-            account.save();
-            account.fetchAccountDetails();
-        }
-
         // Once we have a token, start up Simperium
         SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
 

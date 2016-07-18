@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -25,6 +26,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -76,9 +79,12 @@ public class PeopleManagementActivity extends AppCompatActivity
     private int mFollowersLastFetchedPage;
     private int mEmailFollowersLastFetchedPage;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.people_management_activity);
 
@@ -425,7 +431,8 @@ public class PeopleManagementActivity extends AppCompatActivity
         int localTableBlogID = person.getLocalTableBlogId();
 
         if (personDetailFragment == null) {
-            personDetailFragment = PersonDetailFragment.newInstance(personID, localTableBlogID, person.getPersonType());
+            personDetailFragment = PersonDetailFragment.newInstance(mAccountStore.getAccount().getUserId(), personID,
+                    localTableBlogID, person.getPersonType());
         } else {
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }

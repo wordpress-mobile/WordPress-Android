@@ -14,12 +14,10 @@ import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
-import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.Account;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
@@ -263,6 +261,7 @@ public class WordPressDB {
             AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
+        // TODO: STORES: only migrate auth token and local drafts to wpstores, drop everything else.
         switch (currentVersion) {
             case 0:
                 // New install
@@ -357,11 +356,6 @@ public class WordPressDB {
                 removeDotComCredentials();
                 currentVersion++;
             case 29:
-                // Migrate WordPress.com token and infos to the DB
-                AccountTable.createTables(db);
-                if (!isNewInstall) {
-                    migratePreferencesToAccountTable(context);
-                }
                 currentVersion++;
             case 30:
                 // Fix big comments issue #2855
@@ -380,7 +374,6 @@ public class WordPressDB {
                 deleteUploadedLocalDrafts();
                 currentVersion++;
             case 34:
-                AccountTable.migrationAddEmailAddressField(db);
                 currentVersion++;
             case 35:
                 // Delete simperium DB - from 4.6 to 4.6.1
@@ -399,13 +392,10 @@ public class WordPressDB {
                 updateDotcomFlag();
                 currentVersion++;
             case 39:
-                AccountTable.migrationAddFirstNameLastNameAboutMeFields(db);
                 currentVersion++;
             case 40:
-                AccountTable.migrationAddDateFields(db);
                 currentVersion++;
             case 41:
-                AccountTable.migrationAddAccountSettingsFields(db);
                 currentVersion++;
             case 42:
                 db.execSQL(ADD_BLOGS_PLAN_ID);
@@ -470,24 +460,6 @@ public class WordPressDB {
     private void resetThemeTable() {
         db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
         db.execSQL(CREATE_TABLE_THEMES);
-    }
-
-    private void migratePreferencesToAccountTable(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String oldAccessToken = settings.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
-        String oldUsername = settings.getString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, null);
-        Account account = new Account();
-        account.setUserName(oldUsername);
-        if (oldAccessToken != null) {
-            account.setAccessToken(oldAccessToken);
-        }
-        AccountTable.save(account, db);
-
-        // Remove preferences
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.remove(DEPRECATED_WPCOM_USERNAME_PREFERENCE);
-        editor.remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE);
-        editor.apply();
     }
 
     public SQLiteDatabase getDatabase() {

@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -201,7 +202,6 @@ public class MagicLinkSignInFragment extends SignInFragment {
             mSignInButton.setText(R.string.sign_in);
         }
     }
-
     private void requestWPComEmailCheck() {
         WordPress.getRestClientUtilsV0().isAvailable(mUsername, new RestRequest.Listener() {
             @Override
@@ -243,13 +243,19 @@ public class MagicLinkSignInFragment extends SignInFragment {
     }
 
     private void saveUsernameAndTokenToAccount() {
-        Account account = AccountHelper.getDefaultAccount();
-        account.setAccessToken(mToken);
-        account.setUserName(mUsername);
-        account.save();
-        account.fetchAccountDetails();
+        AccountModel accountModel = mAccountStore.getAccount();
+        accountModel.setUserName(mUsername);
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(
+                new AccountStore.UpdateTokenPayload(mToken)));
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
     }
 
+    public void saveEmailToAccount(String email) {
+        AccountModel accountModel = mAccountStore.getAccount();
+        accountModel.setUserName(email);
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
+    }
     @Override
     public void onCredentialRetrieved(Credential credential) {
         super.onCredentialRetrieved(credential);

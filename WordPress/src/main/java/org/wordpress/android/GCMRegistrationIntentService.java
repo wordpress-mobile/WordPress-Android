@@ -10,7 +10,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -18,10 +18,19 @@ import org.wordpress.android.util.HelpshiftHelper;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 public class GCMRegistrationIntentService extends IntentService {
+    @Inject AccountStore mAccountStore;
 
     public GCMRegistrationIntentService() {
         super("GCMRegistrationIntentService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -46,7 +55,7 @@ public class GCMRegistrationIntentService extends IntentService {
         if (!TextUtils.isEmpty(gcmToken)) {
             AppLog.i(T.NOTIFS, "Sending GCM token to our remote services: " + gcmToken);
             // Register to WordPress.com notifications
-            if (AccountHelper.isSignedInWordPressDotCom()) {
+            if (mAccountStore.hasAccessToken()) {
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 // Get or create UUID for WP.com notes api
                 String uuid = preferences.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);

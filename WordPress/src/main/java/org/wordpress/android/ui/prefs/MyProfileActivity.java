@@ -8,22 +8,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.AccountModel;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.generated.AccountActionBuilder;
+import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.stores.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
-
     private final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
@@ -31,9 +34,13 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -83,15 +90,14 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
@@ -99,7 +105,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         super.onResume();
 
         if (NetworkUtils.isNetworkAvailable(this)) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 
@@ -113,7 +119,7 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     private void refreshDetails() {
-        Account account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         updateLabel(mFirstName, account != null ? StringUtils.unescapeHTML(account.getFirstName()) : null);
         updateLabel(mLastName, account != null ? StringUtils.unescapeHTML(account.getLastName()) : null);
         updateLabel(mDisplayName, account != null ? StringUtils.unescapeHTML(account.getDisplayName()) : null);
@@ -121,17 +127,17 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     private void updateMyProfileForLabel(TextView textView) {
-        Map<String, String> params = new HashMap<>();
-        params.put(restParamForTextView(textView), textView.getText().toString());
-        AccountHelper.getDefaultAccount().postAccountSettings(params);
+        PostAccountSettingsPayload payload = new PostAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put(restParamForTextView(textView), textView.getText().toString());
+        mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
     private void updateLabel(WPTextView textView, String text) {
         textView.setText(text);
         if (TextUtils.isEmpty(text)) {
             if (textView == mDisplayName) {
-                Account account = AccountHelper.getDefaultAccount();
-                mDisplayName.setText(account.getUserName());
+                mDisplayName.setText(mAccountStore.getAccount().getUserName());
             } else {
                 textView.setVisibility(View.GONE);
             }
@@ -159,19 +165,21 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     // helper method to get the rest parameter for a text view
     private String restParamForTextView(TextView textView) {
         if (textView == mFirstName) {
-            return AccountModel.RestParam.FIRST_NAME.getDescription();
+            return "first_name";
         } else if (textView == mLastName) {
-            return AccountModel.RestParam.LAST_NAME.getDescription();
+            return "last_name";
         } else if (textView == mDisplayName) {
-            return AccountModel.RestParam.DISPLAY_NAME.getDescription();
+            return "display_name";
         } else if (textView == mAboutMe) {
-            return AccountModel.RestParam.ABOUT_ME.getDescription();
+            return "description";
         }
         return null;
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
+    @Subscribe
+    public void onAccountChanged(OnAccountChanged event) {
         if (!isFinishing()) {
+            // TODO: STORES: manage errors
             refreshDetails();
         }
     }

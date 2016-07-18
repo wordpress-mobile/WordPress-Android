@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.util.AniUtils;
@@ -32,10 +33,11 @@ import org.wordpress.android.widgets.WPViewPager;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class PlansActivity extends AppCompatActivity {
-
     public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
 
@@ -47,9 +49,12 @@ public class PlansActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewGroup mManageBar;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.plans_activity);
 
@@ -265,5 +270,4 @@ public class PlansActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

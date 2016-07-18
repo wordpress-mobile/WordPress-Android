@@ -10,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
+
+import javax.inject.Inject;
 
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
@@ -41,8 +45,16 @@ public class SignInDialogFragment extends DialogFragment {
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
     public static final int ACTION_OPEN_APPLICATION_LOG = 4;
 
+    @Inject AccountStore mAccountStore;
+
     public SignInDialogFragment() {
         // Empty constructor required for DialogFragment
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
@@ -153,7 +165,8 @@ public class SignInDialogFragment extends DialogFragment {
                         SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().showConversation(getActivity(), Tag.ORIGIN_LOGIN_SCREEN_ERROR);
+                HelpshiftHelper.getInstance().showConversation(getActivity(), Tag.ORIGIN_LOGIN_SCREEN_ERROR,
+                        mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:

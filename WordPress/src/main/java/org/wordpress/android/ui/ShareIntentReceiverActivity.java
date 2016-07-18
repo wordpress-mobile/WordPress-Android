@@ -17,18 +17,22 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
@@ -44,6 +48,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
     private int mAccountIDs[];
@@ -53,6 +60,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.share_intent_receiver_dialog);
 
@@ -108,7 +116,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not signed in, then ask to sign in, else inform the user to set at least one blog
         // visible
-        if (!AccountHelper.isSignedIn()) {
+        if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -244,7 +252,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void savePreferences() {
         // If current blog is not set don't save preferences
         if (WordPress.currentBlog == null) {
-            return ;
+            return;
         }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
 
