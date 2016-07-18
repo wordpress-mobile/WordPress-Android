@@ -125,6 +125,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtDate;
         private final TextView txtTag;
         private final TextView txtWordCount;
+        private final TextView txtDateBelowTitle;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -153,6 +154,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtDate = (TextView) itemView.findViewById(R.id.text_date);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
             txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
+            txtDateBelowTitle = (TextView) itemView.findViewById(R.id.text_date_below_title);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -169,13 +171,28 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
-            // adjust the right padding of the post header to allow right padding of the  "..." icon
-            // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
-            layoutPostHeader.setPadding(
-                    layoutPostHeader.getPaddingLeft(),
-                    layoutPostHeader.getPaddingTop(),
-                    layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
-                    layoutPostHeader.getPaddingBottom());
+            // post header isn't shown for blog preview
+            if (!isBlogPreview()) {
+                // adjust the right padding of the post header to allow right padding of the  "..." icon
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
+                layoutPostHeader.setPadding(
+                        layoutPostHeader.getPaddingLeft(),
+                        layoutPostHeader.getPaddingTop(),
+                        layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
+                        layoutPostHeader.getPaddingBottom());
+            } else {
+                // hide the header
+                layoutPostHeader.setVisibility(View.GONE);
+                // add a bit more padding above the title
+                int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
+                txtTitle.setPadding(
+                        txtTitle.getPaddingLeft(),
+                        txtTitle.getPaddingTop() + extraPadding,
+                        txtTitle.getPaddingRight(),
+                        txtTitle.getPaddingBottom());
+                // show the dateline that appears below the title (hidden in layout)
+                txtDateBelowTitle.setVisibility(View.VISIBLE);
+            }
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
         }
