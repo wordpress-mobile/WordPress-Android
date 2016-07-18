@@ -920,7 +920,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mAccountStore.hasAccessToken()) {
             // On WordPress.com login, configure Simperium
             AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(getContext(), mAccountStore.getAccessToken());
+            SimperiumUtils.configureSimperium(getContext().getApplicationContext(),
+                    mAccountStore.getAccessToken());
             // Fetch user infos
             mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
             // Fetch sites
