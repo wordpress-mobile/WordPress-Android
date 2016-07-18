@@ -32,6 +32,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
 
@@ -350,7 +351,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             // TODO: STORES: this shouldn't exist, WPMainActivity should listen for OnSiteChanged() and check
             // mAccountStore.isSignedIn() there
             // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
-            if (!mAccountStore.isSignedIn()) {
+            if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 EventBus.getDefault().post(new UserSignedOutCompletely());
             }
 

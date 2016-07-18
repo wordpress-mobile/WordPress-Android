@@ -35,6 +35,7 @@ import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -61,6 +62,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPOptimizelyEventListener;
+import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import javax.inject.Inject;
@@ -78,6 +80,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private int  mAppBarElevation;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
@@ -195,7 +198,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         });
 
         if (savedInstanceState == null) {
-            if (mAccountStore.isSignedIn()) {
+            if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 startOptimizely(true);
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
@@ -467,7 +470,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!mAccountStore.isSignedIn()) {
+                } else if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -572,7 +575,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @SuppressWarnings("unused")
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
-        if (!mAccountStore.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
             ActivityLauncher.showSignInForResult(this);
         }
@@ -611,7 +614,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void handleBlogRemoved() {
-        if (!mAccountStore.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             Blog blog = WordPress.getCurrentBlog();

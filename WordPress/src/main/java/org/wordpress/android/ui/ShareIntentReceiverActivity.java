@@ -19,12 +19,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
@@ -113,7 +116,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not signed in, then ask to sign in, else inform the user to set at least one blog
         // visible
-        if (mAccountStore.isSignedIn()) {
+        if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();

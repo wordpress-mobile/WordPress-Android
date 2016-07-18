@@ -58,6 +58,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.io.DataInputStream;
@@ -334,7 +335,7 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
-        if (!mAccountStore.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             return;
         }
         // we only want to show user details for WordPress.com users

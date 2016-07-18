@@ -20,8 +20,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         // If not signed into WordPress inform the user
-        if (!mAccountStore.isSignedIn()) {
+        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
