@@ -938,8 +938,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
-        // Finish activity if account settings have been fetched
-        if (mAccountSettingsFetched && mAccountFetched) {
+        // Finish activity if account settings have been fetched or if it's a wporg site
+        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
             finishCurrentActivity();
         }
     }
