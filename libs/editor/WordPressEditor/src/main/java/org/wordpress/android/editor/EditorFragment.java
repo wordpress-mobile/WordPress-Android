@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -148,6 +149,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // -- WebView configuration
 
         mWebView = (EditorWebViewAbstract) view.findViewById(R.id.webview);
+
+        // Revert to compatibility WebView for custom ROMs using a 4.3 WebView in Android 4.4
+        if (mWebView.shouldSwitchToCompatibilityMode()) {
+            ViewGroup parent = (ViewGroup) mWebView.getParent();
+            int index = parent.indexOfChild(mWebView);
+            parent.removeView(mWebView);
+            mWebView = new EditorWebViewCompatibility(getActivity(), null);
+            mWebView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            parent.addView(mWebView, index);
+        }
 
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);

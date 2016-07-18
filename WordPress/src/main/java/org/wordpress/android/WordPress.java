@@ -49,7 +49,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -853,7 +852,6 @@ public class WordPress extends MultiDexApplication {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
-            PlansUtils.synchIAPsWordPressCom();
         }
 
         @Override

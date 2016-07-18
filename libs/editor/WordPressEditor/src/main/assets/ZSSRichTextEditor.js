@@ -436,6 +436,25 @@ ZSSEditor.getSelectedText = function() {
 	return selection.toString();
 };
 
+ZSSEditor.selectWordAroundCursor = function() {
+    var selection = window.getSelection();
+    // If there is no text selected, try to expand it to the word under the cursor
+    if (selection.rangeCount == 1) {
+        var range = selection.getRangeAt(0);
+        if (range.startOffset == range.endOffset) {
+            while (ZSSEditor.canExpandBackward(range)) {
+              range.setStart(range.startContainer, range.startOffset - 1);
+            }
+            while (ZSSEditor.canExpandForward(range)) {
+              range.setEnd(range.endContainer, range.endOffset + 1);
+            }
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+    return selection;
+};
+
 ZSSEditor.canExpandBackward = function(range) {
     // Can't expand if focus is not a text node
     if (!range.endContainer.nodeType == 3) {
@@ -443,12 +462,12 @@ ZSSEditor.canExpandBackward = function(range) {
     }
     var caretRange = range.cloneRange();
     if (range.startOffset == 0) {
-    return false;
+        return false;
     }
     caretRange.setStart(range.startContainer, range.startOffset - 1);
     caretRange.setEnd(range.startContainer, range.startOffset);
     if (!caretRange.toString().match(/\w/)) {
-    return false;
+        return false;
     }
     return true;
 };
@@ -459,35 +478,22 @@ ZSSEditor.canExpandForward = function(range) {
         return false;
     }
     var caretRange = range.cloneRange();
-    if (range.endOffset == range.endContainer.length)  {
-    return false;
+    if (range.endOffset == range.endContainer.length) {
+        return false;
     }
     caretRange.setStart(range.endContainer, range.endOffset);
-    if (range.endOffset )
-    caretRange.setEnd(range.endContainer, range.endOffset + 1);
-    var strin = caretRange.toString();
+    if (range.endOffset) {
+        caretRange.setEnd(range.endContainer, range.endOffset + 1);
+    }
     if (!caretRange.toString().match(/\w/)) {
-    return false;
+        return false;
     }
     return true;
 };
 
 ZSSEditor.getSelectedTextToLinkify = function() {
-  var selection = window.getSelection();
-  var element = ZSSEditor.getField("zss_field_content");
-  // If there is no text selected, try to expand it to the word under the cursor
-  if (selection.rangeCount == 1) {
-    var range = selection.getRangeAt(0);
-    while (ZSSEditor.canExpandBackward(range)) {
-      range.setStart(range.startContainer, range.startOffset - 1);
-    }
-    while (ZSSEditor.canExpandForward(range)) {
-      range.setEnd(range.endContainer, range.endOffset + 1);
-    }
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  return selection.toString();
+    ZSSEditor.selectWordAroundCursor();
+    return document.getSelection().toString();
 };
 
 ZSSEditor.getCaretArguments = function() {
@@ -600,26 +606,31 @@ ZSSEditor.getYCaretInfo = function() {
 // MARK: - Styles
 
 ZSSEditor.setBold = function() {
+    ZSSEditor.selectWordAroundCursor();
 	document.execCommand('bold', false, null);
 	ZSSEditor.sendEnabledStyles();
 };
 
 ZSSEditor.setItalic = function() {
+    ZSSEditor.selectWordAroundCursor();
 	document.execCommand('italic', false, null);
 	ZSSEditor.sendEnabledStyles();
 };
 
 ZSSEditor.setSubscript = function() {
+    ZSSEditor.selectWordAroundCursor();
 	document.execCommand('subscript', false, null);
 	ZSSEditor.sendEnabledStyles();
 };
 
 ZSSEditor.setSuperscript = function() {
+    ZSSEditor.selectWordAroundCursor();
 	document.execCommand('superscript', false, null);
 	ZSSEditor.sendEnabledStyles();
 };
 
 ZSSEditor.setStrikeThrough = function() {
+    ZSSEditor.selectWordAroundCursor();
 	var commandName = 'strikeThrough';
 	var isDisablingStrikeThrough = ZSSEditor.isCommandEnabled(commandName);
 
@@ -668,6 +679,7 @@ ZSSEditor.setStrikeThrough = function() {
 };
 
 ZSSEditor.setUnderline = function() {
+    ZSSEditor.selectWordAroundCursor();
 	document.execCommand('underline', false, null);
 	ZSSEditor.sendEnabledStyles();
 };
@@ -826,6 +838,7 @@ ZSSEditor.setOutdent = function() {
 };
 
 ZSSEditor.setTextColor = function(color) {
+    ZSSEditor.selectWordAroundCursor();
     ZSSEditor.restoreRange();
 	document.execCommand("styleWithCSS", null, true);
 	document.execCommand('foreColor', false, color);
@@ -835,6 +848,7 @@ ZSSEditor.setTextColor = function(color) {
 };
 
 ZSSEditor.setBackgroundColor = function(color) {
+    ZSSEditor.selectWordAroundCursor();
 	ZSSEditor.restoreRange();
 	document.execCommand("styleWithCSS", null, true);
 	document.execCommand('hiliteColor', false, color);
@@ -2584,6 +2598,31 @@ ZSSEditor.sendEnabledStyles = function(e) {
 	ZSSEditor.stylesCallback(items);
 };
 
+ZSSEditor.storeInlineStylesAsFunctions = function() {
+    var styles = [];
+
+    if (ZSSEditor.isCommandEnabled('bold')) {
+        styles.push(ZSSEditor.setBold);
+    }
+    if (ZSSEditor.isCommandEnabled('italic')) {
+        styles.push(ZSSEditor.setItalic);
+    }
+    if (ZSSEditor.isCommandEnabled('strikeThrough')) {
+        styles.push(ZSSEditor.setStrikeThrough);
+    }
+    if (ZSSEditor.isCommandEnabled('underline')) {
+        styles.push(ZSSEditor.setUnderline);
+    }
+    if (ZSSEditor.isCommandEnabled('subscript')) {
+        styles.push(ZSSEditor.setSubscript);
+    }
+    if (ZSSEditor.isCommandEnabled('superscript')) {
+        styles.push(ZSSEditor.setSuperscript);
+    }
+
+    return styles;
+};
+
 // MARK: - Commands: High Level Editing
 
 /**
@@ -3628,6 +3667,14 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
                     closerParentNode.removeChild(closerParentNode.firstChild);
                 }
 
+                var storedStyles = [];
+                if (this.getWrappedDomNode().innerHTML.length == 0) {
+                    // If the post is empty, store any active in-line formatting so it can be re-applied after the
+                    // DOM manipulations are completed
+                    // (Fix for https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/204)
+                    storedStyles = ZSSEditor.storeInlineStylesAsFunctions();
+                }
+
                 var paragraph = document.createElement("div");
                 var textNode = document.createTextNode("&#x200b;");
 
@@ -3638,6 +3685,11 @@ ZSSField.prototype.wrapCaretInParagraphIfNecessary = function() {
 
                 selection.removeAllRanges();
                 selection.addRange(range);
+
+                // Re-apply inline styles that were cleared
+                storedStyles.map(function(styleFunction) {
+                    styleFunction();
+                });
             }
         }
     }

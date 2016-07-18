@@ -1106,7 +1106,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 matcher.appendReplacement(stringBuffer, replacement);
             }
             matcher.appendTail(stringBuffer);
-            return stringBuffer.toString();
+            content = stringBuffer.toString();
+        }
+        if (content.contains("[caption")) {
+            // Convert old legacy post caption formatting to new format, to avoid being stripped by the visual editor
+            Pattern pattern = Pattern.compile("(\\[caption[^]]*caption=\"([^\"]*)\"[^]]*].+?)(\\[\\/caption])");
+            Matcher matcher = pattern.matcher(content);
+            StringBuffer stringBuffer = new StringBuffer();
+            while (matcher.find()) {
+                String replacement = matcher.group(1) + matcher.group(2) + matcher.group(3);
+                matcher.appendReplacement(stringBuffer, replacement);
+            }
+            matcher.appendTail(stringBuffer);
+            content = stringBuffer.toString();
         }
         return content;
     }
