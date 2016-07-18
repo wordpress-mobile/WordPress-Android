@@ -95,7 +95,8 @@ public class TestUtils {
         WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
             try {
-                WordPress.wordPressComSignOut(context);
+                WordPress app = (WordPress) context.getApplicationContext();
+                app.wordPressComSignOut();
             } catch (Exception e) {
                 // noop
             }
