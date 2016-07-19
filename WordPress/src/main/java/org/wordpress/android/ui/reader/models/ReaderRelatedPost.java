@@ -22,16 +22,38 @@ public class ReaderRelatedPost {
         mTitle = post.getTitle();
         mFeaturedImage = post.getFeaturedImage();
 
-        if (post.hasAuthorName() && post.hasBlogName()) {
-            if (post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
-                mByline = post.getBlogName();
+        /*
+         * we want to include the blog name in the byline when it's available, and most sites
+         * will have a blog name, but in rare cases there isn't one so we show the URL instead
+         */
+        String blogNameOrUrl;
+        boolean hasBlogNameOrUrl;
+        if (post.hasBlogName()) {
+            blogNameOrUrl = post.getBlogName();
+            hasBlogNameOrUrl = true;
+        } else if (post.hasBlogUrl()) {
+            blogNameOrUrl = post.getBlogUrl();
+            hasBlogNameOrUrl = true;
+        } else {
+            blogNameOrUrl = null;
+            hasBlogNameOrUrl = false;
+        }
+
+        /*
+         * The byline should show the author name and blog name if both are available, but if
+         * they're the same (which happens frequently) we only need to show the blog name.
+         * Otherwise, show either the blog name or author name depending on which is available.
+         */
+        if (post.hasAuthorName() && hasBlogNameOrUrl) {
+            if (post.getAuthorName().equalsIgnoreCase(blogNameOrUrl)) {
+                mByline = blogNameOrUrl;
             } else {
-                mByline = post.getAuthorName() + ", " + post.getBlogName();
+                mByline = post.getAuthorName() + ", " + blogNameOrUrl;
             }
         } else if (post.hasAuthorName()) {
             mByline = post.getAuthorName();
-        } else if (post.hasBlogName()) {
-            mByline = post.getBlogName();
+        } else if (hasBlogNameOrUrl) {
+            mByline = blogNameOrUrl;
         } else {
             mByline = "";
         }
