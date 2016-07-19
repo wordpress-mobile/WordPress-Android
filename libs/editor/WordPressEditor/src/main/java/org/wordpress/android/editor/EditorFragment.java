@@ -168,8 +168,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView.setOnDragListener(new View.OnDragListener() {
             private final String MIMETYPE_JPEG = "image/jpeg";
+            private final String MIMETYPE_PNG = "image/png";
             private final String[] mSupportedMimeTypes = { ClipDescription.MIMETYPE_TEXT_PLAIN,
-                    ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG };
+                    ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG, MIMETYPE_PNG };
 
             private boolean isSupported(ClipDescription clipDescription) {
                 for (String supportedMimeType : mSupportedMimeTypes) {
@@ -204,7 +205,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                             break;
                         }
 
-                        if (clipDescription.hasMimeType(MIMETYPE_JPEG)) {
+                        if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
                             mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
                         } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) ||
                                 clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
