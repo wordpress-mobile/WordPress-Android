@@ -207,8 +207,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                         if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
                             mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
-                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) ||
-                                clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                            mEditorFragmentListener.onTextDropped(dragEvent.getClipData().getItemAt(0).getText()
+                                    .toString());
+                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
                             mEditorFragmentListener.onTextDropped(dragEvent.getClipData().getItemAt(0).getHtmlText());
                         }
                         break;
