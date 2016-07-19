@@ -490,11 +490,11 @@ public class ReaderPostDetailFragment extends Fragment
 
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            TextView txtByline = (TextView) postView.findViewById(R.id.text_related_post_byline);
             WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
 
             txtTitle.setText(relatedPost.getTitle());
-            txtSubtitle.setText(relatedPost.getSubtitle());
+            txtByline.setText(relatedPost.getByline());
 
             imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (relatedPost.hasFeaturedImage()) {

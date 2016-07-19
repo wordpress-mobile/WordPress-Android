@@ -12,7 +12,7 @@ public class ReaderRelatedPost {
     private final long mPostId;
     private final long mBlogId;
     private final String mTitle;
-    private final String mSubtitle;
+    private final String mByline;
     private final String mFeaturedImage;
 
     public ReaderRelatedPost(@NonNull ReaderPost post) {
@@ -24,16 +24,16 @@ public class ReaderRelatedPost {
 
         if (post.hasAuthorName() && post.hasBlogName()) {
             if (post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
-                mSubtitle = post.getBlogName();
+                mByline = post.getBlogName();
             } else {
-                mSubtitle = post.getAuthorName() + ", " + post.getBlogName();
+                mByline = post.getAuthorName() + ", " + post.getBlogName();
             }
         } else if (post.hasAuthorName()) {
-            mSubtitle = post.getAuthorName();
+            mByline = post.getAuthorName();
         } else if (post.hasBlogName()) {
-            mSubtitle = post.getBlogName();
+            mByline = post.getBlogName();
         } else {
-            mSubtitle = "";
+            mByline = "";
         }
     }
 
@@ -49,8 +49,8 @@ public class ReaderRelatedPost {
         return mTitle;
     }
 
-    public String getSubtitle() {
-        return mSubtitle;
+    public String getByline() {
+        return mByline;
     }
 
     public String getFeaturedImage() {
