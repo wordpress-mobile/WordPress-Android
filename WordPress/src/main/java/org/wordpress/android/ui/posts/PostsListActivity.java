@@ -10,18 +10,17 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
+    public static final String EXTRA_SELECT_SITE_LOCAL_ID = "EXTRA_SELECT_SITE_LOCAL_ID";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
+    private int mSelectedSite = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +42,9 @@ public class PostsListActivity extends AppCompatActivity {
 
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        mSelectedSite = getIntent().getIntExtra(EXTRA_SELECT_SITE_LOCAL_ID, -1);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
-        showWarningToastIfNeeded(getIntent().getExtras());
     }
 
     @Override
@@ -84,19 +83,6 @@ public class PostsListActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    /**
-     * Show a toast when the user taps a Post Upload notification referencing a post that's not from the current
-     * selected Blog
-     */
-    private void showWarningToastIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_BLOG_LOCAL_ID) || isFinishing()) {
-            return;
-        }
-        if (extras.getInt(EXTRA_BLOG_LOCAL_ID, -1) != WordPress.getCurrentLocalTableBlogId()) {
-            ToastUtils.showToast(this, R.string.error_open_list_from_notification);
-        }
-    }
-
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
     }
@@ -116,5 +102,9 @@ public class PostsListActivity extends AppCompatActivity {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    public int getSelectedSite() {
+        return mSelectedSite;
     }
 }

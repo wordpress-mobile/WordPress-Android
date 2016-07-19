@@ -37,12 +37,14 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
     static final int PAGE_NUMBER_THEMES     = 3; // business only
 
     private static final String ARG_IS_BUSINESS_PLAN = "is_business_plan";
+    private static final String ARG_SITE_ID = "ARG_SITE_ID";
 
     private ViewPager mViewPager;
     private PageAdapter mPageAdapter;
     private TextView mTxtSkip;
     private TextView mTxtNext;
     private ViewGroup mIndicatorContainerView;
+    private int mSelectedSiteId;
 
     private int mPrevPageNumber = 0;
     private boolean mIsBusinessPlan;
@@ -55,8 +57,10 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mIsBusinessPlan = savedInstanceState.getBoolean(ARG_IS_BUSINESS_PLAN, false);
+            mSelectedSiteId = savedInstanceState.getInt(ARG_SITE_ID, -1);
         } else {
             mIsBusinessPlan = getIntent().getBooleanExtra(ARG_IS_BUSINESS_PLAN, false);
+            mSelectedSiteId = getIntent().getIntExtra(ARG_SITE_ID, -1);
         }
 
         mTxtSkip = (TextView) findViewById(R.id.text_skip);
@@ -239,5 +243,9 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
         public int getCount() {
             return mFragments.size();
         }
+    }
+
+    public int getSelectedSiteId() {
+        return mSelectedSiteId;
     }
 }

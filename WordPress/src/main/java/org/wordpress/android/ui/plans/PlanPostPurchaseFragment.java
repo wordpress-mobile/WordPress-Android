@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
 import org.wordpress.android.util.AppLog;
@@ -127,6 +126,10 @@ public class PlanPostPurchaseFragment extends Fragment {
     }
 
     private void handleButtonClick() {
+        int selectedSiteId = -1;
+        if (getActivity() instanceof PlanPostPurchaseActivity) {
+            selectedSiteId = ((PlanPostPurchaseActivity) getActivity()).getSelectedSiteId();
+        }
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
                 ThemeWebActivity.openCurrentTheme(getActivity(), ThemeWebActivity.ThemeWebActivityType.PREVIEW);
@@ -135,7 +138,7 @@ public class PlanPostPurchaseFragment extends Fragment {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity());
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.currentBlog, false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), selectedSiteId, false);
                 break;
         }
 

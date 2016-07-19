@@ -16,6 +16,7 @@ public class BlogUtils {
         }
     };
 
+
     /**
      * Return a blog name or blog home URL if trimmed name is an empty string
      */

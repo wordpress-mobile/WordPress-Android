@@ -172,8 +172,13 @@ public class PostsListFragment extends Fragment
     private void newPost() {
         if (!isAdded()) return;
 
+        int selectedSite = -1;
+        if (getActivity() instanceof PostsListActivity) {
+            selectedSite = ((PostsListActivity) getActivity()).getSelectedSite();
+        }
+
         if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage);
+            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), selectedSite, mIsPage);
         } else {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found);
         }

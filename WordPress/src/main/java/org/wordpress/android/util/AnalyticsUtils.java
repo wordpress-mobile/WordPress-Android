@@ -5,11 +5,12 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
 
@@ -88,9 +89,13 @@ public class AnalyticsUtils {
      * @param blog The blog object
      *
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog) {
-        trackWithBlogDetails(stat, blog, null);
+    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, SiteModel site) {
+        trackWithBlogDetails(stat, site, null);
     }
+
+    // TODO: STORES: do nothing
+    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site) {}
+    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site, Map<String, Object> properties) {}
 
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
@@ -100,24 +105,20 @@ public class AnalyticsUtils {
      * @param properties Properties to attach to the event
      *
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog, Map<String, Object> properties) {
-        if (blog == null || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
+    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, SiteModel site, Map<String, Object>
+            properties) {
+        if (site == null || (!site.isWPCom() && !site.isJetpack())) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        String blogID = blog.getDotComBlogId();
-        if (blogID != null) {
+        if (site.isWPCom()) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
-            properties.put(BLOG_ID_KEY, blogID);
-            properties.put(IS_JETPACK_KEY, blog.isJetpackPowered());
-        } else {
-            // When the blog ID is null here does mean the blog is not hosted on wpcom.
-            // It may be a Jetpack blog still in synch for options, or a self-hosted.
-            // In both of these cases skip adding blog details into properties.
+            properties.put(BLOG_ID_KEY, site.getSiteId());
+            properties.put(IS_JETPACK_KEY, site.isJetpack());
         }
 
         if (properties == null) {

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
@@ -83,8 +84,8 @@ public class StatsUtils {
     /**
      * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
-    public static String getCurrentDateTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static String getCurrentDateTZ(SiteModel site) {
+        String timezone = StatsUtils.getBlogTimezone(site);
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
             return getCurrentDate();

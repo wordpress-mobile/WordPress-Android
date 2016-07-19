@@ -23,6 +23,7 @@ import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -344,7 +345,7 @@ public class NotificationsListFragment extends Fragment
                     R.string.notifications_empty_view_reader
             );
         } else if (i == R.id.notifications_filter_unread) {// User might not have a blog, if so just show the title
-            if (WordPress.getCurrentBlog() == null) {
+            if (getSelectedSite() == null) {
                 showEmptyView(R.string.notifications_empty_unread);
             } else {
                 showEmptyView(
@@ -385,8 +386,8 @@ public class NotificationsListFragment extends Fragment
         }
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
-        if (i == R.id.notifications_filter_unread) {// Create a new post
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
+        if (i == R.id.notifications_filter_unread) { // Create a new post
+            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), getSelectedSite(), false);
         } else {// Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();
@@ -509,5 +510,13 @@ public class NotificationsListFragment extends Fragment
         }
 
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
+    }
+
+    public SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            mainActivity.getSelectedSite();
+        }
+        return null;
     }
 }

@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.ActivityLauncher;
 
 /**
  * An alert dialog fragment for XML-RPC authentication failures
@@ -50,7 +48,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
         b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getCurrentBlog());
+                // FIXME: ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getCurrentBlog());
             }
         });
         b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

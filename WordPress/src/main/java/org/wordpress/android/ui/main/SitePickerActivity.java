@@ -351,9 +351,7 @@ public class SitePickerActivity extends AppCompatActivity
     public void onSiteClick(SiteRecord site) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            WordPress.setCurrentBlogAndSetVisible(site.localId);
-            WordPress.wpDB.updateLastBlogId(site.localId);
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, site.localId));
             mDidUserSelectSite = true;
             new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
                     AsyncTask.THREAD_POOL_EXECUTOR, false);

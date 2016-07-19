@@ -20,13 +20,11 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.BlogUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -37,8 +35,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -79,25 +76,31 @@ public class MySiteFragment extends Fragment
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
 
-    private int mBlogLocalId = BlogUtils.BLOG_ID_INVALID;
-
     @Inject AccountStore mAccountStore;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
     }
 
-    public void setBlog(@Nullable final Blog blog) {
-        mBlogLocalId = BlogUtils.getBlogLocalId(blog);
+    public void setSelectedSite(int locaSiteId) {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            mainActivity.setSelectedSite(locaSiteId);
+        }
+    }
 
-        refreshBlogDetails(blog);
+    public SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
-        mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
     }
 
     @Override
@@ -112,10 +115,8 @@ public class MySiteFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        final Blog blog = WordPress.getBlog(mBlogLocalId);
-
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
-        refreshBlogDetails(blog);
+        refreshSelectedSiteDetails();
 
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
@@ -125,9 +126,7 @@ public class MySiteFragment extends Fragment
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAdded()
-                        && blog != null
-                        && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
                     AniUtils.showFab(mFabView, true);
                 }
             }
@@ -163,7 +162,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getBlog(mBlogLocalId), false);
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), getSelectedSite(), false);
             }
         });
 
@@ -177,21 +176,21 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentSite(getActivity(), WordPress.getBlog(mBlogLocalId));
+                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite());
             }
         });
 
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogStats(getActivity(), mBlogLocalId);
+                ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
             }
         });
 
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+                ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
             }
         });
 
@@ -240,14 +239,14 @@ public class MySiteFragment extends Fragment
         mSettingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getBlog(mBlogLocalId));
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), getSelectedSite());
             }
         });
 
         rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), WordPress.getBlog(mBlogLocalId));
+                ActivityLauncher.viewBlogAdmin(getActivity(), getSelectedSite());
             }
         });
 
@@ -263,7 +262,7 @@ public class MySiteFragment extends Fragment
 
     private void showSitePicker() {
         if (isAdded()) {
-            ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
+            ActivityLauncher.showSitePickerForResult(getActivity(), getSelectedSite());
         }
     }
 
@@ -277,7 +276,8 @@ public class MySiteFragment extends Fragment
                 if (resultCode == Activity.RESULT_OK) {
                     //reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatus.UNKNOWN);
-                    setBlog(WordPress.getCurrentBlog());
+                    int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                    setSelectedSite(selectedSite);
                 }
                 break;
 
@@ -295,7 +295,7 @@ public class MySiteFragment extends Fragment
 
             case RequestCodes.CREATE_BLOG:
                 // user created a new blog so, use and show that new one
-                setBlog(WordPress.getCurrentBlog());
+                // FIXME: setSelectedSite(WordPress.getCurrentBlog());
                 break;
         }
     }
@@ -324,12 +324,14 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails(@Nullable final Blog blog) {
+    private void refreshSelectedSiteDetails() {
         if (!isAdded()) {
             return;
         }
 
-        if (blog == null) {
+        SiteModel site = getSelectedSite();
+
+        if (site == null) {
             mScrollView.setVisibility(View.GONE);
             mFabView.setVisibility(View.GONE);
             mNoSiteView.setVisibility(View.VISIBLE);
@@ -349,15 +351,17 @@ public class MySiteFragment extends Fragment
         mScrollView.setVisibility(View.VISIBLE);
         mNoSiteView.setVisibility(View.GONE);
 
-        toggleAdminVisibility(blog);
+        toggleAdminVisibility(site);
 
         int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted =  blog.isAdmin() || !blog.isDotcomFlag();
-        boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
+        boolean isAdminOrSelfHosted =  site.isAdmin() || !site.isWPCom();
+        // TODO: STORES: implement capabilities in SiteStore
+        // boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
+        boolean canListPeople = true;
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
 
@@ -365,23 +369,18 @@ public class MySiteFragment extends Fragment
         int settingsVisibility = (isAdminOrSelfHosted || canListPeople) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(blog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
-
-        String blogName = StringUtils.unescapeHTML(blog.getBlogName());
-        String homeURL;
-        if (!TextUtils.isEmpty(blog.getHomeURL())) {
-            homeURL = UrlUtils.removeScheme(blog.getHomeURL());
-            homeURL = StringUtils.removeTrailingSlash(homeURL);
-        } else {
-            homeURL = UrlUtils.getHost(blog.getUrl());
-        }
-        String blogTitle = TextUtils.isEmpty(blogName) ? homeURL : blogName;
+        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(site.getUrl(), mBlavatarSz), WPNetworkImageView
+                .ImageType.BLAVATAR);
+        String homeUrl = SiteUtils.getHomeURLOrHostName(site);
+        String blogTitle = SiteUtils.getSiteNameOrHomeURL(site);
 
         mBlogTitleTextView.setText(blogTitle);
-        mBlogSubtitleTextView.setText(homeURL);
+        mBlogSubtitleTextView.setText(homeUrl);
 
         // Hide the Plan item if the Plans feature is not available for this blog
-        String planShortName = blog.getPlanShortName();
+        // TODO: STORES: implement plans in SiteStore
+        // String planShortName = site.getPlanShortName();
+        String planShortName = "// TODO: STORES";
         if (!TextUtils.isEmpty(planShortName)) {
             mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
@@ -390,22 +389,22 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void toggleAdminVisibility(@Nullable final Blog blog) {
-        if (blog == null) {
+    private void toggleAdminVisibility(@Nullable final SiteModel site) {
+        if (site == null) {
             return;
         }
-        if (shouldHideWPAdmin(blog)) {
+        if (shouldHideWPAdmin(site)) {
             mAdminView.setVisibility(View.GONE);
         } else {
             mAdminView.setVisibility(View.VISIBLE);
         }
     }
 
-    private boolean shouldHideWPAdmin(@Nullable final Blog blog) {
-        if (blog == null) {
+    private boolean shouldHideWPAdmin(@Nullable final SiteModel site) {
+        if (site == null) {
             return false;
         }
-        if (!blog.isDotcomFlag()) {
+        if (!site.isWPCom()) {
             return false;
         } else {
             Date dateCreated = DateTimeUtils.iso8601ToJavaDate(mAccountStore.getAccount().getDate());
@@ -448,7 +447,6 @@ public class MySiteFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-
-        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
+        refreshSelectedSiteDetails();
     }
 }

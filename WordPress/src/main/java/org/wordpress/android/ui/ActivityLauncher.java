@@ -19,6 +19,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -57,10 +58,11 @@ import java.security.GeneralSecurityException;
 public class ActivityLauncher {
     private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
     private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
+    public static final String EXTRA_SITE = "EXTRA_SITE";
 
-    public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
+    public static void showSitePickerForResult(Activity activity, SiteModel selectedSite) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, selectedSite.getId());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,
@@ -68,17 +70,16 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void viewBlogStats(Context context, int blogLocalTableId) {
-        if (blogLocalTableId == 0) return;
-
+    public static void viewBlogStats(Context context, SiteModel site) {
+        if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        intent.putExtra(EXTRA_SITE, site);
         slideInFromRight(context, intent);
     }
 
-    public static void viewBlogPlans(Context context, int blogLocalTableId) {
+    public static void viewBlogPlans(Context context, SiteModel site) {
         Intent intent = new Intent(context, PlansActivity.class);
-        intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
+        intent.putExtra(EXTRA_SITE, site);
         slideInFromRight(context, intent);
     }
 
@@ -120,22 +121,22 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
-    public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
-        if (blog == null) return;
+    public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
+        if (site == null) return;
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
-        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, site.getId());
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, blog);
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
-    public static void viewCurrentSite(Context context, Blog blog) {
-        if (blog == null) {
+    public static void viewCurrentSite(Context context, SiteModel site) {
+        if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String siteUrl = blog.getAlternativeHomeUrl();
+        String siteUrl = site.getUrl();
         Uri uri = Uri.parse(siteUrl);
 
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
@@ -146,16 +147,16 @@ public class ActivityLauncher {
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    public static void viewBlogAdmin(Context context, Blog blog) {
-        if (blog == null) {
+    public static void viewBlogAdmin(Context context, SiteModel site) {
+        if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String adminUrl = blog.getAdminUrl();
+        String adminUrl = site.getAdminUrl();
         Uri uri = Uri.parse(adminUrl);
 
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
+        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
@@ -173,11 +174,10 @@ public class ActivityLauncher {
         slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
-        if (blog == null) return;
-
+    public static void addNewBlogPostOrPageForResult(Activity context, int siteId, boolean isPage) {
+        if (siteId == -1) return;
         // Create a new post object and assign default settings
-        Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
+        Post newPost = new Post(siteId, isPage);
         newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
         newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
@@ -187,6 +187,11 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         context.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void addNewBlogPostOrPageForResult(Activity context, SiteModel site, boolean isPage) {
+        if (site == null) return;
+        addNewBlogPostOrPageForResult(context, site.getId(), isPage);
     }
 
     public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {

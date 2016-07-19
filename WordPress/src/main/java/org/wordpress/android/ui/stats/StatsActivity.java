@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
@@ -82,7 +83,7 @@ public class StatsActivity extends AppCompatActivity
     private NestedScrollViewExt mOuterScrollView;
 
     private static final int REQUEST_JETPACK = 7000;
-    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
+    public static final String ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
 
@@ -95,8 +96,8 @@ public class StatsActivity extends AppCompatActivity
     @Inject SiteStore mSiteStore;
 
     private int mResultCode = -1;
+    private SiteModel mSite;
     private boolean mIsInFront;
-    private int mLocalBlogID = -1;
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.INSIGHTS;
     private String mRequestedDate;
     private boolean mIsUpdatingStats;
@@ -105,7 +106,6 @@ public class StatsActivity extends AppCompatActivity
     private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
-
     private boolean mThereWasAnErrorLoadingStats = false;
 
 
@@ -148,7 +148,7 @@ public class StatsActivity extends AppCompatActivity
                             return;
                         }
 
-                        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
                         if (checkCredentials()) {
                             updateTimeframeAndDateAndStartRefreshOfFragments(true);
                         }
@@ -162,7 +162,7 @@ public class StatsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-            mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_SITE_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
@@ -177,7 +177,7 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
-            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_SITE_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
@@ -352,7 +352,7 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
-        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putInt(ARG_LOCAL_TABLE_SITE_ID, mLocalBlogID);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
         outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);
@@ -546,6 +546,7 @@ public class StatsActivity extends AppCompatActivity
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
             if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
                 if (currentBlog.getDotComBlogId() == null) {
+                    // TODO: STORES: this must die
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
