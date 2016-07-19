@@ -23,7 +23,11 @@ public class ReaderRelatedPost {
         mFeaturedImage = post.getFeaturedImage();
 
         if (post.hasAuthorName() && post.hasBlogName()) {
-            mSubtitle = post.getAuthorName() + ", " + post.getBlogName();
+            if (post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
+                mSubtitle = post.getBlogName();
+            } else {
+                mSubtitle = post.getAuthorName() + ", " + post.getBlogName();
+            }
         } else if (post.hasAuthorName()) {
             mSubtitle = post.getAuthorName();
         } else if (post.hasBlogName()) {
