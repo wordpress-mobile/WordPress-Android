@@ -295,7 +295,8 @@ public class WordPress extends MultiDexApplication {
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 

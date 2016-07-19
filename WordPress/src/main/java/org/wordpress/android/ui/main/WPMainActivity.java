@@ -30,8 +30,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.network.MemorizingTrustManager;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.OnAuthenticationChanged;
@@ -59,6 +59,7 @@ import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPOptimizelyEventListener;
@@ -82,6 +83,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
@@ -583,7 +585,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.InvalidSslCertificateDetected event) {
-        SelfSignedSSLCertsManager.askForSslTrust(this, null);
+        SelfSignedSSLUtils.showSSLWarningDialog(this, mMemorizingTrustManager, null);
     }
 
     @SuppressWarnings("unused")

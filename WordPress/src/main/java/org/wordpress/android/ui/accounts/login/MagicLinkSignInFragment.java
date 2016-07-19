@@ -245,7 +245,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     private void saveUsernameAndTokenToAccount() {
         AccountModel accountModel = mAccountStore.getAccount();
         accountModel.setUserName(mUsername);
-        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAccountAction(accountModel));
         mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(
                 new AccountStore.UpdateTokenPayload(mToken)));
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -254,7 +254,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
     public void saveEmailToAccount(String email) {
         AccountModel accountModel = mAccountStore.getAccount();
         accountModel.setUserName(email);
-        mDispatcher.dispatch(AccountActionBuilder.newUpdateAction(accountModel));
+        mDispatcher.dispatch(AccountActionBuilder.newUpdateAccountAction(accountModel));
     }
     @Override
     public void onCredentialRetrieved(Credential credential) {

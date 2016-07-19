@@ -532,7 +532,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
         }
         // Fetch user infos
-        mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+        mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+        mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         // Fetch sites
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
