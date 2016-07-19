@@ -923,7 +923,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             SimperiumUtils.configureSimperium(getContext().getApplicationContext(),
                     mAccountStore.getAccessToken());
             // Fetch user infos
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             // Fetch sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
             // Setup legacy access token storage
