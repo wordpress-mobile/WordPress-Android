@@ -1,14 +1,27 @@
 package org.wordpress.android.ui.publicize;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.EditTextPreference;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.util.ArraySet;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestClient;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.PublicizeButton;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -20,11 +33,17 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import de.greenrobot.event.EventBus;
 
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, SiteSettingsInterface.SiteSettingsListener {
     private static final String TWITTER_PREFIX = "@";
+    private MultiSelectListPreference mButtonsPreference;
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
@@ -34,6 +53,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private SummaryEditTextPreference mTwitterUsernamePreference;
     private Blog mBlog;
     private boolean mShouldFetch;
+    private ArrayList<PublicizeButton> mPublicizeButtons;
 
     public PublicizeManageConnectionsFragment() {
     }
@@ -53,6 +73,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mBlog, this);
         setRetainInstance(true);
 
+        configureButtonsPreference();
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
@@ -62,6 +83,50 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
         mCommentLikesPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_comment_likes);
         mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
+    }
+
+    private void configureButtonsPreference() {
+        mPublicizeButtons = new ArrayList<>();
+        mButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
+        WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String yup = "yup";
+
+                try {
+                    JSONArray jsonArray = response.getJSONArray("sharing_buttons");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
+                        mPublicizeButtons.add(publicizeButton);
+                    }
+
+                    String[] entries = new String[mPublicizeButtons.size()];
+                    String[] entryValues = new String[mPublicizeButtons.size()];
+                    HashSet<String> selectedSet = new HashSet<>();
+
+                    for (int i = 0; i < mPublicizeButtons.size(); i++) {
+                        PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+                        entries[i] = publicizeButton.getName();
+                        entryValues[i] = publicizeButton.getId();
+                        if (publicizeButton.isEnabled()) {
+                            selectedSet.add(publicizeButton.getId());
+                        }
+                    }
+
+                    mButtonsPreference.setEntries(entries);
+                    mButtonsPreference.setEntryValues(entryValues);
+                    mButtonsPreference.setValues(selectedSet);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
     }
 
     private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {

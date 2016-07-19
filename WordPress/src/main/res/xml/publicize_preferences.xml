@@ -4,6 +4,10 @@
     <PreferenceCategory
         android:title="Visual">
 
+        <MultiSelectListPreference
+            android:key="@string/pref_key_sharing_buttons"
+            android:title="Sharing Buttons"/>
+
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/publicize_label"
             android:layout="@layout/preference_layout"

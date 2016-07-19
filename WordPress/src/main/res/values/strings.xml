@@ -1591,6 +1591,7 @@
     <string name="connecting_account">Connecting account</string>
     <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
     <string name="pref_key_sharing_reblog_and_like" translatable="false">wp_pref_sharing_reblog_and_like</string>
+    <string name="pref_key_sharing_buttons" translatable="false">wp_pref_sharing_buttons</string>
     <string name="pref_key_reblog" translatable="false">wp_pref_sharing_reblog</string>
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
