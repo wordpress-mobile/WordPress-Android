@@ -27,7 +27,6 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
-    public static final int SHOW_CERT_DETAILS = 4;
     public static final int SMART_LOCK_SAVE = 5;
     public static final int SMART_LOCK_READ = 6;
 
@@ -109,9 +108,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SHOW_CERT_DETAILS) {
-            getSignInFragment().askForSslTrust();
-        } else if (requestCode == SMART_LOCK_SAVE) {
+        if (requestCode == SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
                 AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
                 AppLog.d(T.NUX, "Credentials saved");

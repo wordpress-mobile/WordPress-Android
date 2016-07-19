@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.Html;
@@ -32,6 +33,7 @@ import com.optimizely.Optimizely;
 import com.optimizely.Variable.LiveVariable;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -39,12 +41,14 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
 import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.network.HTTPAuthManager;
+import org.wordpress.android.stores.network.MemorizingTrustManager;
+import org.wordpress.android.stores.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.stores.store.AccountStore.AuthenticationError;
@@ -58,10 +62,11 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.GenericCallback;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SelfSignedSSLUtils;
+import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -125,6 +130,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
+    protected @Inject HTTPAuthManager mHTTPAuthManager;
+    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
+
 
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
@@ -561,6 +569,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPCom() {
         // TODO: STORES: mTwoStepCode
         // TODO: STORES: mShouldSendTwoStepSMS
+        startProgress(getString(R.string.connecting_wpcom));
         AuthenticatePayload payload = new AuthenticatePayload(mUsername, mPassword);
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
@@ -578,15 +587,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPOrg() {
+        startProgress(getString(R.string.signing_in));
         String url = EditTextUtils.getText(mUrlEditText).trim();
 
-        RefreshSitesXMLRPCPayload payload = new RefreshSitesXMLRPCPayload();
-        payload.username = mUsername;
-        payload.password = mPassword;
-        payload.url = url;
-        mSelfhostedPayload = payload;
+        mSelfhostedPayload = new RefreshSitesXMLRPCPayload();
+        mSelfhostedPayload.username = mUsername;
+        mSelfhostedPayload.password = mPassword;
+        mSelfhostedPayload.url = url;
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(payload));
+        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+
     }
 
     private boolean checkNetworkConnectivity() {
@@ -618,12 +628,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
         if (isWPComLogin()) {
             AppLog.i(T.NUX, "User tries to sign in on WordPress.com with username: " + mUsername);
-            startProgress(getString(R.string.connecting_wpcom));
             signInAndFetchBlogListWPCom();
         } else {
             String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
             AppLog.i(T.NUX, "User tries to sign in on Self Hosted: " + selfHostedUrl + " with username: " + mUsername);
-            startProgress(getString(R.string.signing_in));
             signInAndFetchBlogListWPOrg();
         }
     }
@@ -751,18 +759,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mForgotPassword.setEnabled(true);
     }
 
-    public void askForSslTrust() {
-        SelfSignedSSLCertsManager.askForSslTrust(getActivity(), new GenericCallback<Void>() {
-            @Override
-            public void callback(Void aVoid) {
-                // Try to signin again
-                signIn();
-            }
-        });
-        endProgress();
-    }
-
-    private void askForHttpAuthCredentials() {
+    private void askForHttpAuthCredentials(@NonNull final String url) {
         // Prompt for http credentials
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(R.string.http_authorization_required);
@@ -775,13 +772,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mHttpUsername = EditTextUtils.getText(usernameEditText);
                 mHttpPassword = EditTextUtils.getText(passwordEditText);
-                signIn();
-            }
-        });
-
-        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
+                mHTTPAuthManager.addHTTPAuthCredentials(mHttpUsername, mHttpPassword, url, null);
+                signInAndFetchBlogListWPOrg();
             }
         });
 
@@ -898,7 +890,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
@@ -909,7 +901,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
@@ -932,7 +924,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         // Sites updated, login step is successful. Note: the user can have zero sites.
@@ -944,5 +936,39 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
             finishCurrentActivity();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDiscoverySucceeded(AccountStore.OnDiscoverySucceeded event) {
+        AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
+        mSelfhostedPayload.url = event.xmlRpcEndpoint;
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(mSelfhostedPayload));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDiscoveryFailed(AccountStore.OnDiscoveryFailed event) {
+        endProgress();
+        if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
+            signInAndFetchBlogListWPCom();
+        } else if (event.error == DiscoveryError.HTTP_AUTH_REQUIRED) {
+            askForHttpAuthCredentials(event.failedEndpoint);
+        } else if (event.error == DiscoveryError.ERRONEOUS_SSL_CERTIFICATE) {
+            mSelfhostedPayload.url = event.failedEndpoint;
+            if (isAdded()) {
+                SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
+                        new Callback() {
+                    @Override
+                    public void certificateTrusted() {
+                        if (mSelfhostedPayload == null) {
+                            return;
+                        }
+                        // retry login with the same parameters
+                        startProgress(getString(R.string.signing_in));
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mSelfhostedPayload));
+                    }
+                });
+            }
+        }
+        AppLog.e(T.API, "Discover error: " + event.error);
     }
 }

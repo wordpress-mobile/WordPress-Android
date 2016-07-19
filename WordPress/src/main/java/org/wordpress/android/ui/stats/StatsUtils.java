@@ -97,10 +97,10 @@ public class StatsUtils {
     /**
      * Get the current datetime of the blog *
      */
-    public static String getCurrentDateTimeTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static String getCurrentDateTimeTZ(SiteModel site) {
+        String timezone = StatsUtils.getBlogTimezone(site);
         if (timezone == null) {
-            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return getCurrentDatetime();
         }
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
@@ -110,10 +110,10 @@ public class StatsUtils {
     /**
      * Get the current datetime of the blog in Ms *
      */
-    public static long getCurrentDateTimeMsTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static long getCurrentDateTimeMsTZ(SiteModel site) {
+        String timezone = site
         if (timezone == null) {
-            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return new Date().getTime();
         }
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
@@ -135,26 +135,6 @@ public class StatsUtils {
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(new Date());
-    }
-
-    private static String getBlogTimezone(Blog blog) {
-        if (blog == null) {
-            AppLog.w(T.UTILS, "Blog object is null!! Can't read timezone opt then.");
-            return null;
-        }
-
-        JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
-        String timezone = null;
-        if (jsonOptions != null && jsonOptions.has("time_zone")) {
-            try {
-                timezone = jsonOptions.getJSONObject("time_zone").getString("value");
-            } catch (JSONException e) {
-                AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
-            }
-        } else {
-            AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
-        }
-        return timezone;
     }
 
     private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {

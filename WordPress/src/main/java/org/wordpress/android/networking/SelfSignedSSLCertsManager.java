@@ -1,18 +1,13 @@
 package org.wordpress.android.networking;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.http.SslCertificate;
 import android.os.Bundle;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.GenericCallback;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,7 +24,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -44,42 +38,6 @@ public class SelfSignedSSLCertsManager {
         mLocalTrustStoreFile = new File(ctx.getFilesDir(), "self_signed_certs_truststore.bks");
         createLocalKeyStoreFile();
         mLocalKeyStore = loadTrustStore(ctx);
-    }
-
-    public static void askForSslTrust(final Context ctx, final GenericCallback<Void> certificateTrusted) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-        alert.setTitle(ctx.getString(R.string.ssl_certificate_error));
-        alert.setMessage(ctx.getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        SelfSignedSSLCertsManager selfSignedSSLCertsManager;
-                        try {
-                            selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(ctx);
-                            X509Certificate[] certificates = selfSignedSSLCertsManager.getLastFailureChain();
-                            AppLog.i(T.NUX, "Add the following certificate to our Certificate Manager: " +
-                                    Arrays.toString(certificates));
-                            selfSignedSSLCertsManager.addCertificates(certificates);
-                        } catch (GeneralSecurityException e) {
-                            AppLog.e(T.API, e);
-                        } catch (IOException e) {
-                            AppLog.e(T.API, e);
-                        }
-                        if (certificateTrusted != null) {
-                            certificateTrusted.callback(null);
-                        }
-                    }
-                }
-        );
-        alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ActivityLauncher.viewSSLCerts(ctx);
-            }
-        });
-        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alert.show();
     }
 
     public static synchronized SelfSignedSSLCertsManager getInstance(Context ctx)
