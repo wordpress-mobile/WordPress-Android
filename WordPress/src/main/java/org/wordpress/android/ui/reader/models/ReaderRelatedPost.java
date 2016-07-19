@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * simplified version of a reader post that contains only the fields necessary for a related post
@@ -24,19 +25,19 @@ public class ReaderRelatedPost {
 
         /*
          * we want to include the blog name in the byline when it's available, and most sites
-         * will have a blog name, but in rare cases there isn't one so we show the URL instead
+         * will have a name, but in rare cases there isn't one so we show the domain instead
          */
-        String blogNameOrUrl;
-        boolean hasBlogNameOrUrl;
+        String blogNameOrDomain;
+        boolean hasBlogNameOrDomain;
         if (post.hasBlogName()) {
-            blogNameOrUrl = post.getBlogName();
-            hasBlogNameOrUrl = true;
+            blogNameOrDomain = post.getBlogName();
+            hasBlogNameOrDomain = true;
         } else if (post.hasBlogUrl()) {
-            blogNameOrUrl = post.getBlogUrl();
-            hasBlogNameOrUrl = true;
+            blogNameOrDomain = UrlUtils.getHost(post.getBlogUrl());
+            hasBlogNameOrDomain = true;
         } else {
-            blogNameOrUrl = null;
-            hasBlogNameOrUrl = false;
+            blogNameOrDomain = null;
+            hasBlogNameOrDomain = false;
         }
 
         /*
@@ -44,16 +45,16 @@ public class ReaderRelatedPost {
          * they're the same (which happens frequently) we only need to show the blog name.
          * Otherwise, show either the blog name or author name depending on which is available.
          */
-        if (post.hasAuthorName() && hasBlogNameOrUrl) {
-            if (post.getAuthorName().equalsIgnoreCase(blogNameOrUrl)) {
-                mByline = blogNameOrUrl;
+        if (post.hasAuthorName() && hasBlogNameOrDomain) {
+            if (post.getAuthorName().equalsIgnoreCase(blogNameOrDomain)) {
+                mByline = blogNameOrDomain;
             } else {
-                mByline = post.getAuthorName() + ", " + blogNameOrUrl;
+                mByline = post.getAuthorName() + ", " + blogNameOrDomain;
             }
         } else if (post.hasAuthorName()) {
             mByline = post.getAuthorName();
-        } else if (hasBlogNameOrUrl) {
-            mByline = blogNameOrUrl;
+        } else if (hasBlogNameOrDomain) {
+            mByline = blogNameOrDomain;
         } else {
             mByline = "";
         }
