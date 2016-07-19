@@ -188,6 +188,19 @@ ZSSEditor.getField = function(fieldId) {
     return field;
 };
 
+ZSSEditor.moveCaretToCoords = function(x, y) {
+    if (document.caretRangeFromPoint) {
+        var range = document.caretRangeFromPoint(x, y);
+
+        var selection = window.getSelection();
+
+        if (range && selection.rangeCount) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+};
+
 ZSSEditor.getFocusedField = function() {
     var currentField = $(this.findParentContenteditableDiv());
     var currentFieldId;

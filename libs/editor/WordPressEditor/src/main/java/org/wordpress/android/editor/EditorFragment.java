@@ -19,6 +19,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ import org.json.JSONObject;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcodeUtils;
@@ -173,6 +175,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         break;
                     case DragEvent.ACTION_DRAG_ENTERED:
                         // would be nice to start marking the place the item will drop
+                        break;
+                    case DragEvent.ACTION_DRAG_LOCATION:
+                        int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
+                        int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
+
+                        mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
                         break;
                     case DragEvent.ACTION_DRAG_EXITED:
                         // clear any drop marking maybe
