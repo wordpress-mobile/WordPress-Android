@@ -16,6 +16,7 @@ import java.util.HashMap;
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
+    public abstract void insertContent(CharSequence text);
     public abstract CharSequence getTitle();
     public abstract CharSequence getContent();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
@@ -141,6 +142,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onSettingsClicked();
         void onAddMediaClicked();
+        void onTextDropped(String text);
         void onMediaDropped(Uri mediaUri);
         void onMediaRetryClicked(String mediaId);
         void onMediaUploadCancelClicked(String mediaId, boolean delete);

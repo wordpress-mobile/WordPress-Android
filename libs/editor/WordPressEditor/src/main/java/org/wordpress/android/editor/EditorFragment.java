@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ClipDescription;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -19,7 +20,6 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -167,12 +167,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setAuthHeaderRequestListener(this);
 
         mWebView.setOnDragListener(new View.OnDragListener() {
+            private final String MIMETYPE_JPEG = "image/jpeg";
+            private final String[] mSupportedMimeTypes = { ClipDescription.MIMETYPE_TEXT_PLAIN,
+                    ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG };
+
+            private boolean isSupported(ClipDescription clipDescription) {
+                for (String supportedMimeType : mSupportedMimeTypes) {
+                    if (clipDescription.hasMimeType(supportedMimeType)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
                 switch (dragEvent.getAction()) {
                     case DragEvent.ACTION_DRAG_STARTED:
-                        // do nothing
-                        break;
+                        return isSupported(dragEvent.getClipDescription());
                     case DragEvent.ACTION_DRAG_ENTERED:
                         // would be nice to start marking the place the item will drop
                         break;
@@ -186,14 +199,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         // clear any drop marking maybe
                         break;
                     case DragEvent.ACTION_DROP:
-                        mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                        ClipDescription clipDescription = dragEvent.getClipDescription();
+                        if (clipDescription.getMimeTypeCount() < 1) {
+                            break;
+                        }
+
+                        if (clipDescription.hasMimeType(MIMETYPE_JPEG)) {
+                            mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) ||
+                                clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                            mEditorFragmentListener.onTextDropped(dragEvent.getClipData().getItemAt(0).getHtmlText());
+                        }
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
                         // clear any drop marking maybe
                     default:
                         break;
                 }
-                return true;            }
+                return true;
+            }
         });
 
         if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
@@ -791,6 +815,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void setContent(CharSequence text) {
         mContentHtml = text.toString();
+    }
+
+    @Override
+    public void insertContent(CharSequence text) {
+        mWebView.execJavaScriptFromString("ZSSEditor.insertHTML('" + text + "');");
     }
 
     /**

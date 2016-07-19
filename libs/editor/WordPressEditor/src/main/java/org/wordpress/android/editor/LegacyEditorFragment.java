@@ -155,6 +155,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
+    public void insertContent(CharSequence text) {
+        // not supported in the Legacy editor
+    }
+
+    @Override
     public Spanned getSpannedContent() {
         return mContentEditText.getText();
     }
