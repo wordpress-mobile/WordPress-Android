@@ -2047,11 +2047,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onTextDropped(String text) {
-        mEditorFragment.insertContent(text);
-    }
-
-    @Override
     public void onMediaDropped(Uri mediaUri) {
         fetchMedia(mediaUri);
     }

@@ -52,10 +52,6 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
-        public void insertContent(CharSequence text) {
-        }
-
-        @Override
         public CharSequence getTitle() {
             return null;
         }

@@ -208,10 +208,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
                             mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
                         } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                            mEditorFragmentListener.onTextDropped(dragEvent.getClipData().getItemAt(0).getText()
-                                    .toString());
+                            insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
                         } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                            mEditorFragmentListener.onTextDropped(dragEvent.getClipData().getItemAt(0).getHtmlText());
+                            insertTextToEditor(dragEvent.getClipData().getItemAt(0).getHtmlText());
                         }
                         break;
                     case DragEvent.ACTION_DRAG_ENDED:
@@ -220,6 +219,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         break;
                 }
                 return true;
+            }
+
+            private void insertTextToEditor(String text) {
+                mWebView.execJavaScriptFromString("ZSSEditor.insertHTML('" + text + "');");
             }
         });
 
@@ -818,11 +821,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void setContent(CharSequence text) {
         mContentHtml = text.toString();
-    }
-
-    @Override
-    public void insertContent(CharSequence text) {
-        mWebView.execJavaScriptFromString("ZSSEditor.insertHTML('" + text + "');");
     }
 
     /**
