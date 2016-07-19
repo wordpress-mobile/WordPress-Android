@@ -181,7 +181,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
                 txtTitle.setPadding(
                         txtTitle.getPaddingLeft(),
-                        txtTitle.getTotalPaddingTop() + extraPadding,
+                        txtTitle.getPaddingTop() + extraPadding,
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
                 // show the dateline that appears below the title (hidden in layout)
