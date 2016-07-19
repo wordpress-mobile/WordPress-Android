@@ -18,7 +18,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -44,15 +43,11 @@ import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
     private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
@@ -240,19 +235,10 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewSSLCerts(Context context) {
-        try {
-            Intent intent = new Intent(context, SSLCertsViewActivity.class);
-            SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(context);
-            String lastFailureChainDescription =
-                    selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-            intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
-            context.startActivity(intent);
-        } catch (GeneralSecurityException e) {
-            AppLog.e(AppLog.T.API, e);
-        } catch (IOException e) {
-            AppLog.e(AppLog.T.API, e);
-        }
+    public static void viewSSLCerts(Context context, String certificateString) {
+        Intent intent = new Intent(context, SSLCertsViewActivity.class);
+        intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, certificateString.replaceAll("\n", "<br/>"));
+        context.startActivity(intent);
     }
 
     public static void newBlogForResult(Activity activity) {
