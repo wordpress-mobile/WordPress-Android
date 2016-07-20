@@ -221,7 +221,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -575,6 +574,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 return true;
