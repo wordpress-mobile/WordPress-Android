@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
@@ -52,12 +51,6 @@ public class PostsListActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     /**

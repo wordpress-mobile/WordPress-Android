@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    SlidingScrollView is used for animating the slide in-out between fragments
-    Background color is set so the fragment below it, PeopleListFragment, won't be visible
--->
-<org.wordpress.android.ui.SlidingScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -159,4 +155,4 @@
             android:textStyle="italic"
             android:text="@string/invite_message_info"/>
     </LinearLayout>
-</org.wordpress.android.ui.SlidingScrollView>
+</ScrollView>
