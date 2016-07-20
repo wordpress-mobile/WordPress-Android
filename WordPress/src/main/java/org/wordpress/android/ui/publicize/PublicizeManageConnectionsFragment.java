@@ -187,7 +187,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
             JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.put("connections", jsonArray);
+                jsonObject.put("sharing_buttons", jsonArray);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
