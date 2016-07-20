@@ -597,7 +597,13 @@ public class ImageUtils {
         return output;
     }
 
-    public static Bitmap getRoundedEdgeBitmap(final Bitmap bitmap, int radius) {
+    /**
+     * Returns the passed bitmap with rounded corners
+     * @param bitmap - the bitmap to modify
+     * @param radius - the radius of the corners
+     * @param borderColor - the border to apply (use Color.TRANSPARENT for none)
+     */
+    public static Bitmap getRoundedEdgeBitmap(final Bitmap bitmap, int radius, int borderColor) {
         if (bitmap == null) {
             return null;
         }
@@ -616,10 +622,12 @@ public class ImageUtils {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1f);
-        paint.setColor(Color.DKGRAY);
-        canvas.drawRoundRect(rectF, radius, radius, paint);
+        if (borderColor != Color.TRANSPARENT) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(1f);
+            paint.setColor(borderColor);
+            canvas.drawRoundRect(rectF, radius, radius, paint);
+        }
 
         return output;
     }

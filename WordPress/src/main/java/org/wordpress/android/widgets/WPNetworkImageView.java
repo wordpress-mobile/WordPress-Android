@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
@@ -424,7 +425,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 case CIRCLE:
                     return ImageUtils.getCircularBitmap(bitmap);
                 case ROUNDED:
-                    return ImageUtils.getRoundedEdgeBitmap(bitmap, mRoundedCornerRadiusPx);
+                    return ImageUtils.getRoundedEdgeBitmap(bitmap, mRoundedCornerRadiusPx, Color.TRANSPARENT);
                 default:
                     return bitmap;
             }
