@@ -223,7 +223,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             private void insertTextToEditor(String text) {
                 if (text != null) {
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertHTML('" + text + "');");
+                    mWebView.execJavaScriptFromString("ZSSEditor.insertText('" + text + "');");
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.editor_dropped_text_error, ToastUtils.Duration.SHORT);
                     AppLog.d(T.EDITOR, "Dropped text was null!");

@@ -2477,6 +2477,16 @@ ZSSEditor.insertHTML = function(html) {
 	this.sendEnabledStyles();
 };
 
+ZSSEditor.insertText = function(text) {
+    var focusedField = ZSSEditor.getFocusedField();
+    if (focusedField.isMultiline() && focusedField.getHTML().length == 0) {
+        // when the text field is empty, we need to add an initial paragraph tag
+        text = Util.wrapHTMLInTag(text, ZSSEditor.defaultParagraphSeparator);
+    }
+
+    ZSSEditor.insertHTML(text);
+};
+
 ZSSEditor.isCommandEnabled = function(commandName) {
 	return document.queryCommandState(commandName);
 };
