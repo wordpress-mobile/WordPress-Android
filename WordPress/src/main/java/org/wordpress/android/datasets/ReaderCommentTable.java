@@ -1,5 +1,6 @@
 package org.wordpress.android.datasets;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,6 +26,7 @@ public class ReaderCommentTable {
     public static final int ORDER_BY_TIME_OF_COMMENT = 2;
     public static final int ORDER_BY_DEFAULT = ORDER_BY_NEWEST_COMMENT_FIRST;
 
+    @SuppressLint("UniqueConstants")
     @IntDef({ ORDER_BY_NEWEST_COMMENT_FIRST , ORDER_BY_TIME_OF_COMMENT , ORDER_BY_DEFAULT })
     @Retention(RetentionPolicy.SOURCE)
     public @interface CommentsOrderBy{}
