@@ -121,9 +121,11 @@ public class ReaderCommentTable {
             int currPage = c.getInt(0);
             int currPageComments = c.getInt(1);
             if( currPage != pageNumber || currPageComments < commentsPerPage ){
-                return pageNumber;
+                break;
             }
         }
+
+        c.close();
         return pageNumber;
     }
 
@@ -143,6 +145,7 @@ public class ReaderCommentTable {
 
 
         if( !c.moveToNext() ){
+            c.close();
             return 1;
         }
 
@@ -158,10 +161,13 @@ public class ReaderCommentTable {
             currPage = c.getInt(0);
             int currPageComments = c.getInt(1);
             if( currPage + 1 != lastPage || currPageComments < commentsPerPage){
+                c.close();
                 return backwardPageNumber;
             }
             lastPage = currPage;
         }
+
+        c.close();
 
         if(currPage == 1){
             //all comments are loaded
