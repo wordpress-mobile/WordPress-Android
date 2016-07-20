@@ -29,7 +29,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -88,12 +87,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void setCurrentThemeFromDB() {
         mCurrentTheme = WordPress.wpDB.getCurrentTheme(getBlogId());
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
