@@ -113,6 +113,71 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private long mActionStartedAt = -1;
 
+    private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
+        private final String MIMETYPE_JPEG = "image/jpeg";
+        private final String MIMETYPE_PNG = "image/png";
+        private final String[] mSupportedMimeTypes = { ClipDescription.MIMETYPE_TEXT_PLAIN,
+                ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG, MIMETYPE_PNG };
+
+        private boolean isSupported(ClipDescription clipDescription) {
+            for (String supportedMimeType : mSupportedMimeTypes) {
+                if (clipDescription.hasMimeType(supportedMimeType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            switch (dragEvent.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    return isSupported(dragEvent.getClipDescription());
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // would be nice to start marking the place the item will drop
+                    break;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
+                    int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
+
+                    mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    // clear any drop marking maybe
+                    break;
+                case DragEvent.ACTION_DROP:
+                    ClipDescription clipDescription = dragEvent.getClipDescription();
+                    if (clipDescription.getMimeTypeCount() < 1) {
+                        break;
+                    }
+
+                    if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
+                        mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                    } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
+                    } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                        insertTextToEditor(dragEvent.getClipData().getItemAt(0).getHtmlText());
+                    }
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    // clear any drop marking maybe
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private void insertTextToEditor(String text) {
+            if (text != null) {
+                mWebView.execJavaScriptFromString("ZSSEditor.insertText('" + Utils.escapeHtml(text) + "');");
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.editor_dropped_text_error, ToastUtils.Duration.SHORT);
+                AppLog.d(T.EDITOR, "Dropped text was null!");
+            }
+        }
+    };
+
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
         Bundle args = new Bundle();
@@ -166,70 +231,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.setOnImeBackListener(this);
         mWebView.setAuthHeaderRequestListener(this);
 
-        mWebView.setOnDragListener(new View.OnDragListener() {
-            private final String MIMETYPE_JPEG = "image/jpeg";
-            private final String MIMETYPE_PNG = "image/png";
-            private final String[] mSupportedMimeTypes = { ClipDescription.MIMETYPE_TEXT_PLAIN,
-                    ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG, MIMETYPE_PNG };
-
-            private boolean isSupported(ClipDescription clipDescription) {
-                for (String supportedMimeType : mSupportedMimeTypes) {
-                    if (clipDescription.hasMimeType(supportedMimeType)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-                switch (dragEvent.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        return isSupported(dragEvent.getClipDescription());
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        // would be nice to start marking the place the item will drop
-                        break;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
-                        int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
-
-                        mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
-                        break;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        // clear any drop marking maybe
-                        break;
-                    case DragEvent.ACTION_DROP:
-                        ClipDescription clipDescription = dragEvent.getClipDescription();
-                        if (clipDescription.getMimeTypeCount() < 1) {
-                            break;
-                        }
-
-                        if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
-                            mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
-                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                            insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
-                        } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                            insertTextToEditor(dragEvent.getClipData().getItemAt(0).getHtmlText());
-                        }
-                        break;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        // clear any drop marking maybe
-                    default:
-                        break;
-                }
-                return true;
-            }
-
-            private void insertTextToEditor(String text) {
-                if (text != null) {
-                    mWebView.execJavaScriptFromString("ZSSEditor.insertText('" + Utils.escapeHtml(text) + "');");
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.editor_dropped_text_error, ToastUtils.Duration.SHORT);
-                    AppLog.d(T.EDITOR, "Dropped text was null!");
-                }
-            }
-        });
+        mWebView.setOnDragListener(mOnDragListener);
 
         if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
             for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
