@@ -176,7 +176,35 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             mSiteSettings.setAllowCommentLikes((Boolean) newValue);
         } else if (preference == mTwitterUsernamePreference) {
             saveAndSetTwitterUsername(newValue.toString());
-        } else {
+        } else if (preference == mButtonsPreference) {
+            JSONArray jsonArray = new JSONArray();
+            HashSet<String> enabledValues = (HashSet<String>) newValue;
+            for (PublicizeButton button: mPublicizeButtons) {
+                boolean isEnabled = enabledValues.contains(button.getId());
+                button.setEnabled(isEnabled);
+                jsonArray.put(button.toJson());
+            }
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("connections", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    String yup = "YUP";
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String yup = "YUP";
+                }
+            });
+        }
+        else {
             return false;
         }
 

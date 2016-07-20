@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PublicizeButton {
@@ -27,6 +28,24 @@ public class PublicizeButton {
         mIsEnabled = jsonObject.optBoolean(ENABLED_KEY, false);
         mVisibility = jsonObject.optString(VISIBILITY_KEY, "visible");
         mGenericon = jsonObject.optString(GENERICON_KEY, "");
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put(ID_KEY, mId);
+            jsonObject.put(NAME_KEY, mName);
+            jsonObject.put(SHORT_NAME_KEY, mShortName);
+            jsonObject.put(CUSTOM_KEY, mIsCustom);
+            jsonObject.put(ENABLED_KEY, mIsEnabled);
+            jsonObject.put(VISIBILITY_KEY, mVisibility);
+            jsonObject.put(GENERICON_KEY, mGenericon);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 
     public String getId() {
