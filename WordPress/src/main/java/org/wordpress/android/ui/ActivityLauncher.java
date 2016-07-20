@@ -56,7 +56,6 @@ import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
     private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
-    private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -300,17 +299,5 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    /*
-     * called in an activity's finish to slide it out to the right if it slid in
-     * from the right when started
-     */
-    public static void slideOutToRight(Activity activity) {
-        if (activity != null
-                && activity.getIntent() != null
-                && activity.getIntent().hasExtra(ARG_DID_SLIDE_IN_FROM_RIGHT)) {
-            activity.overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_right);
-        }
     }
 }

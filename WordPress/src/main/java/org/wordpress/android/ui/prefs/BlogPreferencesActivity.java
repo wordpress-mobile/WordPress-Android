@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -23,14 +23,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
 
 import de.greenrobot.event.EventBus;
 
@@ -120,12 +119,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
             loadSettingsForBlog();
         }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
