@@ -131,6 +131,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
+    public static final String STATE_KEY_DROPPED_MEDIA_URI = "stateKeyDroppedMediaUri";
 
     // Context menu positioning
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
@@ -143,6 +144,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
+    public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -191,6 +193,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
+
+    // for keeping the media uri while asking for permissions
+    private Uri mDroppedMediaUri;
+
+    private Runnable mFetchMediaRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mDroppedMediaUri != null) {
+                final Uri mediaUri = mDroppedMediaUri;
+                mDroppedMediaUri = null;
+
+                fetchMedia(mediaUri);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,6 +267,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return;
             }
         } else {
+            mDroppedMediaUri = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URI);
+
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
@@ -394,6 +413,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
+        outState.putParcelable(STATE_KEY_DROPPED_MEDIA_URI, mDroppedMediaUri);
+
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
@@ -515,6 +536,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
                 break;
+            case DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE:
+                boolean mediaAccessGranted = false;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                mediaAccessGranted = true;
+                            }
+                            break;
+                    }
+                }
+                if (mediaAccessGranted) {
+                    runOnUiThread(mFetchMediaRunnable);
+                } else {
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
+                }
             default:
                 break;
         }
@@ -2047,8 +2084,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaDropped(Uri mediaUri) {
-        fetchMedia(mediaUri);
+    public void onMediaDropped(final Uri mediaUri) {
+        mDroppedMediaUri = mediaUri;
+
+        if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
+            runOnUiThread(mFetchMediaRunnable);
+        }
     }
 
     @Override
