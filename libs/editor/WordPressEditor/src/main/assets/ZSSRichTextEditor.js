@@ -2484,7 +2484,7 @@ ZSSEditor.insertText = function(text) {
         text = Util.wrapHTMLInTag(text, ZSSEditor.defaultParagraphSeparator);
     }
 
-    ZSSEditor.insertHTML(text);
+    ZSSEditor.insertHTML(Formatter.htmlToVisual(text));
 };
 
 ZSSEditor.isCommandEnabled = function(commandName) {
