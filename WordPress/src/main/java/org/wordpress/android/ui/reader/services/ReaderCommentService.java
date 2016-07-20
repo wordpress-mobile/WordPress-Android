@@ -30,20 +30,23 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderCommentService extends Service {
 
+    public static final int COMMENTS_PER_PAGE = ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST;
+
     private static final String ARG_POST_ID     = "post_id";
     private static final String ARG_BLOG_ID     = "blog_id";
     private static final String ARG_COMMENT_ID  = "comment_id";
     private static final String ARG_NEXT_PAGE   = "next_page";
+    private static final String ARG_COMMENTS_ORDER = "comments_order";
 
-    private static int mCurrentPage;
-
-    public static void startService(Context context, long blogId, long postId, boolean requestNextPage) {
+    public static void startService(Context context, long blogId, long postId, boolean requestNextPage,
+                                    @ReaderCommentTable.CommentsOrderBy int commentsOrder) {
         if (context == null) return;
 
         Intent intent = new Intent(context, ReaderCommentService.class);
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
         intent.putExtra(ARG_NEXT_PAGE, requestNextPage);
+        intent.putExtra(ARG_COMMENTS_ORDER, commentsOrder);
         context.startService(intent);
     }
 
@@ -55,6 +58,7 @@ public class ReaderCommentService extends Service {
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
         intent.putExtra(ARG_COMMENT_ID, commentId);
+        intent.putExtra(ARG_COMMENTS_ORDER, ReaderCommentTable.ORDER_BY_DEFAULT);
         context.startService(intent);
     }
 
@@ -94,15 +98,27 @@ public class ReaderCommentService extends Service {
         final long postId = intent.getLongExtra(ARG_POST_ID, 0);
         final long commentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
         boolean requestNextPage = intent.getBooleanExtra(ARG_NEXT_PAGE, false);
+        final int commentsOrder = intent.getIntExtra(ARG_COMMENTS_ORDER,ReaderCommentTable.ORDER_BY_DEFAULT);
 
-        if (requestNextPage) {
-            int prevPage = ReaderCommentTable.getLastPageNumberForPost(blogId, postId);
-            mCurrentPage = prevPage + 1;
-        } else {
-            mCurrentPage = 1;
+        int currentPage;
+
+        if(requestNextPage){
+            if( commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
+                currentPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
+            }else if(commentsOrder == ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT){
+                currentPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
+            }else{
+                throw new IllegalArgumentException("Unknown commentsOrder");
+            }
+        }else{
+            currentPage = 1;
         }
 
-        updateCommentsForPost(blogId, postId, mCurrentPage, new UpdateResultListener() {
+        if(currentPage <= 0){
+            return START_NOT_STICKY;
+        }
+
+        updateCommentsForPost(blogId, postId, currentPage, commentsOrder, new UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
                 if (commentId > 0) {
@@ -111,8 +127,14 @@ public class ReaderCommentService extends Service {
                         stopSelf();
                     } else {
                         // Comment not found yet, request the next page
-                        mCurrentPage++;
-                        updateCommentsForPost(blogId, postId, mCurrentPage, this);
+                        int nextPage;
+                        if(commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST){
+                            nextPage = ReaderCommentTable.getLastNotLoadedPage(blogId,postId,COMMENTS_PER_PAGE);
+                        }else{
+                            nextPage = ReaderCommentTable.getFirstNotLoadedPage(blogId,postId,COMMENTS_PER_PAGE);
+                        }
+
+                        updateCommentsForPost(blogId, postId, nextPage , commentsOrder, this);
                     }
                 } else {
                     EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
@@ -127,18 +149,24 @@ public class ReaderCommentService extends Service {
     private static void updateCommentsForPost(final long blogId,
                                               final long postId,
                                               final int pageNumber,
+                                              final int commentOrder,
                                               final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
-                    + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
+                    + "?number=" + Integer.toString(COMMENTS_PER_PAGE)
                     + "&meta=likes"
                     + "&hierarchical=true"
-                    + "&order=ASC"
                     + "&page=" + pageNumber;
+
+        if(commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST){
+            path += "&order=DESC";
+        }else{
+            path += "&order=ASC";
+        }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, blogId, pageNumber, resultListener);
+                handleUpdateCommentsResponse(jsonObject, blogId, pageNumber, commentOrder, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -148,12 +176,16 @@ public class ReaderCommentService extends Service {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
             }
         };
-        AppLog.d(AppLog.T.READER, "updating comments");
+
+        AppLog.d(AppLog.T.READER, "updating comments - pageNumber: " + pageNumber +
+                (commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST?" backward":" forward") );
+
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
                                                      final long blogId,
                                                      final int pageNumber,
+                                                     final int commentOrder,
                                                      final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
@@ -169,13 +201,23 @@ public class ReaderCommentService extends Service {
                 try {
                     ReaderCommentList serverComments = new ReaderCommentList();
                     JSONArray jsonCommentList = jsonObject.optJSONArray("comments");
+                    int commentsFound = jsonObject.optInt("found");
                     if (jsonCommentList != null) {
                         for (int i = 0; i < jsonCommentList.length(); i++) {
                             JSONObject jsonComment = jsonCommentList.optJSONObject(i);
 
                             // extract this comment and add it to the list
                             ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
-                            comment.pageNumber = pageNumber;
+
+                            if( commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
+                                //calculate forward page number of comment
+                                int commentIndex = ( pageNumber - 1 )*COMMENTS_PER_PAGE + i;
+                                int forwardCommentIndex = commentsFound - commentIndex;
+                                comment.pageNumber = ( forwardCommentIndex + COMMENTS_PER_PAGE - 1 )/COMMENTS_PER_PAGE;
+                            }else {
+                                comment.pageNumber = pageNumber;
+                            }
+
                             serverComments.add(comment);
 
                             // extract and save likes for this comment

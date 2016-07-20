@@ -73,6 +73,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
+    private int mCommentsOrder = ReaderCommentTable.ORDER_BY_DEFAULT;
+
     class CommentHolder extends RecyclerView.ViewHolder {
         private final ViewGroup container;
         private final TextView txtAuthor;
@@ -120,8 +122,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public ReaderCommentAdapter(Context context, ReaderPost post) {
+    public ReaderCommentAdapter(Context context, ReaderPost post,
+                                @ReaderCommentTable.CommentsOrderBy int commentsOrder) {
         mPost = post;
+        mCommentsOrder = commentsOrder;
         mIsPrivatePost = (post != null && post.isPrivate);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
@@ -463,7 +467,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(mPost);
             tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
-            tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
+            tmpComments = ReaderCommentTable.getCommentsForPost(mPost,mCommentsOrder);
             return !mComments.isSameList(tmpComments);
         }
 
@@ -492,5 +496,25 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             notifyItemChanged(0); //notify header to update itself
         }
 
+    }
+
+    public void setCommentsOrder(@ReaderCommentTable.CommentsOrderBy int commentsOrder,
+                                 boolean loadCommentsFromDb){
+        if(mCommentsOrder == commentsOrder){
+            return;
+        }
+
+        mCommentsOrder = commentsOrder;
+
+        clearData();
+        if(loadCommentsFromDb){
+            refreshComments();
+        }
+    }
+
+    private void clearData(){
+        int numOfComments = mComments.size();
+        mComments.clear();
+        notifyItemRangeRemoved(NUM_HEADERS,numOfComments);
     }
 }

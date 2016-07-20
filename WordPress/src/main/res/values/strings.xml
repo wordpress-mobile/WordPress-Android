@@ -311,6 +311,8 @@
     <string name="mnu_comment_delete_permanently">Delete</string>
     <string name="mnu_comment_liked">Liked</string>
 
+    <string name="newest_comments_first">Newest Comments First</string>
+
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
     <string name="dlg_approving_comments">Approving</string>
     <string name="dlg_unapproving_comments">Unapproving</string>

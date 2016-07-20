@@ -1,19 +1,34 @@
 package org.wordpress.android.datasets;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.IntDef;
 
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.util.SqlUtils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * stores comments on reader posts
  */
 public class ReaderCommentTable {
+
+    //comments ordering constants for retrieving comments from database
+    public static final int ORDER_BY_NEWEST_COMMENT_FIRST = 1;
+    public static final int ORDER_BY_TIME_OF_COMMENT = 2;
+    public static final int ORDER_BY_DEFAULT = ORDER_BY_NEWEST_COMMENT_FIRST;
+
+    @IntDef({ ORDER_BY_NEWEST_COMMENT_FIRST , ORDER_BY_TIME_OF_COMMENT , ORDER_BY_DEFAULT })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CommentsOrderBy{}
+
     private static final String COLUMN_NAMES =
                       " blog_id,"
                     + " post_id,"
@@ -93,6 +108,70 @@ public class ReaderCommentTable {
     }
 
     /*
+     * return first not loaded or first partially loaded page number
+     * if numOfComments for a page is less than commentsPerPage then that page is partially loaded
+     */
+    public static int getFirstNotLoadedPage(long blogId, long postId, final int commentsPerPage){
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number";
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
+
+        int pageNumber = 1;
+        for( ; c.moveToNext() ; pageNumber++){
+            int currPage = c.getInt(0);
+            int currPageComments = c.getInt(1);
+            if( currPage != pageNumber || currPageComments < commentsPerPage ){
+                return pageNumber;
+            }
+        }
+        return pageNumber;
+    }
+
+    /**
+     * <p>
+     * NOTE: method check pages in local database not on server if you want fresh result than load first page of comments by
+     *          {@link org.wordpress.android.ui.reader.services.ReaderCommentService#startService(Context, long, long, boolean, int)}
+     *          with {@link #ORDER_BY_NEWEST_COMMENT_FIRST} and requestNextPage = false
+     * </p>
+     * @return last not loaded or last partially loaded page number from back i.e. 1 for last page, 2 for second last page and so on.
+     * If numOfComments for a page is less than commentsPerPage then that page is partially loaded
+     */
+    public static int getLastNotLoadedPage(long blogId, long postId, final int commentsPerPage){
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number DESC";
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
+
+
+        if( !c.moveToNext() ){
+            return 1;
+        }
+
+        /* NOTE: never perform ( currPageComments < commentsPerPage ) check for last page
+            because it is always fully loaded and
+            it always has less comments if total comments is not divisible by commentsPerPage
+            e.g. totalComments = 153 , commentsPerPage = 20 , last page have 13 comments*/
+        int lastPage = c.getInt(0);
+        int currPage = -1;
+
+        int backwardPageNumber = 2;
+        for( ; c.moveToNext() ; backwardPageNumber++){
+            currPage = c.getInt(0);
+            int currPageComments = c.getInt(1);
+            if( currPage + 1 != lastPage || currPageComments < commentsPerPage){
+                return backwardPageNumber;
+            }
+            lastPage = currPage;
+        }
+
+        if(currPage == 1){
+            //all comments are loaded
+            return -1;
+        }
+
+        return backwardPageNumber;
+    }
+
+    /*
      * returns the page number for a specific comment
      */
     public static int getPageNumberForComment(long blogId, long postId, long commentId) {
@@ -124,13 +203,32 @@ public class ReaderCommentTable {
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
     }
 
-    public static ReaderCommentList getCommentsForPost(ReaderPost post) {
+    /**
+     *
+     * @param orderBy one of ORDER_BY_* constants
+     * @see org.wordpress.android.datasets.ReaderCommentTable.CommentsOrderBy
+     *
+     */
+    public static ReaderCommentList getCommentsForPost(ReaderPost post,@CommentsOrderBy int orderBy) {
         if (post == null) {
             return new ReaderCommentList();
         }
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+        String query = "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp";
+
+        switch(orderBy){
+            case ORDER_BY_NEWEST_COMMENT_FIRST:
+                query += " DESC";
+                break;
+            case ORDER_BY_TIME_OF_COMMENT:
+                //ASC is default in ORDER BY clause of SQL
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown orderBy");
+        }
+
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
