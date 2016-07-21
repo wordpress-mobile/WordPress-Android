@@ -6,7 +6,11 @@
 
         <MultiSelectListPreference
             android:key="@string/pref_key_sharing_buttons"
-            android:title="Sharing Buttons"/>
+            android:title="Sharing Buttons" />
+
+        <MultiSelectListPreference
+            android:key="@string/pref_key_more_buttons"
+            android:title="More Buttons" />
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/publicize_label"

@@ -44,6 +44,7 @@ import de.greenrobot.event.EventBus;
 public class PublicizeManageConnectionsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener, SiteSettingsInterface.SiteSettingsListener {
     private static final String TWITTER_PREFIX = "@";
     private MultiSelectListPreference mButtonsPreference;
+    private MultiSelectListPreference mMoreButtonsPreference;
     private SummaryEditTextPreference mLabelPreference;
     private SiteSettingsInterface mSiteSettings;
     private DetailListPreference mButtonStylePreference;
@@ -88,6 +89,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
     private void configureButtonsPreference() {
         mPublicizeButtons = new ArrayList<>();
         mButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
+        mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
         WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -102,20 +104,28 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
                     String[] entries = new String[mPublicizeButtons.size()];
                     String[] entryValues = new String[mPublicizeButtons.size()];
-                    HashSet<String> selectedSet = new HashSet<>();
+                    HashSet<String> selectedSharingButtons = new HashSet<>();
+                    HashSet<String> selectedMoreButtons = new HashSet<>();
 
                     for (int i = 0; i < mPublicizeButtons.size(); i++) {
                         PublicizeButton publicizeButton = mPublicizeButtons.get(i);
                         entries[i] = publicizeButton.getName();
                         entryValues[i] = publicizeButton.getId();
-                        if (publicizeButton.isEnabled()) {
-                            selectedSet.add(publicizeButton.getId());
+                        if (publicizeButton.isEnabled() && publicizeButton.isVisible()) {
+                            selectedSharingButtons.add(publicizeButton.getId());
+                        }
+                        if (publicizeButton.isEnabled() && !publicizeButton.isVisible()) {
+                            selectedMoreButtons.add(publicizeButton.getId());
                         }
                     }
 
                     mButtonsPreference.setEntries(entries);
                     mButtonsPreference.setEntryValues(entryValues);
-                    mButtonsPreference.setValues(selectedSet);
+                    mButtonsPreference.setValues(selectedSharingButtons);
+
+                    mMoreButtonsPreference.setEntries(entries);
+                    mMoreButtonsPreference.setEntryValues(entryValues);
+                    mMoreButtonsPreference.setValues(selectedMoreButtons);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -177,40 +187,46 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
         } else if (preference == mTwitterUsernamePreference) {
             saveAndSetTwitterUsername(newValue.toString());
         } else if (preference == mButtonsPreference) {
-            JSONArray jsonArray = new JSONArray();
-            HashSet<String> enabledValues = (HashSet<String>) newValue;
-            for (PublicizeButton button: mPublicizeButtons) {
-                boolean isEnabled = enabledValues.contains(button.getId());
-                button.setEnabled(isEnabled);
-                jsonArray.put(button.toJson());
-            }
-
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("sharing_buttons", jsonArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    String yup = "YUP";
-                }
-            }, new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String yup = "YUP";
-                }
-            });
-        }
-        else {
+            saveSharingButtons((HashSet<String>) newValue, true);
+        } else if (preference == mMoreButtonsPreference) {
+            saveSharingButtons((HashSet<String>) newValue, false);
+        } else {
             return false;
         }
 
         mSiteSettings.saveSettings();
 
         return true;
+    }
+
+    private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
+        JSONArray jsonArray = new JSONArray();
+        for (PublicizeButton button: mPublicizeButtons) {
+            if (values.contains(button.getId())) {
+                button.setVisibility(isVisible);
+            }
+            button.setEnabled(true);
+            jsonArray.put(button.toJson());
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("sharing_buttons", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String yup = "YUP";
+            }
+        });
     }
 
     private void saveAndSetTwitterUsername(String username) {

@@ -92,8 +92,20 @@ public class PublicizeButton {
         return mVisibility;
     }
 
+    public boolean isVisible() {
+        return mVisibility.equals("visible");
+    }
+
+    public void setVisibility(boolean isVisible) {
+        if (isVisible) {
+            mVisibility = "visible";
+        } else {
+            mVisibility = "hidden";
+        }
+    }
+
     public void setVisibility(String visibility) {
-        this.mVisibility = visibility;
+        mVisibility = visibility;
     }
 
     public String getGenericon() {
