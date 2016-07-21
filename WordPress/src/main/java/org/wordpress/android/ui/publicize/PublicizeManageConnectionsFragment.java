@@ -18,6 +18,7 @@ import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +26,8 @@ import java.util.HashSet;
 
 public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private static final String TWITTER_PREFIX = "@";
+    private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
+    public static final String TWITTER_ID = "twitter";
 
     private MultiSelectListPreference mButtonsPreference;
     private MultiSelectListPreference mMoreButtonsPreference;
@@ -53,7 +56,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("sharing_buttons", jsonArray);
+            jsonObject.put(SHARING_BUTTONS_KEY, jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -61,12 +64,16 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-
+                try {
+                    configureSharingButtons(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                String yup = "YUP";
+                AppLog.e(AppLog.T.SETTINGS, error.getMessage());
             }
         });
     }
@@ -87,7 +94,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private void toggleTwitterPreferenceVisiblity() {
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            if (publicizeButton.getId().equals("twitter")) {
+            if (publicizeButton.getId().equals(TWITTER_ID)) {
                 mTwitterUsernamePreference.setEnabled(publicizeButton.isEnabled());
             }
         }
@@ -100,41 +107,8 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                String yup = "yup";
-
                 try {
-                    JSONArray jsonArray = response.getJSONArray("sharing_buttons");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
-                        mPublicizeButtons.add(publicizeButton);
-                    }
-
-                    String[] entries = new String[mPublicizeButtons.size()];
-                    String[] entryValues = new String[mPublicizeButtons.size()];
-                    HashSet<String> selectedSharingButtons = new HashSet<>();
-                    HashSet<String> selectedMoreButtons = new HashSet<>();
-
-                    for (int i = 0; i < mPublicizeButtons.size(); i++) {
-                        PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-                        entries[i] = publicizeButton.getName();
-                        entryValues[i] = publicizeButton.getId();
-                        if (publicizeButton.isEnabled() && publicizeButton.isVisible()) {
-                            selectedSharingButtons.add(publicizeButton.getId());
-                        }
-                        if (publicizeButton.isEnabled() && !publicizeButton.isVisible()) {
-                            selectedMoreButtons.add(publicizeButton.getId());
-                        }
-                    }
-
-                    mButtonsPreference.setEntries(entries);
-                    mButtonsPreference.setEntryValues(entryValues);
-                    mButtonsPreference.setValues(selectedSharingButtons);
-
-                    mMoreButtonsPreference.setEntries(entries);
-                    mMoreButtonsPreference.setEntryValues(entryValues);
-                    mMoreButtonsPreference.setValues(selectedMoreButtons);
-
-                    toggleTwitterPreferenceVisiblity();
+                    configureSharingButtons(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -142,9 +116,44 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                AppLog.e(AppLog.T.SETTINGS, error);
             }
         });
+    }
+
+    private void configureSharingButtons(JSONObject response) throws JSONException {
+        JSONArray jsonArray = response.getJSONArray(SHARING_BUTTONS_KEY);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
+            mPublicizeButtons.add(publicizeButton);
+        }
+
+        String[] entries = new String[mPublicizeButtons.size()];
+        String[] entryValues = new String[mPublicizeButtons.size()];
+        HashSet<String> selectedSharingButtons = new HashSet<>();
+        HashSet<String> selectedMoreButtons = new HashSet<>();
+
+        for (int i = 0; i < mPublicizeButtons.size(); i++) {
+            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+            entries[i] = publicizeButton.getName();
+            entryValues[i] = publicizeButton.getId();
+            if (publicizeButton.isEnabled() && publicizeButton.isVisible()) {
+                selectedSharingButtons.add(publicizeButton.getId());
+            }
+            if (publicizeButton.isEnabled() && !publicizeButton.isVisible()) {
+                selectedMoreButtons.add(publicizeButton.getId());
+            }
+        }
+
+        mButtonsPreference.setEntries(entries);
+        mButtonsPreference.setEntryValues(entryValues);
+        mButtonsPreference.setValues(selectedSharingButtons);
+
+        mMoreButtonsPreference.setEntries(entries);
+        mMoreButtonsPreference.setEntryValues(entryValues);
+        mMoreButtonsPreference.setValues(selectedMoreButtons);
+
+        toggleTwitterPreferenceVisiblity();
     }
 
     @Override
@@ -184,6 +193,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
         mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
         changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());
+
     }
 
     @Override
