@@ -126,6 +126,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
                     mMoreButtonsPreference.setEntries(entries);
                     mMoreButtonsPreference.setEntryValues(entryValues);
                     mMoreButtonsPreference.setValues(selectedMoreButtons);
+
+                    toggleTwitterPreferenceVisiblity();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -209,6 +211,8 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
             jsonArray.put(button.toJson());
         }
 
+        toggleTwitterPreferenceVisiblity();
+
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("sharing_buttons", jsonArray);
@@ -240,6 +244,15 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment imple
 
         mSiteSettings.setTwitterUsername(username);
         changeEditTextPreferenceValue(mTwitterUsernamePreference, username);
+    }
+
+    private void toggleTwitterPreferenceVisiblity() {
+        for (int i = 0; i < mPublicizeButtons.size(); i++) {
+            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
+            if (publicizeButton.getId().equals("twitter")) {
+                mTwitterUsernamePreference.setEnabled(publicizeButton.isEnabled());
+            }
+        }
     }
 
     private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
