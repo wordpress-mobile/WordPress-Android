@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 
 import de.greenrobot.event.EventBus;
@@ -63,12 +62,6 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     @SuppressWarnings("unused")
