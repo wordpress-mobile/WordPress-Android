@@ -11,6 +11,8 @@ public class PublicizeButton {
     private static final String ENABLED_KEY = "enabled";
     private static final String VISIBILITY_KEY = "visibility";
     private static final String GENERICON_KEY = "genericon";
+    public static final String VISIBLE = "visible";
+    public static final String HIDDEN = "hidden";
 
     private String mId;
     private String mName;
@@ -26,7 +28,7 @@ public class PublicizeButton {
         mShortName = jsonObject.optString(SHORT_NAME_KEY, "");
         mIsCustom = jsonObject.optBoolean(CUSTOM_KEY, false);
         mIsEnabled = jsonObject.optBoolean(ENABLED_KEY, false);
-        mVisibility = jsonObject.optString(VISIBILITY_KEY, "visible");
+        mVisibility = jsonObject.optString(VISIBILITY_KEY, VISIBLE);
         mGenericon = jsonObject.optString(GENERICON_KEY, "");
     }
 
@@ -93,14 +95,14 @@ public class PublicizeButton {
     }
 
     public boolean isVisible() {
-        return mVisibility.equals("visible");
+        return mVisibility.equals(VISIBLE);
     }
 
     public void setVisibility(boolean isVisible) {
         if (isVisible) {
-            mVisibility = "visible";
+            mVisibility = VISIBLE;
         } else {
-            mVisibility = "hidden";
+            mVisibility = HIDDEN;
         }
     }
 
