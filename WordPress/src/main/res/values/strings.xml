@@ -1392,6 +1392,22 @@
         <item>@string/text</item>
         <item>@string/official</item>
     </string-array>
+    <string name="publicize_official_buttons">Official Buttons</string>
+    <string name="publicize_icon_only">Icon Only</string>
+    <string name="publicize_icon_and_text"><![CDATA[Icon & Text]]></string>
+    <string name="publicize_text_only">Text Only</string>
+    <string name="publicize_label" translatable="false">publicize_label</string>
+    <string name="publicize_button_style" translatable="false">publicize_button_style</string>
+    <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
+    <string name="site_settings_reblog">Show Reblog Button</string>
+    <string name="site_settings_like">Show Like Button</string>
+    <string name="manage_connections">Manage Connections</string>
+    <string name="sharing_buttons">Sharing Buttons</string>
+    <string name="more_buttons">More Buttons</string>
+    <string name="label">Label</string>
+    <string name="button_style">Button Style</string>
+    <string name="allow_comment_likes">Allow Comment Likes</string>
+    <string name="twitter_username">Twitter Username</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -1589,14 +1605,4 @@
     <string name="connected">Connected</string>
     <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
     <string name="connecting_account">Connecting account</string>
-    <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
-    <string name="pref_key_sharing_reblog_and_like" translatable="false">wp_pref_sharing_reblog_and_like</string>
-    <string name="pref_key_sharing_buttons" translatable="false">wp_pref_sharing_buttons</string>
-    <string name="pref_key_reblog" translatable="false">wp_pref_sharing_reblog</string>
-    <string name="site_settings_reblog">Show Reblog Button</string>
-    <string name="site_settings_like">Show Like Button</string>
-    <string name="pref_key_like" translatable="false">wp_pref_sharing_like</string>
-    <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
-    <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
-    <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
 </resources>
