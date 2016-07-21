@@ -78,6 +78,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_POST_COUNT_KEY = "post_count";
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
+    public static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
@@ -196,7 +197,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
-        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, "icon-only");
+        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowReblogButton = settingsObject.optBoolean(SHARING_REBLOG_KEY, false);
         mRemoteSettings.allowLikeButton = settingsObject.optBoolean(SHARING_LIKE_KEY, false);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(COMMENT_LIKES_KEY, false);
