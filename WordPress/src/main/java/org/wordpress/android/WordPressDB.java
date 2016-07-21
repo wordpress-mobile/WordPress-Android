@@ -26,6 +26,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -85,7 +86,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -429,6 +430,9 @@ public class WordPressDB {
             case 48:
                 PeopleTable.createViewersTable(db);
                 currentVersion++;
+            case 49:
+                resetSiteSettingsTable();
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -470,6 +474,11 @@ public class WordPressDB {
     private void resetThemeTable() {
         db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
         db.execSQL(CREATE_TABLE_THEMES);
+    }
+
+    private void resetSiteSettingsTable() {
+        db.execSQL(DROP_TABLE_PREFIX + SiteSettingsModel.SETTINGS_TABLE_NAME);
+        SiteSettingsTable.createTable(db);
     }
 
     private void migratePreferencesToAccountTable(Context context) {
