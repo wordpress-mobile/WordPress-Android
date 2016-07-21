@@ -225,31 +225,45 @@ public class ReaderCommentTable {
     }
 
     /**
-     *
      * @param orderBy one of ORDER_BY_* constants
+     * @param lastPageNumber page number till which comments are return , -1 to return all comments
      * @see org.wordpress.android.datasets.ReaderCommentTable.CommentsOrderBy
-     *
      */
-    public static ReaderCommentList getCommentsForPost(ReaderPost post,@CommentsOrderBy int orderBy) {
+    public static ReaderCommentList getCommentsForPost(ReaderPost post,
+                                                       @CommentsOrderBy int orderBy,
+                                                       final int lastPageNumber) {
         if (post == null) {
             return new ReaderCommentList();
         }
 
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        String query = "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp";
+        String[] args;
+        String whereClause,orderByClause;
+
+        if( lastPageNumber <= 0 ){
+            whereClause = "blog_id = ? AND post_id = ?";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
+        }else if( orderBy == ORDER_BY_NEWEST_COMMENT_FIRST ){
+            whereClause = "blog_id = ? AND post_id = ? AND page_number >= ?";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
+        }else if( orderBy == ORDER_BY_TIME_OF_COMMENT ){
+            whereClause = "blog_id = ? AND post_id = ? AND page_number <= ?";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
+        }else {
+            throw new IllegalArgumentException("Unknown orderBy");
+        }
 
         switch(orderBy){
             case ORDER_BY_NEWEST_COMMENT_FIRST:
-                query += " DESC";
+                orderByClause = "timestamp DESC";
                 break;
             case ORDER_BY_TIME_OF_COMMENT:
-                //ASC is default in ORDER BY clause of SQL
+                orderByClause = "timestamp";
                 break;
             default:
                 throw new IllegalArgumentException("Unknown orderBy");
         }
 
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
+        Cursor c = ReaderDatabase.getReadableDb().query("tbl_comments",null,whereClause,args,null,null,orderByClause);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {

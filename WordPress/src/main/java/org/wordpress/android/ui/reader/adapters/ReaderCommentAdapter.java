@@ -467,7 +467,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(mPost);
             tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
-            tmpComments = ReaderCommentTable.getCommentsForPost(mPost,mCommentsOrder);
+            int lastPageNumber;
+            switch (mCommentsOrder){
+                case ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST:
+                    lastPageNumber = ReaderCommentTable.getLastNotLoadedPage(mPost.blogId, mPost.postId, false);
+                    break;
+                case ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT:
+                    lastPageNumber = ReaderCommentTable.getFirstNotLoadedPage(mPost.blogId, mPost.postId);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown mCommentsOrder");
+            }
+
+            tmpComments = ReaderCommentTable.getCommentsForPost(mPost, mCommentsOrder, lastPageNumber);
             return !mComments.isSameList(tmpComments);
         }
 
