@@ -30,8 +30,6 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderCommentService extends Service {
 
-    public static final int COMMENTS_PER_PAGE = ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST;
-
     private static final String ARG_POST_ID     = "post_id";
     private static final String ARG_BLOG_ID     = "blog_id";
     private static final String ARG_COMMENT_ID  = "comment_id";
@@ -104,9 +102,9 @@ public class ReaderCommentService extends Service {
 
         if(requestNextPage){
             if( commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
-                currentPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE, true);
+                currentPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, true);
             }else if(commentsOrder == ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT){
-                currentPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
+                currentPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId);
             }else{
                 throw new IllegalArgumentException("Unknown commentsOrder");
             }
@@ -133,9 +131,9 @@ public class ReaderCommentService extends Service {
                         // Comment not found yet, request the next page
                         int nextPage;
                         if(commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST){
-                            nextPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE, true);
+                            nextPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, true);
                         }else{
-                            nextPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
+                            nextPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId);
                         }
 
                         updateCommentsForPost(blogId, postId, nextPage , commentsOrder, this);
@@ -156,7 +154,7 @@ public class ReaderCommentService extends Service {
                                               final int commentOrder,
                                               final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + blogId + "/posts/" + postId + "/replies/"
-                    + "?number=" + Integer.toString(COMMENTS_PER_PAGE)
+                    + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
                     + "&meta=likes"
                     + "&hierarchical=true"
                     + "&page=" + pageNumber;
@@ -215,9 +213,10 @@ public class ReaderCommentService extends Service {
 
                             if( commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
                                 //calculate forward page number of comment
-                                int commentIndex = ( pageNumber - 1 )*COMMENTS_PER_PAGE + i;
+                                int commentIndex = ( pageNumber - 1 )*ReaderCommentTable.COMMENTS_PER_PAGE + i;
                                 int forwardCommentIndex = commentsFound - commentIndex;
-                                comment.pageNumber = ( forwardCommentIndex + COMMENTS_PER_PAGE - 1 )/COMMENTS_PER_PAGE;
+                                comment.pageNumber = ( forwardCommentIndex + ReaderCommentTable.COMMENTS_PER_PAGE - 1 )/
+                                                            ReaderCommentTable.COMMENTS_PER_PAGE;
                             }else {
                                 comment.pageNumber = pageNumber;
                             }

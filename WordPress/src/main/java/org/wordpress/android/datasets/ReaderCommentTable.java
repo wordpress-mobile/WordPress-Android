@@ -11,6 +11,7 @@ import android.support.annotation.IntDef;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.SqlUtils;
 
 import java.lang.annotation.Retention;
@@ -30,6 +31,13 @@ public class ReaderCommentTable {
     @IntDef({ ORDER_BY_NEWEST_COMMENT_FIRST , ORDER_BY_TIME_OF_COMMENT , ORDER_BY_DEFAULT })
     @Retention(RetentionPolicy.SOURCE)
     public @interface CommentsOrderBy{}
+
+    /**
+     * <p>
+     * NOTE : Don't change it instead change {@link ReaderConstants#READER_MAX_COMMENTS_TO_REQUEST}
+     * </p>
+    */
+    public static final int COMMENTS_PER_PAGE = ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST;
 
     private static final String COLUMN_NAMES =
                       " blog_id,"
@@ -111,9 +119,9 @@ public class ReaderCommentTable {
 
     /*
      * return first not loaded or first partially loaded page number
-     * if numOfComments for a page is less than commentsPerPage then that page is partially loaded
+     * if numOfComments for a page is less than COMMENTS_PER_PAGE then that page is partially loaded
      */
-    public static int getFirstNotLoadedPage(long blogId, long postId, final int commentsPerPage){
+    public static int getFirstNotLoadedPage(long blogId, long postId){
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
@@ -122,7 +130,7 @@ public class ReaderCommentTable {
         for( ; c.moveToNext() ; pageNumber++){
             int currPage = c.getInt(0);
             int currPageComments = c.getInt(1);
-            if( currPage != pageNumber || currPageComments < commentsPerPage ){
+            if( currPage != pageNumber || currPageComments < COMMENTS_PER_PAGE ){
                 break;
             }
         }
@@ -147,7 +155,6 @@ public class ReaderCommentTable {
      */
     public static int getLastNotLoadedPage(long blogId,
                                            long postId,
-                                           final int commentsPerPage,
                                            final boolean pageNumberFromBack){
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number DESC";
@@ -158,8 +165,7 @@ public class ReaderCommentTable {
             return 0;
         }
 
-        /* NOTE: never perform ( currPageComments < commentsPerPage ) check for last page
-            because it is always fully loaded and
+        /* NOTE: never perform ( currPageComments < COMMENTS_PER_PAGE ) check for last page because it is always fully loaded and
             it always has less comments if total comments is not divisible by commentsPerPage
             e.g. totalComments = 153 , commentsPerPage = 20 , last page have 13 comments*/
         int lastPage = c.getInt(0);
@@ -169,7 +175,7 @@ public class ReaderCommentTable {
         for( ; c.moveToNext() ; backwardPageNumber++){
             currPage = c.getInt(0);
             int currPageComments = c.getInt(1);
-            if( currPage + 1 != lastPage || currPageComments < commentsPerPage){
+            if( currPage + 1 != lastPage || currPageComments < COMMENTS_PER_PAGE){
                 c.close();
                 return pageNumberFromBack ? backwardPageNumber : currPage;
             }
