@@ -35,8 +35,11 @@ import java.util.HashMap;
 import de.greenrobot.event.EventBus;
 
 public abstract class SettingsFragment extends PreferenceFragment implements
-        ViewGroup.OnHierarchyChangeListener, Dialog.OnDismissListener, Preference.OnPreferenceChangeListener,
-        Preference.OnPreferenceClickListener, AdapterView.OnItemLongClickListener, SiteSettingsInterface.SiteSettingsListener {
+            ViewGroup.OnHierarchyChangeListener,
+            Preference.OnPreferenceChangeListener,
+            Preference.OnPreferenceClickListener,
+            AdapterView.OnItemLongClickListener,
+            SiteSettingsInterface.SiteSettingsListener {
     protected abstract void initPreferences();
     protected abstract void setEditingEnabled(boolean enabled);
     protected abstract void setPreferencesFromSiteSettings();

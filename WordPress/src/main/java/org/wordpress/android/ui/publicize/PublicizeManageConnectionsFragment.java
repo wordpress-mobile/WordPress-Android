@@ -245,9 +245,4 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     public boolean onPreferenceClick(Preference preference) {
         return preference == mButtonStylePreference && !shouldShowListPreference((DetailListPreference) preference);
     }
-
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        // NOP
-    }
 }

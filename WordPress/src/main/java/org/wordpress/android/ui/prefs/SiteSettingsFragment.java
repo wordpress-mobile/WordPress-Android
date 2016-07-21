@@ -66,7 +66,7 @@ import de.greenrobot.event.EventBus;
  * Settings are synced automatically when local changes are made.
  */
 
-public class SiteSettingsFragment extends SettingsFragment {
+public class SiteSettingsFragment extends SettingsFragment implements Dialog.OnDismissListener {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
