@@ -234,9 +234,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
 
     @Override
     protected void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
-
-        if (pref == mTwitterUsernamePreference && !newValue.isEmpty()) {
+        if (pref != null && pref == mTwitterUsernamePreference && newValue != null && !newValue.isEmpty()) {
             newValue = TWITTER_PREFIX + newValue;
         }
 
