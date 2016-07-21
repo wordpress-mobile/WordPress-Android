@@ -259,12 +259,6 @@ public class WPWebViewActivity extends WebViewActivity {
         }
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
     /**
      * Login to the WordPress.com and load the specified URL.
      *

@@ -305,12 +305,6 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
