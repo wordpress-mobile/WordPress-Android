@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
@@ -299,7 +300,12 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onManageConnectionsClicked() {
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mSiteId);
+        Bundle args = new Bundle();
+        args.putInt(SettingsFragment.ARG_LOCAL_BLOG_ID, localBlogId);
+
         PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
+        manageConnectionsFragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
         fragmentTransaction.addToBackStack(null);
