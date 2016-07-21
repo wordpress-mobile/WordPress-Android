@@ -573,8 +573,10 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
+                }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
                 return true;
