@@ -391,6 +391,7 @@ public class SiteSettingsFragment extends SettingsFragment {
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
+    @Override
     protected void initPreferences() {
         mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
         mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
