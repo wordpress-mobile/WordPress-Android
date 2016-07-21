@@ -104,7 +104,7 @@ public class ReaderCommentService extends Service {
 
         if(requestNextPage){
             if( commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
-                currentPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
+                currentPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE, true);
             }else if(commentsOrder == ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT){
                 currentPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
             }else{
@@ -114,8 +114,12 @@ public class ReaderCommentService extends Service {
             currentPage = 1;
         }
 
-        if(currentPage <= 0){
+        if( currentPage < 0 ){
+            //all pages are loaded
             return START_NOT_STICKY;
+        }else if( currentPage == 0 ){
+            //no any comment is loaded yet
+            currentPage = 1;
         }
 
         updateCommentsForPost(blogId, postId, currentPage, commentsOrder, new UpdateResultListener() {
@@ -129,9 +133,9 @@ public class ReaderCommentService extends Service {
                         // Comment not found yet, request the next page
                         int nextPage;
                         if(commentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST){
-                            nextPage = ReaderCommentTable.getLastNotLoadedPage(blogId,postId,COMMENTS_PER_PAGE);
+                            nextPage = ReaderCommentTable.getLastNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE, true);
                         }else{
-                            nextPage = ReaderCommentTable.getFirstNotLoadedPage(blogId,postId,COMMENTS_PER_PAGE);
+                            nextPage = ReaderCommentTable.getFirstNotLoadedPage(blogId, postId, COMMENTS_PER_PAGE);
                         }
 
                         updateCommentsForPost(blogId, postId, nextPage , commentsOrder, this);

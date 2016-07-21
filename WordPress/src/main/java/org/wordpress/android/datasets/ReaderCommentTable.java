@@ -137,18 +137,25 @@ public class ReaderCommentTable {
      *          {@link org.wordpress.android.ui.reader.services.ReaderCommentService#startService(Context, long, long, boolean, int)}
      *          with {@link #ORDER_BY_NEWEST_COMMENT_FIRST} and requestNextPage = false
      * </p>
-     * @return last not loaded or last partially loaded page number from back i.e. 1 for last page, 2 for second last page and so on.
-     * If numOfComments for a page is less than commentsPerPage then that page is partially loaded
+     * @param pageNumberFromBack return page number from back i.e. 1 for last page, 2 for second last page and so on.
+     * @return
+     * <ul>
+     *     <li>last not loaded or last partially loaded page number</li>
+     *     <li>-1 if all pages are loaded</li>
+     *     <li>0 if no any comments is loaded</li>
+     * </ul>
      */
-    public static int getLastNotLoadedPage(long blogId, long postId, final int commentsPerPage){
+    public static int getLastNotLoadedPage(long blogId,
+                                           long postId,
+                                           final int commentsPerPage,
+                                           final boolean pageNumberFromBack){
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number DESC";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
 
-
         if( !c.moveToNext() ){
             c.close();
-            return 1;
+            return 0;
         }
 
         /* NOTE: never perform ( currPageComments < commentsPerPage ) check for last page
@@ -164,7 +171,7 @@ public class ReaderCommentTable {
             int currPageComments = c.getInt(1);
             if( currPage + 1 != lastPage || currPageComments < commentsPerPage){
                 c.close();
-                return backwardPageNumber;
+                return pageNumberFromBack ? backwardPageNumber : currPage;
             }
             lastPage = currPage;
         }
@@ -176,7 +183,7 @@ public class ReaderCommentTable {
             return -1;
         }
 
-        return backwardPageNumber;
+        return pageNumberFromBack ? backwardPageNumber : (currPage-1) ;
     }
 
     /*
