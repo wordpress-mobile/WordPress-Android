@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.stores.model.PostModel;
 import org.wordpress.android.stores.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.stores.network.xmlrpc.post.PostXMLRPCClient;
+import org.wordpress.android.stores.persistence.PostSqlUtils;
 import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.stores.store.PostStore;
 
@@ -41,5 +42,49 @@ public class PostStoreUnitTest {
         assertEquals(1, mPostStore.getPostsCount());
 
         assertEquals(42, mPostStore.getPosts().get(0).getPostId());
+    }
+
+    @Test
+    public void testInsertWithLocalChanges() {
+        PostModel postModel = generateSamplePost();
+        postModel.setIsLocallyChanged(true);
+        WellSql.insert(postModel).execute();
+
+        String newTitle = "A different title";
+        postModel.setTitle(newTitle);
+
+        assertEquals(0, PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(postModel));
+        assertEquals("A test post", mPostStore.getPosts().get(0).getTitle());
+
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel));
+        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+    }
+
+    @Test
+    public void testInsertWithoutLocalChanges() {
+        PostModel postModel = generateSamplePost();
+        WellSql.insert(postModel).execute();
+
+        String newTitle = "A different title";
+        postModel.setTitle(newTitle);
+
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(postModel));
+        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+
+        newTitle = "Another different title";
+        postModel.setTitle(newTitle);
+
+        assertEquals(1, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel));
+        assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
+    }
+
+    public PostModel generateSamplePost() {
+        PostModel example = new PostModel();
+        example.setId(1);
+        example.setSiteId(6);
+        example.setPostId(5);
+        example.setTitle("A test post");
+        example.setDescription("Bunch of content here");
+        return example;
     }
 }
