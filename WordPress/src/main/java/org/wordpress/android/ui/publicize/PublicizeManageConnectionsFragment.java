@@ -100,7 +100,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         }
     }
 
-    private void configureButtonsPreference() {
+    private void configureSharingAndMoreButtonsPreferences() {
         mPublicizeButtons = new ArrayList<>();
         mButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
         mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
@@ -158,7 +158,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
 
     @Override
     protected void initPreferences() {
-        configureButtonsPreference();
+        configureSharingAndMoreButtonsPreferences();
         mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
         mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
