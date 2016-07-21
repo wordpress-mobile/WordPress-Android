@@ -29,7 +29,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     public static final String TWITTER_ID = "twitter";
 
-    private MultiSelectListPreference mButtonsPreference;
+    private MultiSelectListPreference mSharingButtonsPreference;
     private MultiSelectListPreference mMoreButtonsPreference;
     private SummaryEditTextPreference mLabelPreference;
     private DetailListPreference mButtonStylePreference;
@@ -102,7 +102,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
 
     private void configureSharingAndMoreButtonsPreferences() {
         mPublicizeButtons = new ArrayList<>();
-        mButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
+        mSharingButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
         mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
         WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
             @Override
@@ -145,9 +145,9 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
             }
         }
 
-        mButtonsPreference.setEntries(entries);
-        mButtonsPreference.setEntryValues(entryValues);
-        mButtonsPreference.setValues(selectedSharingButtons);
+        mSharingButtonsPreference.setEntries(entries);
+        mSharingButtonsPreference.setEntryValues(entryValues);
+        mSharingButtonsPreference.setValues(selectedSharingButtons);
 
         mMoreButtonsPreference.setEntries(entries);
         mMoreButtonsPreference.setEntryValues(entryValues);
@@ -173,7 +173,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     @Override
     protected void setEditingEnabled(boolean enabled) {
         final Preference[] editablePreference = {
-                mButtonsPreference, mMoreButtonsPreference, mLabelPreference, mButtonStylePreference,
+                mSharingButtonsPreference, mMoreButtonsPreference, mLabelPreference, mButtonStylePreference,
                 mReblogButtonPreference, mLikeButtonPreference, mCommentLikesPreference,
                 mTwitterUsernamePreference
         };
@@ -219,7 +219,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
             mSiteSettings.setAllowCommentLikes((Boolean) newValue);
         } else if (preference == mTwitterUsernamePreference) {
             saveAndSetTwitterUsername(newValue.toString());
-        } else if (preference == mButtonsPreference) {
+        } else if (preference == mSharingButtonsPreference) {
             saveSharingButtons((HashSet<String>) newValue, true);
         } else if (preference == mMoreButtonsPreference) {
             saveSharingButtons((HashSet<String>) newValue, false);
