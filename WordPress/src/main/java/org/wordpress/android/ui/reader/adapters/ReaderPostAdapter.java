@@ -129,6 +129,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
+        private final WPNetworkImageView imgBlavatar;
 
         private final ViewGroup layoutPostHeader;
 
@@ -155,6 +156,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
+            imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
@@ -321,6 +323,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.txtDateline.setText(timestamp);
         }
 
+        if (post.hasPostAvatar()) {
+            holder.imgAvatar.setImageUrl(
+                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
+
         if (!isBlogPreview()) {
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
@@ -333,10 +342,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (post.hasBlogUrl()) {
             String imageUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), mAvatarSzMedium);
-            holder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            holder.imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
             holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
         } else {
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+            holder.imgBlavatar.showDefaultBlavatarImage();
             holder.txtDomain.setText(null);
         }
         if (post.hasBlogName()) {
