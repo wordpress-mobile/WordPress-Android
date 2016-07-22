@@ -116,10 +116,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
-        private final TextView txtDate;
+        private final TextView txtDateline;
         private final TextView txtTag;
         private final TextView txtWordCount;
-        private final TextView txtDateBelowTitle;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -145,10 +144,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
-            txtDate = (TextView) itemView.findViewById(R.id.text_date);
+            txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
             txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
-            txtDateBelowTitle = (TextView) itemView.findViewById(R.id.text_date_below_title);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -184,8 +182,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         txtTitle.getPaddingTop() + extraPadding,
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
-                // show the dateline that appears below the title (hidden in layout)
-                txtDateBelowTitle.setVisibility(View.VISIBLE);
             }
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
@@ -320,11 +316,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }
+        holder.txtDateline.setText(dateLine);
 
-        // when post header is visible (which it shouldn't be for blog preview), the dateline
-        // appears within it - otherwise a separate dateline appears below the title
         if (!isBlogPreview()) {
-            holder.txtDate.setText(dateLine);
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -332,8 +326,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
                 }
             });
-        } else {
-            holder.txtDateBelowTitle.setText(dateLine);
         }
 
         if (post.hasBlogUrl()) {
