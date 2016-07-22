@@ -306,20 +306,21 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         checkLoadMore(position);
     }
 
+    private static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
     private void renderPost(int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
 
         holder.txtTitle.setText(post.getTitle());
 
-        // dateline includes author name if different than blog name
-        String dateLine;
-        if (post.hasAuthorName() && !post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
-            dateLine = post.getAuthorName() + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+        if (post.hasAuthorName()) {
+            holder.txtDateline.setText(post.getAuthorName() + UNICODE_BULLET_WITH_SPACE + timestamp);
+        } else if (post.hasBlogName()) {
+            holder.txtDateline.setText(post.getBlogName() + UNICODE_BULLET_WITH_SPACE + timestamp);
         } else {
-            dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+            holder.txtDateline.setText(timestamp);
         }
-        holder.txtDateline.setText(dateLine);
 
         if (!isBlogPreview()) {
             // show blog preview when post header is tapped
