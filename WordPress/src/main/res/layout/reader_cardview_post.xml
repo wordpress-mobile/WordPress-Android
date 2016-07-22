@@ -107,7 +107,7 @@
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
-                style="@style/ReaderImageView.Avatar.ExtraSmall"
+                style="@style/ReaderImageView.Avatar.Tiny"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/margin_medium"
                 tools:src="@drawable/gravatar_placeholder" />
