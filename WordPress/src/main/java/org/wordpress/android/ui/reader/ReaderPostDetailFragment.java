@@ -903,7 +903,9 @@ public class ReaderPostDetailFragment extends Fragment
 
             String dateLine;
             if (mPost.hasBlogUrl()) {
-                dateLine = UrlUtils.getHost(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
+                dateLine = UrlUtils.getHost(mPost.getBlogUrl())
+                        + ReaderConstants.UNICODE_BULLET_WITH_SPACE
+                        + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             } else {
                 dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             }

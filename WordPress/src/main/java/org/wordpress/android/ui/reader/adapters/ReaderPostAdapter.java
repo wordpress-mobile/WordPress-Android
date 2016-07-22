@@ -306,7 +306,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         checkLoadMore(position);
     }
 
-    private static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
     private void renderPost(int position, ReaderPostViewHolder holder) {
         final ReaderPost post = getItem(position);
         ReaderTypes.ReaderPostListType postListType = getPostListType();
@@ -315,9 +314,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         if (post.hasAuthorName()) {
-            holder.txtDateline.setText(post.getAuthorName() + UNICODE_BULLET_WITH_SPACE + timestamp);
+            holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else if (post.hasBlogName()) {
-            holder.txtDateline.setText(post.getBlogName() + UNICODE_BULLET_WITH_SPACE + timestamp);
+            holder.txtDateline.setText(post.getBlogName() +  ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else {
             holder.txtDateline.setText(timestamp);
         }
