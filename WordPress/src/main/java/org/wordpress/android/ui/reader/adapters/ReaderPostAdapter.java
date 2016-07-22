@@ -41,6 +41,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -116,6 +117,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
+        private final TextView txtDomain;
         private final TextView txtDateline;
         private final TextView txtTag;
         private final TextView txtWordCount;
@@ -144,6 +146,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
+            txtDomain = (TextView) itemView.findViewById(R.id.text_domain);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
             txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
@@ -331,8 +334,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post.hasBlogUrl()) {
             String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
             holder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
         } else {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+            holder.txtDomain.setText(null);
         }
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
