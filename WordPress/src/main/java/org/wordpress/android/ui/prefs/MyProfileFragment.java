@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,11 @@ import java.util.Map;
 
 public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
     private final String DIALOG_TAG = "DIALOG";
+
+    private final String FIRST_NAME_TAG = "first_name";
+    private final String LAST_NAME_TAG = "last_name";
+    private final String DISPLAY_NAME_TAG = "display_name";
+    private final String ABOUT_ME_TAG = "about_me";
 
     private WPTextView mFirstName;
     private WPTextView mLastName;
@@ -46,9 +52,13 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_profile_fragment, container, false);
 
         mFirstName = (WPTextView) rootView.findViewById(R.id.first_name);
+        mFirstName.setTag(FIRST_NAME_TAG);
         mLastName = (WPTextView) rootView.findViewById(R.id.last_name);
+        mLastName.setTag(LAST_NAME_TAG);
         mDisplayName = (WPTextView) rootView.findViewById(R.id.display_name);
+        mDisplayName.setTag(DISPLAY_NAME_TAG);
         mAboutMe = (WPTextView) rootView.findViewById(R.id.about_me);
+        mAboutMe.setTag(ABOUT_ME_TAG);
 
         rootView.findViewById(R.id.first_name_row).setOnClickListener(
                 createOnClickListener(
@@ -112,20 +122,35 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
             @Override
             public void onClick(View v) {
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
-                        textView.getText().toString(), hint, isMultiline, textView.getId());
+                        textView.getText().toString(), hint, isMultiline, (String)textView.getTag());
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
     }
 
     @Override
-    public void onSuccessfulInput(String input, int callbackId) {
-        View rootView = getView();
-        if (rootView == null) return;
+    public void onSuccessfulInput(String input, String callbackTag) {
+        WPTextView textView = getTextView(callbackTag);
+        if (textView == null) return;
 
-        WPTextView textView = (WPTextView) rootView.findViewById(callbackId);
         updateLabel(textView, input);
         updateMyProfileForLabel(textView);
+    }
+
+    @Nullable
+    private WPTextView getTextView(String tag) {
+        switch (tag) {
+            case FIRST_NAME_TAG:
+                return mFirstName;
+            case LAST_NAME_TAG:
+                return mLastName;
+            case DISPLAY_NAME_TAG:
+                return mDisplayName;
+            case ABOUT_ME_TAG:
+                return mAboutMe;
+            default:
+                return null;
+        }
     }
 
     private void updateMyProfileForLabel(TextView textView) {
