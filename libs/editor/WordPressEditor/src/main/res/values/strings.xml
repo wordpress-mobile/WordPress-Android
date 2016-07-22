@@ -79,4 +79,5 @@
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
 
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
+    <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
 </resources>

@@ -24,7 +24,6 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v13.view.DragAndDropPermissionsCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
@@ -115,6 +114,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -135,7 +135,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
-    public static final String STATE_KEY_DROPPED_MEDIA_URI = "stateKeyDroppedMediaUri";
+    public static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
 
     // Context menu positioning
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
@@ -199,16 +199,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private View mMenuView = null;
 
     // for keeping the media uri while asking for permissions
-    private Uri mDroppedMediaUri;
+    private ArrayList<Uri> mDroppedMediaUris;
 
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mDroppedMediaUri != null) {
-                final Uri mediaUri = mDroppedMediaUri;
-                mDroppedMediaUri = null;
+            if (mDroppedMediaUris != null) {
+                final List<Uri> mediaUris = mDroppedMediaUris;
+                mDroppedMediaUris = null;
 
-                fetchMedia(mediaUri);
+                fetchMedia(mediaUris);
             }
         }
     };
@@ -271,7 +271,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return;
             }
         } else {
-            mDroppedMediaUri = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URI);
+            mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
 
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
@@ -417,7 +417,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
-        outState.putParcelable(STATE_KEY_DROPPED_MEDIA_URI, mDroppedMediaUri);
+        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
@@ -1439,42 +1439,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Media
      */
 
-    private void fetchMedia(Uri mediaUri) {
-        if (mediaUri == null) {
-            Toast.makeText(EditPostActivity.this,
-                    getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (URLUtil.isNetworkUrl(mediaUri.toString())) {
-            // Create an AsyncTask to download the file
-            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-        } else {
-            // It is a regular local image file
-            if (!addMedia(mediaUri)) {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
-                        .show();
+    private void fetchMedia(List<Uri> mediaUris) {
+        for (Uri mediaUri : mediaUris) {
+            if (mediaUri == null) {
+                Toast.makeText(EditPostActivity.this,
+                        getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+                continue;
             }
-        }
-    }
 
-    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-            Uri imageUri = uris[0];
-            return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(EditPostActivity.this, R.string.download, Toast.LENGTH_SHORT).show();
-        }
-
-        protected void onPostExecute(Uri newUri) {
-            if (newUri != null) {
-                addMedia(newUri);
-            } else {
-                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT)
-                        .show();
+            if (!addMedia(mediaUri)) {
+                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -1630,7 +1605,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
+                    fetchMedia(Arrays.asList(imageUri));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1656,7 +1631,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    fetchMedia(videoUri);
+                    fetchMedia(Arrays.asList(videoUri));
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -2088,8 +2063,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaDropped(final Uri mediaUri) {
-        mDroppedMediaUri = mediaUri;
+    public void onMediaDropped(final ArrayList<Uri> mediaUris) {
+        mDroppedMediaUris = mediaUris;
 
         if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class EditorFragmentAbstract extends Fragment {
@@ -157,7 +158,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
      * Callbacks for drag and drop support
      */
     public interface EditorDragAndDropListener {
-        void onMediaDropped(Uri mediaUri);
+        void onMediaDropped(ArrayList<Uri> mediaUri);
         void onRequestDragAndDropPermissions(DragEvent dragEvent);
     }
 

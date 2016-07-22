@@ -1,11 +1,11 @@
 package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipDescription;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -52,9 +52,11 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -79,9 +81,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
 
-    private static final String[] DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = { ClipDescription.MIMETYPE_TEXT_PLAIN,
-            ClipDescription.MIMETYPE_TEXT_HTML };
-    private static final String[] DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = { "image/jpeg", "image/png" };
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription.MIMETYPE_TEXT_PLAIN,
+            ClipDescription.MIMETYPE_TEXT_HTML);
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -126,7 +128,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
         private long lastSetCoordsTimestamp;
 
-        private boolean isSupported(ClipDescription clipDescription, String[] mimeTypesToCheck) {
+        private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
             for (String supportedMimeType : mimeTypesToCheck) {
                 if (clipDescription.hasMimeType(supportedMimeType)) {
                     return true;
@@ -204,7 +206,27 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
 
                     if (isSupported(clipDescription, DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                        mEditorDragAndDropListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                        ArrayList<Uri> uris = new ArrayList<>();
+
+                        boolean unsupportedDropsFound = false;
+                        ContentResolver contentResolver = getActivity().getContentResolver();
+                        for (int i = 0; i < dragEvent.getClipData().getItemCount(); i++) {
+                            Uri uri = dragEvent.getClipData().getItemAt(i).getUri();
+                            if (DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE.contains(contentResolver.getType(uri))) {
+                                uris.add(uri);
+                            } else {
+                                unsupportedDropsFound = true;
+                            }
+                        }
+
+                        if (unsupportedDropsFound) {
+                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_unsupported_files, ToastUtils
+                                    .Duration.LONG);
+                        }
+
+                        if (uris.size() > 0) {
+                            mEditorDragAndDropListener.onMediaDropped(uris);
+                        }
                     } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
                     } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
