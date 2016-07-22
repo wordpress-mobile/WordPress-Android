@@ -1,6 +1,8 @@
 package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipDescription;
@@ -192,13 +194,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         return false;
                     }
 
+                    if (isAdded()) {
+                        mEditorDragAndDropListener.onRequestDragAndDropPermissions(dragEvent);
+                    }
+
                     ClipDescription clipDescription = dragEvent.getClipDescription();
                     if (clipDescription.getMimeTypeCount() < 1) {
                         break;
                     }
 
                     if (isSupported(clipDescription, DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                        mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
+                        mEditorDragAndDropListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
                     } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
                     } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
@@ -360,6 +366,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mIsKeyboardOpen = true;
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
     }
 
