@@ -39,7 +39,7 @@
             tools:text="text_blog_name" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_dateline"
+            android:id="@+id/text_domain"
             style="@style/ReaderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_below="@+id/text_blog_name"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_small"
-            tools:text="text_dateline" />
+            tools:text="text_domain" />
     </LinearLayout>
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton

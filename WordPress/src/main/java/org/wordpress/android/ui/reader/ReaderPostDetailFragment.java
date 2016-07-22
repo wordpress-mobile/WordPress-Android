@@ -829,7 +829,7 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
             TextView txtAuthor = (TextView) getView().findViewById(R.id.text_author);
-            TextView txtDateLine = (TextView) getView().findViewById(R.id.text_dateline);
+            TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
@@ -878,12 +878,10 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
-                txtBlogName.setVisibility(View.VISIBLE);
-            } else if (mPost.hasBlogUrl()) {
-                txtBlogName.setText(UrlUtils.getHost(mPost.getBlogUrl()));
-                txtBlogName.setVisibility(View.VISIBLE);
+            } else if (mPost.hasAuthorName()) {
+                txtBlogName.setText(mPost.getAuthorName());
             } else {
-                txtBlogName.setVisibility(View.GONE);
+                txtBlogName.setText(null);
             }
 
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
@@ -907,7 +905,7 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             }
-            txtDateLine.setText(dateLine);
+            //txtDateLine.setText(dateLine); // TODO
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {
