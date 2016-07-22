@@ -138,34 +138,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return false;
         }
 
-        private void highlightTitleForbidden(boolean forbidden) {
-            if (forbidden) {
-                mWebView.execJavaScriptFromString(
-                        "$('#zss_field_title').css('background-color', 'rgba(255,0,0,0.8)')");
-            } else {
-                mWebView.execJavaScriptFromString("$('#zss_field_title').css('background-color', '')");
-            }
-        }
-
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                        // give focus to the content. Dropping images into the title is not supported
-                        mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
-
-                        // let the system know we support this drag operation
-                        return true;
-                    } else {
-                        // check whether text is dragged and let the system know we support it
-                        return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT);
-                    }
+                    return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
+                            isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // would be nice to start marking the place the item will drop
-
-                    // give focus to the content. Dropping into the title is not supported anyway
-                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
@@ -177,22 +157,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         lastSetCoordsTimestamp = currentTimestamp;
 
                         mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
-
-                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                            highlightTitleForbidden("zss_field_title".equals(mFocusedFieldId));
-                        }
                     }
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     // clear any drop marking maybe
-                    highlightTitleForbidden(false);
-
-                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
                     break;
                 case DragEvent.ACTION_DROP:
                     if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
                             "zss_field_title".equals(mFocusedFieldId)) {
                         // don't allow dropping into the title field
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed);
                         return false;
                     }
 
@@ -235,7 +209,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     // clear any drop marking maybe
-                    highlightTitleForbidden(false);
                 default:
                     break;
             }
