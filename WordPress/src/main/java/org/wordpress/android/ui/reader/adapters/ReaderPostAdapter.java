@@ -333,7 +333,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (post.hasBlogUrl()) {
-            String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
+            String imageUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), mAvatarSzMedium);
             holder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
             holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
         } else {

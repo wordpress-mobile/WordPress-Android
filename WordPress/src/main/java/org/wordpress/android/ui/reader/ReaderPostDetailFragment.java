@@ -888,8 +888,10 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.hasBlogUrl()) {
                 String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
                 imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+                txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
             } else {
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+                txtDomain.setText(null);
             }
 
             if (mPost.hasAuthorName()) {
