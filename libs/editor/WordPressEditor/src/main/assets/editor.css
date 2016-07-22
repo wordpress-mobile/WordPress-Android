@@ -45,9 +45,6 @@ html, body {
 }
 
 body {
-    padding-left:15px;
-    padding-right:15px;
-    padding-top: 15px;
     padding-bottom: 5px;
     overflow-y: auto;
     min-height: 100vh;
@@ -403,8 +400,13 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
 
 #separatorDiv {
     -webkit-user-select: none;
-    padding-top: 5px;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
+}
+
+#separatorDiv hr {
+    padding-left:15px;
+    padding-right:15px;
+    margin: 0;
 }
 
 #zss_field_title, #zss_field_title p {
@@ -412,13 +414,20 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
     font-weight: bold;
     font-size: 24px;
     line-height: 32px;
+    padding-top: 15px;
+    padding-left:15px;
+    padding-right:15px;
+    padding-bottom: 10px;
     margin-bottom: 0px;
 }
 
 #zss_field_content {
     font-size: 16px;
     line-height: 24px;
-    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-left:15px;
+    padding-right:15px;
+    padding-bottom: 10px;
 }
 
 .wp-temp[data-wp-temp="caption"] {
