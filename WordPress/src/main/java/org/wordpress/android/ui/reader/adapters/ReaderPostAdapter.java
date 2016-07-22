@@ -54,6 +54,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
+    private final int mAvatarSzExtraSmall;
     private final int mMarginLarge;
 
     private final String mWordCountFmtStr;
@@ -324,10 +325,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (post.hasPostAvatar()) {
+            holder.imgAvatar.setVisibility(View.VISIBLE);
             holder.imgAvatar.setImageUrl(
-                    post.getPostAvatarForDisplay(mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    post.getPostAvatarForDisplay(mAvatarSzExtraSmall), WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImage();
+            holder.imgAvatar.setVisibility(View.GONE);
         }
 
         if (!isBlogPreview()) {
@@ -539,6 +541,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        mAvatarSzExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
 
