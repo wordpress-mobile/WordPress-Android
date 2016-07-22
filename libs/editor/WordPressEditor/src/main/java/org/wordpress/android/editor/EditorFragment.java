@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -75,6 +76,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
+
+    private static final String[] DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = { ClipDescription.MIMETYPE_TEXT_PLAIN,
+            ClipDescription.MIMETYPE_TEXT_HTML };
+    private static final String[] DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = { "image/jpeg", "image/png" };
+
     public static final int MAX_ACTION_TIME_MS = 2000;
 
     private String mTitle = "";
@@ -87,6 +93,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private int mSelectionStart;
     private int mSelectionEnd;
+
+    private String mFocusedFieldId;
 
     private String mTitlePlaceholder = "";
     private String mContentPlaceholder = "";
@@ -114,13 +122,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private long mActionStartedAt = -1;
 
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
-        private final String MIMETYPE_JPEG = "image/jpeg";
-        private final String MIMETYPE_PNG = "image/png";
-        private final String[] mSupportedMimeTypes = { ClipDescription.MIMETYPE_TEXT_PLAIN,
-                ClipDescription.MIMETYPE_TEXT_HTML, MIMETYPE_JPEG, MIMETYPE_PNG };
+        private long lastSetCoordsTimestamp;
 
-        private boolean isSupported(ClipDescription clipDescription) {
-            for (String supportedMimeType : mSupportedMimeTypes) {
+        private boolean isSupported(ClipDescription clipDescription, String[] mimeTypesToCheck) {
+            for (String supportedMimeType : mimeTypesToCheck) {
                 if (clipDescription.hasMimeType(supportedMimeType)) {
                     return true;
                 }
@@ -129,30 +134,70 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return false;
         }
 
+        private void highlightTitleForbidden(boolean forbidden) {
+            if (forbidden) {
+                mWebView.execJavaScriptFromString(
+                        "$('#zss_field_title').css('background-color', 'rgba(255,0,0,0.8)')");
+            } else {
+                mWebView.execJavaScriptFromString("$('#zss_field_title').css('background-color', '')");
+            }
+        }
+
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    return isSupported(dragEvent.getClipDescription());
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                        // give focus to the content. Dropping images into the title is not supported
+                        mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
+
+                        // let the system know we support this drag operation
+                        return true;
+                    } else {
+                        // check whether text is dragged and let the system know we support it
+                        return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT);
+                    }
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // would be nice to start marking the place the item will drop
+
+                    // give focus to the content. Dropping into the title is not supported anyway
+                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
                     int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
                     int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
 
-                    mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
+                    // don't call into JS too often
+                    long currentTimestamp = SystemClock.uptimeMillis();
+                    if ((currentTimestamp - lastSetCoordsTimestamp) > 150) {
+                        lastSetCoordsTimestamp = currentTimestamp;
+
+                        mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
+
+                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                            highlightTitleForbidden("zss_field_title".equals(mFocusedFieldId));
+                        }
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     // clear any drop marking maybe
+                    highlightTitleForbidden(false);
+
+                    mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
                     break;
                 case DragEvent.ACTION_DROP:
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                            "zss_field_title".equals(mFocusedFieldId)) {
+                        // don't allow dropping into the title field
+                        return false;
+                    }
+
                     ClipDescription clipDescription = dragEvent.getClipDescription();
                     if (clipDescription.getMimeTypeCount() < 1) {
                         break;
                     }
 
-                    if (clipDescription.hasMimeType(MIMETYPE_JPEG) || clipDescription.hasMimeType(MIMETYPE_PNG)) {
+                    if (isSupported(clipDescription, DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
                         mEditorFragmentListener.onMediaDropped(dragEvent.getClipData().getItemAt(0).getUri());
                     } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
@@ -162,6 +207,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     // clear any drop marking maybe
+                    highlightTitleForbidden(false);
                 default:
                     break;
             }
@@ -1197,12 +1243,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void onSelectionChanged(final Map<String, String> selectionArgs) {
-        final String focusedFieldId = selectionArgs.get("id"); // The field now in focus
+        mFocusedFieldId = selectionArgs.get("id"); // The field now in focus
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                if (!focusedFieldId.isEmpty()) {
-                    switch (focusedFieldId) {
+                if (!mFocusedFieldId.isEmpty()) {
+                    switch (mFocusedFieldId) {
                         case "zss_field_title":
                             updateFormatBarEnabledState(false);
                             break;
