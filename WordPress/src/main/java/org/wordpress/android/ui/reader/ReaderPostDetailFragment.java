@@ -828,8 +828,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
-            TextView txtAuthor = (TextView) getView().findViewById(R.id.text_author);
             TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
+            TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
             TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
@@ -894,22 +894,14 @@ public class ReaderPostDetailFragment extends Fragment
                 txtDomain.setText(null);
             }
 
+            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             if (mPost.hasAuthorName()) {
-                txtAuthor.setText(mPost.getAuthorName());
-                txtAuthor.setVisibility(View.VISIBLE);
+                txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
+            } else if (mPost.hasBlogName()) {
+                txtDateline.setText(mPost.getBlogName() +  ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else {
-                txtAuthor.setVisibility(View.GONE);
+                txtDateline.setText(timestamp);
             }
-
-            String dateLine;
-            if (mPost.hasBlogUrl()) {
-                dateLine = UrlUtils.getHost(mPost.getBlogUrl())
-                        + ReaderConstants.UNICODE_BULLET_WITH_SPACE
-                        + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
-            } else {
-                dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
-            }
-            //txtDateLine.setText(dateLine); // TODO
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {

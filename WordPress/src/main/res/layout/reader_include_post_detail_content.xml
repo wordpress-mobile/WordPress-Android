@@ -19,7 +19,7 @@
         tools:text="text_title" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_author"
+        android:id="@+id/text_dateline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_title"
@@ -28,13 +28,13 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="text_author" />
+        tools:text="text_dateline" />
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
         android:layout_width="@dimen/reader_webview_width"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_author"
+        android:layout_below="@id/text_dateline"
         android:layout_marginTop="@dimen/margin_large"
         android:scrollbars="none" />
 
