@@ -168,7 +168,7 @@ public class ReaderCommentService extends Service {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, blogId, pageNumber, commentOrder, resultListener);
+                handleUpdateCommentsResponse(jsonObject, blogId, postId, pageNumber, commentOrder, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -184,8 +184,85 @@ public class ReaderCommentService extends Service {
 
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
+
+    /**
+     * load a single comment if it is not in database
+     * @param refreshComment download fresh comment from server whether it is present in database or not
+     * @param loadParents load all parents of this comment
+     * @param commentsLoaded should be 0, number of comments loaded (used for recursion)
+     */
+    private static void updateComment(final long blogId,
+                                      final long postId,
+                                      final long commentId,
+                                      final boolean refreshComment,
+                                      final boolean loadParents,
+                                      final UpdateResultListener resultListener,
+                                      final int commentsLoaded){
+        boolean loadCurrentComment;
+
+        if( refreshComment ){
+            loadCurrentComment = true;
+        }else if( ReaderCommentTable.commentExists(blogId,postId,commentId) ){
+            loadCurrentComment = false;
+        }else {
+            //comment not exist in database , load from server
+            loadCurrentComment = true;
+        }
+
+        if( loadCurrentComment ){
+            String path = "sites/" + blogId + "/comments/" + commentId + "&meta=likes";
+
+            RestRequest.Listener listener = new RestRequest.Listener(){
+                @Override
+                public void onResponse(JSONObject jsonComment) {
+                    if(jsonComment == null){
+                        if(resultListener != null ) {
+                            resultListener.onUpdateResult(commentsLoaded > 0 ? UpdateResult.HAS_NEW : UpdateResult.FAILED);
+                        }
+                        return;
+                    }
+
+                    ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
+                    saveLikesForComment(jsonComment,comment);
+                    ReaderCommentTable.addOrUpdateComment(comment);
+
+                    if( loadParents && comment.parentId != 0 ){
+                        updateComment(blogId, postId, comment.parentId, refreshComment, loadParents, resultListener, commentsLoaded+1);
+                    }else if( resultListener != null ) {
+                        resultListener.onUpdateResult(UpdateResult.HAS_NEW);
+                    }
+                }
+            };
+
+            RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    AppLog.e(AppLog.T.READER, volleyError);
+                    if( resultListener != null ) {
+                        resultListener.onUpdateResult(commentsLoaded > 0 ? UpdateResult.HAS_NEW : UpdateResult.FAILED);
+                    }
+                }
+            };
+
+            WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+
+            return;
+        }
+
+        long parentId = ReaderCommentTable.getParentOfComment(blogId, postId, commentId);
+        if(parentId != 0) {
+            updateComment(blogId, postId, parentId, refreshComment, loadParents, resultListener, commentsLoaded);
+            return;
+        }
+
+        if( resultListener != null ){
+            resultListener.onUpdateResult( commentsLoaded > 0 ? UpdateResult.HAS_NEW : UpdateResult.UNCHANGED );
+        }
+    }
+
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
                                                      final long blogId,
+                                                     final long postId,
                                                      final int pageNumber,
                                                      final int commentOrder,
                                                      final ReaderActions.UpdateResultListener resultListener) {
@@ -199,9 +276,9 @@ public class ReaderCommentService extends Service {
             public void run() {
                 final boolean hasNewComments;
 
+                ReaderCommentList serverComments = new ReaderCommentList();
                 ReaderDatabase.getWritableDb().beginTransaction();
                 try {
-                    ReaderCommentList serverComments = new ReaderCommentList();
                     JSONArray jsonCommentList = jsonObject.optJSONArray("comments");
                     int commentsFound = jsonObject.optInt("found");
                     if (jsonCommentList != null) {
@@ -223,13 +300,7 @@ public class ReaderCommentService extends Service {
 
                             serverComments.add(comment);
 
-                            // extract and save likes for this comment
-                            JSONObject jsonLikes = JSONUtils.getJSONChild(jsonComment, "meta/data/likes");
-                            if (jsonLikes != null) {
-                                ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
-                                ReaderUserTable.addOrUpdateUsers(likingUsers);
-                                ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
-                            }
+                            saveLikesForComment(jsonComment,comment);
                         }
                     }
 
@@ -242,10 +313,31 @@ public class ReaderCommentService extends Service {
                     ReaderDatabase.getWritableDb().endTransaction();
                 }
 
+                //load parents of comments because in NEWEST_COMMENT_FIRST parents are not loaded
+                if( commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
+                    for(ReaderComment comment : serverComments){
+                        if(comment.parentId == 0){
+                            continue;
+                        }
+
+                        updateComment(blogId, postId, comment.parentId, false, true, null, 0);
+                    }
+                }
+
                 ReaderActions.UpdateResult result =
                         (hasNewComments ? ReaderActions.UpdateResult.HAS_NEW : ReaderActions.UpdateResult.UNCHANGED);
                 resultListener.onUpdateResult(result);
             }
         }.start();
+    }
+
+    // extract and save likes for this comment
+    private static void saveLikesForComment(JSONObject jsonComment,ReaderComment comment){
+        JSONObject jsonLikes = JSONUtils.getJSONChild(jsonComment, "meta/data/likes");
+        if (jsonLikes != null) {
+            ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
+            ReaderUserTable.addOrUpdateUsers(likingUsers);
+            ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
+        }
     }
 }

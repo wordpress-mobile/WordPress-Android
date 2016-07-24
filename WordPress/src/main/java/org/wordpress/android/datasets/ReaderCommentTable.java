@@ -55,7 +55,7 @@ public class ReaderCommentTable {
                     + " text,"
                     + " num_likes,"
                     + " is_liked,"
-                    + " page_number";
+                    + " page_number"; //NOTE: page_number may be zero if we load the comment by Id
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -114,7 +114,7 @@ public class ReaderCommentTable {
     public static int getLastPageNumberForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0", args);
     }
 
     /*
@@ -123,7 +123,7 @@ public class ReaderCommentTable {
      */
     public static int getFirstNotLoadedPage(long blogId, long postId){
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number";
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 GROUP BY page_number ORDER BY page_number";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
 
         int pageNumber = 1;
@@ -157,7 +157,7 @@ public class ReaderCommentTable {
                                            long postId,
                                            final boolean pageNumberFromBack){
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? GROUP BY page_number ORDER BY page_number DESC";
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 GROUP BY page_number ORDER BY page_number DESC";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
 
         if( !c.moveToNext() ){
@@ -221,7 +221,7 @@ public class ReaderCommentTable {
     }
     private static int getNumCommentsForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0", args);
     }
 
     /**
@@ -240,13 +240,13 @@ public class ReaderCommentTable {
         String whereClause,orderByClause;
 
         if( lastPageNumber <= 0 ){
-            whereClause = "blog_id = ? AND post_id = ?";
+            whereClause = "blog_id = ? AND post_id = ? AND page_number > 0";
             args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
         }else if( orderBy == ORDER_BY_NEWEST_COMMENT_FIRST ){
-            whereClause = "blog_id = ? AND post_id = ? AND page_number >= ?";
+            whereClause = "blog_id = ? AND post_id = ? AND page_number >= ? AND page_number > 0";
             args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
         }else if( orderBy == ORDER_BY_TIME_OF_COMMENT ){
-            whereClause = "blog_id = ? AND post_id = ? AND page_number <= ?";
+            whereClause = "blog_id = ? AND post_id = ? AND page_number <= ? AND page_number > 0";
             args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
         }else {
             throw new IllegalArgumentException("Unknown orderBy");
@@ -358,7 +358,7 @@ public class ReaderCommentTable {
         }
 
         StringBuilder sb = new StringBuilder(
-                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
+                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 AND comment_id IN (");
         boolean isFirst = true;
         for (ReaderComment comment: comments) {
             if (isFirst) {
@@ -465,5 +465,14 @@ public class ReaderCommentTable {
         comment.pageNumber = c.getInt(c.getColumnIndex("page_number"));
 
         return comment;
+    }
+
+    public static long getParentOfComment(final long blogId, final long postId , final long commentId){
+        String[] args = {Long.toString(blogId),
+                Long.toString(postId),
+                Long.toString(commentId)};
+
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT parent_id FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
     }
 }
