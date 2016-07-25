@@ -21,7 +21,7 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
+public class MyProfileFragment extends Fragment {
     private final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
@@ -133,7 +133,6 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         };
     }
 
-    @Override
     public void onSuccessfulInput(String input, int callbackId) {
         View rootView = getView();
         if (rootView == null) return;

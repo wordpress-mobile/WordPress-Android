@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-public class MyProfileActivity extends AppCompatActivity {
+public class MyProfileActivity extends AppCompatActivity implements ProfileInputDialogFragment.Callback {
     private static final String KEY_MY_PROFILE_FRAGMENT = "my-profile-fragment";
 
     @Override
@@ -38,5 +38,14 @@ public class MyProfileActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSuccessfulInput(String input, int callbackId) {
+        MyProfileFragment myProfileFragment =
+                (MyProfileFragment) getFragmentManager().findFragmentByTag(KEY_MY_PROFILE_FRAGMENT);
+        if (myProfileFragment != null) {
+            myProfileFragment.onSuccessfulInput(input, callbackId);
+        }
     }
 }
