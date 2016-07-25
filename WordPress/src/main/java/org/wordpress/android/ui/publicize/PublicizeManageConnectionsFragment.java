@@ -49,8 +49,12 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         for (PublicizeButton button: mPublicizeButtons) {
             if (values.contains(button.getId())) {
                 button.setVisibility(isVisible);
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+                button.setVisibility(false);
             }
-            button.setEnabled(true);
+
             jsonArray.put(button.toJson());
         }
 
@@ -96,13 +100,15 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private void toggleTwitterPreferenceVisiblity() {
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            if (publicizeButton.getId().equals(TWITTER_ID)) {
+            if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
+                mTwitterPreferenceCategory.setTitle(R.string.twitter);
                 mTwitterPreferenceCategory.removeAll();
                 mTwitterPreferenceCategory.addPreference(mTwitterUsernamePreference);
                 return;
             }
         }
 
+        mTwitterPreferenceCategory.setTitle("");
         mTwitterPreferenceCategory.removePreference(mTwitterUsernamePreference);
     }
 
