@@ -498,6 +498,7 @@
 	<string name="passcode_preference_title">Blokada PIN</string>
 	<string name="passcode_turn_off">Wyłącz blokadę PIN</string>
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>
+	<string name="discard">Odrzuć</string>
 	<string name="upload">Załaduj</string>
 	<string name="notifications">Powiadomienia</string>
 	<string name="note_reply_successful">Odpowiedź opublikowana</string>
@@ -537,6 +538,7 @@
 	<string name="image_alignment">Wyrównanie</string>
 	<string name="refresh">Odśwież</string>
 	<string name="untitled">Bez tytułu</string>
+	<string name="edit">Edytuj</string>
 	<string name="page_id">Strona</string>
 	<string name="post_id">Wpis</string>
 	<string name="post_password">Hasło (opcjonalnie)</string>
@@ -555,7 +557,6 @@
 	<string name="title">Tytuł</string>
 	<string name="tags_separate_with_commas">Tagi (oddzielone przecinkami)</string>
 	<string name="notification_vibrate">Wibracja</string>
-	<string name="notification_sound">Odtwórz dźwięk powiadomienia</string>
 	<string name="notification_blink">Mruganie diody LED przy powiadomieniach</string>
 	<string name="status">Status</string>
 	<string name="location">Lokalizacja</string>

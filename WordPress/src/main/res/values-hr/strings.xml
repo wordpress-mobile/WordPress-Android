@@ -302,7 +302,6 @@
 	<string name="my_site_header_look_and_feel">Izgled i dojam</string>
 	<string name="my_site_header_configuration">Konfiguracija</string>
 	<string name="reader_label_new_posts_subtitle">Pritisni za prikaz</string>
-	<string name="my_site_header_admin">Admin</string>
 	<string name="notifications_account_required">Za obavijesti, prijavite se u WordPress.com</string>
 	<string name="stats_unknown_author">Nepoznati autor</string>
 	<string name="image_added">Slika dodana</string>
@@ -843,6 +842,7 @@
 	<string name="scaled_image">Širina dimenzionirane slike</string>
 	<string name="scheduled">Zakazano</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">Prijenos...</string>
 	<string name="version">Inačica</string>
 	<string name="tos">Uvjeti Korištenja</string>
 	<string name="app_title">WordPress za Android</string>
@@ -850,6 +850,7 @@
 	<string name="image_alignment">Poravnanje</string>
 	<string name="refresh">Osvježi</string>
 	<string name="untitled">Nenaslovljeno</string>
+	<string name="edit">Uredi</string>
 	<string name="page_id">Stranica</string>
 	<string name="post_id">Objava</string>
 	<string name="post_password">Lozinka (opcionalno)</string>
@@ -869,8 +870,8 @@
 	<string name="categories">Kategorije</string>
 	<string name="dlg_deleting_comments">Brisanje komentara</string>
 	<string name="notification_blink">Trepereće svjetlo za obavijesti</string>
-	<string name="notification_sound">Reproduciraj zvučnu obavijest </string>
 	<string name="notification_vibrate">Vibracija</string>
+	<string name="notification_sound">Zvučna obavijest </string>
 	<string name="status">Status</string>
 	<string name="location">Lokacija</string>
 	<string name="sdcard_title">Neophodna SD kartica</string>

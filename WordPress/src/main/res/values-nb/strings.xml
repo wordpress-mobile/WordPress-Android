@@ -41,7 +41,6 @@
 	<string name="my_site_btn_view_site">Vis nettsted</string>
 	<string name="my_site_header_publish">Publiser</string>
 	<string name="my_site_btn_site_settings">Innstillinger</string>
-	<string name="my_site_header_admin">Admin</string>
 	<string name="notifications_account_required">Logg inn på WordPress.com for varsler</string>
 	<string name="image_added">Bilde lagt til</string>
 	<string name="show">Vis</string>
@@ -319,6 +318,7 @@
 	<string name="passcode_turn_off">Slå av PIN-lås</string>
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
 	<string name="upload">Last opp</string>
+	<string name="discard">Forkast</string>
 	<string name="sign_in">Logg inn</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
@@ -358,6 +358,7 @@
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Oppdater</string>
 	<string name="untitled">Uten tittel</string>
+	<string name="edit">Redigér</string>
 	<string name="post_id">Innlegg</string>
 	<string name="page_id">Side</string>
 	<string name="post_password">Passord (valgfritt)</string>
@@ -375,7 +376,6 @@
 	<string name="title">Tittel</string>
 	<string name="tags_separate_with_commas">Stikkord (separer flere stikkord med komma)</string>
 	<string name="categories">Kategorier</string>
-	<string name="notification_sound">Spill av meldingslyd</string>
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blinkende varsler</string>
 	<string name="status">Status</string>

@@ -466,6 +466,7 @@
 	<string name="image_alignment">Усогласување</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без наслов</string>
+	<string name="edit">Уреди</string>
 	<string name="post_id">Напис</string>
 	<string name="page_id">Страница</string>
 	<string name="post_password">Лозинка (опционално)</string>
@@ -484,7 +485,6 @@
 	<string name="tags_separate_with_commas">Ознаки (одделете ги ознаките со запирки)</string>
 	<string name="categories">Категории</string>
 	<string name="notification_blink">Известување со трепкачко светло</string>
-	<string name="notification_sound">Свири звук за известување</string>
 	<string name="notification_vibrate">Вибрирај</string>
 	<string name="status">Статус</string>
 	<string name="location">Локација</string>
