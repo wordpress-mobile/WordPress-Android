@@ -1,15 +1,13 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import org.wordpress.android.R;
-
-import de.greenrobot.event.EventBus;
-
 public class MyProfileActivity extends AppCompatActivity {
+    private static final String KEY_MY_PROFILE_FRAGMENT = "my-profile-fragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,12 +18,17 @@ public class MyProfileActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.my_profile_activity);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        FragmentManager fragmentManager = getFragmentManager();
+        MyProfileFragment myProfileFragment =
+                (MyProfileFragment) fragmentManager.findFragmentByTag(KEY_MY_PROFILE_FRAGMENT);
+        if (myProfileFragment == null) {
+            myProfileFragment = MyProfileFragment.newInstance();
+
+            fragmentManager.beginTransaction()
+                    .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
+                    .commit();
+        }
     }
 
     @Override
