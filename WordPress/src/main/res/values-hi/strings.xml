@@ -130,7 +130,6 @@
 	<string name="my_site_btn_blog_posts">ब्लॉग पोस्ट्स</string>
 	<string name="my_site_btn_site_settings">सेटिंग्स</string>
 	<string name="my_site_header_publish">प्रकाशित</string>
-	<string name="my_site_header_admin">एडमिन</string>
 	<string name="stats_unknown_author">अज्ञात लेखक</string>
 	<string name="show">दिखाएँ</string>
 	<string name="hide">छुपाएँ</string>
@@ -523,6 +522,7 @@
 	<string name="passcode_turn_off">पिन को ऑफ करे</string>
 	<string name="passcode_turn_on">पिन को ऑन करे</string>
 	<string name="upload">अपलोड</string>
+	<string name="discard">नज़रअंदाज़ करे</string>
 	<string name="sign_in">साइन इन</string>
 	<string name="notifications">सूचनाएं</string>
 	<string name="note_reply_successful">जवाब प्रकाशित हो गया</string>
@@ -562,6 +562,7 @@
 	<string name="image_alignment">संरेखण</string>
 	<string name="refresh">रिफ्रेश</string>
 	<string name="untitled">बिना शीर्षक का</string>
+	<string name="edit">संपादित करें</string>
 	<string name="post_id">पोस्ट</string>
 	<string name="page_id">पृष्ठ</string>
 	<string name="post_password">कूटशब्द (वैकल्पिक)</string>
@@ -581,7 +582,6 @@
 	<string name="categories">श्रेणिया</string>
 	<string name="dlg_deleting_comments">टिप्पणियों को हटाना</string>
 	<string name="notification_blink">ब्लिंक सुचना का प्रकाश </string>
-	<string name="notification_sound">सूचना ध्वनि चलाएं</string>
 	<string name="notification_vibrate">वाइब्रेट</string>
 	<string name="status">स्थति</string>
 	<string name="location">स्थान</string>

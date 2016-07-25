@@ -573,6 +573,9 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
+                }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
@@ -644,7 +647,7 @@ public class ReaderPostListFragment extends Fragment
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED, properties);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
         }
     }
 
@@ -1441,6 +1444,7 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }
