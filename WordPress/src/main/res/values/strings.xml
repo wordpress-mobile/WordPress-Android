@@ -1402,12 +1402,20 @@
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
     <string name="manage_connections">Manage Connections</string>
-    <string name="sharing_buttons">Sharing Buttons</string>
+    <string name="sharing_buttons">Edit Sharing Buttons</string>
     <string name="more_buttons">More Buttons</string>
     <string name="label">Label</string>
     <string name="button_style">Button Style</string>
-    <string name="allow_comment_likes">Allow Comment Likes</string>
+    <string name="sharing_comment_likes">Comment Likes</string>
     <string name="twitter_username">Twitter Username</string>
+    <string name="sharing_sharing_buttons_description">Select which buttons are shown under your posts</string>
+    <string name="sharing_more_description">A more button contains a dropdown which displays sharing buttons</string>
+    <string name="sharing_edit_more_buttons">Edit More Buttons</string>
+    <string name="buttons">Buttons</string>
+    <string name="visual">Visual</string>
+    <string name="sharing_comment_likes_description">Allow all comments to be Liked by you and your readers</string>
+    <string name="likes">Likes</string>
+    <string name="twitter">Twitter</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>

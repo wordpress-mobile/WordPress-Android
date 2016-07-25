@@ -2,15 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="Visual">
+        android:title="@string/buttons">
 
         <MultiSelectListPreference
             android:key="@string/pref_key_sharing_buttons"
-            android:title="@string/sharing_buttons" />
+            android:title="@string/sharing_buttons"
+            android:summary="@string/sharing_sharing_buttons_description"/>
 
         <MultiSelectListPreference
             android:key="@string/pref_key_more_buttons"
-            android:title="@string/more_buttons" />
+            android:title="@string/sharing_edit_more_buttons"
+            android:summary="@string/sharing_more_description" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/visual">
 
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/publicize_label"
@@ -26,7 +33,6 @@
             android:entries="@array/publicize_button_style_etries"
             android:entryValues="@array/publicize_button_style_values"
             android:defaultValue="-2" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -47,14 +53,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Likes">
+        android:title="@string/likes">
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_comment_likes"
-            android:title="@string/allow_comment_likes" />
+            android:title="@string/sharing_comment_likes"
+            android:summary="@string/sharing_comment_likes_description" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Twitter">
+        android:title="@string/twitter">
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/pref_key_twitter_username"
             android:layout="@layout/preference_layout"
