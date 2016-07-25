@@ -36,6 +36,12 @@
 	<string name="post_format_quote">Citat</string>
 	<string name="post_format_standard">Standard</string>
 	<string name="post_format_audio">Lyd</string>
+	<string name="reader_discover_visit_blog">Besøg %s</string>
+	<string name="reader_short_like_count_multi">%s Likes</string>
+	<string name="reader_short_like_count_one">1 Like</string>
+	<string name="reader_label_follow_count">%,d følgere</string>
+	<string name="reader_short_like_count_none">Like</string>
+	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="tabbar_accessibility_label_my_site">Mit websted</string>
 	<string name="tabbar_accessibility_label_me">Mig</string>
 	<string name="passcodelock_prompt_message">Indtast din PIN</string>
@@ -67,7 +73,6 @@
 	<string name="my_site_header_publish">Udgiv</string>
 	<string name="my_site_header_look_and_feel">Udseende</string>
 	<string name="my_site_btn_blog_posts">Blogindlæg</string>
-	<string name="my_site_header_admin">Administrator</string>
 	<string name="my_site_header_configuration">Konfiguration</string>
 	<string name="notifications_account_required">Log ind på WordPress.com for notifikationer</string>
 	<string name="stats_unknown_author">Ukendt forfatter</string>
@@ -588,6 +593,7 @@
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>
+	<string name="edit">Rediger</string>
 	<string name="post_id">Indlæg</string>
 	<string name="page_id">Side</string>
 	<string name="post_password">Kodeord (valgfrit)</string>
@@ -607,7 +613,6 @@
 	<string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
 	<string name="dlg_deleting_comments">Sletter kommentarer</string>
 	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_sound">Afspil beskedlyd</string>
 	<string name="notification_blink">Blink beskedlys</string>
 	<string name="status">Status</string>
 	<string name="select_video">Vælg en video fra galleriet</string>

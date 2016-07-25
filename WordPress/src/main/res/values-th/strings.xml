@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="image_thumbnail">รูปย่อ</string>
 	<string name="remove">ลบออก</string>
 	<string name="search">ค้นหา</string>
 	<string name="add_category">เพิ่มหมวดหมู่</string>
@@ -243,7 +244,6 @@
 	<string name="my_site_header_look_and_feel">หน้าตาและสัมผัส (Look and Feel)</string>
 	<string name="my_site_btn_site_settings">ตั้งค่า</string>
 	<string name="my_site_btn_blog_posts">เรื่องบล็อก</string>
-	<string name="my_site_header_admin">ผู้ควบคุม</string>
 	<string name="reader_label_new_posts_subtitle">แตะเพื่อแสดงมัน</string>
 	<string name="my_site_header_configuration">การปรับแต่ง</string>
 	<string name="notifications_account_required">ลงทะเบียนเข้าสู่ WordPress.com สำหรับการเตือน</string>
@@ -752,6 +752,7 @@
 	<string name="passcode_turn_off">ปิดการใช้ PIN ล็อค</string>
 	<string name="passcode_turn_on">เปิดการใช้ PIN ล็อค</string>
 	<string name="upload">อัปโหลด</string>
+	<string name="discard">เอาออก</string>
 	<string name="sign_in">เข้าสู่ระบบ</string>
 	<string name="notifications">การเตือน</string>
 	<string name="note_reply_successful">เผยแพร่การตอบกลับแล้ว</string>
@@ -792,6 +793,7 @@
 	<string name="image_alignment">จัดหน้า</string>
 	<string name="refresh">รีเฟรช</string>
 	<string name="untitled">ไม่มีหัวข้อ</string>
+	<string name="edit">แก้ไข</string>
 	<string name="post_id">เลขที่เรื่อง</string>
 	<string name="page_id">เลขที่หน้า</string>
 	<string name="post_password">รหัสผ่านเรื่อง (ทางเลือก)</string>
@@ -811,7 +813,6 @@
 	<string name="tags_separate_with_commas">ป้ายกำกับ (แยกป้ายกำกับด้วย commas)</string>
 	<string name="notification_vibrate">สั่น</string>
 	<string name="notification_blink">เปิดไฟกระพริบการแจ้งเตือน</string>
-	<string name="notification_sound">เปิดเสียงการแจ้งเตือน </string>
 	<string name="status">สถานะ</string>
 	<string name="location">สถานที่</string>
 	<string name="sdcard_title">ต้องการ SD Card</string>

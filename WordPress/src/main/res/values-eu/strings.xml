@@ -114,7 +114,6 @@
 	<string name="my_site_header_publish">Argitaratu</string>
 	<string name="my_site_btn_site_settings">Hobespenak</string>
 	<string name="my_site_header_configuration">Konfigurazioa</string>
-	<string name="my_site_header_admin">Administratzailea</string>
 	<string name="stats_unknown_author">Egile ezezaguna</string>
 	<string name="signout">Deskonektatu</string>
 	<string name="image_added">Irudia gehitua</string>
@@ -494,6 +493,7 @@
 	<string name="media_edit_failure">Huts egin du eguneratzeak</string>
 	<string name="theme_auth_error_title">Huts egin du itxurak eskuratzeak</string>
 	<string name="upload">Igo</string>
+	<string name="discard">Baztertu</string>
 	<string name="new_notifications">%d jakinarazpen berri</string>
 	<string name="notifications">Jakinarazpenak</string>
 	<string name="more_notifications">eta %d gehiago.</string>
@@ -533,6 +533,7 @@
 	<string name="image_alignment">Lerrokatzea</string>
 	<string name="refresh">Freskatu</string>
 	<string name="untitled">Izenbururik gabe</string>
+	<string name="edit">Editatu</string>
 	<string name="page_id">Orrialdea</string>
 	<string name="post_id">Bidalketa</string>
 	<string name="immediately">Berehala</string>
@@ -553,7 +554,6 @@
 	<string name="dlg_deleting_comments">Iruzkinak ezabatzen</string>
 	<string name="notification_vibrate">Bibratu</string>
 	<string name="notification_blink">Jakinarazpen keinukariaren argia</string>
-	<string name="notification_sound">Erreproduzitu jakinarazpenaren soinua</string>
 	<string name="status">Egoera</string>
 	<string name="select_video">Aukeratu bideo bat bildumatik</string>
 	<string name="location">Kokalekua</string>

@@ -96,7 +96,6 @@
 	<string name="my_site_btn_blog_posts">Чланци блога</string>
 	<string name="my_site_btn_site_settings">Подешавања</string>
 	<string name="my_site_header_configuration">Поставка</string>
-	<string name="my_site_header_admin">Управљање</string>
 	<string name="reader_label_new_posts_subtitle">Притисните да бисте их показали</string>
 	<string name="notifications_account_required">Пријавите се на WordPress.com за пријаве</string>
 	<string name="stats_unknown_author">Непознат аутор</string>
@@ -638,6 +637,7 @@
 	<string name="image_alignment">Поравнање</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без имена</string>
+	<string name="edit">Уреди</string>
 	<string name="post_id">Чланак</string>
 	<string name="page_id">Страна</string>
 	<string name="immediately">Одмах</string>
@@ -656,7 +656,6 @@
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
 	<string name="notification_vibrate">Вибрирај</string>
-	<string name="notification_sound">Пуштај звук обавештења</string>
 	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="status">Стање</string>
 	<string name="select_video">Одабери видео снимак из галерије</string>
