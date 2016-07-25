@@ -24,19 +24,6 @@ public class MyProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
     }

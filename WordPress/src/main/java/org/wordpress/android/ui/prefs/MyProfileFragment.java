@@ -19,6 +19,8 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
     private final String DIALOG_TAG = "DIALOG";
 
@@ -39,6 +41,19 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             AccountHelper.getDefaultAccount().fetchAccountSettings();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
