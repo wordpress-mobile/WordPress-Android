@@ -163,11 +163,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     // clear any drop marking maybe
                     break;
                 case DragEvent.ACTION_DROP:
-                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
-                            "zss_field_title".equals(mFocusedFieldId)) {
-                        // don't allow dropping into the title field
-                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed);
-                        return true;
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                        if (mSourceView.getVisibility() == View.VISIBLE) {
+                            // don't allow dropping images into the HTML source
+                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
+                                    ToastUtils.Duration.LONG);
+                            return true;
+                        } else if ("zss_field_title".equals(mFocusedFieldId)) {
+                            // don't allow dropping images into the title field
+                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
+                                    ToastUtils.Duration.LONG);
+                            return true;
+                        }
                     }
 
                     if (isAdded()) {
@@ -334,6 +341,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mSourceViewTitle.setHint(mTitlePlaceholder);
         mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
+
+        // attach drag-and-drop handler
+        mSourceViewTitle.setOnDragListener(mOnDragListener);
+        mSourceViewContent.setOnDragListener(mOnDragListener);
 
         // -- Format bar configuration
 
