@@ -605,10 +605,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             otherwise load comments from database
          */
         if(NetworkUtils.isNetworkAvailable(this)){
-            mCommentAdapter.setCommentsOrder(commentsOrder,false);
-            updateComments(true,false);
+            ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+            mCommentAdapter.setCommentsOrder(commentsOrder, false);
+            updateComments(true, false);
         }else{
-            mCommentAdapter.setCommentsOrder(commentsOrder,true);
+            mCommentAdapter.setCommentsOrder(commentsOrder, true);
         }
     }
 }

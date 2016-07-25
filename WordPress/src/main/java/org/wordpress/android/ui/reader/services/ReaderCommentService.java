@@ -205,12 +205,12 @@ public class ReaderCommentService extends Service {
         }else if( ReaderCommentTable.commentExists(blogId,postId,commentId) ){
             loadCurrentComment = false;
         }else {
-            //comment not exist in database , load from server
+            //comment not exist in database, load from server
             loadCurrentComment = true;
         }
 
         if( loadCurrentComment ){
-            String path = "sites/" + blogId + "/comments/" + commentId + "&meta=likes";
+            String path = "sites/" + blogId + "/comments/" + commentId + "?meta=likes";
 
             RestRequest.Listener listener = new RestRequest.Listener(){
                 @Override
@@ -225,6 +225,8 @@ public class ReaderCommentService extends Service {
                     ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
                     saveLikesForComment(jsonComment,comment);
                     ReaderCommentTable.addOrUpdateComment(comment);
+
+                    AppLog.d(AppLog.T.READER, "updating comment , commentId: " + commentId );
 
                     if( loadParents && comment.parentId != 0 ){
                         updateComment(blogId, postId, comment.parentId, refreshComment, loadParents, resultListener, commentsLoaded+1);
@@ -245,14 +247,15 @@ public class ReaderCommentService extends Service {
             };
 
             WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
-
             return;
         }
 
-        long parentId = ReaderCommentTable.getParentOfComment(blogId, postId, commentId);
-        if(parentId != 0) {
-            updateComment(blogId, postId, parentId, refreshComment, loadParents, resultListener, commentsLoaded);
-            return;
+        if( loadParents ){
+            long parentId = ReaderCommentTable.getParentIdOfComment(blogId, postId, commentId);
+            if( parentId != 0 ) {
+                updateComment(blogId, postId, parentId, refreshComment, loadParents, resultListener, commentsLoaded);
+                return;
+            }
         }
 
         if( resultListener != null ){
@@ -313,7 +316,7 @@ public class ReaderCommentService extends Service {
                     ReaderDatabase.getWritableDb().endTransaction();
                 }
 
-                //load parents of comments because in NEWEST_COMMENT_FIRST parents are not loaded
+                //load parents of comments if not present in database
                 if( commentOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST ){
                     for(ReaderComment comment : serverComments){
                         if(comment.parentId == 0){

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
@@ -63,6 +64,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final long ID_HEADER = -1L;
 
     private static final int NUM_HEADERS = 1;
+
+    private Context mContext;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -124,6 +127,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public ReaderCommentAdapter(Context context, ReaderPost post,
                                 @ReaderCommentTable.CommentsOrderBy int commentsOrder) {
+        mContext = context;
         mPost = post;
         mCommentsOrder = commentsOrder;
         mIsPrivatePost = (post != null && post.isPrivate);
@@ -440,13 +444,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCommentsTask extends AsyncTask<Void, Void, ReaderCommentList> {
         private ReaderCommentList tmpComments;
         private boolean tmpMoreCommentsExist;
+        private int commentsOrder;
 
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
+            commentsOrder = mCommentsOrder;
         }
 
         @Override
@@ -455,9 +461,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected ReaderCommentList doInBackground(Void... params) {
             if (mPost == null) {
-                return false;
+                return null;
             }
 
             // determine whether more comments can be downloaded by comparing the number of
@@ -467,29 +473,55 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(mPost);
             tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
-            int lastPageNumber;
-            switch (mCommentsOrder){
-                case ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST:
-                    lastPageNumber = ReaderCommentTable.getLastNotLoadedPage(mPost.blogId, mPost.postId, false);
-                    break;
-                case ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT:
-                    lastPageNumber = ReaderCommentTable.getFirstNotLoadedPage(mPost.blogId, mPost.postId);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown mCommentsOrder");
+            int lastPageNumber = -1;
+
+            //Connected to internet you can load middle comments from server when needed
+            //if not connected to internet than it will show all comments in database
+            if( NetworkUtils.isNetworkAvailable(mContext) ){
+                switch (commentsOrder){
+                    case ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST:
+                        lastPageNumber = ReaderCommentTable.getLastNotLoadedPage(mPost.blogId, mPost.postId, false);
+                        break;
+                    case ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT:
+                        lastPageNumber = ReaderCommentTable.getFirstNotLoadedPage(mPost.blogId, mPost.postId);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unknown mCommentsOrder");
+                }
             }
 
             tmpComments = ReaderCommentTable.getCommentsForPost(mPost, mCommentsOrder, lastPageNumber);
-            return !mComments.isSameList(tmpComments);
+
+            if( tmpComments.size() > 0 ){
+                final long blogId = tmpComments.get(0).blogId;
+                final long postId = tmpComments.get(0).postId;
+                for(int i=0; i < tmpComments.size() ; i++){
+                    ReaderComment comment = tmpComments.get(i);
+                    if( comment.parentId == 0 ){
+                        continue;
+                    }
+
+                    if( tmpComments.indexOfCommentId(comment.parentId) >= 0 ){
+                        continue;
+                    }
+
+                    ReaderComment parentComment = ReaderCommentTable.getComment(blogId, postId, comment.parentId);
+
+                    if( parentComment != null ) {
+                        tmpComments.add(parentComment);
+                    }
+                }
+            }
+
+            return ReaderCommentList.getLevelList(tmpComments, commentsOrder);
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(ReaderCommentList newList) {
             mMoreCommentsExist = tmpMoreCommentsExist;
 
-            if (result) {
-                // assign the comments with children sorted under their parents and indent levels applied
-                mComments = ReaderCommentList.getLevelList(tmpComments);
+            if ( newList != null && !mComments.isSameList(newList) ) {
+                mComments = newList;
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {

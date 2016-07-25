@@ -27,6 +27,10 @@ public class ReaderCommentTable {
     public static final int ORDER_BY_TIME_OF_COMMENT = 2;
     public static final int ORDER_BY_DEFAULT = ORDER_BY_NEWEST_COMMENT_FIRST;
 
+    /**
+     * NOTE: use only one type of ordering for comments of same blogId,postId
+     * if you are changing the ordering purge all comments for that post via {@link #purgeCommentsForPost(long, long)}
+     */
     @SuppressLint("UniqueConstants")
     @IntDef({ ORDER_BY_NEWEST_COMMENT_FIRST , ORDER_BY_TIME_OF_COMMENT , ORDER_BY_DEFAULT })
     @Retention(RetentionPolicy.SOURCE)
@@ -169,6 +173,11 @@ public class ReaderCommentTable {
             it always has less comments if total comments is not divisible by commentsPerPage
             e.g. totalComments = 153 , commentsPerPage = 20 , last page have 13 comments*/
         int lastPage = c.getInt(0);
+        /* suppose totalComments = 167 and COMMENTS_PER_PAGE = 20.
+            7 comments of page 9 is loaded by request with page number 1 along with 13 comments of page 8
+            next 7 comments of page 8 is loaded by request with page number 2 along with 13 comments of page 7
+            So a single page is loaded by two request one for right half and one for left half*/
+        final int commentsLoadedByPreviousRequest = COMMENTS_PER_PAGE - c.getInt(1);
         int currPage = -1;
 
         int backwardPageNumber = 2;
@@ -177,7 +186,11 @@ public class ReaderCommentTable {
             int currPageComments = c.getInt(1);
             if( currPage + 1 != lastPage || currPageComments < COMMENTS_PER_PAGE){
                 c.close();
-                return pageNumberFromBack ? backwardPageNumber : currPage;
+                //not all right half comments of this page is loaded from previous request
+                if( currPageComments < commentsLoadedByPreviousRequest ){
+                    return pageNumberFromBack ? backwardPageNumber-1 : lastPage-1;
+                }
+                return pageNumberFromBack ? backwardPageNumber : lastPage-1;
             }
             lastPage = currPage;
         }
@@ -467,7 +480,7 @@ public class ReaderCommentTable {
         return comment;
     }
 
-    public static long getParentOfComment(final long blogId, final long postId , final long commentId){
+    public static long getParentIdOfComment(final long blogId, final long postId, final long commentId){
         String[] args = {Long.toString(blogId),
                 Long.toString(postId),
                 Long.toString(commentId)};
