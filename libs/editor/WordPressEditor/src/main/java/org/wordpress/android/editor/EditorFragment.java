@@ -163,18 +163,24 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     // clear any drop marking maybe
                     break;
                 case DragEvent.ACTION_DROP:
-                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                        if (mSourceView.getVisibility() == View.VISIBLE) {
+                    if (mSourceView.getVisibility() == View.VISIBLE) {
+                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
                             // don't allow dropping images into the HTML source
                             ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
                                     ToastUtils.Duration.LONG);
                             return true;
-                        } else if ("zss_field_title".equals(mFocusedFieldId)) {
-                            // don't allow dropping images into the title field
-                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
-                                    ToastUtils.Duration.LONG);
-                            return true;
+                        } else {
+                            // let the system handle the text drop
+                            return false;
                         }
+                    }
+
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                            ("zss_field_title".equals(mFocusedFieldId))) {
+                        // don't allow dropping images into the title field
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
+                                ToastUtils.Duration.LONG);
+                        return true;
                     }
 
                     if (isAdded()) {
