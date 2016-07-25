@@ -33,7 +33,6 @@
 	<string name="my_site_header_look_and_feel">Coltas</string>
 	<string name="my_site_btn_site_settings">Roghainnean</string>
 	<string name="my_site_btn_blog_posts">Puist bloga</string>
-	<string name="my_site_header_admin">Rianachd</string>
 	<string name="my_site_header_configuration">Rèiteachadh</string>
 	<string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
 	<string name="notifications_account_required">Clàraich a-steach gu WordPress.com airson nam brathan</string>
@@ -530,6 +529,7 @@
 	<string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
 	<string name="upload">Luchdadh suas</string>
+	<string name="discard">Tilg air falbh</string>
 	<string name="sign_in">Clàraich a-steach</string>
 	<string name="notifications">Brathan</string>
 	<string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
@@ -568,6 +568,7 @@
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
+	<string name="edit">Deasaich</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Duilleag</string>
 	<string name="post_password">Facal-faire (roghainneil)</string>
@@ -586,7 +587,6 @@
 	<string name="tags_separate_with_commas">Tagaichean (sgar na tagaichean le cromagan)</string>
 	<string name="categories">Roinnean-seòrsa</string>
 	<string name="notification_blink">Boillsg solas</string>
-	<string name="notification_sound">Cluich fuaim</string>
 	<string name="notification_vibrate">Crith</string>
 	<string name="status">Staid</string>
 	<string name="location">Ionad</string>

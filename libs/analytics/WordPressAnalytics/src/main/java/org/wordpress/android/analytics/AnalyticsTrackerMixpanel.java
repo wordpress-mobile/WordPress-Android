@@ -387,6 +387,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_loaded");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_search_loaded");
                 break;
+            case READER_SEARCH_PERFORMED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Performed Search");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_performed");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_search_performed");
+                break;
+            case READER_SEARCH_RESULT_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Tapped Search Result");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_result_tapped");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_search_result_tapped");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");

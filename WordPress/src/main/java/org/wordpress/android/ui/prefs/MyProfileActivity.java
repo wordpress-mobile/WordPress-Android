@@ -83,12 +83,6 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     protected void onStop() {
         mDispatcher.unregister(this);
         super.onStop();
