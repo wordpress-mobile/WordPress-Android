@@ -48,7 +48,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.android.support:design:24.1.1'
-    compile 'org.wordpress:utils:1.10.0'
+    compile 'org.wordpress:utils:1.11.0'
 
     // Test libraries
     testCompile 'junit:junit:4.11'
