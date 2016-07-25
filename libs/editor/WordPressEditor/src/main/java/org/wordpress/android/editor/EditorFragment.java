@@ -167,7 +167,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                             "zss_field_title".equals(mFocusedFieldId)) {
                         // don't allow dropping into the title field
                         ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed);
-                        return false;
+                        return true;
                     }
 
                     if (isAdded()) {
