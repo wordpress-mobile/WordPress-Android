@@ -54,20 +54,25 @@
 
     <PreferenceCategory
         android:title="@string/likes">
+
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:key="@string/pref_key_comment_likes"
             android:title="@string/sharing_comment_likes"
             android:summary="@string/sharing_comment_likes_description" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="@string/pref_key_twitter_category"
         android:title="@string/twitter">
+
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/pref_key_twitter_username"
             android:layout="@layout/preference_layout"
             app:summaryLines="1"
             app:maxSummaryLines="1"
             android:title="@string/twitter_username" />
+
     </PreferenceCategory>
 
 

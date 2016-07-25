@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -37,6 +38,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private WPSwitchPreference mLikeButtonPreference;
     private WPSwitchPreference mCommentLikesPreference;
     private SummaryEditTextPreference mTwitterUsernamePreference;
+    private PreferenceCategory mTwitterPreferenceCategory;
     private ArrayList<PublicizeButton> mPublicizeButtons;
 
     public PublicizeManageConnectionsFragment() {
@@ -95,9 +97,13 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
             if (publicizeButton.getId().equals(TWITTER_ID)) {
-                mTwitterUsernamePreference.setEnabled(publicizeButton.isEnabled());
+                mTwitterPreferenceCategory.removeAll();
+                mTwitterPreferenceCategory.addPreference(mTwitterUsernamePreference);
+                return;
             }
         }
+
+        mTwitterPreferenceCategory.removePreference(mTwitterUsernamePreference);
     }
 
     private void configureSharingAndMoreButtonsPreferences() {
@@ -168,6 +174,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
         mCommentLikesPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_comment_likes);
         mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
+        mTwitterPreferenceCategory = (PreferenceCategory) getChangePref(R.string.pref_key_twitter_category);
     }
 
     @Override

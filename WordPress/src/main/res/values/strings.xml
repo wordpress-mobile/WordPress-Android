@@ -1416,6 +1416,10 @@
     <string name="sharing_comment_likes_description">Allow all comments to be Liked by you and your readers</string>
     <string name="likes">Likes</string>
     <string name="twitter">Twitter</string>
+    <string name="connected">Connected</string>
+    <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
+    <string name="connecting_account">Connecting account</string>
+    <string name="pref_key_twitter_category">wp_pref_twitter_category</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -1610,7 +1614,4 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="connected">Connected</string>
-    <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
-    <string name="connecting_account">Connecting account</string>
 </resources>
