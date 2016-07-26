@@ -81,7 +81,7 @@ public class PostStoreUnitTest {
     public PostModel generateSamplePost() {
         PostModel example = new PostModel();
         example.setId(1);
-        example.setSiteId(6);
+        example.setLocalTableSiteId(6);
         example.setPostId(5);
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
