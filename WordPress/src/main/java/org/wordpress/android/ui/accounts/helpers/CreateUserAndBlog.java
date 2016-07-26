@@ -25,22 +25,19 @@ import java.util.Map;
 
 public class CreateUserAndBlog {
     public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC = 1;
-    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_BLOCK_SEARCH_ENGINE = 0;
-    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PRIVATE = -1;
     private String mEmail;
     private String mUsername;
     private String mPassword;
     private String mSiteUrl;
     private String mSiteName;
     private String mLanguage;
-    private Context mContext;
     private Callback mCallback;
     private ErrorListener mErrorListener;
     private RestClientUtils mRestClient;
     private ResponseHandler mResponseHandler;
 
     public CreateUserAndBlog(String email, String username, String password, String siteUrl, String siteName,
-                             String language, RestClientUtils restClient, Context context,
+                             String language, RestClientUtils restClient,
                              ErrorListener errorListener, Callback callback) {
         mEmail = email;
         mUsername = username;
@@ -49,7 +46,6 @@ public class CreateUserAndBlog {
         mSiteName = siteName;
         mLanguage = language;
         mCallback = callback;
-        mContext = context;
         mErrorListener = errorListener;
         mRestClient = restClient;
         mResponseHandler = new ResponseHandler();
