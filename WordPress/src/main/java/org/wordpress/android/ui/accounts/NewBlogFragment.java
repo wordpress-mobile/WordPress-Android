@@ -174,7 +174,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
-                getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {
+                getRestClientUtils(), new ErrorListener(), new CreateUserAndBlog.Callback() {
             @Override
             public void onStepFinished(CreateUserAndBlog.Step step) {
                 if (getActivity() != null) {
