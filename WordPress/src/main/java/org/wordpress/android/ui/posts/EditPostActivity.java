@@ -1439,20 +1439,33 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Media
      */
 
-    private void fetchMedia(List<Uri> mediaUris) {
-        for (Uri mediaUri : mediaUris) {
-            if (mediaUri == null) {
-                Toast.makeText(EditPostActivity.this,
-                        getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                continue;
+    private void fetchMedia(final List<Uri> mediaUris) {
+        new AsyncTask<List<Uri>, Boolean, Void>() {
+            @Override
+            protected Void doInBackground(List<Uri>... lists) {
+                for (Uri mediaUri : mediaUris) {
+                    if (mediaUri == null) {
+                        publishProgress(false);
+                        continue;
+                    }
+
+                    if (!addMedia(mediaUri)) {
+                        publishProgress(false);
+                    }
+                }
+
+                return null;
             }
 
-            if (!addMedia(mediaUri)) {
+            @Override
+            protected void onProgressUpdate(Boolean... values) {
+                // use onProgressUpdate to Toast on error
                 Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
                         Toast.LENGTH_SHORT).show();
             }
-        }
+        }.execute(mediaUris);
     }
+
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
         Blog currentBlog = WordPress.getCurrentBlog();
