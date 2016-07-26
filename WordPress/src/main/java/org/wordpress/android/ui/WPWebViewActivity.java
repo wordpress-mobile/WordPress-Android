@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -70,8 +70,6 @@ import javax.inject.Inject;
  *
  */
 public class WPWebViewActivity extends WebViewActivity {
-    @Inject AccountStore mAccountStore;
-
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -85,10 +83,13 @@ public class WPWebViewActivity extends WebViewActivity {
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
@@ -225,12 +226,12 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
-            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(blog, allowedURL, mAccountStore.getAccessToken());
+            webViewClient = new WPWebViewClient(site, allowedURL, mAccountStore.getAccessToken());
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -346,11 +347,10 @@ public class WPWebViewActivity extends WebViewActivity {
 
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
         if (loginURL == null) {
-            if (site.getUrl().lastIndexOf("/") != -1) {
-                return site.getUrl().substring(0, site.getUrl().lastIndexOf("/"))
-                        + "/wp-login.php";
+            if (site.getUrl() != null) {
+                return site.getUrl() + "/wp-login.php";
             } else {
-                return site.getUrl().replace("xmlrpc.php", "wp-login.php");
+                return site.getXmlRpcUrl().replace("xmlrpc.php", "wp-login.php");
             }
         }
 

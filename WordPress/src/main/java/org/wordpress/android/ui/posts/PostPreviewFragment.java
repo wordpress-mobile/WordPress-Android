@@ -13,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -25,6 +26,7 @@ public class PostPreviewFragment extends Fragment {
     private WebView mWebView;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
         Bundle args = new Bundle();
@@ -65,7 +67,7 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId),
+        WPWebViewClient client = new WPWebViewClient(mSiteStore.getSiteByLocalId(mLocalBlogId),
                 mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
 
