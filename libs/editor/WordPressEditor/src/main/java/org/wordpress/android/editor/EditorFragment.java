@@ -130,6 +130,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         private long lastSetCoordsTimestamp;
 
         private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
+            if (clipDescription == null) {
+                return false;
+            }
+
             for (String supportedMimeType : mimeTypesToCheck) {
                 if (clipDescription.hasMimeType(supportedMimeType)) {
                     return true;
