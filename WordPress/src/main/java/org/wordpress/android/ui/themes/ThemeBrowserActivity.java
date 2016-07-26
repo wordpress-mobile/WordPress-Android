@@ -254,7 +254,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            mCurrentTheme = Theme.fromJSONV1_1(response);
+                            mCurrentTheme = Theme.fromJSONV1_1(response, mSite);
                             if (mCurrentTheme != null) {
                                 mCurrentTheme.setIsCurrent(true);
                                 mCurrentTheme.save();
@@ -519,7 +519,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         int count = array.length();
                         for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
-                            Theme theme = Theme.fromJSONV1_2(object);
+                            Theme theme = Theme.fromJSONV1_2(object, mSite);
                             if (theme != null) {
                                 theme.save();
                                 themes.add(theme);
@@ -542,19 +542,18 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         @Override
         protected void onPostExecute(final ArrayList<Theme> result) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mFetchingThemes = false;
-                    if (mThemeBrowserFragment != null && mThemeBrowserFragment.isVisible()) {
-                        mThemeBrowserFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
-                        mThemeBrowserFragment.setRefreshing(false);
-                    } else if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
-                        mThemeSearchFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
-                        mThemeSearchFragment.setRefreshing(false);
-                    }
-                }
-            });
+            mFetchingThemes = false;
+            if (mThemeBrowserFragment != null && mThemeBrowserFragment.isVisible()) {
+                mThemeBrowserFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
+                mThemeBrowserFragment.setRefreshing(false);
+            } else if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
+                mThemeSearchFragment.getEmptyTextView().setText(R.string.theme_no_search_result_found);
+                mThemeSearchFragment.setRefreshing(false);
+            }
         }
+    }
+
+    public SiteModel getSite() {
+        return mSite;
     }
 }

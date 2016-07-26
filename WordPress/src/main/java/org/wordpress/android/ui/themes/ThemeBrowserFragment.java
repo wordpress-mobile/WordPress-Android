@@ -26,6 +26,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -35,7 +36,8 @@ import org.wordpress.android.widgets.HeaderGridView;
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener, AbsListView.OnScrollListener {
+public class ThemeBrowserFragment extends Fragment implements RecyclerListener, AdapterView.OnItemSelectedListener,
+        AbsListView.OnScrollListener {
     public interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
         void onTryAndCustomizeSelected(String themeId);
@@ -275,17 +277,25 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
+    private SiteModel getSite() {
+        if (getActivity() instanceof ThemeBrowserActivity) {
+            ThemeBrowserActivity activity = (ThemeBrowserActivity) getActivity();
+            return activity.getSite();
+        }
+        return null;
+    }
+
     /**
      * Fetch themes for a given ThemeFilterType.
      *
      * @return a db Cursor or null if current blog is null
      */
     protected Cursor fetchThemes(int position) {
-        if (WordPress.getCurrentBlog() == null) {
+        if (getSite() == null) {
             return null;
         }
 
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        String blogId = String.valueOf(getSite().getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
                 return WordPress.wpDB.getThemesPremium(blogId);

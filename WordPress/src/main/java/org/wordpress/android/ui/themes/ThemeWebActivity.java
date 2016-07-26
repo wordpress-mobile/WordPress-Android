@@ -69,7 +69,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Theme currentTheme = Theme.fromJSONV1_1(response);
+                    Theme currentTheme = Theme.fromJSONV1_1(response, site);
                     if (currentTheme != null) {
                         currentTheme.setIsCurrent(true);
                         currentTheme.save();
