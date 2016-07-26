@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -192,33 +193,40 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         break;
                     }
 
-                    if (isSupported(clipDescription, DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
-                        ArrayList<Uri> uris = new ArrayList<>();
+                    ContentResolver contentResolver = getActivity().getContentResolver();
+                    ArrayList<Uri> uris = new ArrayList<>();
+                    boolean unsupportedDropsFound = false;
 
-                        boolean unsupportedDropsFound = false;
-                        ContentResolver contentResolver = getActivity().getContentResolver();
-                        for (int i = 0; i < dragEvent.getClipData().getItemCount(); i++) {
-                            Uri uri = dragEvent.getClipData().getItemAt(i).getUri();
-                            if (DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE.contains(contentResolver.getType(uri))) {
-                                uris.add(uri);
-                            } else {
-                                unsupportedDropsFound = true;
-                            }
+                    for (int i = 0; i < dragEvent.getClipData().getItemCount(); i++) {
+                        ClipData.Item item = dragEvent.getClipData().getItemAt(i);
+                        Uri uri = item.getUri();
+
+                        final String uriType = uri != null ? contentResolver.getType(uri) : null;
+                        if (uriType != null && DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE.contains(uriType)) {
+                            uris.add(uri);
+                            continue;
+                        } else if (item.getText() != null) {
+                            insertTextToEditor(item.getText().toString());
+                            continue;
+                        } else if (item.getHtmlText() != null) {
+                            insertTextToEditor(item.getHtmlText());
+                            continue;
                         }
 
-                        if (unsupportedDropsFound) {
-                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_unsupported_files, ToastUtils
-                                    .Duration.LONG);
-                        }
-
-                        if (uris.size() > 0) {
-                            mEditorDragAndDropListener.onMediaDropped(uris);
-                        }
-                    } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                        insertTextToEditor(dragEvent.getClipData().getItemAt(0).getText().toString());
-                    } else if (clipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                        insertTextToEditor(dragEvent.getClipData().getItemAt(0).getHtmlText());
+                        // any other drop types are not supported, including web URLs. We cannot proactively
+                        // determine their mime type for filtering
+                        unsupportedDropsFound = true;
                     }
+
+                    if (unsupportedDropsFound) {
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_unsupported_files, ToastUtils
+                                .Duration.LONG);
+                    }
+
+                    if (uris.size() > 0) {
+                        mEditorDragAndDropListener.onMediaDropped(uris);
+                    }
+
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     // clear any drop marking maybe
