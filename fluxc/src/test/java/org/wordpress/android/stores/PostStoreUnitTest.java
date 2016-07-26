@@ -37,7 +37,7 @@ public class PostStoreUnitTest {
     public void testSimpleInsertionAndRetrieval() {
         PostModel postModel = new PostModel();
         postModel.setPostId(42);
-        WellSql.insert(postModel).execute();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         assertEquals(1, mPostStore.getPostsCount());
 
@@ -48,7 +48,7 @@ public class PostStoreUnitTest {
     public void testInsertWithLocalChanges() {
         PostModel postModel = generateSamplePost();
         postModel.setIsLocallyChanged(true);
-        WellSql.insert(postModel).execute();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         String newTitle = "A different title";
         postModel.setTitle(newTitle);
@@ -63,7 +63,7 @@ public class PostStoreUnitTest {
     @Test
     public void testInsertWithoutLocalChanges() {
         PostModel postModel = generateSamplePost();
-        WellSql.insert(postModel).execute();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         String newTitle = "A different title";
         postModel.setTitle(newTitle);
