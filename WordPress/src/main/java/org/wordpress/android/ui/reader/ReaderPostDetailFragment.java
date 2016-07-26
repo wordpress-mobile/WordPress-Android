@@ -832,9 +832,11 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
             TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
+            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
+
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
             ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
 
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
@@ -892,6 +894,14 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 imgBlavatar.showDefaultBlavatarImage();
                 txtDomain.setText(null);
+            }
+
+            if (mPost.hasPostAvatar()) {
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
+                imgAvatar.setVisibility(View.VISIBLE);
+                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+            } else {
+                imgAvatar.setVisibility(View.GONE);
             }
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
