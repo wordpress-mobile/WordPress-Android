@@ -612,7 +612,7 @@ public class WordPress extends MultiDexApplication {
 
         // Reset Stats Data
         StatsDatabaseHelper.getDatabase(context).reset();
-        StatsWidgetProvider.refreshAllWidgets(context);
+        StatsWidgetProvider.refreshAllWidgets(context, mSiteStore);
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();

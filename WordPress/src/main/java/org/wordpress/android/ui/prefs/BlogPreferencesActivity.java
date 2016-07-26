@@ -356,7 +356,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             }
 
             // Checks for stats widgets that were synched with a blog that could be gone now.
-            StatsWidgetProvider.refreshAllWidgets(this);
+            StatsWidgetProvider.refreshAllWidgets(this, mSiteStore);
 
             finish();
         } else {

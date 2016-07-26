@@ -61,23 +61,10 @@ public class AnalyticsUtils {
         return text.split("\\s+").length;
     }
 
-    /**
-     * Bump Analytics for the passed Stat and CURRENT blog details into properties.
-     *
-     * @param stat The Stat to bump
-     *
-     */
+    // TODO: STORES: kill these methods
     public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat) {
         trackWithCurrentBlogDetails(stat, null);
     }
-
-    /**
-     * Bump Analytics for the passed Stat and CURRENT blog details into properties.
-     *
-     * @param stat The Stat to bump
-     * @param properties Properties to attach to the event
-     *
-     */
     public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat, Map<String, Object> properties) {
         trackWithBlogDetails(stat, WordPress.getCurrentBlog(), properties);
     }
@@ -93,7 +80,7 @@ public class AnalyticsUtils {
         trackWithBlogDetails(stat, site, null);
     }
 
-    // TODO: STORES: do nothing
+    // TODO: STORES: do nothing - kill these methods
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site) {}
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site, Map<String, Object> properties) {}
 

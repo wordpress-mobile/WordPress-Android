@@ -16,7 +16,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -26,7 +28,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
@@ -47,6 +48,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,7 +181,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
-    public void showStatsActivityForSite(int localTableSiteId, NoteBlockRangeType rangeType) {
+    public void showStatsActivityForSite(long siteId, NoteBlockRangeType rangeType) {
+        SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+        showStatsActivityForSite(site, rangeType);
+    }
+
+    public void showStatsActivityForSite(SiteModel mSite, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
@@ -187,11 +194,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
             intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, localTableSiteId);
+            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
             intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
             startActivity(intent);
         } else {
-            ActivityLauncher.viewBlogStats(this, localTableSiteId);
+            ActivityLauncher.viewBlogStats(this, mSite);
         }
     }
 

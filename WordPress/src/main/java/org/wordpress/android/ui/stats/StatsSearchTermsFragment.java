@@ -160,7 +160,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 return super.getItem(position);
             }
 
-            return new SearchTermModel("", null, "Unknown Search Terms", encryptedSearchTerms, true);
+            return new SearchTermModel(0, null, "Unknown Search Terms", encryptedSearchTerms, true);
         }
 
         @Override

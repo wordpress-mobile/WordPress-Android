@@ -5,15 +5,15 @@ import org.json.JSONObject;
 
 
 public class InsightsLatestPostDetailsModel extends BaseStatsModel {
-    private String mBlogID;
+    private long mBlogID;
     private int mViews;
 
-    public InsightsLatestPostDetailsModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsLatestPostDetailsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mViews = response.getInt("views");
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 

@@ -308,14 +308,16 @@ public class ApiHelper {
 
                 // get theme post formats
                 new GetPostFormatsTask().execute(mBlog);
-
-                //Update Stats widgets if necessary
-                String currentBlogID = String.valueOf(mBlog.getRemoteBlogId());
-                if (StatsWidgetProvider.isBlogDisplayedInWidget(mBlog.getRemoteBlogId())) {
-                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + currentBlogID + " is NOT displayed in a widget. Blog Refresh Task doesn't call an update of the widget.");
-                    String currentDate = StatsUtils.getCurrentDateTZ(mBlog.getLocalTableBlogId());
-                    StatsWidgetProvider.enqueueStatsRequestForBlog(WordPress.getContext(), currentBlogID, currentDate);
-                }
+                // TODO: STORES:
+//
+//                //Update Stats widgets if necessary
+//                String currentBlogID = String.valueOf(mBlog.getRemoteBlogId());
+//                if (StatsWidgetProvider.isBlogDisplayedInWidget(mBlog.getRemoteBlogId())) {
+//                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + currentBlogID + " is NOT displayed in a widget. Blog Refresh Task doesn't call an update of the widget.");
+//                    // String currentDate = StatsUtils.getCurrentDateTZ(mSite());
+//                    // StatsWidgetProvider.enqueueStatsRequestForBlog(WordPress.getContext(), currentBlogID,
+//                    // currentDate);
+//                }
             }
 
             // Check if user is an admin

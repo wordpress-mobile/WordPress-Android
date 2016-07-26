@@ -23,6 +23,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
@@ -63,6 +64,7 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+    private SiteModel mSite;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -75,6 +77,7 @@ public class PostsListFragment extends Fragment
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+                mSite = (SiteModel) extras.getSerializable(ActivityLauncher.EXTRA_SITE);
             }
         }
     }
@@ -138,7 +141,7 @@ public class PostsListFragment extends Fragment
 
     public PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), WordPress.getCurrentBlog(), mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -172,13 +175,12 @@ public class PostsListFragment extends Fragment
     private void newPost() {
         if (!isAdded()) return;
 
-        int selectedSite = -1;
         if (getActivity() instanceof PostsListActivity) {
-            selectedSite = ((PostsListActivity) getActivity()).getSelectedSite();
+            mSite = ((PostsListActivity) getActivity()).getSelectedSite();
         }
 
-        if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), selectedSite, mIsPage);
+        if (mSite != null) {
+            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mSite, mIsPage);
         } else {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found);
         }
@@ -411,13 +413,13 @@ public class PostsListFragment extends Fragment
                 publishPost(fullPost);
                 break;
             case PostListButton.BUTTON_VIEW:
-                ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                ActivityLauncher.browsePostOrPage(getActivity(), mSite, fullPost);
                 break;
             case PostListButton.BUTTON_PREVIEW:
                 ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
@@ -516,8 +518,7 @@ public class PostsListFragment extends Fragment
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
-                            fullPost.getRemotePostId(), mIsPage);
+                    new ApiHelper.DeleteSinglePostTask().execute(mSite, fullPost.getRemotePostId(), mIsPage);
                 }
             }
         });

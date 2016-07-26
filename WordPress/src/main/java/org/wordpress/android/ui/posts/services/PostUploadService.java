@@ -29,6 +29,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
@@ -66,6 +68,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class PostUploadService extends Service {
@@ -74,6 +78,8 @@ public class PostUploadService extends Service {
     private static Post mCurrentUploadingPost = null;
     private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
+
+    @Inject SiteStore mSiteStore;
 
     public static void addPostToUpload(Post currentPost) {
         synchronized (mPostsList) {
@@ -114,6 +120,7 @@ public class PostUploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
         mContext = this.getApplicationContext();
     }
 
@@ -891,7 +898,8 @@ public class PostUploadService extends Service {
             AppLog.d(T.POSTS, "updateNotificationSuccess");
 
             // Get the sharableUrl
-            String sharableUrl = WPMeShortlinks.getPostShortlink(post);
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalTableBlogId());
+            String sharableUrl = WPMeShortlinks.getPostShortlink(site, post);
             if (sharableUrl == null && !TextUtils.isEmpty(post.getPermaLink())) {
                     sharableUrl = post.getPermaLink();
             }

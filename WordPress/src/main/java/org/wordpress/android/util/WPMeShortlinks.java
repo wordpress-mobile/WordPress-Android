@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.AppLog.T;
 
 public class WPMeShortlinks {
@@ -59,12 +60,12 @@ public class WPMeShortlinks {
      * @param post Post or page we want calculate the shortlink
      * @return String The blog shortlink or null (null is returned if the blog object is empty, or it's not a wpcom/jetpack blog, or in case of errors).
      */
-    public static String getPostShortlink(Blog blog, Post post) {
-        if (post == null || blog == null) {
+    public static String getPostShortlink(SiteModel site, Post post) {
+        if (post == null || site == null) {
             return null;
         }
 
-        if (!blog.isDotcomFlag() && !blog.isJetpackPowered()) {
+        if (!site.isWPCom() && !site.isJetpack()) {
             return null;
         }
 
@@ -99,8 +100,7 @@ public class WPMeShortlinks {
         // Calculate the blog shortlink
         String blogShortlink = null;
         try {
-            double blogID = blog.isDotcomFlag() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
-            blogShortlink = wpme_dec2sixtwo(blogID);
+            blogShortlink = wpme_dec2sixtwo(site.getSiteId());
         } catch (NumberFormatException e) {
             AppLog.e(T.UTILS, "Remote Blog ID cannot be converted to double", e);
             return null;
@@ -111,11 +111,6 @@ public class WPMeShortlinks {
         }
 
         return "http://wp.me/" + type + blogShortlink + "-" + id;
-    }
-
-    public static String getPostShortlink(Post post) {
-        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
-        return getPostShortlink(blog, post);
     }
 
     /**

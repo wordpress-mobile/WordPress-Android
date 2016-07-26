@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -85,7 +84,7 @@ public class StatsUtils {
      * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     public static String getCurrentDateTZ(SiteModel site) {
-        String timezone = StatsUtils.getBlogTimezone(site);
+        String timezone = site.getTimezone();
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
             return getCurrentDate();
@@ -98,7 +97,7 @@ public class StatsUtils {
      * Get the current datetime of the blog *
      */
     public static String getCurrentDateTimeTZ(SiteModel site) {
-        String timezone = StatsUtils.getBlogTimezone(site);
+        String timezone = site.getTimezone();
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return getCurrentDatetime();
@@ -111,7 +110,7 @@ public class StatsUtils {
      * Get the current datetime of the blog in Ms *
      */
     public static long getCurrentDateTimeMsTZ(SiteModel site) {
-        String timezone = site
+        String timezone = site.getTimezone();
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return new Date().getTime();
@@ -273,22 +272,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
-        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-        // the current wpcom account. We need to load the correct localID here, otherwise options are
-        // blank
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                remoteBlogID,
-                null);
-        if (localId == 0) {
-            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                    remoteBlogID
-            );
-        }
-
-        return localId;
-    }
-
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
             AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
@@ -318,76 +301,77 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
+    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, long siteId,
+                                                            JSONObject response)
             throws JSONException {
         BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:
-                model = new VisitsModel(blogID, response);
+                model = new VisitsModel(siteId, response);
                 break;
             case TOP_POSTS:
-                model = new TopPostsAndPagesModel(blogID, response);
+                model = new TopPostsAndPagesModel(siteId, response);
                 break;
             case REFERRERS:
-                model = new ReferrersModel(blogID, response);
+                model = new ReferrersModel(siteId, response);
                 break;
             case CLICKS:
-                model = new ClicksModel(blogID, response);
+                model = new ClicksModel(siteId, response);
                 break;
             case GEO_VIEWS:
-                model = new GeoviewsModel(blogID, response);
+                model = new GeoviewsModel(siteId, response);
                 break;
             case AUTHORS:
-                model = new AuthorsModel(blogID, response);
+                model = new AuthorsModel(siteId, response);
                 break;
             case VIDEO_PLAYS:
-                model = new VideoPlaysModel(blogID, response);
+                model = new VideoPlaysModel(siteId, response);
                 break;
             case COMMENTS:
-                model = new CommentsModel(blogID, response);
+                model = new CommentsModel(siteId, response);
                 break;
             case FOLLOWERS_WPCOM:
-                model = new FollowersModel(blogID, response);
+                model = new FollowersModel(siteId, response);
                 break;
             case FOLLOWERS_EMAIL:
-                model = new FollowersModel(blogID, response);
+                model = new FollowersModel(siteId, response);
                 break;
             case COMMENT_FOLLOWERS:
-                model = new CommentFollowersModel(blogID, response);
+                model = new CommentFollowersModel(siteId, response);
                 break;
             case TAGS_AND_CATEGORIES:
-                model = new TagsContainerModel(blogID, response);
+                model = new TagsContainerModel(siteId, response);
                 break;
             case PUBLICIZE:
-                model = new PublicizeModel(blogID, response);
+                model = new PublicizeModel(siteId, response);
                 break;
             case SEARCH_TERMS:
-                model = new SearchTermsModel(blogID, response);
+                model = new SearchTermsModel(siteId, response);
                 break;
             case INSIGHTS_ALL_TIME:
-                model = new InsightsAllTimeModel(blogID, response);
+                model = new InsightsAllTimeModel(siteId, response);
                 break;
             case INSIGHTS_POPULAR:
-                model = new InsightsPopularModel(blogID, response);
+                model = new InsightsPopularModel(siteId, response);
                 break;
             case INSIGHTS_TODAY:
-                model = new InsightsTodayModel(blogID, response);
+                model = new InsightsTodayModel(siteId, response);
                 break;
             case INSIGHTS_LATEST_POST_SUMMARY:
-                model = new InsightsLatestPostModel(blogID, response);
+                model = new InsightsLatestPostModel(siteId, response);
                 break;
             case INSIGHTS_LATEST_POST_VIEWS:
-                model = new InsightsLatestPostDetailsModel(blogID, response);
+                model = new InsightsLatestPostDetailsModel(siteId, response);
                 break;
         }
         return model;
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final String remoteBlogID,
+    public static void openPostInReaderOrInAppWebview(Context ctx, final long remoteBlogID,
                                                       final String remoteItemID,
                                                       final String itemType,
                                                       final String itemURL) {
-        final long blogID = Long.parseLong(remoteBlogID);
+        final long blogID = remoteBlogID;
         final long itemID = Long.parseLong(remoteItemID);
         if (itemType == null) {
             // If we don't know the type of the item, open it with the browser.
@@ -423,7 +407,7 @@ public class StatsUtils {
     public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
         final String postType = post.getPostType();
         final String url = post.getUrl();
-        final String blogID = post.getBlogID();
+        final long blogID = post.getBlogID();
         final String itemID = post.getItemID();
         openPostInReaderOrInAppWebview(ctx, blogID, itemID, postType, url);
     }

@@ -14,7 +14,7 @@ import java.util.List;
  * A model to represent a Author
  */
 public class AuthorModel implements Serializable {
-    private String mBlogId;
+    private long mBlogId;
     private long mDate;
     private String mGroupId;
     private String mName;
@@ -23,7 +23,7 @@ public class AuthorModel implements Serializable {
     private FollowDataModel mFollowData;
     private List<PostModel> mPosts;
 
-    public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, JSONObject followData) throws JSONException {
+    public AuthorModel(long mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, JSONObject followData) throws JSONException {
         this.mBlogId = mBlogId;
         setDate(StatsUtils.toMs(date));
         this.mGroupId = mGroupId;
@@ -35,7 +35,7 @@ public class AuthorModel implements Serializable {
         }
     }
 
-    public AuthorModel(String blogId, String date, JSONObject authorJSON) throws JSONException {
+    public AuthorModel(long blogId, String date, JSONObject authorJSON) throws JSONException {
         setBlogId(blogId);
         setDate(StatsUtils.toMs(date));
 
@@ -63,12 +63,12 @@ public class AuthorModel implements Serializable {
         }
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    private void setBlogId(String blogId) {
-        this.mBlogId = blogId;
+    public void setBlogId(long blogId) {
+        mBlogId = blogId;
     }
 
     public long getDate() {

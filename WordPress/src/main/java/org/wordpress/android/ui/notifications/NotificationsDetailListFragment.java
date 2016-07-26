@@ -34,7 +34,6 @@ import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -200,7 +199,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
 
-            NotificationsUtils.handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
+            handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
         }
 
         @Override
@@ -245,6 +244,48 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 detailActivity.showBlogPreviewActivity(siteId);
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl);
+            }
+        }
+
+        public void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
+            switch (clickedSpan.getRangeType()) {
+                case SITE:
+                    // Show blog preview
+                    activity.showBlogPreviewActivity(clickedSpan.getId());
+                    break;
+                case USER:
+                    // Show blog preview
+                    activity.showBlogPreviewActivity(clickedSpan.getSiteId());
+                    break;
+                case POST:
+                    // Show post detail
+                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                    break;
+                case COMMENT:
+                    // Load the comment in the reader list if it exists, otherwise show a webview
+                    if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId())) {
+                        activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
+                    } else {
+                        activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                    }
+                    break;
+                case STAT:
+                case FOLLOW:
+                    // We can open native stats if the site is a wpcom or Jetpack sites
+                    activity.showStatsActivityForSite(clickedSpan.getSiteId(), clickedSpan.getRangeType());
+                    break;
+                case LIKE:
+                    if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
+                        activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                    } else {
+                        activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                    }
+                    break;
+                default:
+                    // We don't know what type of id this is, let's see if it has a URL and push a webview
+                    if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                        activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                    }
             }
         }
     };

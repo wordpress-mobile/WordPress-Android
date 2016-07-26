@@ -395,7 +395,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED);
+                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
+                            getSelectedSite());
                 }
                 break;
             case WPMainTabAdapter.TAB_READER:

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 
@@ -20,7 +21,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
-    private int mSelectedSite = -1;
+    private SiteModel mSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class PostsListActivity extends AppCompatActivity {
 
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
-        mSelectedSite = getIntent().getIntExtra(EXTRA_SELECT_SITE_LOCAL_ID, -1);
+        mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
@@ -104,7 +105,7 @@ public class PostsListActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public int getSelectedSite() {
-        return mSelectedSite;
+    public SiteModel getSelectedSite() {
+        return mSite;
     }
 }

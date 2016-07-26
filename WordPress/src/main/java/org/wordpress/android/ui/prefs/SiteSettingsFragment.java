@@ -1182,7 +1182,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
 
             // Checks for stats widgets that were synched with a blog that could be gone now.
-            StatsWidgetProvider.refreshAllWidgets(getActivity());
+            StatsWidgetProvider.refreshAllWidgets(getActivity(), mSiteStore);
 
             getActivity().finish();
         } else {

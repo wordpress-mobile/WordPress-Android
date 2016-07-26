@@ -132,10 +132,12 @@ public class PlanPostPurchaseFragment extends Fragment {
         }
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
-                ThemeWebActivity.openCurrentTheme(getActivity(), ThemeWebActivity.ThemeWebActivityType.PREVIEW);
+                // TODO: Stores: used null site here
+                ThemeWebActivity.openCurrentTheme(getActivity(), null, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
-                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+                // TODO: Stores: used null site here
+                ActivityLauncher.viewCurrentBlogThemes(getActivity(), null);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
                 ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), selectedSiteId, false);

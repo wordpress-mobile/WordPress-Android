@@ -26,8 +26,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -58,10 +58,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private Theme mCurrentTheme;
     private boolean mIsInSearchMode;
 
-    public static boolean isAccessible() {
+    private SiteModel mSite;
+
+    public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
-        Blog blog = WordPress.getCurrentBlog();
-        return (blog != null && blog.isAdmin() && blog.isDotcomFlag());
+        return site != null && site.isWPCom() && site.isCapabilityEditThemeOptions();
     }
 
     @Override
@@ -75,19 +76,28 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
-        setCurrentThemeFromDB();
 
         if (savedInstanceState == null) {
             AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
             mThemeBrowserFragment = new ThemeBrowserFragment();
             mThemeSearchFragment = new ThemeSearchFragment();
             addBrowserFragment();
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
         }
+        if (mSite == null) {
+            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        setCurrentThemeFromDB();
         showToolbar();
     }
 
     private void setCurrentThemeFromDB() {
-        mCurrentTheme = WordPress.wpDB.getCurrentTheme(getBlogId());
+        mCurrentTheme = WordPress.wpDB.getCurrentTheme(String.valueOf(mSite.getSiteId()));
     }
 
     @Override
@@ -123,6 +133,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(IS_IN_SEARCH_MODE, mIsInSearchMode);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     @Override
@@ -164,7 +175,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (mFetchingThemes) {
             return;
         }
-        String siteId = getBlogId();
+        String siteId = getSiteId();
         mFetchingThemes = true;
         int page = 1;
         if (mThemeBrowserFragment != null) {
@@ -202,7 +213,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void searchThemes(String searchTerm) {
-        String siteId = getBlogId();
+        String siteId = getSiteId();
         mFetchingThemes = true;
         int page = 1;
         if (mThemeSearchFragment != null) {
@@ -237,7 +248,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void fetchCurrentTheme() {
-        final String siteId = getBlogId();
+        final String siteId = getSiteId();
 
         WordPress.getRestClientUtilsV1_1().getCurrentTheme(siteId, new Listener() {
                     @Override
@@ -291,17 +302,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mThemeSearchFragment = themeSearchFragment;
     }
 
-    private String getBlogId() {
-        if (WordPress.getCurrentBlog() == null)
-            return "0";
-        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+    private String getSiteId() {
+        return String.valueOf(mSite.getSiteId());
     }
 
     private void fetchThemesIfNoneAvailable() {
-        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
-                && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
+        if (NetworkUtils.isNetworkAvailable(this) && WordPress.wpDB.getThemeCount(getSiteId()) == 0) {
             fetchThemes();
-
             //do not interact with theme browser fragment if we are in search mode
             if (!mIsInSearchMode) {
                 mThemeBrowserFragment.setRefreshing(true);
@@ -310,8 +317,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void fetchPurchasedThemes() {
-        if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null) {
-            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(getBlogId(), new Listener() {
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(getSiteId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     new FetchThemesTask().execute(response);
@@ -385,7 +392,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void activateTheme(final String themeId) {
-        final String siteId = getBlogId();
+        final String siteId = getSiteId();
         final String newThemeId = themeId;
 
         WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
@@ -455,7 +462,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED, themeProperties);
                         break;
                 }
-                ThemeWebActivity.openTheme(this, themeId, type, isCurrentTheme);
+                ThemeWebActivity.openTheme(this, mSite, themeId, type, isCurrentTheme);
                 return;
             } else {
                 toastText = getString(R.string.could_not_load_theme);

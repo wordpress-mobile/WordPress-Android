@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -92,6 +93,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     /*
      * cross-post
@@ -510,9 +512,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    v.getContext(),
-                                    discoverData.getBlogId());
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
                         } else if (discoverData.hasBlogUrl()) {
                             ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl(),
                                     mAccountStore.getAccount().getUserName());

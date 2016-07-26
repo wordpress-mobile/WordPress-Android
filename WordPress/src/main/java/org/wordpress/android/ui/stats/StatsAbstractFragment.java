@@ -10,8 +10,9 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 
@@ -41,6 +42,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     protected abstract void showErrorUI(String label);
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     /**
      * Wheter or not previous data is available.
@@ -76,25 +78,22 @@ public abstract class StatsAbstractFragment extends Fragment {
             sections = sectionsToUpdate();
         }
 
-        //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
-
-        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-        if (currentBlog == null) {
-            AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
+        SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+        if (site == null) {
+            AppLog.w(AppLog.T.STATS, "Current blsiteog is null. This should never happen here.");
             return;
         }
 
-        final String blogId = currentBlog.getDotComBlogId();
+        final long siteId = site.getSiteId();
         // Make sure the blogId is available.
-        if (blogId == null) {
-            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
+        if (siteId == 0) {
+            AppLog.e(AppLog.T.STATS, "remote siteId is 0: " + site.getUrl());
             return;
         }
 
         // Check credentials for jetpack blogs first
-        if (!currentBlog.isDotcomFlag() && !currentBlog.hasValidJetpackCredentials()
-                && !mAccountStore.hasAccessToken()) {
-            AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack blog without valid .com credentials stored");
+        if (!site.isWPCom() && !mAccountStore.hasAccessToken()) {
+            AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack site without valid .com credentials stored");
             return;
         }
 
@@ -111,7 +110,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // start service to get stats
         Intent intent = new Intent(getActivity(), StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
+        intent.putExtra(StatsService.ARG_BLOG_ID, siteId);
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
@@ -206,9 +205,9 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     boolean isSameBlog(StatsEvents.SectionUpdatedAbstract event) {
-        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
-            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+        if (site != null) {
+            return event.mRequestBlogId == site.getSiteId();
         }
         return false;
     }

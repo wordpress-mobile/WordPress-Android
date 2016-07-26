@@ -158,7 +158,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         final Context context = StatsWidgetConfigureActivity.this;
-        StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID);
+        StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID, mSiteStore);
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);

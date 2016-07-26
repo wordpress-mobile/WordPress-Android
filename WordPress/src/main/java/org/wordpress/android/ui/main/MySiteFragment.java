@@ -225,7 +225,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+                ActivityLauncher.viewCurrentBlogThemes(getActivity(), getSelectedSite());
             }
         });
 
@@ -353,7 +353,7 @@ public class MySiteFragment extends Fragment
 
         toggleAdminVisibility(site);
 
-        int themesVisibility = ThemeBrowserActivity.isAccessible() ? View.VISIBLE : View.GONE;
+        int themesVisibility = ThemeBrowserActivity.isAccessible(getSelectedSite()) ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 

@@ -15,7 +15,6 @@ import com.optimizely.Variable.LiveVariable;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.stores.model.SiteModel;
@@ -103,9 +102,10 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
 
-    public static void viewCurrentBlogThemes(Context context) {
-        if (ThemeBrowserActivity.isAccessible()) {
+    public static void viewCurrentBlogThemes(Context context, SiteModel site) {
+        if (ThemeBrowserActivity.isAccessible(site)) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
+            intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
             slideInFromRight(context, intent);
         }
     }
@@ -199,12 +199,12 @@ public class ActivityLauncher {
     /*
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
-    public static void browsePostOrPage(Context context, Blog blog, Post post) {
-        if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
+    public static void browsePostOrPage(Context context, SiteModel site, Post post) {
+        if (site == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
+        WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url);
     }
 
     public static void addMedia(Activity activity) {
@@ -262,16 +262,11 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, Post post, boolean isPage) {
         if (post == null) return;
 
-        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(post.getLocalTableBlogId());
-        PostModel postModel = new PostModel(
-                Integer.toString(remoteBlogId),
-                post.getRemotePostId(),
-                post.getTitle(),
-                post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+        PostModel postModel = new PostModel(site.getSiteId(), post.getRemotePostId(), post.getTitle(), post
+                .getLink(), isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, postModel);
     }
 
@@ -298,9 +293,7 @@ public class ActivityLauncher {
             intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
             Activity activity = (Activity) context;
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_in_from_right,
-                    R.anim.do_nothing);
+                    activity, R.anim.activity_slide_in_from_right, R.anim.do_nothing);
             ActivityCompat.startActivity(activity, intent, options.toBundle());
         } else {
             context.startActivity(intent);
