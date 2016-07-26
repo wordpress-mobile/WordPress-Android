@@ -834,7 +834,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
             ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
+            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
 
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
@@ -884,13 +884,13 @@ public class ReaderPostDetailFragment extends Fragment
                 txtBlogName.setText(null);
             }
 
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
             if (mPost.hasBlogUrl()) {
-                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
-                imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+                int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
+                imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
                 txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
             } else {
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+                imgBlavatar.showDefaultBlavatarImage();
                 txtDomain.setText(null);
             }
 
