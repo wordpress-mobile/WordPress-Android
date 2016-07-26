@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.stores.model.PostModel;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.stores.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.stores.persistence.PostSqlUtils;
@@ -46,7 +47,7 @@ public class PostStoreUnitTest {
 
     @Test
     public void testInsertWithLocalChanges() {
-        PostModel postModel = generateSamplePost();
+        PostModel postModel = generateSampleUploadedPost();
         postModel.setIsLocallyChanged(true);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
@@ -62,7 +63,7 @@ public class PostStoreUnitTest {
 
     @Test
     public void testInsertWithoutLocalChanges() {
-        PostModel postModel = generateSamplePost();
+        PostModel postModel = generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         String newTitle = "A different title";
@@ -78,13 +79,61 @@ public class PostStoreUnitTest {
         assertEquals(newTitle, mPostStore.getPosts().get(0).getTitle());
     }
 
-    public PostModel generateSamplePost() {
+    @Test
+    public void testGetPostsForSite() {
+        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+
+        PostModel uploadedPost2 = generateSampleUploadedPost();
+        uploadedPost2.setLocalTableSiteId(8);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+
+        SiteModel site1 = new SiteModel();
+        site1.setId(uploadedPost1.getLocalTableSiteId());
+
+        SiteModel site2 = new SiteModel();
+        site2.setId(uploadedPost2.getLocalTableSiteId());
+
+        assertEquals(2, mPostStore.getPostsCount());
+
+        assertEquals(1, mPostStore.getPostsCountForSite(site1));
+        assertEquals(1, mPostStore.getPostsCountForSite(site2));
+    }
+
+    @Test
+    public void testGetPublishedPosts() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        PostModel uploadedPost = generateSampleUploadedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost);
+
+        PostModel localDraft = generateSampleLocalDraftPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+
+        assertEquals(2, mPostStore.getPostsCount());
+        assertEquals(2, mPostStore.getPostsCountForSite(site));
+
+        assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
+    }
+
+    public PostModel generateSampleUploadedPost() {
         PostModel example = new PostModel();
         example.setId(1);
         example.setLocalTableSiteId(6);
         example.setPostId(5);
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
+        return example;
+    }
+
+    public PostModel generateSampleLocalDraftPost() {
+        PostModel example = new PostModel();
+        example.setId(2);
+        example.setLocalTableSiteId(6);
+        example.setTitle("A test post");
+        example.setDescription("Bunch of content here");
+        example.setIsLocalDraft(true);
         return example;
     }
 }
