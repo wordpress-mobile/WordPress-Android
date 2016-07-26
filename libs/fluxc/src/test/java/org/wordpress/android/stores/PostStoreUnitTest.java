@@ -19,6 +19,7 @@ import org.wordpress.android.stores.persistence.WellSqlConfig;
 import org.wordpress.android.stores.store.PostStore;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class PostStoreUnitTest {
@@ -149,6 +150,45 @@ public class PostStoreUnitTest {
         PostSqlUtils.deleteUploadedPostsForSite(site, false);
 
         assertEquals(2, mPostStore.getPostsCountForSite(site));
+    }
+
+    @Test
+    public void testDeletePost() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+
+        PostModel uploadedPost2 = generateSampleUploadedPost();
+        uploadedPost2.setId(4);
+        uploadedPost2.setPostId(9);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+
+        PostModel localDraft = generateSampleLocalDraftPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+
+        PostModel locallyChangedPost = generateSampleLocallyChangedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
+
+        assertEquals(4, mPostStore.getPostsCountForSite(site));
+
+        PostSqlUtils.deletePost(uploadedPost1);
+
+        assertEquals(null, mPostStore.getPostByLocalPostId(uploadedPost1.getId()));
+        assertEquals(3, mPostStore.getPostsCountForSite(site));
+
+        PostSqlUtils.deletePost(uploadedPost2);
+        PostSqlUtils.deletePost(localDraft);
+
+        assertNotEquals(null, mPostStore.getPostByLocalPostId(locallyChangedPost.getId()));
+        assertEquals(1, mPostStore.getPostsCountForSite(site));
+
+        PostSqlUtils.deletePost(locallyChangedPost);
+
+        assertEquals(null, mPostStore.getPostByLocalPostId(locallyChangedPost.getId()));
+        assertEquals(0, mPostStore.getPostsCountForSite(site));
+        assertEquals(0, mPostStore.getPostsCount());
     }
 
     public PostModel generateSampleUploadedPost() {
