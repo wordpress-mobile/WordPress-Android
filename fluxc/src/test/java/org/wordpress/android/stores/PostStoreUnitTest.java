@@ -125,6 +125,32 @@ public class PostStoreUnitTest {
         assertEquals(post, mPostStore.getPostByLocalPostId(post.getId()));
     }
 
+    @Test
+    public void testDeleteUploadedPosts() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
+
+        PostModel uploadedPost2 = generateSampleUploadedPost();
+        uploadedPost2.setId(4);
+        uploadedPost2.setPostId(9);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
+
+        PostModel localDraft = generateSampleLocalDraftPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
+
+        PostModel locallyChangedPost = generateSampleLocallyChangedPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
+
+        assertEquals(4, mPostStore.getPostsCountForSite(site));
+
+        PostSqlUtils.deleteUploadedPostsForSite(site, false);
+
+        assertEquals(2, mPostStore.getPostsCountForSite(site));
+    }
+
     public PostModel generateSampleUploadedPost() {
         PostModel example = new PostModel();
         example.setId(1);
@@ -142,6 +168,17 @@ public class PostStoreUnitTest {
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
         example.setIsLocalDraft(true);
+        return example;
+    }
+
+    public PostModel generateSampleLocallyChangedPost() {
+        PostModel example = new PostModel();
+        example.setId(3);
+        example.setLocalTableSiteId(6);
+        example.setPostId(7);
+        example.setTitle("A test post");
+        example.setDescription("Bunch of content here");
+        example.setIsLocallyChanged(true);
         return example;
     }
 }
