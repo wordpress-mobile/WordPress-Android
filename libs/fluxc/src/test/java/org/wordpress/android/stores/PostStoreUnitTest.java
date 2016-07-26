@@ -117,6 +117,14 @@ public class PostStoreUnitTest {
         assertEquals(1, mPostStore.getUploadedPostsCountForSite(site));
     }
 
+    @Test
+    public void testGetPostByLocalId() {
+        PostModel post = generateSampleLocalDraftPost();
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+
+        assertEquals(post, mPostStore.getPostByLocalPostId(post.getId()));
+    }
+
     public PostModel generateSampleUploadedPost() {
         PostModel example = new PostModel();
         example.setId(1);
