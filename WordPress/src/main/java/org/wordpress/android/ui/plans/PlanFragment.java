@@ -62,7 +62,7 @@ public class PlanFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        refreshPlanUI();
+        showPlans();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PlanFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void refreshPlanUI() {
+    private void showPlans() {
         if (!isAdded()) return;
 
         if (mPlanDetails == null) {
