@@ -101,7 +101,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
-            handleResetBadgePN();
+            handleBadgeResetPN();
             return;
         }
 
@@ -335,7 +335,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Clear all notifications
-    private void handleResetBadgePN() {
+    private void handleBadgeResetPN() {
         removeAllNotifications(this);
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
