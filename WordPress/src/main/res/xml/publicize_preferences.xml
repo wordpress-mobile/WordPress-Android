@@ -14,11 +14,6 @@
             android:title="@string/sharing_edit_more_buttons"
             android:summary="@string/sharing_more_description" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/visual">
-
         <org.wordpress.android.ui.prefs.SummaryEditTextPreference
             android:key="@string/publicize_label"
             android:layout="@layout/preference_layout"
