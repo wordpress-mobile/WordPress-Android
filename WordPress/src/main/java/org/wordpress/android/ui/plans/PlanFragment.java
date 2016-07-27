@@ -60,10 +60,9 @@ public class PlanFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         refreshPlanUI();
-
     }
 
     @Override
