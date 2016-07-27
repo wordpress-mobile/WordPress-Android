@@ -17,9 +17,9 @@ import org.wordpress.android.stores.model.AccountModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.PostAccountSettingsPayload;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -170,10 +170,20 @@ public class MyProfileActivity extends AppCompatActivity implements ProfileInput
         return null;
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void onAccountChanged(OnAccountChanged event) {
-        if (!isFinishing()) {
-            // TODO: STORES: manage errors
+        if (isFinishing()) return;
+        if (event.isError) {
+            switch (event.errorType) {
+                case SETTINGS_FETCH_ERROR:
+                    ToastUtils.showToast(this, R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    break;
+                case SETTINGS_POST_ERROR:
+                    ToastUtils.showToast(this, R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+                    break;
+            }
+        } else {
             refreshDetails();
         }
     }
