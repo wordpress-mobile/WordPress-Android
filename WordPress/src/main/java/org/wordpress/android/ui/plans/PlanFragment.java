@@ -100,7 +100,6 @@ public class PlanFragment extends Fragment {
         TextView txtTagLine = (TextView) getView().findViewById(R.id.text_tagline);
         txtTagLine.setText(HtmlUtils.fastUnescapeHtml(mPlanDetails.getTagline()));
 
-        mPlanContainerView.removeAllViews();
         addFeaturesToHighlight();
     }
 
