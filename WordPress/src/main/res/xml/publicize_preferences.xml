@@ -24,6 +24,7 @@
             android:layout="@layout/preference_layout"
             app:summaryLines="1"
             app:maxSummaryLines="1"
+            app:dialogMessage="@string/sharing_label_message"
             android:title="@string/label" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
@@ -71,6 +72,7 @@
             android:layout="@layout/preference_layout"
             app:summaryLines="1"
             app:maxSummaryLines="1"
+            app:dialogMessage="@string/sharing_twitter_message"
             android:title="@string/twitter_username" />
 
     </PreferenceCategory>
