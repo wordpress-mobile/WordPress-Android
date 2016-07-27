@@ -38,6 +38,10 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderPost mPost;
     private boolean mMoreCommentsExist;
@@ -56,6 +60,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int mColorAuthor;
     private final int mColorNotAuthor;
     private final int mColorHighlight;
+    private final int mColorOldCommentBackground;
+    private final int mColorOldCommentText;
+    private final int mColorNewCommentText;
 
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_COMMENT = 2;
@@ -72,6 +79,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private RequestReplyListener mReplyListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
+
+    private ReaderCommentList mOldComments;
+    private volatile boolean mOldCommentsSorted;
+    private ArrayList<Integer> mNewCommentsIndexes;  // indexes that are not seen by user
+    private final boolean mTrackingNewComments;
+    private Comparator<ReaderComment> mCommentsComparator = new Comparator<ReaderComment>() {
+        @Override
+        public int compare(ReaderComment x, ReaderComment y) {
+            return (int)( x.commentId - y.commentId );
+        }
+    };
 
     class CommentHolder extends RecyclerView.ViewHolder {
         private final ViewGroup container;
@@ -120,7 +138,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public ReaderCommentAdapter(Context context, ReaderPost post) {
+    /**
+     * <p>
+     * Note: oldComments are sorted for binary search
+     * If you are using oldComments at other places pass a copy
+     * </p>
+     * pass oldComments = null if you don't want to track about new comments */
+    public ReaderCommentAdapter(Context context,
+                                ReaderPost post,
+                                ReaderCommentList oldComments) {
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
         mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
@@ -138,8 +164,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mColorAuthor = ContextCompat.getColor(context, R.color.blue_medium);
         mColorNotAuthor = ContextCompat.getColor(context, R.color.grey_dark);
         mColorHighlight = ContextCompat.getColor(context, R.color.grey_lighten_30);
+        mColorOldCommentBackground = ContextCompat.getColor(context, R.color.grey_light);
+        mColorOldCommentText = ContextCompat.getColor(context, R.color.grey_darken_10);
+        mColorNewCommentText = ContextCompat.getColor(context, R.color.grey_dark);
 
         setHasStableIds(true);
+
+        // NOTE: old comments are sorted in background in LoadCommentsTask
+        mOldComments = oldComments;
+        mOldCommentsSorted = false;
+        mTrackingNewComments = ( oldComments != null );
     }
 
     public void setReplyListener(RequestReplyListener replyListener) {
@@ -269,9 +303,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
             commentHolder.container.setBackgroundColor(mColorHighlight);
+            commentHolder.txtText.setTextColor(mColorNewCommentText);
             commentHolder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
-        } else {
+        }else if( mTrackingNewComments && Collections.binarySearch(mNewCommentsIndexes,position-NUM_HEADERS) < 0 ){
+            commentHolder.container.setBackgroundColor(mColorOldCommentBackground);
+            commentHolder.txtText.setTextColor(mColorOldCommentText);
+            commentHolder.progress.setVisibility(View.GONE);
+        }else {
             commentHolder.container.setBackgroundColor(Color.WHITE);
+            commentHolder.txtText.setTextColor(mColorNewCommentText);
             commentHolder.progress.setVisibility(View.GONE);
         }
 
@@ -381,6 +421,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         // appears under its parent and is correctly indented
         if (comment.parentId == 0) {
             mComments.add(comment);
+            if( mTrackingNewComments ){
+                mNewCommentsIndexes.add( mComments.size() - 1 );
+            }
             notifyDataSetChanged();
         } else {
             refreshComments();
@@ -436,9 +479,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     private boolean mIsTaskRunning = false;
 
-    private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
+    private class LoadCommentsTask extends AsyncTask<Void, Void, ReaderCommentList> {
         private ReaderCommentList tmpComments;
         private boolean tmpMoreCommentsExist;
+
+        private ArrayList<Integer> tmpUnseenCommentsIndexes;
 
         @Override
         protected void onPreExecute() {
@@ -451,9 +496,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected ReaderCommentList doInBackground(Void... params) {
             if (mPost == null) {
-                return false;
+                return null;
             }
 
             // determine whether more comments can be downloaded by comparing the number of
@@ -464,16 +509,30 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
             tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
-            return !mComments.isSameList(tmpComments);
+
+            // arrange the comments with children sorted under their parents and indent levels applied
+            tmpComments = ReaderCommentList.getLevelList(tmpComments);
+
+            //perform sort and search of unseen in background because these operations takes time
+            //you can access mOldCommentsSorted and mOldComments because we are not using them elsewhere
+            if( mTrackingNewComments ){
+                if( !mOldCommentsSorted ){
+                    Collections.sort(mOldComments, mCommentsComparator);
+                }
+                tmpUnseenCommentsIndexes = findNextUnseenCommentIndexes(mOldComments, tmpComments);
+            }
+
+            return tmpComments;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(ReaderCommentList newList) {
             mMoreCommentsExist = tmpMoreCommentsExist;
+            mNewCommentsIndexes = tmpUnseenCommentsIndexes;
+            mOldCommentsSorted = true;
 
-            if (result) {
-                // assign the comments with children sorted under their parents and indent levels applied
-                mComments = ReaderCommentList.getLevelList(tmpComments);
+            if ( newList != null && !mComments.isSameList(tmpComments)) {
+                mComments = newList;
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {
@@ -492,5 +551,137 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             notifyItemChanged(0); //notify header to update itself
         }
 
+    }
+
+    public boolean isMoreCommentExist(){
+        return mMoreCommentsExist;
+    }
+
+    public boolean hasNewComments(){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+        return mNewCommentsIndexes.size() > 0;
+    }
+
+    /**
+     * @return new comment index after "afterIndex" else -1 if no new comment exist after "afterIndex"
+     */
+    private int getNextNewCommentIndex(int afterIndex){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+
+        final ArrayList<Integer>  indexes = mNewCommentsIndexes;
+        //no new comments
+        if( indexes.size() == 0 ){
+            return -1;
+        }
+
+        int first = 0;
+        int last = indexes.size() - 1;
+
+        if( afterIndex < indexes.get(first) ){
+            return indexes.get(first);
+        }
+
+        if( afterIndex >= indexes.get(last) ){
+            return -1;
+        }
+
+        int i = Collections.binarySearch(indexes, afterIndex);
+
+        //if present in new - return the next new comment index
+        if( i >= 0 ){
+            return indexes.get( i + 1 );
+        }
+
+        //if not i = -(insertion-point)-1;
+        int insertionPoint = -(i+1);
+        return indexes.get(insertionPoint);
+    }
+
+    /**
+     * @return new comment index before "beforeIndex" else -1 if no new comment exist before "beforeIndex"
+     */
+    private int getPrevNextCommentIndex(int beforeIndex){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+
+        final ArrayList<Integer>  indexes = mNewCommentsIndexes;
+        //now new comments
+        if( indexes.size() == 0 ){
+            return -1;
+        }
+
+        int first = 0;
+        int last = indexes.size() - 1;
+
+        if( beforeIndex <= indexes.get(first) ){
+            return -1;
+        }
+
+        if( beforeIndex > indexes.get(last) ){
+            return indexes.get(last);
+        }
+
+        int i = Collections.binarySearch(indexes, beforeIndex);
+
+        //if present in new - return the previous new comment index
+        if( i >= 0 ){
+            return indexes.get( i - 1 );
+        }
+
+        //if not i = -(insertion-point)-1;
+        int insertionPoint = -(i+1);
+        return indexes.get( insertionPoint - 1 );
+    }
+
+    /**
+     * @return new comment position after "afterItemPosition" else -1 if no new comment exist after "afterItemPosition"
+     */
+    public int getNextNewCommentPosition(int afterItemPosition){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+
+        int index = getNextNewCommentIndex(afterItemPosition-NUM_HEADERS);
+        if(index < 0){
+            return index;
+        }
+        return index + NUM_HEADERS;
+    }
+
+    /**
+     * @return new comment position before "beforeItemPosition" else -1 if no new comment exist before "beforeItemPosition"
+     */
+    public int getPrevNewCommentPosition(int beforeItemPosition){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+
+        int index = getPrevNextCommentIndex(beforeItemPosition-NUM_HEADERS);
+        if(index < 0){
+            return index;
+        }
+        return index + NUM_HEADERS;
+    }
+
+    private ArrayList<Integer> findNextUnseenCommentIndexes(ReaderCommentList seenComments,
+                                                            ReaderCommentList newComments ){
+        if( !mTrackingNewComments ){
+            throw new UnsupportedOperationException("You are not using New Comments Functionality");
+        }
+
+        ArrayList<Integer> result = new ArrayList<Integer>();
+
+        for( int i=0 ; i < newComments.size() ; i++ ){
+            if( Collections.binarySearch(seenComments, newComments.get(i), mCommentsComparator) < 0 ){
+                result.add(i);
+            }
+        }
+
+        return result;
     }
 }

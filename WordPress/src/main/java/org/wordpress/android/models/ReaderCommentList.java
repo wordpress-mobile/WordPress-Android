@@ -1,8 +1,15 @@
 package org.wordpress.android.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
+
+    public ReaderCommentList(){}
+
+    public ReaderCommentList(Collection<ReaderComment> list){
+        super(list);
+    }
 
     private boolean commentIdExists(long commentId) {
         return (indexOfCommentId(commentId) > -1);

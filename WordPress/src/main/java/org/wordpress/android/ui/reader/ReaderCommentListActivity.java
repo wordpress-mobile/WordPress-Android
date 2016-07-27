@@ -307,7 +307,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost(), null);
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
