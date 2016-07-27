@@ -6,7 +6,11 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,6 +19,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
@@ -940,5 +945,57 @@ public class WordPress extends MultiDexApplication {
         @Override
         public void onActivityStopped(Activity arg0) {
         }
+    }
+
+    //
+    // WPStores Access Token migration
+    //
+    private static final String DEPRECATED_DATABASE_NAME = "wordpress";
+    private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
+    private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
+    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+
+    private String migrateAccessTokenToAccountStore() {
+        String token = getLatestDeprecatedAccessToken();
+
+        // updating from previous app version
+        if (!TextUtils.isEmpty(token)) {
+            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(token);
+            mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
+        }
+        return token;
+    }
+
+    private String getDeprecatedAccountTableAccessToken() {
+        String token = null;
+        try {
+            SQLiteDatabase db = SQLiteDatabase.openDatabase(DEPRECATED_DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
+            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + DEPRECATED_ACCOUNTS_TABLE + " WHERE local_id=0", null);
+            if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
+                token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
+            }
+            c.close();
+            db.close();
+        } catch (SQLException e) {
+            // DB doesn't exist
+        }
+        return token;
+    }
+
+    private String getDeprecatedPreferencesAccessTokenThenDelete() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String token = prefs.getString(DEPRECATED_ACCESS_TOKEN_PREFERENCE, null);
+        if (!TextUtils.isEmpty(token)) {
+            prefs.edit().remove(DEPRECATED_ACCESS_TOKEN_PREFERENCE).apply();
+        }
+        return token;
+    }
+
+    private String getLatestDeprecatedAccessToken() {
+        String latestToken = getDeprecatedAccountTableAccessToken();
+        if (TextUtils.isEmpty(latestToken)) {
+            latestToken = getDeprecatedPreferencesAccessTokenThenDelete();
+        }
+        return latestToken;
     }
 }

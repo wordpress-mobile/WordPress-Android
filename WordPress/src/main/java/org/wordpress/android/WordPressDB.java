@@ -229,7 +229,6 @@ public class WordPressDB {
 
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
-    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
 
