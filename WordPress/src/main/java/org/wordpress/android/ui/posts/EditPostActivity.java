@@ -94,6 +94,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -223,7 +224,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_GALLERY.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -263,7 +263,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return;
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
@@ -279,6 +278,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -287,12 +291,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(WordPress.imageLoader);
-        }
-
-        // Ensure we have a valid blog
-        if (WordPress.getCurrentBlog() == null) {
-            showErrorAndFinish(R.string.blog_not_found);
-            return;
         }
 
         // Ensure we have a valid post
@@ -305,8 +303,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             trackEditorCreatedPost(action, getIntent());
         }
 
-        setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
-
+        setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
@@ -323,7 +320,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
-                    setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
+                    setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
@@ -1021,10 +1018,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void addExistingMediaToEditor(String mediaId) {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(mSite.getId());
         MediaFile mediaFile = createMediaFile(blogId, mediaId);
         if (mediaFile == null) {
             return;
@@ -1048,7 +1042,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         String imageURL;
-        if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
+        if (mSite.isWPCom()) {
             String photonUrl = mediaFile.getFileURL();
             imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidthForEditor());
         } else {
@@ -1146,10 +1140,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
-        if (WordPress.getCurrentBlog() != null) {
-            mEditorFragment.setFeaturedImageSupported(WordPress.getCurrentBlog().isFeaturedImageCapable());
-            mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
-        }
+        mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
+        // TODO: STORES: add getMaxImageWidth() method
+        // mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
@@ -1460,9 +1453,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null || wpIS == null)
-            return;
+        if (wpIS == null) return;
 
         MediaFile mf = wpIS.getMediaFile();
 
@@ -1471,16 +1462,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         final String description = mf.getDescription();
         final String caption = mf.getCaption();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, mf.getMediaId(), mf.getTitle(),
                 mf.getDescription(), mf.getCaption(),
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
-                        if (WordPress.getCurrentBlog() == null) {
-                            return;
-                        }
-                        String localBlogTableIndex = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                        WordPress.wpDB.updateMediaFile(localBlogTableIndex, mediaId, title, description, caption);
+                        WordPress.wpDB.updateMediaFile(String.valueOf(mSite.getId()), mediaId, title, description,
+                                caption);
                     }
 
                     @Override
@@ -1488,10 +1476,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         Toast.makeText(EditPostActivity.this, R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                     }
                 });
-
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(currentBlog);
-        task.execute(apiArgs);
+        task.execute();
     }
 
     private void trackAddMediaEvents(boolean isVideo, boolean fromMediaLibrary) {

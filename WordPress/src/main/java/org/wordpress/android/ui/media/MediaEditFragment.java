@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,15 +27,14 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.xmlrpc.android.ApiHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment for editing media on the Media tab
@@ -180,11 +180,8 @@ public class MediaEditFragment extends Fragment {
 
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null && getActivity() != null) {
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-
+        if (getActivity() != null) {
+            String blogId = String.valueOf(getSelectedSite().getId());
             if (mMediaId != null) {
                 Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
                 refreshViews(cursor);
@@ -200,14 +197,14 @@ public class MediaEditFragment extends Fragment {
         final String mediaId = this.getMediaId();
         final String title = mTitleView.getText().toString();
         final String description = mDescriptionView.getText().toString();
-        final Blog currentBlog = WordPress.getCurrentBlog();
         final String caption = mCaptionView.getText().toString();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title, description, caption,
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(getSelectedSite(), mediaId, title,
+                description, caption,
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
+                        String blogId = String.valueOf(getSelectedSite().getId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
@@ -232,12 +229,9 @@ public class MediaEditFragment extends Fragment {
                 }
         );
 
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(currentBlog);
-
         if (!isMediaUpdating()) {
             setMediaUpdating(true);
-            task.execute(apiArgs);
+            task.execute();
         }
     }
 
@@ -380,6 +374,17 @@ public class MediaEditFragment extends Fragment {
                 });
                 task.execute(filePath);
             }
+        }
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof MediaBrowserActivity) {
+            MediaBrowserActivity mainActivity = (MediaBrowserActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        } else {
+            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
+            // Crash
+            return null;
         }
     }
 }

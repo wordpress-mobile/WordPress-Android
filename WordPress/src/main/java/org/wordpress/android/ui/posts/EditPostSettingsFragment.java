@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.Html;
@@ -41,16 +42,14 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -70,15 +69,12 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
-import org.xmlrpc.android.ApiHelper;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -203,31 +199,31 @@ public class EditPostSettingsFragment extends Fragment
             mRootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats =
-                    new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status",
-                                 "video"};
-            if (WordPress.getCurrentBlog().getPostFormats().equals("")) {
-                new ApiHelper.GetPostFormatsTask().execute(WordPress.getCurrentBlog());
-            } else {
-                try {
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<Map<String, String>>() {}.getType();
-                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(),
-                            type);
-                    mPostFormats = new String[jsonPostFormats.size()];
-                    mPostFormatTitles = new String[jsonPostFormats.size()];
-                    int i = 0;
-                    for (Map.Entry<String, String> entry : jsonPostFormats.entrySet()) {
-                        String key = entry.getKey();
-                        String val = entry.getValue();
-                        mPostFormats[i] = key;
-                        mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
-                        i++;
-                    }
-                } catch (RuntimeException e) {
-                    AppLog.e(T.POSTS, e);
-                }
-            }
+            mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
+                    "status", "video"};
+            // TODO: STORES: use mSite getPostFormats() and the FETCH_POST_FORMATS action
+//            if (getSelectedSite().getPostFormats().equals("")) {
+//                new ApiHelper.GetPostFormatsTask().execute(WordPress.getCurrentBlog());
+//            } else {
+//                try {
+//                    Gson gson = new Gson();
+//                    Type type = new TypeToken<Map<String, String>>() {}.getType();
+//                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(),
+//                            type);
+//                    mPostFormats = new String[jsonPostFormats.size()];
+//                    mPostFormatTitles = new String[jsonPostFormats.size()];
+//                    int i = 0;
+//                    for (Map.Entry<String, String> entry : jsonPostFormats.entrySet()) {
+//                        String key = entry.getKey();
+//                        String val = entry.getValue();
+//                        mPostFormats[i] = key;
+//                        mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
+//                        i++;
+//                    }
+//                } catch (RuntimeException e) {
+//                    AppLog.e(T.POSTS, e);
+//                }
+//            }
             mPostFormatSpinner = (Spinner) mRootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
                     mPostFormatTitles);
@@ -383,8 +379,8 @@ public class EditPostSettingsFragment extends Fragment
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
-                int blogId = WordPress.getCurrentBlog().getLocalTableBlogId();
-                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(blogId), String.valueOf(mFeaturedImageId));
+                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(getSelectedSite().getId()),
+                        String.valueOf(mFeaturedImageId));
                 if (cursor != null && cursor.moveToFirst()) {
                     mFeaturedImageView.setVisibility(View.VISIBLE);
                     mFeaturedImageButton.setVisibility(View.GONE);
@@ -465,7 +461,7 @@ public class EditPostSettingsFragment extends Fragment
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", WordPress.getCurrentBlog().getLocalTableBlogId());
+            bundle.putInt("id", getSelectedSite().getId());
             if (mCategories != null && mCategories.size() > 0) {
                 bundle.putSerializable("categories", new HashSet<String>(mCategories));
             }
@@ -1049,6 +1045,17 @@ public class EditPostSettingsFragment extends Fragment
         if (selectCategory != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
+        }
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof EditPostActivity) {
+            EditPostActivity mainActivity = (EditPostActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        } else {
+            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
+            // Crash
+            return null;
         }
     }
 }

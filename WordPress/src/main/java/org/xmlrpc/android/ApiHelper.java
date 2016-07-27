@@ -610,15 +610,17 @@ public class ApiHelper {
         }
     }
 
-    public static class EditMediaItemTask extends HelperAsyncTask<List<?>, Void, Boolean> {
+    public static class EditMediaItemTask extends HelperAsyncTask<Void, Void, Boolean> {
         private GenericCallback mCallback;
         private String mMediaId;
         private String mTitle;
         private String mDescription;
         private String mCaption;
+        private SiteModel mSite;
 
-        public EditMediaItemTask(String mediaId, String title, String description, String caption,
+        public EditMediaItemTask(SiteModel site, String mediaId, String title, String description, String caption,
                                  GenericCallback callback) {
+            mSite = site;
             mMediaId = mediaId;
             mCallback = callback;
             mTitle = title;
@@ -626,26 +628,18 @@ public class ApiHelper {
             mDescription = description;
         }
         @Override
-        protected Boolean doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            WordPress.currentBlog = (Blog) arguments.get(0);
-            Blog blog = WordPress.currentBlog;
-
-            if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
-                return null;
-            }
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
+        protected Boolean doInBackground(Void... params) {
+            // TODO: STORES: this will be replaced in MediaStore
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
             Map<String, Object> contentStruct = new HashMap<String, Object>();
             contentStruct.put("post_title", mTitle);
             contentStruct.put("post_content", mDescription);
             contentStruct.put("post_excerpt", mCaption);
 
             Object[] apiParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
+                    mSite.getSiteId(),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
                     mMediaId,
                     contentStruct
             };
