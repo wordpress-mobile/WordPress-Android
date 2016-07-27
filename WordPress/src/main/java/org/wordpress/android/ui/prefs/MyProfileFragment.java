@@ -127,6 +127,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
             public void onClick(View v) {
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
                         textView.getText().toString(), hint, isMultiline, textView.getId());
+                inputDialog.setTargetFragment(MyProfileFragment.this, 0);
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
         };
