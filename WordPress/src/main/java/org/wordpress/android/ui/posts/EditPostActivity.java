@@ -1142,7 +1142,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
         // TODO: STORES: add getMaxImageWidth() method
-        // mEditorFragment.setBlogSettingMaxImageWidth(WordPress.getCurrentBlog().getMaxImageWidth());
+        // mEditorFragment.setBlogSettingMaxImageWidth(mSite.getMaxImageWidth());
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
@@ -1535,11 +1535,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        Blog blog = WordPress.getCurrentBlog();
-        if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-            // If the user has selected a maximum image width for uploads, rescale the image accordingly
-            path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
-        }
+        // TODO: STORES: add getMaxImageWidth() method
+//        if (MediaUtils.getImageWidthSettingFromString(mSite.getMaxImageWidth()) != Integer.MAX_VALUE) {
+//            // If the user has selected a maximum image width for uploads, rescale the image accordingly
+//            path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(mSite.getMaxImageWidth()));
+//        }
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
@@ -1957,7 +1957,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     private void startMediaUploadService() {
         if (!mMediaUploadServiceStarted) {
-            startService(new Intent(this, MediaUploadService.class));
+            Intent intent = new Intent(this, MediaUploadService.class);
+            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
+            startService(intent);
             mMediaUploadServiceStarted = true;
         }
     }
@@ -1999,13 +2001,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
-        Blog blog = WordPress.getCurrentBlog();
         long currentTime = System.currentTimeMillis();
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         MediaFile mediaFile = new MediaFile();
 
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setBlogId(String.valueOf(mSite.getId()));
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState(startingState);
@@ -2052,7 +2053,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(mSite.getId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
 
         MediaUploadService mediaUploadService = MediaUploadService.getInstance();
@@ -2106,11 +2107,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public String onAuthHeaderRequested(String url) {
         String authHeader = "";
-        Blog currentBlog = WordPress.getCurrentBlog();
         String token = mAccountStore.getAccessToken();
 
-        if (currentBlog != null && currentBlog.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url) &&
-                !TextUtils.isEmpty(token)) {
+        // TODO: STORES: mSite isPrivate() needed
+        //         if (mSites.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
+        // Only do the following if the site is private:
+        if (WPUrlUtils.safeToAddWordPressComAuthToken(url) && !TextUtils.isEmpty(token)) {
             authHeader = "Bearer " + token;
         }
         return authHeader;

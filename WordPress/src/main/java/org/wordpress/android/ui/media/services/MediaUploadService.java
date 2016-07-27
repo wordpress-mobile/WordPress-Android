@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.media.services;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
@@ -19,9 +22,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -33,14 +33,17 @@ public class MediaUploadService extends Service {
     // time to wait before trying to upload the next file
     private static final int UPLOAD_WAIT_TIME = 1000;
 
-    private static MediaUploadService mInstance;
-
-    private Context mContext;
+    private static MediaUploadService sInstance;
     private Handler mHandler = new Handler();
 
     private boolean mUploadInProgress;
     private ApiHelper.UploadMediaTask mCurrentUploadMediaTask;
     private String mCurrentUploadMediaId;
+
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,22 +53,23 @@ public class MediaUploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mInstance = this;
-
-        mContext = this.getApplicationContext();
-        mUploadInProgress = false;
-
-        cancelOldUploads();
+        sInstance = this;
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mSite = (SiteModel) intent.getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        if (mSite == null) {
+            AppLog.e(T.API, "Site is null");
+            return START_NOT_STICKY;
+        }
         mHandler.post(mFetchQueueTask);
+        cancelOldUploads();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     public static MediaUploadService getInstance() {
-        return mInstance;
+        return sInstance;
     }
 
     public void processQueue() {
@@ -96,13 +100,11 @@ public class MediaUploadService extends Service {
             mUploadInProgress = false;
         } else {
             // Remove the media item from the upload queue
-            if (WordPress.getCurrentBlog() != null) {
-                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                if (delete) {
-                    WordPress.wpDB.deleteMediaFile(blogId, mediaId);
-                } else {
-                    WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.FAILED);
-                }
+            String blogId = String.valueOf(mSite.getId());
+            if (delete) {
+                WordPress.wpDB.deleteMediaFile(blogId, mediaId);
+            } else {
+                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.FAILED);
             }
         }
     }
@@ -112,7 +114,7 @@ public class MediaUploadService extends Service {
         public void run() {
             Cursor cursor = getQueue();
             try {
-                if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
+                if ((cursor == null || cursor.getCount() == 0) && !mUploadInProgress) {
                     MediaUploadService.this.stopSelf();
                     return;
                 } else {
@@ -133,18 +135,12 @@ public class MediaUploadService extends Service {
     private void cancelOldUploads() {
         // There should be no media files with an upload state of 'uploading' at the start of this service.
         // Since we won't be able to receive notifications for these, set them to 'failed'.
-
-        if (WordPress.getCurrentBlog() != null) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            WordPress.wpDB.setMediaUploadingToFailed(blogId);
-        }
+        String blogId = String.valueOf(mSite.getId());
+        WordPress.wpDB.setMediaUploadingToFailed(blogId);
     }
 
     private Cursor getQueue() {
-        if (WordPress.getCurrentBlog() == null)
-            return null;
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(mSite.getId());
         return WordPress.wpDB.getMediaUploadQueue(blogId);
     }
 
@@ -168,7 +164,7 @@ public class MediaUploadService extends Service {
 
         mCurrentUploadMediaId = mediaId;
 
-        mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(mContext, mediaFile,
+        mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(getApplicationContext(), mSite, mediaFile,
                 new ApiHelper.UploadMediaTask.Callback() {
             @Override
             public void onSuccess(String remoteId, String remoteUrl, String secondaryId) {
@@ -209,16 +205,12 @@ public class MediaUploadService extends Service {
         });
 
         WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.UPLOADING);
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        mCurrentUploadMediaTask.execute(apiArgs);
+        mCurrentUploadMediaTask.execute();
         mHandler.post(mFetchQueueTask);
     }
 
     private void fetchMediaFile(final String id) {
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id),
+        GetMediaItemTask task = new GetMediaItemTask(mSite, Integer.valueOf(id),
                 new ApiHelper.GetMediaItemTask.Callback() {
             @Override
             public void onSuccess(MediaFile mediaFile) {
@@ -242,6 +234,6 @@ public class MediaUploadService extends Service {
                 }
             }
         });
-        task.execute(apiArgs);
+        task.execute();
     }
 }

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,8 +23,9 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
@@ -181,8 +183,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             return;
         }
 
-        Blog blog = WordPress.getCurrentBlog();
-
         File file = new File(path);
         if (!file.exists()) {
             return;
@@ -192,7 +192,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
 
         MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setBlogId(String.valueOf(getSelectedSite().getId()));
         mediaFile.setFileName(fileName);
         mediaFile.setFilePath(path);
         mediaFile.setUploadState("queued");
@@ -211,13 +211,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             mediaFile.setMimeType(mimeType);
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
-        EventBus.getDefault().post(new MediaChanged(String.valueOf(blog.getLocalTableBlogId()), mediaFile.getMediaId()));
+        EventBus.getDefault().post(new MediaChanged(String.valueOf(getSelectedSite().getId()), mediaFile.getMediaId()));
         startMediaUploadService();
     }
 
     private void startMediaUploadService() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            getActivity().startService(new Intent(getActivity(), MediaUploadService.class));
+            Intent intent = new Intent(getActivity(), MediaUploadService.class);
+            intent.putExtra(ActivityLauncher.EXTRA_SITE, getSelectedSite());
+            getActivity().startService(intent);
         }
     }
 
@@ -247,7 +249,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     public void addToQueue(String mediaId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(getSelectedSite().getId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.QUEUED);
         startMediaUploadService();
     }
@@ -275,6 +277,16 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
             }
             else
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof MediaBrowserActivity) {
+            MediaBrowserActivity mainActivity = (MediaBrowserActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        } else {
+            // Crash
+            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }

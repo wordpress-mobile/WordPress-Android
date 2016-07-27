@@ -672,36 +672,29 @@ public class ApiHelper {
         }
     }
 
-    public static class GetMediaItemTask extends HelperAsyncTask<List<?>, Void, MediaFile> {
+    public static class GetMediaItemTask extends HelperAsyncTask<Void, Void, MediaFile> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(MediaFile results);
         }
         private Callback mCallback;
         private int mMediaId;
+        private SiteModel mSite;
 
-        public GetMediaItemTask(int mediaId, Callback callback) {
+        public GetMediaItemTask(SiteModel site, int mediaId, Callback callback) {
+            mSite = site;
             mMediaId = mediaId;
             mCallback = callback;
         }
 
         @Override
-        protected MediaFile doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            WordPress.currentBlog = (Blog) arguments.get(0);
-            Blog blog = WordPress.currentBlog;
-            if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
-                return null;
-            }
+        protected MediaFile doInBackground(Void... params) {
+            String blogId = String.valueOf(mSite.getId());
 
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
             Object[] apiParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
                     mMediaId
             };
             Map<?, ?> results = null;
@@ -739,7 +732,7 @@ public class ApiHelper {
         }
     }
 
-    public static class UploadMediaTask extends HelperAsyncTask<List<?>, Void, Map<?, ?>> {
+    public static class UploadMediaTask extends HelperAsyncTask<Void, Void, Map<?, ?>> {
         public interface Callback extends GenericErrorCallback {
             void onSuccess(String remoteId, String remoteUrl, String secondaryId);
             void onProgressUpdate(float progress);
@@ -747,28 +740,18 @@ public class ApiHelper {
         private Callback mCallback;
         private Context mContext;
         private MediaFile mMediaFile;
+        private SiteModel mSite;
 
-        public UploadMediaTask(Context applicationContext, MediaFile mediaFile,
-                               Callback callback) {
+        public UploadMediaTask(Context applicationContext, SiteModel site, MediaFile mediaFile, Callback callback) {
             mContext = applicationContext;
+            mSite = site;
             mMediaFile = mediaFile;
             mCallback = callback;
         }
 
         @Override
-        protected Map<?, ?> doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            WordPress.currentBlog = (Blog) arguments.get(0);
-            Blog blog = WordPress.currentBlog;
-
-            if (blog == null) {
-                setError(ErrorType.INVALID_CURRENT_BLOG, "current blog is null");
-                return null;
-            }
-
-            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-
+        protected Map<?, ?> doInBackground(Void... params) {
+            final XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("name", mMediaFile.getFileName());
             data.put("type", mMediaFile.getMimeType());
@@ -776,12 +759,11 @@ public class ApiHelper {
             data.put("overwrite", true);
 
             Object[] apiParams = {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
                     data
             };
-
             final File tempFile = getTempFile(mContext);
 
             if (client instanceof XMLRPCClient) {
