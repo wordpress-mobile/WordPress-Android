@@ -378,9 +378,7 @@ public class MySiteFragment extends Fragment
         mBlogSubtitleTextView.setText(homeUrl);
 
         // Hide the Plan item if the Plans feature is not available for this blog
-        // TODO: STORES: implement plans in SiteStore
-        // String planShortName = site.getPlanShortName();
-        String planShortName = "// TODO: STORES";
+        String planShortName = site.getPlanShortName();
         if (!TextUtils.isEmpty(planShortName)) {
             mCurrentPlanNameTextView.setText(planShortName);
             mPlanContainer.setVisibility(View.VISIBLE);
