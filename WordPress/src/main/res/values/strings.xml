@@ -1419,7 +1419,6 @@
     <string name="connected">Connected</string>
     <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
     <string name="connecting_account">Connecting account</string>
-    <string name="pref_key_twitter_category">wp_pref_twitter_category</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people sharing using the Twitter button</string>
 

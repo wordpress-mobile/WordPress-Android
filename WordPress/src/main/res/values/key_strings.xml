@@ -87,6 +87,7 @@
     <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
     <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
     <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
+    <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
