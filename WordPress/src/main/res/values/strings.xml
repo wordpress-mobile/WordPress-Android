@@ -1401,7 +1401,7 @@
     <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
-    <string name="manage_connections">Manage Connections</string>
+    <string name="manage">Manage</string>
     <string name="sharing_buttons">Edit Sharing Buttons</string>
     <string name="more_buttons">More Buttons</string>
     <string name="label">Label</string>
