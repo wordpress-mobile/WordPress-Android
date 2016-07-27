@@ -25,10 +25,10 @@ public class ProfileInputDialogFragment extends DialogFragment {
     private static final String CALLBACK_ID_TAG = "callback_id";
 
     public static ProfileInputDialogFragment newInstance(String title,
-                                   String initialText,
-                                   String hint,
-                                   boolean isMultiline,
-                                   int callbackId) {
+                                                         String initialText,
+                                                         String hint,
+                                                         boolean isMultiline,
+                                                         int callbackId) {
 
         ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
         Bundle args = new Bundle();
