@@ -8,7 +8,7 @@
         <attr name="summaryLines" format="integer" />
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
-        <attr name="dialogMessage" />
+        <attr name="dialogMessage" format="string" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
