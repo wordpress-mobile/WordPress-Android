@@ -1,19 +1,48 @@
 package org.wordpress.android.datasets;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.IntDef;
 
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.SqlUtils;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * stores comments on reader posts
  */
 public class ReaderCommentTable {
+
+    //comments ordering constants for retrieving comments from database
+    public static final int ORDER_BY_NEWEST_COMMENT_FIRST = 1;
+    public static final int ORDER_BY_TIME_OF_COMMENT = 2;
+    public static final int ORDER_BY_DEFAULT = ORDER_BY_NEWEST_COMMENT_FIRST;
+
+    /**
+     * NOTE: use only one type of ordering for comments of same blogId,postId
+     * if you are changing the ordering purge all comments for that post via {@link #purgeCommentsForPost(long, long)}
+     */
+    @SuppressLint("UniqueConstants")
+    @IntDef({ ORDER_BY_NEWEST_COMMENT_FIRST , ORDER_BY_TIME_OF_COMMENT , ORDER_BY_DEFAULT })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CommentsOrderBy{}
+
+    /**
+     * <p>
+     * NOTE : Don't change it instead change {@link ReaderConstants#READER_MAX_COMMENTS_TO_REQUEST}
+     * </p>
+    */
+    public static final int COMMENTS_PER_PAGE = ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST;
+
     private static final String COLUMN_NAMES =
                       " blog_id,"
                     + " post_id,"
@@ -30,7 +59,7 @@ public class ReaderCommentTable {
                     + " text,"
                     + " num_likes,"
                     + " is_liked,"
-                    + " page_number";
+                    + " page_number"; //NOTE: page_number may be zero if we load the comment by Id
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -89,7 +118,91 @@ public class ReaderCommentTable {
     public static int getLastPageNumberForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0", args);
+    }
+
+    /*
+     * return first not loaded or first partially loaded page number
+     * if numOfComments for a page is less than COMMENTS_PER_PAGE then that page is partially loaded
+     */
+    public static int getFirstNotLoadedPage(long blogId, long postId){
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 GROUP BY page_number ORDER BY page_number";
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
+
+        int pageNumber = 1;
+        for( ; c.moveToNext() ; pageNumber++){
+            int currPage = c.getInt(0);
+            int currPageComments = c.getInt(1);
+            if( currPage != pageNumber || currPageComments < COMMENTS_PER_PAGE ){
+                break;
+            }
+        }
+
+        c.close();
+        return pageNumber;
+    }
+
+    /**
+     * <p>
+     * NOTE: method check pages in local database not on server if you want fresh result than load first page of comments by
+     *          {@link org.wordpress.android.ui.reader.services.ReaderCommentService#startService(Context, long, long, boolean, int)}
+     *          with {@link #ORDER_BY_NEWEST_COMMENT_FIRST} and requestNextPage = false
+     * </p>
+     * @param pageNumberFromBack return page number from back i.e. 1 for last page, 2 for second last page and so on.
+     * @return
+     * <ul>
+     *     <li>last not loaded or last partially loaded page number</li>
+     *     <li>-1 if all pages are loaded</li>
+     *     <li>0 if no any comments is loaded</li>
+     * </ul>
+     */
+    public static int getLastNotLoadedPage(long blogId,
+                                           long postId,
+                                           final boolean pageNumberFromBack){
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        String query = "SELECT page_number,COUNT(comment_id) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 GROUP BY page_number ORDER BY page_number DESC";
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(query, args);
+
+        if( !c.moveToNext() ){
+            c.close();
+            return 0;
+        }
+
+        /* NOTE: never perform ( currPageComments < COMMENTS_PER_PAGE ) check for last page because it is always fully loaded and
+            it always has less comments if total comments is not divisible by commentsPerPage
+            e.g. totalComments = 153 , commentsPerPage = 20 , last page have 13 comments*/
+        int lastPage = c.getInt(0);
+        /* suppose totalComments = 167 and COMMENTS_PER_PAGE = 20.
+            7 comments of page 9 is loaded by request with page number 1 along with 13 comments of page 8
+            next 7 comments of page 8 is loaded by request with page number 2 along with 13 comments of page 7
+            So a single page is loaded by two request one for right half and one for left half*/
+        final int commentsLoadedByPreviousRequest = COMMENTS_PER_PAGE - c.getInt(1);
+        int currPage = -1;
+
+        int backwardPageNumber = 2;
+        for( ; c.moveToNext() ; backwardPageNumber++){
+            currPage = c.getInt(0);
+            int currPageComments = c.getInt(1);
+            if( currPage + 1 != lastPage || currPageComments < COMMENTS_PER_PAGE){
+                c.close();
+                //not all right half comments of this page is loaded from previous request
+                if( currPageComments < commentsLoadedByPreviousRequest ){
+                    return pageNumberFromBack ? backwardPageNumber-1 : lastPage-1;
+                }
+                return pageNumberFromBack ? backwardPageNumber : lastPage-1;
+            }
+            lastPage = currPage;
+        }
+
+        c.close();
+
+        if(currPage == 1){
+            //all comments are loaded
+            return -1;
+        }
+
+        return pageNumberFromBack ? backwardPageNumber : (currPage-1) ;
     }
 
     /*
@@ -121,16 +234,49 @@ public class ReaderCommentTable {
     }
     private static int getNumCommentsForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0", args);
     }
 
-    public static ReaderCommentList getCommentsForPost(ReaderPost post) {
+    /**
+     * @param orderBy one of ORDER_BY_* constants
+     * @param lastPageNumber page number till which comments are return , -1 to return all comments
+     * @see org.wordpress.android.datasets.ReaderCommentTable.CommentsOrderBy
+     */
+    public static ReaderCommentList getCommentsForPost(ReaderPost post,
+                                                       @CommentsOrderBy int orderBy,
+                                                       final int lastPageNumber) {
         if (post == null) {
             return new ReaderCommentList();
         }
 
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+        String[] args;
+        String whereClause,orderByClause;
+
+        if( lastPageNumber <= 0 ){
+            whereClause = "blog_id = ? AND post_id = ? AND page_number > 0";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
+        }else if( orderBy == ORDER_BY_NEWEST_COMMENT_FIRST ){
+            whereClause = "blog_id = ? AND post_id = ? AND page_number >= ? AND page_number > 0";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
+        }else if( orderBy == ORDER_BY_TIME_OF_COMMENT ){
+            whereClause = "blog_id = ? AND post_id = ? AND page_number <= ? AND page_number > 0";
+            args = new String[]{Long.toString(post.blogId), Long.toString(post.postId), Integer.toString(lastPageNumber)};
+        }else {
+            throw new IllegalArgumentException("Unknown orderBy");
+        }
+
+        switch(orderBy){
+            case ORDER_BY_NEWEST_COMMENT_FIRST:
+                orderByClause = "timestamp DESC";
+                break;
+            case ORDER_BY_TIME_OF_COMMENT:
+                orderByClause = "timestamp";
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown orderBy");
+        }
+
+        Cursor c = ReaderDatabase.getReadableDb().query("tbl_comments",null,whereClause,args,null,null,orderByClause);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
@@ -225,7 +371,7 @@ public class ReaderCommentTable {
         }
 
         StringBuilder sb = new StringBuilder(
-                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
+                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND page_number > 0 AND comment_id IN (");
         boolean isFirst = true;
         for (ReaderComment comment: comments) {
             if (isFirst) {
@@ -332,5 +478,14 @@ public class ReaderCommentTable {
         comment.pageNumber = c.getInt(c.getColumnIndex("page_number"));
 
         return comment;
+    }
+
+    public static long getParentIdOfComment(final long blogId, final long postId, final long commentId){
+        String[] args = {Long.toString(blogId),
+                Long.toString(postId),
+                Long.toString(commentId)};
+
+        return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT parent_id FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
     }
 }

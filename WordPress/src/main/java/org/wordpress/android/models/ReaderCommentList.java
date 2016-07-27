@@ -1,8 +1,17 @@
 package org.wordpress.android.models;
 
+import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.util.AppLog;
+
 import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
+
+    public ReaderCommentList(){}
+
+    public ReaderCommentList(int initialCapacity){
+        super(initialCapacity);
+    }
 
     private boolean commentIdExists(long commentId) {
         return (indexOfCommentId(commentId) > -1);
@@ -50,66 +59,78 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
 
     /*
      * builds a new list from the passed one with child comments placed under their parents and indent levels applied
+     * NOTE: list should be sorted according to timestamp
      */
-    public static ReaderCommentList getLevelList(ReaderCommentList thisList) {
-        if (thisList==null)
-            return new ReaderCommentList();
+    public static ReaderCommentList getLevelList(ReaderCommentList list,
+                                                 @ReaderCommentTable.CommentsOrderBy int commentsOrder){
+        switch(commentsOrder){
+            case ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST:
+                return getNewestFirstLevelList(list);
 
-        // first check if there are any child comments - if not, just return the passed list
-        boolean hasChildComments = false;
-        for (ReaderComment comment: thisList) {
-            if (comment.parentId!=0) {
-                hasChildComments = true;
-                break;
-            }
+            case ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT:
+                return getOldestFirstLevelList(list);
         }
-        if (!hasChildComments)
-            return thisList;
+        throw new IllegalArgumentException("Unknown commentsOrder");
+    }
 
-        ReaderCommentList result = new ReaderCommentList();
+    private static ReaderCommentList getNewestFirstLevelList(ReaderCommentList list){
+        ReaderCommentList resultList = new ReaderCommentList(list.size());
 
-        // reset all levels, and add root comments to result
-        for (ReaderComment comment: thisList) {
-            comment.level = 0;
-            if (comment.parentId==0)
-                result.add(comment);
+        for(int i=0; i < list.size() ; i++){
+            putNewestFirstComment(list, resultList, i);
         }
 
-        // add child comments under their parents
-        boolean done;
-        do {
-            done = true;
-            for (ReaderComment comment: thisList) {
-                // only look at comments that have a parentId but no level assigned yet
-                if (comment.parentId!=0 && comment.level==0) {
-                    int parentIndex = result.indexOfCommentId(comment.parentId);
-                    if (parentIndex > -1) {
-                        comment.level = result.get(parentIndex).level + 1;
+        return resultList;
+    }
 
-                        // insert this comment after the last comment of this level that has this parent
-                        int commentIndex=parentIndex+1;
-                        while (commentIndex < result.size()) {
-                            if (result.get(commentIndex).level!=comment.level || result.get(commentIndex).parentId!=comment.parentId)
-                                break;
-                            commentIndex++;
-                        }
-                        result.add(commentIndex, comment);
+    /**
+     * first add parents of current comment(at index) from oldList to newList than add current comment
+     */
+    private static int putNewestFirstComment(ReaderCommentList oldList,
+                                              ReaderCommentList newList,
+                                              int index){
+        ReaderComment comment = oldList.get(index);
+        int level = 1;
 
-
-                        done = false;
-                    }
-                }
-            }
-        } while (!done);
-
-        // handle orphans (child comments whose parents weren't found above)
-        for (ReaderComment comment: thisList) {
-            if (comment.level==0 && comment.parentId!=0) {
-                comment.level = 1; // give it a non-zero level so it's indented by ReaderCommentAdapter
-                result.add(comment);
+        if(comment.parentId != 0){
+            int parentIndex = oldList.indexOfCommentId(comment.parentId);
+            if(parentIndex >= 0){
+                level = putNewestFirstComment(oldList, newList, parentIndex) + 1;
+                //NOTE: parentIndex can changed if parent comment of this parent is removed so always find fresh index of parent
+                oldList.remove(oldList.indexOfCommentId(comment.parentId));
+            }else{
+                AppLog.d(AppLog.T.READER, "Parent Comment Not in list , parentId : "+comment.parentId);
             }
         }
 
-        return result;
+        comment.level = level;
+        newList.add(comment);
+        return level;
+    }
+
+    private static ReaderCommentList getOldestFirstLevelList(ReaderCommentList oldList){
+        for(int i=0; i < oldList.size() ; i++){
+            ReaderComment comment = oldList.get(i);
+            if(comment.parentId == 0){
+                continue;
+            }
+
+            int parentIndex = oldList.indexOfCommentId(comment.parentId);
+
+            if( parentIndex < 0 ){
+                AppLog.d(AppLog.T.READER, "Parent Comment Not in list , parentId : "+comment.parentId);
+                continue;
+            }
+
+            ReaderComment parentComment = oldList.get(parentIndex);
+
+            // swap parent and child comment such that child comment come before parent comment
+            // Due to which putNewestFirstComment() will put parent comment before child and than put child in new list
+            // when it encouters a child comment in oldList
+            oldList.set(i, parentComment);
+            oldList.set(parentIndex, comment);
+        }
+
+        return getNewestFirstLevelList(oldList);
     }
 }

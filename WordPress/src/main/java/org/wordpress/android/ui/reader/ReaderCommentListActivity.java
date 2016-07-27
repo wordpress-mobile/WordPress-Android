@@ -8,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -76,6 +79,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
+
+    private int mCommentsOrder = ReaderCommentTable.ORDER_BY_DEFAULT;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -307,7 +312,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost());
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost(), mCommentsOrder);
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
@@ -416,7 +421,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (showProgress) {
             showProgress();
         }
-        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage);
+        ReaderCommentService.startService(this, mPost.blogId, mPost.postId, requestNextPage, mCommentsOrder);
     }
 
     private void checkEmptyView() {
@@ -543,5 +548,60 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reader_comments_list,menu);
+
+        MenuItem newestCommentFirst = menu.findItem(R.id.menu_newest_comments_first);
+        newestCommentFirst.setChecked(mCommentsOrder == ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.menu_newest_comments_first:
+                handleNewestCommentMenuItem(item);
+                return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void handleNewestCommentMenuItem(MenuItem item){
+        if(item.isChecked()){
+            setCommentsOrder(ReaderCommentTable.ORDER_BY_TIME_OF_COMMENT);
+            item.setChecked(false);
+        }else{
+            setCommentsOrder(ReaderCommentTable.ORDER_BY_NEWEST_COMMENT_FIRST);
+            item.setChecked(true);
+        }
+    }
+
+    private void setCommentsOrder(@ReaderCommentTable.CommentsOrderBy int commentsOrder){
+        if(mCommentsOrder == commentsOrder){
+            return;
+        }
+
+        mCommentsOrder = commentsOrder;
+
+        /* if connected to network then load fresh first page from server
+            otherwise load comments from database
+         */
+        if(NetworkUtils.isNetworkAvailable(this)){
+            ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+            mCommentAdapter.setCommentsOrder(commentsOrder, false);
+            updateComments(true, false);
+        }else{
+            mCommentAdapter.setCommentsOrder(commentsOrder, true);
+        }
     }
 }
