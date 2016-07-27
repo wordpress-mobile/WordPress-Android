@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -155,7 +156,8 @@ public class StatsUtils {
 
         AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
-        if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
+        if (TextUtils.isEmpty(blogTimeZoneOption) || blogTimeZoneOption.equals("0")
+                || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
             String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
