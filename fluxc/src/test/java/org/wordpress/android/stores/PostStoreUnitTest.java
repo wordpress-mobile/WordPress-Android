@@ -38,12 +38,12 @@ public class PostStoreUnitTest {
     @Test
     public void testSimpleInsertionAndRetrieval() {
         PostModel postModel = new PostModel();
-        postModel.setPostId(42);
+        postModel.setRemotePostId(42);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         assertEquals(1, mPostStore.getPostsCount());
 
-        assertEquals(42, mPostStore.getPosts().get(0).getPostId());
+        assertEquals(42, mPostStore.getPosts().get(0).getRemotePostId());
     }
 
     @Test
@@ -86,14 +86,14 @@ public class PostStoreUnitTest {
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
 
         PostModel uploadedPost2 = generateSampleUploadedPost();
-        uploadedPost2.setLocalTableSiteId(8);
+        uploadedPost2.setLocalSiteId(8);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
         SiteModel site1 = new SiteModel();
-        site1.setId(uploadedPost1.getLocalTableSiteId());
+        site1.setId(uploadedPost1.getLocalSiteId());
 
         SiteModel site2 = new SiteModel();
-        site2.setId(uploadedPost2.getLocalTableSiteId());
+        site2.setId(uploadedPost2.getLocalSiteId());
 
         assertEquals(2, mPostStore.getPostsCount());
 
@@ -136,7 +136,7 @@ public class PostStoreUnitTest {
 
         PostModel uploadedPost2 = generateSampleUploadedPost();
         uploadedPost2.setId(4);
-        uploadedPost2.setPostId(9);
+        uploadedPost2.setRemotePostId(9);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
         PostModel localDraft = generateSampleLocalDraftPost();
@@ -162,7 +162,7 @@ public class PostStoreUnitTest {
 
         PostModel uploadedPost2 = generateSampleUploadedPost();
         uploadedPost2.setId(4);
-        uploadedPost2.setPostId(9);
+        uploadedPost2.setRemotePostId(9);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
         PostModel localDraft = generateSampleLocalDraftPost();
@@ -194,8 +194,8 @@ public class PostStoreUnitTest {
     public PostModel generateSampleUploadedPost() {
         PostModel example = new PostModel();
         example.setId(1);
-        example.setLocalTableSiteId(6);
-        example.setPostId(5);
+        example.setLocalSiteId(6);
+        example.setRemotePostId(5);
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
         return example;
@@ -204,7 +204,7 @@ public class PostStoreUnitTest {
     public PostModel generateSampleLocalDraftPost() {
         PostModel example = new PostModel();
         example.setId(2);
-        example.setLocalTableSiteId(6);
+        example.setLocalSiteId(6);
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
         example.setIsLocalDraft(true);
@@ -214,8 +214,8 @@ public class PostStoreUnitTest {
     public PostModel generateSampleLocallyChangedPost() {
         PostModel example = new PostModel();
         example.setId(3);
-        example.setLocalTableSiteId(6);
-        example.setPostId(7);
+        example.setLocalSiteId(6);
+        example.setRemotePostId(7);
         example.setTitle("A test post");
         example.setDescription("Bunch of content here");
         example.setIsLocallyChanged(true);
