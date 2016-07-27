@@ -44,7 +44,6 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         FragmentManager fm = getFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
         } else {
@@ -55,6 +54,7 @@ public class PostsListActivity extends AppCompatActivity {
             finish();
             return;
         }
+        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
 

@@ -7,8 +7,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.Method;
@@ -18,6 +20,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +32,6 @@ import de.greenrobot.event.EventBus;
  */
 
 public class PostUpdateService extends Service {
-
-    private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_LOAD_MORE = "load_more";
     private static final String ARG_IS_PAGE = "is_page";
 
@@ -39,9 +40,9 @@ public class PostUpdateService extends Service {
     /*
      * fetch posts/pages in a specific blog
      */
-    public static void startServiceForBlog(Context context, int blogId, boolean isPage, boolean loadMore) {
+    public static void startServiceForBlog(Context context, SiteModel site, boolean isPage, boolean loadMore) {
         Intent intent = new Intent(context, PostUpdateService.class);
-        intent.putExtra(ARG_BLOG_ID, blogId);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(ARG_IS_PAGE, isPage);
         intent.putExtra(ARG_LOAD_MORE, loadMore);
         context.startService(intent);
@@ -72,30 +73,28 @@ public class PostUpdateService extends Service {
         new Thread() {
             @Override
             public void run() {
-                int blogId = intent.getIntExtra(ARG_BLOG_ID, 0);
+                SiteModel site = (SiteModel) intent.getSerializableExtra(ActivityLauncher.EXTRA_SITE);
                 boolean isPage = intent.getBooleanExtra(ARG_IS_PAGE, false);
                 boolean loadMore = intent.getBooleanExtra(ARG_LOAD_MORE, false);
-                fetchPostsInBlog(blogId, isPage, loadMore);
+                fetchPostsInBlog(site, isPage, loadMore);
             }
         }.start();
 
         return START_NOT_STICKY;
     }
 
-    private void fetchPostsInBlog(int blogId, boolean isPage, boolean loadMore) {
-        Blog blog = WordPress.getBlog(blogId);
-        if (blog == null) {
+    private void fetchPostsInBlog(SiteModel site, boolean isPage, boolean loadMore) {
+        if (site == null) {
             return;
         }
 
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
-                blog.getUri(),
-                blog.getHttpuser(),
-                blog.getHttppassword());
+        // TODO: Stores: this will be replaced by PostStore
+        // TODO: HTTP Auth is dead here
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
 
         int numPostsToRequest;
         if (loadMore) {
-            int numExisting = WordPress.wpDB.getUploadedCountInBlog(blogId, isPage);
+            int numExisting = WordPress.wpDB.getUploadedCountInBlog(site.getId(), isPage);
             numPostsToRequest = numExisting + NUM_POSTS_TO_REQUEST;
         } else {
             numPostsToRequest = NUM_POSTS_TO_REQUEST;
@@ -103,12 +102,12 @@ public class PostUpdateService extends Service {
 
         Object[] result;
         Object[] xmlrpcParams = {
-                blog.getRemoteBlogId(),
-                blog.getUsername(),
-                blog.getPassword(),
+                site.getSiteId(),
+                StringUtils.notNullStr(site.getUsername()),
+                StringUtils.notNullStr(site.getPassword()),
                 numPostsToRequest};
 
-        PostEvents.RequestPosts event = new PostEvents.RequestPosts(blogId, isPage);
+        PostEvents.RequestPosts event = new PostEvents.RequestPosts(site, isPage);
         try {
             boolean canLoadMore;
 
@@ -131,9 +130,9 @@ public class PostUpdateService extends Service {
                 }
 
                 if (!loadMore) {
-                    WordPress.wpDB.deleteUploadedPosts(blogId, isPage);
+                    WordPress.wpDB.deleteUploadedPosts(site.getId(), isPage);
                 }
-                WordPress.wpDB.savePosts(postsList, blogId, isPage, false);
+                WordPress.wpDB.savePosts(postsList, site.getId(), isPage, false);
             } else {
                 canLoadMore = false;
             }

@@ -66,7 +66,6 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
-    private SiteModel mSite;
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
@@ -79,7 +78,6 @@ public class PostsListFragment extends Fragment
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-                mSite = (SiteModel) extras.getSerializable(ActivityLauncher.EXTRA_SITE);
             }
         }
     }
@@ -143,7 +141,7 @@ public class PostsListFragment extends Fragment
 
     public PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), getSelectedSite(), mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -176,29 +174,18 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-
-        if (getActivity() instanceof PostsListActivity) {
-            mSite = ((PostsListActivity) getActivity()).getSelectedSite();
-        }
-
-        if (mSite != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mSite, mIsPage);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found);
-        }
+        ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), getSelectedSite(), mIsPage);
     }
 
     public void onResume() {
         super.onResume();
 
-        if (WordPress.getCurrentBlog() != null && mRecyclerView.getAdapter() == null) {
+        if (mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        if (WordPress.getCurrentBlog() != null) {
-            // always (re)load when resumed to reflect changes made elsewhere
-            loadPosts();
-        }
+        // always (re)load when resumed to reflect changes made elsewhere
+        loadPosts();
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
@@ -236,7 +223,7 @@ public class PostsListFragment extends Fragment
         if (loadMore) {
             showLoadMoreProgress();
         }
-        PostUpdateService.startServiceForBlog(getActivity(), WordPress.getCurrentLocalTableBlogId(), mIsPage, loadMore);
+        PostUpdateService.startServiceForBlog(getActivity(), getSelectedSite(), mIsPage, loadMore);
     }
 
     private void showLoadMoreProgress() {
@@ -257,7 +244,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded() && WordPress.getCurrentBlog() != null) {
+        if (isAdded()) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
@@ -267,7 +254,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
+        if (isAdded() && getSelectedSite().getId() == event.mLocalBlogId) {
             loadPosts();
         }
     }
@@ -277,7 +264,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
+        if (isAdded() && getSelectedSite().getId() == event.mLocalBlogId) {
             loadPosts();
         }
     }
@@ -288,7 +275,7 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.RequestPosts event) {
         mIsFetchingPosts = false;
-        if (isAdded() && event.getBlogId() == WordPress.getCurrentLocalTableBlogId()) {
+        if (isAdded() && event.getSite().getId() == getSelectedSite().getId()) {
             setRefreshing(false);
             hideLoadMoreProgress();
             if (!event.getFailed()) {
@@ -416,13 +403,13 @@ public class PostsListFragment extends Fragment
                 publishPost(fullPost);
                 break;
             case PostListButton.BUTTON_VIEW:
-                ActivityLauncher.browsePostOrPage(getActivity(), mSite, fullPost);
+                ActivityLauncher.browsePostOrPage(getActivity(), getSelectedSite(), fullPost);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), getSelectedSite(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, fullPost, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), getSelectedSite(), fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
@@ -521,7 +508,8 @@ public class PostsListFragment extends Fragment
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    new ApiHelper.DeleteSinglePostTask().execute(mSite, fullPost.getRemotePostId(), mIsPage);
+                    new ApiHelper.DeleteSinglePostTask().execute(getSelectedSite(), fullPost.getRemotePostId(),
+                            mIsPage);
                 }
             }
         });

@@ -197,7 +197,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity());
+                ActivityLauncher.viewCurrentBlogPosts(getActivity(), getSelectedSite());
             }
         });
 
@@ -211,7 +211,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPages(getActivity());
+                ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
             }
         });
 

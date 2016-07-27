@@ -77,8 +77,9 @@ public class ActivityLauncher {
         slideInFromRight(context, intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context) {
+    public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
@@ -90,8 +91,9 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
-    public static void viewCurrentBlogPages(Context context) {
+    public static void viewCurrentBlogPages(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
