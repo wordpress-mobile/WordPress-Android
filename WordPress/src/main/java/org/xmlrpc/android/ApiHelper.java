@@ -16,6 +16,7 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -26,6 +27,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -35,12 +37,14 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -503,7 +507,7 @@ public class ApiHelper {
         }
     }
 
-    public static class SyncMediaLibraryTask extends HelperAsyncTask<java.util.List<?>, Void, Integer> {
+    public static class SyncMediaLibraryTask extends HelperAsyncTask<Void, Void, Integer> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int results);
         }
@@ -511,26 +515,25 @@ public class ApiHelper {
         private Callback mCallback;
         private int mOffset;
         private Filter mFilter;
+        private SiteModel mSite;
 
-        public SyncMediaLibraryTask(int offset, Filter filter, Callback callback) {
+        public SyncMediaLibraryTask(int offset, Filter filter, Callback callback, SiteModel site) {
             mOffset = offset;
             mCallback = callback;
             mFilter = filter;
+            mSite = site;
         }
 
         @Override
-        protected Integer doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            WordPress.currentBlog = (Blog) arguments.get(0);
-            Blog blog = WordPress.currentBlog;
-            if (blog == null) {
+        protected Integer doInBackground(Void... params) {
+            if (mSite == null) {
                 setError(ErrorType.INVALID_CURRENT_BLOG, "ApiHelper - current blog is null");
                 return 0;
             }
 
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
+            String blogId = String.valueOf(mSite.getId());
+            URI xmlrpcUri = URI.create(mSite.getXmlRpcUrl());
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(xmlrpcUri, "", "");
             Map<String, Object> filter = new HashMap<String, Object>();
             filter.put("number", 50);
             filter.put("offset", mOffset);
@@ -541,8 +544,8 @@ public class ApiHelper {
                 filter.put("parent_id", 0);
             }
 
-            Object[] apiParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
-                    filter};
+            Object[] apiParams = {String.valueOf(mSite.getSiteId()), StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()), filter};
 
             Object[] results = null;
             try {
@@ -579,8 +582,7 @@ public class ApiHelper {
             }
             for (Object result : results) {
                 resultMap = (Map<?, ?>) result;
-                boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
-                MediaFile mediaFile = new MediaFile(blogId, resultMap, isDotCom);
+                MediaFile mediaFile = new MediaFile(blogId, resultMap, mSite.isWPCom());
                 WordPress.wpDB.saveMediaFile(mediaFile);
             }
             WordPress.wpDB.deleteFilesMarkedForDeleted(blogId);

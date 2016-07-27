@@ -31,6 +31,8 @@ import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -407,7 +409,8 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), getSelectedSite(), post.getPostId(),
+                        mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(fullPost);
@@ -416,7 +419,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, fullPost);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
                 ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, fullPost, mIsPage);
@@ -524,5 +527,16 @@ public class PostsListFragment extends Fragment
         });
 
         snackbar.show();
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof PostsListActivity) {
+            PostsListActivity mainActivity = (PostsListActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        } else {
+            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
+            // Crash
+            return null;
+        }
     }
 }

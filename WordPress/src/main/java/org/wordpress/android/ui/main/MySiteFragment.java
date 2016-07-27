@@ -204,7 +204,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity());
+                ActivityLauncher.viewCurrentBlogMedia(getActivity(), getSelectedSite());
             }
         });
 

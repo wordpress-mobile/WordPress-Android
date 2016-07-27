@@ -83,8 +83,9 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
-    public static void viewCurrentBlogMedia(Context context) {
+    public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
@@ -159,38 +160,36 @@ public class ActivityLauncher {
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, SiteModel site, Post post, boolean isPage) {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
-        intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewBlogPostOrPageForResult(Activity context, int siteId, boolean isPage) {
-        if (siteId == -1) return;
+    public static void addNewBlogPostOrPageForResult(Activity context, SiteModel site, boolean isPage) {
+        if (site == null) return;
         // Create a new post object and assign default settings
-        Post newPost = new Post(siteId, isPage);
+        Post newPost = new Post(site.getId(), isPage);
         newPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(context) +"]");
         newPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(context));
         WordPress.wpDB.savePost(newPost);
 
         Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         context.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void addNewBlogPostOrPageForResult(Activity context, SiteModel site, boolean isPage) {
-        if (site == null) return;
-        addNewBlogPostOrPageForResult(context, site.getId(), isPage);
-    }
-
-    public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
+    public static void editBlogPostOrPageForResult(Activity activity, SiteModel site,
+                                                   long postOrPageId, boolean isPage) {
         Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);

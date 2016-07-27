@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.FeatureSet;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
@@ -47,8 +47,6 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,15 +73,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
-    private FeatureSet mFeatureSet;
     private String mQuery;
+
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                int blogId = WordPress.getCurrentLocalTableBlogId();
+                int blogId = getSelectedSite().getId();
                 if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
                     startMediaDeleteService();
                 }
@@ -94,8 +96,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This should be removed when #2734 is fixed
-        if (WordPress.getCurrentBlog() == null) {
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -159,6 +167,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_QUERY, mQuery);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     @Override
@@ -238,26 +247,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onResume() {
         super.onResume();
         startMediaDeleteService();
-        getFeatureSet();
         ActivityId.trackLastActivity(ActivityId.MEDIA);
-    }
-
-    /** Get the feature set for a wordpress.com hosted blog **/
-    private void getFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
-            return;
-
-        ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
-            @Override
-            public void onResult(FeatureSet featureSet) {
-                mFeatureSet = featureSet;
-            }
-
-        });
-
-        List<Object> apiArgs = new ArrayList<>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        task.execute(apiArgs);
     }
 
     @Override
@@ -542,7 +532,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     public void deleteMedia(final ArrayList<String> ids) {
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        final String blogId = String.valueOf(getSelectedSite().getId());
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible

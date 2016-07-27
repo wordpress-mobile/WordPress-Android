@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
@@ -51,6 +54,11 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
     private int mOldMediaSyncOffset = 0;
+    private SiteModel mSite;
+    public @NonNull
+    SiteModel getSelectedSite() {
+        return mSite;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +77,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             selectedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+        }
+
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
@@ -207,9 +228,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
-            List<Object> apiArgs = new ArrayList<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
-
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
                 // refersh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
@@ -267,9 +285,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
                 }
             };
-
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, MediaGridFragment.Filter.ALL, callback);
-            getMediaTask.execute(apiArgs);
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset,
+                    MediaGridFragment.Filter.ALL, callback, mSite);
+            getMediaTask.execute();
         }
     }
 }

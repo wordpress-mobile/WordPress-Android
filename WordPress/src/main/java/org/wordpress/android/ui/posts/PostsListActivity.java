@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
@@ -43,8 +45,16 @@ public class PostsListActivity extends AppCompatActivity {
 
         FragmentManager fm = getFragmentManager();
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
-        mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
-
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
 
@@ -103,9 +113,10 @@ public class PostsListActivity extends AppCompatActivity {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
-    public SiteModel getSelectedSite() {
+    public @NonNull SiteModel getSelectedSite() {
         return mSite;
     }
 }

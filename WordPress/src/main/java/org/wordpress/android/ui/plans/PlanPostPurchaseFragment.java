@@ -140,7 +140,8 @@ public class PlanPostPurchaseFragment extends Fragment {
                 ActivityLauncher.viewCurrentBlogThemes(getActivity(), null);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_VIDEO:
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), selectedSiteId, false);
+                // TODO: Stores: used null site here
+                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), null, false);
                 break;
         }
 

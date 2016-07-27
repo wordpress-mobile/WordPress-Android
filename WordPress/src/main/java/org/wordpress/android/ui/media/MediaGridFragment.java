@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,12 +34,14 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -52,7 +55,6 @@ import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask.Callback;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * The grid displaying the media items.
@@ -258,7 +260,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private void setupSpinnerAdapter() {
-        if (getActivity() == null || WordPress.getCurrentBlog() == null) {
+        if (getActivity() == null) {
             return;
         }
 
@@ -282,10 +284,7 @@ public class MediaGridFragment extends Fragment
     }
 
     void updateFilterText() {
-        if (WordPress.currentBlog == null)
-            return;
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(getSelectedSite().getId());
 
         int countAll = WordPress.wpDB.getMediaCountAll(blogId);
         int countImages = WordPress.wpDB.getMediaCountImages(blogId);
@@ -347,7 +346,7 @@ public class MediaGridFragment extends Fragment
         }
 
         // do not refresh if custom date filter is shown
-        if (WordPress.getCurrentBlog() == null || mFilter == Filter.CUSTOM_DATE) {
+        if (mFilter == Filter.CUSTOM_DATE) {
             setRefreshing(false);
             return;
         }
@@ -369,9 +368,6 @@ public class MediaGridFragment extends Fragment
             updateEmptyView(EmptyViewMessageType.LOADING);
             mListener.onMediaItemListDownloadStart();
             mGridAdapter.setRefreshing(true);
-
-            List<Object> apiArgs = new ArrayList<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
 
             Callback callback = new Callback() {
                 // refresh db from server. If returned count is 0, we've retrieved all the media.
@@ -441,20 +437,17 @@ public class MediaGridFragment extends Fragment
                     }
                 }
             };
-
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter, callback);
-            getMediaTask.execute(apiArgs);
+            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter,
+                    callback, getSelectedSite());
+            getMediaTask.execute();
         }
     }
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        Blog blog = WordPress.getCurrentBlog();
-        if (blog != null) {
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-            Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
-            mGridAdapter.changeCursor(cursor);
-        }
+        String blogId = String.valueOf(getSelectedSite().getId());
+        Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
+        mGridAdapter.changeCursor(cursor);
     }
 
     @Override
@@ -543,12 +536,7 @@ public class MediaGridFragment extends Fragment
     }
 
     Cursor setDateFilter() {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog == null)
-            return null;
-
-        String blogId = String.valueOf(blog.getLocalTableBlogId());
+        String blogId = String.valueOf(getSelectedSite().getId());
 
         GregorianCalendar startDate = new GregorianCalendar(mStartYear, mStartMonth, mStartDay);
         GregorianCalendar endDate = new GregorianCalendar(mEndYear, mEndMonth, mEndDay);
@@ -577,12 +565,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private Cursor filterItems(Filter filter) {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog == null)
-            return null;
-
-        String blogId = String.valueOf(blog.getLocalTableBlogId());
+        String blogId = String.valueOf(getSelectedSite().getId());
 
         switch (filter) {
             case ALL:
@@ -725,6 +708,17 @@ public class MediaGridFragment extends Fragment
     @Override
     public boolean isInMultiSelect() {
         return mIsMultiSelect;
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof MediaBrowserActivity) {
+            MediaBrowserActivity mainActivity = (MediaBrowserActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        } else {
+            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
+            // Crash
+            return null;
+        }
     }
 
     public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {

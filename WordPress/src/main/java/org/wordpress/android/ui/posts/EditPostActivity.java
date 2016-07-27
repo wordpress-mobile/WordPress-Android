@@ -66,8 +66,10 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -196,6 +198,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Inject AccountStore mAccountStore;
 
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,6 +223,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_GALLERY.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -255,6 +263,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return;
             }
         } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
@@ -268,6 +277,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
@@ -398,6 +413,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         savePostAsync(null);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
 
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
@@ -1911,8 +1927,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            List<Object> apiArgs = new ArrayList<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
                 @Override
                 public void onSuccess(int count) {
@@ -1945,8 +1959,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             };
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0,
-                    MediaGridFragment.Filter.ALL, callback);
-            getMediaTask.execute(apiArgs);
+                    MediaGridFragment.Filter.ALL, callback, mSite);
+            getMediaTask.execute();
         } else {
             mBlogMediaStatus = 0;
             ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);

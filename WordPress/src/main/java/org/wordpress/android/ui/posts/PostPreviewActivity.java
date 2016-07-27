@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -30,22 +32,25 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import de.greenrobot.event.EventBus;
 
 public class PostPreviewActivity extends AppCompatActivity {
-
     public static final String ARG_LOCAL_POST_ID = "local_post_id";
-    public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     public static final String ARG_IS_PAGE = "is_page";
 
     private long mLocalPostId;
-    private int mLocalBlogId;
     private boolean mIsPage;
     private boolean mIsUpdatingPost;
 
     private Post mPost;
+
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,13 +67,23 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mLocalPostId = savedInstanceState.getLong(ARG_LOCAL_POST_ID);
-            mLocalBlogId = savedInstanceState.getInt(ARG_LOCAL_BLOG_ID);
             mIsPage = savedInstanceState.getBoolean(ARG_IS_PAGE);
         } else {
             mLocalPostId = getIntent().getLongExtra(ARG_LOCAL_POST_ID, 0);
-            mLocalBlogId = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, 0);
             mIsPage = getIntent().getBooleanExtra(ARG_IS_PAGE, false);
         }
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
 
         setTitle(mIsPage ? getString(R.string.preview_page) : getString(R.string.preview_post));
     }
@@ -104,7 +119,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         fm.executePendingTransactions();
 
         String tagForFragment = getString(R.string.fragment_tag_post_preview);
-        Fragment fragment = PostPreviewFragment.newInstance(mLocalBlogId, mLocalPostId);
+        Fragment fragment = PostPreviewFragment.newInstance(mSite, mLocalPostId);
 
         fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, tagForFragment)
@@ -138,8 +153,8 @@ public class PostPreviewActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(ARG_LOCAL_POST_ID, mLocalPostId);
-        outState.putInt(ARG_LOCAL_BLOG_ID, mLocalBlogId);
         outState.putBoolean(ARG_IS_PAGE, mIsPage);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
         super.onSaveInstanceState(outState);
     }
 
@@ -156,7 +171,7 @@ public class PostPreviewActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_edit) {
-            ActivityLauncher.editBlogPostOrPageForResult(this, mLocalPostId, mIsPage);
+            ActivityLauncher.editBlogPostOrPageForResult(this, mSite, mLocalPostId, mIsPage);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -275,14 +290,14 @@ public class PostPreviewActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (event.mLocalBlogId == mLocalBlogId) {
+        if (event.mLocalBlogId == mSite.getId()) {
             showProgress();
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (event.mLocalBlogId == mLocalBlogId) {
+        if (event.mLocalBlogId == mSite.getId()) {
             hideProgress();
             refreshPreview();
         }
@@ -317,7 +332,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            return ApiHelper.updateSinglePost(mLocalBlogId, mPost.getRemotePostId(), mIsPage);
+            return ApiHelper.updateSinglePost(mSite.getId(), mPost.getRemotePostId(), mIsPage);
         }
 
         @Override
