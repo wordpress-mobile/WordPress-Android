@@ -9,7 +9,7 @@
     android:id="@+id/layout_post_detail_content"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingTop="@dimen/margin_medium">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
@@ -17,7 +17,6 @@
         android:layout_alignLeft="@+id/reader_webview"
         android:layout_alignRight="@+id/reader_webview"
         tools:text="text_title" />
-
 
     <LinearLayout
         android:id="@+id/layout_dateline"
