@@ -207,8 +207,14 @@ public class WordPress extends MultiDexApplication {
                 .build();
         component().inject(this);
 
-        // TODO: STORES: This is needed for legacy REST clients
-        OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        // it will take some time to update the access token in the AccountStore if it was migrated
+        // so it will be set to the migrated token or the store token if no migration was performed
+        String migratedToken = migrateAccessTokenToAccountStore();
+        if (TextUtils.isEmpty(migratedToken)) {
+            OAuthAuthenticator.sAccessToken = mAccountStore.getAccessToken();
+        } else {
+            OAuthAuthenticator.sAccessToken = migratedToken;
+        }
 
         mContext = this;
         ProfilingUtils.start("App Startup");
