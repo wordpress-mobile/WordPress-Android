@@ -24,7 +24,7 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
  * topmost view in post adapter when showing blog preview - displays description, follower
  * count, and follow button
  */
-public class ReaderBlogInfoView extends LinearLayout {
+public class ReaderSiteHeaderView extends LinearLayout {
 
     public interface OnBlogInfoLoadedListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
@@ -36,17 +36,17 @@ public class ReaderBlogInfoView extends LinearLayout {
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
 
-    public ReaderBlogInfoView(Context context) {
+    public ReaderSiteHeaderView(Context context) {
         super(context);
         initView(context);
     }
 
-    public ReaderBlogInfoView(Context context, AttributeSet attrs) {
+    public ReaderSiteHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public ReaderBlogInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ReaderSiteHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }

@@ -29,7 +29,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
-import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
@@ -69,7 +69,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
-    private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+    private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -193,10 +193,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class BlogInfoViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderBlogInfoView mBlogInfoView;
+        private final ReaderSiteHeaderView mBlogInfoView;
         public BlogInfoViewHolder(View itemView) {
             super(itemView);
-            mBlogInfoView = (ReaderBlogInfoView) itemView;
+            mBlogInfoView = (ReaderSiteHeaderView) itemView;
         }
     }
 
@@ -238,7 +238,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         switch (viewType) {
             case VIEW_TYPE_BLOG_INFO:
-                return new BlogInfoViewHolder(new ReaderBlogInfoView(context));
+                return new BlogInfoViewHolder(new ReaderSiteHeaderView(context));
 
             case VIEW_TYPE_TAG_INFO:
                 return new TagInfoViewHolder(new ReaderTagInfoView(context));
@@ -575,7 +575,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mOnPostPopupListener = onPostPopupListener;
     }
 
-    public void setOnBlogInfoLoadedListener(ReaderBlogInfoView.OnBlogInfoLoadedListener listener) {
+    public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
     }
 
