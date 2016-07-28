@@ -62,11 +62,11 @@ public class PeopleInviteFragment extends Fragment implements
     private String mCustomMessage = "";
     private boolean mInviteOperationInProgress = false;
 
-    public static PeopleInviteFragment newInstance(String dotComBlogId) {
+    public static PeopleInviteFragment newInstance(long dotComBlogId) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_BLOGID, dotComBlogId);
+        bundle.putLong(ARG_BLOGID, dotComBlogId);
 
         peopleInviteFragment.setArguments(bundle);
         return peopleInviteFragment;
@@ -401,8 +401,7 @@ public class PeopleInviteFragment extends Fragment implements
         }
 
         if (usernamesToCheck.size() > 0) {
-
-            String dotComBlogId = getArguments().getString(ARG_BLOGID);
+            long dotComBlogId = getArguments().getLong(ARG_BLOGID);
             PeopleUtils.validateUsernames(usernamesToCheck, dotComBlogId, new PeopleUtils.ValidateUsernameCallback() {
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
@@ -562,7 +561,7 @@ public class PeopleInviteFragment extends Fragment implements
         //set the  "SEND" option disabled
         enableSendButton(false);
 
-        String dotComBlogId = getArguments().getString(ARG_BLOGID);
+        long dotComBlogId = getArguments().getLong(ARG_BLOGID);
         PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override

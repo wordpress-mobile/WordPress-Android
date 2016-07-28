@@ -295,7 +295,8 @@ public class MySiteFragment extends Fragment
 
             case RequestCodes.CREATE_BLOG:
                 // user created a new blog so, use and show that new one
-                // FIXME: setSelectedSite(WordPress.getCurrentBlog());
+                // TODO: STORES: create a blog
+                // TODO: STORES: setSelectedSite(newly created site);
                 break;
         }
     }
