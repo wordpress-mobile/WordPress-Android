@@ -553,7 +553,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public SiteModel getSite() {
+    public SiteModel getSelectedSite() {
         return mSite;
     }
 }

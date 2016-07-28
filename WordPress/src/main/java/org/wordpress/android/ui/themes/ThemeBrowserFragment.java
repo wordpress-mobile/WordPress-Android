@@ -280,7 +280,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private SiteModel getSite() {
         if (getActivity() instanceof ThemeBrowserActivity) {
             ThemeBrowserActivity activity = (ThemeBrowserActivity) getActivity();
-            return activity.getSite();
+            return activity.getSelectedSite();
         }
         return null;
     }

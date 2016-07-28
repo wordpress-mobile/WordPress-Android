@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.NetworkUtils;
 
 /**
@@ -138,12 +140,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes(int position) {
-        if (WordPress.getCurrentBlog() == null) {
-            return null;
-        }
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
+        String blogId = String.valueOf(getSelectedSite().getSiteId());
         return WordPress.wpDB.getThemes(blogId, mLastSearch);
     }
 
@@ -154,6 +151,15 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
             refreshView(getSpinnerPosition());
+        }
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof ThemeBrowserActivity) {
+            return ((ThemeBrowserActivity) getActivity()).getSelectedSite();
+        } else {
+            // Crash
+            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }
