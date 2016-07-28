@@ -11,7 +11,7 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;                 // min width for an image to be suitable featured image
 
-    public static final int DISCOVER_SITE_ID = 53424024;                    // site id for discover.wordpress.com
+    public static final long DISCOVER_SITE_ID = 53424024;                    // site id for discover.wordpress.com
 
     // min size for images in post content to be shown in a gallery (thumbnail strip) - matches
     // the Calypso web reader
