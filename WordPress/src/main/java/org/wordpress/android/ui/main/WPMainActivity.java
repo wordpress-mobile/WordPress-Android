@@ -552,23 +552,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     // Events
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.InvalidCredentialsDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    // TODO: STORES: remove this when we drop legacy REST clients
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.RestApiUnauthorized event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
-    // TODO: STORES: remove this when we drop legacy REST clients
-    @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.TwoFactorAuthenticationDetected event) {
-        AuthenticationDialogUtils.showAuthErrorView(this);
-    }
-
     // TODO: STORES: this must be replaced by onAuthenticationChanged
     @SuppressWarnings("unused")
     public void onEventMainThread(UserSignedOutWordPressCom event) {
@@ -578,8 +561,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @SuppressWarnings("unused")
     @Subscribe
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError) {
-            AuthenticationDialogUtils.showAuthErrorView(this);
+        if (event.isError && mSelectedSite.isWPCom()) {
+            AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite != null && mSelectedSite.isWPCom());
         }
     }
 

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -82,7 +81,6 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
-import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -505,17 +503,6 @@ public class WordPress extends MultiDexApplication {
             wpDB.setDotComBlogsVisibility(id, true);
             currentBlog.setHidden(false);
         }
-    }
-
-    /**
-     * returns the blogID of the current blog or null if current blog is null or remoteID is null.
-     */
-    public static String getCurrentRemoteBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getDotComBlogId() : null);
-    }
-
-    public static int getCurrentLocalTableBlogId() {
-        return (getCurrentBlog() != null ? getCurrentBlog().getLocalTableBlogId() : -1);
     }
 
     /**

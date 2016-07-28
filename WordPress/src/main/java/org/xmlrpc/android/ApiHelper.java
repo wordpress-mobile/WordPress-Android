@@ -552,8 +552,7 @@ public class ApiHelper {
             }
 
             if (results != null && blogId != null) {
-                boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
-                MediaFile mediaFile = new MediaFile(blogId, results, isDotCom);
+                MediaFile mediaFile = new MediaFile(blogId, results, mSite.isWPCom());
                 WordPress.wpDB.saveMediaFile(mediaFile);
                 return mediaFile;
             } else {

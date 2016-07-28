@@ -245,7 +245,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
 
                 // Create a new post for share intents and QuickPress
-                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+                mPost = new Post(mSite.getId(), false);
                 mPost.setCategories("[" + SiteSettingsInterface.getDefaultCategory(this) + "]");
                 mPost.setPostFormat(SiteSettingsInterface.getDefaultFormat(this));
                 WordPress.wpDB.savePost(mPost);

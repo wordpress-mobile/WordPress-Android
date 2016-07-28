@@ -65,7 +65,6 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -288,12 +287,10 @@ public class EditPostSettingsFragment extends Fragment
     private void setupSuggestionServiceAndAdapter() {
         if (!isAdded()) return;
 
-        int remoteBlogId = -1;
-        String blogID = WordPress.getCurrentRemoteBlogId();
-        remoteBlogId = StringUtils.stringToInt(blogID, -1);
-
+        long remoteBlogId = getSelectedSite().getSiteId();
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
+        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(getSelectedSite(), getActivity(),
+                mSuggestionServiceConnectionManager);
         if (tagSuggestionAdapter != null) {
             mTagsEditText.setAdapter(tagSuggestionAdapter);
         }

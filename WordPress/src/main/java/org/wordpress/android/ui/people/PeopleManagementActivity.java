@@ -535,10 +535,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (person == null) {
             return;
         }
-        String blogId = WordPress.getCurrentRemoteBlogId();
-        if (blogId == null) {
-            return;
-        }
 
         final Person.PersonType personType = person.getPersonType();
         final String displayName = person.getDisplayName();
