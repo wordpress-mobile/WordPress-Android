@@ -29,9 +29,9 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
-import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -81,7 +81,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int VIEW_TYPE_POST        = 0;
     private static final int VIEW_TYPE_XPOST       = 1;
-    private static final int VIEW_TYPE_BLOG_INFO   = 2;
+    private static final int VIEW_TYPE_SITE_HEADER = 2;
     private static final int VIEW_TYPE_TAG_INFO    = 3;
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
@@ -192,11 +192,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class BlogInfoViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderSiteHeaderView mBlogInfoView;
-        public BlogInfoViewHolder(View itemView) {
+    class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderSiteHeaderView mSiteHeaderView;
+        public SiteHeaderViewHolder(View itemView) {
             super(itemView);
-            mBlogInfoView = (ReaderSiteHeaderView) itemView;
+            mSiteHeaderView = (ReaderSiteHeaderView) itemView;
         }
     }
 
@@ -219,8 +219,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemViewType(int position) {
         if (position == 0 && hasSiteHeader()) {
-            // first item is a ReaderBlogInfoView
-            return VIEW_TYPE_BLOG_INFO;
+            // first item is a ReaderSiteHeaderView
+            return VIEW_TYPE_SITE_HEADER;
         } else if (position == 0 && isTagPreview()) {
             // first item is a ReaderTagInfoView
             return VIEW_TYPE_TAG_INFO;
@@ -237,8 +237,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case VIEW_TYPE_BLOG_INFO:
-                return new BlogInfoViewHolder(new ReaderSiteHeaderView(context));
+            case VIEW_TYPE_SITE_HEADER:
+                return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
 
             case VIEW_TYPE_TAG_INFO:
                 return new TagInfoViewHolder(new ReaderTagInfoView(context));
@@ -262,10 +262,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             renderPost(position, (ReaderPostViewHolder) holder);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
-        } else if (holder instanceof BlogInfoViewHolder) {
-            BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
-            blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
-            blogHolder.mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+        } else if (holder instanceof SiteHeaderViewHolder) {
+            SiteHeaderViewHolder blogHolder = (SiteHeaderViewHolder) holder;
+            blogHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
+            blogHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
         } else if (holder instanceof TagInfoViewHolder) {
             TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
             tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
