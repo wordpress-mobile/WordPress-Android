@@ -54,7 +54,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
     public static final String SHARING_REBLOG_KEY = "social_notifications_reblog";
     public static final String SHARING_LIKE_KEY = "social_notifications_like";
-    public static final String COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
+    public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
     public static final String TWITTER_USERNAME_KEY = "twitter_via";
 
     // WP.com REST keys used to GET certain site settings
@@ -200,7 +200,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowReblogButton = settingsObject.optBoolean(SHARING_REBLOG_KEY, false);
         mRemoteSettings.allowLikeButton = settingsObject.optBoolean(SHARING_LIKE_KEY, false);
-        mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(COMMENT_LIKES_KEY, false);
+        mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
@@ -347,7 +347,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
 
         if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
-            params.put(ALLOW_COMMENTS_KEY, String.valueOf(mSettings.allowCommentLikes));
+            params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
         }
 
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
