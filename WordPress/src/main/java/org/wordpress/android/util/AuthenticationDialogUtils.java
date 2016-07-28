@@ -4,24 +4,25 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
 public class AuthenticationDialogUtils {
-    public static void showAuthErrorView(Activity activity, boolean isCurrentSiteWPCom) {
+    public static void showAuthErrorView(Activity activity, SiteModel site) {
         showAuthErrorView(activity, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID,
-                AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, isCurrentSiteWPCom);
+                AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, site);
     }
 
     public static void showAuthErrorView(Activity activity, int titleResId, int messageResId,
-                                         boolean isCurrentSiteWPCom) {
+                                         SiteModel site) {
         final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
 
         // WP.com errors will show the sign in activity
-        if (isCurrentSiteWPCom) {
+        if (site.isWPCom()) {
             Intent signInIntent = new Intent(activity, SignInActivity.class);
             signInIntent.putExtra(SignInActivity.EXTRA_IS_AUTH_ERROR, true);
             signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -36,7 +37,7 @@ public class AuthenticationDialogUtils {
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert = new AuthErrorDialogFragment();
-        authAlert.setWPComTitleMessage(titleResId, messageResId);
+        authAlert.setArgs(titleResId, messageResId, site);
         ft.add(authAlert, ALERT_TAG);
         ft.commitAllowingStateLoss();
     }
