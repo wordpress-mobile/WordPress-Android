@@ -265,7 +265,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof SiteHeaderViewHolder) {
             SiteHeaderViewHolder blogHolder = (SiteHeaderViewHolder) holder;
             blogHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
-            blogHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+            if (isDiscover()) {
+                blogHolder.mSiteHeaderView.loadBlogInfo(ReaderConstants.DISCOVER_SITE_ID, 0);
+            } else {
+                blogHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+            }
         } else if (holder instanceof TagInfoViewHolder) {
             TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
             tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
@@ -551,12 +555,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return hasSiteHeader() || isTagPreview();
     }
 
+    /*
+     * site header appears at the top for blog preview and Discover
+     */
     private boolean hasSiteHeader() {
-        return getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
+        return isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
     private boolean isTagPreview() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
+    }
+
+    private boolean isDiscover() {
+        return mCurrentTag != null && mCurrentTag.isDiscover();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
