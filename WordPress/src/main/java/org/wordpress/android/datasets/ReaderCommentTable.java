@@ -129,7 +129,11 @@ public class ReaderCommentTable {
             return new ReaderCommentList();
         }
 
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        return getCommentsForPost(post.blogId, post.postId);
+    }
+
+    public static ReaderCommentList getCommentsForPost(long blogId,long postId){
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
         try {
             ReaderCommentList comments = new ReaderCommentList();

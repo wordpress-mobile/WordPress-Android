@@ -1100,6 +1100,8 @@
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this blog</string>
+    <string name="reader_menu_next_new_comment">Next new comment</string>
+    <string name="reader_menu_prev_new_comment">Previous new comment</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -1170,6 +1172,9 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_no_more_new_comments">No more new comments</string>
+    <string name="reader_toast_no_new_comments">No new comments</string>
+    <string name="reader_toast_not_connected_to_internet">Not connected to internet</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>

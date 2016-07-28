@@ -8,11 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -21,6 +24,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderComment;
+import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -52,7 +56,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class ReaderCommentListActivity extends AppCompatActivity {
+public class ReaderCommentListActivity extends AppCompatActivity implements ReaderInterfaces.DataLoadedListener {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
@@ -76,6 +80,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
+
+    private ReaderCommentList mOldComments;
+    private boolean mScrollingToNewComments;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
+
+            // copy old comments before purging comments from database
+            mOldComments = ReaderCommentTable.getCommentsForPost(mBlogId, mPostId);
             // we need to re-request comments every time this activity is shown in order to
             // correctly reflect deletions and nesting changes - skipped when there's no
             // connection so we can show existing comments while offline
@@ -307,7 +317,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost(), null);
+            mCommentAdapter = new ReaderCommentAdapter(WPActivityUtils.getThemedContext(this), getPost(), mOldComments);
 
             // adapter calls this when user taps reply icon
             mCommentAdapter.setReplyListener(new ReaderCommentAdapter.RequestReplyListener() {
@@ -323,24 +333,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             }
 
             // adapter calls this when data has been loaded & displayed
-            mCommentAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (!isFinishing()) {
-                        if (isEmpty || !mHasUpdatedComments) {
-                            updateComments(isEmpty, false);
-                        } else if (mRestorePosition > 0) {
-                            mRecyclerView.scrollToPosition(mRestorePosition);
-                        } else if (mCommentId > 0) {
-                            // Scroll to the commentId once if it was passed to this activity
-                            smoothScrollToCommentId(mCommentId);
-                            mCommentId = 0;
-                        }
-                        mRestorePosition = 0;
-                        checkEmptyView();
-                    }
-                }
-            });
+            mCommentAdapter.setDataLoadedListener(this);
 
             // adapter uses this to request more comments from server when it reaches the end and
             // detects that more comments exist on the server than are stored locally
@@ -541,7 +534,117 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     }
 
+    private int getLastVisibleItemPosition(){
+        if (mRecyclerView != null && hasCommentAdapter()) {
+            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findLastVisibleItemPosition();
+        } else {
+            return -1;
+        }
+    }
+
     private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.reader_comments_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_next_new_comment:
+                scrollToNextNewComment();
+                return true;
+            case R.id.menu_prev_new_comment:
+                scrollToPreviousNewComment();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void scrollToNextNewComment(){
+        int lastItemPosition = getLastVisibleItemPosition();
+        ReaderCommentAdapter adapter = getCommentAdapter();
+        int position = adapter.getNextNewCommentPosition(lastItemPosition);
+
+        if( position >= 0 ){
+            mRecyclerView.smoothScrollToPosition(position);
+            return;
+        }
+
+        // no more comments on server
+        if( !adapter.isMoreCommentExist() ){
+            if( adapter.hasNewComments() ){
+                Toast.makeText(this, R.string.reader_toast_no_more_new_comments, Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, R.string.reader_toast_no_new_comments, Toast.LENGTH_SHORT).show();
+            }
+            mRecyclerView.smoothScrollToPosition( adapter.getItemCount() - 1 );
+            return;
+        }
+
+        // not connected to internet we are not able to load new comments
+        if( !NetworkUtils.isNetworkAvailable(this) ){
+            Toast.makeText(this, R.string.reader_toast_not_connected_to_internet, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // has more comments on server
+        // set the scrolling flag such that after downloading comments we can scroll to next new comment
+        mScrollingToNewComments = true;
+        mRecyclerView.smoothScrollToPosition( adapter.getItemCount() - 1 );
+        updateComments(true, true);
+    }
+
+    private void scrollToPreviousNewComment(){
+        int firstItemPosition = getCurrentPosition();
+        ReaderCommentAdapter adapter = getCommentAdapter();
+
+        int position = adapter.getPrevNewCommentPosition(firstItemPosition);
+
+        if( position >= 0 ){
+            mRecyclerView.smoothScrollToPosition(position);
+            return;
+        }
+
+        // not connected to internet we are not able to load new comments
+        if( !NetworkUtils.isNetworkAvailable(this) ){
+            Toast.makeText(this, R.string.reader_toast_not_connected_to_internet, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if( adapter.hasNewComments() ){
+            Toast.makeText(this, R.string.reader_toast_no_more_new_comments, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, R.string.reader_toast_no_new_comments, Toast.LENGTH_SHORT).show();
+        }
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void onDataLoaded(boolean isEmpty) {
+        if (!isFinishing()) {
+            if (isEmpty || !mHasUpdatedComments) {
+                updateComments(isEmpty, false);
+            } else if (mRestorePosition > 0) {
+                mRecyclerView.scrollToPosition(mRestorePosition);
+            } else if (mCommentId > 0) {
+                // Scroll to the commentId once if it was passed to this activity
+                smoothScrollToCommentId(mCommentId);
+                mCommentId = 0;
+            }
+            mRestorePosition = 0;
+            checkEmptyView();
+
+            if( mScrollingToNewComments ){
+                // new comments are loaded because we are scrolling to next new comment
+                mScrollingToNewComments = false;
+                scrollToNextNewComment();
+            }
+        }
     }
 }
