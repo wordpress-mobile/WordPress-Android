@@ -165,8 +165,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
-            // post header isn't shown for blog preview
-            if (!isBlogPreview()) {
+            // post header isn't shown when there's a site header
+            if (!hasSiteHeader()) {
                 // adjust the right padding of the post header to allow right padding of the  "..." icon
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
                 layoutPostHeader.setPadding(
@@ -218,7 +218,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && isBlogPreview()) {
+        if (position == 0 && hasSiteHeader()) {
             // first item is a ReaderBlogInfoView
             return VIEW_TYPE_BLOG_INFO;
         } else if (position == 0 && isTagPreview()) {
@@ -321,9 +321,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
         }
 
-        // when post header is visible (which it shouldn't be for blog preview), the dateline
+        // when post header is visible (which it shouldn't be when there's a site header), the dateline
         // appears within it - otherwise a separate dateline appears below the title
-        if (!isBlogPreview()) {
+        if (!hasSiteHeader()) {
             holder.txtDate.setText(dateLine);
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
@@ -548,10 +548,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasCustomFirstItem() {
-        return isBlogPreview() || isTagPreview();
+        return hasSiteHeader() || isTagPreview();
     }
 
-    private boolean isBlogPreview() {
+    private boolean hasSiteHeader() {
         return getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
