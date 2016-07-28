@@ -120,6 +120,7 @@ public final class AnalyticsTracker {
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
         CREATED_ACCOUNT,
+        CREATED_SITE,
         ACCOUNT_LOGOUT,
         SHARED_ITEM,
         ADDED_SELF_HOSTED_SITE,

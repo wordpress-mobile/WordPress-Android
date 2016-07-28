@@ -299,6 +299,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case CREATED_ACCOUNT:
                 eventName = "account_created";
                 break;
+            case CREATED_SITE:
+                eventName = "site_created";
+                break;
             case SHARED_ITEM:
                 eventName = "item_shared";
                 break;

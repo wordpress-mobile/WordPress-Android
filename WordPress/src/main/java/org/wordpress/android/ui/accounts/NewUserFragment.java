@@ -260,7 +260,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, mUsername, mPassword,
-                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
+                siteUrl, siteName, language, getRestClientUtils(), new ErrorListener(),
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
