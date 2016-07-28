@@ -132,21 +132,6 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
-     * Updates Options for the current blog in background.
-     */
-    public RateLimitedTask mUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
-        protected boolean run() {
-            Blog currentBlog = WordPress.getCurrentBlog();
-            if (currentBlog != null) {
-                new ApiHelper.RefreshBlogContentTask(currentBlog, null).executeOnExecutor(
-                        AsyncTask.THREAD_POOL_EXECUTOR, false);
-                return true;
-            }
-            return false;
-        }
-    };
-
-    /**
      *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
      *  list changed.
      */
@@ -893,9 +878,6 @@ public class WordPress extends MultiDexApplication {
 
                 // Rate limited WPCom blog list Update
                 mUpdateWordPressComBlogList.runIfNotLimited();
-
-                // Rate limited blog options Update
-                mUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
         }
