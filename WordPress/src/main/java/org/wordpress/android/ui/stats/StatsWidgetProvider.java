@@ -66,7 +66,6 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 name = context.getString(R.string.stats_widget_name);
             }
             remoteViews.setTextViewText(R.id.blog_title, name);
-
             remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
             remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
             remoteViews.setTextViewText(R.id.stats_widget_error_text, message);

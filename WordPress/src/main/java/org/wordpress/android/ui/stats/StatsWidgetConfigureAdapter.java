@@ -38,7 +38,6 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
     private static int mBlavatarSz;
 
     private SiteList mSites = new SiteList();
-    private final int mCurrentLocalId;
     private final long mPrimarySiteId;
 
     private final Drawable mSelectedItemBackground;
@@ -79,12 +78,11 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         }
     }
 
-    public StatsWidgetConfigureAdapter(Context context, int currentLocalBlogId, long primarySiteId) {
+    public StatsWidgetConfigureAdapter(Context context, long primarySiteId) {
         super();
 
         setHasStableIds(true);
 
-        mCurrentLocalId = currentLocalBlogId;
         mPrimarySiteId = primarySiteId;
         mInflater = LayoutInflater.from(context);
 
@@ -129,7 +127,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
-        if (site.localId == mCurrentLocalId) {
+        if (site.localId == mPrimarySiteId) {
             holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.layoutContainer.setBackgroundDrawable(null);
