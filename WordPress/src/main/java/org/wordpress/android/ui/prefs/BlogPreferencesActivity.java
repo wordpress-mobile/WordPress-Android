@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -17,22 +18,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
-import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
 
@@ -48,12 +46,9 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     // The blog this activity is managing settings for.
-    private Blog blog;
     private boolean mBlogDeleted;
     private EditText mUsernameET;
     private EditText mPasswordET;
-    private EditText mHttpUsernameET;
-    private EditText mHttpPasswordET;
     private CheckBox mFullSizeCB;
     private CheckBox mScaledCB;
     private Spinner mImageWidthSpinner;
@@ -61,21 +56,31 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        Integer id = getIntent().getIntExtra(ARG_LOCAL_BLOG_ID, -1);
-        blog = WordPress.getBlog(id);
-        if (WordPress.getBlog(id) == null) {
-            Toast.makeText(this, getString(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
 
-        if (blog.isDotcomFlag()) {
+        if (mSite.isWPCom()) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setHomeButtonEnabled(true);
@@ -97,14 +102,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle(StringUtils.unescapeHTML(blog.getNameOrHostUrl()));
+                actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
 
             mUsernameET = (EditText) findViewById(R.id.username);
             mPasswordET = (EditText) findViewById(R.id.password);
-            mHttpUsernameET = (EditText) findViewById(R.id.httpuser);
-            mHttpPasswordET = (EditText) findViewById(R.id.httppassword);
             mScaledImageWidthET = (EditText) findViewById(R.id.scaledImageWidth);
             mFullSizeCB = (CheckBox) findViewById(R.id.fullSizeImage);
             mScaledCB = (CheckBox) findViewById(R.id.scaledImage);
@@ -112,7 +115,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
             // remove blog & credentials apply only to dot org
-            if (blog.isDotcomFlag()) {
+            if (mSite.isWPCom()) {
                 View credentialsRL = findViewById(R.id.sectionContent);
                 credentialsRL.setVisibility(View.GONE);
                 removeBlogButton.setVisibility(View.GONE);
@@ -140,18 +143,17 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (blog.isDotcomFlag() || mBlogDeleted) {
+        if (mSite.isWPCom() || mBlogDeleted) {
             return;
         }
 
-        blog.setUsername(mUsernameET.getText().toString());
-        blog.setPassword(mPasswordET.getText().toString());
-        blog.setHttpuser(mHttpUsernameET.getText().toString());
-        blog.setHttppassword(mHttpPasswordET.getText().toString());
-
-        blog.setFullSizeImage(mFullSizeCB.isChecked());
-        blog.setScaledImage(mScaledCB.isChecked());
-        if (blog.isScaledImage()) {
+        mSite.setUsername(mUsernameET.getText().toString());
+        mSite.setPassword(mPasswordET.getText().toString());
+        // TODO: STORES: setFullSizeImage
+        // mSite.setFullSizeImage(mFullSizeCB.isChecked());
+        // TODO: STORES: setScaledImage
+        // mSite.setScaledImage(mScaledCB.isChecked());
+        if (mScaledCB.isChecked()) {
             EditText scaledImgWidth = (EditText) findViewById(R.id.scaledImageWidth);
 
             boolean error = false;
@@ -178,17 +180,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
                 dialogBuilder.create().show();
                 return;
             } else {
-                blog.setScaledImageWidth(width);
+                // TODO: STORES: setScaledImageWidth
+                // mSite.setScaledImageWidth(width);
             }
         }
-
-        blog.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
-
-        WordPress.wpDB.saveBlog(blog);
-
-        if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId()) {
-            WordPress.currentBlog = blog;
-        }
+        // TODO: STORES: setMaxImageWidth
+        // mSite.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
     }
 
     @Override
@@ -259,26 +256,14 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             }
         });
 
-        mUsernameET.setText(blog.getUsername());
-        mPasswordET.setText(blog.getPassword());
-        mHttpUsernameET.setText(blog.getHttpuser());
-        mHttpPasswordET.setText(blog.getHttppassword());
-        TextView httpUserLabel = (TextView) findViewById(R.id.l_httpuser);
-        if (blog.isDotcomFlag()) {
-            mHttpUsernameET.setVisibility(View.GONE);
-            mHttpPasswordET.setVisibility(View.GONE);
-            httpUserLabel.setVisibility(View.GONE);
-        } else {
-            mHttpUsernameET.setVisibility(View.VISIBLE);
-            mHttpPasswordET.setVisibility(View.VISIBLE);
-            httpUserLabel.setVisibility(View.VISIBLE);
-        }
+        mUsernameET.setText(mSite.getUsername());
+        mPasswordET.setText(mSite.getPassword());
 
-        mFullSizeCB.setChecked(blog.isFullSizeImage());
-        mScaledCB.setChecked(blog.isScaledImage());
-
-        this.mScaledImageWidthET.setText("" + blog.getScaledImageWidth());
-        showScaledSetting(blog.isScaledImage());
+        // TODO: STORES: isFullSizeImage
+        // mFullSizeCB.setChecked(mSite.isFullSizeImage());
+        // mScaledCB.setChecked(mSite.isScaledImage());
+        // mScaledImageWidthET.setText("" + mSite.getScaledImageWidth());
+        // showScaledSetting(mSite.isScaledImage());
 
         CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
         scaledImage.setChecked(false);
@@ -300,8 +285,9 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             }
         });
 
-        int imageWidthPosition = spinnerArrayAdapter.getPosition(blog.getMaxImageWidth());
-        mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);
+        // TODO: STORES: getMaxImageWidth
+        // int imageWidthPosition = spinnerArrayAdapter.getPosition(mSite.getMaxImageWidth());
+        // mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);
         if (mImageWidthSpinner.getSelectedItemPosition() ==
                 0) //Original size selected. Do not show the link to full image.
         {
@@ -330,42 +316,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                removeBlog();
+                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                mBlogDeleted = true;
             }
         });
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
-    }
-
-    private void removeBlog() {
-        if (WordPress.wpDB.deleteBlog(this, blog.getLocalTableBlogId())) {
-            StatsTable.deleteStatsForBlog(this,blog.getLocalTableBlogId()); // Remove stats data
-            AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
-            ToastUtils.showToast(this, R.string.blog_removed_successfully);
-            WordPress.wpDB.deleteLastBlogId();
-            WordPress.currentBlog = null;
-            mBlogDeleted = true;
-            setResult(RESULT_BLOG_REMOVED);
-
-            // TODO: STORES: this shouldn't exist, WPMainActivity should listen for OnSiteChanged() and check
-            // mAccountStore.isSignedIn() there
-            // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
-            if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                EventBus.getDefault().post(new UserSignedOutCompletely());
-            }
-
-            // Checks for stats widgets that were synched with a blog that could be gone now.
-            StatsWidgetProvider.refreshAllWidgets(this, mSiteStore);
-
-            finish();
-        } else {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setTitle(getResources().getText(R.string.error));
-            dialogBuilder.setMessage(getResources().getText(R.string.could_not_remove_account));
-            dialogBuilder.setPositiveButton("OK", null);
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        }
     }
 }

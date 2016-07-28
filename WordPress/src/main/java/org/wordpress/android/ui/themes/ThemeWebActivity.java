@@ -64,7 +64,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     private static void requestAndOpenCurrentTheme(final Activity activity, final SiteModel site) {
-        WordPress.getRestClientUtilsV1_1().getCurrentTheme(String.valueOf(site.getSiteId()),
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(site.getSiteId(),
                 new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {

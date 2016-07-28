@@ -1116,7 +1116,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         final boolean commentStatusShouldRevert = commentWasUnapproved;
-        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
+        WordPress.getRestClientUtils().likeComment(mNote.getSiteId(),
                 String.valueOf(mNote.getCommentId()),
                 mBtnLikeComment.isActivated(),
                 new RestRequest.Listener() {

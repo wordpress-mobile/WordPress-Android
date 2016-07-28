@@ -175,13 +175,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (mFetchingThemes) {
             return;
         }
-        String siteId = getSiteId();
         mFetchingThemes = true;
         int page = 1;
         if (mThemeBrowserFragment != null) {
             page = mThemeBrowserFragment.getPage();
         }
-        WordPress.getRestClientUtilsV1_2().getFreeThemes(siteId, THEME_FETCH_MAX, page, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getFreeThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);
@@ -213,14 +212,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void searchThemes(String searchTerm) {
-        String siteId = getSiteId();
         mFetchingThemes = true;
         int page = 1;
         if (mThemeSearchFragment != null) {
             page = mThemeSearchFragment.getPage();
         }
 
-        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(siteId, THEME_FETCH_MAX, page, searchTerm, new Listener() {
+        WordPress.getRestClientUtilsV1_2().getFreeSearchThemes(mSite.getSiteId(), THEME_FETCH_MAX, page, searchTerm, new
+                Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         new FetchThemesTask().execute(response);
@@ -248,9 +247,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     public void fetchCurrentTheme() {
-        final String siteId = getSiteId();
-
-        WordPress.getRestClientUtilsV1_1().getCurrentTheme(siteId, new Listener() {
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(mSite.getSiteId(), new Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -258,7 +255,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             if (mCurrentTheme != null) {
                                 mCurrentTheme.setIsCurrent(true);
                                 mCurrentTheme.save();
-                                WordPress.wpDB.setCurrentTheme(siteId, mCurrentTheme.getId());
+                                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), mCurrentTheme.getId());
                                 if (mThemeBrowserFragment != null) {
                                     mThemeBrowserFragment.setRefreshing(false);
                                     if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
@@ -277,8 +274,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 }, new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError response) {
-                        String themeId = WordPress.wpDB.getCurrentThemeId(siteId);
-                        mCurrentTheme = WordPress.wpDB.getTheme(siteId, themeId);
+                        String themeId = WordPress.wpDB.getCurrentThemeId(String.valueOf(mSite.getSiteId()));
+                        mCurrentTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), themeId);
                         if (mCurrentTheme != null && mThemeBrowserFragment != null) {
                             if (mThemeBrowserFragment.getCurrentThemeTextView() != null) {
                                 mThemeBrowserFragment.getCurrentThemeTextView().setText(mCurrentTheme.getName());
@@ -302,12 +299,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mThemeSearchFragment = themeSearchFragment;
     }
 
-    private String getSiteId() {
-        return String.valueOf(mSite.getSiteId());
-    }
-
     private void fetchThemesIfNoneAvailable() {
-        if (NetworkUtils.isNetworkAvailable(this) && WordPress.wpDB.getThemeCount(getSiteId()) == 0) {
+        if (NetworkUtils.isNetworkAvailable(this)
+                && WordPress.wpDB.getThemeCount(String.valueOf(mSite.getSiteId())) == 0) {
             fetchThemes();
             //do not interact with theme browser fragment if we are in search mode
             if (!mIsInSearchMode) {
@@ -318,7 +312,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void fetchPurchasedThemes() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(getSiteId(), new Listener() {
+            WordPress.getRestClientUtilsV1_1().getPurchasedThemes(mSite.getSiteId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
                     new FetchThemesTask().execute(response);
@@ -392,14 +386,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void activateTheme(final String themeId) {
-        final String siteId = getSiteId();
         final String newThemeId = themeId;
 
-        WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
+        WordPress.getRestClientUtils().setTheme(mSite.getSiteId(), themeId, new Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                WordPress.wpDB.setCurrentTheme(siteId, newThemeId);
-                Theme newTheme = WordPress.wpDB.getTheme(siteId, newThemeId);
+                WordPress.wpDB.setCurrentTheme(String.valueOf(mSite.getSiteId()), newThemeId);
+                Theme newTheme = WordPress.wpDB.getTheme(String.valueOf(mSite.getSiteId()), newThemeId);
 
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);

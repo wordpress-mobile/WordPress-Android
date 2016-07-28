@@ -125,7 +125,7 @@ public class ActivityLauncher {
         if (site == null) return;
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
-        intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, site.getId());
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }

@@ -44,29 +44,6 @@
                 android:maxLength="@integer/max_length_password"
                 android:singleLine="true" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/l_httpuser"
-                style="@style/WordPressSubHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/http_credentials" />
-
-            <org.wordpress.android.widgets.WPEditText
-                android:id="@+id/httpuser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:maxLength="@integer/max_length_username"
-                android:hint="@string/httpuser" />
-
-            <org.wordpress.android.widgets.WPEditText
-                android:id="@+id/httppassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:maxLength="@integer/max_length_password"
-                android:hint="@string/httppassword" />
         </LinearLayout>
 
         <LinearLayout

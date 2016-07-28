@@ -359,15 +359,12 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted =  site.isAdmin() || !site.isWPCom();
-        // TODO: STORES: implement capabilities in SiteStore
-        // boolean canListPeople = blog.hasCapability(Capability.LIST_USERS);
-        boolean canListPeople = true;
+        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !site.isWPCom();
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
-        mPeopleView.setVisibility(canListPeople ? View.VISIBLE : View.GONE);
+        mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
-        int settingsVisibility = (isAdminOrSelfHosted || canListPeople) ? View.VISIBLE : View.GONE;
+        int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
         mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(site.getUrl(), mBlavatarSz), WPNetworkImageView
