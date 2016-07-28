@@ -32,7 +32,7 @@ import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
+import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -82,7 +82,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_POST        = 0;
     private static final int VIEW_TYPE_XPOST       = 1;
     private static final int VIEW_TYPE_SITE_HEADER = 2;
-    private static final int VIEW_TYPE_TAG_INFO    = 3;
+    private static final int VIEW_TYPE_TAG_HEADER  = 3;
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
@@ -200,11 +200,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class TagInfoViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderTagInfoView mTagInfoView;
-        public TagInfoViewHolder(View itemView) {
+    class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderTagHeaderView mTagHeaderView;
+        public TagHeaderViewHolder(View itemView) {
             super(itemView);
-            mTagInfoView = (ReaderTagInfoView) itemView;
+            mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
     }
 
@@ -221,9 +221,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (position == 0 && hasSiteHeader()) {
             // first item is a ReaderSiteHeaderView
             return VIEW_TYPE_SITE_HEADER;
-        } else if (position == 0 && isTagPreview()) {
+        } else if (position == 0 && hasTagHeader()) {
             // first item is a ReaderTagInfoView
-            return VIEW_TYPE_TAG_INFO;
+            return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
         } else if (getItem(position).isXpost()) {
@@ -240,8 +240,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case VIEW_TYPE_SITE_HEADER:
                 return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
 
-            case VIEW_TYPE_TAG_INFO:
-                return new TagInfoViewHolder(new ReaderTagInfoView(context));
+            case VIEW_TYPE_TAG_HEADER:
+                return new TagHeaderViewHolder(new ReaderTagHeaderView(context));
 
             case VIEW_TYPE_GAP_MARKER:
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
@@ -270,9 +270,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 blogHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
             }
-        } else if (holder instanceof TagInfoViewHolder) {
-            TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
-            tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
+        } else if (holder instanceof TagHeaderViewHolder) {
+            TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
+            tagHolder.mTagHeaderView.setCurrentTag(mCurrentTag);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -552,17 +552,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasCustomFirstItem() {
-        return hasSiteHeader() || isTagPreview();
+        return hasSiteHeader() || hasTagHeader();
     }
 
-    /*
-     * site header appears at the top for blog preview and Discover
-     */
     private boolean hasSiteHeader() {
         return isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
-    private boolean isTagPreview() {
+    private boolean hasTagHeader() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
     }
 
