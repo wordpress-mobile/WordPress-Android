@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.content.DialogInterface;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
@@ -206,7 +205,6 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
         mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
         mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
         changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());
-
     }
 
     @Override
