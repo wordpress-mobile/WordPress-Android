@@ -99,8 +99,9 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
     }
 
-    public static void viewCurrentBlogComments(Context context) {
+    public static void viewCurrentBlogComments(Context context, SiteModel site) {
         Intent intent = new Intent(context, CommentsActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
@@ -113,8 +114,9 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewCurrentBlogPeople(Context context) {
+    public static void viewCurrentBlogPeople(Context context, SiteModel site) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }

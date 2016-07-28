@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -9,13 +10,14 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -26,6 +28,7 @@ import org.xmlrpc.android.XMLRPCFactory;
 import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +68,7 @@ public class CommentActions {
     }
 
     public interface OnCommentActionListener {
-        void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
+        void onModerateComment(SiteModel site, Comment comment, CommentStatus newStatus);
     }
 
     public interface OnNoteCommentActionListener {
@@ -76,12 +79,11 @@ public class CommentActions {
     /**
      * reply to an individual comment
      */
-    static void submitReplyToComment(final int accountId,
+    static void submitReplyToComment(@NonNull final SiteModel site,
                                      final Comment comment,
                                      final String replyText,
                                      final CommentActionListener actionListener) {
-        final Blog blog = WordPress.getBlog(accountId);
-        if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
+        if (comment == null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null) {
                 actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             }
@@ -93,9 +95,7 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
                 Map<String, Object> replyHash = new HashMap<>();
                 replyHash.put("comment_parent", Long.toString(comment.commentID));
                 replyHash.put("content", replyText);
@@ -104,9 +104,9 @@ public class CommentActions {
                 replyHash.put("author_email", "");
 
                 Object[] params = {
-                        blog.getRemoteBlogId(),
-                        blog.getUsername(),
-                        blog.getPassword(),
+                        String.valueOf(site.getSiteId()),
+                        StringUtils.notNullStr(site.getUsername()),
+                        StringUtils.notNullStr(site.getPassword()),
                         Long.toString(comment.postID),
                         replyHash };
 
@@ -278,19 +278,17 @@ public class CommentActions {
     /**
      * change the status of a single comment
      */
-    static void moderateComment(final int accountId,
+    static void moderateComment(final SiteModel site,
                                 final Comment comment,
                                 final CommentStatus newStatus,
                                 final CommentActionListener actionListener) {
         // deletion is handled separately
         if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
-            deleteComment(accountId, comment, actionListener, newStatus.equals(CommentStatus.DELETE));
+            deleteComment(site, comment, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
 
-        final Blog blog = WordPress.getBlog(accountId);
-
-        if (blog==null || comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
+        if (comment==null || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
             if (actionListener != null)
                 actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             return;
@@ -301,10 +299,10 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                final boolean success = ApiHelper.editComment(blog, comment, newStatus);
+                final boolean success = ApiHelper.editComment(site, comment, newStatus);
 
                 if (success) {
-                    CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID, CommentStatus
+                    CommentTable.updateCommentStatus(site.getId(), comment.commentID, CommentStatus
                             .toString(newStatus));
                 }
 
@@ -324,34 +322,33 @@ public class CommentActions {
      * change the status of multiple comments
      * TODO: investigate using system.multiCall to perform a single call to moderate the list
      */
-    static void moderateComments(final int accountId,
+    static void moderateComments(final SiteModel site,
                                  final CommentList comments,
                                  final CommentStatus newStatus,
                                  final OnCommentsModeratedListener actionListener) {
         // deletion is handled separately
         if (newStatus != null && (newStatus.equals(CommentStatus.TRASH) || newStatus.equals(CommentStatus.DELETE))) {
-            deleteComments(accountId, comments, actionListener, newStatus.equals(CommentStatus.DELETE));
+            deleteComments(site, comments, actionListener, newStatus.equals(CommentStatus.DELETE));
             return;
         }
 
-        final Blog blog = WordPress.getBlog(accountId);
-
-        if (blog==null || comments==null || comments.size() == 0 || newStatus==null || newStatus==CommentStatus.UNKNOWN) {
-            if (actionListener != null)
+        if (comments == null || comments.size() == 0 || newStatus == null || newStatus == CommentStatus.UNKNOWN) {
+            if (actionListener != null) {
                 actionListener.onCommentsModerated(new CommentList());
+            }
             return;
         }
 
         final CommentList moderatedComments = new CommentList();
         final String newStatusStr = CommentStatus.toString(newStatus);
-        final int localBlogId = blog.getLocalTableBlogId();
+        final int localBlogId = site.getId();
 
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
                 for (Comment comment: comments) {
-                    if (ApiHelper.editComment(blog, comment, newStatus)) {
+                    if (ApiHelper.editComment(site, comment, newStatus)) {
                         comment.setStatus(newStatusStr);
                         moderatedComments.add(comment);
                     }
@@ -375,12 +372,11 @@ public class CommentActions {
     /**
      * delete (trash) a single comment
      */
-    private static void deleteComment(final int accountId,
-                                        final Comment comment,
-                                        final CommentActionListener actionListener,
-                                        final boolean deletePermanently) {
-        final Blog blog = WordPress.getBlog(accountId);
-        if (blog==null || comment==null) {
+    private static void deleteComment(final SiteModel site,
+                                      final Comment comment,
+                                      final CommentActionListener actionListener,
+                                      final boolean deletePermanently) {
+        if (comment == null) {
             if (actionListener != null)
                 actionListener.onActionResult(new CommentActionResult(CommentActionResult.COMMENT_ID_ON_ERRORS, null));
             return;
@@ -391,13 +387,12 @@ public class CommentActions {
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
 
                 Object[] params = {
-                        blog.getRemoteBlogId(),
-                        blog.getUsername(),
-                        blog.getPassword(),
+                        String.valueOf(site.getSiteId()),
+                        StringUtils.notNullStr(site.getUsername()),
+                        StringUtils.notNullStr(site.getPassword()),
                         comment.commentID,
                         deletePermanently};
 
@@ -413,11 +408,11 @@ public class CommentActions {
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success){
                     if (deletePermanently) {
-                        CommentTable.deleteComment(accountId, comment.commentID);
+                        CommentTable.deleteComment(site.getId(), comment.commentID);
                     }
                     else {
                         // update status in SQLite of successfully moderated comments
-                        CommentTable.updateCommentStatus(blog.getLocalTableBlogId(), comment.commentID,
+                        CommentTable.updateCommentStatus(site.getId(), comment.commentID,
                                 CommentStatus.toString(CommentStatus.TRASH));
                     }
                 }
@@ -437,34 +432,30 @@ public class CommentActions {
     /**
      * delete multiple comments
      */
-    private static void deleteComments(final int accountId,
+    private static void deleteComments(final SiteModel site,
                                        final CommentList comments,
                                        final OnCommentsModeratedListener actionListener,
                                        final boolean deletePermanently) {
-        final Blog blog = WordPress.getBlog(accountId);
-
-        if (blog==null || comments==null || comments.size() == 0) {
-            if (actionListener != null)
+        if (comments == null || comments.size() == 0) {
+            if (actionListener != null) {
                 actionListener.onCommentsModerated(new CommentList());
+            }
             return;
         }
 
         final CommentList deletedComments = new CommentList();
-        final int localBlogId = blog.getLocalTableBlogId();
-        final int remoteBlogId = blog.getRemoteBlogId();
+        final int localBlogId = site.getId();
 
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
                 for (Comment comment: comments) {
                     Object[] params = {
-                            remoteBlogId,
-                            blog.getUsername(),
-                            blog.getPassword(),
+                            String.valueOf(site.getSiteId()),
+                            StringUtils.notNullStr(site.getUsername()),
+                            StringUtils.notNullStr(site.getPassword()),
                             comment.commentID,
                             deletePermanently};
 
@@ -485,7 +476,7 @@ public class CommentActions {
                 }
                 else {
                     // update status in SQLite of successfully moderated comments
-                    CommentTable.updateCommentsStatus(blog.getLocalTableBlogId(), deletedComments,
+                    CommentTable.updateCommentsStatus(localBlogId, deletedComments,
                             CommentStatus.toString(CommentStatus.TRASH));
                 }
 

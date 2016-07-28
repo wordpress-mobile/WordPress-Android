@@ -26,7 +26,11 @@ import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.Dispatcher;
+import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -62,6 +66,8 @@ public class SitePickerActivity extends AppCompatActivity
     private boolean mDidUserSelectSite;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -348,14 +354,14 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSiteClick(SiteRecord site) {
+    public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, site.localId));
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
-            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR, false);
-
+            SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            // Fetch site informations and options
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
             finish();
         }
     }

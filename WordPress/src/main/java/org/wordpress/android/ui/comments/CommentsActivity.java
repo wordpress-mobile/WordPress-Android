@@ -15,11 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
@@ -43,6 +43,11 @@ public class CommentsActivity extends AppCompatActivity
 
     private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
 
+    private SiteModel mSite;
+    public @NonNull SiteModel getSelectedSite() {
+        return mSite;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,18 @@ public class CommentsActivity extends AppCompatActivity
             actionBar.setTitle(R.string.comments);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
         }
 
         if (getIntent() != null && getIntent().hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
@@ -80,7 +97,6 @@ public class CommentsActivity extends AppCompatActivity
 
             mSelectedCommentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
         }
-
     }
 
     @Override
@@ -166,8 +182,7 @@ public class CommentsActivity extends AppCompatActivity
 
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(),
-                commentId);
+        CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(mSite.getId(), commentId);
         ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (listFragment != null) {
@@ -181,7 +196,7 @@ public class CommentsActivity extends AppCompatActivity
      * reader detail fragment
      */
     @Override
-    public void onPostClicked(Note note, int remoteBlogId, int postId) {
+    public void onPostClicked(Note note, long remoteBlogId, int postId) {
         showReaderFragment(remoteBlogId, postId);
     }
 
@@ -208,10 +223,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        // https://code.google.com/p/android/issues/detail?id=19917
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
 
         // retain the id of the highlighted and selected comments
         if (mSelectedCommentId != 0 && hasDetailFragment()) {
@@ -234,7 +246,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final int accountId, final Comment comment,
+    public void onModerateComment(final SiteModel site, final Comment comment,
                                   final CommentStatus newStatus) {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
@@ -244,7 +256,7 @@ public class CommentsActivity extends AppCompatActivity
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().setCommentIsModerating(comment.commentID, true);
             getListFragment().updateEmptyView();
-            CommentActions.moderateComment(accountId, comment, newStatus,
+            CommentActions.moderateComment(site, comment, newStatus,
                     new CommentActions.CommentActionListener() {
                 @Override
                 public void onActionResult(CommentActionResult result) {
@@ -265,13 +277,16 @@ public class CommentsActivity extends AppCompatActivity
                     }
                 }
             });
-        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETE) {
+        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
+                || newStatus == CommentStatus.DELETE) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
             getListFragment().updateEmptyView();
 
-            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently)  );
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
+                    newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) :
+                            getString(R.string.comment_deleted_permanently)  );
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -296,7 +311,8 @@ public class CommentsActivity extends AppCompatActivity
                     }
                     mTrashedComments.remove(comment);
 
-                    CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
+                    CommentActions.moderateComment(mSite, comment, newStatus,
+                            new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(CommentActionResult result) {
                             if (isFinishing() || !hasListFragment()) {

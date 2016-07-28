@@ -14,14 +14,17 @@ import java.util.List;
 
 public class SuggestionUtils {
 
-    public static SuggestionAdapter setupSuggestions(final int remoteBlogId, Context context, SuggestionServiceConnectionManager serviceConnectionManager) {
-        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(Integer.toString(remoteBlogId));
+    public static SuggestionAdapter setupSuggestions(final long remoteBlogId, Context context,
+                                                     SuggestionServiceConnectionManager serviceConnectionManager) {
+        // TODO: STORES: SiteStore call needed here
+        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(Long.toString(remoteBlogId));
         boolean isDotComFlag = (blog != null && blog.isDotcomFlag());
 
         return SuggestionUtils.setupSuggestions(remoteBlogId, context, serviceConnectionManager, isDotComFlag);
     }
 
-    public static SuggestionAdapter setupSuggestions(final int remoteBlogId, Context context, SuggestionServiceConnectionManager serviceConnectionManager, boolean isDotcomFlag) {
+    public static SuggestionAdapter setupSuggestions(final long remoteBlogId, Context context,
+                                                     SuggestionServiceConnectionManager serviceConnectionManager, boolean isDotcomFlag) {
         if (!isDotcomFlag) {
             return null;
         }

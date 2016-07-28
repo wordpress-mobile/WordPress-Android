@@ -7,9 +7,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class BlogIdentifier {
     private String mXmlRpcUrl;
-    private int mBlogId;
+    private long mBlogId;
 
-    public BlogIdentifier(String mXmlRpcUrl, int mBlogId) {
+    public BlogIdentifier(String mXmlRpcUrl, long mBlogId) {
         this.mXmlRpcUrl = mXmlRpcUrl;
         this.mBlogId = mBlogId;
     }
@@ -22,11 +22,11 @@ public class BlogIdentifier {
         this.mXmlRpcUrl = mXmlRpcUrl;
     }
 
-    public int getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    public void setBlogId(int mBlogId) {
+    public void setBlogId(long mBlogId) {
         this.mBlogId = mBlogId;
     }
 

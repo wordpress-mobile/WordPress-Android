@@ -16,25 +16,18 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.BlogIdentifier;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats.StatsWidgetProvider;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
@@ -47,7 +40,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -55,8 +47,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.SSLHandshakeException;
-
-import de.greenrobot.event.EventBus;
 
 public class ApiHelper {
 
@@ -230,152 +220,6 @@ public class ApiHelper {
     }
 
     /**
-     * Task to refresh blog level information (WP version number) and stuff
-     * related to the active theme (available post types, recent comments, etc).
-     */
-    public static class RefreshBlogContentTask extends HelperAsyncTask<Boolean, Void, Boolean> {
-        private static HashSet<BlogIdentifier> refreshedBlogs = new HashSet<BlogIdentifier>();
-        private Blog mBlog;
-        private BlogIdentifier mBlogIdentifier;
-        private GenericCallback mCallback;
-
-        public RefreshBlogContentTask(Blog blog, GenericCallback callback) {
-            if (blog == null) {
-                cancel(true);
-                return;
-            }
-
-            mBlogIdentifier = new BlogIdentifier(blog.getUrl(), blog.getRemoteBlogId());
-            if (refreshedBlogs.contains(mBlogIdentifier)) {
-                cancel(true);
-            } else {
-                refreshedBlogs.add(mBlogIdentifier);
-            }
-
-            mBlog = blog;
-            mCallback = callback;
-        }
-
-        private void updateBlogAdmin(Map<String, Object> userInfos) {
-            if (userInfos.containsKey("roles") && ( userInfos.get("roles") instanceof Object[])) {
-                boolean isAdmin = false;
-                Object[] userRoles = (Object[])userInfos.get("roles");
-                for (int i = 0; i < userRoles.length; i++) {
-                    if (userRoles[i].toString().equals("administrator")) {
-                        isAdmin = true;
-                        break;
-                    }
-                }
-                if (mBlog.bsetAdmin(isAdmin)) {
-                    WordPress.wpDB.saveBlog(mBlog);
-                    EventBus.getDefault().post(new CoreEvents.BlogListChanged());
-                }
-            }
-        }
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            boolean commentsOnly = params[0];
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
-
-            boolean alreadyTrackedAsJetpackBlog = mBlog.isJetpackPowered();
-
-            if (!commentsOnly) {
-                // check the WP number if self-hosted
-                Map<String, String> hPost = ApiHelper.blogOptionsXMLRPCParameters;
-
-                Object[] vParams = {mBlog.getRemoteBlogId(),
-                                    mBlog.getUsername(),
-                                    mBlog.getPassword(),
-                                    hPost};
-                Object versionResult = null;
-                try {
-                    versionResult = client.call(Method.GET_OPTIONS, vParams);
-                } catch (ClassCastException cce) {
-                    setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-                    return false;
-                } catch (Exception e) {
-                    setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                    return false;
-                }
-
-                if (versionResult != null) {
-                    Map<?, ?> blogOptions = (HashMap<?, ?>) versionResult;
-                    ApiHelper.updateBlogOptions(mBlog, blogOptions);
-                }
-
-                if (mBlog.isJetpackPowered() && !alreadyTrackedAsJetpackBlog) {
-                    // blog just added to the app, or the value of jetpack_client_id has just changed
-                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, mBlog);
-                }
-
-                // get theme post formats
-                new GetPostFormatsTask().execute(mBlog);
-                // TODO: STORES:
-//
-//                //Update Stats widgets if necessary
-//                String currentBlogID = String.valueOf(mBlog.getRemoteBlogId());
-//                if (StatsWidgetProvider.isBlogDisplayedInWidget(mBlog.getRemoteBlogId())) {
-//                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + currentBlogID + " is NOT displayed in a widget. Blog Refresh Task doesn't call an update of the widget.");
-//                    // String currentDate = StatsUtils.getCurrentDateTZ(mSite());
-//                    // StatsWidgetProvider.enqueueStatsRequestForBlog(WordPress.getContext(), currentBlogID,
-//                    // currentDate);
-//                }
-            }
-
-            // Check if user is an admin
-            Object[] userParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword()};
-            try {
-                Map<String, Object> userInfos = (HashMap<String, Object>) client.call(Method.GET_PROFILE, userParams);
-                updateBlogAdmin(userInfos);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-                return false;
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-
-            // refresh the comments
-            Map<String, Object> hPost = new HashMap<String, Object>();
-            hPost.put("number", 30);
-            Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), hPost};
-            try {
-                ApiHelper.refreshComments(mBlog, commentParams, new DatabasePersistCallback() {
-                    @Override
-                    public void onDataReadyToSave(List list) {
-                        int localBlogId = mBlog.getLocalTableBlogId();
-                        CommentTable.deleteCommentsForBlog(localBlogId);
-                        CommentTable.saveComments(localBlogId, (CommentList)list);
-                    }
-                });
-            } catch (Exception e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-                return false;
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (mCallback != null) {
-                if (success) {
-                    mCallback.onSuccess();
-                } else {
-                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
-                }
-            }
-            refreshedBlogs.remove(mBlogIdentifier);
-        }
-    }
-
-    /**
      * request deleted comments for passed blog and remove them from local db
      * @param blog  blog to check
      * @return count of comments that were removed from db
@@ -425,13 +269,10 @@ public class ApiHelper {
         return numDeleted;
     }
 
-    public static CommentList refreshComments(Blog blog, Object[] commentParams, DatabasePersistCallback dbCallback)
+    public static CommentList refreshComments(SiteModel site, Object[] commentParams,
+                                              DatabasePersistCallback dbCallback)
             throws XMLRPCException, IOException, XmlPullParserException {
-        if (blog == null) {
-            return null;
-        }
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                blog.getHttppassword());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
         Object[] result;
         result = (Object[]) client.call(Method.GET_COMMENTS, commentParams);
 
@@ -1088,13 +929,8 @@ public class ApiHelper {
         }
     }
 
-    public static boolean editComment(Blog blog, Comment comment, CommentStatus newStatus) {
-        if (blog == null) {
-            return false;
-        }
-
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                blog.getHttppassword());
+    public static boolean editComment(SiteModel site, Comment comment, CommentStatus newStatus) {
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
 
         Map<String, String> postHash = new HashMap<>();
         postHash.put("status", CommentStatus.toString(newStatus));
@@ -1103,11 +939,13 @@ public class ApiHelper {
         postHash.put("author_url", comment.getAuthorUrl());
         postHash.put("author_email", comment.getAuthorEmail());
 
-        Object[] params = { blog.getRemoteBlogId(),
-                blog.getUsername(),
-                blog.getPassword(),
+        Object[] params = {
+                String.valueOf(site.getSiteId()),
+                StringUtils.notNullStr(site.getUsername()),
+                StringUtils.notNullStr(site.getPassword()),
                 Long.toString(comment.commentID),
-                postHash};
+                postHash
+        };
 
         try {
             Object result = client.call(Method.EDIT_COMMENT, params);
@@ -1115,7 +953,7 @@ public class ApiHelper {
         } catch (XMLRPCFault xmlrpcFault) {
             if (xmlrpcFault.getFaultCode() == 500) {
                 // let's check whether the comment is already marked as _newStatus_
-                CommentStatus remoteStatus = getCommentStatus(blog, comment);
+                CommentStatus remoteStatus = getCommentStatus(site, comment);
                 if (remoteStatus != null && remoteStatus.equals(newStatus)) {
                     // Happy days! Remote is already marked as the desired status
                     return true;
@@ -1139,18 +977,19 @@ public class ApiHelper {
      * @param comment the comment to fetch its status
      * @return the status of the comment on the server, null if error
      */
-    public static @Nullable CommentStatus getCommentStatus(Blog blog, Comment comment) {
-        if (blog == null || comment == null) {
+    public static @Nullable CommentStatus getCommentStatus(SiteModel site, Comment comment) {
+        if (site == null || comment == null) {
             return null;
         }
 
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                blog.getHttppassword());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
 
-        Object[] params = { blog.getRemoteBlogId(),
-                blog.getUsername(),
-                blog.getPassword(),
-                Long.toString(comment.commentID)};
+        Object[] params = {
+                String.valueOf(site.getSiteId()),
+                StringUtils.notNullStr(site.getUsername()),
+                StringUtils.notNullStr(site.getPassword()),
+                Long.toString(comment.commentID)
+        };
 
         try {
             Map<?, ?> contentHash = (Map<?, ?>) client.call(Method.GET_COMMENT, params);

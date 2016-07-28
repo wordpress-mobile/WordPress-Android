@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -17,18 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -140,7 +141,7 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mAdapter = new CommentAdapter(getActivity(), WordPress.getCurrentLocalTableBlogId());
+            mAdapter = new CommentAdapter(getActivity(), getSelectedSite().getId());
             mAdapter.setOnCommentPressedListener(pressedListener);
             mAdapter.setOnDataLoadedListener(dataLoadedListener);
             mAdapter.setOnLoadMoreListener(loadMoreListener);
@@ -364,7 +365,7 @@ public class CommentsListFragment extends Fragment {
         };
 
         CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(),
+                getSelectedSite(),
                 updateComments,
                 newStatus,
                 listener);
@@ -439,8 +440,7 @@ public class CommentsListFragment extends Fragment {
         if (deletePermanently){
             newStatus = CommentStatus.DELETE;
         }
-        CommentActions.moderateComments(
-                WordPress.getCurrentLocalTableBlogId(), selectedComments, newStatus, listener);
+        CommentActions.moderateComments(getSelectedSite(), selectedComments, newStatus, listener);
     }
 
     void loadComments() {
@@ -537,12 +537,6 @@ public class CommentsListFragment extends Fragment {
                 return null;
             }
 
-            final Blog blog = WordPress.getCurrentBlog();
-            if (blog == null) {
-                mErrorType = ErrorType.INVALID_CURRENT_BLOG;
-                return null;
-            }
-
             Map<String, Object> hPost = new HashMap<>();
             if (mIsLoadingMore) {
                 int numExisting = getAdapter().getItemCount();
@@ -559,15 +553,18 @@ public class CommentsListFragment extends Fragment {
                 }
             }
 
-            Object[] params = { blog.getRemoteBlogId(),
-                                blog.getUsername(),
-                                blog.getPassword(),
-                                hPost };
+            SiteModel site = getSelectedSite();
+
+            Object[] params = {
+                    String.valueOf(site.getSiteId()),
+                    StringUtils.notNullStr(site.getUsername()),
+                    StringUtils.notNullStr(site.getPassword()),
+                    hPost};
             try {
-                return ApiHelper.refreshComments(blog, params, new ApiHelper.DatabasePersistCallback() {
+                return ApiHelper.refreshComments(getSelectedSite(), params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
-                        int localBlogId = blog.getLocalTableBlogId();
+                        int localBlogId = getSelectedSite().getId();
                         CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
                         CommentTable.saveComments(localBlogId, (CommentList)list);
                     }
@@ -739,4 +736,12 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof CommentsActivity) {
+            return ((CommentsActivity) getActivity()).getSelectedSite();
+        } else {
+            // Crash
+            throw new AssertionError("Wrong fragment's parent activity");
+        }
+    }
 }
