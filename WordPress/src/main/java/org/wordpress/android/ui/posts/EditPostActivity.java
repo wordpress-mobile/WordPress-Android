@@ -1755,14 +1755,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private ArrayList<MediaSource> blogImageMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceWPImages());
+        imageMediaSources.add(new MediaSourceWPImages(mSite));
 
         return imageMediaSources;
     }
 
     private ArrayList<MediaSource> blogVideoMediaSelectionSources() {
         ArrayList<MediaSource> imageMediaSources = new ArrayList<>();
-        imageMediaSources.add(new MediaSourceWPVideos());
+        imageMediaSources.add(new MediaSourceWPVideos(mSite));
 
         return imageMediaSources;
     }

@@ -14,9 +14,8 @@ import android.widget.ImageView;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -30,24 +29,28 @@ public class MediaSourceWPVideos implements MediaSource {
 
     private OnMediaChange mListener;
     private List<MediaItem> mMediaItems = new ArrayList<>();
+    private SiteModel mSite;
 
-    public MediaSourceWPVideos() {
+    public MediaSourceWPVideos(SiteModel site) {
+        mSite = site;
+    }
+
+    public MediaSourceWPVideos(Parcel parcel) {
+        mSite = (SiteModel) parcel.readSerializable();
     }
 
     @Override
     public void gather(Context context) {
-        Blog blog = WordPress.getCurrentBlog();
-
-        if (blog != null) {
-            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(String.valueOf(blog.getLocalTableBlogId()));
+        if (mSite != null) {
+            Cursor videoCursor = WordPressMediaUtils.getWordPressMediaVideos(String.valueOf(mSite.getId()));
 
             if (videoCursor != null) {
                 addWordPressVideosFromCursor(videoCursor);
                 videoCursor.close();
-            } else if (mListener != null){
+            } else if (mListener != null) {
                 mListener.onMediaLoaded(false);
             }
-        } else if (mListener != null){
+        } else if (mListener != null) {
             mListener.onMediaLoaded(false);
         }
     }
@@ -190,7 +193,7 @@ public class MediaSourceWPVideos implements MediaSource {
     public static final Creator<MediaSourceWPVideos> CREATOR =
             new Creator<MediaSourceWPVideos>() {
                 public MediaSourceWPVideos createFromParcel(Parcel in) {
-                    return new MediaSourceWPVideos();
+                    return new MediaSourceWPVideos(in);
                 }
 
                 public MediaSourceWPVideos[] newArray(int size) {
@@ -205,5 +208,6 @@ public class MediaSourceWPVideos implements MediaSource {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(mSite);
     }
 }
