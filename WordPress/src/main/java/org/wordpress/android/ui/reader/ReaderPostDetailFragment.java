@@ -908,7 +908,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.hasAuthorName()) {
                 txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else if (mPost.hasBlogName()) {
-                txtDateline.setText(mPost.getBlogName() +  ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
+                txtDateline.setText(mPost.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else {
                 txtDateline.setText(timestamp);
             }

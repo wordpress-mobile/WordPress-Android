@@ -319,7 +319,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post.hasAuthorName()) {
             holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else if (post.hasBlogName()) {
-            holder.txtDateline.setText(post.getBlogName() +  ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
+            holder.txtDateline.setText(post.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else {
             holder.txtDateline.setText(timestamp);
         }
