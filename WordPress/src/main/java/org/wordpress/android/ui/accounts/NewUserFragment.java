@@ -291,6 +291,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
                         // sign in screen
                         AnalyticsUtils.refreshMetadata(mUsername, email);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
                         // Save credentials to smart lock
                         SmartLockHelper smartLockHelper = getSmartLockHelper();
                         if (smartLockHelper != null) {
