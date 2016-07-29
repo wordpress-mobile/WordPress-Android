@@ -21,12 +21,14 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.helpers.Version;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -310,11 +312,11 @@ public class WordPressMediaUtils {
      * @param cursor the media file cursor
      * @param width width to use for photon request (if applicable)
      */
-    public static String getNetworkThumbnailUrl(Cursor cursor, int width) {
+    public static String getNetworkThumbnailUrl(Cursor cursor, SiteModel site, int width) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
 
         // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if ((WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable())) {
+        if (SiteUtils.isPhotonCapable(site)) {
             String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
             if (imageURL != null) {
                 thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);

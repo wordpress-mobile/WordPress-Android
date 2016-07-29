@@ -27,6 +27,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -53,6 +54,8 @@ public class MediaGridAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
     private ImageLoader mImageLoader;
     private Context mContext;
+    private SiteModel mSite;
+
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<String> mSelectedItems;
 
@@ -70,9 +73,10 @@ public class MediaGridAdapter extends CursorAdapter {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, SiteModel site, Cursor c, int flags, ImageLoader imageLoader) {
         super(context, c, flags);
         mContext = context;
+        mSite = site;
         mSelectedItems = new ArrayList<String>();
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
@@ -178,7 +182,7 @@ public class MediaGridAdapter extends CursorAdapter {
         if (isLocalFile) {
             loadLocalImage(cursor, holder.imageView);
         } else {
-            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mGridItemWidth);
+            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, mGridItemWidth);
             WordPressMediaUtils.loadNetworkImage(thumbUrl, (NetworkImageView) holder.imageView, mImageLoader);
         }
 

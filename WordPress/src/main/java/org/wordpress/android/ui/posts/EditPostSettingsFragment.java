@@ -388,7 +388,7 @@ public class EditPostSettingsFragment extends Fragment
                     int padding = DisplayUtils.dpToPx(getActivity(), 16);
                     int imageWidth = (maxWidth - padding);
 
-                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, imageWidth);
+                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, getSelectedSite(), imageWidth);
                     WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
                 }
 
