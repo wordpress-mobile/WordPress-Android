@@ -19,6 +19,8 @@ public class ReaderConstants {
 
     public static final String HTTP_REFERER_URL = "https://wordpress.com";  // referrer url for reader posts opened in a browser
 
+    public static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
+
     // intent arguments / keys
     static final String ARG_TAG               = "tag";
     static final String ARG_BLOG_ID           = "blog_id";
