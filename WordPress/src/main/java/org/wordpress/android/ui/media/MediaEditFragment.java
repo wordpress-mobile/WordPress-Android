@@ -80,7 +80,8 @@ public class MediaEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mImageLoader = MediaImageLoader.getInstance();
+        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        mImageLoader = WordPress.imageLoader;
 
         // retain this fragment across configuration changes
         setRetainInstance(true);

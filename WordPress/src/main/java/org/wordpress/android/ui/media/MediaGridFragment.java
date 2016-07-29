@@ -144,7 +144,8 @@ public class MediaGridFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFiltersText = new String[Filter.values().length];
-        mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, MediaImageLoader.getInstance());
+        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter = new MediaGridAdapter(getActivity(), null, 0, WordPress.imageLoader);
         mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
@@ -683,7 +684,8 @@ public class MediaGridFragment extends Fragment
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
-        mGridAdapter.setImageLoader(MediaImageLoader.getInstance());
+        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter.setImageLoader(WordPress.imageLoader);
         mGridAdapter.changeCursor(null);
         resetSpinnerAdapter();
         mHasRetrievedAllMedia = false;

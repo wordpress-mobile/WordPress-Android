@@ -111,16 +111,6 @@ public class VolleyUtils {
         requestQueue.cancelAll(filter);
     }
 
-    /*
-     * Return true if the blog is protected with HTTP Basic Auth
-     */
-    public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
-        if (currentBlog.hasValidHTTPAuthCredentials())
-            return true;
-
-        return false;
-    }
-
     public static HttpStack getHTTPClientStack(final Context ctx) {
         return getHTTPClientStack(ctx, null);
     }

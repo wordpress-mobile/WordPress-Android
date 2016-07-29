@@ -43,8 +43,9 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
         }
 
+        // TOOD: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true,
-                MediaImageLoader.getInstance());
+                WordPress.imageLoader);
 
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 
