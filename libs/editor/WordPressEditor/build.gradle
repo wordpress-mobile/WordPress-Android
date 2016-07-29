@@ -19,7 +19,7 @@ android {
     publishNonDefault true
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         versionCode 13
@@ -45,10 +45,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'org.wordpress:utils:1.10.0'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+    compile 'org.wordpress:utils:1.11.0'
 
     // Test libraries
     testCompile 'junit:junit:4.11'
