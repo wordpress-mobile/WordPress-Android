@@ -225,7 +225,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // track successful settings screen access
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED, mSite);
 
         // setup state to fetch remote settings
         mShouldFetch = true;
@@ -382,16 +382,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         // More preference selected, style the Discussion screen
         if (preference == mMorePreference) {
             // track user accessing the full Discussion settings screen
-            AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS);
+            AnalyticsUtils.trackWithSiteDetails(
+                    AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED_MORE_SETTINGS, mSite);
 
             return setupMorePreferenceScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (dialog == null) return false;
 
-            AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED, mSite);
 
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             String title = getString(R.string.start_over);
@@ -416,8 +415,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mStartOverPref) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
+                    mSite);
             HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER,
                     mAccountStore.getAccount().getUserName());
         } else if (preference == mCloseAfterPref) {
@@ -431,8 +430,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mExportSitePref) {
             showExportContentDialog();
         } else if (preference == mDeleteSitePref) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
         } else {
             return false;
@@ -552,8 +550,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 if (hintObj.hasHint()) {
                     HashMap<String, Object> properties = new HashMap<>();
                     properties.put("hint_shown", hintObj.getHint());
-                    AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SITE_SETTINGS_HINT_TOAST_SHOWN, properties);
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_HINT_TOAST_SHOWN, mSite,
+                            properties);
                     ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
                 }
                 return true;
@@ -756,16 +754,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.site_settings_export_content_title, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_REQUESTED);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_REQUESTED, mSite);
                 exportSite();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
 
         builder.show();
-        AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED, mSite);
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
@@ -780,8 +776,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void requestPurchasesForDeletionCheck() {
         final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_purchases), true, false);
-        AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED, mSite);
         WordPress.getRestClientUtils().getSitePurchases(mSite.getSiteId(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -822,8 +817,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.show_purchases, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED);
+                AnalyticsUtils.trackWithSiteDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED, mSite);
                 WPWebViewActivity.openUrlByUsingWPCOMCredentials(getActivity(), WORDPRESS_PURCHASES_URL,
                         mAccountStore.getAccount().getUserName());
             }
@@ -835,8 +830,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             }
         });
         builder.show();
-        AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN, mSite);
     }
 
     private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
@@ -861,6 +855,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         deleteSiteDialogFragment.setArguments(args);
         deleteSiteDialogFragment.setTargetFragment(this, DELETE_SITE_REQUEST_CODE);
         deleteSiteDialogFragment.show(getFragmentManager(), DELETE_SITE_TAG);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
     }
 
     private void showCloseAfterDialog() {
@@ -1104,8 +1099,8 @@ public class SiteSettingsFragment extends PreferenceFragment
 
                 HashMap<String, Object> properties = new HashMap<>();
                 properties.put("num_items_deleted", checkedItems.size());
-                AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
+                AnalyticsUtils.trackWithSiteDetails(
+                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, mSite, properties);
 
                 ListAdapter adapter = list.getAdapter();
                 List<String> itemsToRemove = new ArrayList<>();
@@ -1147,8 +1142,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                                     R.layout.wp_simple_list_item_1,
                                     mEditingList));
                             mSiteSettings.saveSettings();
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
+                            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM,
+                                    mSite);
                         }
                     }
                 });
@@ -1251,8 +1246,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         @Override
                         public void onResponse(JSONObject response) {
                             if (isAdded()) {
-                                AnalyticsUtils.trackWithCurrentBlogDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK);
+                                AnalyticsUtils.trackWithSiteDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
                                 dismissProgressDialog(progressDialog);
                                 Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
                             }
@@ -1263,8 +1258,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                             if (isAdded()) {
                                 HashMap<String, Object> errorProperty = new HashMap<>();
                                 errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
-                                AnalyticsUtils.trackWithCurrentBlogDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR, errorProperty);
+                                AnalyticsUtils.trackWithSiteDetails(
+                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR,
+                                        mSite, errorProperty);
                                 dismissProgressDialog(progressDialog);
                             }
                         }
@@ -1275,13 +1271,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void deleteSite() {
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.delete_site_progress), true, false);
-            AnalyticsUtils.trackWithCurrentBlogDetails(
-                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_REQUESTED, mSite);
             WordPress.getRestClientUtils().deleteSite(mSite.getSiteId(), new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_OK);
+                            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat
+                                    .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
                             progressDialog.dismiss();
                             mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
                         }
@@ -1290,8 +1285,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                         public void onErrorResponse(VolleyError error) {
                             HashMap<String, Object> errorProperty = new HashMap<>();
                             errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, errorProperty);
+                            AnalyticsUtils.trackWithSiteDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR, mSite,
+                                    errorProperty);
                             dismissProgressDialog(progressDialog);
                             handleDeleteSiteError();
                         }

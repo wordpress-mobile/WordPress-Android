@@ -813,10 +813,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
 
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
-                WordPress.getBlog(getLocalTableBlogID())
-        );
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
+                mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
 
     public enum OverviewLabel {

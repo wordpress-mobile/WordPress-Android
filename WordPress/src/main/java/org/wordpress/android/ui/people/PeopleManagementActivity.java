@@ -449,7 +449,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             personDetailFragment.setPersonDetails(personID, localTableBlogID);
         }
         if (!personDetailFragment.isAdded()) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PERSON);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PERSON, mSite);
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
@@ -483,7 +483,7 @@ public class PeopleManagementActivity extends AppCompatActivity
                 new PeopleUtils.UpdateUserCallback() {
             @Override
             public void onSuccess(Person person) {
-                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_UPDATED);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_UPDATED, mSite);
                 PeopleTable.saveUser(person);
                 refreshOnScreenFragmentDetails();
             }
@@ -543,7 +543,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             @Override
             public void onSuccess(long personID, int localTableBlogId) {
                 if (personType == Person.PersonType.USER) {
-                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.PERSON_REMOVED);
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PERSON_REMOVED, mSite);
                 }
 
                 // remove the person from db, navigate back to list fragment and refresh it

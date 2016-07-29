@@ -444,7 +444,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, remoteBlogID);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, site);
         AnalyticsTracker.flush();
 
         // Store the association between the widget ID and the remote blog id into prefs.

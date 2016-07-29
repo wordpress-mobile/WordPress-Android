@@ -8,7 +8,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
@@ -61,14 +60,6 @@ public class AnalyticsUtils {
         return text.split("\\s+").length;
     }
 
-    // TODO: STORES: kill these methods
-    public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat) {
-        trackWithCurrentBlogDetails(stat, null);
-    }
-    public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat, Map<String, Object> properties) {
-        trackWithBlogDetails(stat, WordPress.getCurrentBlog(), properties);
-    }
-
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
      *
@@ -76,13 +67,9 @@ public class AnalyticsUtils {
      * @param blog The blog object
      *
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, SiteModel site) {
-        trackWithBlogDetails(stat, site, null);
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site) {
+        trackWithSiteDetails(stat, site, null);
     }
-
-    // TODO: STORES: do nothing - kill these methods
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site) {}
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog site, Map<String, Object> properties) {}
 
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
@@ -92,8 +79,8 @@ public class AnalyticsUtils {
      * @param properties Properties to attach to the event
      *
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, SiteModel site, Map<String, Object>
-            properties) {
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
+                                            Map<String, Object> properties) {
         if (site == null || (!site.isWPCom() && !site.isJetpack())) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
@@ -122,28 +109,12 @@ public class AnalyticsUtils {
      * @param blogID The REMOTE blog ID.
      *
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Long blogID) {
-        Map<String, Object> properties =  new HashMap<>();
-        if (blogID != null) {
+    public static void trackWithSiteId(AnalyticsTracker.Stat stat, long blogID) {
+        Map<String, Object> properties = new HashMap<>();
+        if (blogID != 0) {
             properties.put(BLOG_ID_KEY, blogID);
         }
         AnalyticsTracker.track(stat, properties);
-    }
-
-    /**
-     * Bump Analytics and add blog_id into properties
-     *
-     * @param stat The Stat to bump
-     * @param blogID The REMOTE blog ID.
-     *
-     */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, String blogID) {
-        try {
-            Long remoteID = Long.parseLong(blogID);
-            trackWithBlogDetails(stat, remoteID);
-        } catch (NumberFormatException err) {
-            AnalyticsTracker.track(stat);
-        }
     }
 
     /**

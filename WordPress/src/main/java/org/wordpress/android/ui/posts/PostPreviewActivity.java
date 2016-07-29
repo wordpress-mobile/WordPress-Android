@@ -273,10 +273,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
             if (!mPost.isLocalDraft()) {
-                AnalyticsUtils.trackWithBlogDetails(
-                        AnalyticsTracker.Stat.EDITOR_UPDATED_POST,
-                        WordPress.getBlog(mPost.getLocalTableBlogId())
-                );
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite);
             }
 
             if (mPost.getStatusEnum() == PostStatus.DRAFT) {

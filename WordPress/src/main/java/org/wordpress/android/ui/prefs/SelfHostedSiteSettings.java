@@ -110,8 +110,8 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
                             }
                         }
                     }
-                    AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                    AnalyticsUtils.trackWithSiteDetails(
+                            AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                 }
             }
 

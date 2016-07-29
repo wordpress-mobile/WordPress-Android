@@ -179,7 +179,7 @@ public class StatsActivity extends AppCompatActivity
             if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
                 StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
                 if (from == StatsLaunchedFrom.STATS_WIDGET) {
-                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, mSite);
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, mSite);
                 }
             }
         }
@@ -262,7 +262,7 @@ public class StatsActivity extends AppCompatActivity
 
         // Track usage here
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
             trackStatsAnalytics();
         }
     }
@@ -271,19 +271,19 @@ public class StatsActivity extends AppCompatActivity
         // Track usage here
         switch (mCurrentTimeframe) {
             case INSIGHTS:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, mSite);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, mSite);
                 break;
             case DAY:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, mSite);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, mSite);
                 break;
             case WEEK:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, mSite);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, mSite);
                 break;
             case MONTH:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, mSite);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, mSite);
                 break;
             case YEAR:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, mSite);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, mSite);
                 break;
         }
     }

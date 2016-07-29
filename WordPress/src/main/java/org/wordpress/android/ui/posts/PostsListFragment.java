@@ -439,7 +439,7 @@ public class PostsListFragment extends Fragment
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
-        PostUtils.trackSavePostAnalytics(post);
+        PostUtils.trackSavePostAnalytics(post, getSelectedSite());
     }
 
     /*

@@ -107,8 +107,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                     properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
                                 }
                             }
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                            AnalyticsUtils.trackWithSiteDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
                     }
                 }, new RestRequest.ErrorListener() {

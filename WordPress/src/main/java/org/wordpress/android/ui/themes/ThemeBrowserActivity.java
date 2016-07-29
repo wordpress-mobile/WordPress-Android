@@ -78,7 +78,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
             mThemeBrowserFragment = new ThemeBrowserFragment();
             mThemeSearchFragment = new ThemeSearchFragment();
             addBrowserFragment();
@@ -396,7 +396,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
-                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, themeProperties);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_CHANGED_THEME, mSite, themeProperties);
 
                 if (!isFinishing()) {
                     showAlertDialogOnNewSettingNewTheme(newTheme);
@@ -443,16 +443,20 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
                 switch (type) {
                     case PREVIEW:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE,
+                                mSite, themeProperties);
                         break;
                     case DEMO:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_DEMO_ACCESSED,
+                                mSite, themeProperties);
                         break;
                     case DETAILS:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_DETAILS_ACCESSED,
+                                mSite, themeProperties);
                         break;
                     case SUPPORT:
-                        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED, themeProperties);
+                        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_SUPPORT_ACCESSED,
+                                mSite, themeProperties);
                         break;
                 }
                 ThemeWebActivity.openTheme(this, mSite, themeId, type, isCurrentTheme);
@@ -493,7 +497,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     public void onSearchClicked() {
         mIsInSearchMode = true;
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
         addSearchFragment();
     }
 

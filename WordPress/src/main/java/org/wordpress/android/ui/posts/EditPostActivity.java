@@ -68,6 +68,7 @@ import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -198,6 +199,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private View mMenuView = null;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private SiteModel mSite;
     public @NonNull SiteModel getSelectedSite() {
@@ -626,7 +628,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
 
-                PostUtils.trackSavePostAnalytics(mPost);
+                PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId()));
 
                 PostUploadService.addPostToUpload(mPost);
                 PostUploadService.setLegacyMode(!mShowNewEditor);
@@ -738,9 +740,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
-        AnalyticsUtils.trackWithBlogDetails(
+        AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
-                WordPress.getBlog(mPost.getLocalTableBlogId()),
+                mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId()),
                 properties
         );
     }

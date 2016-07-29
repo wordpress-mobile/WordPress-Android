@@ -88,14 +88,14 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
     public static void viewCurrentBlogPages(Context context, SiteModel site) {
@@ -103,14 +103,14 @@ public class ActivityLauncher {
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
     public static void viewCurrentBlogComments(Context context, SiteModel site) {
         Intent intent = new Intent(context, CommentsActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
@@ -125,7 +125,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRight(context, intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -134,7 +134,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
     public static void viewCurrentSite(Context context, SiteModel site) {
@@ -146,7 +146,7 @@ public class ActivityLauncher {
         String siteUrl = site.getUrl();
         Uri uri = Uri.parse(siteUrl);
 
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE, site);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
@@ -163,7 +163,7 @@ public class ActivityLauncher {
         String adminUrl = site.getAdminUrl();
         Uri uri = Uri.parse(adminUrl);
 
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
@@ -243,19 +243,19 @@ public class ActivityLauncher {
 
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
         slideInFromRight(context, intent);
     }
 
     public static void viewAccountSettings(Context context) {
         Intent intent = new Intent(context, AccountSettingsActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
         slideInFromRight(context, intent);
     }
 
     public static void viewAppSettings(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
         slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
     }
 

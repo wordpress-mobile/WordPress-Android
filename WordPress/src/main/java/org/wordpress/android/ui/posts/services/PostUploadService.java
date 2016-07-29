@@ -25,7 +25,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -59,6 +58,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -173,7 +173,7 @@ public class PostUploadService extends Service {
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post mPost;
-        private Blog mBlog;
+        private SiteModel mSite;
         private PostUploadNotifier mPostUploadNotifier;
 
         private String mErrorMessage = "";
@@ -225,16 +225,14 @@ public class PostUploadService extends Service {
             );
             mPostUploadNotifier = new PostUploadNotifier(mPost, uploadingPostTitle, uploadingPostMessage);
 
-            mBlog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
-            if (mBlog == null) {
+            mSite = mSiteStore.getSiteByLocalId(mPost.getLocalTableBlogId());
+            if (mSite == null) {
                 mErrorMessage = mContext.getString(R.string.blog_not_found);
                 return false;
             }
 
             // Create the XML-RPC client
-            mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
-
+            XMLRPCClientInterface mClient = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
@@ -376,12 +374,20 @@ public class PostUploadService extends Service {
             contentStruct.put("wp_password", mPost.getPassword());
 
             Object[] params;
-            if (mPost.isLocalDraft())
-                params = new Object[]{mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
+            if (mPost.isLocalDraft()) {
+                params = new Object[]{
+                        String.valueOf(mSite.getSiteId()),
+                        StringUtils.notNullStr(mSite.getUsername()),
+                        StringUtils.notNullStr(mSite.getPassword()),
+                        contentStruct, false
+                };
+            } else {
+                params = new Object[]{
+                        mPost.getRemotePostId(),
+                        StringUtils.notNullStr(mSite.getUsername()),
+                        StringUtils.notNullStr(mSite.getPassword()),
                         contentStruct, false};
-            else
-                params = new Object[]{mPost.getRemotePostId(), mBlog.getUsername(), mBlog.getPassword(), contentStruct,
-                        false};
+            }
 
             try {
                 EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalTableBlogId()));
@@ -409,7 +415,7 @@ public class PostUploadService extends Service {
                 }
 
                 // request the new/updated post from the server to ensure local copy matches server
-                ApiHelper.updateSinglePost(mBlog.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
+                ApiHelper.updateSinglePost(mSite.getId(), mPost.getRemotePostId(), mPost.isPage());
 
                 return true;
             } catch (final XMLRPCException e) {
@@ -450,7 +456,7 @@ public class PostUploadService extends Service {
                 properties.put("with_tags", true);
             }
             properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
-            AnalyticsUtils.trackWithBlogDetails(Stat.EDITOR_PUBLISHED_POST, mBlog, properties);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST, mSite, properties);
         }
 
         /**
@@ -572,7 +578,10 @@ public class PostUploadService extends Service {
             // We won't resize gif images to keep them awesome.
             boolean shouldUploadResizedVersion = false;
             // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            if (!mimeType.equals("image/gif") && MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth())
+            String maxImageWidth = "12000";
+            // TODO: STORES: siteModel.getMaxImageWidth()
+            // int maxImageWidth = siteModel.getMaxImageWidth()
+            if (!mimeType.equals("image/gif") && MediaUtils.getImageWidthSettingFromString(maxImageWidth)
                     != Integer.MAX_VALUE) {
                 // check the picture settings
                 int pictureSettingWidth = mediaFile.getWidth();
@@ -624,7 +633,7 @@ public class PostUploadService extends Service {
                         parameters.put("type", mimeType);
                         parameters.put("bits", resizedMediaFile);
                         parameters.put("overwrite", true);
-                        resizedPictureURL = uploadImageFile(parameters, resizedMediaFile, mBlog);
+                        resizedPictureURL = uploadImageFile(parameters, resizedMediaFile, mSite);
                         if (resizedPictureURL == null) {
                             AppLog.w(T.POSTS, "failed to upload resized picture");
                             return null;
@@ -642,14 +651,16 @@ public class PostUploadService extends Service {
             String fullSizeUrl = null;
             // Upload the full size picture if "Original Size" is selected in settings,
             // or if 'link to full size' is checked.
-            if (!shouldUploadResizedVersion || mBlog.isFullSizeImage()) {
+            // TODO: STORES: mSite.isFullSizeImage()
+            // if (!shouldUploadResizedVersion || mSite.isFullSizeImage()) {
+            if (!shouldUploadResizedVersion) {
                 Map<String, Object> parameters = new HashMap<String, Object>();
                 parameters.put("name", fileName);
                 parameters.put("type", mimeType);
                 parameters.put("bits", mediaFile);
                 parameters.put("overwrite", true);
 
-                fullSizeUrl = uploadImageFile(parameters, mediaFile, mBlog);
+                fullSizeUrl = uploadImageFile(parameters, mediaFile, mSite);
                 if (fullSizeUrl == null) {
                     mErrorMessage = mContext.getString(R.string.error_media_upload);
                     return null;
@@ -704,9 +715,12 @@ public class PostUploadService extends Service {
                         }
                     } else {
                         // set the width of the video to the thumbnail width, else 640x480
-                        if (MediaUtils.getImageWidthSettingFromString(mBlog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-                            xRes = mBlog.getMaxImageWidth();
-                            yRes = String.valueOf(Math.round(Integer.valueOf(mBlog.getMaxImageWidth()) * 0.75));
+                        // TODO: STORES: siteModel.getMaxImageWidth()
+                        // int maxImageWidth = mSite.getMaxImageWidth();
+                        String maxImageWidth = "2000";
+                        if (MediaUtils.getImageWidthSettingFromString(maxImageWidth) != Integer.MAX_VALUE) {
+                            xRes = maxImageWidth;
+                            yRes = String.valueOf(Math.round(Integer.valueOf(maxImageWidth) * 0.75));
                         } else {
                             xRes = "640";
                             yRes = "480";
@@ -736,7 +750,7 @@ public class PostUploadService extends Service {
             m.put("bits", mediaFile);
             m.put("overwrite", true);
 
-            Object[] params = {1, mBlog.getUsername(), mBlog.getPassword(), m};
+            Object[] params = {1, mSite.getUsername(), mSite.getPassword(), m};
 
             File tempFile;
             try {
@@ -775,7 +789,7 @@ public class PostUploadService extends Service {
             AppLog.e(T.EDITOR, mErrorMessage, e);
         }
 
-        private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
+        private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, SiteModel site) {
             // create temporary upload file
             File tempFile;
             try {
@@ -787,7 +801,10 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            Object[] params = {1, blog.getUsername(), blog.getPassword(), pictureParams};
+            Object[] params = {1,
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
+                    pictureParams};
             Object result = uploadFileHelper(params, tempFile);
             if (result == null) {
                 mIsMediaError = true;

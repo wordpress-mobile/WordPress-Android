@@ -202,7 +202,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithBlogDetails(
+            AnalyticsUtils.trackWithSiteId(
                     AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
                     mRemoteBlogID
             );
