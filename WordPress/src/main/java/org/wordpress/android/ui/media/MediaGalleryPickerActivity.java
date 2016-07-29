@@ -24,7 +24,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
@@ -55,6 +54,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     private int mOldMediaSyncOffset = 0;
     private SiteModel mSite;
+
     public @NonNull
     SiteModel getSelectedSite() {
         return mSite;
@@ -128,10 +128,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshViews() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
+        final String localBlogId = String.valueOf(mSite.getId());
+        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(localBlogId, mFilteredItems);
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
         } else {
@@ -237,7 +235,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
                     adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                    String blogId = String.valueOf(mSite.getId());
                     if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
                         // There is no media at all
                         noMediaFinish();
@@ -251,7 +249,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                                String blogId = String.valueOf(mSite.getId());
                                 Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
                                 mGridAdapter.swapCursor(cursor);
 

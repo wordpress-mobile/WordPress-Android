@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -25,6 +27,8 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
@@ -47,7 +51,10 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.passcodelock.AppLockManager;
+
+import java.util.ArrayList;
 
 public class ActivityLauncher {
     private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
@@ -174,6 +181,26 @@ public class ActivityLauncher {
         slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
     }
 
+    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<String> mediaIds) {
+        if (site == null) return;
+        // Create a new post object and assign default settings
+        Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
+        intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
+        context.startActivity(intent);
+    }
+
+    public static void newMediaPost(Activity context, SiteModel site, String mediaId) {
+        if (site == null) return;
+        // Create a new post object and assign default settings
+        Intent intent = new Intent(context, EditPostActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.setAction(EditPostActivity.NEW_MEDIA_POST);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, mediaId);
+        context.startActivity(intent);
+    }
+
     public static void addNewBlogPostOrPageForResult(Activity context, SiteModel site, boolean isPage) {
         if (site == null) return;
         // Create a new post object and assign default settings
@@ -283,6 +310,32 @@ public class ActivityLauncher {
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_TITLE, post.getTitle());
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_ITEM_URL, post.getUrl());
         context.startActivity(statsPostViewIntent);
+    }
+
+    public static void viewMediaGalleryPickerForSite(Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+    }
+
+    public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
+                                                     @NonNull ArrayList<String> mediaIds) {
+        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+    }
+
+    public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
+                                               @Nullable MediaGallery mediaGallery) {
+        Intent intent = new Intent(activity, MediaGalleryActivity.class);
+        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
+        if (mediaGallery == null) {
+            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
+        }
+        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {

@@ -210,6 +210,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.new_edit_post_activity);
 
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
@@ -276,17 +287,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
-        }
-
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
-        }
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
@@ -1255,12 +1255,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        Intent intent = new Intent(this, MediaGalleryActivity.class);
-        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        if (mediaGallery == null) {
-            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
-        }
-        startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
     }
 
     private void prepareMediaGallery() {
@@ -1641,9 +1636,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void startMediaGalleryAddActivity() {
-        Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.SparseIntArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -19,6 +20,7 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.model.SiteModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,11 +65,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     }
 
     private void refreshGridView() {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+        String blogId = String.valueOf(getSelectedSite().getId());
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
@@ -187,5 +185,14 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void remove(int position) {
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof MediaGalleryActivity) {
+            return ((MediaGalleryActivity) getActivity()).getSelectedSite();
+        } else {
+            // Crash
+            throw new AssertionError("Wrong fragment's parent activity");
+        }
     }
 }

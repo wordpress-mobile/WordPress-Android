@@ -6,7 +6,6 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,11 +34,11 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -790,10 +789,7 @@ public class MediaGridFragment extends Fragment
                 return;
             }
             ArrayList<String> ids = mGridAdapter.getSelectedItems();
-            Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostActivity.NEW_MEDIA_POST);
-            i.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, ids.iterator().next());
-            startActivity(i);
+            ActivityLauncher.newMediaPost(getActivity(), getSelectedSite(), ids.iterator().next());
         }
 
         private void handleMultiSelectDelete() {
@@ -820,11 +816,7 @@ public class MediaGridFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            Intent i = new Intent(getActivity(), EditPostActivity.class);
-            i.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-            i.putStringArrayListExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS,
-                    mGridAdapter.getSelectedItems());
-            startActivity(i);
+            ActivityLauncher.newGalleryPost(getActivity(), getSelectedSite(), mGridAdapter.getSelectedItems());
         }
     }
 }
