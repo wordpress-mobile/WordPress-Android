@@ -435,22 +435,6 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
-     * Get the currently active blog.
-     * <p/>
-     * If the current blog is not already set, try and determine the last active blog from the last
-     * time the application was used. If we're not able to determine the last active blog, try to
-     * select the first visible blog. If there are no more visible blogs, try to select the first
-     * hidden blog. If there are no blogs at all, return null.
-     */
-    public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
-            attemptToRestoreLastActiveBlog();
-        }
-
-        return currentBlog;
-    }
-
-    /**
      * Get the blog with the specified ID.
      *
      * @param id ID of the blog to retrieve.
