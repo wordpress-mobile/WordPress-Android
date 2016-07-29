@@ -23,8 +23,6 @@ public class ProfileInputDialogFragment extends DialogFragment {
     private static final String IS_MULTILINE_TAG = "is_multiline";
     private static final String CALLBACK_ID_TAG = "callback_id";
 
-    private Callback mCallback;
-
     public static ProfileInputDialogFragment newInstance(String title,
                                                          String initialText,
                                                          String hint,
@@ -42,17 +40,6 @@ public class ProfileInputDialogFragment extends DialogFragment {
 
         profileInputDialogFragment.setArguments(args);
         return profileInputDialogFragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getTargetFragment() instanceof Callback) {
-            mCallback = (Callback) getTargetFragment();
-        } else {
-            AppLog.e(AppLog.T.UTILS, "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
-        }
     }
 
     @Override
@@ -91,8 +78,10 @@ public class ProfileInputDialogFragment extends DialogFragment {
         alertDialogBuilder.setCancelable(true)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (mCallback != null) {
-                            mCallback.onSuccessfulInput(editText.getText().toString(), callbackId);
+                        if (getTargetFragment() instanceof Callback) {
+                            ((Callback) getTargetFragment()).onSuccessfulInput(editText.getText().toString(), callbackId);
+                        } else {
+                            AppLog.e(AppLog.T.UTILS, "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
                         }
                     }
                 })
