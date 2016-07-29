@@ -325,11 +325,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (post.hasPostAvatar()) {
-            holder.imgAvatar.setVisibility(View.VISIBLE);
             holder.imgAvatar.setImageUrl(
                     post.getPostAvatarForDisplay(mAvatarSzTiny), WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.setVisibility(View.GONE);
+            holder.imgAvatar.showDefaultGravatarImage();
         }
 
         if (!isBlogPreview()) {

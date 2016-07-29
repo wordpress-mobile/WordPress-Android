@@ -898,10 +898,9 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasPostAvatar()) {
                 int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
-                imgAvatar.setVisibility(View.VISIBLE);
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
             } else {
-                imgAvatar.setVisibility(View.GONE);
+                imgAvatar.showDefaultGravatarImage();
             }
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
