@@ -514,22 +514,7 @@ public class WordPressDB {
         values.put("capabilities", blog.getCapabilities());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
-
-    public List<Integer> getAllBlogsIDs() {
-        Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + BLOGS_TABLE, null);
-        try {
-            List<Integer> ids = new ArrayList<Integer>();
-            if (c.moveToFirst()) {
-                do {
-                    ids.add(c.getInt(0));
-                } while (c.moveToNext());
-            }
-            return ids;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
+    
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
         return getBlogsBy(byString, extraFields, 0, true);
     }
@@ -604,18 +589,6 @@ public class WordPressDB {
         return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 1 LIMIT 1", null);
     }
 
-    public List<Map<String, Object>> getVisibleDotComBlogs() {
-        return getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
-    }
-
-    public int getNumVisibleBlogs() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE isHidden = 0", null);
-    }
-
-    public int getNumHiddenBlogs() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE isHidden = 1", null);
-    }
-
     public int getNumDotComBlogs() {
         return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
     }
@@ -666,19 +639,6 @@ public class WordPressDB {
         String[] args = {Integer.toString(blogId)};
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE +
                 " WHERE isHidden = 0 AND blogId=?", args);
-    }
-
-    public boolean isBlogInDatabase(int blogId, String xmlRpcUrl) {
-        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "blogId=? AND url=?",
-                new String[]{Integer.toString(blogId), xmlRpcUrl}, null, null, null, null);
-        boolean result =  c.getCount() > 0;
-        c.close();
-        return result;
-    }
-
-    public boolean isLocalBlogIdInDatabase(int localBlogId) {
-        String[] args = {Integer.toString(localBlogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE id=?", args);
     }
 
     public boolean saveBlog(Blog blog) {
@@ -738,33 +698,6 @@ public class WordPressDB {
                 + username + "\" AND dotcomFlag=1", null) > 0;
     }
 
-    public boolean deleteBlog(Context ctx, int id) {
-        int rowsAffected = db.delete(BLOGS_TABLE, "id=?", new String[]{Integer.toString(id)});
-        deleteQuickPressShortcutsForLocalTableBlogId(ctx, id);
-        deleteAllPostsForLocalTableBlogId(id);
-        PeopleTable.deletePeopleForLocalBlogId(id);
-        return (rowsAffected > 0);
-    }
-
-    public boolean deleteWordPressComBlogs(Context ctx) {
-        List<Map<String, Object>> wordPressComBlogs = getBlogsBy("isHidden = 0 AND dotcomFlag = 1", null);
-        for (Map<String, Object> blog : wordPressComBlogs) {
-            int localBlogId = MapUtils.getMapInt(blog, "id");
-            deleteQuickPressShortcutsForLocalTableBlogId(ctx, localBlogId);
-            deleteAllPostsForLocalTableBlogId(localBlogId);
-            PeopleTable.deletePeopleForLocalBlogId(localBlogId);
-        }
-
-        // H4ck alert: We need to delete the Jetpack sites that were added in the initial
-        // WP.com get blogs call. These sites will not have the dotcomFlag set and will
-        // have an empty password.
-        String args = String.format("dotcomFlag=1 OR (dotcomFlag=0 AND password='%s')", encryptPassword(""));
-
-        // Delete blogs
-        int rowsAffected = db.delete(BLOGS_TABLE, args, null);
-        return (rowsAffected > 0);
-    }
-
     /**
      * Deletes all the things! Use wisely.
      */
@@ -774,20 +707,6 @@ public class WordPressDB {
         db.delete(MEDIA_TABLE, null, null);
         db.delete(CATEGORIES_TABLE, null, null);
         db.delete(CommentTable.COMMENTS_TABLE, null, null);
-    }
-
-    public boolean hasDotOrgBlogForUsernameAndUrl(String username, String url) {
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(url)) {
-            return false;
-        }
-
-        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "username=? AND url=?", new String[]{username, url}, null,
-                null, null);
-        try {
-            return c.getCount() > 0;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
     }
 
     public boolean isCurrentUserAdminOfRemoteBlogId(long remoteBlogId) {
@@ -874,16 +793,6 @@ public class WordPressDB {
         return blog;
     }
 
-    /*
-     * returns true if the passed blog is wp.com or jetpack-enabled (ie: returns false for
-     * self-hosted blogs that don't use jetpack)
-     */
-    public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
-        int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
-        Blog blog = instantiateBlogByLocalId(localId);
-        return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
-    }
-
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
         Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
                 new String[]{dotComBlogId, dotComBlogId}, null, null, null);
@@ -893,24 +802,6 @@ public class WordPressDB {
         }
         c.close();
         return blog;
-    }
-
-    public List<String> loadStatsLogin(int id) {
-        Cursor c = db.query(BLOGS_TABLE, new String[]{"dotcom_username",
-                "dotcom_password"}, "id=" + id, null, null, null, null);
-
-        c.moveToFirst();
-
-        List<String> returnVector = new Vector<String>();
-        if (c.getString(0) != null) {
-            returnVector.add(c.getString(0));
-            returnVector.add(decryptPassword(c.getString(1)));
-        } else {
-            returnVector = null;
-        }
-        c.close();
-
-        return returnVector;
     }
 
     /*
@@ -947,20 +838,6 @@ public class WordPressDB {
         return localBlogID;
     }
 
-    public int getRemoteBlogIdForLocalTableBlogId(int localBlogId) {
-        int remoteBlogID = SqlUtils.intForQuery(db, "SELECT blogId FROM accounts WHERE id=?", new String[]{Integer.toString(localBlogId)});
-        if (remoteBlogID<=1) { //Make sure we're not returning a wrong ID for jetpack blog.
-            List<Map<String,Object>> allBlogs = this.getBlogsBy("dotcomFlag=0", new String[]{"api_blogid"});
-            for (Map<String, Object> currentBlog : allBlogs) {
-                if (MapUtils.getMapInt(currentBlog, "id")==localBlogId) {
-                    remoteBlogID = MapUtils.getMapInt(currentBlog, "api_blogid");
-                    break;
-                }
-            }
-        }
-        return remoteBlogID;
-    }
-
     public long getPlanIdForLocalTableBlogId(int localBlogId) {
         return SqlUtils.longForQuery(db,
                 "SELECT plan_product_id FROM accounts WHERE id=?",
@@ -977,15 +854,6 @@ public class WordPressDB {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("last_blog_id", id);
         editor.commit();
-    }
-
-    /**
-     * Delete the ID for the most recently active blog.
-     */
-    public void deleteLastBlogId() {
-        updateLastBlogId(-1);
-        // Clear the last selected activity
-        AppPrefs.resetLastActivityStr();
     }
 
     /**
@@ -1008,13 +876,6 @@ public class WordPressDB {
     // Deletes all posts for the given blogId
     public void deleteAllPostsForLocalTableBlogId(int localBlogId) {
         db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
-    }
-
-    public Object[] arrayListToArray(Object array) {
-        if (array instanceof ArrayList) {
-            return ((ArrayList) array).toArray();
-        }
-        return (Object[]) array;
     }
 
     /*

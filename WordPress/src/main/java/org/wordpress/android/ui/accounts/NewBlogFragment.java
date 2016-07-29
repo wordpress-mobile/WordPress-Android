@@ -234,8 +234,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
 

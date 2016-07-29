@@ -451,8 +451,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
 
@@ -471,8 +471,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
