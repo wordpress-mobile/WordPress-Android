@@ -12,6 +12,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,7 +29,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -36,6 +37,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -137,23 +139,19 @@ public class MediaItemFragment extends Fragment {
     }
 
     public void loadMedia(String mediaId) {
-        Blog blog = WordPress.getCurrentBlog();
+        String blogId = String.valueOf(getSelectedSite().getId());
 
-        if (blog != null) {
-            String blogId = String.valueOf(blog.getLocalTableBlogId());
-
-            Cursor cursor = null;
-            try {
-                // if the id is null, get the first media item in the database
-                if (mediaId == null) {
-                    cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
-                } else {
-                    cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
-                }
-                refreshViews(cursor);
-            } finally {
-                SqlUtils.closeCursor(cursor);
+        Cursor cursor = null;
+        try {
+            // if the id is null, get the first media item in the database
+            if (mediaId == null) {
+                cursor = WordPress.wpDB.getFirstMediaFileForBlog(blogId);
+            } else {
+                cursor = WordPress.wpDB.getMediaFile(blogId, mediaId);
             }
+            refreshViews(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
         }
     }
 
@@ -247,7 +245,7 @@ public class MediaItemFragment extends Fragment {
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
-                if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
+                if (SiteUtils.isPhotonCapable(getSelectedSite())) {
                     thumbnailURL = StringUtils.getPhotonUrl(mImageUri, imageWidth);
                 } else {
                     thumbnailURL = UrlUtils.removeQuery(mImageUri) + "?w=" + imageWidth;
@@ -283,8 +281,9 @@ public class MediaItemFragment extends Fragment {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Blog blog = WordPress.getCurrentBlog();
-                    boolean isPrivate = blog != null && blog.isPrivate();
+                    // TODO: STORES: siteModel.isPrivate()
+                    // boolean isPrivate = getSelectedSite().isPrivate();
+                    boolean isPrivate = false;
                     EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
                     if (isPrivate) {
                         imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
@@ -337,7 +336,7 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+            String blogId = String.valueOf(getSelectedSite().getId());
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
@@ -375,6 +374,15 @@ public class MediaItemFragment extends Fragment {
         } catch (Exception e) {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
+        }
+    }
+
+    private @NonNull SiteModel getSelectedSite() {
+        if (getActivity() instanceof MediaBrowserActivity) {
+            return ((MediaBrowserActivity) getActivity()).getSelectedSite();
+        } else {
+            // Crash
+            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }

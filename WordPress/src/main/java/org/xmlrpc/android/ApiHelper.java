@@ -478,7 +478,7 @@ public class ApiHelper {
             contentStruct.put("post_excerpt", mCaption);
 
             Object[] apiParams = {
-                    mSite.getSiteId(),
+                    String.valueOf(mSite.getSiteId()),
                     StringUtils.notNullStr(mSite.getUsername()),
                     StringUtils.notNullStr(mSite.getPassword()),
                     mMediaId,
@@ -693,27 +693,23 @@ public class ApiHelper {
     public static class DeleteMediaTask extends HelperAsyncTask<List<?>, Void, Void> {
         private GenericCallback mCallback;
         private String mMediaId;
+        private SiteModel mSite;
 
-        public DeleteMediaTask(String mediaId, GenericCallback callback) {
+        public DeleteMediaTask(SiteModel site, String mediaId, GenericCallback callback) {
             mMediaId = mediaId;
             mCallback = callback;
+            mSite = site;
         }
 
         @Override
         protected Void doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            Blog blog = (Blog) arguments.get(0);
-
-            if (blog == null) {
-                setError(ErrorType.INVALID_CONTEXT, "ApiHelper - invalid blog");
-                return null;
-            }
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-            Object[] apiParams = new Object[]{blog.getRemoteBlogId(), blog.getUsername(),
-                    blog.getPassword(), mMediaId};
-
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
+            Object[] apiParams = {
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
+                    mMediaId,
+            };
             try {
                 if (client != null) {
                     Boolean result = (Boolean) client.call(Method.DELETE_POST, apiParams);

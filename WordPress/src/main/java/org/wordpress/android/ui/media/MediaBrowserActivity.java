@@ -470,7 +470,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void startMediaDeleteService() {
         if (NetworkUtils.isNetworkAvailable(this)) {
-           startService(new Intent(this, MediaDeleteService.class));
+            Intent intent = new Intent(this, MediaDeleteService.class);
+            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
+            startService(intent);
         }
     }
 

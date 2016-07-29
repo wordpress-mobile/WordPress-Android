@@ -11,7 +11,6 @@ public class SiteUtils {
         return siteName;
     }
 
-
     public static String getHomeURLOrHostName(SiteModel siteModel) {
         String homeURL = UrlUtils.removeScheme(siteModel.getUrl());
         homeURL = StringUtils.removeTrailingSlash(homeURL);
@@ -23,5 +22,15 @@ public class SiteUtils {
 
     public static String getSiteName(SiteModel siteModel) {
         return StringUtils.unescapeHTML(siteModel.getName());
+    }
+
+    /**
+     * @return true if the site is WPCom or Jetpack and is not private
+     */
+    public static boolean isPhotonCapable(SiteModel siteModel) {
+        // Note: siteModel.isWPCom() is true for .com sites and jetpack sites
+        // TODO: STORES: sitemodel.isPrivate()
+        // return siteModel.isWPCom() && !siteModel.isPrivate();
+        return siteModel.isWPCom();
     }
 }

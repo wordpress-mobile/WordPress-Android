@@ -22,6 +22,7 @@ import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -121,6 +122,8 @@ public interface AppComponent {
     void inject(PostUploadService object);
 
     void inject(ThemeWebActivity object);
+
+    void inject(MediaDeleteService object);
 
     // WPDelayedHurlStack will burn in hell as soon as we have all the XMLRPC based stores ready.
     void inject(WPDelayedHurlStack object);

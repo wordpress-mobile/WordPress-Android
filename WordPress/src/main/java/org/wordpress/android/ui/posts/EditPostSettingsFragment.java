@@ -202,12 +202,12 @@ public class EditPostSettingsFragment extends Fragment
                     "status", "video"};
             // TODO: STORES: use mSite getPostFormats() and the FETCH_POST_FORMATS action
 //            if (getSelectedSite().getPostFormats().equals("")) {
-//                new ApiHelper.GetPostFormatsTask().execute(WordPress.getCurrentBlog());
+//                new ApiHelper.GetPostFormatsTask().execute(getSelectedSite());
 //            } else {
 //                try {
 //                    Gson gson = new Gson();
 //                    Type type = new TypeToken<Map<String, String>>() {}.getType();
-//                    Map<String, String> jsonPostFormats = gson.fromJson(WordPress.getCurrentBlog().getPostFormats(),
+//                    Map<String, String> jsonPostFormats = gson.fromJson(getSelectedSite().getPostFormats(),
 //                            type);
 //                    mPostFormats = new String[jsonPostFormats.size()];
 //                    mPostFormatTitles = new String[jsonPostFormats.size()];
