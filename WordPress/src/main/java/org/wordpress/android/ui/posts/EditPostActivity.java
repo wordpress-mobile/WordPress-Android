@@ -63,7 +63,6 @@ import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.stores.model.SiteModel;
@@ -244,17 +243,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     || (extras != null && extras.getInt("quick-media", -1) > -1)) {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
-                    int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    Blog quickPressBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-                    if (quickPressBlog == null) {
+                    int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
+                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
+                    if (site == null) {
                         showErrorAndFinish(R.string.blog_not_found);
                         return;
                     }
-                    if (quickPressBlog.isHidden()) {
+                    if (!site.isVisible()) {
                         showErrorAndFinish(R.string.error_blog_hidden);
                         return;
                     }
-                    WordPress.currentBlog = quickPressBlog;
+                    mSite = site;
                 }
 
                 // Create a new post for share intents and QuickPress
@@ -1918,7 +1917,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests.isEmpty()) {
                                 // If there are pending requests for video URLs from VideoPress ids, query the DB for
                                 // them again and notify the editor
-                                String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+                                String blogId = String.valueOf(mSite.getId());
                                 for (String videoId : mPendingVideoPressInfoRequests) {
                                     String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
                                     String posterUrl = WordPressMediaUtils.getVideoPressVideoPosterFromURL(videoUrl);
@@ -2076,7 +2075,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onVideoPressInfoRequested(final String videoId) {
-        String blogId = String.valueOf(WordPress.currentBlog.getLocalTableBlogId());
+        String blogId = String.valueOf(mSite.getId());
         String videoUrl = WordPress.wpDB.getMediaUrlByVideoPressId(blogId, videoId);
 
         if (videoUrl.isEmpty()) {

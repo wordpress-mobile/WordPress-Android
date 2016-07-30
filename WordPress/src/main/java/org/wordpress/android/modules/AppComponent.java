@@ -8,6 +8,7 @@ import org.wordpress.android.stores.module.AppContextModule;
 import org.wordpress.android.stores.module.ReleaseBaseModule;
 import org.wordpress.android.stores.module.ReleaseNetworkModule;
 import org.wordpress.android.stores.module.ReleaseStoreModule;
+import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -83,6 +84,7 @@ public interface AppComponent {
     void inject(GCMRegistrationIntentService object);
     void inject(DeepLinkingIntentReceiverActivity object);
     void inject(ShareIntentReceiverActivity object);
+    void inject(AddQuickPressShortcutActivity object);
 
     void inject(HelpActivity object);
 
