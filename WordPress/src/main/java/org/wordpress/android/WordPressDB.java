@@ -514,7 +514,7 @@ public class WordPressDB {
         values.put("capabilities", blog.getCapabilities());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
-    
+
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
         return getBlogsBy(byString, extraFields, 0, true);
     }
@@ -635,12 +635,6 @@ public class WordPressDB {
         return db.update(BLOGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
     }
 
-    public boolean isDotComBlogVisible(int blogId) {
-        String[] args = {Integer.toString(blogId)};
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE +
-                " WHERE isHidden = 0 AND blogId=?", args);
-    }
-
     public boolean saveBlog(Blog blog) {
         if (blog.getLocalTableBlogId() == -1) {
             return addBlog(blog);
@@ -683,9 +677,6 @@ public class WordPressDB {
         if (blog.isDotcomFlag()) {
             returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
         }
-
-        updateCurrentBlog(blog);
-
         return (returnValue);
     }
 
@@ -842,27 +833,6 @@ public class WordPressDB {
         return SqlUtils.longForQuery(db,
                 "SELECT plan_product_id FROM accounts WHERE id=?",
                 new String[]{Integer.toString(localBlogId)});
-    }
-    /**
-     * Set the ID of the most recently active blog. This value will persist between application
-     * launches.
-     *
-     * @param id ID of the most recently active blog.
-     */
-    public void updateLastBlogId(int id) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("last_blog_id", id);
-        editor.commit();
-    }
-
-    /**
-     * Get the ID of the most recently active blog. -1 is returned if there is no recently active
-     * blog.
-     */
-    public int getLastBlogId() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt("last_blog_id", -1);
     }
 
     public boolean deletePost(Post post) {
@@ -1909,12 +1879,5 @@ public class WordPressDB {
 
     public boolean hasAnyJetpackBlogs() {
         return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
-    }
-
-    private void updateCurrentBlog(Blog blog) {
-        Blog currentBlog = WordPress.currentBlog;
-        if (currentBlog != null && blog.getLocalTableBlogId() == currentBlog.getLocalTableBlogId()) {
-            WordPress.currentBlog = blog;
-        }
     }
 }

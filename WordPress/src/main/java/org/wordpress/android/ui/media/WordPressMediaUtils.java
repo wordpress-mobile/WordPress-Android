@@ -29,7 +29,6 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.helpers.Version;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -213,39 +212,6 @@ public class WordPressMediaUtils {
         } else {
             return 0;
         }
-    }
-
-    /**
-     * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties
-     * within the app. See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
-     */
-    public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-        if (WordPress.currentBlog == null) {
-            return false;
-        }
-
-        if (WordPress.currentBlog.getWpVersion() == null) {
-            return true;
-        }
-
-        if (WordPress.currentBlog.isDotcomFlag()) {
-            return true;
-        }
-
-        Version minVersion;
-        Version currentVersion;
-        try {
-            minVersion = new Version("3.5.2");
-            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
-
-            if (currentVersion.compareTo(minVersion) == -1) {
-                return false;
-            }
-        } catch (IllegalArgumentException e) {
-            AppLog.e(T.POSTS, e);
-        }
-
-        return true;
     }
 
     public static boolean canDeleteMedia(String blogId, String mediaID) {

@@ -324,10 +324,7 @@ public class MediaItemFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
-
-        menu.findItem(R.id.menu_edit_media).setVisible(
-                !mIsLocal && WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities());
-
+        menu.findItem(R.id.menu_edit_media).setVisible(!mIsLocal);
         menu.findItem(R.id.menu_copy_media_url).setVisible(!mIsLocal && !TextUtils.isEmpty(mImageUri));
     }
 

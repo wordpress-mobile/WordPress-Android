@@ -156,22 +156,9 @@ public class MediaEditFragment extends Fragment {
             }
         });
 
-        disableEditingOnOldVersion();
-
         loadMedia(getMediaId());
 
         return mScrollView;
-    }
-
-    private void disableEditingOnOldVersion() {
-        if (WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
-            return;
-        }
-
-        mSaveButton.setEnabled(false);
-        mTitleView.setEnabled(false);
-        mCaptionView.setEnabled(false);
-        mDescriptionView.setEnabled(false);
     }
 
     @Override
@@ -324,7 +311,6 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DESCRIPTION)));
 
         refreshImageView(cursor, isLocal);
-        disableEditingOnOldVersion();
     }
 
     @Override
@@ -339,10 +325,6 @@ public class MediaEditFragment extends Fragment {
         if (!isInLayout()) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
-
-            if (!WordPressMediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
-                menu.findItem(R.id.menu_save_media).setVisible(false);
-            }
         }
     }
 

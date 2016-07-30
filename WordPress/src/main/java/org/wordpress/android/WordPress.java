@@ -89,7 +89,6 @@ import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -101,7 +100,6 @@ import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends MultiDexApplication {
     public static String versionName;
-    public static Blog currentBlog;
     public static WordPressDB wpDB;
 
     public static RequestQueue requestQueue;
@@ -302,10 +300,6 @@ public class WordPress extends MultiDexApplication {
     private void initWpDb() {
         if (!createAndVerifyWpDb()) {
             AppLog.e(T.DB, "Invalid database, sign out user and delete database");
-            currentBlog = null;
-            if (wpDB != null) {
-                wpDB.updateLastBlogId(-1);
-            }
             // Force DB deletion
             WordPressDB.deleteDatabase(this);
             wpDB = new WordPressDB(this);
@@ -445,47 +439,6 @@ public class WordPress extends MultiDexApplication {
             return wpDB.instantiateBlogByLocalId(id);
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    /**
-     * Set the last active blog as the current blog.
-     *
-     * @return the current blog
-     */
-    public static Blog setCurrentBlogToLastActive() {
-        List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleBlogs();
-
-        int lastBlogId = WordPress.wpDB.getLastBlogId();
-        if (lastBlogId != -1) {
-            for (Map<String, Object> account : accounts) {
-                int id = Integer.valueOf(account.get("id").toString());
-                if (id == lastBlogId) {
-                    setCurrentBlog(id);
-                    return currentBlog;
-                }
-            }
-        }
-        // Previous active blog is hidden or deleted
-        currentBlog = null;
-        return null;
-    }
-
-    /**
-     * Set the blog with the specified id as the current blog.
-     *
-     * @param id id of the blog to set as current
-     */
-    public static void setCurrentBlog(int id) {
-        currentBlog = getBlog(id);
-    }
-
-    public static void setCurrentBlogAndSetVisible(int id) {
-        setCurrentBlog(id);
-
-        if (currentBlog != null && currentBlog.isHidden()) {
-            wpDB.setDotComBlogsVisibility(id, true);
-            currentBlog.setHidden(false);
         }
     }
 
@@ -670,18 +623,6 @@ public class WordPress extends MultiDexApplication {
         HttpResponseCache cache = HttpResponseCache.getInstalled();
         if (cache != null) {
             cache.flush();
-        }
-    }
-
-    private static void attemptToRestoreLastActiveBlog() {
-        if (setCurrentBlogToLastActive() == null) {
-            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
-            if (blogId == 0) {
-                blogId = WordPress.wpDB.getFirstHiddenBlogId();
-            }
-
-            setCurrentBlogAndSetVisible(blogId);
-            wpDB.updateLastBlogId(blogId);
         }
     }
 
