@@ -137,88 +137,6 @@ public class ApiHelper {
         void onDataReadyToSave(List list);
     }
 
-    public static class GetPostFormatsTask extends HelperAsyncTask<Blog, Void, Object> {
-        private Blog mBlog;
-
-        @Override
-        protected Object doInBackground(Blog... blog) {
-            mBlog = blog[0];
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
-            Object result = null;
-            Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                    mBlog.getPassword(), Param.SHOW_SUPPORTED_POST_FORMATS };
-            try {
-                result = client.call(Method.GET_POST_FORMATS, params);
-            } catch (ClassCastException cce) {
-                setError(ErrorType.INVALID_RESULT, cce.getMessage(), cce);
-            } catch (XMLRPCException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (IOException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            } catch (XmlPullParserException e) {
-                setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
-            }
-            return result;
-        }
-
-        protected void onPostExecute(Object result) {
-            if (result != null && result instanceof HashMap) {
-                Map<?, ?> postFormats = (HashMap<?, ?>) result;
-                if (postFormats.size() > 0) {
-                    Gson gson = new Gson();
-                    String postFormatsJson = gson.toJson(postFormats);
-                    if (postFormatsJson != null) {
-                        if (mBlog.bsetPostFormats(postFormatsJson)) {
-                            WordPress.wpDB.saveBlog(mBlog);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static synchronized void updateBlogOptions(Blog currentBlog, Map<?, ?> blogOptions) {
-        boolean isModified = false;
-        Gson gson = new Gson();
-        String blogOptionsJson = gson.toJson(blogOptions);
-        if (blogOptionsJson != null) {
-            isModified |= currentBlog.bsetBlogOptions(blogOptionsJson);
-        }
-
-        // Software version
-        if (!currentBlog.isDotcomFlag()) {
-            Map<?, ?> sv = (Map<?, ?>) blogOptions.get("software_version");
-            String wpVersion = MapUtils.getMapStr(sv, "value");
-            if (wpVersion.length() > 0) {
-                isModified |= currentBlog.bsetWpVersion(wpVersion);
-            }
-        }
-
-        // Featured image support
-        Map<?, ?> featuredImageHash = (Map<?, ?>) blogOptions.get("post_thumbnail");
-        if (featuredImageHash != null) {
-            boolean featuredImageCapable = MapUtils.getMapBool(featuredImageHash, "value");
-            isModified |= currentBlog.bsetFeaturedImageCapable(featuredImageCapable);
-        } else {
-            isModified |= currentBlog.bsetFeaturedImageCapable(false);
-        }
-
-        // Blog name
-        Map<?, ?> blogNameHash = (Map<?, ?>) blogOptions.get("blog_title");
-        if (blogNameHash != null) {
-            String blogName = MapUtils.getMapStr(blogNameHash, "value");
-            if (blogName != null && !blogName.equals(currentBlog.getBlogName())) {
-                currentBlog.setBlogName(blogName);
-                isModified = true;
-            }
-        }
-
-        if (isModified) {
-            WordPress.wpDB.saveBlog(currentBlog);
-        }
-    }
-
     /**
      * request deleted comments for passed blog and remove them from local db
      * @param blog  blog to check
@@ -877,30 +795,26 @@ public class ApiHelper {
     /*
      * fetches a single post saves it to the db - note that this should NOT be called from main thread
      */
-    public static boolean updateSinglePost(int localBlogId, String remotePostId, boolean isPage) {
-        Blog blog = WordPress.getBlog(localBlogId);
-        if (blog == null || TextUtils.isEmpty(remotePostId)) {
+    public static boolean updateSinglePost(SiteModel site, String remotePostId, boolean isPage) {
+        if (TextUtils.isEmpty(remotePostId)) {
             return false;
         }
 
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
-                blog.getUri(),
-                blog.getHttpuser(),
-                blog.getHttppassword());
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(site.getXmlRpcUrl()), "", "");
 
         Object[] apiParams;
         if (isPage) {
             apiParams = new Object[]{
-                    blog.getRemoteBlogId(),
+                    String.valueOf(site.getSiteId()),
                     remotePostId,
-                    blog.getUsername(),
-                    blog.getPassword()
+                    StringUtils.notNullStr(site.getUsername()),
+                    StringUtils.notNullStr(site.getPassword()),
             };
         } else {
             apiParams = new Object[]{
                     remotePostId,
-                    blog.getUsername(),
-                    blog.getPassword()
+                    StringUtils.notNullStr(site.getUsername()),
+                    StringUtils.notNullStr(site.getPassword()),
             };
         }
 
@@ -912,7 +826,7 @@ public class ApiHelper {
                 List<Map<?, ?>> postsList = new ArrayList<>();
                 postsList.add(postMap);
 
-                WordPress.wpDB.savePosts(postsList, localBlogId, isPage, true);
+                WordPress.wpDB.savePosts(postsList, site.getId(), isPage, true);
                 return true;
             } else {
                 return false;

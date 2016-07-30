@@ -25,9 +25,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPStoreUtils;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
@@ -70,19 +67,19 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
+
         // If no visible blogs
-        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", null);
-        if (accounts.size() == 0) {
+        int visibleSites = mSiteStore.getVisibleSitesCount();
+        if (mSiteStore.getVisibleSitesCount() == 0) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
             return;
         }
 
         // If one blog only, skip config
-        if (accounts.size() == 1) {
-            Map<String, Object> account = accounts.get(0);
-            Integer localID = (Integer) account.get("id");
-            addWidgetToScreenAndFinish(localID);
+        if (visibleSites == 1) {
+            SiteModel site = mSiteStore.getVisibleSites().get(0);
+            addWidgetToScreenAndFinish(site.getId());
             return;
         }
 

@@ -429,20 +429,6 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
-     * Get the blog with the specified ID.
-     *
-     * @param id ID of the blog to retrieve.
-     * @return the blog with the specified ID, or null if blog could not be retrieved.
-     */
-    public static Blog getBlog(int id) {
-        try {
-            return wpDB.instantiateBlogByLocalId(id);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * Sign out from wpcom account.
      * Note: This method must not be called on UI Thread.
      */

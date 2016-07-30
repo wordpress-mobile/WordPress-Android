@@ -262,20 +262,6 @@ public class Blog {
     }
 
     public String getApi_blogid() {
-        if (api_blogid == null) {
-            JSONObject jsonOptions = getBlogOptionsJSONObject();
-            if (jsonOptions!=null && jsonOptions.has("jetpack_client_id")) {
-                try {
-                    String jetpackBlogId = jsonOptions.getJSONObject("jetpack_client_id").getString("value");
-                    if (!TextUtils.isEmpty(jetpackBlogId)) {
-                        this.setApi_blogid(jetpackBlogId);
-                        WordPress.wpDB.saveBlog(this);
-                    }
-                } catch (JSONException e) {
-                    AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + jsonOptions, e);
-                }
-            }
-        }
         return api_blogid;
     }
 

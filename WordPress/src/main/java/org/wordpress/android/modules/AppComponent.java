@@ -56,6 +56,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
+import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeWebActivity;
@@ -82,6 +83,7 @@ public interface AppComponent {
     void inject(NewUserFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
+    void inject(StatsWidgetConfigureAdapter object);
     void inject(StatsActivity object);
     void inject(StatsAbstractFragment object);
     void inject(StatsService object);

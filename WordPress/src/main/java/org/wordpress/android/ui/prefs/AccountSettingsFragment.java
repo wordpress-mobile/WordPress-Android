@@ -25,15 +25,14 @@ import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.stores.store.SiteStore;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -258,10 +257,34 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
     }
 
+    public static String[] getSiteNamesFromSites(List<SiteModel> sites) {
+        List<String> blogNames = new ArrayList<>();
+        for (SiteModel site : sites) {
+            blogNames.add(SiteUtils.getSiteNameOrHomeURL(site));
+        }
+        return blogNames.toArray(new String[blogNames.size()]);
+    }
+
+    public static String[] getHomeURLOrHostNamesFromSites(List<SiteModel> sites) {
+        List<String> urls = new ArrayList<>();
+        for (SiteModel site : sites) {
+            urls.add(SiteUtils.getHomeURLOrHostName(site));
+        }
+        return urls.toArray(new String[urls.size()]);
+    }
+
+    public static String[] getSiteIdsFromSites(List<SiteModel> sites) {
+        List<String> ids = new ArrayList<>();
+        for (SiteModel site : sites) {
+            ids.add(String.valueOf(site.getSiteId()));
+        }
+        return ids.toArray(new String[ids.size()]);
+    }
+
+
     /*
      * AsyncTask which loads sites from database for primary site preference
      */
-    // TODO: STORES: class below will be replaced by a store call
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -275,11 +298,10 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
-            mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
-            mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
-            mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
-
+            List<SiteModel> sites = mSiteStore.getDotComSites();
+            mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
+            mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
+            mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));
             return null;
         }
 

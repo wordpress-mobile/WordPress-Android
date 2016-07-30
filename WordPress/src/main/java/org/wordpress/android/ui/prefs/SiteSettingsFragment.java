@@ -417,8 +417,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mStartOverPref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
                     mSite);
-            HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_START_OVER,
-                    mAccountStore.getAccount().getUserName());
+            HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                    HelpshiftHelper.Tag.ORIGIN_START_OVER, mAccountStore.getAccount().getUserName());
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
         } else if (preference == mPagingPref) {
@@ -1232,8 +1232,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.setPositiveButton(R.string.contact_support, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                HelpshiftHelper.getInstance().showConversation(getActivity(), HelpshiftHelper.Tag.ORIGIN_DELETE_SITE,
-                        mAccountStore.getAccount().getUserName());
+                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                        HelpshiftHelper.Tag.ORIGIN_DELETE_SITE, mAccountStore.getAccount().getUserName());
             }
         });
         builder.show();

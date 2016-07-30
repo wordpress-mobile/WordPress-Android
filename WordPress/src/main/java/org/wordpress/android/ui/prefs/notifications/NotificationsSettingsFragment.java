@@ -33,18 +33,18 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -69,6 +69,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -275,8 +276,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             args += " AND (url LIKE '%" + trimmedQuery + "%' OR blogName LIKE '%" + trimmedQuery + "%')";
         }
 
-        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
-        mSiteCount = blogs.size();
+        // TODO: STORES: we must implement a SiteStore searchDotComSitesByName or a generic way to get create a request
+        // mSiteStore.getsi
+        // List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
+        List<SiteModel> sites = new ArrayList<>();
+        mSiteCount = sites.size();
 
         Context context = getActivity();
 
@@ -284,18 +288,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
                 getString(R.string.pref_notification_blogs));
         blogsCategory.removeAll();
 
-        for (Map blog : blogs) {
+        for (SiteModel site : sites) {
             if (context == null) return;
 
-            String siteUrl = MapUtils.getMapStr(blog, "url");
-            String title = MapUtils.getMapStr(blog, "blogName");
-            long blogId = MapUtils.getMapLong(blog, "blogId");
-
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(title);
-            prefScreen.setSummary(UrlUtils.getHost(siteUrl));
-
-            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
+            prefScreen.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
+            prefScreen.setSummary(SiteUtils.getHomeURLOrHostName(site));
+            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, site.getSiteId());
             blogsCategory.addPreference(prefScreen);
         }
 

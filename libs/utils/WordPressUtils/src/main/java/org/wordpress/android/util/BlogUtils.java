@@ -1,8 +1,6 @@
 package org.wordpress.android.util;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 public class BlogUtils {
@@ -47,29 +45,5 @@ public class BlogUtils {
         }
 
         return homeURL;
-    }
-
-    public static String[] getBlogNamesFromAccountMapList(List<Map<String, Object>> accounts) {
-        List<String> blogNames = new ArrayList<>();
-        for (Map<String, Object> account : accounts) {
-            blogNames.add(getBlogNameOrHomeURLFromAccountMap(account));
-        }
-        return blogNames.toArray(new String[blogNames.size()]);
-    }
-
-    public static String[] getHomeURLOrHostNamesFromAccountMapList(List<Map<String, Object>> accounts) {
-        List<String> urls = new ArrayList<>();
-        for (Map<String, Object> account : accounts) {
-            urls.add(getHomeURLOrHostNameFromAccountMap(account));
-        }
-        return urls.toArray(new String[urls.size()]);
-    }
-
-    public static String[] getBlogIdsFromAccountMapList(List<Map<String, Object>> accounts) {
-        List<String> ids = new ArrayList<>();
-        for (Map<String, Object> account : accounts) {
-            ids.add(MapUtils.getMapStr(account, "blogId"));
-        }
-        return ids.toArray(new String[ids.size()]);
     }
 }

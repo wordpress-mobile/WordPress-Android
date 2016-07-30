@@ -12,13 +12,11 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
@@ -30,13 +28,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.FileInputStream;
@@ -45,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -353,7 +348,7 @@ public class WordPressDB {
                 currentVersion++;
             case 28:
                 // Remove WordPress.com credentials
-                removeDotComCredentials();
+                // NOPE: removeDotComCredentials();
                 currentVersion++;
             case 29:
                 currentVersion++;
@@ -389,7 +384,7 @@ public class WordPressDB {
                 resetThemeTable();
                 currentVersion++;
             case 38:
-                updateDotcomFlag();
+                // TODO: STORES: kill this - updateDotcomFlag();
                 currentVersion++;
             case 39:
                 currentVersion++;
@@ -421,23 +416,6 @@ public class WordPressDB {
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
-    }
-
-    private void updateDotcomFlag() {
-        // Loop over all .com blogs in the app and check that are really hosted on wpcom
-        List<Map<String, Object>> allBlogs = getBlogsBy("dotcomFlag=1", null, 0, false);
-        for (Map<String, Object> blog : allBlogs) {
-            String xmlrpcURL = MapUtils.getMapStr(blog, "url");
-            if (!WPUrlUtils.isWordPressCom(xmlrpcURL)) {
-                // .org blog marked as .com. Fix it.
-                int blogID = MapUtils.getMapInt(blog, "id");
-                if (blogID > 0) {
-                    ContentValues values = new ContentValues();
-                    values.put("dotcomFlag", false); // Mark as .org blog
-                    db.update(BLOGS_TABLE, values, "id=" + blogID, null);
-                }
-            }
-        }
     }
 
     /*
@@ -486,209 +464,6 @@ public class WordPressDB {
         c.close();
     }
 
-    public boolean addBlog(Blog blog) {
-        ContentValues values = new ContentValues();
-        values.put("url", blog.getUrl());
-        values.put("homeURL", blog.getHomeURL());
-        values.put("blogName", blog.getBlogName());
-        values.put("username", blog.getUsername());
-        values.put("password", encryptPassword(blog.getPassword()));
-        values.put("httpuser", blog.getHttpuser());
-        values.put("httppassword", encryptPassword(blog.getHttppassword()));
-        values.put("imagePlacement", blog.getImagePlacement());
-        values.put("centerThumbnail", false);
-        values.put("fullSizeImage", false);
-        values.put("maxImageWidth", blog.getMaxImageWidth());
-        values.put("maxImageWidthId", blog.getMaxImageWidthId());
-        values.put("blogId", blog.getRemoteBlogId());
-        values.put("dotcomFlag", blog.isDotcomFlag());
-        values.put("plan_product_id", blog.getPlanID());
-        values.put("plan_product_name_short", blog.getPlanShortName());
-        if (blog.getWpVersion() != null) {
-            values.put("wpVersion", blog.getWpVersion());
-        } else {
-            values.putNull("wpVersion");
-        }
-        values.put("isAdmin", blog.isAdmin());
-        values.put("isHidden", blog.isHidden());
-        values.put("capabilities", blog.getCapabilities());
-        return db.insert(BLOGS_TABLE, null, values) > -1;
-    }
-
-    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields) {
-        return getBlogsBy(byString, extraFields, 0, true);
-    }
-
-    public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
-                                                int limit, boolean hideJetpackWithoutCredentials) {
-        if (db == null) {
-            return new Vector<>();
-        }
-
-        if (hideJetpackWithoutCredentials) {
-            // Hide Jetpack blogs that were added in FetchBlogListWPCom
-            // They will have a false dotcomFlag and an empty (but encrypted) password
-            String hideJetpackArgs = String.format("NOT(dotcomFlag=0 AND password='%s')", encryptPassword(""));
-            if (TextUtils.isEmpty(byString)) {
-                byString = hideJetpackArgs;
-            } else {
-                byString = hideJetpackArgs + " AND " + byString;
-            }
-        }
-
-        String limitStr = null;
-        if (limit != 0) {
-            limitStr = String.valueOf(limit);
-        }
-        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url"};
-        String[] allFields = baseFields;
-        if (extraFields != null) {
-            allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
-        }
-        Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<>();
-        for (int i = 0; i < numRows; i++) {
-            int id = c.getInt(0);
-            String blogName = c.getString(1);
-            String username = c.getString(2);
-            int blogId = c.getInt(3);
-            String url = c.getString(4);
-            if (id > 0) {
-                Map<String, Object> blogMap = new HashMap<>();
-                blogMap.put("id", id);
-                blogMap.put("blogName", blogName);
-                blogMap.put("username", username);
-                blogMap.put("blogId", blogId);
-                blogMap.put("url", url);
-                int extraFieldsIndex = baseFields.length;
-                if (extraFields != null) {
-                    for (int j = 0; j < extraFields.length; ++j) {
-                        blogMap.put(extraFields[j], c.getString(extraFieldsIndex + j));
-                    }
-                }
-                blogs.add(blogMap);
-            }
-            c.moveToNext();
-        }
-        c.close();
-        Collections.sort(blogs, BlogUtils.BlogNameComparator);
-        return blogs;
-    }
-
-    public List<Map<String, Object>> getVisibleBlogs() {
-        return getBlogsBy("isHidden = 0", null);
-    }
-
-    public int getFirstVisibleBlogId() {
-        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
-    }
-
-    public int getFirstHiddenBlogId() {
-        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 1 LIMIT 1", null);
-    }
-
-    public int getNumDotComBlogs() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE + " WHERE dotcomFlag = 1", null);
-    }
-
-    public int getNumBlogs() {
-        return SqlUtils.intForQuery(db, "SELECT COUNT(*) FROM " + BLOGS_TABLE, null);
-    }
-
-    // Removes stored DotCom credentials. As of March 2015 only the OAuth token is used
-    private void removeDotComCredentials() {
-        // First clear out the password for all WP.com sites
-        ContentValues dotComValues = new ContentValues();
-        dotComValues.put("password", "");
-        db.update(BLOGS_TABLE, dotComValues, "dotcomFlag=1", null);
-
-        // Next, we'll clear out the credentials stored for Jetpack sites
-        ContentValues jetPackValues = new ContentValues();
-        jetPackValues.put("dotcom_username", "");
-        jetPackValues.put("dotcom_password", "");
-        db.update(BLOGS_TABLE, jetPackValues, null, null);
-
-        // Lastly we'll remove the preference that previously stored the WP.com password
-        if (this.context != null) {
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.remove("wp_pref_wpcom_password");
-            editor.apply();
-        }
-    }
-
-    public List<Map<String, Object>> getAllBlogs() {
-        return getBlogsBy(null, null);
-    }
-
-    public int setAllDotComBlogsVisibility(boolean visible) {
-        ContentValues values = new ContentValues();
-        values.put("isHidden", !visible);
-        return db.update(BLOGS_TABLE, values, "dotcomFlag=1", null);
-    }
-
-    public int setDotComBlogsVisibility(int id, boolean visible) {
-        ContentValues values = new ContentValues();
-        values.put("isHidden", !visible);
-        return db.update(BLOGS_TABLE, values, "dotcomFlag=1 AND id=" + id, null);
-    }
-
-    public boolean saveBlog(Blog blog) {
-        if (blog.getLocalTableBlogId() == -1) {
-            return addBlog(blog);
-        }
-
-        ContentValues values = new ContentValues();
-        values.put("url", blog.getUrl());
-        values.put("homeURL", blog.getHomeURL());
-        values.put("username", blog.getUsername());
-        values.put("password", encryptPassword(blog.getPassword()));
-        values.put("httpuser", blog.getHttpuser());
-        values.put("httppassword", encryptPassword(blog.getHttppassword()));
-        values.put("imagePlacement", blog.getImagePlacement());
-        values.put("centerThumbnail", blog.isFeaturedImageCapable());
-        values.put("fullSizeImage", blog.isFullSizeImage());
-        values.put("maxImageWidth", blog.getMaxImageWidth());
-        values.put("maxImageWidthId", blog.getMaxImageWidthId());
-        values.put("postFormats", blog.getPostFormats());
-        values.put("dotcom_username", blog.getDotcom_username());
-        values.put("dotcom_password", encryptPassword(blog.getDotcom_password()));
-        values.put("api_blogid", blog.getApi_blogid());
-        values.put("api_key", blog.getApi_key());
-        values.put("isScaledImage", blog.isScaledImage());
-        values.put("scaledImgWidth", blog.getScaledImageWidth());
-        values.put("blog_options", blog.getBlogOptions());
-        values.put("isHidden", blog.isHidden());
-        values.put("blogName", blog.getBlogName());
-        values.put("isAdmin", blog.isAdmin());
-        values.put("isHidden", blog.isHidden());
-        values.put("plan_product_id", blog.getPlanID());
-        values.put("plan_product_name_short", blog.getPlanShortName());
-        values.put("capabilities", blog.getCapabilities());
-        if (blog.getWpVersion() != null) {
-            values.put("wpVersion", blog.getWpVersion());
-        } else {
-            values.putNull("wpVersion");
-        }
-        boolean returnValue = db.update(BLOGS_TABLE, values, "id=" + blog.getLocalTableBlogId(),
-                null) > 0;
-        if (blog.isDotcomFlag()) {
-            returnValue = updateWPComCredentials(blog.getUsername(), blog.getPassword());
-        }
-        return (returnValue);
-    }
-
-    public boolean updateWPComCredentials(String username, String password) {
-        // update the login for wordpress.com blogs
-        ContentValues userPass = new ContentValues();
-        userPass.put("username", username);
-        userPass.put("password", encryptPassword(password));
-        return db.update(BLOGS_TABLE, userPass, "username=\""
-                + username + "\" AND dotcomFlag=1", null) > 0;
-    }
-
     /**
      * Deletes all the things! Use wisely.
      */
@@ -698,135 +473,6 @@ public class WordPressDB {
         db.delete(MEDIA_TABLE, null, null);
         db.delete(CATEGORIES_TABLE, null, null);
         db.delete(CommentTable.COMMENTS_TABLE, null, null);
-    }
-
-    public boolean isCurrentUserAdminOfRemoteBlogId(long remoteBlogId) {
-        String args[] = {String.valueOf(remoteBlogId)};
-        String sql = "SELECT isAdmin FROM " + BLOGS_TABLE + " WHERE blogId=?";
-        return SqlUtils.boolForQuery(db, sql, args);
-    }
-
-    /**
-     * Instantiate a new Blog object from it's local id
-     *
-     * @param localId local blog id
-     * @return a new Blog instance or null if the localId was not found
-     */
-    public Blog instantiateBlogByLocalId(int localId) {
-        String[] fields =
-                new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
-                             "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
-                             "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
-                             "api_blogid", "wpVersion", "postFormats", "isScaledImage",
-                             "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
-        Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
-
-        Blog blog = null;
-        if (c.moveToFirst()) {
-            if (c.getString(0) != null) {
-                blog = new Blog();
-                blog.setLocalTableBlogId(localId);
-                blog.setUrl(c.getString(c.getColumnIndex("url"))); // 0
-
-                blog.setBlogName(c.getString(c.getColumnIndex("blogName"))); // 1
-                blog.setUsername(c.getString(c.getColumnIndex("username"))); // 2
-                blog.setPassword(decryptPassword(c.getString(c.getColumnIndex("password")))); // 3
-                if (c.getString(c.getColumnIndex("httpuser")) == null) {
-                    blog.setHttpuser("");
-                } else {
-                    blog.setHttpuser(c.getString(c.getColumnIndex("httpuser")));
-                }
-                if (c.getString(c.getColumnIndex("httppassword")) == null) {
-                    blog.setHttppassword("");
-                } else {
-                    blog.setHttppassword(decryptPassword(c.getString(c.getColumnIndex("httppassword"))));
-                }
-                blog.setImagePlacement(c.getString(c.getColumnIndex("imagePlacement")));
-                blog.setFeaturedImageCapable(c.getInt(c.getColumnIndex("centerThumbnail")) > 0);
-                blog.setFullSizeImage(c.getInt(c.getColumnIndex("fullSizeImage")) > 0);
-                blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
-                blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
-                blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
-                blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
-                if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
-                    blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));
-                }
-                if (c.getString(c.getColumnIndex("dotcom_password")) != null) {
-                    blog.setDotcom_password(decryptPassword(c.getString(c.getColumnIndex("dotcom_password"))));
-                }
-                if (c.getString(c.getColumnIndex("api_key")) != null) {
-                    blog.setApi_key(c.getString(c.getColumnIndex("api_key")));
-                }
-                if (c.getString(c.getColumnIndex("api_blogid")) != null) {
-                    blog.setApi_blogid(c.getString(c.getColumnIndex("api_blogid")));
-                }
-                if (c.getString(c.getColumnIndex("wpVersion")) != null) {
-                    blog.setWpVersion(c.getString(c.getColumnIndex("wpVersion")));
-                }
-                blog.setPostFormats(c.getString(c.getColumnIndex("postFormats")));
-                blog.setScaledImage(c.getInt(c.getColumnIndex("isScaledImage")) > 0);
-                blog.setScaledImageWidth(c.getInt(c.getColumnIndex("scaledImgWidth")));
-                blog.setHomeURL(c.getString(c.getColumnIndex("homeURL")));
-                if (c.getString(c.getColumnIndex("blog_options")) == null) {
-                    blog.setBlogOptions("{}");
-                } else {
-                    blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
-                }
-                blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
-                blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
-                blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
-                blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
-                blog.setCapabilities(c.getString(c.getColumnIndex("capabilities")));
-            }
-        }
-        c.close();
-        return blog;
-    }
-
-    public Blog getBlogForDotComBlogId(String dotComBlogId) {
-        Cursor c = db.query(BLOGS_TABLE, new String[]{"id"}, "api_blogid=? OR (blogId=? AND dotcomFlag=1)",
-                new String[]{dotComBlogId, dotComBlogId}, null, null, null);
-        Blog blog = null;
-        if (c.moveToFirst()) {
-            blog = instantiateBlogByLocalId(c.getInt(0));
-        }
-        c.close();
-        return blog;
-    }
-
-    /*
-     * Jetpack blogs have the "wpcom" blog_id stored in options->api_blogid. This is because self-hosted blogs have both
-     * a blogID (local to their network), and a unique blogID on wpcom.
-     */
-    public int getLocalTableBlogIdForJetpackRemoteID(int remoteBlogId, String xmlRpcUrl) {
-        if (TextUtils.isEmpty(xmlRpcUrl)) {
-            String sql = "SELECT id FROM " + BLOGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=?";
-            String[] args = {Integer.toString(remoteBlogId)};
-            return SqlUtils.intForQuery(db, sql, args);
-        } else {
-            String sql = "SELECT id FROM " + BLOGS_TABLE + " WHERE dotcomFlag=0 AND api_blogid=? AND url=?";
-            String[] args = {Integer.toString(remoteBlogId), xmlRpcUrl};
-            return SqlUtils.intForQuery(db, sql, args);
-        }
-    }
-
-    public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
-        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
-                new String[]{Integer.toString(remoteBlogId)});
-        if (localBlogID == 0) {
-            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
-        }
-        return localBlogID;
-    }
-
-    public int getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(int remoteBlogId, String xmlRpcUrl) {
-        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? AND url=?",
-                new String[]{Integer.toString(remoteBlogId), xmlRpcUrl});
-        if (localBlogID==0) {
-            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, xmlRpcUrl);
-        }
-        return localBlogID;
     }
 
     public long getPlanIdForLocalTableBlogId(int localBlogId) {
@@ -1705,29 +1351,6 @@ public class WordPressDB {
                 new String[]{"delete", Integer.toString(blogId)});
     }
 
-    public int getWPCOMBlogID() {
-        int id = -1;
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "id" },
-                "dotcomFlag=1", null, null, null, null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-        if (numRows > 0) {
-            id = c.getInt(0);
-        }
-
-        c.close();
-
-        return id;
-    }
-
-    /*
-     * returns true if any posts in the passed blog have changes which haven't been uploaded yet
-     */
-    public boolean blogHasLocalChanges(int localBlogId, boolean isPage) {
-        String sql = "SELECT 1 FROM " + POSTS_TABLE + " WHERE isLocalChange=1 AND blogID=? AND isPage=?";
-        String[] args = {String.valueOf(localBlogId), isPage ? "1" : "0"};
-        return SqlUtils.boolForQuery(db, sql, args);
-    }
 
     /*
      * returns the number of posts/pages in the passed blog that aren't local drafts
@@ -1875,9 +1498,5 @@ public class WordPressDB {
         } catch (IOException e) {
             AppLog.e(T.DB, "failed to copy database", e);
         }
-    }
-
-    public boolean hasAnyJetpackBlogs() {
-        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + BLOGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
     }
 }

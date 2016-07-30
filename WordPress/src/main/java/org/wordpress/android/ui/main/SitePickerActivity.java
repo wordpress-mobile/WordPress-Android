@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -40,7 +39,8 @@ import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.xmlrpc.android.ApiHelper;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -131,12 +131,12 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuAdd.setVisible(false);
         } else {
             // don't allow editing visibility unless there are multiple wp.com blogs
-            mMenuEdit.setVisible(WordPress.wpDB.getNumDotComBlogs() > 1);
+            mMenuEdit.setVisible(mSiteStore.getDotComSitesCount() > 1);
             mMenuAdd.setVisible(true);
         }
 
         // no point showing search if there aren't multiple blogs
-        mMenuSearch.setVisible(WordPress.wpDB.getNumBlogs() > 1);
+        mMenuSearch.setVisible(mSiteStore.getSitesCount() > 1);
     }
 
     @Override
@@ -245,36 +245,38 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void saveHiddenSites() {
-        WordPress.wpDB.getDatabase().beginTransaction();
-        try {
-            // make all sites visible...
-            WordPress.wpDB.setAllDotComBlogsVisibility(true);
+        // TODO: STORES: This is super inefficient
+        // Mark all sites visible
+        List<SiteModel> sites = mSiteStore.getDotComSites();
+        for (SiteModel site : sites) {
+            site.setIsVisible(true);
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+        }
 
-            // ...then update ones marked hidden in the adapter, but don't hide the current site
-            boolean skippedCurrentSite = false;
-            String currentSiteName = null;
-            SiteList hiddenSites = getAdapter().getHiddenSites();
-            for (SiteRecord site : hiddenSites) {
-                if (site.localId == mCurrentLocalId) {
-                    skippedCurrentSite = true;
-                    currentSiteName = site.getBlogNameOrHomeURL();
-                } else {
-                    WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
-                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
-                }
+        // Update sites marked hidden in the adapter, but don't hide the current site
+        boolean skippedCurrentSite = false;
+        String currentSiteName = null;
+        SiteList hiddenSites = getAdapter().getHiddenSites();
+        for (SiteRecord site : hiddenSites) {
+            if (site.localId == mCurrentLocalId) {
+                skippedCurrentSite = true;
+                currentSiteName = site.getBlogNameOrHomeURL();
+            } else {
+                SiteModel siteModel = mSiteStore.getSiteByLocalId(site.localId);
+                siteModel.setIsVisible(false);
+                // Save the site
+                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+                // Remove stats data for hidden sites
+                StatsTable.deleteStatsForBlog(this, site.localId);
             }
+        }
 
-            // let user know the current site wasn't hidden
-            if (skippedCurrentSite) {
-                String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
-                ToastUtils.showToast(this,
-                        String.format(cantHideCurrentSite, currentSiteName),
-                        ToastUtils.Duration.LONG);
-            }
-
-            WordPress.wpDB.getDatabase().setTransactionSuccessful();
-        } finally {
-            WordPress.wpDB.getDatabase().endTransaction();
+        // let user know the current site wasn't hidden
+        if (skippedCurrentSite) {
+            String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
+            ToastUtils.showToast(this,
+                    String.format(cantHideCurrentSite, currentSiteName),
+                    ToastUtils.Duration.LONG);
         }
     }
 

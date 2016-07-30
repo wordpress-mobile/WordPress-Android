@@ -14,19 +14,21 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfigureAdapter.SiteViewHolder> {
+import javax.inject.Inject;
+
+public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfigureAdapter.SiteViewHolder> {
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
@@ -48,6 +50,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
     private boolean mShowSelfHostedSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
+    @Inject SiteStore mSiteStore;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -80,6 +83,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
     public StatsWidgetConfigureAdapter(Context context, long primarySiteId) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         setHasStableIds(true);
 
@@ -174,11 +178,8 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
-
-            blogs = getBlogsForCurrentView(extraFields);
-            SiteList sites = new SiteList(blogs);
+            List<SiteModel> siteModels = getBlogsForCurrentView();
+            SiteList sites = new SiteList(siteModels);
 
             // sort by blog/host
             Collections.sort(sites, new Comparator<SiteRecord>() {
@@ -207,22 +208,24 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
             mIsTaskRunning = false;
         }
 
-        private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
+        private List<SiteModel> getBlogsForCurrentView() {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs and all wp.com blogs
-                    return WordPress.wpDB.getBlogsBy(null, extraFields);
+                    // all self-hosted sites and all wp.com sites
+                    return mSiteStore.getSites();
                 } else {
-                    // only wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                    // only wp.com sites
+                    return mSiteStore.getDotComSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs plus visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                    // all self-hosted sites plus visible wp.com sites
+                    List<SiteModel> out = mSiteStore.getVisibleDotComSites();
+                    out.addAll(mSiteStore.getDotOrgSites());
+                    return out;
                 } else {
                     // only visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                    return mSiteStore.getVisibleDotComSites();
                 }
             }
         }
@@ -233,7 +236,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
      */
      static class SiteRecord {
         final int localId;
-        final int blogId;
+        final long blogId;
         final String blogName;
         final String homeURL;
         final String url;
@@ -241,15 +244,15 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         final boolean isDotCom;
         final boolean isHidden;
 
-        SiteRecord(Map<String, Object> account) {
-            localId = MapUtils.getMapInt(account, "id");
-            blogId = MapUtils.getMapInt(account, "blogId");
-            blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
-            homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
-            url = MapUtils.getMapStr(account, "url");
+        SiteRecord(SiteModel site) {
+            localId = site.getId();
+            blogId = site.getSiteId();
+            blogName = SiteUtils.getSiteNameOrHomeURL(site);
+            homeURL = SiteUtils.getHomeURLOrHostName(site);
+            url = site.getUrl();
             blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
-            isHidden = MapUtils.getMapBool(account, "isHidden");
+            isDotCom = site.isWPCom();
+            isHidden = !site.isVisible();
         }
 
         String getBlogNameOrHomeURL() {
@@ -262,10 +265,10 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
-        SiteList(List<Map<String, Object>> accounts) {
-            if (accounts != null) {
-                for (Map<String, Object> account : accounts) {
-                    add(new SiteRecord(account));
+        SiteList(List<SiteModel> sites) {
+            if (sites != null) {
+                for (SiteModel site : sites) {
+                    add(new SiteRecord(site));
                 }
             }
         }

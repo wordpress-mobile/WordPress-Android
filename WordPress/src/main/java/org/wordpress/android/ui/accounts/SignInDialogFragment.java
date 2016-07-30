@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
@@ -46,6 +47,7 @@ public class SignInDialogFragment extends DialogFragment {
     public static final int ACTION_OPEN_APPLICATION_LOG = 4;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public SignInDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -165,8 +167,8 @@ public class SignInDialogFragment extends DialogFragment {
                         SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().showConversation(getActivity(), Tag.ORIGIN_LOGIN_SCREEN_ERROR,
-                        mAccountStore.getAccount().getUserName());
+                HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
+                        Tag.ORIGIN_LOGIN_SCREEN_ERROR, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:
