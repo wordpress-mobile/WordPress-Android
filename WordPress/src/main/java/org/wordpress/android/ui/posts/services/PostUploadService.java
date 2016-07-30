@@ -415,7 +415,7 @@ public class PostUploadService extends Service {
                 }
 
                 // request the new/updated post from the server to ensure local copy matches server
-                ApiHelper.updateSinglePost(mSite.getId(), mPost.getRemotePostId(), mPost.isPage());
+                ApiHelper.updateSinglePost(mSite, mPost.getRemotePostId(), mPost.isPage());
 
                 return true;
             } catch (final XMLRPCException e) {

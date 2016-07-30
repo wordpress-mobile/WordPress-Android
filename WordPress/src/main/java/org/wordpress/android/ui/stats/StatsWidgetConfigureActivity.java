@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AppLog;
@@ -136,16 +136,16 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     private void addWidgetToScreenAndFinish(int localID) {
-        final Blog currentBlog = WordPress.getBlog(localID);
+        SiteModel site = mSiteStore.getSiteByLocalId(localID);
 
-        if (currentBlog == null) {
+        if (site == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + localID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
-        if (currentBlog.getDotComBlogId() == null) {
+        if (!site.isWPCom()) {
             // The blog could be a self-hosted blog with NO Jetpack installed on it
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh

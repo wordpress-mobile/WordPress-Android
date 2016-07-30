@@ -1304,7 +1304,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     postContent.removeSpan(characterStyle);
                 }
             }
-            content = WPHtml.toHtml(postContent);
+            content = WPHtml.toHtml(postContent, mSiteStore);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -1344,7 +1344,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                         // network image has a mediaId
                         if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
-                            postContent.insert(tagStart, WPHtml.getContent(wpIS));
+                            postContent.insert(tagStart, WPHtml.getContent(wpIS, mSiteStore));
                         } else {
                             // local image for upload
                             postContent.insert(tagStart,

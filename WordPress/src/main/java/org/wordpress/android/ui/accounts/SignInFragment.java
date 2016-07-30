@@ -39,13 +39,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.action.AccountAction;
 import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.generated.AuthenticationActionBuilder;
 import org.wordpress.android.stores.generated.SiteActionBuilder;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.network.HTTPAuthManager;
 import org.wordpress.android.stores.network.MemorizingTrustManager;
 import org.wordpress.android.stores.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
@@ -114,7 +114,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected String mTwoStepCode;
     protected String mHttpUsername;
     protected String mHttpPassword;
-    protected Blog mJetpackBlog;
+    protected SiteModel mJetpackSite;
 
     protected WPTextView mSignInButton;
     protected WPTextView mCreateAccountButton;
@@ -420,12 +420,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private boolean isJetpackAuth() {
-        return mJetpackBlog != null;
+        return mJetpackSite != null;
     }
 
     // Set blog for Jetpack auth
-    public void setBlogAndCustomMessageForJetpackAuth(Blog blog, String customAuthMessage) {
-        mJetpackBlog = blog;
+    public void setBlogAndCustomMessageForJetpackAuth(SiteModel site, String customAuthMessage) {
+        mJetpackSite = site;
         if(customAuthMessage != null && mJetpackAuthLabel != null) {
             mJetpackAuthLabel.setText(customAuthMessage);
         }

@@ -601,7 +601,7 @@ public class StatsActivity extends AppCompatActivity
 
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
-    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
+    public void onDateChanged(long siteId, StatsTimeframe timeframe, String date) {
         if (isFinishing()) {
             return;
         }

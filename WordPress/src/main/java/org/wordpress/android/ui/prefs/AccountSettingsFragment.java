@@ -17,16 +17,17 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.Dispatcher;
 import org.wordpress.android.stores.generated.AccountActionBuilder;
 import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.AccountStore;
 import org.wordpress.android.stores.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.stores.store.AccountStore.PostAccountSettingsPayload;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -127,7 +128,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mPrimarySitePreference) {
-            changePrimaryBlogPreference(newValue.toString());
+            changePrimaryBlogPreference(Long.parseLong(newValue.toString()));
             updatePrimaryBlog(newValue.toString());
             return false;
         } else if (preference == mWebAddressPreference) {
@@ -152,9 +153,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
-
-        String blogId = String.valueOf(account.getPrimaryBlogId());
-        changePrimaryBlogPreference(blogId);
+        changePrimaryBlogPreference(account.getPrimaryBlogId());
 
         checkIfEmailChangeIsPending();
     }
@@ -194,11 +193,11 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
     }
 
-    private void changePrimaryBlogPreference(String blogId) {
-        mPrimarySitePreference.setValue(blogId);
-        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId(blogId);
-        if (primaryBlog != null) {
-            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(primaryBlog.getNameOrHostUrl()));
+    private void changePrimaryBlogPreference(long siteRemoteId) {
+        mPrimarySitePreference.setValue(String.valueOf(siteRemoteId));
+        SiteModel site = mSiteStore.getSiteBySiteId(siteRemoteId);
+        if (site != null) {
+            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
             mPrimarySitePreference.refreshAdapter();
         }
     }

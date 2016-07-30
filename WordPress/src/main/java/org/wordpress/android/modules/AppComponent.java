@@ -15,9 +15,11 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -27,9 +29,12 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
+import org.wordpress.android.ui.posts.SelectCategoriesActivity;
+import org.wordpress.android.ui.posts.services.PostMediaService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -40,6 +45,7 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragmen
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -69,6 +75,7 @@ import dagger.Component;
 public interface AppComponent {
     void inject(WordPress application);
     void inject(WPMainActivity object);
+    void inject(SignInActivity object);
     void inject(SignInFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
@@ -89,6 +96,7 @@ public interface AppComponent {
     void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
+    void inject(EditCommentActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
@@ -100,6 +108,7 @@ public interface AppComponent {
     void inject(BlogPreferencesActivity object);
     void inject(AppSettingsFragment object);
     void inject(PeopleManagementActivity object);
+    void inject(PersonDetailFragment object);
     void inject(PlansActivity object);
 
     void inject(EditPostActivity object);
@@ -118,6 +127,7 @@ public interface AppComponent {
     void inject(ReaderTagInfoView object);
     void inject(ReaderLikingUsersView object);
     void inject(ReaderWebView object);
+    void inject(ReaderPostPagerActivity object);
 
     void inject(WPWebViewActivity object);
     void inject(PostPreviewFragment object);
@@ -126,6 +136,9 @@ public interface AppComponent {
     void inject(ThemeWebActivity object);
 
     void inject(MediaDeleteService object);
+    void inject(PostMediaService object);
+
+    void inject(SelectCategoriesActivity object);
 
     // WPDelayedHurlStack will burn in hell as soon as we have all the XMLRPC based stores ready.
     void inject(WPDelayedHurlStack object);

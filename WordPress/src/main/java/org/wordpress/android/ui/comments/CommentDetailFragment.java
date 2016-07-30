@@ -578,7 +578,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mNote != null && mShouldRequestCommentFromNote) {
                 // If a remote comment was requested, check if we have the comment for display.
                 // Otherwise request the comment via the REST API
-                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
+                int localTableBlogId = mSiteStore.getLocalIdForRemoteSiteId(mNote.getSiteId());
                 if (localTableBlogId > 0) {
                     Comment comment = CommentTable.getComment(localTableBlogId, mNote.getParentCommentId());
                     if (comment != null) {

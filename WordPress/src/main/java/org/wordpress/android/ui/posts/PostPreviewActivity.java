@@ -329,7 +329,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            return ApiHelper.updateSinglePost(mSite.getId(), mPost.getRemotePostId(), mIsPage);
+            return ApiHelper.updateSinglePost(mSite, mPost.getRemotePostId(), mIsPage);
         }
 
         @Override

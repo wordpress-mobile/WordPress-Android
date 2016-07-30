@@ -19,6 +19,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -40,6 +42,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class SelectCategoriesActivity extends AppCompatActivity {
     String finalResult = "";
     private final Handler mHandler = new Handler();
@@ -53,9 +57,12 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
     XMLRPCClientInterface mClient;
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
@@ -90,8 +97,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("id");
-            blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(blogId);
+            if (site == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
