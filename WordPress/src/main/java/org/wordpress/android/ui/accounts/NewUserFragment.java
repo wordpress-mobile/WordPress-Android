@@ -360,7 +360,14 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         intent.putExtra("username", mUsername);
         intent.putExtra("password", mPassword);
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-        getFragmentManager().popBackStack();
+        try {
+            getFragmentManager().popBackStack();
+        } catch (IllegalStateException e) {
+            // Catch the ISE exception, because we can't check for the fragment state here
+            // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
+            // fragment transaction will be executed. In that case the user already is back on the Sign In screen.
+            AppLog.e(T.NUX, e);
+        }
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
     }
 
