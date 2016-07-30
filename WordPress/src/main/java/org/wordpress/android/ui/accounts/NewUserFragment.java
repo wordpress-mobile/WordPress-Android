@@ -316,6 +316,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mEmail = EditTextUtils.getText(mEmailTextField).trim();
         mUsername = EditTextUtils.getText(mUsernameTextField).trim();
         mPassword = EditTextUtils.getText(mPasswordTextField).trim();
+
         String siteName = siteUrlToSiteName(siteUrl);
         String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
