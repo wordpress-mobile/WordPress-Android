@@ -224,7 +224,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // first item is a ReaderSiteHeaderView
             return VIEW_TYPE_SITE_HEADER;
         } else if (position == 0 && hasTagHeader()) {
-            // first item is a ReaderTagInfoView
+            // first item is a ReaderTagHeaderView
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
