@@ -589,7 +589,7 @@ public class ReaderCommentListActivity extends AppCompatActivity implements Read
 
         // not connected to internet we are not able to load new comments
         if( !NetworkUtils.isNetworkAvailable(this) ){
-            Toast.makeText(this, R.string.reader_toast_not_connected_to_internet, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_network_message, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -613,7 +613,7 @@ public class ReaderCommentListActivity extends AppCompatActivity implements Read
 
         // not connected to internet we are not able to load new comments
         if( !NetworkUtils.isNetworkAvailable(this) ){
-            Toast.makeText(this, R.string.reader_toast_not_connected_to_internet, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_network_message, Toast.LENGTH_SHORT).show();
             return;
         }
 
