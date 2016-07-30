@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {

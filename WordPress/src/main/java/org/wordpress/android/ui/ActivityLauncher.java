@@ -125,7 +125,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
