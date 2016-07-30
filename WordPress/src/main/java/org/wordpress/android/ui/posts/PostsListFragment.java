@@ -41,6 +41,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.DeleteSinglePostTask;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
@@ -508,8 +509,9 @@ public class PostsListFragment extends Fragment
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    new ApiHelper.DeleteSinglePostTask().execute(getSelectedSite(), fullPost.getRemotePostId(),
-                            mIsPage);
+                    DeleteSinglePostTask task = new ApiHelper.DeleteSinglePostTask(getSelectedSite(),
+                            fullPost.getRemotePostId(), mIsPage);
+                    task.execute();
                 }
             }
         });

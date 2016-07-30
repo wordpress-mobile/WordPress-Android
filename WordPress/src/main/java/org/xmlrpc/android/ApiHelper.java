@@ -17,7 +17,6 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
@@ -189,21 +188,26 @@ public class ApiHelper {
      * Delete a single post or page via XML-RPC API parameters follow those of FetchSinglePostTask
      */
     public static class DeleteSinglePostTask extends HelperAsyncTask<Object, Boolean, Boolean> {
+        SiteModel mSite;
+        String mPostId;
+        boolean mIsPage;
+
+        public DeleteSinglePostTask(SiteModel site, String postId, boolean isPage) {
+            mSite = site;
+            mPostId = postId;
+            mIsPage = isPage;
+        }
 
         @Override
         protected Boolean doInBackground(Object... arguments) {
-            Blog blog = (Blog) arguments[0];
-            if (blog == null) {
-                return false;
-            }
-
-            String postId = (String) arguments[1];
-            boolean isPage = (Boolean) arguments[2];
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-            Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), postId};
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
+            Object[] params = {
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
+                    mPostId};
             try {
-                client.call(isPage ? Method.DELETE_PAGE : Method.DELETE_POST, params);
+                client.call(mIsPage ? Method.DELETE_PAGE : Method.DELETE_POST, params);
                 return true;
             } catch (XMLRPCException | IOException | XmlPullParserException e) {
                 mErrorMessage = e.getMessage();
