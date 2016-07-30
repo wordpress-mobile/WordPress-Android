@@ -50,6 +50,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String MAX_LINKS_KEY = "comment_max_links";
     public static final String MODERATION_KEYS_KEY = "moderation_keys";
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    public static final String SHARING_LABEL_KEY = "sharing_label";
+    public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
+    public static final String SHARING_REBLOG_KEY = "social_notifications_reblog";
+    public static final String SHARING_LIKE_KEY = "social_notifications_like";
+    public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
+    public static final String TWITTER_USERNAME_KEY = "twitter_via";
 
     // WP.com REST keys used to GET certain site settings
     public static final String GET_TITLE_KEY = "name";
@@ -72,6 +78,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CAT_POST_COUNT_KEY = "post_count";
     private static final String CAT_NUM_POSTS_KEY = "found";
     private static final String CATEGORIES_KEY = "categories";
+    public static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
@@ -189,6 +196,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
+        mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
+        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
+        mRemoteSettings.allowReblogButton = settingsObject.optBoolean(SHARING_REBLOG_KEY, false);
+        mRemoteSettings.allowLikeButton = settingsObject.optBoolean(SHARING_LIKE_KEY, false);
+        mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
+        mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
@@ -315,6 +328,30 @@ class DotComSiteSettings extends SiteSettingsInterface {
             } else {
                 params.put(BLACKLIST_KEYS_KEY, "");
             }
+        }
+
+        if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
+            params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
+        }
+
+        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
+            params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
+        }
+
+        if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
+            params.put(SHARING_REBLOG_KEY, String.valueOf(mSettings.allowReblogButton));
+        }
+
+        if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
+            params.put(SHARING_LIKE_KEY, String.valueOf(mSettings.allowLikeButton));
+        }
+
+        if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
+            params.put(SHARING_COMMENT_LIKES_KEY, String.valueOf(mSettings.allowCommentLikes));
+        }
+
+        if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
+            params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
         }
 
         return params;

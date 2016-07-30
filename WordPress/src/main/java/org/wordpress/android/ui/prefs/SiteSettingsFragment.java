@@ -8,26 +8,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +47,6 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -74,31 +66,12 @@ import de.greenrobot.event.EventBus;
  * Settings are synced automatically when local changes are made.
  */
 
-public class SiteSettingsFragment extends PreferenceFragment
-        implements Preference.OnPreferenceChangeListener,
-                   Preference.OnPreferenceClickListener,
-                   AdapterView.OnItemLongClickListener,
-                   ViewGroup.OnHierarchyChangeListener,
-                   Dialog.OnDismissListener,
-                   SiteSettingsInterface.SiteSettingsListener {
-
-    /**
-     * Use this argument to pass the {@link Integer} local blog ID to this fragment.
-     */
-    public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
-
+public class SiteSettingsFragment extends SettingsFragment implements Dialog.OnDismissListener {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
      */
     public static final int RESULT_BLOG_REMOVED = Activity.RESULT_FIRST_USER;
-
-    /**
-     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
-     *
-     * Used to format user-facing {@link String}'s in certain preferences.
-     */
-    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
 
     /**
      * url that points to wordpress.com purchases
@@ -124,19 +97,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final String PURCHASE_ACTIVE_KEY = "active";
     private static final String ANALYTICS_ERROR_PROPERTY_KEY = "error";
 
-    private static final long FETCH_DELAY = 1000;
-
-    // Reference to blog obtained from passed ID (ARG_LOCAL_BLOG_ID)
-    private Blog mBlog;
-
-    // Can interface with WP.com or WP.org
-    private SiteSettingsInterface mSiteSettings;
-
     // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
-
-    // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment
-    private boolean mShouldFetch;
 
     // General settings
     private EditTextPreference mTitlePref;
@@ -186,72 +148,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mStartOverPref;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
-
-    private boolean mEditingEnabled = true;
-
-    // Reference to the state of the fragment
-    private boolean mIsFragmentPaused = false;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Activity activity = getActivity();
-
-        // make sure we have local site data and a network connection, otherwise finish activity
-        mBlog = WordPress.getBlog(getArguments().getInt(ARG_LOCAL_BLOG_ID, -1));
-        if (mBlog == null || !NetworkUtils.checkConnection(activity)) {
-            getActivity().finish();
-            return;
-        }
-
-        // track successful settings screen access
-        AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SITE_SETTINGS_ACCESSED);
-
-        // setup state to fetch remote settings
-        mShouldFetch = true;
-
-        // initialize the appropriate settings interface (WP.com or WP.org)
-        mSiteSettings = SiteSettingsInterface.getInterface(activity, mBlog, this);
-
-        setRetainInstance(true);
-        addPreferencesFromResource(R.xml.site_settings);
-
-        // toggle which preferences are shown and set references
-        initPreferences();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        WordPress.wpDB.saveBlog(mBlog);
-        mIsFragmentPaused = true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Fragment#onResume() is called after FragmentActivity#onPostResume().
-        // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
-        mIsFragmentPaused = false;
-
-        // always load cached settings
-        mSiteSettings.init(false);
-
-        if (mShouldFetch) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // initialize settings with locally cached values, fetch remote on first pass
-                    mSiteSettings.init(true);
-                }
-            }, FETCH_DELAY);
-            // stop future calls from fetching remote settings
-            mShouldFetch = false;
-        }
-    }
 
     @Override
     public void onDestroyView() {
@@ -309,22 +205,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
-        // use a wrapper to apply the Calypso theme
-        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        LayoutInflater localInflater = inflater.cloneInContext(themer);
-        View view = super.onCreateView(localInflater, container, savedInstanceState);
-
-        if (view != null) {
-            setupPreferenceList((ListView) view.findViewById(android.R.id.list), getResources());
-        }
-
-        return view;
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
         super.onSaveInstanceState(outState);
@@ -335,24 +215,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) setupMorePreferenceScreen();
-    }
-
-    @Override
-    public void onChildViewAdded(View parent, View child) {
-        if (child.getId() == android.R.id.title && child instanceof TextView) {
-            // style preference category title views
-            TextView title = (TextView) child;
-            WPPrefUtils.layoutAsBody2(title);
-        } else {
-            // style preference title views
-            TextView title = (TextView) child.findViewById(android.R.id.title);
-            if (title != null) WPPrefUtils.layoutAsSubhead(title);
-        }
-    }
-
-    @Override
-    public void onChildViewRemoved(View parent, View child) {
-        // NOP
     }
 
     @Override
@@ -517,32 +379,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        ListView listView = (ListView) parent;
-        ListAdapter listAdapter = listView.getAdapter();
-        Object obj = listAdapter.getItem(position);
-
-        if (obj != null) {
-            if (obj instanceof View.OnLongClickListener) {
-                View.OnLongClickListener longListener = (View.OnLongClickListener) obj;
-                return longListener.onLongClick(view);
-            } else if (obj instanceof PreferenceHint) {
-                PreferenceHint hintObj = (PreferenceHint) obj;
-                if (hintObj.hasHint()) {
-                    HashMap<String, Object> properties = new HashMap<>();
-                    properties.put("hint_shown", hintObj.getHint());
-                    AnalyticsUtils.trackWithCurrentBlogDetails(
-                            AnalyticsTracker.Stat.SITE_SETTINGS_HINT_TOAST_SHOWN, properties);
-                    ToastUtils.showToast(getActivity(), hintObj.getHint(), ToastUtils.Duration.SHORT);
-                }
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public void onDismiss(DialogInterface dialog) {
         if (mEditingList == mSiteSettings.getModerationKeys()) {
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
@@ -552,60 +388,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         mEditingList = null;
     }
 
-    @Override
-    public void onSettingsUpdated(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-            getActivity().finish();
-            return;
-        }
-
-        if (isAdded()) setPreferencesFromSiteSettings();
-    }
-
-    @Override
-    public void onSettingsSaved(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
-            return;
-        }
-        mBlog.setBlogName(mSiteSettings.getTitle());
-        WordPress.wpDB.saveBlog(mBlog);
-
-        // update the global current Blog so WordPress.getCurrentBlog() callers will get the updated object
-        WordPress.setCurrentBlog(mBlog.getLocalTableBlogId());
-
-        EventBus.getDefault().post(new CoreEvents.BlogListChanged());
-    }
-
-    @Override
-    public void onCredentialsValidated(Exception error) {
-        if (error != null) {
-            ToastUtils.showToast(WordPress.getContext(), R.string.username_or_password_incorrect);
-        }
-    }
-
-    private void setupPreferenceList(ListView prefList, Resources res) {
-        if (prefList == null || res == null) return;
-
-        // customize list dividers
-        //noinspection deprecation
-        prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
-        prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
-        // handle long clicks on preferences to display hints
-        prefList.setOnItemLongClickListener(this);
-        // required to customize (Calypso) preference views
-        prefList.setOnHierarchyChangeListener(this);
-        // remove footer divider bar
-        prefList.setFooterDividersEnabled(false);
-        //noinspection deprecation
-        prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
-    }
-
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
-    private void initPreferences() {
+    @Override
+    protected void initPreferences() {
         mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
         mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
         mAddressPref = (EditTextPreference) getChangePref(R.string.pref_key_site_address);
@@ -653,6 +440,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mBlog.isAdmin()) hideAdminRequiredPreferences();
     }
 
+    @Override
     public void setEditingEnabled(boolean enabled) {
         // excludes mAddressPref, mMorePreference
         final Preference[] editablePreference = {
@@ -867,7 +655,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
     }
 
-    private void setPreferencesFromSiteSettings() {
+    @Override
+    protected void setPreferencesFromSiteSettings() {
         mLocationPref.setChecked(mSiteSettings.getLocation());
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
@@ -906,6 +695,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+    }
+
+    @Override
+    protected void addPreferencesFromResource() {
+        addPreferencesFromResource(R.xml.site_settings);
     }
 
     private void setCategories() {
@@ -974,27 +768,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSiteSettings.setReceivePingbacks(newValue);
         mReceivePingbacksPref.setChecked(newValue);
         mReceivePingbacksNested.setChecked(newValue);
-    }
-
-    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
-        pref.setValue(value);
-        pref.setSummary(summary);
-        pref.refreshAdapter();
-    }
-
-    /**
-     * Helper method to perform validation and set multiple properties on an EditTextPreference.
-     * If newValue is equal to the current preference text no action will be taken.
-     */
-    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
-
-        if (!newValue.equals(pref.getSummary())) {
-            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
-
-            pref.setText(formattedValue);
-            pref.setSummary(formattedValue);
-        }
     }
 
     /**
@@ -1183,10 +956,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    private boolean shouldShowListPreference(DetailListPreference preference) {
-        return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
-    }
-
     private boolean setupMorePreferenceScreen() {
         if (mMorePreference == null || !isAdded()) return false;
         String title = getString(R.string.site_settings_discussion_title);
@@ -1222,14 +991,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void removeSelfHostedOnlyPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site_screen);
-    }
-
-    private Preference getChangePref(int id) {
-        return WPPrefUtils.getPrefAndSetChangeListener(this, id, this);
-    }
-
-    private Preference getClickPref(int id) {
-        return WPPrefUtils.getPrefAndSetClickListener(this, id, this);
     }
 
     private void handleDeleteSiteError() {

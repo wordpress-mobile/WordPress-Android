@@ -126,7 +126,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, PublicizeListActivity.class);
         intent.putExtra(PublicizeConstants.ARG_SITE_ID, blog.getRemoteBlogId());
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, Blog blog) {

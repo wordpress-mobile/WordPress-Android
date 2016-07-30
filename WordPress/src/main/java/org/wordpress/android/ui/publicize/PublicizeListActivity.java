@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
@@ -27,7 +28,8 @@ import de.greenrobot.event.EventBus;
 public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
-        PublicizeServiceAdapter.OnServiceClickListener {
+        PublicizeServiceAdapter.OnServiceClickListener,
+        PublicizeListFragment.PublicizeManageConnectionsListener {
 
     private int mSiteId;
     private ProgressDialog mProgressDialog;
@@ -173,12 +175,6 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
@@ -294,5 +290,19 @@ public class PublicizeListActivity extends AppCompatActivity
         args.putString(PublicizeConstants.ARG_SERVICE_ID, event.getServiceId());
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
+    }
+
+    @Override
+    public void onManageConnectionsClicked() {
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mSiteId);
+        Bundle args = new Bundle();
+        args.putInt(SettingsFragment.ARG_LOCAL_BLOG_ID, localBlogId);
+
+        PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
+        manageConnectionsFragment.setArguments(args);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

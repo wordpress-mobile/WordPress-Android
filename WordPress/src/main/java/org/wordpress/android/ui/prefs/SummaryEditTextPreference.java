@@ -34,12 +34,14 @@ import org.wordpress.android.util.WPPrefUtils;
  *  - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
  *                       (see {@link TextView#setMaxLines(int)} for details)
  *  - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
+ *  - app:dialogSummary : sets the summary text in the dialog
  */
 
 public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
     private int mLines;
     private int mMaxLines;
     private String mHint;
+    private String mDialogMessage;
     private AlertDialog mDialog;
     private int mWhichButtonClicked;
 
@@ -67,6 +69,8 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
                 mMaxLines = array.getInt(index, -1);
             } else if (index == R.styleable.SummaryEditTextPreference_longClickHint) {
                 mHint = array.getString(index);
+            } else if (index == R.styleable.SummaryEditTextPreference_dialogMessage) {
+                mDialogMessage = array.getString(index);
             }
         }
 
@@ -115,6 +119,10 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             builder.setCustomTitle(titleView);
         } else {
             builder.setTitle(getTitle());
+        }
+
+        if (mDialogMessage != null) {
+            builder.setMessage(mDialogMessage);
         }
 
         View view = View.inflate(getContext(), getDialogLayoutResource(), null);
