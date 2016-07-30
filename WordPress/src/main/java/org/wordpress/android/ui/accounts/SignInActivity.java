@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;

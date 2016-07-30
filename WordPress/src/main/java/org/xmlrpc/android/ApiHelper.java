@@ -14,22 +14,18 @@ import com.android.volley.RedirectError;
 import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.xmlpull.v1.XmlPullParserException;
@@ -135,56 +131,6 @@ public class ApiHelper {
 
     public interface DatabasePersistCallback {
         void onDataReadyToSave(List list);
-    }
-
-    /**
-     * request deleted comments for passed blog and remove them from local db
-     * @param blog  blog to check
-     * @return count of comments that were removed from db
-     */
-    public static int removeDeletedComments(Blog blog) {
-        if (blog == null) {
-            return 0;
-        }
-
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(
-                blog.getUri(),
-                blog.getHttpuser(),
-                blog.getHttppassword());
-
-        Map<String, Object> hPost = new HashMap<String, Object>();
-        hPost.put("status", "trash");
-
-        Object[] params = { blog.getRemoteBlogId(),
-                blog.getUsername(),
-                blog.getPassword(),
-                hPost };
-
-        int numDeleted = 0;
-        try {
-            Object[] result = (Object[]) client.call(Method.GET_COMMENTS, params);
-            if (result == null || result.length == 0) {
-                return 0;
-            }
-            Map<?, ?> contentHash;
-            for (Object aComment : result) {
-                contentHash = (Map<?, ?>) aComment;
-                long commentId = Long.parseLong(contentHash.get("comment_id").toString());
-                if (CommentTable.deleteComment(blog.getLocalTableBlogId(), commentId))
-                    numDeleted++;
-            }
-            if (numDeleted > 0) {
-                AppLog.d(T.COMMENTS, String.format("removed %d deleted comments", numDeleted));
-            }
-        } catch (XMLRPCException e) {
-            AppLog.e(T.COMMENTS, e);
-        } catch (IOException e) {
-            AppLog.e(T.COMMENTS, e);
-        } catch (XmlPullParserException e) {
-            AppLog.e(T.COMMENTS, e);
-        }
-
-        return numDeleted;
     }
 
     public static CommentList refreshComments(SiteModel site, Object[] commentParams,
@@ -657,69 +603,6 @@ public class ApiHelper {
                 }
             }
         }
-    }
-
-    public static class GetFeatures extends AsyncTask<List<?>, Void, FeatureSet> {
-        public interface Callback {
-            void onResult(FeatureSet featureSet);
-        }
-
-        private Callback mCallback;
-
-        public GetFeatures() {
-        }
-
-        public GetFeatures(Callback callback) {
-            mCallback = callback;
-        }
-
-        public FeatureSet doSynchronously(List<?>... params) {
-            return doInBackground(params);
-        }
-
-        @Override
-        protected FeatureSet doInBackground(List<?>... params) {
-            List<?> arguments = params[0];
-            Blog blog = (Blog) arguments.get(0);
-
-            if (blog == null)
-                return null;
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-
-            Object[] apiParams = new Object[] {
-                    blog.getRemoteBlogId(),
-                    blog.getUsername(),
-                    blog.getPassword(),
-            };
-
-            Map<?, ?> resultMap = null;
-            try {
-                resultMap = (HashMap<?, ?>) client.call(Method.WPCOM_GET_FEATURES, apiParams);
-            } catch (ClassCastException cce) {
-                AppLog.e(T.API, "wpcom.getFeatures error", cce);
-            } catch (XMLRPCException e) {
-                AppLog.e(T.API, "wpcom.getFeatures error", e);
-            } catch (IOException e) {
-                AppLog.e(T.API, "wpcom.getFeatures error", e);
-            } catch (XmlPullParserException e) {
-                AppLog.e(T.API, "wpcom.getFeatures error", e);
-            }
-
-            if (resultMap != null) {
-                return new FeatureSet(blog.getRemoteBlogId(), resultMap);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(FeatureSet result) {
-            if (mCallback != null)
-                mCallback.onResult(result);
-        }
-
     }
 
     /**

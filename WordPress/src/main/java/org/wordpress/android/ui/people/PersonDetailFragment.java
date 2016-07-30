@@ -16,8 +16,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.stores.model.SiteModel;
 import org.wordpress.android.stores.store.SiteStore;

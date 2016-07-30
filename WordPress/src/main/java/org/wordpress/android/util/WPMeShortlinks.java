@@ -11,8 +11,6 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.stores.model.SiteModel;
@@ -111,31 +109,5 @@ public class WPMeShortlinks {
         }
 
         return "http://wp.me/" + type + blogShortlink + "-" + id;
-    }
-
-    /**
-     * Returns The blog shortlink
-     *
-     * @param blog Blog we want calculate the shortlink
-     * @return String The blog shortlink or null (null is returned if the blog object is empty, or it's not a wpcom/jetpack blog, or in case of errors).
-     */
-    public static String getBlogShortlink(Blog blog) {
-        if (blog == null) {
-            return null;
-        }
-
-        if (!blog.isDotcomFlag() && !blog.isJetpackPowered()) {
-            return null;
-        }
-
-        try {
-            double blogID = blog.isDotcomFlag() ? blog.getRemoteBlogId() : Double.parseDouble(blog.getApi_blogid());
-            String shortlink = wpme_dec2sixtwo(blogID);
-            String shortlinkWithProtocol = (shortlink == null) ? blog.getHomeURL() : "http://wp.me/" + shortlink;
-            return shortlinkWithProtocol;
-        } catch (NumberFormatException e) {
-            AppLog.e(T.UTILS, "Remote Blog ID cannot be converted to double ", e);
-            return blog.getHomeURL();
-        }
     }
 }

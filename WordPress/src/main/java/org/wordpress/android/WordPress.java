@@ -29,8 +29,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.yarolegovich.wellsql.WellSql;
@@ -40,7 +38,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -85,7 +82,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
@@ -511,30 +507,6 @@ public class WordPress extends MultiDexApplication {
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
-    }
-
-    public static String getLoginUrl(Blog blog) {
-        String loginURL = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {
-        }.getType();
-        Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
-            if (homeURLMap != null)
-                loginURL = homeURLMap.get("value").toString();
-        }
-        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
-        if (loginURL == null) {
-            if (blog.getUrl().lastIndexOf("/") != -1) {
-                return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
-                        + "/wp-login.php";
-            } else {
-                return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
-            }
-        }
-
-        return loginURL;
     }
 
     /**

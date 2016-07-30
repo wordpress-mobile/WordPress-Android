@@ -10,7 +10,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.stores.model.SiteModel;
@@ -61,7 +60,7 @@ import java.util.Map;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)} method. It will
+ * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method. It will
  * determine which interface ({@link SelfHostedSiteSettings} or {@link DotComSiteSettings}) is
  * appropriate for the given blog.
  */
@@ -701,9 +700,7 @@ public abstract class SiteSettingsInterface {
      * Needed so that subclasses can be created before initializing. The final member variables
      * are null until object has been created so XML-RPC callbacks will not run.
      *
-     * @return
-     * returns itself for the convenience of
-     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
+     * @return itself
      */
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
