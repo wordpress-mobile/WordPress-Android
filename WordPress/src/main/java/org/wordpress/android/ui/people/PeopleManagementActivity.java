@@ -226,12 +226,6 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     public void onBackPressed() {
         if (!navigateBackToPeopleListFragment()) {
             super.onBackPressed();

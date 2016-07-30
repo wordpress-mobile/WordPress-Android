@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.people;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -82,19 +80,6 @@ public class PeopleInviteFragment extends Fragment implements
     public void onPrepareOptionsMenu(Menu menu) {
         menu.getItem(0).setEnabled(!mInviteOperationInProgress); // here pass the index of send menu item
         super.onPrepareOptionsMenu(menu);
-    }
-
-    /**
-     * Sets the enter & pop animation for the fragment. In order to keep the animation even after the configuration
-     * changes, this method is used instead of FragmentTransaction for the animation.
-     */
-    @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        if (enter) {
-            return AnimatorInflater.loadAnimator(getActivity(), R.animator.fragment_slide_in_from_right);
-        } else {
-            return AnimatorInflater.loadAnimator(getActivity(), R.animator.fragment_slide_out_to_right);
-        }
     }
 
     @Override

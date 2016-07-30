@@ -108,12 +108,6 @@ public class PostPreviewActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
     private void showPreviewFragment() {
         FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();

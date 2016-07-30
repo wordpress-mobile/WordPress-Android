@@ -86,7 +86,7 @@
     <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_related_post_margin">@dimen/margin_large</dimen>
+    <dimen name="reader_related_post_margin">@dimen/margin_extra_large</dimen>
     <dimen name="reader_related_post_image_size">48dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_size">48dp</dimen>
@@ -105,6 +105,7 @@
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_triple_extra_large">26sp</dimen>
 
+    <dimen name="avatar_sz_tiny">18dp</dimen>
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>

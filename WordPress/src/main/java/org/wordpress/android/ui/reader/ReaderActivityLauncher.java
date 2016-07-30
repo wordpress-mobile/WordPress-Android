@@ -44,7 +44,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -65,8 +65,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -79,8 +78,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -150,7 +148,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -160,7 +158,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*

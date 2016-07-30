@@ -4,10 +4,12 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -22,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
@@ -38,6 +41,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     public enum ImageType {
         NONE,
         PHOTO,
+        PHOTO_ROUNDED,
         VIDEO,
         AVATAR,
         BLAVATAR,
@@ -256,7 +260,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                new CircularizeBitmapTask(imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                return;
+            } else if (mImageType == ImageType.PHOTO_ROUNDED) {
+                new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             }
 
@@ -306,7 +313,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     private int getColorRes(@ColorRes int resId) {
-        return getContext().getResources().getColor(resId);
+        return ContextCompat.getColor(getContext(), resId);
     }
 
     public void setDefaultImageResId(@DrawableRes int resourceId) {
@@ -372,7 +379,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void showDefaultGravatarImage() {
         if (getContext() == null) return;
-        new CircularizeBitmapTask(null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+        new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
                 R.drawable.gravatar_placeholder
         ));
@@ -393,12 +400,20 @@ public class WPNetworkImageView extends AppCompatImageView {
         alpha.start();
     }
 
-    // Circularizes a bitmap in a background thread
-    private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
-        private ImageLoadListener mImageLoadListener;
+    // Circularizes or rounds the corners of a bitmap in a background thread
+    private enum ShapeType { CIRCLE, ROUNDED }
+    private class ShapeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
+        private final ImageLoadListener mImageLoadListener;
+        private final ShapeType mShapeType;
+        private int mRoundedCornerRadiusPx;
+        private static final int ROUNDED_CORNER_RADIUS_DP = 2;
 
-        public CircularizeBitmapTask(ImageLoadListener imageLoadListener) {
+        public ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
             mImageLoadListener = imageLoadListener;
+            mShapeType = shapeType;
+            if (mShapeType == ShapeType.ROUNDED) {
+                mRoundedCornerRadiusPx = DisplayUtils.dpToPx(getContext(), ROUNDED_CORNER_RADIUS_DP);
+            }
         }
 
         @Override
@@ -406,7 +421,14 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (params == null || params.length == 0) return null;
 
             Bitmap bitmap = params[0];
-            return ImageUtils.getCircularBitmap(bitmap);
+            switch (mShapeType) {
+                case CIRCLE:
+                    return ImageUtils.getCircularBitmap(bitmap);
+                case ROUNDED:
+                    return ImageUtils.getRoundedEdgeBitmap(bitmap, mRoundedCornerRadiusPx, Color.TRANSPARENT);
+                default:
+                    return bitmap;
+            }
         }
 
         @Override

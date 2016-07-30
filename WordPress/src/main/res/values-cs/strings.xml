@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="format_bar_description_html">HTML</string>
+	<string name="visual_editor">Vizuální editor</string>
+	<string name="image_thumbnail">Náhled</string>
+	<string name="format_bar_description_link">Vložit URL</string>
+	<string name="format_bar_description_bold">Tučně</string>
+	<string name="stop_upload_dialog_title">Zastavit nahrávání?</string>
+	<string name="stop_upload_button">Nahrávání zastaveno</string>
+	<string name="uploading_gallery_placeholder">Nahrávám galerii...</string>
+	<string name="invite_message_remaining_other">%d zbývajících znaků</string>
+	<string name="invite_message_remaining_one">1 zbývající znak</string>
+	<string name="invite_message_remaining_zero">Žádný zbývající znak</string>
+	<string name="invite_message_title">Vlastní zpráva</string>
+	<string name="invite">Pozvat</string>
+	<string name="invite_names_hint">Zadejte e-mail nebo uživatelské jméno</string>
+	<string name="invite_names_title">Uživatelská jména nebo e-maily</string>
+	<string name="send_link">Poslat URL</string>
+	<string name="my_site_header_external">Externí</string>
+	<string name="invite_people">Přidat uživatele</string>
+	<string name="label_clear_search_history">Smazat historii prohlížení</string>
+	<string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
+	<string name="reader_empty_posts_in_search_title">Nenalezeny žádné příspěvky</string>
+	<string name="reader_label_post_search_running">Hledání...</string>
+	<string name="reader_hint_post_search">Prohledat WordPress.com</string>
+	<string name="send">Poslat</string>
 	<string name="person_removed_general">Uživatel byl úspěšně odebrán</string>
 	<string name="person_removed">\@%1$s úspěšně odstraněno</string>
 	<string name="person_remove_confirmation_title">Ostranit %1$s</string>
@@ -8,6 +32,8 @@
 	<string name="role">Role</string>
 	<string name="check_your_email">Zkontroluj svůj email</string>
 	<string name="logging_in">Přihlašování</string>
+	<string name="username_email">E-mail nebo uživatelské jméno</string>
+	<string name="jetpack_not_connected">Jetpack není připojen</string>
 	<string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
 	<string name="capture_or_pick_photo">Vyfoťte nebo vyberte fotku</string>
 	<string name="plans_post_purchase_button_themes">Procházet šablony</string>
@@ -21,6 +47,7 @@
 	<string name="primary_domain">Primární doména</string>
 	<string name="domain_removal">Odebrání domény</string>
 	<string name="contact_support">Kontaktovat podporu</string>
+	<string name="confirm_delete_site">Potvrďte smazání stránky</string>
 	<string name="me_btn_app_settings">Nastavení aplikace</string>
 	<string name="editor_remove_failed_uploads">Odstranit</string>
 	<string name="editor_toast_failed_uploads">Nahrávání některých souborů selhalo. V tomto stavu nemůžete\n    publikovat příspěvek. Chcete odstranit neúspěšně přenesené soubory?</string>
@@ -386,7 +413,6 @@
 	<string name="my_site_btn_site_settings">Nastavení</string>
 	<string name="my_site_btn_blog_posts">Příspěvky</string>
 	<string name="my_site_header_look_and_feel">Vzhled</string>
-	<string name="my_site_header_admin">Administrace</string>
 	<string name="my_site_header_configuration">Nastavení</string>
 	<string name="reader_label_new_posts_subtitle">Klepněte pro jejich zobrazení</string>
 	<string name="notifications_account_required">Přihlaste se přes WordPress.com kvůli notifikacím</string>
@@ -898,6 +924,7 @@
 	<string name="stats_view_referrers">Odkazující</string>
 	<string name="stats_entry_referrers">Odkazující</string>
 	<string name="upload">Nahrát</string>
+	<string name="discard">Zahodit</string>
 	<string name="notifications">Notifikace</string>
 	<string name="note_reply_successful">Odpověď publikována</string>
 	<string name="follows">Sledovat</string>
@@ -931,6 +958,7 @@
 	<string name="upload_scaled_image">Nahrát a odkazovat na zmenšený obrázek</string>
 	<string name="scheduled">Načasováno</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">Nahrávám...</string>
 	<string name="app_title">WordPress pro Android</string>
 	<string name="version">Verze</string>
 	<string name="tos">Podmínky služby</string>
@@ -938,6 +966,7 @@
 	<string name="image_alignment">Zarovnání</string>
 	<string name="refresh">Obnovit</string>
 	<string name="untitled">Bez názvu</string>
+	<string name="edit">Upravit</string>
 	<string name="post_id">Příspěvek</string>
 	<string name="page_id">Stránka</string>
 	<string name="immediately">Okamžitě</string>

@@ -496,19 +496,21 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderRelatedPost relatedPost : relatedPosts) {
+        for (int index = 0; index < relatedPosts.size(); index++) {
+            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
+
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            TextView txtByline = (TextView) postView.findViewById(R.id.text_related_post_byline);
             WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
 
             txtTitle.setText(relatedPost.getTitle());
-            txtSubtitle.setText(relatedPost.getSubtitle());
+            txtByline.setText(relatedPost.getByline());
 
             imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (relatedPost.hasFeaturedImage()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
                 imgFeatured.setVisibility(View.VISIBLE);
             }
 
@@ -529,6 +531,12 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             container.addView(postView);
+
+            // add a divider below all but the last related post
+            if (index < relatedPosts.size() - 1) {
+                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
+                container.addView(dividerView);
+            }
         }
 
         View label = getView().findViewById(R.id.text_related_posts_label);
@@ -831,13 +839,15 @@ public class ReaderPostDetailFragment extends Fragment
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
-            TextView txtAuthor = (TextView) getView().findViewById(R.id.text_author);
-            TextView txtDateLine = (TextView) getView().findViewById(R.id.text_dateline);
+            TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
+            TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
             TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
+
+            WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
 
             ViewGroup layoutHeader = (ViewGroup) getView().findViewById(R.id.layout_post_detail_header);
             ReaderFollowButton followButton = (ReaderFollowButton) layoutHeader.findViewById(R.id.follow_button);
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
 
             if (!canShowFooter()) {
                 mLayoutFooter.setVisibility(View.GONE);
@@ -881,36 +891,37 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
-                txtBlogName.setVisibility(View.VISIBLE);
-            } else if (mPost.hasBlogUrl()) {
-                txtBlogName.setText(UrlUtils.getHost(mPost.getBlogUrl()));
-                txtBlogName.setVisibility(View.VISIBLE);
+            } else if (mPost.hasAuthorName()) {
+                txtBlogName.setText(mPost.getAuthorName());
             } else {
-                txtBlogName.setVisibility(View.GONE);
+                txtBlogName.setText(null);
             }
 
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
             if (mPost.hasBlogUrl()) {
-                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), avatarSz);
-                imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+                int blavatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+                String imageUrl = GravatarUtils.blavatarFromUrl(mPost.getBlogUrl(), blavatarSz);
+                imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+                txtDomain.setText(UrlUtils.getHost(mPost.getBlogUrl()));
             } else {
+                imgBlavatar.showDefaultBlavatarImage();
+                txtDomain.setText(null);
+            }
+
+            if (mPost.hasPostAvatar()) {
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+            } else {
+                imgAvatar.showDefaultGravatarImage();
             }
 
+            String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
             if (mPost.hasAuthorName()) {
-                txtAuthor.setText(mPost.getAuthorName());
-                txtAuthor.setVisibility(View.VISIBLE);
+                txtDateline.setText(mPost.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
+            } else if (mPost.hasBlogName()) {
+                txtDateline.setText(mPost.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
             } else {
-                txtAuthor.setVisibility(View.GONE);
+                txtDateline.setText(timestamp);
             }
-
-            String dateLine;
-            if (mPost.hasBlogUrl()) {
-                dateLine = UrlUtils.getHost(mPost.getBlogUrl()) + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
-            } else {
-                dateLine = DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished());
-            }
-            txtDateLine.setText(dateLine);
 
             final String tagToDisplay = mPost.getTagForDisplay(null);
             if (!TextUtils.isEmpty(tagToDisplay)) {

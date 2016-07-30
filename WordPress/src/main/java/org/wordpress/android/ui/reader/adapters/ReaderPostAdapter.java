@@ -44,6 +44,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
@@ -58,6 +59,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
+    private final int mAvatarSzTiny;
     private final int mMarginLarge;
 
     private final String mWordCountFmtStr;
@@ -124,10 +126,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
-        private final TextView txtDate;
+        private final TextView txtDomain;
+        private final TextView txtDateline;
         private final TextView txtTag;
         private final TextView txtWordCount;
-        private final TextView txtDateBelowTitle;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -136,6 +138,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
+        private final WPNetworkImageView imgBlavatar;
 
         private final ViewGroup layoutPostHeader;
 
@@ -153,15 +156,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtTitle = (TextView) itemView.findViewById(R.id.text_title);
             txtText = (TextView) itemView.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) itemView.findViewById(R.id.text_blog_name);
-            txtDate = (TextView) itemView.findViewById(R.id.text_date);
+            txtDomain = (TextView) itemView.findViewById(R.id.text_domain);
+            txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
             txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
-            txtDateBelowTitle = (TextView) itemView.findViewById(R.id.text_date_below_title);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
 
             imgFeatured = (WPNetworkImageView) itemView.findViewById(R.id.image_featured);
+            imgBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_blavatar);
             imgAvatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
 
@@ -192,8 +196,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         txtTitle.getPaddingTop() + extraPadding,
                         txtTitle.getPaddingRight(),
                         txtTitle.getPaddingBottom());
-                // show the dateline that appears below the title (hidden in layout)
-                txtDateBelowTitle.setVisibility(View.VISIBLE);
             }
 
             ReaderUtils.setBackgroundToRoundRipple(imgMore);
@@ -321,20 +323,39 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.txtTitle.setText(post.getTitle());
 
-        // dateline includes author name if different than blog name
-        String dateLine;
-        if (post.hasAuthorName() && !post.getAuthorName().equalsIgnoreCase(post.getBlogName())) {
-            dateLine = post.getAuthorName() + " \u2022 " + DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+        String timestamp = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+        if (post.hasAuthorName()) {
+            holder.txtDateline.setText(post.getAuthorName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
+        } else if (post.hasBlogName()) {
+            holder.txtDateline.setText(post.getBlogName() + ReaderConstants.UNICODE_BULLET_WITH_SPACE + timestamp);
         } else {
-            dateLine = DateTimeUtils.javaDateToTimeSpan(post.getDatePublished());
+            holder.txtDateline.setText(timestamp);
         }
-        holder.txtDate.setText(dateLine);
+
+        if (post.hasPostAvatar()) {
+            holder.imgAvatar.setImageUrl(
+                    post.getPostAvatarForDisplay(mAvatarSzTiny), WPNetworkImageView.ImageType.AVATAR);
+        } else {
+            holder.imgAvatar.showDefaultGravatarImage();
+        }
+
+        if (!isBlogPreview()) {
+            // show blog preview when post header is tapped
+            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
+                }
+            });
+        }
 
         if (post.hasBlogUrl()) {
-            String imageUrl = GravatarUtils.blavatarFromUrl(post.getUrl(), mAvatarSzMedium);
-            holder.imgAvatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            String imageUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), mAvatarSzMedium);
+            holder.imgBlavatar.setImageUrl(imageUrl, WPNetworkImageView.ImageType.BLAVATAR);
+            holder.txtDomain.setText(UrlUtils.getHost(post.getBlogUrl()));
         } else {
-            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSzMedium), WPNetworkImageView.ImageType.AVATAR);
+            holder.imgBlavatar.showDefaultBlavatarImage();
+            holder.txtDomain.setText(null);
         }
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
@@ -537,6 +558,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        mAvatarSzTiny = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
 

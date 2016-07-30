@@ -463,7 +463,6 @@
 	<string name="my_site_header_publish">Botoje</string>
 	<string name="my_site_header_configuration">Formësim</string>
 	<string name="reader_label_new_posts_subtitle">Prekeni që të shfaqen</string>
-	<string name="my_site_header_admin">Përgjegjës</string>
 	<string name="notifications_account_required">Për njoftime, bëni hyrjen te WordPress.com</string>
 	<string name="stats_unknown_author">Autor i Panjohur</string>
 	<string name="image_added">Figura u shtua</string>
@@ -1032,7 +1031,6 @@
 	<string name="categories">Kategori</string>
 	<string name="dlg_deleting_comments">Po fshihen komente</string>
 	<string name="notification_blink">Xixëllo dritëzë njoftimesh</string>
-	<string name="notification_sound">Luaj tingull njoftimesh</string>
 	<string name="notification_vibrate">Dridhu</string>
 	<string name="status">Gjendje</string>
 	<string name="location">Vendndodhje</string>
