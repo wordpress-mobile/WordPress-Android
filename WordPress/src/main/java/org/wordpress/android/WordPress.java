@@ -290,7 +290,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     public static void setupVolleyQueue() {
-        requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
+        requestQueue = Volley.newRequestQueue(mContext);
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag(AppLog.TAG);
         // http://stackoverflow.com/a/17035814

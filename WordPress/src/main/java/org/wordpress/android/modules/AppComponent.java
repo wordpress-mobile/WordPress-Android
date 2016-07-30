@@ -3,7 +3,6 @@ package org.wordpress.android.modules;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.WPDelayedHurlStack;
 import org.wordpress.android.stores.module.AppContextModule;
 import org.wordpress.android.stores.module.ReleaseBaseModule;
 import org.wordpress.android.stores.module.ReleaseNetworkModule;
@@ -141,7 +140,4 @@ public interface AppComponent {
     void inject(PostMediaService object);
 
     void inject(SelectCategoriesActivity object);
-
-    // WPDelayedHurlStack will burn in hell as soon as we have all the XMLRPC based stores ready.
-    void inject(WPDelayedHurlStack object);
 }
