@@ -18,28 +18,28 @@ import org.wordpress.android.util.ToastUtils;
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
-public class ReaderTagInfoView extends LinearLayout {
+public class ReaderTagHeaderView extends LinearLayout {
 
     private ReaderFollowButton mFollowButton;
     private ReaderTag mCurrentTag;
 
-    public ReaderTagInfoView(Context context) {
+    public ReaderTagHeaderView(Context context) {
         super(context);
         initView(context);
     }
 
-    public ReaderTagInfoView(Context context, AttributeSet attrs) {
+    public ReaderTagHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public ReaderTagInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ReaderTagHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_tag_info_view, this);
+        View view = inflate(context, R.layout.reader_tag_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
     }
 
