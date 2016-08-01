@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -155,7 +156,7 @@ public class MagicLinkSignInFragment extends SignInFragment {
                 if (userBlogList != null) {
                     Intent intent = new Intent(getActivity(), WPMainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(MagicLinkSignInActivity.MAGIC_LOGIN, true);
+                    intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
 
                     getActivity().startActivity(intent);
                 }
