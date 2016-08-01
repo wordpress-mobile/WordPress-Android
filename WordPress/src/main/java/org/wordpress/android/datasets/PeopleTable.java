@@ -311,12 +311,12 @@ public class PeopleTable {
         return person;
     }
 
-    // order is disabled for followers for now since the API is not supporting it
+    // order is disabled for followers & viewers for now since the API is not supporting it
     private static String orderByString(String table) {
-        if (table.equals(FOLLOWERS_TABLE) || table.equals(EMAIL_FOLLOWERS_TABLE)) {
-            return "";
+        if (table.equals(TEAM_TABLE)) {
+            return " ORDER BY lower(display_name), lower(user_name)";
         }
-        return " ORDER BY lower(display_name), lower(user_name)";
+        return "";
     }
 
     @Nullable
