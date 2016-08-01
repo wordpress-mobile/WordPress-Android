@@ -17,8 +17,10 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
@@ -30,6 +32,8 @@ import org.wordpress.android.util.VolleyUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import de.greenrobot.event.EventBus;
 
 public class ReaderPostActions {
 
@@ -310,5 +314,46 @@ public class ReaderPostActions {
         };
 
         WordPress.requestQueue.add(request);
+    }
+
+    /*
+     * request posts related to the passed one
+     */
+    public static void requestRelatedPosts(final ReaderPost sourcePost) {
+        if (sourcePost == null) return;
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+               handleRelatedPostsResponse(sourcePost, jsonObject);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.w(T.READER, "updateRelatedPosts failed");
+                AppLog.e(T.READER, volleyError);
+
+            }
+        };
+
+        String path = "/read/site/" + sourcePost.blogId + "/post/" + sourcePost.postId + "/related";
+        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+    }
+
+    private static void handleRelatedPostsResponse(final ReaderPost sourcePost, final JSONObject jsonObject) {
+        if (jsonObject == null) return;
+
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderPostList relatedPosts = ReaderPostList.fromJson(jsonObject);
+                if (relatedPosts != null && relatedPosts.size() > 0) {
+                    ReaderPostTable.addOrUpdatePosts(null, relatedPosts);
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, relatedPosts));
+                }
+            }
+        }.start();
+
     }
 }

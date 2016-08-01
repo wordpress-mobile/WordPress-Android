@@ -11,10 +11,9 @@ import org.wordpress.android.util.HtmlUtils;
  * class which holds all resource-based variables used when rendering post detail
  */
 class ReaderResourceVars {
-    final int marginSmallPx;
-    final int marginExtraSmallPx;
+    final int marginMediumPx;
 
-    final boolean canShowTiledGallery;
+    final boolean isWideDisplay;
 
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
@@ -32,14 +31,13 @@ class ReaderResourceVars {
 
         int displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
 
-        canShowTiledGallery = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
+        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
 
         int marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
         int detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);
 
         featuredImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
-        marginSmallPx = resources.getDimensionPixelSize(R.dimen.margin_small);
-        marginExtraSmallPx = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
+        marginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium);
 
         linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
         greyMediumDarkStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_darken_30);

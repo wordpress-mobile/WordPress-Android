@@ -114,6 +114,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SEARCH_LOADED:
                 eventName = "reader_search_loaded";
                 break;
+            case READER_SEARCH_PERFORMED:
+                eventName = "reader_search_performed";
+                break;
+            case READER_SEARCH_RESULT_TAPPED:
+                eventName = "reader_searchcard_clicked";
+                break;
             case READER_TAG_UNFOLLOWED:
                 eventName = "reader_reader_tag_unfollowed";
                 break;
@@ -292,6 +298,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case CREATED_ACCOUNT:
                 eventName = "account_created";
+                break;
+            case CREATED_SITE:
+                eventName = "site_created";
                 break;
             case SHARED_ITEM:
                 eventName = "item_shared";
@@ -634,23 +643,22 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public void refreshMetadata(AnalyticsMetadata metadata) {
         if (mNosaraClient == null) {
             return;
         }
 
         try {
             JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            properties.put(JETPACK_USER, metadata.isJetpackUser());
+            properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (isUserConnected && isWordPressComUser) {
-            setWordPressComUserName(username);
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+            setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
                 mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);

@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -57,10 +56,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+    private boolean mIsRelatedPostView;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-
-    private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +80,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
+            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -92,7 +91,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
+            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -103,6 +103,20 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         if (mPostListType == null) {
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
+        }
+
+        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : R.string.reader_title_post_detail);
+
+        // for related posts, show an X in the toolbar which closes the activity - using the
+        // back button will navigate through related posts
+        if (mIsRelatedPostView) {
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
         }
 
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -151,12 +165,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -180,7 +188,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -220,6 +229,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (fragment != null && fragment.isCustomViewShowing()) {
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
+        } else if (fragment != null && fragment.goBackInPostHistory()) {
+            // noop - fragment moved back to a previous post
         } else {
             super.onBackPressed();
         }
@@ -474,6 +485,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return ReaderPostDetailFragment.newInstance(
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
+                    mIsRelatedPostView,
                     getPostListType());
         }
 

@@ -56,7 +56,7 @@ import org.wordpress.android.ui.reader.services.ReaderSearchService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -573,6 +573,9 @@ public class ReaderPostListFragment extends Fragment
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED);
+                }
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 showSearchMessage();
                 mSettingsMenuItem.setVisible(false);
@@ -644,7 +647,7 @@ public class ReaderPostListFragment extends Fragment
         if (!trimQuery.equals("")) {
             Map<String, Object> properties = new HashMap<>();
             properties.put("query", trimQuery);
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_LOADED, properties);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_PERFORMED, properties);
         }
     }
 
@@ -1005,8 +1008,8 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            if (getActivity() instanceof ReaderBlogInfoView.OnBlogInfoLoadedListener) {
-                mPostAdapter.setOnBlogInfoLoadedListener((ReaderBlogInfoView.OnBlogInfoLoadedListener) getActivity());
+            if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
+                mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
@@ -1441,6 +1444,7 @@ public class ReaderPostListFragment extends Fragment
                         post.postId);
                 break;
             case SEARCH_RESULTS:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
         }

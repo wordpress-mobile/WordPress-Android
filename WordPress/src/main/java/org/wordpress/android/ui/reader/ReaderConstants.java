@@ -11,7 +11,15 @@ public class ReaderConstants {
 
     public static final int MIN_FEATURED_IMAGE_WIDTH = 640;                 // min width for an image to be suitable featured image
 
+    public static final long DISCOVER_SITE_ID = 53424024;                    // site id for discover.wordpress.com
+
+    // min size for images in post content to be shown in a gallery (thumbnail strip) - matches
+    // the Calypso web reader
+    public static int MIN_GALLERY_IMAGE_WIDTH  = 144;
+
     public static final String HTTP_REFERER_URL = "https://wordpress.com";  // referrer url for reader posts opened in a browser
+
+    public static final String UNICODE_BULLET_WITH_SPACE = " \u2022 ";
 
     // intent arguments / keys
     static final String ARG_TAG               = "tag";
@@ -21,9 +29,11 @@ public class ReaderConstants {
     static final String ARG_COMMENT_ID        = "comment_id";
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
+    static final String ARG_IS_GALLERY        = "is_gallery";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
     static final String ARG_CONTENT           = "content";
     static final String ARG_IS_SINGLE_POST    = "is_single_post";
+    static final String ARG_IS_RELATED_POST   = "is_related_post";
     static final String ARG_SEARCH_QUERY      = "search_query";
 
     static final String KEY_ALREADY_UPDATED   = "already_updated";

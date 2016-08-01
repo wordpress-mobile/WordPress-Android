@@ -31,7 +31,7 @@
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
-    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.Light.SearchView" />
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -93,6 +93,11 @@
     <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
+        <item name="android:theme">@style/FilteredRecyclerViewToolbar.Theme</item>
+    </style>
+
+    <style name="FilteredRecyclerViewToolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:listDivider">@null</item>
     </style>
 
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
@@ -418,7 +423,7 @@
         <item name="android:layout_margin">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="PersonUsernameAndDisplayName">
+    <style name="PersonTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>

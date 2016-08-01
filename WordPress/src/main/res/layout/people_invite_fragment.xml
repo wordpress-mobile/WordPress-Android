@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    SlidingScrollView is used for animating the slide in-out between fragments
-    Background color is set so the fragment below it, PeopleListFragment, won't be visible
--->
-<org.wordpress.android.ui.SlidingScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clipToPadding="false"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:clickable="true">
+    android:clickable="true"
+    android:scrollbarStyle="outsideInset" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,13 +39,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/invites_border"
-                android:layout_marginBottom="@dimen/margin_small"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:paddingBottom="@dimen/margin_large"
                 android:animateLayoutChanges="true" >
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.android.widgets.MultiUsernameEditText
                     android:id="@+id/invite_usernames"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,6 +62,15 @@
                     android:imeOptions="actionDone"
                     android:minWidth="40dp" />
             </org.wordpress.android.widgets.FlowLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/grey_lighten_10"
+                android:textSize="@dimen/text_sz_small"
+                android:textStyle="italic"
+                android:text="@string/invite_message_usernames_limit"/>
         </LinearLayout>
 
         <LinearLayout
@@ -136,8 +142,7 @@
                 android:layout_below="@+id/message"
                 android:padding="5dp"
                 android:textColor="@color/grey_lighten_10"
-                android:textSize="@dimen/text_sz_small"
-                tools:text="@string/invite_message_remaining"/>
+                android:textSize="@dimen/text_sz_small"/>
         </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -150,4 +155,4 @@
             android:textStyle="italic"
             android:text="@string/invite_message_info"/>
     </LinearLayout>
-</org.wordpress.android.ui.SlidingScrollView>
+</ScrollView>

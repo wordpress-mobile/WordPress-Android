@@ -27,13 +27,14 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ToastUtils;
+
+import de.greenrobot.event.EventBus;
 
 public class CommentsActivity extends AppCompatActivity
         implements OnCommentSelectedListener,
-                   NotificationFragment.OnPostClickListener,
-                   CommentActions.OnCommentActionListener,
-                   CommentActions.OnCommentChangeListener {
+        NotificationFragment.OnPostClickListener,
+        CommentActions.OnCommentActionListener,
+        CommentActions.OnCommentChangeListener {
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     static final String KEY_EMPTY_VIEW_MESSAGE = "empty_view_message";
@@ -90,12 +91,6 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
@@ -145,8 +140,8 @@ public class CommentsActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-          .addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                .addToBackStack(tagForFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (hasDetailFragment())
             ft.hide(getDetailFragment());
         ft.commit();
@@ -169,7 +164,7 @@ public class CommentsActivity extends AppCompatActivity
         CommentDetailFragment detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(),
                 commentId);
         ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (listFragment != null) {
             ft.hide(listFragment);
         }
@@ -234,8 +229,7 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onModerateComment(final int accountId, final Comment comment,
-                                  final CommentStatus newStatus) {
+    public void onModerateComment(final int accountId, final Comment comment, final CommentStatus newStatus) {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
@@ -246,32 +240,19 @@ public class CommentsActivity extends AppCompatActivity
             getListFragment().updateEmptyView();
             CommentActions.moderateComment(accountId, comment, newStatus,
                     new CommentActions.CommentActionListener() {
-                @Override
-                public void onActionResult(CommentActionResult result) {
-                    if (isFinishing() || !hasListFragment()) {
-                        return;
-                    }
-
-                    getListFragment().setCommentIsModerating(comment.commentID, false);
-
-                    if (result.isSuccess()) {
-                        reloadCommentList();
-                    } else {
-                        getListFragment().updateEmptyView();
-                        ToastUtils.showToast(CommentsActivity.this,
-                                R.string.error_moderate_comment,
-                                ToastUtils.Duration.LONG
-                        );
-                    }
-                }
-            });
+                        @Override
+                        public void onActionResult(CommentActionResult result) {
+                            EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
+                                    (result.isSuccess(), true, comment.commentID, newStatus));
+                        }
+                    });
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETE) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
             getListFragment().setCommentIsModerating(comment.commentID, true);
             getListFragment().updateEmptyView();
 
-            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently)  );
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) : getString(R.string.comment_deleted_permanently));
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -295,24 +276,11 @@ public class CommentsActivity extends AppCompatActivity
                         return;
                     }
                     mTrashedComments.remove(comment);
-
                     CommentActions.moderateComment(accountId, comment, newStatus, new CommentActions.CommentActionListener() {
                         @Override
                         public void onActionResult(CommentActionResult result) {
-                            if (isFinishing() || !hasListFragment()) {
-                                return;
-                            }
-                            getListFragment().setCommentIsModerating(comment.commentID, false);
-                            if (!result.isSuccess()) {
-                                // show comment again upon error
-                                getListFragment().loadComments();
-                                ToastUtils.showToast(CommentsActivity.this,
-                                        R.string.error_moderate_comment,
-                                        ToastUtils.Duration.LONG
-                                );
-                            } else {
-                                getListFragment().updateEmptyView();
-                            }
+                            EventBus.getDefault().post(new CommentEvents.CommentModerationFinishedEvent
+                                    (result.isSuccess(), true, comment.commentID, newStatus));
                         }
                     });
                 }

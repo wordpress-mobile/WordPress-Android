@@ -27,7 +27,6 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
-    private static final String VERSION_CODE = "version_code";
     private static final String APP_LOCALE = "app_locale";
     private static final String MIXPANEL_ANON_ID = "mixpanel_user_anon_id";
 
@@ -173,17 +172,15 @@ public class AnalyticsTrackerMixpanel extends Tracker {
     }
 
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public void refreshMetadata(AnalyticsMetadata metadata) {
         // Register super properties
         try {
             JSONObject properties = new JSONObject();
             properties.put(MIXPANEL_PLATFORM, "Android");
-            properties.put(MIXPANEL_SESSION_COUNT, sessionCount);
-            properties.put(DOTCOM_USER, isUserConnected);
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
-            properties.put(VERSION_CODE, versionCode);
+            properties.put(MIXPANEL_SESSION_COUNT, metadata.getSessionCount());
+            properties.put(DOTCOM_USER, metadata.isUserConnected());
+            properties.put(JETPACK_USER, metadata.isJetpackUser());
+            properties.put(MIXPANEL_NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
@@ -191,14 +188,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
 
-        if (isUserConnected && isWordPressComUser) {
-            setWordPressComUserName(username);
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+            setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
                 mMixpanel.alias(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             } else {
-                mMixpanel.identify(username);
+                mMixpanel.identify(metadata.getUsername());
             }
         } else {
             // Not wpcom connected. Check if anonID is already present
@@ -210,7 +207,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
         // Application opened and start.
-        if (isUserConnected) {
+        if (metadata.isUserConnected()) {
             try {
                 String userID = getWordPressComUserName() != null ? getWordPressComUserName() : getAnonID();
                 if (userID == null) {
@@ -221,8 +218,8 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 mMixpanel.getPeople().identify(userID);
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("$username", userID);
-                if (email != null) {
-                    jsonObj.put("$email", email);
+                if (metadata.getEmail() != null) {
+                    jsonObj.put("$email", metadata.getEmail());
                 }
                 jsonObj.put("$first_name", userID);
                 mMixpanel.getPeople().set(jsonObj);
@@ -389,6 +386,18 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Reader - Loaded Search");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_loaded");
                 instructions.setCurrentDateForPeopleProperty("last_time_reader_search_loaded");
+                break;
+            case READER_SEARCH_PERFORMED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Performed Search");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_performed");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_search_performed");
+                break;
+            case READER_SEARCH_RESULT_TAPPED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Tapped Search Result");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_search_result_tapped");
+                instructions.setCurrentDateForPeopleProperty("last_time_reader_search_result_tapped");
                 break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -665,6 +674,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Created Account");
                 instructions.setCurrentDateForPeopleProperty("$created");
                 instructions.addSuperPropertyToFlag("created_account_on_mobile");
+                break;
+            case CREATED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Created Site");
                 break;
             case SHARED_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

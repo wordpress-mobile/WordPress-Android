@@ -47,7 +47,6 @@
 	<string name="purchases_request_error">Κάτι πήγε στραβά. Αδυναμία αναζήτησης αγορών.</string>
 	<string name="delete_site_progress">Διαγραφή ιστοτόπου...</string>
 	<string name="delete_site_summary">Αυτή η ενέργεια δεν μπορεί να αναιρεθεί. Η διαγραφή του ιστοτόπου σας θα αφαιρέσει όλο το περιεχόμενο, τους συντελεστές και τους τομείς από τον ιστότοπο.</string>
-	<string name="delete_site_hint">Διαγράψτε τον ιστότοπό σας</string>
 	<string name="export_site_hint">Εξαγωγή του ιστοτόπου σας σε αρχείο XML</string>
 	<string name="are_you_sure">Είστε σίγουροι;</string>
 	<string name="export_site_summary">Αν είστε σίγουροι, παρακαλούμε αφιερώστε λίγο χρόνο να εξάγετε τώρα το περιεχόμενο του ιστοτόπου σας. Δεν μπορεί να ανακτηθεί μελλοντικά.</string>
@@ -452,7 +451,6 @@
 	<string name="my_site_header_publish">Δημοσιεύω</string>
 	<string name="my_site_header_configuration">Ρυθμίσεις</string>
 	<string name="reader_label_new_posts_subtitle">Πατήστε για να τα δείτε</string>
-	<string name="my_site_header_admin">Διαχειριστής</string>
 	<string name="notifications_account_required">Συνδεθείτε στο WordPress.com για ειδοποιήσεις</string>
 	<string name="stats_unknown_author">Άγνωστος Συγγραφέας</string>
 	<string name="image_added">Η εικόνα προστέθηκε</string>
@@ -962,6 +960,7 @@
 	<string name="passcode_turn_off">Απενεργοποιήστε το κλείδωμα PIN</string>
 	<string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>
 	<string name="upload">Ανέβασμα</string>
+	<string name="discard">Απόρριψη</string>
 	<string name="sign_in">Συνδεθείτε</string>
 	<string name="notifications">Ενημερώσεις</string>
 	<string name="note_reply_successful">Η απάντηση δημοσιεύτηκε</string>
@@ -1002,6 +1001,7 @@
 	<string name="image_alignment">Στοίχιση</string>
 	<string name="refresh">Ανανέωση</string>
 	<string name="untitled">Χωρίς τίτλο</string>
+	<string name="edit">Επεξεργασία</string>
 	<string name="post_id">Άρθρο</string>
 	<string name="page_id">Σελίδα</string>
 	<string name="post_password">Κωδικός (προαιρετικός)</string>
@@ -1021,7 +1021,6 @@
 	<string name="categories">Κατηγορίες</string>
 	<string name="dlg_deleting_comments">Διαγραφή σχολίων</string>
 	<string name="notification_blink">Να αναβοσβήνει η ένδειξη ενημερώσεων</string>
-	<string name="notification_sound">Αναπαραγωγή ήχου ειδοποιήσης</string>
 	<string name="notification_vibrate">Δόνηση</string>
 	<string name="status">Κατάσταση</string>
 	<string name="location">Τοποθεσία</string>

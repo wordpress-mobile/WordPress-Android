@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -42,6 +43,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 /**
  * A fragment display a media item's details.
@@ -283,8 +285,12 @@ public class MediaItemFragment extends Fragment {
                 public void onClick(View v) {
                     Blog blog = WordPress.getCurrentBlog();
                     boolean isPrivate = blog != null && blog.isPrivate();
+                    EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
+                    if (isPrivate) {
+                        imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
+                    }
                     ReaderActivityLauncher.showReaderPhotoViewer(
-                            v.getContext(), mImageUri, isPrivate);
+                            v.getContext(), mImageUri, imageOptions);
                 }
             });
         }

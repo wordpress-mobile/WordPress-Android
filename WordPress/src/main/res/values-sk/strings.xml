@@ -2,7 +2,6 @@
 <resources>
 	<string name="export_your_content">Exportujem Váš obsah...</string>
 	<string name="exporting_content_progress">Exportujem obsah...</string>
-	<string name="delete_site_hint">Zmazať Vašu stránku</string>
 	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
 	<string name="are_you_sure">Ste si istý?</string>
 	<string name="keep_your_content">Ponechať Váš obsah</string>
@@ -211,7 +210,6 @@
 	<string name="my_site_header_publish">Zverejniť</string>
 	<string name="my_site_header_configuration">Kanfigurácia</string>
 	<string name="reader_label_new_posts_subtitle">Ťuknite k ich zobrazeniu</string>
-	<string name="my_site_header_admin">Administrácia</string>
 	<string name="notifications_account_required">Prihláste sa do WordPress.com pre upozornenia</string>
 	<string name="stats_unknown_author">Neznámy autor</string>
 	<string name="image_added">Obrázok pridaný</string>
@@ -757,6 +755,7 @@
 	<string name="image_alignment">Zarovnanie</string>
 	<string name="refresh">Obnoviť</string>
 	<string name="untitled">Bez názvu</string>
+	<string name="edit">Upraviť</string>
 	<string name="post_id">Príspevok</string>
 	<string name="page_id">Strana</string>
 	<string name="post_password">Heslo (voliteľné)</string>
@@ -775,7 +774,6 @@
 	<string name="tags_separate_with_commas">Značky (oddeľte značky čiarkami)</string>
 	<string name="categories">Kategórie</string>
 	<string name="notification_blink">Blikať oznamovacie svetlo</string>
-	<string name="notification_sound">Prehrať oznamovací zvuk</string>
 	<string name="notification_vibrate">Vibrovať</string>
 	<string name="status">Stav</string>
 	<string name="location">Umiestnenie</string>

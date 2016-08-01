@@ -4,11 +4,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -60,6 +60,9 @@ public class AppPrefs {
 
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
+
+        // index of the last active people list filter in People Management activity
+        PEOPLE_LIST_FILTER_INDEX,
     }
 
     /**
@@ -236,6 +239,25 @@ public class AppPrefs {
         }
     }
 
+    public static PeopleListFilter getPeopleListFilter() {
+        int idx = getInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX);
+        PeopleListFilter[] values = PeopleListFilter.values();
+        if (values.length < idx) {
+            return values[0];
+        } else {
+            return values[idx];
+        }
+    }
+    public static void setPeopleListFilter(PeopleListFilter peopleListFilter) {
+        if (peopleListFilter != null) {
+            setInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX, peopleListFilter.ordinal());
+        } else {
+            prefs().edit()
+                    .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
+                    .apply();
+        }
+    }
+
     // Store the version code of the app. Used to check it the app was upgraded.
     public static int getLastAppVersionCode() {
         return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
@@ -363,10 +385,6 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static boolean isInAppBillingAvailable() {
-        return BuildConfig.IN_APP_BILLING_AVAILABLE;
     }
 
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {

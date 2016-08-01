@@ -21,6 +21,10 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -59,9 +63,9 @@ class ReaderPostRenderer {
         mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
 
-        // enable JavaScript in the webView if it's safe to do so, otherwise videos
-        // and other embedded content won't work
-        webView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
+        // enable JavaScript in the webView, otherwise videos and other embedded content won't
+        // work - note that the content is scrubbed on the backend so this is considered safe
+        webView.getSettings().setJavaScriptEnabled(true);
     }
 
     void beginRender() {
@@ -71,14 +75,16 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                if (!mResourceVars.canShowTiledGallery) {
+                final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
+
+                if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder
-                        .toString(), mResourceVars.canShowTiledGallery);
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), hasTiledGallery,
+                        mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -88,6 +94,11 @@ class ReaderPostRenderer {
                 });
             }
         }.start();
+    }
+
+    public static boolean hasTiledGallery(String text) {
+        // determine whether a tiled-gallery exists in the content
+        return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find();
     }
 
     /*
@@ -306,7 +317,12 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean renderAsTiledGallery) {
+    private String formatPostContentForWebView(final String content, boolean hasTiledGallery, boolean isWideDisplay) {
+        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
+
+        // unique CSS class assigned to the gallery elements for easy selection
+        final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
+
         @SuppressWarnings("StringBufferReplaceableByString")
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -323,42 +339,42 @@ class ReaderPostRenderer {
         .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
-        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
+        // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
-                ", li { line-height: 1.6em; font-size: 0.95em; }")
+        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+                ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
+        // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
         .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
-        .append("      margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("  p { margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
+        .append("      margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }")
         .append("  p:first-child { margin-top: 0px; }")
 
         // add background color and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         .append("  pre { overflow-x: scroll;")
         .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-        .append("        padding: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
 
         // add a left border to blockquotes
-        .append("  blockquote { margin-left: ").append(mResourceVars.marginSmallPx).append("px; ")
-        .append("               padding-left: ").append(mResourceVars.marginSmallPx).append("px; ")
+        .append("  blockquote { margin-left: ").append(mResourceVars.marginMediumPx).append("px; ")
+        .append("               padding-left: ").append(mResourceVars.marginMediumPx).append("px; ")
         .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
         .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
 
         // make sure images aren't wider than the display, strictly enforced for images without size
-        .append("  img { max-width: 100%; }")
+        .append("  img { max-width: 100%; width: auto; height: auto; }")
         .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
         // center large/medium images, provide a small bottom margin, and add a background color
@@ -366,11 +382,28 @@ class ReaderPostRenderer {
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
+        .append("     margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
+
+        if (isWideDisplay) {
+            sbHtml
+            .append(".alignleft {")
+            .append("    max-width: 100%;")
+            .append("    float: left;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-right: 32px;}")
+            .append(".alignright {")
+            .append("    max-width: 100%;")
+            .append("    float: right;")
+            .append("    margin-top: 12px;")
+            .append("    margin-bottom: 12px;")
+            .append("    margin-left: 32px;}");
+        }
 
         if (renderAsTiledGallery) {
+            // tiled-gallery related styles
             sbHtml
-            .append("  .tiled-gallery {")
+            .append(".tiled-gallery {")
             .append("    clear:both;")
             .append("    overflow:hidden;}")
             .append(".tiled-gallery img {")
@@ -440,16 +473,17 @@ class ReaderPostRenderer {
         }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
-        sbHtml.append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
+        sbHtml
         .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
-        .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
+        .append("       text-align: center;")
+        .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
         // attribution for Discover posts
         .append("  div#discover { ")
-        .append("       margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
+        .append("       margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
         .append("       font-family: sans-serif;")
         .append(" }")
 
@@ -461,9 +495,21 @@ class ReaderPostRenderer {
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        .append("</style>")
-        .append("</head><body>")
-        .append(content)
+        .append("</style>");
+
+        // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
+        final List<String> classAmendRegexes = Arrays.asList(
+                "(tiled-gallery)([\\s\"\'])",
+                "(gallery-row)([\\s\"'])",
+                "(gallery-group)([\\s\"'])",
+                "(tiled-gallery-item)([\\s\"'])");
+        String contentCustomised = content;
+        for (String classToAmend : classAmendRegexes) {
+            contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
+        }
+
+        sbHtml.append("</head><body>")
+        .append(contentCustomised)
         .append("</body></html>");
 
         return sbHtml.toString();
@@ -530,15 +576,5 @@ class ReaderPostRenderer {
         }
         return DisplayUtils.pxToDp(WordPress.getContext(), px);
     }
-
-    /*
-     * javascript should only be enabled for WordPress.com blogs (not feeds or Jetpack blogs)
-     */
-    private boolean canEnableJavaScript() {
-        return mPost.isWP() && !mPost.isJetpack;
-    }
-
-
-
 
 }
