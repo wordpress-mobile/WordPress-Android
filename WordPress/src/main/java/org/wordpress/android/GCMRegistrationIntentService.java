@@ -10,7 +10,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.util.AniUtils;

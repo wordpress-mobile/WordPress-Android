@@ -66,7 +66,7 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryActivity;

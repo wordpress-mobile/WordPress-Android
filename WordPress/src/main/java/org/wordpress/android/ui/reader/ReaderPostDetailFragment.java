@@ -28,7 +28,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;

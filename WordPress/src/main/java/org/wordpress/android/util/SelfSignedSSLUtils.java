@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.wordpress.android.stores.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.ui.ActivityLauncher;
 
 public class SelfSignedSSLUtils {

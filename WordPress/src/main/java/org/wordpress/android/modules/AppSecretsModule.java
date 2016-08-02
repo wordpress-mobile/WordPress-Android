@@ -1,7 +1,7 @@
 package org.wordpress.android.modules;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.stores.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 
 import dagger.Module;
 import dagger.Provides;
