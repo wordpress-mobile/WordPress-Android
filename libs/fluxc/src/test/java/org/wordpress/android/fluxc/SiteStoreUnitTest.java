@@ -1,4 +1,4 @@
-package org.wordpress.android.stores;
+package org.wordpress.android.fluxc;
 
 import android.content.Context;
 
@@ -10,12 +10,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.network.rest.wpcom.site.SiteRestClient;
-import org.wordpress.android.stores.network.xmlrpc.site.SiteXMLRPCClient;
-import org.wordpress.android.stores.persistence.SiteSqlUtils;
-import org.wordpress.android.stores.persistence.WellSqlConfig;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.List;
 
