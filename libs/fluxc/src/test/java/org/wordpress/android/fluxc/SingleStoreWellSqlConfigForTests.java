@@ -1,4 +1,4 @@
-package org.wordpress.android.stores;
+package org.wordpress.android.fluxc;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,7 @@ import com.yarolegovich.wellsql.WellTableManager;
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.TableClass;
 
-import org.wordpress.android.stores.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
 public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
     private Class<? extends Identifiable> mStoreClass;

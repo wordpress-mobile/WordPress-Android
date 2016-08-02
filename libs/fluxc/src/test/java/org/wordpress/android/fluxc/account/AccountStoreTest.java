@@ -1,4 +1,4 @@
-package org.wordpress.android.stores.account;
+package org.wordpress.android.fluxc.account;
 
 import android.content.Context;
 
@@ -12,16 +12,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.SingleStoreWellSqlConfigForTests;
-import org.wordpress.android.stores.model.AccountModel;
-import org.wordpress.android.stores.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.stores.network.rest.wpcom.account.AccountRestClient;
-import org.wordpress.android.stores.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.stores.network.rest.wpcom.auth.Authenticator;
-import org.wordpress.android.stores.persistence.AccountSqlUtils;
-import org.wordpress.android.stores.persistence.WellSqlConfig;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
+import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 
 import java.lang.reflect.Method;
 
