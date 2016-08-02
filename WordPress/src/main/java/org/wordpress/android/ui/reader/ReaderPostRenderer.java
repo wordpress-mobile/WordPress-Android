@@ -61,9 +61,9 @@ class ReaderPostRenderer {
         mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
 
-        // enable JavaScript in the webView if it's safe to do so, otherwise videos
-        // and other embedded content won't work
-        webView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
+        // enable JavaScript in the webView, otherwise videos and other embedded content won't
+        // work - note that the content is scrubbed on the backend so this is considered safe
+        webView.getSettings().setJavaScriptEnabled(true);
     }
 
     void beginRender() {
@@ -562,15 +562,5 @@ class ReaderPostRenderer {
         }
         return DisplayUtils.pxToDp(WordPress.getContext(), px);
     }
-
-    /*
-     * javascript should only be enabled for WordPress.com blogs (not feeds or Jetpack blogs)
-     */
-    private boolean canEnableJavaScript() {
-        return mPost.isWP() && !mPost.isJetpack;
-    }
-
-
-
 
 }

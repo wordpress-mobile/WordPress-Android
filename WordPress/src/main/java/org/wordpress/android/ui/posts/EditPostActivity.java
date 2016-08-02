@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -36,6 +37,7 @@ import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
 import android.view.ContextMenu;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,6 +58,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
@@ -111,6 +114,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +126,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener,
+public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -133,6 +137,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
+    public static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
 
     // Context menu positioning
     private static final int SELECT_PHOTO_MENU_POSITION = 0;
@@ -145,6 +150,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
+    public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -195,6 +201,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private View mMenuView = null;
 
     @Inject AccountStore mAccountStore;
+
+    // for keeping the media uri while asking for permissions
+    private ArrayList<Uri> mDroppedMediaUris;
+
+    private Runnable mFetchMediaRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mDroppedMediaUris != null) {
+                final List<Uri> mediaUris = mDroppedMediaUris;
+                mDroppedMediaUris = null;
+
+                fetchMedia(mediaUris);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,6 +276,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return;
             }
         } else {
+            mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
+
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
@@ -399,6 +422,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
 
+        outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
+
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
         }
@@ -520,6 +545,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
                 break;
+            case DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE:
+                boolean mediaAccessGranted = false;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                mediaAccessGranted = true;
+                            }
+                            break;
+                    }
+                }
+                if (mediaAccessGranted) {
+                    runOnUiThread(mFetchMediaRunnable);
+                } else {
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
+                }
             default:
                 break;
         }
@@ -1403,45 +1444,33 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Media
      */
 
-    private void fetchMedia(Uri mediaUri) {
-        if (mediaUri == null) {
-            Toast.makeText(EditPostActivity.this,
-                    getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (URLUtil.isNetworkUrl(mediaUri.toString())) {
-            // Create an AsyncTask to download the file
-            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-        } else {
-            // It is a regular local image file
-            if (!addMedia(mediaUri)) {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
-                        .show();
+    private void fetchMedia(final List<Uri> mediaUris) {
+        new AsyncTask<List<Uri>, Boolean, Void>() {
+            @Override
+            protected Void doInBackground(List<Uri>... lists) {
+                for (Uri mediaUri : mediaUris) {
+                    if (mediaUri == null) {
+                        publishProgress(false);
+                        continue;
+                    }
+
+                    if (!addMedia(mediaUri)) {
+                        publishProgress(false);
+                    }
+                }
+
+                return null;
             }
-        }
+
+            @Override
+            protected void onProgressUpdate(Boolean... values) {
+                // use onProgressUpdate to Toast on error
+                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }.execute(mediaUris);
     }
 
-    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-            Uri imageUri = uris[0];
-            return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(EditPostActivity.this, R.string.download, Toast.LENGTH_SHORT).show();
-        }
-
-        protected void onPostExecute(Uri newUri) {
-            if (newUri != null) {
-                addMedia(newUri);
-            } else {
-                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image), Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }
-    }
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
         Blog currentBlog = WordPress.getCurrentBlog();
@@ -1594,7 +1623,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    fetchMedia(imageUri);
+                    fetchMedia(Arrays.asList(imageUri));
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1620,7 +1649,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    fetchMedia(videoUri);
+                    fetchMedia(Arrays.asList(videoUri));
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -2049,6 +2078,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onAddMediaClicked() {
         // no op
+    }
+
+    @Override
+    public void onMediaDropped(final ArrayList<Uri> mediaUris) {
+        mDroppedMediaUris = mediaUris;
+
+        if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
+            runOnUiThread(mFetchMediaRunnable);
+        }
+    }
+
+    @Override
+    public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            requestTemporaryPermissions(dragEvent);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private void requestTemporaryPermissions(DragEvent dragEvent) {
+        requestDragAndDropPermissions(dragEvent);
     }
 
     @Override

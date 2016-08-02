@@ -51,7 +51,6 @@ import org.wordpress.passcodelock.AppLockManager;
 
 public class ActivityLauncher {
     private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
-    private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
 
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -68,50 +67,50 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewBlogPlans(Context context, int blogLocalTableId) {
         Intent intent = new Intent(context, PlansActivity.class);
         intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogPosts(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
     public static void viewCurrentBlogPages(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
     }
 
     public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context) {
         if (ThemeBrowserActivity.isAccessible()) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            slideInFromRight(context, intent);
+            context.startActivity(intent);
         }
     }
 
     public static void viewCurrentBlogPeople(Context context) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
@@ -120,7 +119,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, blog);
     }
 
@@ -165,7 +164,7 @@ public class ActivityLauncher {
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
-        slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
+        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
@@ -209,30 +208,30 @@ public class ActivityLauncher {
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewAccountSettings(Context context) {
         Intent intent = new Intent(context, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewAppSettings(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
-        slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
-        slideInFromRight(activity, intent);
+        activity.startActivity(intent);
     }
 
     public static void viewHelpAndSupport(Context context, Tag origin) {
         Intent intent = new Intent(context, HelpActivity.class);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewSSLCerts(Context context, String certificateString) {
@@ -286,40 +285,5 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void slideInFromRight(Context context, Intent intent) {
-        if (context instanceof Activity) {
-            intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
-            Activity activity = (Activity) context;
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_in_from_right,
-                    R.anim.do_nothing);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
-    public static void slideInFromRightForResult(Activity activity, Intent intent, int requestCode) {
-        intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_right,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, requestCode, options.toBundle());
-    }
-
-    /*
-     * called in an activity's finish to slide it out to the right if it slid in
-     * from the right when started
-     */
-    public static void slideOutToRight(Activity activity) {
-        if (activity != null
-                && activity.getIntent() != null
-                && activity.getIntent().hasExtra(ARG_DID_SLIDE_IN_FROM_RIGHT)) {
-            activity.overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_right);
-        }
     }
 }

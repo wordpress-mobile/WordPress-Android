@@ -27,14 +27,14 @@
             tools:text="text_related_post_title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_related_post_subtitle"
+            android:id="@+id/text_related_post_byline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="4"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_related_post_subtitle" />
+            tools:text="text_related_post_byline" />
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPNetworkImageView

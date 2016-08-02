@@ -32,6 +32,7 @@ import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
+import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
@@ -83,6 +84,7 @@ public interface AppComponent {
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
+    void inject(MyProfileFragment object);
     void inject(AccountSettingsFragment object);
     void inject(MySiteFragment object);
     void inject(SitePickerActivity object);

@@ -131,12 +131,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
 

@@ -151,12 +151,6 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
-    @Override
     protected void onPause() {
         EventBus.getDefault().unregister(this);
         super.onPause();
