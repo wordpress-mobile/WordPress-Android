@@ -1,9 +1,9 @@
-package org.wordpress.android.stores;
+package org.wordpress.android.fluxc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.wordpress.android.stores.network.rest.wpcom.WPCOMREST;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 
 import static org.junit.Assert.assertEquals;
 

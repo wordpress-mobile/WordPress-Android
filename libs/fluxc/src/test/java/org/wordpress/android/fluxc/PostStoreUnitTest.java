@@ -1,4 +1,4 @@
-package org.wordpress.android.stores;
+package org.wordpress.android.fluxc;
 
 import android.content.Context;
 
@@ -10,13 +10,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.wordpress.android.stores.model.PostModel;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.network.rest.wpcom.post.PostRestClient;
-import org.wordpress.android.stores.network.xmlrpc.post.PostXMLRPCClient;
-import org.wordpress.android.stores.persistence.PostSqlUtils;
-import org.wordpress.android.stores.persistence.WellSqlConfig;
-import org.wordpress.android.stores.store.PostStore;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
+import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.PostSqlUtils;
+import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.store.PostStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
