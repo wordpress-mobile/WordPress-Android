@@ -1,4 +1,4 @@
-package org.wordpress.android.stores.network;
+package org.wordpress.android.fluxc.network;
 
 public interface Response {
 }

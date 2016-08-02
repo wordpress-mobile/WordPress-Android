@@ -1,4 +1,4 @@
-package org.wordpress.android.stores.annotations.action;
+package org.wordpress.android.fluxc.annotations.action;
 
 public class NoPayload {
     private NoPayload() {}
