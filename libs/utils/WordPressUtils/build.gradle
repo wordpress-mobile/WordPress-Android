@@ -20,7 +20,7 @@ dependencies {
         exclude group: 'commons-logging'
     }
     compile 'com.mcxiaoke.volley:library:1.0.18'
-    compile 'com.android.support:support-v13:23.4.0'
+    compile 'com.android.support:support-v13:24.1.1'
 }
 
 android {
@@ -29,12 +29,12 @@ android {
     publishNonDefault true
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         versionName "1.10.0"
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
     }
 }
 
