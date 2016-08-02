@@ -55,7 +55,7 @@ public class MultiSelectListView extends ListView
             mActionMode.finish();
         } else {
             int color = isItemChecked(position) ? R.color.white : R.color.transparent;
-            getChildAt(position).setBackgroundColor(getResources().getColor(color));
+            getChildAt(position - getFirstVisiblePosition()).setBackgroundColor(getResources().getColor(color));
             mActionMode.invalidate();
         }
     }
@@ -65,7 +65,7 @@ public class MultiSelectListView extends ListView
         if (mActionMode != null) return false;
 
         setItemChecked(position, true);
-        getChildAt(position).setBackgroundColor(getResources().getColor(R.color.white));
+        getChildAt(position - getFirstVisiblePosition()).setBackgroundColor(getResources().getColor(R.color.white));
         mActionMode = startActionMode(this);
         if (mEnterListener != null) mEnterListener.onEnterMultiSelect();
 
