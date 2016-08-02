@@ -108,6 +108,7 @@
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
 	<string name="upload">Yuklash</string>
+	<string name="discard">Bekor qilish</string>
 	<string name="notifications">Xabarlar</string>
 	<string name="note_reply_successful">Javob chop qilindi</string>
 	<string name="new_notifications">%d ta yangi xabarlar</string>
@@ -146,6 +147,7 @@
 	<string name="image_alignment">Tekislash</string>
 	<string name="refresh">Yangila</string>
 	<string name="untitled">Nomsiz</string>
+	<string name="edit">Tahrir qil</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Sahifa</string>
 	<string name="post_password">Parol (ixtiyoriy)</string>
@@ -163,7 +165,6 @@
 	<string name="categories">Bo‘limlar</string>
 	<string name="notification_vibrate">Vibratsiya</string>
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
-	<string name="notification_sound">Ovozli xabar</string>
 	<string name="status">Status</string>
 	<string name="location">Manzil</string>
 	<string name="select_video">Galereyadan video tanla</string>

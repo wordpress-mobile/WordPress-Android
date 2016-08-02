@@ -20,6 +20,7 @@
         android:background="@color/grey_lighten_20" />
 
     <LinearLayout
+        android:id="@+id/reply_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

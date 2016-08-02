@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -62,6 +63,8 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
+
+import java.util.EnumSet;
 
 import de.greenrobot.event.EventBus;
 
@@ -482,19 +485,21 @@ public class ReaderPostDetailFragment extends Fragment
         // add a separate view for each related post
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         int imageSize = DisplayUtils.dpToPx(getActivity(), getResources().getDimensionPixelSize(R.dimen.reader_related_post_image_size));
-        for (final ReaderRelatedPost relatedPost : relatedPosts) {
+        for (int index = 0; index < relatedPosts.size(); index++) {
+            final ReaderRelatedPost relatedPost = relatedPosts.get(index);
+
             View postView = inflater.inflate(R.layout.reader_related_post, container, false);
             TextView txtTitle = (TextView) postView.findViewById(R.id.text_related_post_title);
-            TextView txtSubtitle = (TextView) postView.findViewById(R.id.text_related_post_subtitle);
+            TextView txtByline = (TextView) postView.findViewById(R.id.text_related_post_byline);
             WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_related_post);
 
             txtTitle.setText(relatedPost.getTitle());
-            txtSubtitle.setText(relatedPost.getSubtitle());
+            txtByline.setText(relatedPost.getByline());
 
             imgFeatured.setVisibility(relatedPost.hasFeaturedImage() ? View.VISIBLE : View.GONE);
             if (relatedPost.hasFeaturedImage()) {
                 String imageUrl = PhotonUtils.getPhotonImageUrl(relatedPost.getFeaturedImage(), imageSize, imageSize);
-                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_ROUNDED);
                 imgFeatured.setVisibility(View.VISIBLE);
             }
 
@@ -515,6 +520,12 @@ public class ReaderPostDetailFragment extends Fragment
             });
 
             container.addView(postView);
+
+            // add a divider below all but the last related post
+            if (index < relatedPosts.size() - 1) {
+                View dividerView = inflater.inflate(R.layout.reader_related_post_divider, container, false);
+                container.addView(dividerView);
+            }
         }
 
         View label = getView().findViewById(R.id.text_related_posts_label);
@@ -662,13 +673,17 @@ public class ReaderPostDetailFragment extends Fragment
 
         String postContent = (mRenderer != null ? mRenderer.getRenderedHtml() : null);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
+        EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
+        if (isPrivatePost) {
+            options.add(ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE);
+        }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
                 imageUrl,
                 postContent,
                 sourceView,
-                isPrivatePost,
+                options,
                 startX,
                 startY);
 
@@ -936,8 +951,8 @@ public class ReaderPostDetailFragment extends Fragment
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
-                        requestRelatedPosts();
                     }
+                    requestRelatedPosts();
                 }
             }, 300);
         } else {

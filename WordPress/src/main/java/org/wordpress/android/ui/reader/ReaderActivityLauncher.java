@@ -24,6 +24,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -66,8 +67,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -80,8 +80,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -154,7 +153,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -164,7 +163,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        ActivityLauncher.slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     /*
@@ -180,20 +179,28 @@ public class ReaderActivityLauncher {
      * content of the post the image is in, used by the activity to show all images in
      * the post
      */
+    public enum PhotoViewerOption {
+        IS_PRIVATE_IMAGE,
+        IS_GALLERY_IMAGE
+    }
     public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
                                              String content,
                                              View sourceView,
-                                             boolean isPrivate,
+                                             EnumSet<PhotoViewerOption> imageOptions,
                                              int startX,
                                              int startY) {
         if (context == null || TextUtils.isEmpty(imageUrl)) {
             return;
         }
 
+        boolean isPrivate = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE);
+        boolean isGallery = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE);
+
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
         intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
+        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery);
         if (!TextUtils.isEmpty(content)) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }
@@ -207,8 +214,10 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
         }
     }
-    public static void showReaderPhotoViewer(Context context, String imageUrl, boolean isPrivate) {
-        showReaderPhotoViewer(context, imageUrl, null, null, isPrivate, 0, 0);
+    public static void showReaderPhotoViewer(Context context,
+                                             String imageUrl,
+                                             EnumSet<PhotoViewerOption> imageOptions) {
+        showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
     }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }

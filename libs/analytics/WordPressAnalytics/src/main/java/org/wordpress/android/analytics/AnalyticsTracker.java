@@ -41,6 +41,8 @@ public final class AnalyticsTracker {
         READER_TAG_PREVIEWED,
         READER_TAG_UNFOLLOWED,
         READER_SEARCH_LOADED,
+        READER_SEARCH_PERFORMED,
+        READER_SEARCH_RESULT_TAPPED,
         STATS_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,
@@ -257,11 +259,9 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                       int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public static void refreshMetadata(AnalyticsMetadata metadata) {
         for (Tracker tracker : TRACKERS) {
-            tracker.refreshMetadata(isUserConnected, isWordPressComUser, isJetpackUser, sessionCount, numBlogs,
-                    versionCode, username, email);
+            tracker.refreshMetadata(metadata);
         }
     }
 }

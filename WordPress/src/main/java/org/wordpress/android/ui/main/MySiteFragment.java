@@ -67,7 +67,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private LinearLayout mAdminView;
+    private RelativeLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -149,7 +149,7 @@ public class MySiteFragment extends Fragment
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
-        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
+        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
@@ -184,14 +184,12 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        if (isPlansEnabled()) {
-            mPlanContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
-                }
-            });
-        }
+        mPlanContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+            }
+        });
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,13 +255,6 @@ public class MySiteFragment extends Fragment
         });
 
         return rootView;
-    }
-
-    /*
-     * plans is a work-in-progress and is currently only exposed to alpha testers
-     */
-    private static boolean isPlansEnabled() {
-        return AppPrefs.isInAppBillingAvailable();
     }
 
     private void showSitePicker() {
@@ -385,15 +376,11 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
 
-        // Hide the Plan item if the Plans feature is not available.
-        if (isPlansEnabled()) {
-            String planShortName = blog.getPlanShortName();
-            if (!TextUtils.isEmpty(planShortName)) {
-                mCurrentPlanNameTextView.setText(planShortName);
-                mPlanContainer.setVisibility(View.VISIBLE);
-            } else {
-                mPlanContainer.setVisibility(View.GONE);
-            }
+        // Hide the Plan item if the Plans feature is not available for this blog
+        String planShortName = blog.getPlanShortName();
+        if (!TextUtils.isEmpty(planShortName)) {
+            mCurrentPlanNameTextView.setText(planShortName);
+            mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }

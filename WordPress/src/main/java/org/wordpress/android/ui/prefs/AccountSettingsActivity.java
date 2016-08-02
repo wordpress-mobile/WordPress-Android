@@ -40,10 +40,4 @@ public class AccountSettingsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
 }

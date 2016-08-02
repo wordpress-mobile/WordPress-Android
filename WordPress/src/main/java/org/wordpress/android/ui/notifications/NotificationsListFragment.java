@@ -175,7 +175,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNote(getActivity(), noteId, false, true);
+            openNote(getActivity(), noteId, false);
         }
     };
 
@@ -184,8 +184,7 @@ public class NotificationsListFragment extends Fragment
      */
     public static void openNote(Activity activity,
                                 String noteId,
-                                boolean shouldShowKeyboard,
-                                boolean shouldSlideIn) {
+                                boolean shouldShowKeyboard) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -197,11 +196,7 @@ public class NotificationsListFragment extends Fragment
         Intent detailIntent = new Intent(activity, NotificationsDetailActivity.class);
         detailIntent.putExtra(NOTE_ID_EXTRA, noteId);
         detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard);
-        if (shouldSlideIn) {
-            ActivityLauncher.slideInFromRightForResult(activity, detailIntent, RequestCodes.NOTE_DETAIL);
-        } else {
-            activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
-        }
+        activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
     private void setNoteIsHidden(String noteId, boolean isHidden) {

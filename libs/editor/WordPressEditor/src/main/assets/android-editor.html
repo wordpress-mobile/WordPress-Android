@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>%%TITLE%%</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+      <script type="text/javascript">
+        var nativeState = new Object();
+        nativeState.androidApiLevel=%%ANDROID_API_LEVEL%%;
+        %%LOCALIZED_STRING_INIT%%
+    </script>
+    <script src="libs/jquery-2.1.3.min.js"></script>
+    <script src="libs/js-beautifier.js"></script>
+    <script src="libs/underscore-min.js"></script>
+    <script src="libs/shortcode.js"></script>
+    <script src="libs/jquery.mobile-events.min.js"></script>
+    <script src="libs/wpload.js"></script>
+    <script src="libs/wpsave.js"></script>
+    <script src="libs/rangy-core.js"></script>
+    <script src="libs/rangy-classapplier.js"></script>
+    <script src="libs/rangy-highlighter.js"></script>
+    <script src="libs/rangy-selectionsaverestore.js"></script>
+    <script src="libs/rangy-serializer.js"></script>
+    <script src="libs/rangy-textrange.js"></script>
+    <script src="editor-utils.js"></script>
+    <script src="editor-utils-formatter.js"></script>
+    <script src="ZSSRichTextEditor.js"></script>
+    <script>
+        // DRM: onLoad does not get called when offline, if there's remote content in the editor
+        // (such as remote images).  We use the 'ready' event for this reason.
+        //
+        $(document).ready(function() {
+            ZSSEditor.init();
+            ZSSEditor.domLoadedCallback();
+        });
+    </script>
+    <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="editor-android.css">
+  </head>
+  <body>
+      <div contenteditable="true" id="zss_field_title" class="field" nostyle>
+      </div>
+      <div contenteditable="false" id="separatorDiv" >
+          <hr>
+      </div>
+      <div contenteditable="true" id="zss_field_content" class="field">
+      </div>
+  </body>
+</html>
