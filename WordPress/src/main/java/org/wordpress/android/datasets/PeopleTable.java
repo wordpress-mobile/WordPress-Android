@@ -314,7 +314,8 @@ public class PeopleTable {
     // order is disabled for followers & viewers for now since the API is not supporting it
     private static String orderByString(String table, boolean isDescending) {
         if (table.equals(TEAM_TABLE)) {
-            return " ORDER BY lower(display_name), lower(user_name)" + (isDescending ? " DESC" : "");
+            String descQuery = (isDescending ? " DESC" : "");
+            return " ORDER BY lower(display_name)" + descQuery + ", lower(user_name)" + descQuery;
         }
         return "";
     }
