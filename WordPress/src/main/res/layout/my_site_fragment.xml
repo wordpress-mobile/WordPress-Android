@@ -310,7 +310,7 @@
 
             <!--EXTERNAL-->
             <LinearLayout
-                android:id="@+id/admin_section"
+                android:id="@+id/external_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
