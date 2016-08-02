@@ -1428,7 +1428,7 @@
     <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
     <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
     <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
-    <string name="people_fetching">Fetching users..</string>
+    <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
 
