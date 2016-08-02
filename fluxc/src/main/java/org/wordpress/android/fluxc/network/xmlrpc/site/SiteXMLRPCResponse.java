@@ -1,6 +1,6 @@
-package org.wordpress.android.stores.network.xmlrpc.site;
+package org.wordpress.android.fluxc.network.xmlrpc.site;
 
-import org.wordpress.android.stores.network.Response;
+import org.wordpress.android.fluxc.network.Response;
 
 public class SiteXMLRPCResponse implements Response {
 

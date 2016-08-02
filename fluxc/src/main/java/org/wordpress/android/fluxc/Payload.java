@@ -1,4 +1,4 @@
-package org.wordpress.android.stores;
+package org.wordpress.android.fluxc;
 
 public interface Payload {
 }
