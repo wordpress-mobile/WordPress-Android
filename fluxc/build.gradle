@@ -53,7 +53,7 @@ dependencies {
     compile 'org.wordpress:wellsql:1.0.6'
     apt 'org.wordpress:wellsql-processor:1.0.6'
 
-    // Stores annotations
+    // FluxC annotations
     compile project(':fluxc-annotations')
     apt project(':fluxc-processor')
 
@@ -70,4 +70,4 @@ dependencies {
 
 version android.defaultConfig.versionName
 group = "org.wordpress"
-archivesBaseName = "stores"
+archivesBaseName = "fluxc"

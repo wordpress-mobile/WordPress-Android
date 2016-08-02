@@ -40,7 +40,7 @@ import okhttp3.OkUrlFactory;
 
 @Module
 public class ReleaseNetworkModule {
-    private static final String DEFAULT_CACHE_DIR = "volley-wpstores";
+    private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
     private RequestQueue newRequestQueue(OkUrlFactory okUrlFactory, Context appContext) {
