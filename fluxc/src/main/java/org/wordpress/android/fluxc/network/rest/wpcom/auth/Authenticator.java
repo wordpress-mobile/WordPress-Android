@@ -64,6 +64,11 @@ public class Authenticator {
             this.errorType = errorType;
             this.errorMessage = errorMessage;
         }
+
+        public AuthenticateErrorPayload() {
+            this.errorType = AuthenticationError.GENERIC_ERROR;
+            this.errorMessage = "";
+        }
     }
 
     @Inject

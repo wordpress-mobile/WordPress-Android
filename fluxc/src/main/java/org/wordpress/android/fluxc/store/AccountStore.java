@@ -233,7 +233,7 @@ public class AccountStore extends Store {
         } else if (actionType == AccountAction.FETCH_SETTINGS) {
             // fetch only Account Settings
             mAccountRestClient.fetchAccountSettings();
-        } else if (actionType == AccountAction.POST_SETTINGS) {
+        } else if (actionType == AccountAction.PUSH_SETTINGS) {
             PostAccountSettingsPayload payload = (PostAccountSettingsPayload) action.getPayload();
             mAccountRestClient.postAccountSettings(payload.params);
         } else if (actionType == AccountAction.FETCHED_ACCOUNT) {
@@ -248,12 +248,12 @@ public class AccountStore extends Store {
                 mAccount.copyAccountSettingsAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
             }
-        } else if (actionType == AccountAction.POSTED_SETTINGS) {
+        } else if (actionType == AccountAction.PUSHED_SETTINGS) {
             AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
             if (!data.isError()) {
                 boolean updated = AccountRestClient.updateAccountModelFromPostSettingsResponse(mAccount, data.settings);
                 if (updated) {
-                    updateDefaultAccount(mAccount, AccountAction.POST_SETTINGS);
+                    updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
                 } else {
                     OnAccountChanged accountChanged = new OnAccountChanged();
                     accountChanged.accountInfosChanged = false;

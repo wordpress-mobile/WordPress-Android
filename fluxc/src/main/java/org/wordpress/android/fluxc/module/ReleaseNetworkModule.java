@@ -7,18 +7,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 
-import org.wordpress.android.fluxc.network.MemorizingTrustManager;
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -147,6 +149,24 @@ public class ReleaseNetworkModule {
                                                       AppSecrets appSecrets,
                                                       AccessToken token, UserAgent userAgent) {
         return new AccountRestClient(dispatcher, requestQueue, appSecrets, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public PostRestClient providePostRestClient(Dispatcher dispatcher,
+                                                @Named("regular") RequestQueue requestQueue,
+                                                AppSecrets appSecrets,
+                                                AccessToken token, UserAgent userAgent) {
+        return new PostRestClient(dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public PostXMLRPCClient providePostXMLRPCClient(Dispatcher dispatcher,
+                                                    @Named("custom-ssl") RequestQueue requestQueue,
+                                                    AccessToken token,
+                                                    UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new PostXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
     }
 
     @Singleton
