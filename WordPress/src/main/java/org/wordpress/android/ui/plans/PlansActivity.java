@@ -22,11 +22,15 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.io.Serializable;
@@ -98,6 +102,18 @@ public class PlansActivity extends AppCompatActivity {
         } else {
             setupPlansUI();
         }
+
+        // navigate to the "manage plans" page for this blog when the user clicks the manage bar
+        mManageBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Blog blog = WordPress.getBlog(mLocalBlogID);
+                if (blog == null) return;
+                String domain = UrlUtils.getHost(blog.getUrl());
+                String managePlansUrl = "https://wordpress.com/plans/" + domain;
+                ReaderActivityLauncher.openUrl(view.getContext(), managePlansUrl, OpenUrlType.EXTERNAL);
+            }
+        });
     }
 
     @Override

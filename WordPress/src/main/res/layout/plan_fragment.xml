@@ -7,7 +7,6 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/plan_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_large"
@@ -45,6 +44,13 @@
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
             tools:text="text_tagline" />
+
+        <!-- plan features are added to this container view -->
+        <LinearLayout
+            android:id="@+id/plan_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <View
             android:layout_width="match_parent"

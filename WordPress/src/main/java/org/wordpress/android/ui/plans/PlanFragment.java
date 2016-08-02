@@ -60,10 +60,9 @@ public class PlanFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshPlanUI();
-
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        showPlans();
     }
 
     @Override
@@ -72,10 +71,9 @@ public class PlanFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void refreshPlanUI() {
-        if (!isAdded()) {
-            return;
-        }
+    private void showPlans() {
+        if (!isAdded()) return;
+
         if (mPlanDetails == null) {
             // TODO This should never happen - Fix this. Close the activity?
             AppLog.w(AppLog.T.PLANS, "empty plan data in fragment");
@@ -83,7 +81,7 @@ public class PlanFragment extends Fragment {
         }
 
         int iconSize = getActivity().getResources().getDimensionPixelSize(R.dimen.plan_icon_size);
-        NetworkImageView imgPlan = (NetworkImageView) mPlanContainerView.findViewById(R.id.image_plan_icon);
+        NetworkImageView imgPlan = (NetworkImageView) getView().findViewById(R.id.image_plan_icon);
         String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
             imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
@@ -93,16 +91,15 @@ public class PlanFragment extends Fragment {
         }
 
         // show product short name in bold, ex: "WordPress.com <b>Premium</b>"
-        TextView txtProductName = (TextView) mPlanContainerView.findViewById(R.id.text_product_name);
+        TextView txtProductName = (TextView) getView().findViewById(R.id.text_product_name);
         String productShortName = mPlanDetails.getProductNameShort();
         String productName = mPlanDetails.getProductName().replace(productShortName,
                 "<b>" + productShortName + "</b>");
         txtProductName.setText(Html.fromHtml(productName));
 
-        TextView txtTagLine = (TextView) mPlanContainerView.findViewById(R.id.text_tagline);
+        TextView txtTagLine = (TextView) getView().findViewById(R.id.text_tagline);
         txtTagLine.setText(HtmlUtils.fastUnescapeHtml(mPlanDetails.getTagline()));
 
-        // The current plan could probably have some features to highlight on the details screen
         addFeaturesToHighlight();
     }
 
