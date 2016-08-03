@@ -179,7 +179,7 @@ public class PeopleTable {
                     int deleteCount = size - fetchLimit;
                     String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
                     getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                            + table + " WHERE local_blog_id=?1" + orderByString(table) + " DESC LIMIT ?2)", args);
+                            + table + " WHERE local_blog_id=?1" + orderByString(table, true) + " LIMIT ?2)", args);
                 }
             }
             getWritableDb().setTransactionSuccessful();
@@ -232,7 +232,7 @@ public class PeopleTable {
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
         String[] args = {Integer.toString(localTableBlogId)};
-        String orderBy = orderByString(table);
+        String orderBy = orderByString(table, false);
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
 
         List<Person> people = new ArrayList<>();
@@ -312,9 +312,10 @@ public class PeopleTable {
     }
 
     // order is disabled for followers & viewers for now since the API is not supporting it
-    private static String orderByString(String table) {
+    private static String orderByString(String table, boolean isDescending) {
         if (table.equals(TEAM_TABLE)) {
-            return " ORDER BY lower(display_name), lower(user_name)";
+            String descQuery = (isDescending ? " DESC" : "");
+            return " ORDER BY lower(display_name)" + descQuery + ", lower(user_name)" + descQuery;
         }
         return "";
     }
