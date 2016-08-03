@@ -181,7 +181,7 @@ public class PeopleTable {
                     String[] columns = {"person_id"};
                     String limit = Integer.toString(size - fetchLimit);
                     String orderBy = null;
-                    if (shouldOrder(table)) {
+                    if (shouldOrderAlphabetically(table)) {
                         orderBy = " lower(display_name) DESC, lower(user_name) DESC";
                     }
                     String inQuery = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null,
@@ -242,7 +242,7 @@ public class PeopleTable {
     private static List<Person> getPeople(String table, int localTableBlogId) {
         String[] args = {Integer.toString(localTableBlogId)};
         String orderBy = "";
-        if (shouldOrder(table)) {
+        if (shouldOrderAlphabetically(table)) {
             orderBy = " ORDER BY lower(display_name), lower(user_name)";
         }
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
@@ -324,7 +324,7 @@ public class PeopleTable {
     }
 
     // order is disabled for followers & viewers for now since the API is not supporting it
-    private static boolean shouldOrder(String table) {
+    private static boolean shouldOrderAlphabetically(String table) {
        return table.equals(TEAM_TABLE);
     }
 
