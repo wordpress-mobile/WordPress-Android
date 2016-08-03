@@ -81,9 +81,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 return convertView;
         }
 
-
         holder.text.setText(textRes);
-        holder.text.setTextColor(parent.getContext().getColor(textColorRes));
+        holder.text.setTextColor(convertView.getContext().getResources().getColor(textColorRes));
 
         if (iconRes != 0) {
             holder.icon.setImageResource(iconRes);
