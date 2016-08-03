@@ -158,17 +158,19 @@ public class PlansActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                int tabLayoutWidth = 0;
-                LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
-                for (int i = 0; i < mTabLayout.getTabCount(); i++){
-                    LinearLayout tabView = (LinearLayout)(tabFirstChild.getChildAt(i));
-                    tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
-                }
+                if (mTabLayout.getChildCount() > 0) {
+                    int tabLayoutWidth = 0;
+                    LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                    for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                        LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                        tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                    }
 
-                int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
-                if (tabLayoutWidth < displayWidth) {
-                    mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-                    mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
+                    if (tabLayoutWidth < displayWidth) {
+                        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                    }
                 }
             }
         });
