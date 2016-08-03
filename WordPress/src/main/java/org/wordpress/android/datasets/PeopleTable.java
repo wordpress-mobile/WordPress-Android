@@ -180,11 +180,15 @@ public class PeopleTable {
                     String where = "local_blog_id=" + localTableBlogId;
                     String[] columns = {"person_id"};
                     String limit = Integer.toString(size - fetchLimit);
-                    String query = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null, null,
-                            limit);
+                    String orderBy = null;
+                    if (shouldOrder(table)) {
+                        orderBy = " lower(display_name) DESC, lower(user_name) DESC";
+                    }
+                    String inQuery = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null,
+                            orderBy, limit);
 
                     String[] args = new String[] {Integer.toString(localTableBlogId)};
-                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (" + query + ")", args);
+                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (" + inQuery + ")", args);
                 }
             }
             getWritableDb().setTransactionSuccessful();
@@ -237,7 +241,10 @@ public class PeopleTable {
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
         String[] args = {Integer.toString(localTableBlogId)};
-        String orderBy = orderByString(table, false);
+        String orderBy = "";
+        if (shouldOrder(table)) {
+            orderBy = " ORDER BY lower(display_name), lower(user_name)";
+        }
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
 
         List<Person> people = new ArrayList<>();
@@ -317,12 +324,8 @@ public class PeopleTable {
     }
 
     // order is disabled for followers & viewers for now since the API is not supporting it
-    private static String orderByString(String table, boolean isDescending) {
-        if (table.equals(TEAM_TABLE)) {
-            String descQuery = (isDescending ? " DESC" : "");
-            return " ORDER BY lower(display_name)" + descQuery + ", lower(user_name)" + descQuery;
-        }
-        return "";
+    private static boolean shouldOrder(String table) {
+       return table.equals(TEAM_TABLE);
     }
 
     @Nullable
