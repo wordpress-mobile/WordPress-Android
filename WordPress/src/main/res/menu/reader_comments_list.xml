@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_prev_new_comment"
+        android:title="@string/reader_menu_prev_new_comment"
+        android:icon="@drawable/double_up"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_next_new_comment"
+        android:title="@string/reader_menu_next_new_comment"
+        android:icon="@drawable/double_down"
+        app:showAsAction="always" />
+
+</menu>

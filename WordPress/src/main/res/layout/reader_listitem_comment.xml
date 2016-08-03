@@ -41,6 +41,8 @@
                 android:layout_marginRight="@dimen/margin_small"
                 tools:src="@drawable/gravatar_placeholder" />
 
+            <!--NOTE: Color of text is set in ReaderCommentAdapter based on new and old comments,
+                        See mColorOldCommentText and mColorNewCommentText in ReaderCommentAdapter-->
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_comment_author"
                 android:layout_width="wrap_content"
