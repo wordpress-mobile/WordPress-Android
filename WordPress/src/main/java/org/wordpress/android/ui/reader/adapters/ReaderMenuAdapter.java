@@ -59,18 +59,22 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         int textRes;
+        int textColorRes;
         int iconRes;
         switch (mMenuItems.get(position)) {
             case ITEM_FOLLOW:
                 textRes = R.string.reader_btn_follow;
+                textColorRes = R.color.reader_follow;
                 iconRes = R.drawable.reader_follow;
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
+                textColorRes = R.color.reader_following;
                 iconRes = R.drawable.reader_following;
                 break;
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;
+                textColorRes = R.color.grey_dark;
                 iconRes = 0;
                 break;
             default:
@@ -79,6 +83,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
 
 
         holder.text.setText(textRes);
+        holder.text.setTextColor(parent.getContext().getColor(textColorRes));
+
         if (iconRes != 0) {
             holder.icon.setImageResource(iconRes);
         }
