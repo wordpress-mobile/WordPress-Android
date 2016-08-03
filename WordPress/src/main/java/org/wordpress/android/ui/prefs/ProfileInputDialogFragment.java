@@ -17,7 +17,6 @@ import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPTextView;
 
 public class ProfileInputDialogFragment extends DialogFragment {
-
     private static final String TITLE_TAG = "title";
     private static final String INITIAL_TEXT_TAG = "initial_text";
     private static final String HINT_TAG = "hint";
@@ -25,10 +24,10 @@ public class ProfileInputDialogFragment extends DialogFragment {
     private static final String CALLBACK_ID_TAG = "callback_id";
 
     public static ProfileInputDialogFragment newInstance(String title,
-                                   String initialText,
-                                   String hint,
-                                   boolean isMultiline,
-                                   int callbackId) {
+                                                         String initialText,
+                                                         String hint,
+                                                         boolean isMultiline,
+                                                         int callbackId) {
 
         ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
         Bundle args = new Bundle();
@@ -79,11 +78,10 @@ public class ProfileInputDialogFragment extends DialogFragment {
         alertDialogBuilder.setCancelable(true)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (getActivity() instanceof Callback) {
-                            ((Callback) getActivity()).onSuccessfulInput(editText.getText().toString(), callbackId);
+                        if (getTargetFragment() instanceof Callback) {
+                            ((Callback) getTargetFragment()).onSuccessfulInput(editText.getText().toString(), callbackId);
                         } else {
-                            AppLog.e(AppLog.T.UTILS, getActivity().getClass().getName()
-                                    + " doesn't implement ProfileInputDialogFragment.Callback");
+                            AppLog.e(AppLog.T.UTILS, "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
                         }
                     }
                 })

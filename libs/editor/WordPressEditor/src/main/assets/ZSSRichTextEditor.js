@@ -188,6 +188,19 @@ ZSSEditor.getField = function(fieldId) {
     return field;
 };
 
+ZSSEditor.moveCaretToCoords = function(x, y) {
+    if (document.caretRangeFromPoint) {
+        var range = document.caretRangeFromPoint(x, y);
+
+        var selection = window.getSelection();
+
+        if (range && selection.rangeCount) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+};
+
 ZSSEditor.getFocusedField = function() {
     var currentField = $(this.findParentContenteditableDiv());
     var currentFieldId;
@@ -2462,6 +2475,20 @@ ZSSEditor.removeVisualFormatting = function( html ) {
 ZSSEditor.insertHTML = function(html) {
 	document.execCommand('insertHTML', false, html);
 	this.sendEnabledStyles();
+};
+
+ZSSEditor.insertText = function(text, reformatVisually) {
+    var focusedField = ZSSEditor.getFocusedField();
+    if (focusedField.isMultiline() && focusedField.getHTML().length == 0) {
+        // when the text field is empty, we need to add an initial paragraph tag
+        text = Util.wrapHTMLInTag(text, ZSSEditor.defaultParagraphSeparator);
+    }
+
+    if (reformatVisually) {
+        text = wp.loadText(text);
+    }
+
+    ZSSEditor.insertHTML(text);
 };
 
 ZSSEditor.isCommandEnabled = function(commandName) {

@@ -675,6 +675,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setCurrentDateForPeopleProperty("$created");
                 instructions.addSuperPropertyToFlag("created_account_on_mobile");
                 break;
+            case CREATED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Created Site");
+                break;
             case SHARED_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_shared");
