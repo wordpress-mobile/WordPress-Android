@@ -13,7 +13,7 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 
 /**
- * ListView that supports multiple item selection and provides a delete button.
+ * ListView that supports multiple item selection and provides select all and delete buttons.
  */
 public class MultiSelectListView extends ListView
         implements AdapterView.OnItemLongClickListener,
@@ -87,20 +87,30 @@ public class MultiSelectListView extends ListView
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        if (item.getItemId() == R.id.menu_delete) {
-            if (mDeleteListener == null || mDeleteListener.onDeleteRequested()) {
-                mActionMode.finish();
-            }
-            return true;
-        }
+        switch (item.getItemId()) {
+            case R.id.menu_delete:
+                if (mDeleteListener == null || mDeleteListener.onDeleteRequested()) {
+                    mActionMode.finish();
+                }
 
-        return false;
+                return true;
+            case R.id.menu_select_all:
+                for (int i = 0; i < getCount(); i++) {
+                    setItemChecked(i, true);
+                }
+
+                mActionMode.invalidate();
+
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        for (int i = 0; i < getChildCount(); ++i) {
-            getChildAt(i).setBackgroundColor(getResources().getColor(R.color.transparent));
+        for (int i = 0; i < getCount(); i++) {
+            setItemChecked(i, false);
         }
 
         clearChoices();
