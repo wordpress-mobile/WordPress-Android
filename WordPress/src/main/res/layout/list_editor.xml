@@ -22,7 +22,7 @@
         android:visibility="gone" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/list_editor_footer_text"
+        android:id="@+id/list_editor_header_text"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
     <org.wordpress.android.ui.prefs.MultiSelectListView
         android:id="@android:id/list"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@+id/list_editor_footer_text"
+        android:layout_below="@+id/list_editor_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
