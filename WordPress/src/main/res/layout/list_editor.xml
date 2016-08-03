@@ -27,9 +27,15 @@
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/grey_darken_10" />
 
+    <View
+        android:background="@color/divider_grey"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/list_editor_header_text"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_width="match_parent" />
+
     <org.wordpress.android.ui.prefs.MultiSelectListView
         android:id="@android:id/list"
-        android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/list_editor_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
