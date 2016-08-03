@@ -159,8 +159,9 @@ public class PlansActivity extends AppCompatActivity {
                 mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 int tabLayoutWidth = 0;
+                LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                 for (int i = 0; i < mTabLayout.getTabCount(); i++){
-                    LinearLayout tabView = ((LinearLayout)((LinearLayout) mTabLayout.getChildAt(0)).getChildAt(i));
+                    LinearLayout tabView = (LinearLayout)(tabFirstChild.getChildAt(i));
                     tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
                 }
 
