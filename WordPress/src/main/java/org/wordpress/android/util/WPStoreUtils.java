@@ -1,7 +1,7 @@
 package org.wordpress.android.util;
 
-import org.wordpress.android.stores.store.AccountStore;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 public class WPStoreUtils {
     /**
