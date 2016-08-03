@@ -170,16 +170,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
             // post header isn't shown when there's a site header
-            if (!hasSiteHeader()) {
-                // adjust the right padding of the post header to allow right padding of the  "..." icon
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
-                layoutPostHeader.setPadding(
-                        layoutPostHeader.getPaddingLeft(),
-                        layoutPostHeader.getPaddingTop(),
-                        layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
-                        layoutPostHeader.getPaddingBottom());
-            } else {
-                // hide the header
+            if (hasSiteHeader()) {
                 layoutPostHeader.setVisibility(View.GONE);
                 // add a bit more padding above the title
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
