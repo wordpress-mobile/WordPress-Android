@@ -86,10 +86,6 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        if (mIconType == ICON_LIKE) {
-            mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
-        } else {
-            mTextCount.setText(FormatUtils.formatInt(count));
-        }
+        mTextCount.setText(FormatUtils.formatInt(count));
     }
 }
