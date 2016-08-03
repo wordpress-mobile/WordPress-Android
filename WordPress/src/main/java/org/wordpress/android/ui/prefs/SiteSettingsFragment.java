@@ -1065,6 +1065,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);
+        final MultiSelectListViewAdapter adapter = new MultiSelectListViewAdapter(getActivity(), mEditingList);
         list.setEnterMultiSelectListener(new MultiSelectListView.OnEnterMultiSelect() {
             @Override
             public void onEnterMultiSelect() {
@@ -1087,27 +1088,22 @@ public class SiteSettingsFragment extends PreferenceFragment
                 AnalyticsUtils.trackWithCurrentBlogDetails(
                         AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
 
-                ListAdapter adapter = list.getAdapter();
                 List<String> itemsToRemove = new ArrayList<>();
-                for (int i = 0; i < checkedItems.size(); i++) {
+                for (int i = 0; i < adapter.getCount(); i++) {
                     final int index = checkedItems.keyAt(i);
                     if (checkedItems.get(index)) {
-                        itemsToRemove.add(adapter.getItem(index).toString());
+                        itemsToRemove.add(adapter.getItem(index));
                     }
                 }
                 mEditingList.removeAll(itemsToRemove);
-                list.setAdapter(new ArrayAdapter<>(getActivity(),
-                        R.layout.wp_simple_list_item_1,
-                        mEditingList));
+                list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
                 mSiteSettings.saveSettings();
                 return true;
             }
         });
         list.setEmptyView(view.findViewById(R.id.empty_view));
         list.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        list.setAdapter(new ArrayAdapter<>(getActivity(),
-                R.layout.wp_simple_list_item_1,
-                mEditingList));
+        list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1123,9 +1119,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
-                            list.setAdapter(new ArrayAdapter<>(getActivity(),
-                                    R.layout.wp_simple_list_item_1,
-                                    mEditingList));
+                            list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
