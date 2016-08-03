@@ -51,7 +51,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ReaderMenuHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.popup_menu_item, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_popup_menu_item, parent, false);
             holder = new ReaderMenuHolder(convertView);
             convertView.setTag(holder);
         } else {
