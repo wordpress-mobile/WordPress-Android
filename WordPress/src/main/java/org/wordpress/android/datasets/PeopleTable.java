@@ -3,6 +3,7 @@ package org.wordpress.android.datasets;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
@@ -176,10 +177,14 @@ public class PeopleTable {
             for (String table : tables) {
                 int size = getPeopleCountForLocalBlogId(table, localTableBlogId);
                 if (size > fetchLimit) {
-                    int deleteCount = size - fetchLimit;
-                    String[] args = new String[] {Integer.toString(localTableBlogId), Integer.toString(deleteCount)};
-                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (SELECT person_id FROM "
-                            + table + " WHERE local_blog_id=?1" + orderByString(table, true) + " LIMIT ?2)", args);
+                    String where = "local_blog_id=" + localTableBlogId;
+                    String[] columns = {"person_id"};
+                    String limit = Integer.toString(size - fetchLimit);
+                    String query = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null, null,
+                            limit);
+
+                    String[] args = new String[] {Integer.toString(localTableBlogId)};
+                    getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (" + query + ")", args);
                 }
             }
             getWritableDb().setTransactionSuccessful();
