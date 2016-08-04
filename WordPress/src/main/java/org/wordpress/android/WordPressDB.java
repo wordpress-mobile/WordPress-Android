@@ -78,8 +78,6 @@ public class WordPressDB {
 
     private static final int DATABASE_VERSION = 49;
 
-    private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
-            + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
 
@@ -142,37 +140,10 @@ public class WordPressDB {
             + "blog_id text, wp_id integer, category_name text not null);";
     private static final String CATEGORIES_TABLE = "cats";
 
-    // for capturing blogID
-    private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
-    private static final String UPDATE_BLOGID = "update accounts set blogId = 1;";
-
-    // for capturing blogID, trac ticket #
-    private static final String ADD_LOCATION_FLAG = "alter table accounts add location boolean default false;";
-
-    // add wordpress.com stats login info
-    private static final String ADD_DOTCOM_USERNAME = "alter table accounts add dotcom_username text;";
-    private static final String ADD_DOTCOM_PASSWORD = "alter table accounts add dotcom_password text;";
-    private static final String ADD_API_KEY = "alter table accounts add api_key text;";
-    private static final String ADD_API_BLOGID = "alter table accounts add api_blogid text;";
-
-    // add wordpress.com flag and version column
-    private static final String ADD_DOTCOM_FLAG = "alter table accounts add dotcomFlag boolean default false;";
-    private static final String ADD_WP_VERSION = "alter table accounts add wpVersion text;";
-
-    // add httpuser and httppassword
-    private static final String ADD_HTTPUSER = "alter table accounts add httpuser text;";
-    private static final String ADD_HTTPPASSWORD = "alter table accounts add httppassword text;";
 
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
-
-    // add field to store last used blog
-    private static final String ADD_POST_FORMATS = "alter table accounts add postFormats text default '';";
-
-    //add scaled image settings
-    private static final String ADD_SCALED_IMAGE = "alter table accounts add isScaledImage boolean default false;";
-    private static final String ADD_SCALED_IMAGE_IMG_WIDTH = "alter table accounts add scaledImgWidth integer default 1024;";
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
@@ -187,16 +158,8 @@ public class WordPressDB {
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
 
-    // add home url to blog settings
-    private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
-
-    private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
-
     // add category parent id to keep track of category hierarchy
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
-
-    // add admin flag to blog settings
-    private static final String ADD_BLOGS_ADMIN_FLAG = "alter table accounts add isAdmin boolean default false;";
 
     // add thumbnailURL, thumbnailPath and fileURL to media
     private static final String ADD_MEDIA_THUMBNAIL_URL = "alter table media add thumbnailURL text default '';";
@@ -206,22 +169,6 @@ public class WordPressDB {
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
-
-    // add hidden flag to blog settings (accounts)
-    private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
-
-    // add plan_product_id to blog
-    private static final String ADD_BLOGS_PLAN_ID = "alter table accounts add plan_product_id integer default 0;";
-
-    // add plan_product_name_short to blog
-    private static final String ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT = "alter table accounts add plan_product_name_short text default '';";
-
-    // add capabilities to blog
-    private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
-
-    // used for migration
-    private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
-    private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
 
@@ -235,7 +182,6 @@ public class WordPressDB {
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
-        db.execSQL(CREATE_TABLE_BLOGS);
         db.execSQL(CREATE_TABLE_POSTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
@@ -260,38 +206,22 @@ public class WordPressDB {
                 currentVersion++;
             case 1:
                 // Add columns that were added in very early releases, then move on to version 9
-                db.execSQL(ADD_BLOGID);
-                db.execSQL(UPDATE_BLOGID);
-                db.execSQL(ADD_LOCATION_FLAG);
-                db.execSQL(ADD_DOTCOM_USERNAME);
-                db.execSQL(ADD_DOTCOM_PASSWORD);
-                db.execSQL(ADD_API_KEY);
-                db.execSQL(ADD_API_BLOGID);
-                db.execSQL(ADD_DOTCOM_FLAG);
-                db.execSQL(ADD_WP_VERSION);
                 currentVersion = 9;
             case 9:
-                db.execSQL(ADD_HTTPUSER);
-                db.execSQL(ADD_HTTPPASSWORD);
                 currentVersion++;
             case 10:
                 db.delete(POSTS_TABLE, null, null);
                 db.execSQL(CREATE_TABLE_POSTS);
-                db.execSQL(ADD_POST_FORMATS);
                 currentVersion++;
             case 11:
-                db.execSQL(ADD_SCALED_IMAGE);
-                db.execSQL(ADD_SCALED_IMAGE_IMG_WIDTH);
                 db.execSQL(ADD_LOCAL_POST_CHANGES);
                 currentVersion++;
             case 12:
                 db.execSQL(ADD_FEATURED_IN_POST);
                 currentVersion++;
             case 13:
-                db.execSQL(ADD_HOME_URL);
                 currentVersion++;
             case 14:
-                db.execSQL(ADD_BLOG_OPTIONS);
                 currentVersion++;
             case 15:
                 // No longer used (preferences migration)
@@ -302,7 +232,6 @@ public class WordPressDB {
                 db.execSQL(ADD_PARENTID_IN_CATEGORIES);
                 currentVersion++;
             case 18:
-                db.execSQL(ADD_BLOGS_ADMIN_FLAG);
                 db.execSQL(ADD_MEDIA_FILE_URL);
                 db.execSQL(ADD_MEDIA_THUMBNAIL_URL);
                 db.execSQL(ADD_MEDIA_UNIQUE_ID);
@@ -314,7 +243,6 @@ public class WordPressDB {
                 // revision 20: create table "notes"
                 currentVersion++;
             case 20:
-                db.execSQL(ADD_BLOGS_HIDDEN_FLAG);
                 currentVersion++;
             case 21:
                 db.execSQL(ADD_MEDIA_VIDEOPRESS_SHORTCODE);
@@ -388,16 +316,13 @@ public class WordPressDB {
             case 41:
                 currentVersion++;
             case 42:
-                db.execSQL(ADD_BLOGS_PLAN_ID);
                 currentVersion++;
             case 43:
-                db.execSQL(ADD_BLOGS_PLAN_PRODUCT_NAME_SHORT);
                 currentVersion++;
             case 44:
                 PeopleTable.createTables(db);
                 currentVersion++;
             case 45:
-                db.execSQL(ADD_BLOGS_CAPABILITIES);
                 currentVersion++;
             case 46:
                 AppPrefs.setVisualEditorAvailable(true);
