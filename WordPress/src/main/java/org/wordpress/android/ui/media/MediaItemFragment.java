@@ -281,11 +281,8 @@ public class MediaItemFragment extends Fragment {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: STORES: siteModel.isPrivate()
-                    // boolean isPrivate = getSelectedSite().isPrivate();
-                    boolean isPrivate = false;
                     EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
-                    if (isPrivate) {
+                    if (getSelectedSite().isPrivate()) {
                         imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
                     }
                     ReaderActivityLauncher.showReaderPhotoViewer(

@@ -28,9 +28,6 @@ public class SiteUtils {
      * @return true if the site is WPCom or Jetpack and is not private
      */
     public static boolean isPhotonCapable(SiteModel siteModel) {
-        // Note: siteModel.isWPCom() is true for .com sites and jetpack sites
-        // TODO: STORES: sitemodel.isPrivate()
-        // return siteModel.isWPCom() && !siteModel.isPrivate();
-        return siteModel.isWPCom();
+        return siteModel.isWPCom() && !siteModel.isPrivate();
     }
 }

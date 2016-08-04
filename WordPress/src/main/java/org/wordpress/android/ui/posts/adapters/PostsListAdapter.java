@@ -63,7 +63,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mEndlistIndicatorHeight;
 
     private final boolean mIsPage;
-    private final boolean mIsPrivateBlog;
     private final boolean mIsStatsSupported;
     private final boolean mAlwaysShowAllButtons;
 
@@ -84,9 +83,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
-        // TODO: STORES: private site?
-        // mIsPrivateBlog = site.isPrivateSite()
-        mIsPrivateBlog = false;
         mIsStatsSupported = site.isWPCom() || site.isJetpack();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
@@ -679,19 +675,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
                 } else if (post.hasDescription()) {
-                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mIsPrivateBlog);
+                    ReaderImageScanner scanner = new ReaderImageScanner(post.getDescription(), mSite.isPrivate());
                     imageUrl = scanner.getLargestImage();
                 } else {
                     imageUrl = null;
                 }
 
                 if (!TextUtils.isEmpty(imageUrl)) {
-                    post.setFeaturedImageUrl(
-                            ReaderUtils.getResizedImageUrl(
-                                    imageUrl,
-                                    mPhotonWidth,
-                                    mPhotonHeight,
-                                    mIsPrivateBlog));
+                    post.setFeaturedImageUrl(ReaderUtils.getResizedImageUrl(imageUrl, mPhotonWidth, mPhotonHeight,
+                            mSite.isPrivate()));
                 }
             }
 

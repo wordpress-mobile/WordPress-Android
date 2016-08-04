@@ -79,7 +79,7 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
-        final boolean isPrivate = false; // TODO: STORES: isPrivate() - mSite != null && mSite.isPrivate();
+        final boolean isPrivate =  mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));

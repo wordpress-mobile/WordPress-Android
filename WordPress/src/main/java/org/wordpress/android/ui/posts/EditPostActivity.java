@@ -2144,11 +2144,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public String onAuthHeaderRequested(String url) {
         String authHeader = "";
         String token = mAccountStore.getAccessToken();
-
-        // TODO: STORES: mSite isPrivate() needed
-        //         if (mSites.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
-        // Only do the following if the site is private:
-        if (WPUrlUtils.safeToAddWordPressComAuthToken(url) && !TextUtils.isEmpty(token)) {
+        if (mSite.isPrivate() && WPUrlUtils.safeToAddWordPressComAuthToken(url)
+                && !TextUtils.isEmpty(token)) {
             authHeader = "Bearer " + token;
         }
         return authHeader;
