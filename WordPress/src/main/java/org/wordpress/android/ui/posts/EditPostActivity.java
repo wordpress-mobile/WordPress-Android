@@ -1183,8 +1183,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void fillContentEditorFields() {
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
-        // TODO: STORES: add getMaxImageWidth() method
-        // mEditorFragment.setBlogSettingMaxImageWidth(mSite.getMaxImageWidth());
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
@@ -1345,7 +1343,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     postContent.removeSpan(characterStyle);
                 }
             }
-            content = WPHtml.toHtml(postContent, mSiteStore);
+            content = WPHtml.toHtml(postContent);
             // replace duplicate <p> tags so there's not duplicates, trac #86
             content = content.replace("<p><p>", "<p>");
             content = content.replace("</p></p>", "</p>");
@@ -1385,7 +1383,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                         // network image has a mediaId
                         if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
-                            postContent.insert(tagStart, WPHtml.getContent(wpIS, mSiteStore));
+                            postContent.insert(tagStart, WPHtml.getContent(wpIS));
                         } else {
                             // local image for upload
                             postContent.insert(tagStart,
@@ -1559,12 +1557,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
             return false;
         }
-
-        // TODO: STORES: add getMaxImageWidth() method
-//        if (MediaUtils.getImageWidthSettingFromString(mSite.getMaxImageWidth()) != Integer.MAX_VALUE) {
-//            // If the user has selected a maximum image width for uploads, rescale the image accordingly
-//            path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(mSite.getMaxImageWidth()));
-//        }
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
