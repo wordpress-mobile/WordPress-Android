@@ -52,8 +52,6 @@ import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -163,13 +161,13 @@ public class WPHtml {
     /**
      * Returns an HTML representation of the provided Spanned text.
      */
-    public static String toHtml(Spanned text, SiteStore siteStore) {
+    public static String toHtml(Spanned text) {
         StringBuilder out = new StringBuilder();
-        withinHtml(out, text, siteStore);
+        withinHtml(out, text);
         return out.toString();
     }
 
-    private static void withinHtml(StringBuilder out, Spanned text, SiteStore siteStore) {
+    private static void withinHtml(StringBuilder out, Spanned text) {
         int len = text.length();
 
         int next;
@@ -198,7 +196,7 @@ public class WPHtml {
                 out.append("<div " + elements + ">");
             }*/
 
-            withinDiv(out, text, i, next, siteStore);
+            withinDiv(out, text, i, next);
 
             /*if (needDiv) {
                 out.append("</div>");
@@ -208,7 +206,7 @@ public class WPHtml {
 
     @SuppressWarnings("unused")
     private static void withinDiv(StringBuilder out, Spanned text, int start,
-            int end, SiteStore siteStore) {
+            int end) {
         int next;
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, QuoteSpan.class);
@@ -218,7 +216,7 @@ public class WPHtml {
                 out.append("<blockquote>");
             }
 
-            withinBlockquote(out, text, i, next, siteStore);
+            withinBlockquote(out, text, i, next);
 
             for (QuoteSpan quote : quotes) {
                 out.append("</blockquote>\n");
@@ -227,7 +225,7 @@ public class WPHtml {
     }
 
     private static void withinBlockquote(StringBuilder out, Spanned text,
-            int start, int end, SiteStore siteStore) {
+            int start, int end) {
         out.append("<p>");
 
         int next;
@@ -244,14 +242,14 @@ public class WPHtml {
                 next++;
             }
 
-            withinParagraph(out, text, i, next - nl, nl, next == end, siteStore);
+            withinParagraph(out, text, i, next - nl, nl, next == end);
         }
 
         out.append("</p>\n");
     }
 
     private static void withinParagraph(StringBuilder out, Spanned text,
-            int start, int end, int nl, boolean last, SiteStore siteStore) {
+            int start, int end, int nl, boolean last) {
         int next;
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, CharacterStyle.class);
@@ -296,7 +294,7 @@ public class WPHtml {
                 if (style[j] instanceof MediaGalleryImageSpan) {
                     out.append(getGalleryShortcode((MediaGalleryImageSpan) style[j]));
                 } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaFile().getMediaId() != null) {
-                    out.append(getContent((WPImageSpan) style[j], siteStore));
+                    out.append(getContent((WPImageSpan) style[j]));
                 } else if (style[j] instanceof WPImageSpan) {
                     out.append("<img src=\"");
                     out.append(((WPImageSpan) style[j]).getSource());
@@ -402,7 +400,7 @@ public class WPHtml {
     }
 
     /** Retrieve an image span content for a media file that exists on the server **/
-    public static String getContent(WPImageSpan imageSpan, SiteStore siteStore) {
+    public static String getContent(WPImageSpan imageSpan) {
         // based on PostUploadService
 
         String content = "";
@@ -448,18 +446,6 @@ public class WPHtml {
             int width = mediaFile.getWidth();
 
             String inlineCSS = " ";
-            String localBlogID = imageSpan.getMediaFile().getBlogId();
-            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            SiteModel site = siteStore.getSiteByLocalId(Integer.parseInt(localBlogID));
-            // TODO: STORES: site.getMaxImageWidth()
-//            if (site != null && !mediaFile.getMimeType().equals("image/gif")
-//                    && MediaUtils.getImageWidthSettingFromString(site.getMaxImageWidth()) != Integer.MAX_VALUE) {
-//                width = MediaUtils.getMaximumImageWidth(width, site.getMaxImageWidth());
-//                // Use inline CSS on self-hosted blogs to enforce picture resize settings
-//                if (!site.isWPCom()) {
-//                    inlineCSS = String.format(Locale.US, " style=\"width:%dpx;max-width:%dpx;\" ", width, width);
-//                }
-//            }
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
