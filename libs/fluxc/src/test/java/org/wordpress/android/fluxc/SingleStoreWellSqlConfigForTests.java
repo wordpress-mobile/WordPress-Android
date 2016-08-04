@@ -20,7 +20,7 @@ public class SingleStoreWellSqlConfigForTests extends WellSqlConfig {
 
     @Override
     public String getDbName() {
-        return "test-stores";
+        return "test-fluxc";
     }
 
     @Override

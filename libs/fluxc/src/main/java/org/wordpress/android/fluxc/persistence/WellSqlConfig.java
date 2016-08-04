@@ -35,7 +35,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public String getDbName() {
-        return "wp-stores";
+        return "wp-fluxc";
     }
 
     @Override
