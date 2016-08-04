@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import org.wordpress.android.fluxc.utils.DateTimeUtils;
+
 import java.util.Date;
 
 public enum PostStatus {
@@ -13,7 +15,7 @@ public enum PostStatus {
 
     private synchronized static PostStatus fromStringAndDateGMT(String value, long dateCreatedGMT) {
         if (value == null) {
-            return PostStatus.UNKNOWN;
+            return UNKNOWN;
         } else if (value.equals("publish")) {
             // Check if post is scheduled
             Date d = new Date();
@@ -23,9 +25,9 @@ public enum PostStatus {
             }
             return PUBLISHED;
         } else if (value.equals("draft")) {
-            return PostStatus.DRAFT;
+            return DRAFT;
         } else if (value.equals("private")) {
-            return PostStatus.PRIVATE;
+            return PRIVATE;
         } else if (value.equals("pending")) {
             return PENDING;
         } else if (value.equals("trash")) {
@@ -33,13 +35,19 @@ public enum PostStatus {
         } else if (value.equals("future")) {
             return SCHEDULED;
         } else {
-            return PostStatus.UNKNOWN;
+            return UNKNOWN;
         }
     }
 
     public synchronized static PostStatus fromPost(PostModel post) {
         String value = post.getStatus();
-        long dateCreatedGMT = post.getDateCreatedGmt();
+        long dateCreatedGMT = 0;
+        if (post.getDateCreated() != null) {
+            Date dateCreated = DateTimeUtils.dateFromIso8601(post.getDateCreated());
+            if (dateCreated != null) {
+                dateCreatedGMT = dateCreated.getTime();
+            }
+        }
         return fromStringAndDateGMT(value, dateCreatedGMT);
     }
 

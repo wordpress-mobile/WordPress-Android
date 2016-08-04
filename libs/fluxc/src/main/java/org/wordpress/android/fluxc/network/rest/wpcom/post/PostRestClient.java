@@ -68,9 +68,7 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setRemotePostId(from.ID);
         post.setRemoteSiteId(from.site_ID);
         post.setLink(from.URL); // Is this right?
-        // TODO: Implement dates
-        //post.setDateCreated(from.date);
-        //post.setDateModified(from.modified);
+        post.setDateCreated(from.date);
         post.setTitle(from.title);
         post.setDescription(from.content);
         post.setExcerpt(from.excerpt);
