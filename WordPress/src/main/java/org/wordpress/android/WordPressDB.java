@@ -3,12 +3,10 @@ package org.wordpress.android;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -84,7 +82,6 @@ public class WordPressDB {
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
     private static final String CREATE_TABLE_MEDIA = "create table if not exists media (id integer primary key autoincrement, "
             + "postID integer not null, filePath text default '', fileName text default '', title text default '', description text default '', caption text default '', horizontalAlignment integer default 0, width integer default 0, height integer default 0, mimeType text default '', featured boolean default false, isVideo boolean default false);";
-    public static final String BLOGS_TABLE = "accounts";
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -276,7 +273,6 @@ public class WordPressDB {
             case 9:
                 db.execSQL(ADD_HTTPUSER);
                 db.execSQL(ADD_HTTPPASSWORD);
-                migratePasswords();
                 currentVersion++;
             case 10:
                 db.delete(POSTS_TABLE, null, null);
@@ -301,7 +297,6 @@ public class WordPressDB {
                 // No longer used (preferences migration)
                 currentVersion++;
             case 16:
-                migrateWPComAccount();
                 currentVersion++;
             case 17:
                 db.execSQL(ADD_PARENTID_IN_CATEGORIES);
@@ -448,37 +443,14 @@ public class WordPressDB {
         ctx.deleteDatabase(DATABASE_NAME);
     }
 
-    private void migrateWPComAccount() {
-        Cursor c = db.query(BLOGS_TABLE, new String[]{"username"}, "dotcomFlag=1", null, null,
-                null, null);
-
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-            String username = c.getString(0);
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.context);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(DEPRECATED_WPCOM_USERNAME_PREFERENCE, username);
-            editor.commit();
-        }
-
-        c.close();
-    }
-
     /**
      * Deletes all the things! Use wisely.
      */
     public void dangerouslyDeleteAllContent() {
-        db.delete(BLOGS_TABLE, null, null);
         db.delete(POSTS_TABLE, null, null);
         db.delete(MEDIA_TABLE, null, null);
         db.delete(CATEGORIES_TABLE, null, null);
         db.delete(CommentTable.COMMENTS_TABLE, null, null);
-    }
-
-    public long getPlanIdForLocalTableBlogId(int localBlogId) {
-        return SqlUtils.longForQuery(db,
-                "SELECT plan_product_id FROM accounts WHERE id=?",
-                new String[]{Integer.toString(localBlogId)});
     }
 
     public boolean deletePost(Post post) {
@@ -972,33 +944,6 @@ public class WordPressDB {
         } catch (Exception e) {
         }
         return encryptedPwd;
-    }
-
-    private void migratePasswords() {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "id", "password",
-                "httppassword", "dotcom_password" }, null, null, null, null,
-                null);
-        int numRows = c.getCount();
-        c.moveToFirst();
-
-        for (int i = 0; i < numRows; i++) {
-            ContentValues values = new ContentValues();
-
-            if (c.getString(1) != null) {
-                values.put("password", encryptPassword(c.getString(1)));
-            }
-            if (c.getString(2) != null) {
-                values.put("httppassword", encryptPassword(c.getString(2)));
-            }
-            if (c.getString(3) != null) {
-                values.put("dotcom_password", encryptPassword(c.getString(3)));
-            }
-
-            db.update(BLOGS_TABLE, values, "id=" + c.getInt(0), null);
-
-            c.moveToNext();
-        }
-        c.close();
     }
 
     public int getUnmoderatedCommentCount(int blogID) {
