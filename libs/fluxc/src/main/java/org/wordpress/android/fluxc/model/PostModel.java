@@ -29,16 +29,11 @@ public class PostModel implements Identifiable, Payload {
     @Column private String mCustomFields;
     @Column private String mDescription;
     @Column private String mLink;
-    @Column private boolean mAllowComments;
-    @Column private boolean mAllowPings;
     @Column private String mExcerpt;
     @Column private String mKeywords;
     @Column private String mMoreText;
     @Column private String mPermaLink;
     @Column private String mStatus;
-    @Column private int mUserId;
-    @Column private String mAuthorDisplayName;
-    @Column private String mAuthorId;
     @Column private String mPassword;
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
     @Column private String mPostFormat;
@@ -48,8 +43,8 @@ public class PostModel implements Identifiable, Payload {
 
     // Page specific
     @Column private boolean mIsPage;
-    @Column private String mPageParentId;
-    @Column private String mPageParentTitle;
+    @Column private long mParentId;
+    @Column private String mParentTitle;
 
     @Column private boolean mIsLocalDraft;
     @Column private boolean mIsLocallyChanged;
@@ -149,22 +144,6 @@ public class PostModel implements Identifiable, Payload {
         mLink = link;
     }
 
-    public boolean getAllowComments() {
-        return mAllowComments;
-    }
-
-    public void setAllowComments(boolean allowComments) {
-        mAllowComments = allowComments;
-    }
-
-    public boolean getAllowPings() {
-        return mAllowPings;
-    }
-
-    public void setAllowPings(boolean allowPings) {
-        mAllowPings = allowPings;
-    }
-
     public String getExcerpt() {
         return StringUtils.notNullStr(mExcerpt);
     }
@@ -203,30 +182,6 @@ public class PostModel implements Identifiable, Payload {
 
     public void setStatus(String status) {
         mStatus = status;
-    }
-
-    public int getUserId() {
-        return mUserId;
-    }
-
-    public void setUserId(int userId) {
-        mUserId = userId;
-    }
-
-    public String getAuthorDisplayName() {
-        return StringUtils.notNullStr(mAuthorDisplayName);
-    }
-
-    public void setAuthorDisplayName(String authorDisplayName) {
-        mAuthorDisplayName = authorDisplayName;
-    }
-
-    public String getAuthorId() {
-        return StringUtils.notNullStr(mAuthorId);
-    }
-
-    public void setAuthorId(String authorId) {
-        mAuthorId = authorId;
     }
 
     public String getPassword() {
@@ -307,20 +262,20 @@ public class PostModel implements Identifiable, Payload {
         mIsPage = isPage;
     }
 
-    public String getPageParentId() {
-        return StringUtils.notNullStr(mPageParentId);
+    public long getParentId() {
+        return mParentId;
     }
 
-    public void setPageParentId(String pageParentId) {
-        mPageParentId = pageParentId;
+    public void setParentId(long parentId) {
+        mParentId = parentId;
     }
 
-    public String getPageParentTitle() {
-        return StringUtils.notNullStr(mPageParentTitle);
+    public String getParentTitle() {
+        return StringUtils.notNullStr(mParentTitle);
     }
 
-    public void setPageParentTitle(String pageParentTitle) {
-        mPageParentTitle = pageParentTitle;
+    public void setParentTitle(String parentTitle) {
+        mParentTitle = parentTitle;
     }
 
     public boolean isLocalDraft() {
@@ -387,9 +342,6 @@ public class PostModel implements Identifiable, Payload {
                 getLocalSiteId() == otherPost.getLocalSiteId() &&
                 getRemoteSiteId() == otherPost.getRemoteSiteId() &&
                 getRemotePostId() == otherPost.getRemotePostId() &&
-                getAllowComments() == otherPost.getAllowComments() &&
-                getAllowPings() == otherPost.getAllowPings() &&
-                getUserId() == otherPost.getUserId() &&
                 getFeaturedImageId() == otherPost.getFeaturedImageId() &&
                 Double.compare(otherPost.getLatitude(), getLatitude()) == 0 &&
                 Double.compare(otherPost.getLongitude(), getLongitude()) == 0 &&
@@ -397,6 +349,10 @@ public class PostModel implements Identifiable, Payload {
                 isLocalDraft() == otherPost.isLocalDraft() &&
                 isLocallyChanged() == otherPost.isLocallyChanged() &&
                 getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId() &&
+                getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost() &&
+                getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost() &&
+                getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost() &&
+                getParentId() == otherPost.getParentId() &&
                 getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null &&
                 getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
                         otherPost.getDateCreated() == null &&
@@ -416,19 +372,13 @@ public class PostModel implements Identifiable, Payload {
                 getPermaLink() != null ? getPermaLink().equals(otherPost.getPermaLink()) :
                         otherPost.getPermaLink() == null &&
                 getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null &&
-                getAuthorDisplayName() != null ? getAuthorDisplayName().equals(otherPost.getAuthorDisplayName()) :
-                        otherPost.getAuthorDisplayName() != null &&
-                getAuthorId() != null ? getAuthorId().equals(otherPost.getAuthorId()) :
-                        otherPost.getAuthorId() == null &&
                 getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
                         otherPost.getPassword() == null &&
                 getPostFormat() != null ? getPostFormat().equals(otherPost.getPostFormat()) :
                         otherPost.getPostFormat() == null &&
                 getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null &&
-                getPageParentId() != null ? getPageParentId().equals(otherPost.getPageParentId()) :
-                        otherPost.getPageParentId() == null &&
-                getPageParentTitle() != null ? getPageParentTitle().equals(otherPost.getPageParentTitle()) :
-                        otherPost.getPageParentTitle() == null);
+                getParentTitle() != null ? getParentTitle().equals(otherPost.getParentTitle()) :
+                        otherPost.getParentTitle() == null);
     }
 
     public JSONArray getJSONCategories() {
