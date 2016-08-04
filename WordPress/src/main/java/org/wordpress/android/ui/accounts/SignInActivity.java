@@ -122,7 +122,11 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
             if (resultCode == RESULT_OK) {
                 AppLog.d(T.NUX, "Credentials retrieved");
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                getSignInFragment().onCredentialRetrieved(credential);
+                SignInFragment signInFragment =
+                        (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+                if (signInFragment != null) {
+                    signInFragment.onCredentialRetrieved(credential);
+                }
             } else {
                 AppLog.e(T.NUX, "Credential read failed");
             }

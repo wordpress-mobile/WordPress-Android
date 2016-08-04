@@ -395,7 +395,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostsListPost post) {
         // posts with local changes have preview rather than view button
-        if (post.isLocalDraft() || post.hasLocalChanges() || post.getStatusEnum() == PostStatus.DRAFT) {
+        if (post.isLocalDraft() || post.hasLocalChanges()) {
             holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
