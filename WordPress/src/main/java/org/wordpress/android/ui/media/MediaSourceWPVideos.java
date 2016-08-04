@@ -15,7 +15,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;

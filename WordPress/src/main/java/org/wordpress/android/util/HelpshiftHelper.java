@@ -14,8 +14,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.io.File;
 import java.util.HashMap;

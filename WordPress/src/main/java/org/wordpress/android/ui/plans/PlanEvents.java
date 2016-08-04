@@ -2,7 +2,7 @@ package org.wordpress.android.ui.plans;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.plans.models.Plan;
 
 import java.util.List;

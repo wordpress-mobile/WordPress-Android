@@ -13,7 +13,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog.T;
 
 public class WPMeShortlinks {

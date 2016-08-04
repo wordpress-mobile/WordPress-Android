@@ -5,7 +5,7 @@ import android.content.Context;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.models.Tag;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 

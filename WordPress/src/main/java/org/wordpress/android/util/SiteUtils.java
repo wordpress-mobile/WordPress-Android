@@ -1,6 +1,6 @@
 package org.wordpress.android.util;
 
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 
 public class SiteUtils {
     public static String getSiteNameOrHomeURL(SiteModel siteModel) {

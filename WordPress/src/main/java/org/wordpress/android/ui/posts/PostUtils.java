@@ -3,7 +3,7 @@ package org.wordpress.android.ui.posts;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 

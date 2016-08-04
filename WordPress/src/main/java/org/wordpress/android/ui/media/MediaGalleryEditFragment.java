@@ -20,7 +20,7 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.ArrayList;
 import java.util.Collections;

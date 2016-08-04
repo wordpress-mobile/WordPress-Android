@@ -25,11 +25,11 @@ import android.widget.SearchView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.generated.SiteActionBuilder;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.store.AccountStore;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;

@@ -8,7 +8,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

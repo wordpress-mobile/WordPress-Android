@@ -9,9 +9,9 @@ import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.store.AccountStore;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.util.HashMap;
 import java.util.Map;

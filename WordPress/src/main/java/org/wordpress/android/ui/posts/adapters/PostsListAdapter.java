@@ -26,7 +26,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.services.PostMediaService;
@@ -397,7 +397,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostsListPost post) {
         // posts with local changes have preview rather than view button
-        if (post.isLocalDraft() || post.hasLocalChanges() || post.getStatusEnum() == PostStatus.DRAFT) {
+        if (post.isLocalDraft() || post.hasLocalChanges()) {
             holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);

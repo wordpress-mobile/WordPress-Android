@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
@@ -312,12 +312,12 @@ public class PeopleTable {
         return person;
     }
 
-    // order is disabled for followers for now since the API is not supporting it
+    // order is disabled for followers & viewers for now since the API is not supporting it
     private static String orderByString(String table) {
-        if (table.equals(FOLLOWERS_TABLE) || table.equals(EMAIL_FOLLOWERS_TABLE)) {
-            return "";
+        if (table.equals(TEAM_TABLE)) {
+            return " ORDER BY lower(display_name), lower(user_name)";
         }
-        return " ORDER BY lower(display_name), lower(user_name)";
+        return "";
     }
 
     @Nullable

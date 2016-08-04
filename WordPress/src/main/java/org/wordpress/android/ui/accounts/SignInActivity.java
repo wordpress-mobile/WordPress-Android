@@ -17,8 +17,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.store.SiteStore;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.util.AppLog;
@@ -126,7 +126,11 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
             if (resultCode == RESULT_OK) {
                 AppLog.d(T.NUX, "Credentials retrieved");
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                getSignInFragment().onCredentialRetrieved(credential);
+                SignInFragment signInFragment =
+                        (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+                if (signInFragment != null) {
+                    signInFragment.onCredentialRetrieved(credential);
+                }
             } else {
                 AppLog.e(T.NUX, "Credential read failed");
             }

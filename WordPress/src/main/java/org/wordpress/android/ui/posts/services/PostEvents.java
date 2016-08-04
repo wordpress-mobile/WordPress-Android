@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.posts.services;
 
-import org.wordpress.android.stores.model.SiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.StringUtils;
 import org.xmlrpc.android.ApiHelper;
 

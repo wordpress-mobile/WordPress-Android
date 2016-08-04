@@ -21,8 +21,8 @@ import android.widget.ScrollView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.stores.model.SiteModel;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -66,7 +66,7 @@ public class MySiteFragment extends Fragment
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private LinearLayout mAdminView;
+    private RelativeLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -152,7 +152,7 @@ public class MySiteFragment extends Fragment
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
-        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
+        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);

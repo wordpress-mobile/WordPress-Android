@@ -11,7 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.NetworkUtils;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
  * topmost view in post adapter when showing blog preview - displays description, follower
  * count, and follow button
  */
-public class ReaderBlogInfoView extends LinearLayout {
+public class ReaderSiteHeaderView extends LinearLayout {
 
     public interface OnBlogInfoLoadedListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
@@ -38,24 +38,22 @@ public class ReaderBlogInfoView extends LinearLayout {
 
     @Inject AccountStore mAccountStore;
 
-    public ReaderBlogInfoView(Context context) {
-        super(context);
+    public ReaderSiteHeaderView(Context context) {
+        this(context, null);
+    }
+
+    public ReaderSiteHeaderView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ReaderSiteHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
-    public ReaderBlogInfoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
-    }
-
-    public ReaderBlogInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView(context);
-    }
-
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_blog_info_view, this);
+        View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
     }
 

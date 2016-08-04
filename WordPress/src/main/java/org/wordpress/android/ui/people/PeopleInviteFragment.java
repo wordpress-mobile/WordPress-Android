@@ -336,6 +336,10 @@ public class PeopleInviteFragment extends Fragment implements
         usernamesContainer.removeView(removedErrorView);
     }
 
+    private boolean isUserInInvitees(String username) {
+        return mUsernameButtons.get(username) != null;
+    }
+
     /**
      * Deletes the last entered username.
      * @return true if the username was deleted
@@ -391,6 +395,11 @@ public class PeopleInviteFragment extends Fragment implements
                 @Override
                 public void onUsernameValidation(String username, ValidationResult validationResult) {
                     if (!isAdded()) {
+                        return;
+                    }
+
+                    if(!isUserInInvitees(username)){
+                        //user is removed from invitees before validation
                         return;
                     }
 

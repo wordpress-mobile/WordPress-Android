@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.stores.Dispatcher;
-import org.wordpress.android.stores.store.AccountStore;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.store.AccountStore;
 
 import javax.inject.Inject;
 
