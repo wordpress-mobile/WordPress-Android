@@ -726,7 +726,7 @@ public abstract class SiteSettingsInterface {
      * Helper method to create an XML-RPC interface for the current blog.
      */
     protected XMLRPCClientInterface instantiateInterface() {
-        if (mSite == null) return null;
+        if (mSite == null || mSite.getXmlRpcUrl() == null) return null;
         return XMLRPCFactory.instantiate(URI.create(mSite.getXmlRpcUrl()), "", "");
     }
 

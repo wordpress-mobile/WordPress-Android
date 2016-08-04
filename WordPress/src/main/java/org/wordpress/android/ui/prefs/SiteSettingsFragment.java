@@ -187,7 +187,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mBlacklistPref;
 
     // This Device settings
-    private DetailListPreference mImageWidthPref;
     private WPSwitchPreference mUploadAndLinkPref;
 
     // Advanced settings
@@ -513,13 +512,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mFormatPref,
                     newValue.toString(),
                     mSiteSettings.getDefaultPostFormatDisplay());
-        } else if (preference == mImageWidthPref) {
-            // TODO: STORES: setMaxImageWidth / getMaxImageWidth
-//            mSite.setMaxImageWidth(newValue.toString());
-//            setDetailListPreferenceValue(mImageWidthPref, mSite.getMaxImageWidth(), mSite.getMaxImageWidth());
-        } else if (preference == mUploadAndLinkPref) {
-            // TODO: STORES: setFullSizeImage
-            // mSite.setFullSizeImage(Boolean.valueOf(newValue.toString()));
         } else if (preference == mRelatedPostsPref) {
             mRelatedPostsPref.setSummary(newValue.toString());
         } else if (preference == mModerationHoldPref) {
@@ -652,7 +644,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
-        mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
@@ -680,7 +671,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mImageWidthPref, mUploadAndLinkPref, mDeleteSitePref
+                mUploadAndLinkPref, mDeleteSitePref
         };
 
         for(Preference preference : editablePreference) {
@@ -893,8 +884,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mPrivacyPref,
                 String.valueOf(mSiteSettings.getPrivacy()),
                 mSiteSettings.getPrivacyDescription());
-        // TODO: STORES: setMaxImageWidth / getMaxImageWidth
-        // setDetailListPreferenceValue(mImageWidthPref, mSite.getMaxImageWidth(), mSite.getMaxImageWidth());
         setCategories();
         setPostFormats();
         setAllowComments(mSiteSettings.getAllowComments());
@@ -911,8 +900,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 R.string.site_settings_multiple_links_summary_one,
                 R.string.site_settings_multiple_links_summary_other, mSiteSettings.getMultipleLinks());
         mMultipleLinksPref.setSummary(s);
-        // TODO: STORES: isFullSizeImage
-        // mUploadAndLinkPref.setChecked(mSite.isFullSizeImage());
         mIdentityRequiredPreference.setChecked(mSiteSettings.getIdentityRequired());
         mUserAccountRequiredPref.setChecked(mSiteSettings.getUserAccountRequired());
         mThreadingPref.setSummary(mSiteSettings.getThreadingDescription());
