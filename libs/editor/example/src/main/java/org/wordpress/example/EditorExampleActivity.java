@@ -216,7 +216,6 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     public void onEditorFragmentInitialized() {
         // arbitrary setup
         mEditorFragment.setFeaturedImageSupported(true);
-        mEditorFragment.setBlogSettingMaxImageWidth("600");
         mEditorFragment.setDebugModeEnabled(true);
 
         // get title and content and draft switch
