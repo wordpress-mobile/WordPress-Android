@@ -31,10 +31,10 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
-import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
-import org.wordpress.android.ui.reader.views.ReaderTagInfoView;
+import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -75,7 +75,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
-    private ReaderBlogInfoView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+    private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -87,8 +87,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int VIEW_TYPE_POST        = 0;
     private static final int VIEW_TYPE_XPOST       = 1;
-    private static final int VIEW_TYPE_BLOG_INFO   = 2;
-    private static final int VIEW_TYPE_TAG_INFO    = 3;
+    private static final int VIEW_TYPE_SITE_HEADER = 2;
+    private static final int VIEW_TYPE_TAG_HEADER  = 3;
     private static final int VIEW_TYPE_GAP_MARKER  = 4;
 
     private static final long ITEM_ID_CUSTOM_VIEW = -1L;
@@ -175,8 +175,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
-            // post header isn't shown for blog preview
-            if (!isBlogPreview()) {
+            // post header isn't shown when there's a site header
+            if (!hasSiteHeader()) {
                 // adjust the right padding of the post header to allow right padding of the  "..." icon
                 // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
                 layoutPostHeader.setPadding(
@@ -200,19 +200,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class BlogInfoViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderBlogInfoView mBlogInfoView;
-        public BlogInfoViewHolder(View itemView) {
+    class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderSiteHeaderView mSiteHeaderView;
+        public SiteHeaderViewHolder(View itemView) {
             super(itemView);
-            mBlogInfoView = (ReaderBlogInfoView) itemView;
+            mSiteHeaderView = (ReaderSiteHeaderView) itemView;
         }
     }
 
-    class TagInfoViewHolder extends RecyclerView.ViewHolder {
-        private final ReaderTagInfoView mTagInfoView;
-        public TagInfoViewHolder(View itemView) {
+    class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderTagHeaderView mTagHeaderView;
+        public TagHeaderViewHolder(View itemView) {
             super(itemView);
-            mTagInfoView = (ReaderTagInfoView) itemView;
+            mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
     }
 
@@ -226,12 +226,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && isBlogPreview()) {
-            // first item is a ReaderBlogInfoView
-            return VIEW_TYPE_BLOG_INFO;
-        } else if (position == 0 && isTagPreview()) {
-            // first item is a ReaderTagInfoView
-            return VIEW_TYPE_TAG_INFO;
+        if (position == 0 && hasSiteHeader()) {
+            // first item is a ReaderSiteHeaderView
+            return VIEW_TYPE_SITE_HEADER;
+        } else if (position == 0 && hasTagHeader()) {
+            // first item is a ReaderTagHeaderView
+            return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
             return VIEW_TYPE_GAP_MARKER;
         } else if (getItem(position).isXpost()) {
@@ -245,11 +245,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         switch (viewType) {
-            case VIEW_TYPE_BLOG_INFO:
-                return new BlogInfoViewHolder(new ReaderBlogInfoView(context));
+            case VIEW_TYPE_SITE_HEADER:
+                return new SiteHeaderViewHolder(new ReaderSiteHeaderView(context));
 
-            case VIEW_TYPE_TAG_INFO:
-                return new TagInfoViewHolder(new ReaderTagInfoView(context));
+            case VIEW_TYPE_TAG_HEADER:
+                return new TagHeaderViewHolder(new ReaderTagHeaderView(context));
 
             case VIEW_TYPE_GAP_MARKER:
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
@@ -270,13 +270,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             renderPost(position, (ReaderPostViewHolder) holder);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
-        } else if (holder instanceof BlogInfoViewHolder) {
-            BlogInfoViewHolder blogHolder = (BlogInfoViewHolder) holder;
-            blogHolder.mBlogInfoView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
-            blogHolder.mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
-        } else if (holder instanceof TagInfoViewHolder) {
-            TagInfoViewHolder tagHolder = (TagInfoViewHolder) holder;
-            tagHolder.mTagInfoView.setCurrentTag(mCurrentTag);
+        } else if (holder instanceof SiteHeaderViewHolder) {
+            SiteHeaderViewHolder siteHolder = (SiteHeaderViewHolder) holder;
+            siteHolder.mSiteHeaderView.setOnBlogInfoLoadedListener(mBlogInfoLoadedListener);
+            if (isDiscover()) {
+                siteHolder.mSiteHeaderView.loadBlogInfo(ReaderConstants.DISCOVER_SITE_ID, 0);
+            } else {
+                siteHolder.mSiteHeaderView.loadBlogInfo(mCurrentBlogId, mCurrentFeedId);
+            }
+        } else if (holder instanceof TagHeaderViewHolder) {
+            TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
+            tagHolder.mTagHeaderView.setCurrentTag(mCurrentTag);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -337,7 +341,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgAvatar.showDefaultGravatarImage();
         }
 
-        if (!isBlogPreview()) {
+        if (!hasSiteHeader()) {
             // show blog preview when post header is tapped
             holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -355,22 +359,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgBlavatar.showDefaultBlavatarImage();
             holder.txtDomain.setText(null);
         }
+
         if (post.hasBlogName()) {
             holder.txtBlogName.setText(post.getBlogName());
         } else if (post.hasAuthorName()) {
             holder.txtBlogName.setText(post.getAuthorName());
         } else {
             holder.txtBlogName.setText(null);
-        }
-
-        // show blog preview when post header is tapped unless this already is blog preview
-        if (!isBlogPreview()) {
-            holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                }
-            });
         }
 
         if (post.hasExcerpt()) {
@@ -574,15 +569,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasCustomFirstItem() {
-        return isBlogPreview() || isTagPreview();
+        return hasSiteHeader() || hasTagHeader();
     }
 
-    private boolean isBlogPreview() {
-        return getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
+    private boolean hasSiteHeader() {
+        return isDiscover() || getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW;
     }
 
-    private boolean isTagPreview() {
+    private boolean hasTagHeader() {
         return getPostListType() == ReaderTypes.ReaderPostListType.TAG_PREVIEW;
+    }
+
+    private boolean isDiscover() {
+        return mCurrentTag != null && mCurrentTag.isDiscover();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -601,7 +600,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mOnPostPopupListener = onPostPopupListener;
     }
 
-    public void setOnBlogInfoLoadedListener(ReaderBlogInfoView.OnBlogInfoLoadedListener listener) {
+    public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
     }
 
@@ -930,4 +929,3 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 }
-
