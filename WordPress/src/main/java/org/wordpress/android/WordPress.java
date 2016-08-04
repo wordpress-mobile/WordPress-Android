@@ -305,10 +305,6 @@ public class WordPress extends MultiDexApplication {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data - query will return 1 if any blog names or urls are null
-            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
-                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
-            return result != 1;
         } catch (RuntimeException e) {
             AppLog.e(T.DB, e);
             return false;
