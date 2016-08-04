@@ -19,12 +19,9 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     private static final String REST_AUTHORIZATION_HEADER = "Authorization";
     private static final String REST_AUTHORIZATION_FORMAT = "Bearer %s";
 
-    private final Map<String, String> mParams;
-
     public WPComGsonRequest(int method, String url, Map<String, String> params, Class<T> clazz,
                             Listener<T> listener, ErrorListener errorListener) {
-        super(method, url, clazz, listener, errorListener);
-        mParams = params;
+        super(method, params, url, clazz, listener, errorListener);
     }
 
     public void removeAccessToken() {
@@ -37,11 +34,6 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         } else {
             mHeaders.put(REST_AUTHORIZATION_HEADER, String.format(REST_AUTHORIZATION_FORMAT, token));
         }
-    }
-
-    @Override
-    protected Map<String, String> getParams() {
-        return mParams;
     }
 
     @Override
