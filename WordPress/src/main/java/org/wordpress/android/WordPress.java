@@ -38,13 +38,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
-import org.wordpress.android.modules.AppComponent;
-import org.wordpress.android.modules.DaggerAppComponent;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
-import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.networking.OAuthAuthenticatorFactory;
-import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -52,6 +45,13 @@ import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.modules.AppComponent;
+import org.wordpress.android.modules.DaggerAppComponent;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.OAuthAuthenticator;
+import org.wordpress.android.networking.OAuthAuthenticatorFactory;
+import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -72,7 +72,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPStoreUtils;
@@ -305,10 +304,7 @@ public class WordPress extends MultiDexApplication {
     private boolean createAndVerifyWpDb() {
         try {
             wpDB = new WordPressDB(this);
-            // verify account data - query will return 1 if any blog names or urls are null
-            int result = SqlUtils.intForQuery(wpDB.getDatabase(),
-                    "SELECT 1 FROM accounts WHERE blogName IS NULL OR url IS NULL LIMIT 1", null);
-            return result != 1;
+            return true;
         } catch (RuntimeException e) {
             AppLog.e(T.DB, e);
             return false;
