@@ -25,11 +25,11 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadEnded;
@@ -56,7 +56,6 @@ import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -567,107 +566,22 @@ public class PostUploadService extends Service {
                 mimeType = MediaUtils.getMediaFileMimeType(imageFile);
             }
             String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-            int orientation = ImageUtils.getImageOrientation(mContext, path);
+            // Upload the full size picture if "Original Size" is selected in settings
 
-            String resizedPictureURL = null;
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("name", fileName);
+            parameters.put("type", mimeType);
+            parameters.put("bits", mediaFile);
+            parameters.put("overwrite", true);
 
-            // We need to upload a resized version of the picture when the blog settings != original size, or when
-            // the user has selected a smaller size for the current picture in the picture settings screen
-            // We won't resize gif images to keep them awesome.
-            boolean shouldUploadResizedVersion = false;
-            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-            String maxImageWidth = "12000";
-            // TODO: STORES: siteModel.getMaxImageWidth()
-            // int maxImageWidth = siteModel.getMaxImageWidth()
-            if (!mimeType.equals("image/gif") && MediaUtils.getImageWidthSettingFromString(maxImageWidth)
-                    != Integer.MAX_VALUE) {
-                // check the picture settings
-                int pictureSettingWidth = mediaFile.getWidth();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, options);
-                int imageHeight = options.outHeight;
-                int imageWidth = options.outWidth;
-                int[] dimensions = {imageWidth, imageHeight};
-                if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
-                    shouldUploadResizedVersion = true;
-                }
+            String fullSizeUrl = uploadImageFile(parameters, mediaFile, mSite);
+            if (fullSizeUrl == null) {
+                mErrorMessage = mContext.getString(R.string.error_media_upload);
+                return null;
             }
 
-            boolean shouldAddImageWidthCSS = false;
-
-            if (shouldUploadResizedVersion) {
-                MediaFile resizedMediaFile = new MediaFile(mediaFile);
-                // Create resized image
-                byte[] bytes = ImageUtils.createThumbnailFromUri(mContext, imageUri, resizedMediaFile.getWidth(),
-                        fileExtension, orientation);
-
-                if (bytes == null) {
-                    // We weren't able to resize the image, so we will upload the full size image with css to resize it
-                    shouldUploadResizedVersion = false;
-                    shouldAddImageWidthCSS = true;
-                } else {
-                    // Save temp image
-                    String tempFilePath;
-                    File resizedImageFile;
-                    try {
-                        resizedImageFile = File.createTempFile("wp-image-", fileExtension);
-                        FileOutputStream out = new FileOutputStream(resizedImageFile);
-                        out.write(bytes);
-                        out.close();
-                        tempFilePath = resizedImageFile.getPath();
-                    } catch (IOException e) {
-                        AppLog.w(T.POSTS, "failed to create image temp file");
-                        mErrorMessage = mContext.getString(R.string.error_media_upload);
-                        return null;
-                    }
-
-                    // upload resized picture
-                    if (!TextUtils.isEmpty(tempFilePath)) {
-                        resizedMediaFile.setFilePath(tempFilePath);
-                        Map<String, Object> parameters = new HashMap<String, Object>();
-
-                        parameters.put("name", fileName);
-                        parameters.put("type", mimeType);
-                        parameters.put("bits", resizedMediaFile);
-                        parameters.put("overwrite", true);
-                        resizedPictureURL = uploadImageFile(parameters, resizedMediaFile, mSite);
-                        if (resizedPictureURL == null) {
-                            AppLog.w(T.POSTS, "failed to upload resized picture");
-                            return null;
-                        } else if (resizedImageFile.exists()) {
-                            resizedImageFile.delete();
-                        }
-                    } else {
-                        AppLog.w(T.POSTS, "failed to create resized picture");
-                        mErrorMessage = mContext.getString(R.string.out_of_memory);
-                        return null;
-                    }
-                }
-            }
-
-            String fullSizeUrl = null;
-            // Upload the full size picture if "Original Size" is selected in settings,
-            // or if 'link to full size' is checked.
-            // TODO: STORES: mSite.isFullSizeImage()
-            // if (!shouldUploadResizedVersion || mSite.isFullSizeImage()) {
-            if (!shouldUploadResizedVersion) {
-                Map<String, Object> parameters = new HashMap<String, Object>();
-                parameters.put("name", fileName);
-                parameters.put("type", mimeType);
-                parameters.put("bits", mediaFile);
-                parameters.put("overwrite", true);
-
-                fullSizeUrl = uploadImageFile(parameters, mediaFile, mSite);
-                if (fullSizeUrl == null) {
-                    mErrorMessage = mContext.getString(R.string.error_media_upload);
-                    return null;
-                }
-            }
-
-            return mediaFile.getImageHtmlForUrls(fullSizeUrl, resizedPictureURL, shouldAddImageWidthCSS);
+            return mediaFile.getImageHtmlForUrls(fullSizeUrl, null, false);
         }
 
         private String uploadVideo(MediaFile mediaFile) {
@@ -714,17 +628,9 @@ public class PostUploadService extends Service {
                             yRes = resolutions[1];
                         }
                     } else {
-                        // set the width of the video to the thumbnail width, else 640x480
-                        // TODO: STORES: siteModel.getMaxImageWidth()
-                        // int maxImageWidth = mSite.getMaxImageWidth();
-                        String maxImageWidth = "2000";
-                        if (MediaUtils.getImageWidthSettingFromString(maxImageWidth) != Integer.MAX_VALUE) {
-                            xRes = maxImageWidth;
-                            yRes = String.valueOf(Math.round(Integer.valueOf(maxImageWidth) * 0.75));
-                        } else {
-                            xRes = "640";
-                            yRes = "480";
-                        }
+                        // Default resolution
+                        xRes = "640";
+                        yRes = "480";
                     }
                 }
             } else { // file is not in media library
