@@ -55,8 +55,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-    private static Tweak<Boolean> showMagicLinksLogin = MixpanelAPI.booleanTweak("Show Magic Links", false);
-
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
@@ -261,7 +259,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (showMagicLinksLogin.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
+        if (WPActivityUtils.isEmailClientAvailable(activity)) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {
