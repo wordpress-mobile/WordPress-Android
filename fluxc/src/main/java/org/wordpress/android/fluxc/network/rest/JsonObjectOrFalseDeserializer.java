@@ -22,8 +22,8 @@ public class JsonObjectOrFalseDeserializer implements JsonDeserializer<JsonObjec
             result = (JsonObjectOrFalse) constructor.newInstance();
 
             if (json.isJsonPrimitive()) {
-                // If the value is a JSON primitive, return an empty object (it should be 'false')
-                return result;
+                // If the value is a JSON primitive (it should be 'false', specifically), it signifies a null object
+                return null;
             }
 
             Field[] fields = clazz.getFields();

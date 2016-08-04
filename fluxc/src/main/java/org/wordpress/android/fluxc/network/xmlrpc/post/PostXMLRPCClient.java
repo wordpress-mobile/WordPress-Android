@@ -407,20 +407,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setExcerpt(MapUtils.getMapStr(postMap, (isPage) ? "excerpt" : "mt_excerpt"));
         post.setMoreText(MapUtils.getMapStr(postMap, (isPage) ? "text_more" : "mt_text_more"));
 
-        post.setAllowComments((MapUtils.getMapInt(postMap, "mt_allow_comments", 0)) != 0);
-        post.setAllowPings((MapUtils.getMapInt(postMap, "mt_allow_pings", 0)) != 0);
         post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
         post.setPassword(MapUtils.getMapStr(postMap, "wp_password"));
-        post.setAuthorId(MapUtils.getMapStr(postMap, "wp_author_id"));
-        post.setAuthorDisplayName(MapUtils.getMapStr(postMap, "wp_author_display_name"));
         post.setFeaturedImageId(MapUtils.getMapInt(postMap, "wp_post_thumbnail"));
         post.setStatus(MapUtils.getMapStr(postMap, (isPage) ? "page_status" : "post_status"));
-        post.setUserId(Integer.valueOf(MapUtils.getMapStr(postMap, "userid")));
 
         if (isPage) {
             post.setIsPage(true);
-            post.setPageParentId(MapUtils.getMapStr(postMap, "wp_page_parent_id"));
-            post.setPageParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent_title"));
+            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
+            post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent_title"));
         } else {
             post.setKeywords(MapUtils.getMapStr(postMap, "mt_keywords"));
             post.setPostFormat(MapUtils.getMapStr(postMap, "wp_post_format"));

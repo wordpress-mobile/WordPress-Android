@@ -33,7 +33,10 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         String url = WPCOMREST.POSTS.getUrlV1WithSiteId(site.getSiteId());
         // TODO: Add offset to request params
-        // TODO: Add type=page param if getPages == true
+        if (getPages) {
+            url += "?type=page";
+        }
+
         final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Request.Method.GET,
                 url, null, PostsResponse.class,
                 new Response.Listener<PostsResponse>() {
@@ -76,7 +79,6 @@ public class PostRestClient extends BaseWPComRestClient {
         post.setStatus(from.status);
         post.setPassword(from.password);
         post.setIsPage(from.type.equals("page"));
-        // TODO: Implement parent for pages?
 
         if (from.post_thumbnail != null) {
             post.setFeaturedImageId(from.post_thumbnail.id);
@@ -95,6 +97,11 @@ public class PostRestClient extends BaseWPComRestClient {
             post.setHasCapabilityPublishPost(from.capabilities.publish_post);
             post.setHasCapabilityEditPost(from.capabilities.edit_post);
             post.setHasCapabilityDeletePost(from.capabilities.delete_post);
+        }
+
+        if (from.parent != null) {
+            post.setParentId(from.parent.ID);
+            post.setParentTitle(from.parent.title);
         }
 
         return post;
