@@ -259,7 +259,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (WPActivityUtils.isEmailClientAvailable(activity)) {
+        if (shouldShowMagicLinksLogin(activity);) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {
@@ -297,5 +297,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static boolean shouldShowMagicLinksLogin(Activity activity) {
+        boolean isMagicLinksEnabled = false;
+
+        return isMagicLinksEnabled && WPActivityUtils.isEmailClientAvailable(activity);
     }
 }
