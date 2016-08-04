@@ -11,20 +11,6 @@ public class PostWPComRestResponse implements Payload, Response {
         public List<PostWPComRestResponse> posts;
     }
 
-    public class Author {
-        public long ID;
-        public String login;
-        public String email;
-        public String name;
-        public String first_name;
-        public String last_name;
-        public String nice_name;
-        public String URL;
-        public String avatar_URL;
-        public String profile_URL;
-        public long site_ID;
-    }
-
     public class PostThumbnail {
         public long id;
         public String URL;
@@ -62,7 +48,6 @@ public class PostWPComRestResponse implements Payload, Response {
 
     public int ID;
     public long site_ID;
-    public Author author;
     public String date;
     public String modified;
     public String title;
@@ -75,6 +60,9 @@ public class PostWPComRestResponse implements Payload, Response {
     public String status;
     public boolean sticky;
     public String password;
+
+    public PostParent parent;
+
     public String type;
     public String featured_image;
     // TODO: This can probably use MediaModel instead, and we can drop PostThumbnail
