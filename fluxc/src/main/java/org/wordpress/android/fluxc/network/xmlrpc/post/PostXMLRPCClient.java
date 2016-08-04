@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.utils.DateTimeUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
@@ -174,12 +175,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         contentStruct.put("post_type", (post.isPage()) ? "page" : "post");
         contentStruct.put("title", post.getTitle());
-        long pubDate = post.getDateCreatedGmt();
-        if (pubDate != 0) {
-            Date date_created_gmt = new Date(pubDate);
-            contentStruct.put("date_created_gmt", date_created_gmt);
-            Date dateCreated = new Date(pubDate + (date_created_gmt.getTimezoneOffset() * 60000));
-            contentStruct.put("dateCreated", dateCreated);
+
+        if (post.getDateCreated() != null) {
+            String dateCreated = post.getDateCreated();
+            Date date = DateTimeUtils.dateFromIso8601(dateCreated);
+            if (date != null) {
+                contentStruct.put("dateCreated", date);
+                // Redundant, but left in just in case
+                // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
+                contentStruct.put("date_created_gmt", date);
+            }
         }
 
         if (!TextUtils.isEmpty(moreContent)) {
@@ -361,22 +366,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setRemotePostId(Integer.valueOf(postID));
         post.setTitle(MapUtils.getMapStr(postMap, "title"));
 
-        Date dateCreated = MapUtils.getMapDate(postMap, "dateCreated");
-        if (dateCreated != null) {
-            post.setDateCreated(dateCreated.getTime());
-        } else {
-            Date now = new Date();
-            post.setDateCreated(now.getTime());
-        }
-
         Date dateCreatedGmt = MapUtils.getMapDate(postMap, "date_created_gmt");
-        if (dateCreatedGmt != null) {
-            post.setDateCreatedGmt(dateCreatedGmt.getTime());
-        } else {
-            dateCreatedGmt = new Date(post.getDateCreated());
-            post.setDateCreatedGmt(dateCreatedGmt.getTime() + (dateCreatedGmt.getTimezoneOffset() * 60000));
-        }
-
+        String timeAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
+        post.setDateCreated(timeAsIso8601);
 
         post.setDescription(MapUtils.getMapStr(postMap, "description"));
         post.setLink(MapUtils.getMapStr(postMap, "link"));

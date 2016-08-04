@@ -24,8 +24,7 @@ public class PostModel implements Identifiable, Payload {
     @Column private long mRemoteSiteId; // .COM REST API
     @Column private long mRemotePostId;
     @Column private String mTitle;
-    @Column private long mDateCreated;
-    @Column private long mDateCreatedGmt;
+    @Column private String mDateCreated; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mCategories;
     @Column private String mCustomFields;
     @Column private String mDescription;
@@ -110,20 +109,12 @@ public class PostModel implements Identifiable, Payload {
         mTitle = title;
     }
 
-    public long getDateCreated() {
+    public String getDateCreated() {
         return mDateCreated;
     }
 
-    public void setDateCreated(long dateCreated) {
+    public void setDateCreated(String dateCreated) {
         mDateCreated = dateCreated;
-    }
-
-    public long getDateCreatedGmt() {
-        return mDateCreatedGmt;
-    }
-
-    public void setDateCreatedGmt(long dateCreatedGmt) {
-        mDateCreatedGmt = dateCreatedGmt;
     }
 
     public String getCategories() {
@@ -396,8 +387,6 @@ public class PostModel implements Identifiable, Payload {
                 getLocalSiteId() == otherPost.getLocalSiteId() &&
                 getRemoteSiteId() == otherPost.getRemoteSiteId() &&
                 getRemotePostId() == otherPost.getRemotePostId() &&
-                getDateCreated() == otherPost.getDateCreated() &&
-                getDateCreatedGmt() == otherPost.getDateCreatedGmt() &&
                 getAllowComments() == otherPost.getAllowComments() &&
                 getAllowPings() == otherPost.getAllowPings() &&
                 getUserId() == otherPost.getUserId() &&
@@ -409,6 +398,8 @@ public class PostModel implements Identifiable, Payload {
                 isLocallyChanged() == otherPost.isLocallyChanged() &&
                 getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId() &&
                 getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null &&
+                getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
+                        otherPost.getDateCreated() == null &&
                 getCategories() != null ? getCategories().equals(otherPost.getCategories()) :
                         otherPost.getCategories() == null &&
                 getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
@@ -438,7 +429,6 @@ public class PostModel implements Identifiable, Payload {
                         otherPost.getPageParentId() == null &&
                 getPageParentTitle() != null ? getPageParentTitle().equals(otherPost.getPageParentTitle()) :
                         otherPost.getPageParentTitle() == null);
-
     }
 
     public JSONArray getJSONCategories() {
