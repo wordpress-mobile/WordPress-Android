@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * RecyclerView with setEmptyView method.
+ * RecyclerView with setEmptyView method which displays a view when RecyclerView adapter is empty.
  */
 public class EmptyViewRecyclerView extends RecyclerView {
     private View mEmptyView;

@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * LinearLayoutManager with smooth scrolling and custom duration (in milliseconds).
+ */
 public class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
     private final int mDuration;
 
