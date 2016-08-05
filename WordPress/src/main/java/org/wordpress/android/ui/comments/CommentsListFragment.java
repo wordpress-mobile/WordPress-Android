@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -19,11 +18,12 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.FilterCriteria;
-import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CommentsListFragment extends Fragment {
+    public static final int COMMENTS_PER_PAGE = 30;
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId);
@@ -62,7 +63,30 @@ public class CommentsListFragment extends Fragment {
 
     private UpdateCommentsTask mUpdateCommentsTask;
 
-    public static final int COMMENTS_PER_PAGE = 30;
+    private SiteModel mSite;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        updateSiteOrFinishActivity(savedInstanceState);
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
 
     private CommentAdapter getAdapter() {
         if (mAdapter == null) {
@@ -141,7 +165,7 @@ public class CommentsListFragment extends Fragment {
                 }
             };
 
-            mAdapter = new CommentAdapter(getActivity(), getSelectedSite().getId());
+            mAdapter = new CommentAdapter(getActivity(), mSite.getId());
             mAdapter.setOnCommentPressedListener(pressedListener);
             mAdapter.setOnDataLoadedListener(dataLoadedListener);
             mAdapter.setOnLoadMoreListener(loadMoreListener);
@@ -364,11 +388,7 @@ public class CommentsListFragment extends Fragment {
             }
         };
 
-        CommentActions.moderateComments(
-                getSelectedSite(),
-                updateComments,
-                newStatus,
-                listener);
+        CommentActions.moderateComments(mSite, updateComments, newStatus, listener);
     }
 
     private void confirmDeleteComments() {
@@ -440,7 +460,7 @@ public class CommentsListFragment extends Fragment {
         if (deletePermanently){
             newStatus = CommentStatus.DELETE;
         }
-        CommentActions.moderateComments(getSelectedSite(), selectedComments, newStatus, listener);
+        CommentActions.moderateComments(mSite, selectedComments, newStatus, listener);
     }
 
     void loadComments() {
@@ -553,18 +573,16 @@ public class CommentsListFragment extends Fragment {
                 }
             }
 
-            SiteModel site = getSelectedSite();
-
             Object[] params = {
-                    String.valueOf(site.getSiteId()),
-                    StringUtils.notNullStr(site.getUsername()),
-                    StringUtils.notNullStr(site.getPassword()),
+                    String.valueOf(mSite.getSiteId()),
+                    StringUtils.notNullStr(mSite.getUsername()),
+                    StringUtils.notNullStr(mSite.getPassword()),
                     hPost};
             try {
-                return ApiHelper.refreshComments(getSelectedSite(), params, new ApiHelper.DatabasePersistCallback() {
+                return ApiHelper.refreshComments(mSite, params, new ApiHelper.DatabasePersistCallback() {
                     @Override
                     public void onDataReadyToSave(List list) {
-                        int localBlogId = getSelectedSite().getId();
+                        int localBlogId = mSite.getId();
                         CommentTable.deleteCommentsForBlogWithFilter(localBlogId, mStatusFilter);
                         CommentTable.saveComments(localBlogId, (CommentList)list);
                     }
@@ -629,9 +647,7 @@ public class CommentsListFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
         super.onSaveInstanceState(outState);
     }
 
@@ -733,15 +749,6 @@ public class CommentsListFragment extends Fragment {
             getAdapter().setEnableSelection(false);
             mFilteredCommentsView.setSwipeToRefreshEnabled(true);
             mActionMode = null;
-        }
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof CommentsActivity) {
-            return ((CommentsActivity) getActivity()).getSelectedSite();
-        } else {
-            // Crash
-            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }

@@ -21,6 +21,7 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
@@ -559,7 +560,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError) {
             AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
@@ -567,7 +568,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out

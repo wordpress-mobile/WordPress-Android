@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
 import android.text.Html;
@@ -46,10 +45,10 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -113,6 +112,15 @@ public class EditPostSettingsFragment extends Fragment
     private String[] mPostFormatTitles;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
+    private SiteModel mSite;
+
+    public static EditPostSettingsFragment newInstance(SiteModel site) {
+        EditPostSettingsFragment fragment = new EditPostSettingsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +128,30 @@ public class EditPostSettingsFragment extends Fragment
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
+        updateSiteOrFinishActivity(savedInstanceState);
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     @Override
@@ -202,13 +234,13 @@ public class EditPostSettingsFragment extends Fragment
             mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
                     "status", "video"};
             // TODO: STORES: use mSite getPostFormats() and the FETCH_POST_FORMATS action
-//            if (getSelectedSite().getPostFormats().equals("")) {
-//                new ApiHelper.GetPostFormatsTask().execute(getSelectedSite());
+//            if (mSite.getPostFormats().equals("")) {
+//                new ApiHelper.GetPostFormatsTask().execute(mSite);
 //            } else {
 //                try {
 //                    Gson gson = new Gson();
 //                    Type type = new TypeToken<Map<String, String>>() {}.getType();
-//                    Map<String, String> jsonPostFormats = gson.fromJson(getSelectedSite().getPostFormats(),
+//                    Map<String, String> jsonPostFormats = gson.fromJson(mSite.getPostFormats(),
 //                            type);
 //                    mPostFormats = new String[jsonPostFormats.size()];
 //                    mPostFormatTitles = new String[jsonPostFormats.size()];
@@ -288,9 +320,9 @@ public class EditPostSettingsFragment extends Fragment
     private void setupSuggestionServiceAndAdapter() {
         if (!isAdded()) return;
 
-        long remoteBlogId = getSelectedSite().getSiteId();
+        long remoteBlogId = mSite.getSiteId();
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(getSelectedSite(), getActivity(),
+        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(mSite, getActivity(),
                 mSuggestionServiceConnectionManager);
         if (tagSuggestionAdapter != null) {
             mTagsEditText.setAdapter(tagSuggestionAdapter);
@@ -377,7 +409,7 @@ public class EditPostSettingsFragment extends Fragment
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
-                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(getSelectedSite().getId()),
+                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(mSite.getId()),
                         String.valueOf(mFeaturedImageId));
                 if (cursor != null && cursor.moveToFirst()) {
                     mFeaturedImageView.setVisibility(View.VISIBLE);
@@ -388,7 +420,7 @@ public class EditPostSettingsFragment extends Fragment
                     int padding = DisplayUtils.dpToPx(getActivity(), 16);
                     int imageWidth = (maxWidth - padding);
 
-                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, getSelectedSite(), imageWidth);
+                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, imageWidth);
                     WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
                 }
 
@@ -403,7 +435,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), getSelectedSite());
+        ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
     }
 
     private String getPostStatusForSpinnerPosition(int position) {
@@ -457,9 +489,9 @@ public class EditPostSettingsFragment extends Fragment
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", getSelectedSite().getId());
+            bundle.putInt("id", mSite.getId());
             if (mCategories != null && mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<String>(mCategories));
+                bundle.putSerializable("categories", new HashSet<>(mCategories));
             }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
             categoriesIntent.putExtras(bundle);
@@ -1041,17 +1073,6 @@ public class EditPostSettingsFragment extends Fragment
         if (selectCategory != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
-        }
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof EditPostActivity) {
-            EditPostActivity mainActivity = (EditPostActivity) getActivity();
-            return mainActivity.getSelectedSite();
-        } else {
-            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
-            // Crash
-            return null;
         }
     }
 }

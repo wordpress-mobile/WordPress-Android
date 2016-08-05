@@ -945,9 +945,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         return new LegacyEditorFragment();
                     }
                 case 1:
-                    return new EditPostSettingsFragment();
+                    return EditPostSettingsFragment.newInstance(mSite);
                 default:
-                    return new EditPostPreviewFragment();
+                    return EditPostPreviewFragment.newInstance(mSite);
             }
         }
 

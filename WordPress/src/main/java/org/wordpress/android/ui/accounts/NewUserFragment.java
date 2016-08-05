@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -548,7 +549,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
@@ -569,7 +570,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
@@ -588,7 +589,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
@@ -608,7 +609,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         fetchSiteAndAccount();
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
@@ -619,7 +620,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         mSitesFetched = true;

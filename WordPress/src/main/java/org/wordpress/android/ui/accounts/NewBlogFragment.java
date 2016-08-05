@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -312,7 +313,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError) {
@@ -324,7 +325,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
         // Sites updated, we can finish this.
@@ -334,6 +335,5 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         endProgress();
         getActivity().setResult(Activity.RESULT_OK);
         getActivity().finish();
-
     }
 }

@@ -19,11 +19,11 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.PostsListPostList;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
@@ -31,8 +31,6 @@ import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -70,9 +68,21 @@ public class PostsListFragment extends Fragment
 
     private final PostsListPostList mTrashedPosts = new PostsListPostList();
 
+    private SiteModel mSite;
+
+    public static PostsListFragment newInstance(SiteModel site) {
+        PostsListFragment fragment = new PostsListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updateSiteOrFinishActivity(savedInstanceState);
+
         setRetainInstance(true);
 
         if (isAdded()) {
@@ -80,6 +90,23 @@ public class PostsListFragment extends Fragment
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
+        }
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
         }
     }
 
@@ -142,7 +169,7 @@ public class PostsListFragment extends Fragment
 
     public PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), getSelectedSite(), mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -175,7 +202,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-        ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), getSelectedSite(), mIsPage);
+        ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mSite, mIsPage);
     }
 
     public void onResume() {
@@ -224,7 +251,7 @@ public class PostsListFragment extends Fragment
         if (loadMore) {
             showLoadMoreProgress();
         }
-        PostUpdateService.startServiceForBlog(getActivity(), getSelectedSite(), mIsPage, loadMore);
+        PostUpdateService.startServiceForBlog(getActivity(), mSite, mIsPage, loadMore);
     }
 
     private void showLoadMoreProgress() {
@@ -255,7 +282,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && getSelectedSite().getId() == event.mLocalBlogId) {
+        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
             loadPosts();
         }
     }
@@ -265,7 +292,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (isAdded() && getSelectedSite().getId() == event.mLocalBlogId) {
+        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
             loadPosts();
         }
     }
@@ -276,7 +303,7 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.RequestPosts event) {
         mIsFetchingPosts = false;
-        if (isAdded() && event.getSite().getId() == getSelectedSite().getId()) {
+        if (isAdded() && event.getSite().getId() == mSite.getId()) {
             setRefreshing(false);
             hideLoadMoreProgress();
             if (!event.getFailed()) {
@@ -397,20 +424,20 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), getSelectedSite(), post.getPostId(),
+                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), mSite, post.getPostId(),
                         mIsPage);
                 break;
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(fullPost);
                 break;
             case PostListButton.BUTTON_VIEW:
-                ActivityLauncher.browsePostOrPage(getActivity(), getSelectedSite(), fullPost);
+                ActivityLauncher.browsePostOrPage(getActivity(), mSite, fullPost);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), getSelectedSite(), fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), getSelectedSite(), fullPost, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, fullPost, mIsPage);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
@@ -440,7 +467,7 @@ public class PostsListFragment extends Fragment
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
-        PostUtils.trackSavePostAnalytics(post, getSelectedSite());
+        PostUtils.trackSavePostAnalytics(post, mSite);
     }
 
     /*
@@ -509,7 +536,7 @@ public class PostsListFragment extends Fragment
                 WordPress.wpDB.deletePost(fullPost);
 
                 if (!post.isLocalDraft()) {
-                    DeleteSinglePostTask task = new ApiHelper.DeleteSinglePostTask(getSelectedSite(),
+                    DeleteSinglePostTask task = new ApiHelper.DeleteSinglePostTask(mSite,
                             fullPost.getRemotePostId(), mIsPage);
                     task.execute();
                 }
@@ -517,16 +544,5 @@ public class PostsListFragment extends Fragment
         });
 
         snackbar.show();
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof PostsListActivity) {
-            PostsListActivity mainActivity = (PostsListActivity) getActivity();
-            return mainActivity.getSelectedSite();
-        } else {
-            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
-            // Crash
-            return null;
-        }
     }
 }

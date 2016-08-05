@@ -126,13 +126,9 @@ public class PlanPostPurchaseFragment extends Fragment {
     }
 
     private void handleButtonClick() {
-        int selectedSiteId = -1;
-        if (getActivity() instanceof PlanPostPurchaseActivity) {
-            selectedSiteId = ((PlanPostPurchaseActivity) getActivity()).getSelectedSiteId();
-        }
         switch (mPageNumber) {
             case PlanPostPurchaseActivity.PAGE_NUMBER_CUSTOMIZE:
-                // TODO: Stores: used null site here
+                // TODO: Stores: used null site here but this fragment activity
                 ThemeWebActivity.openCurrentTheme(getActivity(), null, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
                 break;
             case PlanPostPurchaseActivity.PAGE_NUMBER_THEMES:
