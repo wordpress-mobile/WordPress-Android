@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,8 +38,6 @@ import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -104,6 +101,8 @@ public class MediaGridFragment extends Fragment
     private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay;
     private AlertDialog mDatePickerDialog;
 
+    private SiteModel mSite;
+
     public interface MediaGridListener {
         public void onMediaItemListDownloadStart();
         public void onMediaItemListDownloaded();
@@ -141,11 +140,31 @@ public class MediaGridFragment extends Fragment
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFiltersText = new String[Filter.values().length];
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(getActivity(), getSelectedSite(), null, 0, WordPress.imageLoader);
+        // TODO: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, null, 0, WordPress.imageLoader);
         mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
@@ -257,6 +276,7 @@ public class MediaGridFragment extends Fragment
         outState.putInt(BUNDLE_DATE_FILTER_END_DAY, mEndDay);
         outState.putInt(BUNDLE_DATE_FILTER_END_MONTH, mEndMonth);
         outState.putInt(BUNDLE_DATE_FILTER_END_YEAR, mEndYear);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     private void setupSpinnerAdapter() {
@@ -284,7 +304,7 @@ public class MediaGridFragment extends Fragment
     }
 
     void updateFilterText() {
-        String blogId = String.valueOf(getSelectedSite().getId());
+        String blogId = String.valueOf(mSite.getId());
 
         int countAll = WordPress.wpDB.getMediaCountAll(blogId);
         int countImages = WordPress.wpDB.getMediaCountImages(blogId);
@@ -305,6 +325,11 @@ public class MediaGridFragment extends Fragment
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
     }
 
     @Override
@@ -438,14 +463,14 @@ public class MediaGridFragment extends Fragment
                 }
             };
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, mFilter,
-                    callback, getSelectedSite());
+                    callback, mSite);
             getMediaTask.execute();
         }
     }
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        String blogId = String.valueOf(getSelectedSite().getId());
+        String blogId = String.valueOf(mSite.getId());
         Cursor cursor = WordPress.wpDB.getMediaFilesForBlog(blogId, searchTerm);
         mGridAdapter.changeCursor(cursor);
     }
@@ -536,7 +561,7 @@ public class MediaGridFragment extends Fragment
     }
 
     Cursor setDateFilter() {
-        String blogId = String.valueOf(getSelectedSite().getId());
+        String blogId = String.valueOf(mSite.getId());
 
         GregorianCalendar startDate = new GregorianCalendar(mStartYear, mStartMonth, mStartDay);
         GregorianCalendar endDate = new GregorianCalendar(mEndYear, mEndMonth, mEndDay);
@@ -565,7 +590,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private Cursor filterItems(Filter filter) {
-        String blogId = String.valueOf(getSelectedSite().getId());
+        String blogId = String.valueOf(mSite.getId());
 
         switch (filter) {
             case ALL:
@@ -711,17 +736,6 @@ public class MediaGridFragment extends Fragment
         return mIsMultiSelect;
     }
 
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof MediaBrowserActivity) {
-            MediaBrowserActivity mainActivity = (MediaBrowserActivity) getActivity();
-            return mainActivity.getSelectedSite();
-        } else {
-            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
-            // Crash
-            return null;
-        }
-    }
-
     public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
         private MenuItem mNewPostButton;
         private MenuItem mNewGalleryButton;
@@ -791,7 +805,7 @@ public class MediaGridFragment extends Fragment
                 return;
             }
             ArrayList<String> ids = mGridAdapter.getSelectedItems();
-            ActivityLauncher.newMediaPost(getActivity(), getSelectedSite(), ids.iterator().next());
+            ActivityLauncher.newMediaPost(getActivity(), mSite, ids.iterator().next());
         }
 
         private void handleMultiSelectDelete() {
@@ -818,7 +832,7 @@ public class MediaGridFragment extends Fragment
             if (!isAdded()) {
                 return;
             }
-            ActivityLauncher.newGalleryPost(getActivity(), getSelectedSite(), mGridAdapter.getSelectedItems());
+            ActivityLauncher.newGalleryPost(getActivity(), mSite, mGridAdapter.getSelectedItems());
         }
     }
 }

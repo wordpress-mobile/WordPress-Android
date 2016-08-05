@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,9 +21,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -48,9 +47,6 @@ public class PostPreviewActivity extends AppCompatActivity {
     private Post mPost;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

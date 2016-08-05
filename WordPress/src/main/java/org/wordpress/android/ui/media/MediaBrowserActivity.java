@@ -76,16 +76,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String mQuery;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 // Coming from zero connection. Continue what's pending for delete
-                int blogId = getSelectedSite().getId();
+                int blogId = mSite.getId();
                 if (blogId != -1 && WordPress.wpDB.hasMediaDeleteQueueItems(blogId)) {
                     startMediaDeleteService();
                 }
@@ -123,14 +120,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        mMediaGridFragment.setArguments(bundle);
 
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
-        if (mMediaItemFragment != null)
+        if (mMediaItemFragment != null) {
             ft.hide(mMediaGridFragment);
+        }
 
         mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
-        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout())
+        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout()) {
             ft.hide(mMediaItemFragment);
+        }
 
         ft.commitAllowingStateLoss();
 
@@ -271,7 +273,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             FragmentTransaction ft = fm.beginTransaction();
             ft.hide(mMediaGridFragment);
             mMediaGridFragment.clearSelectedItems();
-            mMediaItemFragment = MediaItemFragment.newInstance(mediaId);
+            mMediaItemFragment = MediaItemFragment.newInstance(mSite, mediaId);
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
@@ -361,7 +363,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (mMediaItemFragment.isVisible())
                     ft.hide(mMediaItemFragment);
 
-                mMediaEditFragment = MediaEditFragment.newInstance(mediaId);
+                mMediaEditFragment = MediaEditFragment.newInstance(mSite, mediaId);
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
@@ -528,7 +530,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     public void deleteMedia(final ArrayList<String> ids) {
-        final String blogId = String.valueOf(getSelectedSite().getId());
+        final String blogId = String.valueOf(mSite.getId());
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
         // phone layout: pop the item fragment if it's visible

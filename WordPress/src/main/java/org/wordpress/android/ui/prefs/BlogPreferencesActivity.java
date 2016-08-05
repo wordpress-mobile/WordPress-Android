@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -48,9 +47,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

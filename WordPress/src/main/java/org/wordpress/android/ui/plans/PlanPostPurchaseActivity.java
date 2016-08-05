@@ -244,8 +244,4 @@ public class PlanPostPurchaseActivity extends AppCompatActivity {
             return mFragments.size();
         }
     }
-
-    public int getSelectedSiteId() {
-        return mSelectedSiteId;
-    }
 }

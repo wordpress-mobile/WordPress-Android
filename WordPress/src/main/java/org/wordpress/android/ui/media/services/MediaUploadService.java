@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.util.AppLog;
@@ -41,9 +40,6 @@ public class MediaUploadService extends Service {
     private String mCurrentUploadMediaId;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public IBinder onBind(Intent intent) {

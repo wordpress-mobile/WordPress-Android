@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,12 +27,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
 /**
@@ -60,27 +59,44 @@ public class MediaEditFragment extends Fragment {
     private View mLinearLayout;
     private ImageLoader mImageLoader;
 
+    private SiteModel mSite;
+
     public interface MediaEditFragmentCallback {
         void onResume(Fragment fragment);
         void onPause(Fragment fragment);
         void onSavedEdit(String mediaId, boolean result);
     }
 
-    public static MediaEditFragment newInstance(String mediaId) {
+    public static MediaEditFragment newInstance(SiteModel site, String mediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
-
         Bundle args = new Bundle();
         args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putSerializable(ActivityLauncher.EXTRA_SITE, site);
         fragment.setArguments(args);
-
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+
         setHasOptionsMenu(true);
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        // TODO: We want to inject the image loader in this class instead of using a static field.
         mImageLoader = WordPress.imageLoader;
 
         // retain this fragment across configuration changes
@@ -164,12 +180,13 @@ public class MediaEditFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
         if (getActivity() != null) {
-            String blogId = String.valueOf(getSelectedSite().getId());
+            String blogId = String.valueOf(mSite.getId());
             if (mMediaId != null) {
                 Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mMediaId);
                 refreshViews(cursor);
@@ -187,12 +204,12 @@ public class MediaEditFragment extends Fragment {
         final String description = mDescriptionView.getText().toString();
         final String caption = mCaptionView.getText().toString();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(getSelectedSite(), mediaId, title,
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mSite, mediaId, title,
                 description, caption,
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
-                        String blogId = String.valueOf(getSelectedSite().getId());
+                        String blogId = String.valueOf(mSite.getId());
                         WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
@@ -357,17 +374,6 @@ public class MediaEditFragment extends Fragment {
                 });
                 task.execute(filePath);
             }
-        }
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof MediaBrowserActivity) {
-            MediaBrowserActivity mainActivity = (MediaBrowserActivity) getActivity();
-            return mainActivity.getSelectedSite();
-        } else {
-            AppLog.d(T.MAIN, "Wrong fragment's parent activity");
-            // Crash
-            return null;
         }
     }
 }

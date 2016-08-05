@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.SparseIntArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -21,6 +20,8 @@ import com.mobeta.android.dslv.DragSortListView.RemoveListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +34,13 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private MediaGalleryAdapter mGridAdapter;
     private ArrayList<String> mIds;
+    private SiteModel mSite;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        updateSiteOrFinishActivity(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +51,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
         }
 
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
+        // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true,
                 WordPress.imageLoader);
 
@@ -63,10 +71,28 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
     }
 
     private void refreshGridView() {
-        String blogId = String.valueOf(getSelectedSite().getId());
+        String blogId = String.valueOf(mSite.getId());
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
@@ -186,14 +212,5 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void remove(int position) {
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof MediaGalleryActivity) {
-            return ((MediaGalleryActivity) getActivity()).getSelectedSite();
-        } else {
-            // Crash
-            throw new AssertionError("Wrong fragment's parent activity");
-        }
     }
 }

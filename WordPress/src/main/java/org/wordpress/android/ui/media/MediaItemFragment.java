@@ -12,7 +12,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -66,18 +66,19 @@ public class MediaItemFragment extends Fragment {
     private boolean mIsLocal;
     private String mImageUri;
 
+    private SiteModel mSite;
+
     public interface MediaItemFragmentCallback {
         void onResume(Fragment fragment);
         void onPause(Fragment fragment);
     }
 
-    public static MediaItemFragment newInstance(String mediaId) {
+    public static MediaItemFragment newInstance(SiteModel site, String mediaId) {
         MediaItemFragment fragment = new MediaItemFragment();
-
         Bundle args = new Bundle();
         args.putString(ARGS_MEDIA_ID, mediaId);
+        args.putSerializable(ActivityLauncher.EXTRA_SITE, site);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -85,6 +86,27 @@ public class MediaItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     @Override
@@ -139,7 +161,9 @@ public class MediaItemFragment extends Fragment {
     }
 
     public void loadMedia(String mediaId) {
-        String blogId = String.valueOf(getSelectedSite().getId());
+        if (mSite == null)
+            return;
+        String blogId = String.valueOf(mSite.getId());
 
         Cursor cursor = null;
         try {
@@ -245,7 +269,7 @@ public class MediaItemFragment extends Fragment {
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
-                if (SiteUtils.isPhotonCapable(getSelectedSite())) {
+                if (SiteUtils.isPhotonCapable(mSite)) {
                     thumbnailURL = StringUtils.getPhotonUrl(mImageUri, imageWidth);
                 } else {
                     thumbnailURL = UrlUtils.removeQuery(mImageUri) + "?w=" + imageWidth;
@@ -282,7 +306,7 @@ public class MediaItemFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
-                    if (getSelectedSite().isPrivate()) {
+                    if (mSite.isPrivate()) {
                         imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
                     }
                     ReaderActivityLauncher.showReaderPhotoViewer(
@@ -330,7 +354,7 @@ public class MediaItemFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.menu_delete) {
-            String blogId = String.valueOf(getSelectedSite().getId());
+            String blogId = String.valueOf(mSite.getId());
             boolean canDeleteMedia = WordPressMediaUtils.canDeleteMedia(blogId, getMediaId());
             if (!canDeleteMedia) {
                 Toast.makeText(getActivity(), R.string.wait_until_upload_completes, Toast.LENGTH_LONG).show();
@@ -368,15 +392,6 @@ public class MediaItemFragment extends Fragment {
         } catch (Exception e) {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(getActivity(), R.string.error_copy_to_clipboard);
-        }
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof MediaBrowserActivity) {
-            return ((MediaBrowserActivity) getActivity()).getSelectedSite();
-        } else {
-            // Crash
-            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }

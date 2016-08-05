@@ -3,7 +3,6 @@ package org.wordpress.android.ui.media;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -46,9 +45,6 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     private MediaGallery mMediaGallery;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

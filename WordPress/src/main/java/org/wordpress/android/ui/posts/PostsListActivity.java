@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -108,9 +107,5 @@ public class PostsListActivity extends AppCompatActivity {
         }
         super.onSaveInstanceState(outState);
         outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
-    }
-
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
     }
 }

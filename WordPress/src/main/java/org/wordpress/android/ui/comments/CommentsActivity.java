@@ -44,9 +44,6 @@ public class CommentsActivity extends AppCompatActivity
     private CommentStatus mCurrentCommentStatusType = CommentStatus.UNKNOWN;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

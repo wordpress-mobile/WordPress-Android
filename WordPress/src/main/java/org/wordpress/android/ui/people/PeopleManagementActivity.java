@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,10 +15,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.PeopleListFilter;
-import org.wordpress.android.models.Person;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.models.PeopleListFilter;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -83,9 +82,6 @@ public class PeopleManagementActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

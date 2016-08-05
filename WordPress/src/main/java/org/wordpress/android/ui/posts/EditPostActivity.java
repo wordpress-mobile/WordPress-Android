@@ -207,9 +207,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject SiteStore mSiteStore;
 
     private SiteModel mSite;
-    public @NonNull SiteModel getSelectedSite() {
-        return mSite;
-    }
 
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;

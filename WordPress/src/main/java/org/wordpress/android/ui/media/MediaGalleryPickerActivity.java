@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
@@ -55,11 +54,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private int mOldMediaSyncOffset = 0;
     private SiteModel mSite;
 
-    public @NonNull
-    SiteModel getSelectedSite() {
-        return mSite;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +90,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
-        // TOOD: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(this, getSelectedSite(), null, 0, WordPress.imageLoader);
+        // TODO: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.imageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
