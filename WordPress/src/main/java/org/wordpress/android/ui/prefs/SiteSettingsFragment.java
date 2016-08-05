@@ -1124,8 +1124,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
-                            mAdapter = null;
-                            list.setAdapter(getAdapter());
+                            getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
