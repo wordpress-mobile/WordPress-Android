@@ -82,7 +82,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
             mItemsSelected.put(position, true);
         }
 
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 
     public void toggleItemSelected(int position) {
@@ -92,6 +92,6 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
             mItemsSelected.delete(position);
         }
 
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 }
