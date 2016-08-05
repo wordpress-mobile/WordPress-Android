@@ -24,15 +24,13 @@ public class PostModel implements Identifiable, Payload {
     @Column private long mRemoteSiteId; // .COM REST API
     @Column private long mRemotePostId;
     @Column private String mTitle;
+    @Column private String mContent;
     @Column private String mDateCreated; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column private String mCategories;
     @Column private String mCustomFields;
-    @Column private String mDescription;
     @Column private String mLink;
     @Column private String mExcerpt;
     @Column private String mKeywords;
-    @Column private String mMoreText;
-    @Column private String mPermaLink;
     @Column private String mStatus;
     @Column private String mPassword;
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
@@ -104,6 +102,14 @@ public class PostModel implements Identifiable, Payload {
         mTitle = title;
     }
 
+    public String getContent() {
+        return StringUtils.notNullStr(mContent);
+    }
+
+    public void setContent(String content) {
+        mContent = content;
+    }
+
     public String getDateCreated() {
         return mDateCreated;
     }
@@ -128,14 +134,6 @@ public class PostModel implements Identifiable, Payload {
         mCustomFields = customFields;
     }
 
-    public String getDescription() {
-        return StringUtils.notNullStr(mDescription);
-    }
-
-    public void setDescription(String description) {
-        mDescription = description;
-    }
-
     public String getLink() {
         return StringUtils.notNullStr(mLink);
     }
@@ -158,22 +156,6 @@ public class PostModel implements Identifiable, Payload {
 
     public void setKeywords(String keywords) {
         mKeywords = keywords;
-    }
-
-    public String getMoreText() {
-        return StringUtils.notNullStr(mMoreText);
-    }
-
-    public void setMoreText(String moreText) {
-        mMoreText = moreText;
-    }
-
-    public String getPermaLink() {
-        return StringUtils.notNullStr(mPermaLink);
-    }
-
-    public void setPermaLink(String permaLink) {
-        mPermaLink = permaLink;
     }
 
     public String getStatus() {
@@ -354,23 +336,18 @@ public class PostModel implements Identifiable, Payload {
                 getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost() &&
                 getParentId() == otherPost.getParentId() &&
                 getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null &&
+                getContent() != null ? getContent().equals(otherPost.getContent()) : otherPost.getContent() == null &&
                 getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
                         otherPost.getDateCreated() == null &&
                 getCategories() != null ? getCategories().equals(otherPost.getCategories()) :
                         otherPost.getCategories() == null &&
                 getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
                         otherPost.getCustomFields() == null &&
-                getDescription() != null ? getDescription().equals(otherPost.getDescription()) :
-                        otherPost.getDescription() == null &&
                 getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null &&
                 getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) :
                         otherPost.getExcerpt() == null &&
                 getKeywords() != null ? getKeywords().equals(otherPost.getKeywords()) :
                         otherPost.getKeywords() == null &&
-                getMoreText() != null ? getMoreText().equals(otherPost.getMoreText()) :
-                        otherPost.getMoreText() == null &&
-                getPermaLink() != null ? getPermaLink().equals(otherPost.getPermaLink()) :
-                        otherPost.getPermaLink() == null &&
                 getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null &&
                 getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
                         otherPost.getPassword() == null &&
