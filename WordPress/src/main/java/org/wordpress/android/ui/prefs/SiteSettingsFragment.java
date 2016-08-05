@@ -1074,7 +1074,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mAdapter = null;
         final EmptyViewRecyclerView list = (EmptyViewRecyclerView) view.findViewById(android.R.id.list);
-        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setLayoutManager(
+            new SmoothScrollLinearLayoutManager(
+                getActivity(),
+                LinearLayoutManager.VERTICAL,
+                false,
+                getResources().getInteger(android.R.integer.config_mediumAnimTime)
+            )
+        );
         list.setAdapter(getAdapter());
         list.setEmptyView(view.findViewById(R.id.empty_view));
         list.addOnItemTouchListener(
@@ -1125,6 +1132,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
+                            list.post(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        list.smoothScrollToPosition(getAdapter().getItemCount() - 1);
+                                    }
+                                }
+                            );
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
