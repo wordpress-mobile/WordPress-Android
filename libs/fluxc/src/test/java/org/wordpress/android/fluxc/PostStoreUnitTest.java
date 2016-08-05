@@ -36,6 +36,13 @@ public class PostStoreUnitTest {
     }
 
     @Test
+    public void testInsertNullPost() {
+        assertEquals(0, PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(null));
+
+        assertEquals(0, mPostStore.getPostsCount());
+    }
+
+    @Test
     public void testSimpleInsertionAndRetrieval() {
         PostModel postModel = new PostModel();
         postModel.setRemotePostId(42);
@@ -189,6 +196,31 @@ public class PostStoreUnitTest {
         assertEquals(null, mPostStore.getPostByLocalPostId(locallyChangedPost.getId()));
         assertEquals(0, mPostStore.getPostsCountForSite(site));
         assertEquals(0, mPostStore.getPostsCount());
+    }
+
+    @Test
+    public void testPostAndPageSeparation() {
+        SiteModel site = new SiteModel();
+        site.setId(6);
+
+        PostModel post = new PostModel();
+        post.setLocalSiteId(6);
+        post.setRemotePostId(42);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+
+        PostModel page = new PostModel();
+        page.setIsPage(true);
+        page.setLocalSiteId(6);
+        page.setRemotePostId(43);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(page);
+
+        assertEquals(2, mPostStore.getPostsCount());
+
+        assertEquals(1, mPostStore.getPostsCountForSite(site));
+        assertEquals(1, mPostStore.getPagesCountForSite(site));
+
+        assertEquals(false, mPostStore.getPosts().get(0).isPage());
+        assertEquals(true, mPostStore.getPosts().get(1).isPage());
     }
 
     public PostModel generateSampleUploadedPost() {
