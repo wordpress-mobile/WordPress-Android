@@ -17,18 +17,23 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -61,7 +66,6 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,6 +195,11 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
+
+    // Hold for Moderation and Blacklist settings
+    private Dialog mDialog;
+    private ActionMode mActionMode;
+    private MultiSelectRecyclerViewAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1052,58 +1061,54 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showListEditorDialog(int titleRes, int footerRes) {
-        Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
-        dialog.setOnDismissListener(this);
-        dialog.setContentView(getListEditorView(dialog, getString(footerRes)));
-        dialog.show();
-        WPActivityUtils.addToolbarToDialog(this, dialog, getString(titleRes));
+        mDialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        mDialog.setOnDismissListener(this);
+        mDialog.setContentView(getListEditorView(getString(footerRes)));
+        mDialog.show();
+        WPActivityUtils.addToolbarToDialog(this, mDialog, getString(titleRes));
     }
 
-    private View getListEditorView(final Dialog dialog, String footerText) {
+    private View getListEditorView(String footerText) {
         Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
         View view = View.inflate(themer, R.layout.list_editor, null);
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
-        final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);
-        final MultiSelectListViewAdapter adapter = new MultiSelectListViewAdapter(getActivity(), mEditingList);
-        list.setEnterMultiSelectListener(new MultiSelectListView.OnEnterMultiSelect() {
-            @Override
-            public void onEnterMultiSelect() {
-                WPActivityUtils.setStatusBarColor(dialog.getWindow(), R.color.action_mode_status_bar_tint);
-            }
-        });
-        list.setExitMultiSelectListener(new MultiSelectListView.OnExitMultiSelect() {
-            @Override
-            public void onExitMultiSelect() {
-                WPActivityUtils.setStatusBarColor(dialog.getWindow(), R.color.status_bar_tint);
-            }
-        });
-        list.setDeleteRequestListener(new MultiSelectListView.OnDeleteRequested() {
-            @Override
-            public boolean onDeleteRequested() {
-                SparseBooleanArray checkedItems = list.getCheckedItemPositions();
+        mAdapter = null;
+        final RecyclerView list = (RecyclerView) view.findViewById(android.R.id.list);
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setAdapter(getAdapter());
+        list.addOnItemTouchListener(
+            new RecyclerViewItemClickListener(
+                getActivity(),
+                list,
+                new RecyclerViewItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (mActionMode != null) {
+                            getAdapter().toggleItemSelected(position);
+                            mActionMode.invalidate();
 
-                HashMap<String, Object> properties = new HashMap<>();
-                properties.put("num_items_deleted", checkedItems.size());
-                AnalyticsUtils.trackWithCurrentBlogDetails(
-                        AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
+                            if (getAdapter().getItemsSelected().size() <= 0) {
+                                mActionMode.finish();
+                            }
+                        }
+                    }
 
-                List<String> itemsToRemove = new ArrayList<>();
-                for (int i = 0; i < adapter.getCount(); i++) {
-                    final int index = checkedItems.keyAt(i);
-                    if (checkedItems.get(index)) {
-                        itemsToRemove.add(adapter.getItem(index));
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        if (mActionMode == null) {
+                            if (view.isHapticFeedbackEnabled()) {
+                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                            }
+
+                            mDialog.getWindow().getDecorView().startActionMode(new ActionModeCallback());
+                            getAdapter().setItemSelected(position);
+                            mActionMode.invalidate();
+                        }
                     }
                 }
-                mEditingList.removeAll(itemsToRemove);
-                list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
-                mSiteSettings.saveSettings();
-                return true;
-            }
-        });
-        list.setEmptyView(view.findViewById(R.id.empty_view));
-        list.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
+            )
+        );
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1119,7 +1124,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                         String entry = input.getText().toString();
                         if (!TextUtils.isEmpty(entry) && !mEditingList.contains(entry)) {
                             mEditingList.add(entry);
-                            list.setAdapter(new MultiSelectListViewAdapter(getActivity(), mEditingList));
+                            mAdapter = null;
+                            list.setAdapter(getAdapter());
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithCurrentBlogDetails(
                                     AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM);
@@ -1299,6 +1305,74 @@ public class SiteSettingsFragment extends PreferenceFragment
                             handleDeleteSiteError();
                         }
                     });
+        }
+    }
+
+    private MultiSelectRecyclerViewAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new MultiSelectRecyclerViewAdapter(getActivity(), mEditingList);
+        }
+
+        return mAdapter;
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_delete:
+                    SparseBooleanArray checkedItems = getAdapter().getItemsSelected();
+
+                    HashMap<String, Object> properties = new HashMap<>();
+                    properties.put("num_items_deleted", checkedItems.size());
+                    AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETED_LIST_ITEMS, properties);
+
+                    for (int i = checkedItems.size() - 1; i >= 0; i--) {
+                        final int index = checkedItems.keyAt(i);
+
+                        if (checkedItems.get(index)) {
+                            mEditingList.remove(index);
+                        }
+                    }
+
+                    mSiteSettings.saveSettings();
+                    mActionMode.finish();
+                    return true;
+                case R.id.menu_select_all:
+                    for (int i = 0; i < getAdapter().getItemCount(); i++) {
+                        getAdapter().setItemSelected(i);
+                    }
+
+                    mActionMode.invalidate();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.action_mode_status_bar_tint);
+            mActionMode = actionMode;
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.list_editor, menu);
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            WPActivityUtils.setStatusBarColor(mDialog.getWindow(), R.color.status_bar_tint);
+            getAdapter().removeItemsSelected();
+            mActionMode = null;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            actionMode.setTitle(getString(
+                    R.string.site_settings_list_editor_action_mode_title,
+                    getAdapter().getItemsSelected().size())
+            );
+            return true;
         }
     }
 }

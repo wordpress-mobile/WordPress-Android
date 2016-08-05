@@ -20,7 +20,7 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
-    <org.wordpress.android.ui.prefs.MultiSelectListView
+    <android.support.v7.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
