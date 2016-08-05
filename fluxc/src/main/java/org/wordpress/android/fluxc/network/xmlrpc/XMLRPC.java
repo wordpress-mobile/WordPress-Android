@@ -6,15 +6,11 @@ public enum XMLRPC {
     GET_USERS_BLOGS("wp.getUsersBlogs"),
     LIST_METHODS("system.listMethods"),
 
-    // TODO: Switch from metaWeblog to wp where feasible
-    DELETE_PAGE("wp.deletePage"),
     DELETE_POST("wp.deletePost"),
-    EDIT_POST("metaWeblog.editPost"),
-    GET_PAGE("wp.getPage"),
-    GET_PAGES("wp.getPages"),
-    GET_POST("metaWeblog.getPost"),
-    GET_POSTS("metaWeblog.getRecentPosts"),
-    NEW_POST("metaWeblog.newPost");
+    EDIT_POST("wp.editPost"),
+    GET_POST("wp.getPost"),
+    GET_POSTS("wp.getPosts"),
+    NEW_POST("wp.newPost");
 
     private final String mEndpoint;
 

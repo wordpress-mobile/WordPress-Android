@@ -197,7 +197,7 @@ public class PostStoreUnitTest {
         example.setLocalSiteId(6);
         example.setRemotePostId(5);
         example.setTitle("A test post");
-        example.setDescription("Bunch of content here");
+        example.setContent("Bunch of content here");
         return example;
     }
 
@@ -206,7 +206,7 @@ public class PostStoreUnitTest {
         example.setId(2);
         example.setLocalSiteId(6);
         example.setTitle("A test post");
-        example.setDescription("Bunch of content here");
+        example.setContent("Bunch of content here");
         example.setIsLocalDraft(true);
         return example;
     }
@@ -217,7 +217,7 @@ public class PostStoreUnitTest {
         example.setLocalSiteId(6);
         example.setRemotePostId(7);
         example.setTitle("A test post");
-        example.setDescription("Bunch of content here");
+        example.setContent("Bunch of content here");
         example.setIsLocallyChanged(true);
         return example;
     }
