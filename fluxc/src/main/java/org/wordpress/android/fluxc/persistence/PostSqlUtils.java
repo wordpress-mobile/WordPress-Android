@@ -25,6 +25,7 @@ public class PostSqlUtils {
         if (postResult.isEmpty()) {
             // insert
             WellSql.insert(post).asSingleTransaction(true).execute();
+            return 1;
         } else {
             // Update only if local changes for this post don't exist
             if (overwriteLocalChanges || !postResult.get(0).isLocallyChanged()) {
