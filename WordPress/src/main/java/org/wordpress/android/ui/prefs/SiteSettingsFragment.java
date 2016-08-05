@@ -18,7 +18,6 @@ import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseBooleanArray;
@@ -1074,9 +1073,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
 
         mAdapter = null;
-        final RecyclerView list = (RecyclerView) view.findViewById(android.R.id.list);
+        final EmptyViewRecyclerView list = (EmptyViewRecyclerView) view.findViewById(android.R.id.list);
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setAdapter(getAdapter());
+        list.setEmptyView(view.findViewById(R.id.empty_view));
         list.addOnItemTouchListener(
             new RecyclerViewItemClickListener(
                 getActivity(),

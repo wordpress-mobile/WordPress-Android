@@ -20,7 +20,7 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
+    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
