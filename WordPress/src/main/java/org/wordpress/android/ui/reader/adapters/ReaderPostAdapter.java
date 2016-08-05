@@ -410,8 +410,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgMore.setOnClickListener(null);
         }
 
-        // follow button always shows unless there's a site header (Discover, site preview)
-        boolean showFollowButton = !hasSiteHeader() && !mIsLoggedOutReader;
+        // follow button doesn't show for "Followed Sites" or when there's a site header (Discover, site preview)
+        boolean showFollowButton = !hasSiteHeader()
+                && !mIsLoggedOutReader
+                && !isFollowedSites();
         if (showFollowButton) {
             holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
             holder.followButton.setOnClickListener(new View.OnClickListener() {
@@ -558,6 +560,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
+    }
+
+    private boolean isFollowedSites() {
+        return mCurrentTag != null && mCurrentTag.isFollowedSites();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
