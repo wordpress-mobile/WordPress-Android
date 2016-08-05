@@ -120,9 +120,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mMediaAddFragment = (MediaAddFragment) fm.findFragmentById(R.id.mediaAddFragment);
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
-        mMediaGridFragment.setArguments(bundle);
 
         mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
         if (mMediaItemFragment != null) {
