@@ -15,10 +15,10 @@ import org.wordpress.android.R;
 import java.util.List;
 
 public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSelectRecyclerViewAdapter.ItemHolder> {
-    private List<String> mItems;
-    private SparseBooleanArray mItemsSelected;
-    private int mSelectedColor;
-    private int mUnselectedColor;
+    private final List<String> mItems;
+    private final SparseBooleanArray mItemsSelected;
+    private final int mSelectedColor;
+    private final int mUnselectedColor;
 
     public MultiSelectRecyclerViewAdapter(Context context, List<String> items) {
         this.mSelectedColor = ContextCompat.getColor(context, R.color.white);
@@ -28,8 +28,8 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
-        private TextView text;
-        private View container;
+        private final TextView text;
+        private final View container;
 
         public ItemHolder(View view) {
             super(view);
@@ -73,7 +73,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     }
 
     public void removeItemsSelected() {
-        mItemsSelected = new SparseBooleanArray();
+        mItemsSelected.clear();
         notifyDataSetChanged();
     }
 
