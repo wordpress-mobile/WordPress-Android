@@ -28,13 +28,13 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
+        private final LinearLayout container;
         private final TextView text;
-        private final View container;
 
         public ItemHolder(View view) {
             super(view);
-            this.text = (TextView) view.findViewById(R.id.text);
             this.container = (LinearLayout) view.findViewById(R.id.container);
+            this.text = (TextView) view.findViewById(R.id.text);
         }
     }
 
