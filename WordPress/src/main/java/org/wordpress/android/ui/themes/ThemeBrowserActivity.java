@@ -26,8 +26,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -35,6 +35,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.util.ArrayList;
@@ -69,8 +70,14 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
@@ -79,17 +86,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         if (savedInstanceState == null) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
-            mThemeBrowserFragment = new ThemeBrowserFragment();
-            mThemeSearchFragment = new ThemeSearchFragment();
+            mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
+            mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
             addBrowserFragment();
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
-        }
-        if (mSite == null) {
-            Toast.makeText(this, R.string.error_generic, Toast.LENGTH_LONG).show();
-            finish();
-            return;
         }
 
         setCurrentThemeFromDB();
@@ -370,7 +369,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void addSearchFragment() {
         if (mThemeSearchFragment == null) {
-            mThemeSearchFragment = new ThemeSearchFragment();
+            mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
         }
         showSearchToolbar();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -542,9 +541,5 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                 mThemeSearchFragment.setRefreshing(false);
             }
         }
-    }
-
-    public SiteModel getSelectedSite() {
-        return mSite;
     }
 }

@@ -85,12 +85,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                    ViewGroup.OnHierarchyChangeListener,
                    Dialog.OnDismissListener,
                    SiteSettingsInterface.SiteSettingsListener {
-
-    /**
-     * Use this argument to pass the {@link Integer} local blog ID to this fragment.
-     */
-    public static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
-
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.

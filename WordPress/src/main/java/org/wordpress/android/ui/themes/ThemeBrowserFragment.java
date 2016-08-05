@@ -27,7 +27,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -66,6 +68,32 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private ProgressBar mProgressBar;
+
+    private SiteModel mSite;
+
+    public static ThemeBrowserFragment newInstance(SiteModel site) {
+        ThemeBrowserFragment fragment = new ThemeBrowserFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -134,6 +162,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mGridView != null) {
             outState.putInt(BUNDLE_PAGE, mPage);
         }
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     public TextView getEmptyTextView() {
@@ -277,25 +306,17 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
     }
 
-    private SiteModel getSite() {
-        if (getActivity() instanceof ThemeBrowserActivity) {
-            ThemeBrowserActivity activity = (ThemeBrowserActivity) getActivity();
-            return activity.getSelectedSite();
-        }
-        return null;
-    }
-
     /**
      * Fetch themes for a given ThemeFilterType.
      *
      * @return a db Cursor or null if current blog is null
      */
     protected Cursor fetchThemes(int position) {
-        if (getSite() == null) {
+        if (mSite == null) {
             return null;
         }
 
-        String blogId = String.valueOf(getSite().getSiteId());
+        String blogId = String.valueOf(mSite.getSiteId());
         switch (position) {
             case THEME_FILTER_PREMIUM_INDEX:
                 return WordPress.wpDB.getThemesPremium(blogId);

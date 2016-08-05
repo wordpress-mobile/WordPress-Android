@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -14,7 +13,9 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * A fragment for display the results of a theme search
@@ -25,13 +26,19 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
-    public static ThemeSearchFragment newInstance() {
-        return new ThemeSearchFragment();
-    }
-
     private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+
+    private SiteModel mSite;
+
+    public static ThemeSearchFragment newInstance(SiteModel site) {
+        ThemeSearchFragment fragment = new ThemeSearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,16 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         setHasOptionsMenu(true);
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+        }
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
         }
     }
 
@@ -50,11 +67,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveState(outState);
-    }
-
-    private void saveState(Bundle outState) {
         outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
+        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
     }
 
     @Override
@@ -140,7 +154,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes(int position) {
-        String blogId = String.valueOf(getSelectedSite().getSiteId());
+        String blogId = String.valueOf(mSite.getSiteId());
         return WordPress.wpDB.getThemes(blogId, mLastSearch);
     }
 
@@ -151,15 +165,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
             refreshView(getSpinnerPosition());
-        }
-    }
-
-    private @NonNull SiteModel getSelectedSite() {
-        if (getActivity() instanceof ThemeBrowserActivity) {
-            return ((ThemeBrowserActivity) getActivity()).getSelectedSite();
-        } else {
-            // Crash
-            throw new AssertionError("Wrong fragment's parent activity");
         }
     }
 }
