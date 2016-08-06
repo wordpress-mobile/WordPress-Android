@@ -310,7 +310,7 @@ public class PostStore extends Store {
         } else if (actionType == PostAction.PUSH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                // TODO: Implement REST API post delete
+                // TODO: Implement REST API post push
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.pushPost(payload.post, payload.site);
@@ -338,6 +338,11 @@ public class PostStore extends Store {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.deletePost(payload.post, payload.site);
             }
+        } else if (actionType == PostAction.DELETED_POST) {
+            // Handle any necessary changes to post status in the db here
+            OnPostChanged onPostChanged = new OnPostChanged(0);
+            onPostChanged.causeOfChange = PostAction.DELETE_POST;
+            emitChange(onPostChanged);
         } else if (actionType == PostAction.REMOVE_POST) {
             PostSqlUtils.deletePost((PostModel) action.getPayload());
         }
