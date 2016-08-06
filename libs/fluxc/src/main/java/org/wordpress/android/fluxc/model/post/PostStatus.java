@@ -1,5 +1,6 @@
-package org.wordpress.android.fluxc.model;
+package org.wordpress.android.fluxc.model.post;
 
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.utils.DateTimeUtils;
 
 import java.util.Date;

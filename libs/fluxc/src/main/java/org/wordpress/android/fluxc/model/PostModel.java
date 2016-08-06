@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
