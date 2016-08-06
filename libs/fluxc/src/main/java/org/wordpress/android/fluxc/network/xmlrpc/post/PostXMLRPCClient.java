@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.utils.DateTimeUtils;
@@ -37,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PostXMLRPCClient extends BaseXMLRPCClient {
-    public static final int NUM_POSTS_TO_REQUEST = 20;
-
     public PostXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
@@ -77,7 +76,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         Map<String, Object> contentStruct = new HashMap<>();
 
-        contentStruct.put("number", NUM_POSTS_TO_REQUEST);
+        contentStruct.put("number", PostStore.NUM_POSTS_PER_FETCH);
         contentStruct.put("offset", offset);
 
         if (getPages) {
@@ -95,7 +94,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object[] response) {
                         boolean canLoadMore = false;
-                        if (response != null && response.length > 0) {
+                        if (response != null && response.length == PostStore.NUM_POSTS_PER_FETCH) {
                             canLoadMore = true;
                         }
 

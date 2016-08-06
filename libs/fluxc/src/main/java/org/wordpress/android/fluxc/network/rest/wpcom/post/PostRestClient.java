@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.utils.NetworkUtils;
 import org.wordpress.android.util.AppLog;
@@ -41,6 +42,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         Map<String, String> params = new HashMap<>();
 
+        params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
         if (getPages) {
             params.put("type", "page");
         }
@@ -61,9 +63,11 @@ public class PostRestClient extends BaseWPComRestClient {
                             post.setLocalSiteId(site.getId());
                             posts.add(post);
                         }
-                        // TODO: report canLoadMore properly once offset is implemented
+
+                        boolean canLoadMore = posts.size() == PostStore.NUM_POSTS_PER_FETCH;
+
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
-                                offset > 0, false);
+                                offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
@@ -79,7 +83,6 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
-        // TODO: Are author, short_URL, guid, or sticky needed?
         PostModel post = new PostModel();
         post.setRemotePostId(from.ID);
         post.setRemoteSiteId(from.site_ID);

@@ -27,6 +27,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostStore extends Store {
+    public static final int NUM_POSTS_PER_FETCH = 20;
+
     public static class FetchPostsPayload implements Payload {
         public SiteModel site;
         public boolean loadMore;
