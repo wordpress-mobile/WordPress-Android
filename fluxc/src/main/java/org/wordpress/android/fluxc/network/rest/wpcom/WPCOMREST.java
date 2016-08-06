@@ -11,7 +11,6 @@ public enum WPCOMREST {
 
     // Posts
     POSTS("/sites/$site/posts/"),
-    // TODO: Collapse into one?
     POST_NEW("/sites/$site/posts/new"),
     POST_DELETE("/sites/$site/posts/$post_ID/delete"),
 
