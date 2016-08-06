@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.model;
 
-import android.text.TextUtils;
-
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -13,6 +11,11 @@ import org.json.JSONObject;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 @Table
 public class PostModel implements Identifiable, Payload {
@@ -26,11 +29,11 @@ public class PostModel implements Identifiable, Payload {
     @Column private String mTitle;
     @Column private String mContent;
     @Column private String mDateCreated; // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
-    @Column private String mCategories;
+    @Column private String mCategoryIds;
     @Column private String mCustomFields;
     @Column private String mLink;
     @Column private String mExcerpt;
-    @Column private String mKeywords;
+    @Column private String mTagIds;
     @Column private String mStatus;
     @Column private String mPassword;
     @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
@@ -118,12 +121,20 @@ public class PostModel implements Identifiable, Payload {
         mDateCreated = dateCreated;
     }
 
-    public String getCategories() {
-        return StringUtils.notNullStr(mCategories);
+    public String getCategoryIds() {
+        return StringUtils.notNullStr(mCategoryIds);
     }
 
-    public void setCategories(String categories) {
-        mCategories = categories;
+    public void setCategoryIds(String categoryIds) {
+        mCategoryIds = categoryIds;
+    }
+
+    public List<Long> getCategoryIdList() {
+        return taxonomyIdStringToList(mCategoryIds);
+    }
+
+    public void setCategoryIdList(List<Long> categories) {
+        mCategoryIds = taxonomyIdListToString(categories);
     }
 
     public String getCustomFields() {
@@ -150,12 +161,20 @@ public class PostModel implements Identifiable, Payload {
         mExcerpt = excerpt;
     }
 
-    public String getKeywords() {
-        return StringUtils.notNullStr(mKeywords);
+    public String getTagIds() {
+        return StringUtils.notNullStr(mTagIds);
     }
 
-    public void setKeywords(String keywords) {
-        mKeywords = keywords;
+    public void setTagIds(String tagIds) {
+        mTagIds = tagIds;
+    }
+
+    public List<Long> getTagIdList() {
+        return taxonomyIdStringToList(mTagIds);
+    }
+
+    public void setTagIdList(List<Long> tags) {
+        mTagIds = taxonomyIdListToString(tags);
     }
 
     public String getStatus() {
@@ -339,15 +358,15 @@ public class PostModel implements Identifiable, Payload {
                 getContent() != null ? getContent().equals(otherPost.getContent()) : otherPost.getContent() == null &&
                 getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
                         otherPost.getDateCreated() == null &&
-                getCategories() != null ? getCategories().equals(otherPost.getCategories()) :
-                        otherPost.getCategories() == null &&
+                getCategoryIds() != null ? getCategoryIds().equals(otherPost.getCategoryIds()) :
+                        otherPost.getCategoryIds() == null &&
                 getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
                         otherPost.getCustomFields() == null &&
                 getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null &&
                 getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) :
                         otherPost.getExcerpt() == null &&
-                getKeywords() != null ? getKeywords().equals(otherPost.getKeywords()) :
-                        otherPost.getKeywords() == null &&
+                getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) :
+                        otherPost.getTagIds() == null &&
                 getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null &&
                 getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
                         otherPost.getPassword() == null &&
@@ -356,28 +375,6 @@ public class PostModel implements Identifiable, Payload {
                 getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null &&
                 getParentTitle() != null ? getParentTitle().equals(otherPost.getParentTitle()) :
                         otherPost.getParentTitle() == null);
-    }
-
-    public JSONArray getJSONCategories() {
-        JSONArray jArray = null;
-        if (mCategories == null) {
-            mCategories = "[]";
-        }
-        try {
-            mCategories = StringUtils.unescapeHTML(mCategories);
-            if (TextUtils.isEmpty(mCategories)) {
-                jArray = new JSONArray();
-            } else {
-                jArray = new JSONArray(mCategories);
-            }
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-        }
-        return jArray;
-    }
-
-    public void setJSONCategories(JSONArray categories) {
-        this.mCategories = categories.toString();
     }
 
     public JSONArray getJSONCustomFields() {
@@ -424,5 +421,33 @@ public class PostModel implements Identifiable, Payload {
 
     public boolean featuredImageHasChanged() {
         return (mLastKnownRemoteFeaturedImageId != mFeaturedImageId);
+    }
+
+    private static List<Long> taxonomyIdStringToList(String ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        String[] stringArray = ids.split(",");
+        List<Long> longList = new ArrayList<>();
+        for (String categoryString : stringArray) {
+            longList.add(Long.parseLong(categoryString));
+        }
+        return longList;
+    }
+
+    private static String taxonomyIdListToString(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return "";
+        }
+        StringBuilder strbul  = new StringBuilder();
+        Iterator<Long> iter = ids.iterator();
+        while(iter.hasNext())
+        {
+            strbul.append(iter.next());
+            if(iter.hasNext()){
+                strbul.append(",");
+            }
+        }
+       return strbul.toString();
     }
 }
