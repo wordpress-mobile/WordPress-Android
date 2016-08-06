@@ -17,10 +17,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.utils.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,10 +38,17 @@ public class PostRestClient extends BaseWPComRestClient {
 
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         String url = WPCOMREST.POSTS.getUrlV1WithSiteId(site.getSiteId());
-        // TODO: Add offset to request params
+
+        Map<String, String> params = new HashMap<>();
+
         if (getPages) {
-            url += "?type=page";
+            params.put("type", "page");
         }
+        if (offset > 0) {
+            params.put("offset", String.valueOf(offset));
+        }
+        // TODO: Drop this when we add support for GET params to GsonRequest
+        url = NetworkUtils.addParamsToUrl(url, params);
 
         final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Request.Method.GET,
                 url, null, PostsResponse.class,
