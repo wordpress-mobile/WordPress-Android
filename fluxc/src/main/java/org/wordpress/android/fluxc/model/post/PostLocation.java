@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model;
+package org.wordpress.android.fluxc.model.post;
 
 import java.io.Serializable;
 
