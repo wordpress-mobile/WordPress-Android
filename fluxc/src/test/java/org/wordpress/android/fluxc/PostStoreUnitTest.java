@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.fluxc.post.PostTestUtils;
 import org.wordpress.android.fluxc.store.PostStore;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +56,7 @@ public class PostStoreUnitTest {
 
     @Test
     public void testInsertWithLocalChanges() {
-        PostModel postModel = generateSampleUploadedPost();
+        PostModel postModel = PostTestUtils.generateSampleUploadedPost();
         postModel.setIsLocallyChanged(true);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
@@ -71,7 +72,7 @@ public class PostStoreUnitTest {
 
     @Test
     public void testInsertWithoutLocalChanges() {
-        PostModel postModel = generateSampleUploadedPost();
+        PostModel postModel = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
 
         String newTitle = "A different title";
@@ -89,10 +90,10 @@ public class PostStoreUnitTest {
 
     @Test
     public void testGetPostsForSite() {
-        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
 
-        PostModel uploadedPost2 = generateSampleUploadedPost();
+        PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
         uploadedPost2.setLocalSiteId(8);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
@@ -113,10 +114,10 @@ public class PostStoreUnitTest {
         SiteModel site = new SiteModel();
         site.setId(6);
 
-        PostModel uploadedPost = generateSampleUploadedPost();
+        PostModel uploadedPost = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost);
 
-        PostModel localDraft = generateSampleLocalDraftPost();
+        PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
 
         assertEquals(2, mPostStore.getPostsCount());
@@ -127,7 +128,7 @@ public class PostStoreUnitTest {
 
     @Test
     public void testGetPostByLocalId() {
-        PostModel post = generateSampleLocalDraftPost();
+        PostModel post = PostTestUtils.generateSampleLocalDraftPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
 
         assertEquals(post, mPostStore.getPostByLocalPostId(post.getId()));
@@ -138,18 +139,18 @@ public class PostStoreUnitTest {
         SiteModel site = new SiteModel();
         site.setId(6);
 
-        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
 
-        PostModel uploadedPost2 = generateSampleUploadedPost();
+        PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
         uploadedPost2.setId(4);
         uploadedPost2.setRemotePostId(9);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
-        PostModel localDraft = generateSampleLocalDraftPost();
+        PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
 
-        PostModel locallyChangedPost = generateSampleLocallyChangedPost();
+        PostModel locallyChangedPost = PostTestUtils.generateSampleLocallyChangedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
 
         assertEquals(4, mPostStore.getPostsCountForSite(site));
@@ -164,18 +165,18 @@ public class PostStoreUnitTest {
         SiteModel site = new SiteModel();
         site.setId(6);
 
-        PostModel uploadedPost1 = generateSampleUploadedPost();
+        PostModel uploadedPost1 = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost1);
 
-        PostModel uploadedPost2 = generateSampleUploadedPost();
+        PostModel uploadedPost2 = PostTestUtils.generateSampleUploadedPost();
         uploadedPost2.setId(4);
         uploadedPost2.setRemotePostId(9);
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(uploadedPost2);
 
-        PostModel localDraft = generateSampleLocalDraftPost();
+        PostModel localDraft = PostTestUtils.generateSampleLocalDraftPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(localDraft);
 
-        PostModel locallyChangedPost = generateSampleLocallyChangedPost();
+        PostModel locallyChangedPost = PostTestUtils.generateSampleLocallyChangedPost();
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(locallyChangedPost);
 
         assertEquals(4, mPostStore.getPostsCountForSite(site));
@@ -221,36 +222,5 @@ public class PostStoreUnitTest {
 
         assertEquals(false, mPostStore.getPosts().get(0).isPage());
         assertEquals(true, mPostStore.getPosts().get(1).isPage());
-    }
-
-    public PostModel generateSampleUploadedPost() {
-        PostModel example = new PostModel();
-        example.setId(1);
-        example.setLocalSiteId(6);
-        example.setRemotePostId(5);
-        example.setTitle("A test post");
-        example.setContent("Bunch of content here");
-        return example;
-    }
-
-    public PostModel generateSampleLocalDraftPost() {
-        PostModel example = new PostModel();
-        example.setId(2);
-        example.setLocalSiteId(6);
-        example.setTitle("A test post");
-        example.setContent("Bunch of content here");
-        example.setIsLocalDraft(true);
-        return example;
-    }
-
-    public PostModel generateSampleLocallyChangedPost() {
-        PostModel example = new PostModel();
-        example.setId(3);
-        example.setLocalSiteId(6);
-        example.setRemotePostId(7);
-        example.setTitle("A test post");
-        example.setContent("Bunch of content here");
-        example.setIsLocallyChanged(true);
-        return example;
     }
 }

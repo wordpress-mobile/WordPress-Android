@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import android.support.annotation.NonNull;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -129,6 +131,7 @@ public class PostModel implements Identifiable, Payload {
         mCategoryIds = categoryIds;
     }
 
+    @NonNull
     public List<Long> getCategoryIdList() {
         return taxonomyIdStringToList(mCategoryIds);
     }
@@ -169,6 +172,7 @@ public class PostModel implements Identifiable, Payload {
         mTagIds = tagIds;
     }
 
+    @NonNull
     public List<Long> getTagIdList() {
         return taxonomyIdStringToList(mTagIds);
     }
@@ -339,7 +343,7 @@ public class PostModel implements Identifiable, Payload {
 
         PostModel otherPost = (PostModel) other;
 
-        return (getId() == otherPost.getId() &&
+        return getId() == otherPost.getId() &&
                 getLocalSiteId() == otherPost.getLocalSiteId() &&
                 getRemoteSiteId() == otherPost.getRemoteSiteId() &&
                 getRemotePostId() == otherPost.getRemotePostId() &&
@@ -354,26 +358,27 @@ public class PostModel implements Identifiable, Payload {
                 getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost() &&
                 getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost() &&
                 getParentId() == otherPost.getParentId() &&
-                getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null &&
-                getContent() != null ? getContent().equals(otherPost.getContent()) : otherPost.getContent() == null &&
-                getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
-                        otherPost.getDateCreated() == null &&
-                getCategoryIds() != null ? getCategoryIds().equals(otherPost.getCategoryIds()) :
-                        otherPost.getCategoryIds() == null &&
-                getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
-                        otherPost.getCustomFields() == null &&
-                getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null &&
-                getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) :
-                        otherPost.getExcerpt() == null &&
-                getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) :
-                        otherPost.getTagIds() == null &&
-                getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null &&
-                getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
-                        otherPost.getPassword() == null &&
-                getPostFormat() != null ? getPostFormat().equals(otherPost.getPostFormat()) :
-                        otherPost.getPostFormat() == null &&
-                getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null &&
-                getParentTitle() != null ? getParentTitle().equals(otherPost.getParentTitle()) :
+                (getTitle() != null ? getTitle().equals(otherPost.getTitle()) : otherPost.getTitle() == null) &&
+                (getContent() != null ? getContent().equals(otherPost.getContent()) :
+                        otherPost.getContent() == null) &&
+                (getDateCreated() != null ? getDateCreated().equals(otherPost.getDateCreated()) :
+                        otherPost.getDateCreated() == null) &&
+                (getCategoryIds() != null ? getCategoryIds().equals(otherPost.getCategoryIds()) :
+                        otherPost.getCategoryIds() == null) &&
+                (getCustomFields() != null ? getCustomFields().equals(otherPost.getCustomFields()) :
+                        otherPost.getCustomFields() == null) &&
+                (getLink() != null ? getLink().equals(otherPost.getLink()) : otherPost.getLink() == null) &&
+                (getExcerpt() != null ? getExcerpt().equals(otherPost.getExcerpt()) :
+                        otherPost.getExcerpt() == null) &&
+                (getTagIds() != null ? getTagIds().equals(otherPost.getTagIds()) :
+                        otherPost.getTagIds() == null) &&
+                (getStatus() != null ? getStatus().equals(otherPost.getStatus()) : otherPost.getStatus() == null) &&
+                (getPassword() != null ? getPassword().equals(otherPost.getPassword()) :
+                        otherPost.getPassword() == null) &&
+                (getPostFormat() != null ? getPostFormat().equals(otherPost.getPostFormat()) :
+                        otherPost.getPostFormat() == null) &&
+                (getSlug() != null ? getSlug().equals(otherPost.getSlug()) : otherPost.getSlug() == null) &&
+                (getParentTitle() != null ? getParentTitle().equals(otherPost.getParentTitle()) :
                         otherPost.getParentTitle() == null);
     }
 
