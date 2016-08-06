@@ -30,6 +30,8 @@ public enum PostAction implements IAction {
     @Action(payloadType = RemotePostPayload.class)
     DELETE_POST,
     @Action(payloadType = PostModel.class)
+    DELETED_POST,
+    @Action(payloadType = PostModel.class)
     REMOVE_POST
 }
 

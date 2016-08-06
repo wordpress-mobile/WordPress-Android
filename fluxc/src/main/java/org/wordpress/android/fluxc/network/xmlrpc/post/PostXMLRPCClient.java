@@ -173,7 +173,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
                 new Listener() {
                     @Override
-                    public void onResponse(Object response) {}
+                    public void onResponse(Object response) {
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(post));
+                    }
                 },
                 new ErrorListener() {
                     @Override
