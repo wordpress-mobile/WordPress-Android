@@ -23,6 +23,23 @@ public class SiteSqlUtils {
                 .getAsModel();
     }
 
+    public static List<SiteModel> getAllSitesMatchingUrlOrNameWith(String field, boolean value, String searchString) {
+        // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
+        return WellSql.select(SiteModel.class).where()
+                .equals(field, value)
+                .beginGroup() // AND ( x OR x )
+                .contains(SiteModelTable.URL, searchString)
+                .or().contains(SiteModelTable.NAME, searchString)
+                .endGroup().endWhere().getAsModel();
+    }
+
+    public static List<SiteModel> getAllSitesMatchingUrlOrName(String searchString) {
+        return WellSql.select(SiteModel.class).where()
+                .contains(SiteModelTable.URL, searchString)
+                .or().contains(SiteModelTable.NAME, searchString)
+                .endWhere().getAsModel();
+    }
+
     public static int getNumberOfSitesWith(String field, Object value) {
         return WellSql.select(SiteModel.class)
                 .where().equals(field, value).endWhere()
