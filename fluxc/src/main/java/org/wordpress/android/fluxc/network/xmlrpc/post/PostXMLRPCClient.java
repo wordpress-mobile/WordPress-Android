@@ -126,6 +126,185 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
         }
 
+        Map<String, Object> contentStruct = postModelToContentStruct(post);
+
+        List<Object> params = new ArrayList<>(5);
+        params.add(site.getDotOrgSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        if (!post.isLocalDraft()) {
+            params.add(post.getRemotePostId());
+        }
+        params.add(contentStruct);
+
+        final XMLRPC method = post.isLocalDraft() ? XMLRPC.NEW_POST : XMLRPC.EDIT_POST;
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
+                new Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
+                            post.setRemotePostId(Integer.valueOf((String) response));
+                        }
+                        post.setIsLocalDraft(false);
+                        post.setIsLocallyChanged(false);
+
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                    }
+                });
+
+        add(request);
+    }
+
+    public void deletePost(final PostModel post, final SiteModel site) {
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getDotOrgSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(post.getRemotePostId());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
+                new Listener() {
+                    @Override
+                    public void onResponse(Object response) {}
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Implement lower-level catching in BaseXMLRPCClient
+                    }
+                });
+
+        add(request);
+    }
+
+    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site, boolean isPage) {
+        List<Map<?, ?>> postsList = new ArrayList<>();
+        for (Object responseObject : response) {
+            Map<?, ?> postMap = (Map<?, ?>) responseObject;
+            postsList.add(postMap);
+        }
+
+        PostsModel posts = new PostsModel();
+        PostModel post;
+
+        for (Object postObject : postsList) {
+            post = postResponseObjectToPostModel(postObject, site, isPage);
+            if (post != null) {
+                posts.add(post);
+            }
+        }
+
+        if (posts.isEmpty()) {
+            return null;
+        }
+
+        return posts;
+    }
+
+    private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site, boolean isPage) {
+        // Sanity checks
+        if (!(postObject instanceof Map)) {
+            return null;
+        }
+
+        Map<?, ?> postMap = (Map<?, ?>) postObject;
+        PostModel post = new PostModel();
+
+        String postID = MapUtils.getMapStr(postMap, "post_id");
+        if (TextUtils.isEmpty(postID)) {
+            // If we don't have a post or page ID, move on
+            return null;
+        }
+
+        post.setLocalSiteId(site.getId());
+        post.setRemotePostId(Integer.valueOf(postID));
+        post.setTitle(MapUtils.getMapStr(postMap, "post_title"));
+
+        Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");
+        String timeAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
+        post.setDateCreated(timeAsIso8601);
+
+        post.setContent(MapUtils.getMapStr(postMap, "post_content"));
+        post.setLink(MapUtils.getMapStr(postMap, "link"));
+
+        Object[] terms = (Object[]) postMap.get("terms");
+        List<Long> categoryIds = new ArrayList<>();
+        List<Long> tagIds = new ArrayList<>();
+        for (Object term : terms) {
+            if (!(term instanceof Map)) {
+                continue;
+            }
+            Map<?, ?> termMap = (Map<?, ?>) term;
+            String taxonomy = MapUtils.getMapStr(termMap, "taxonomy");
+            switch (taxonomy) {
+                case "category":
+                    categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
+                    break;
+                case "post_tag":
+                    tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
+                    break;
+            }
+        }
+        post.setCategoryIdList(categoryIds);
+        post.setTagIdList(tagIds);
+
+        Object[] custom_fields = (Object[]) postMap.get("custom_fields");
+        JSONArray jsonCustomFieldsArray = new JSONArray();
+        if (custom_fields != null) {
+            PostLocation postLocation = new PostLocation();
+            for (Object custom_field : custom_fields) {
+                jsonCustomFieldsArray.put(custom_field.toString());
+                // Update geo_long and geo_lat from custom fields
+                if (!(custom_field instanceof Map)) {
+                    continue;
+                }
+                Map<?, ?> customField = (Map<?, ?>) custom_field;
+                if (customField.get("key") != null && customField.get("value") != null) {
+                    if (customField.get("key").equals("geo_longitude"))
+                        postLocation.setLongitude(Long.valueOf(customField.get("value").toString()));
+                    if (customField.get("key").equals("geo_latitude"))
+                        postLocation.setLatitude(Long.valueOf(customField.get("value").toString()));
+                }
+            }
+            if (postLocation.isValid()) {
+                post.setPostLocation(postLocation);
+            }
+        }
+        post.setCustomFields(jsonCustomFieldsArray.toString());
+
+        post.setExcerpt(MapUtils.getMapStr(postMap, "post_excerpt"));
+
+        post.setPassword(MapUtils.getMapStr(postMap, "post_password"));
+        post.setStatus(MapUtils.getMapStr(postMap, "post_status"));
+
+        if (isPage) {
+            post.setIsPage(true);
+            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
+            post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
+            post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
+        } else {
+            // Extract featured image ID from post_thumbnail struct
+            Object featuredImageObject = postMap.get("post_thumbnail");
+            if (featuredImageObject instanceof Map) {
+                Map<?, ?> featuredImageMap = (Map<?, ?>) featuredImageObject;
+                post.setFeaturedImageId(MapUtils.getMapInt(featuredImageMap, "attachment_id"));
+            }
+
+            post.setPostFormat(MapUtils.getMapStr(postMap, "post_format"));
+        }
+
+        return post;
+    }
+
+    private static Map<String, Object> postModelToContentStruct(PostModel post) {
         Map<String, Object> contentStruct = new HashMap<>();
 
         // Post format
@@ -235,179 +414,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         contentStruct.put("post_password", post.getPassword());
 
-        List<Object> params = new ArrayList<>(5);
-        params.add(site.getDotOrgSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
-        if (!post.isLocalDraft()) {
-            params.add(post.getRemotePostId());
-        }
-        params.add(contentStruct);
-
-        final XMLRPC method = post.isLocalDraft() ? XMLRPC.NEW_POST : XMLRPC.EDIT_POST;
-
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
-                new Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
-                            post.setRemotePostId(Integer.valueOf((String) response));
-                        }
-                        post.setIsLocalDraft(false);
-                        post.setIsLocallyChanged(false);
-
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
-                    }
-                },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
-                    }
-                });
-
-        add(request);
-    }
-
-    public void deletePost(final PostModel post, final SiteModel site) {
-        List<Object> params = new ArrayList<>(4);
-        params.add(site.getDotOrgSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
-        params.add(post.getRemotePostId());
-
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
-                new Listener() {
-                    @Override
-                    public void onResponse(Object response) {}
-                },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Implement lower-level catching in BaseXMLRPCClient
-                    }
-                });
-
-        add(request);
-    }
-
-    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site, boolean isPage) {
-        List<Map<?, ?>> postsList = new ArrayList<>();
-        for (Object responseObject : response) {
-            Map<?, ?> postMap = (Map<?, ?>) responseObject;
-            postsList.add(postMap);
-        }
-
-        PostsModel posts = new PostsModel();
-        PostModel post;
-
-        for (Object postObject : postsList) {
-            post = postResponseObjectToPostModel(postObject, site, isPage);
-            if (post != null) {
-                posts.add(post);
-            }
-        }
-
-        if (posts.isEmpty()) {
-            return null;
-        }
-
-        return posts;
-    }
-
-    private PostModel postResponseObjectToPostModel(Object postObject, SiteModel site, boolean isPage) {
-        // Sanity checks
-        if (!(postObject instanceof Map)) {
-            return null;
-        }
-
-        Map<?, ?> postMap = (Map<?, ?>) postObject;
-        PostModel post = new PostModel();
-
-        String postID = MapUtils.getMapStr(postMap, "post_id");
-        if (TextUtils.isEmpty(postID)) {
-            // If we don't have a post or page ID, move on
-            return null;
-        }
-
-        post.setLocalSiteId(site.getId());
-        post.setRemotePostId(Integer.valueOf(postID));
-        post.setTitle(MapUtils.getMapStr(postMap, "post_title"));
-
-        Date dateCreatedGmt = MapUtils.getMapDate(postMap, "post_date_gmt");
-        String timeAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
-        post.setDateCreated(timeAsIso8601);
-
-        post.setContent(MapUtils.getMapStr(postMap, "post_content"));
-        post.setLink(MapUtils.getMapStr(postMap, "link"));
-
-        Object[] terms = (Object[]) postMap.get("terms");
-        List<Long> categoryIds = new ArrayList<>();
-        List<Long> tagIds = new ArrayList<>();
-        for (Object term : terms) {
-            if (!(term instanceof Map)) {
-                continue;
-            }
-            Map<?, ?> termMap = (Map<?, ?>) term;
-            String taxonomy = MapUtils.getMapStr(termMap, "taxonomy");
-            switch (taxonomy) {
-                case "category":
-                    categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
-                    break;
-                case "post_tag":
-                    tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
-                    break;
-            }
-        }
-        post.setCategoryIdList(categoryIds);
-        post.setTagIdList(tagIds);
-
-        Object[] custom_fields = (Object[]) postMap.get("custom_fields");
-        JSONArray jsonCustomFieldsArray = new JSONArray();
-        if (custom_fields != null) {
-            PostLocation postLocation = new PostLocation();
-            for (Object custom_field : custom_fields) {
-                jsonCustomFieldsArray.put(custom_field.toString());
-                // Update geo_long and geo_lat from custom fields
-                if (!(custom_field instanceof Map)) {
-                    continue;
-                }
-                Map<?, ?> customField = (Map<?, ?>) custom_field;
-                if (customField.get("key") != null && customField.get("value") != null) {
-                    if (customField.get("key").equals("geo_longitude"))
-                        postLocation.setLongitude(Long.valueOf(customField.get("value").toString()));
-                    if (customField.get("key").equals("geo_latitude"))
-                        postLocation.setLatitude(Long.valueOf(customField.get("value").toString()));
-                }
-            }
-            if (postLocation.isValid()) {
-                post.setPostLocation(postLocation);
-            }
-        }
-        post.setCustomFields(jsonCustomFieldsArray.toString());
-
-        post.setExcerpt(MapUtils.getMapStr(postMap, "post_excerpt"));
-
-        post.setPassword(MapUtils.getMapStr(postMap, "post_password"));
-        post.setStatus(MapUtils.getMapStr(postMap, "post_status"));
-
-        if (isPage) {
-            post.setIsPage(true);
-            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
-            post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
-            post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
-        } else {
-            // Extract featured image ID from post_thumbnail struct
-            Object featuredImageObject = postMap.get("post_thumbnail");
-            if (featuredImageObject instanceof Map) {
-                Map<?, ?> featuredImageMap = (Map<?, ?>) featuredImageObject;
-                post.setFeaturedImageId(MapUtils.getMapInt(featuredImageMap, "attachment_id"));
-            }
-
-            post.setPostFormat(MapUtils.getMapStr(postMap, "post_format"));
-        }
-
-        return post;
+        return contentStruct;
     }
 }
