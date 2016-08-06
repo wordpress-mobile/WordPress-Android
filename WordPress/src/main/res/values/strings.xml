@@ -1125,8 +1125,6 @@
     <string name="reader_label_comment_count_single">One comment</string>
     <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
-    <string name="reader_label_word_count">%,d words</string>
-    <string name="reader_label_reading_time_in_minutes">%,d min</string>
     <string name="reader_label_follow_count">%,d followers</string>
     <string name="reader_label_submit_comment">SEND</string>
     <string name="reader_label_gap_marker">Load more posts</string>
@@ -1428,7 +1426,7 @@
     <string name="people_empty_list_filtered_followers">You don\'t have any followers yet.</string>
     <string name="people_empty_list_filtered_email_followers">You don\'t have any email followers yet.</string>
     <string name="people_empty_list_filtered_viewers">You don\'t have any viewers yet.</string>
-    <string name="people_fetching">Fetching users..</string>
+    <string name="people_fetching">Fetching users…</string>
     <string name="title_follower">Follower</string>
     <string name="title_email_follower">Email Follower</string>
 

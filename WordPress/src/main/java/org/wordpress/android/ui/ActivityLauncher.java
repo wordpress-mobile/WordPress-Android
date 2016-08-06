@@ -11,9 +11,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.optimizely.Optimizely;
-import com.optimizely.Variable.LiveVariable;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -57,13 +54,11 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 
 public class ActivityLauncher {
-    private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
-    private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
     public static final String EXTRA_SITE = "EXTRA_SITE";
 
-    public static void showSitePickerForResult(Activity activity, SiteModel selectedSite) {
+    public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, selectedSite.getId());
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.activity_slide_in_from_left,
@@ -283,7 +278,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (isMagicLinkEnabledVariable.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
+        if (shouldShowMagicLinksLogin(activity)) {
             Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
             activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
         } else {
@@ -342,5 +337,11 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static boolean shouldShowMagicLinksLogin(Activity activity) {
+        boolean isMagicLinksEnabled = false;
+
+        return isMagicLinksEnabled && WPActivityUtils.isEmailClientAvailable(activity);
     }
 }
