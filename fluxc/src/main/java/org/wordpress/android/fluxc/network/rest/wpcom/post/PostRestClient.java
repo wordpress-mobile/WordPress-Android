@@ -19,6 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -89,9 +92,21 @@ public class PostRestClient extends BaseWPComRestClient {
             post.setLongitude(from.geo.longitude);
         }
 
-        // TODO: Add CategoryModel for tags and categories, and null check
-        //post.setKeywords(from.tags);
-        //post.setCategories(from.categories);
+        if (from.categories != null) {
+            List<Long> categoryIds = new ArrayList<>();
+            for (PostWPComRestResponse.Taxonomy value : from.categories.values()) {
+                categoryIds.add(value.ID);
+            }
+            post.setCategoryIdList(categoryIds);
+        }
+
+        if (from.tags != null) {
+            List<Long> tagIds = new ArrayList<>();
+            for (PostWPComRestResponse.Taxonomy value : from.tags.values()) {
+                tagIds.add(value.ID);
+            }
+            post.setTagIdList(tagIds);
+        }
 
         if (from.capabilities != null) {
             post.setHasCapabilityPublishPost(from.capabilities.publish_post);

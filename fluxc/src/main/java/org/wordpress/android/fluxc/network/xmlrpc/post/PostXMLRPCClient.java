@@ -127,8 +127,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             post.setStatus(PostStatus.toString(PostStatus.PUBLISHED));
         }
 
-        // TODO: Implement categories
-
         Map<String, Object> contentStruct = new HashMap<>();
 
         // Post format
@@ -163,10 +161,22 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         content = content.replaceAll("\uFFFC", "");
 
         contentStruct.put("post_content", content);
-        if (!post.isPage()) {
-            // TODO: Implement keywords
 
-            // TODO: Implement categories
+        // Handle taxonomies (currently supporting categories and tags)
+        Map<Object, Object> terms = new HashMap<>();
+
+        if (!post.getCategoryIdList().isEmpty()) {
+            terms.put("category", post.getCategoryIdList().toArray());
+        }
+
+        if (!post.isPage()) {
+            if (!post.getTagIdList().isEmpty()) {
+                terms.put("post_tag", post.getTagIdList().toArray());
+            }
+        }
+
+        if (!terms.isEmpty()) {
+            contentStruct.put("terms", terms);
         }
 
         contentStruct.put("post_excerpt", post.getExcerpt());
@@ -277,7 +287,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
-                        System.out.println("got VolleyError: " + error);
                     }
                 });
 
@@ -334,7 +343,26 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setContent(MapUtils.getMapStr(postMap, "post_content"));
         post.setLink(MapUtils.getMapStr(postMap, "link"));
 
-        // TODO: implement terms
+        Object[] terms = (Object[]) postMap.get("terms");
+        List<Long> categoryIds = new ArrayList<>();
+        List<Long> tagIds = new ArrayList<>();
+        for (Object term : terms) {
+            if (!(term instanceof Map)) {
+                continue;
+            }
+            Map<?, ?> termMap = (Map<?, ?>) term;
+            String taxonomy = MapUtils.getMapStr(termMap, "taxonomy");
+            switch (taxonomy) {
+                case "category":
+                    categoryIds.add(MapUtils.getMapLong(termMap, "term_id"));
+                    break;
+                case "post_tag":
+                    tagIds.add(MapUtils.getMapLong(termMap, "term_id"));
+                    break;
+            }
+        }
+        post.setCategoryIdList(categoryIds);
+        post.setTagIdList(tagIds);
 
         Object[] custom_fields = (Object[]) postMap.get("custom_fields");
         JSONArray jsonCustomFieldsArray = new JSONArray();
@@ -378,7 +406,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 post.setFeaturedImageId(MapUtils.getMapInt(featuredImageMap, "attachment_id"));
             }
 
-            // TODO: Implement keywords as terms
             post.setPostFormat(MapUtils.getMapStr(postMap, "post_format"));
         }
 

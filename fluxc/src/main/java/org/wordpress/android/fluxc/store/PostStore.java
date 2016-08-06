@@ -71,7 +71,7 @@ public class PostStore extends Store {
     public static class InstantiatePostPayload implements Payload {
         public SiteModel site;
         public boolean isPage;
-        public String categories;
+        public List<Long> categoryIds;
         public String postFormat;
 
         public InstantiatePostPayload(SiteModel site, boolean isPage) {
@@ -79,10 +79,13 @@ public class PostStore extends Store {
             this.isPage = isPage;
         }
 
-        public InstantiatePostPayload(SiteModel site, boolean isPage, String categories, String postFormat) {
+        /**
+         * Used to initialize a post with default category and post format
+         */
+        public InstantiatePostPayload(SiteModel site, boolean isPage, List<Long> categoryIds, String postFormat) {
             this.site = site;
             this.isPage = isPage;
-            this.categories = categories;
+            this.categoryIds = categoryIds;
             this.postFormat = postFormat;
         }
     }
@@ -293,7 +296,9 @@ public class PostStore extends Store {
             newPost.setLocalSiteId(payload.site.getId());
             newPost.setIsLocalDraft(true);
             newPost.setIsPage(payload.isPage);
-            newPost.setCategories(payload.categories);
+            if (payload.categoryIds != null && !payload.categoryIds.isEmpty()) {
+                newPost.setCategoryIdList(payload.categoryIds);
+            }
             newPost.setPostFormat(payload.postFormat);
 
             // Insert the post into the db, updating the object to include the local ID
