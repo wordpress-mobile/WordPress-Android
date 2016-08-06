@@ -1061,18 +1061,18 @@ public class SiteSettingsFragment extends PreferenceFragment
                 getWhitelistSummary(val));
     }
 
-    private void showListEditorDialog(int titleRes, int footerRes) {
+    private void showListEditorDialog(int titleRes, int headerRes) {
         Dialog dialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         dialog.setOnDismissListener(this);
-        dialog.setContentView(getListEditorView(dialog, getString(footerRes)));
+        dialog.setContentView(getListEditorView(dialog, getString(headerRes)));
         dialog.show();
         WPActivityUtils.addToolbarToDialog(this, dialog, getString(titleRes));
     }
 
-    private View getListEditorView(final Dialog dialog, String footerText) {
+    private View getListEditorView(final Dialog dialog, String headerText) {
         Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
         View view = View.inflate(themer, R.layout.list_editor, null);
-        ((TextView) view.findViewById(R.id.list_editor_footer_text)).setText(footerText);
+        ((TextView) view.findViewById(R.id.list_editor_header_text)).setText(headerText);
 
         final MultiSelectListView list = (MultiSelectListView) view.findViewById(android.R.id.list);
         list.setEnterMultiSelectListener(new MultiSelectListView.OnEnterMultiSelect() {

@@ -61,9 +61,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mAvatarSzTiny;
     private final int mMarginLarge;
 
-    private final String mWordCountFmtStr;
-    private final String mReadingTimeFmtStr;
-
     private boolean mCanRequestMorePosts;
     private final boolean mIsLoggedOutReader;
 
@@ -80,10 +77,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
-
-    // Longreads says that people can read 250 words per minute
-    private static final int READING_WORDS_PER_MINUTE = 250;
-    private static final int MIN_READING_TIME_MINUTES = 2;
 
     private static final int VIEW_TYPE_POST        = 0;
     private static final int VIEW_TYPE_XPOST       = 1;
@@ -127,7 +120,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtDomain;
         private final TextView txtDateline;
         private final TextView txtTag;
-        private final TextView txtWordCount;
 
         private final ReaderIconCountView commentCount;
         private final ReaderIconCountView likeCount;
@@ -157,7 +149,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             txtDomain = (TextView) itemView.findViewById(R.id.text_domain);
             txtDateline = (TextView) itemView.findViewById(R.id.text_dateline);
             txtTag = (TextView) itemView.findViewById(R.id.text_tag);
-            txtWordCount = (TextView) itemView.findViewById(R.id.text_word_count);
 
             commentCount = (ReaderIconCountView) itemView.findViewById(R.id.count_comments);
             likeCount = (ReaderIconCountView) itemView.findViewById(R.id.count_likes);
@@ -176,16 +167,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
 
             // post header isn't shown when there's a site header
-            if (!hasSiteHeader()) {
-                // adjust the right padding of the post header to allow right padding of the  "..." icon
-                // https://github.com/wordpress-mobile/WordPress-Android/issues/3078
-                layoutPostHeader.setPadding(
-                        layoutPostHeader.getPaddingLeft(),
-                        layoutPostHeader.getPaddingTop(),
-                        layoutPostHeader.getPaddingRight() - imgMore.getPaddingRight(),
-                        layoutPostHeader.getPaddingBottom());
-            } else {
-                // hide the header
+            if (hasSiteHeader()) {
                 layoutPostHeader.setVisibility(View.GONE);
                 // add a bit more padding above the title
                 int extraPadding = itemView.getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
@@ -394,19 +376,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
         params.topMargin = titleMargin;
 
-        // show word count when appropriate, include reading time if at least two minutes
-        if (post.wordCount > 0 && !post.isDiscoverPost()) {
-            String wordCountStr = String.format(mWordCountFmtStr, post.wordCount);
-            int readingTimeInMinutes = post.wordCount / READING_WORDS_PER_MINUTE;
-            if (readingTimeInMinutes >= MIN_READING_TIME_MINUTES) {
-                wordCountStr += " (~" + String.format(mReadingTimeFmtStr, readingTimeInMinutes) + ")";
-            }
-            holder.txtWordCount.setText(wordCountStr);
-            holder.txtWordCount.setVisibility(View.VISIBLE);
-        } else {
-            holder.txtWordCount.setVisibility(View.GONE);
-        }
-
         // show the best tag for this post
         final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagSlug()) : null);
         if (!TextUtils.isEmpty(tagToDisplay)) {
@@ -556,9 +525,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mAvatarSzTiny = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_tiny);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
-
-        mWordCountFmtStr = context.getString(R.string.reader_label_word_count);
-        mReadingTimeFmtStr = context.getString(R.string.reader_label_reading_time_in_minutes);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
