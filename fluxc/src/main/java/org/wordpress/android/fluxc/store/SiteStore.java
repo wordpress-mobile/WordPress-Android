@@ -9,15 +9,16 @@ import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
+import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -55,12 +56,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class UpdatePostFormatsPayload implements Payload {
+        public SiteModel site;
+        public List<PostFormatModel> postFormats;
+        public UpdatePostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+            this.site = site;
+            this.postFormats = postFormats;
+        }
+    }
+
     // OnChanged Events
     public class OnSiteChanged extends OnChanged {
-        public int mRowsAffected;
+        public int rowsAffected;
 
         public OnSiteChanged(int rowsAffected) {
-            mRowsAffected = rowsAffected;
+            this.rowsAffected = rowsAffected;
         }
     }
 
@@ -78,6 +88,14 @@ public class SiteStore extends Store {
         public String errorMessage;
         public boolean dryRun;
     }
+
+    public class OnPostFormatsChanged extends OnChanged {
+        public SiteModel site;
+        public OnPostFormatsChanged(SiteModel site) {
+            this.site = site;
+        }
+    }
+
     // Enums
     public enum NewSiteError {
         BLOG_NAME_REQUIRED,
@@ -427,6 +445,10 @@ public class SiteStore extends Store {
         }
     }
 
+    public List<PostFormatModel> getPostFormats(SiteModel site) {
+        return SiteSqlUtils.getPostFormats(site);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(org.wordpress.android.fluxc.annotations.action.Action action) {
@@ -481,7 +503,25 @@ public class SiteStore extends Store {
             onNewSiteCreated.errorMessage = payload.errorMessage;
             onNewSiteCreated.dryRun = payload.dryRun;
             emitChange(onNewSiteCreated);
+        } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
+            fetchPostFormats((SiteModel) action.getPayload());
+        } else if (actionType == SiteAction.UPDATE_POST_FORMATS) {
+            UpdatePostFormatsPayload payload = (UpdatePostFormatsPayload) action.getPayload();
+            updatePostFormats(payload.site, payload.postFormats);
         }
+    }
+
+    private void fetchPostFormats(SiteModel site) {
+        if (site.isWPCom()) {
+            mSiteRestClient.pullPostFormats(site);
+        } else {
+            mSiteXMLRPCClient.pullPostFormats(site);
+        }
+    }
+
+    private void updatePostFormats(SiteModel site, List<PostFormatModel> postFormats) {
+        SiteSqlUtils.insertOrReplacePostFormats(site, postFormats);
+        emitChange(new OnPostFormatsChanged(site));
     }
 
     private int createOrUpdateSites(SitesModel sites) {
