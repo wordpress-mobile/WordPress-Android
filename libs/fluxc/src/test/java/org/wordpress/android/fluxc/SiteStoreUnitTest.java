@@ -10,13 +10,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +37,7 @@ public class SiteStoreUnitTest {
     public void setUp() {
         Context appContext = RuntimeEnvironment.application.getApplicationContext();
 
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, SiteModel.class);
+        WellSqlConfig config = new WellSqlConfig(appContext);
         WellSql.init(config);
         config.reset();
     }
@@ -289,6 +291,22 @@ public class SiteStoreUnitTest {
         }
     }
 
+    @Test
+    public void testGetPostFormats() {
+        SiteModel site = generateDotComSite();
+        SiteSqlUtils.insertOrUpdateSite(site);
+
+        // Set 3 post formats
+        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Video", "Image", "Standard"));
+        List<PostFormatModel> postFormats = mSiteStore.getPostFormats(site);
+        assertEquals(3, postFormats.size());
+
+        // Set 1 post format
+        SiteSqlUtils.insertOrReplacePostFormats(site, generatePostFormats("Standard"));
+        postFormats = mSiteStore.getPostFormats(site);
+        assertEquals("Standard", postFormats.get(0).getDisplayName());
+    }
+
     public SiteModel generateDotComSite() {
         SiteModel example = new SiteModel();
         example.setId(1);
@@ -330,5 +348,16 @@ public class SiteStoreUnitTest {
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
         return example;
+    }
+
+    public List<PostFormatModel> generatePostFormats(String... names) {
+        List<PostFormatModel> res = new ArrayList<>();
+        for (String name : names) {
+            PostFormatModel postFormat = new PostFormatModel();
+            postFormat.setSlug(name.toLowerCase());
+            postFormat.setDisplayName(name);
+            res.add(postFormat);
+        }
+        return res;
     }
 }
