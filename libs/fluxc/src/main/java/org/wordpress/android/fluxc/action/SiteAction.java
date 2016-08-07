@@ -1,12 +1,13 @@
 package org.wordpress.android.fluxc.action;
 
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.UpdatePostFormatsPayload;
 
 @ActionEnum
 public enum SiteAction implements org.wordpress.android.fluxc.annotations.action.IAction {
@@ -32,4 +33,8 @@ public enum SiteAction implements org.wordpress.android.fluxc.annotations.action
     CREATE_NEW_SITE,
     @Action(payloadType = NewSiteResponsePayload.class)
     CREATED_NEW_SITE,
+    @Action(payloadType = SiteModel.class)
+    FETCH_POST_FORMATS,
+    @Action(payloadType = UpdatePostFormatsPayload.class)
+    UPDATE_POST_FORMATS,
 }

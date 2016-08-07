@@ -1,11 +1,14 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
+import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
@@ -95,5 +98,25 @@ public class SiteSqlUtils {
                 .endGroup()
                 .endGroup().endWhere()
                 .getAsModel();
+    }
+
+    public static List<PostFormatModel> getPostFormats(@NonNull SiteModel site) {
+        return WellSql.select(PostFormatModel.class)
+                .where()
+                .equals(PostFormatModelTable.SITE_ID, site.getId())
+                .endWhere().getAsModel();
+    }
+
+    public static void insertOrReplacePostFormats(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+        // Remove previous post formats for this site
+        WellSql.delete(PostFormatModel.class)
+                .where()
+                .equals(PostFormatModelTable.SITE_ID, site.getId())
+                .endWhere().execute();
+        // Insert new post formats for this site
+        for (PostFormatModel postFormat : postFormats) {
+            postFormat.setSiteId(site.getId());
+        }
+        WellSql.insert(postFormats).execute();
     }
 }
