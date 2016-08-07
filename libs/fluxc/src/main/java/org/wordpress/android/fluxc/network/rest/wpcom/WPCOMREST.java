@@ -9,6 +9,7 @@ public enum WPCOMREST {
     // Sites
     SITES("/sites/"),
     SITES_NEW("/sites/new"),
+    SITES_POST_FORMATS("/sites/%d/post-formats"), // FIXME: replace this with the builder
 
     // Users
     USERS_NEW("/users/new");
