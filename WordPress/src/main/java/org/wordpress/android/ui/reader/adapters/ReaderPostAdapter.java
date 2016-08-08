@@ -809,7 +809,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         };
 
-        if (!ReaderBlogActions.followBlogForPost(post, isAskingToFollow, null)) {
+        if (!ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
