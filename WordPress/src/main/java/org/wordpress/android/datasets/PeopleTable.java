@@ -180,9 +180,11 @@ public class PeopleTable {
                     String where = "local_blog_id=" + localTableBlogId;
                     String[] columns = {"person_id"};
                     String limit = Integer.toString(size - fetchLimit);
-                    String orderBy = null;
+                    String orderBy;
                     if (shouldOrderAlphabetically(table)) {
-                        orderBy = " lower(display_name) DESC, lower(user_name) DESC";
+                        orderBy = "lower(display_name) DESC, lower(user_name) DESC";
+                    } else {
+                        orderBy = "ROWID DESC";
                     }
                     String inQuery = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null,
                             orderBy, limit);
@@ -241,9 +243,12 @@ public class PeopleTable {
 
     private static List<Person> getPeople(String table, int localTableBlogId) {
         String[] args = {Integer.toString(localTableBlogId)};
-        String orderBy = "";
+        String orderBy;
         if (shouldOrderAlphabetically(table)) {
             orderBy = " ORDER BY lower(display_name), lower(user_name)";
+        } else {
+            // we want the server-side order for followers & viewers
+            orderBy = " ORDER BY ROWID";
         }
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table + " WHERE local_blog_id=?" + orderBy, args);
 
