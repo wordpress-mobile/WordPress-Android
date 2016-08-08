@@ -20,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
@@ -191,11 +194,15 @@ public class PeopleInviteFragment extends Fragment implements
             populateUsernameButtons(usernames);
         }
 
+        String dotComBlogId = getArguments().getString(ARG_BLOGID);
+        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(dotComBlogId);
+        final boolean isPrivateSite = blog != null && blog.isPrivate();
+
         View roleContainer = view.findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0);
+                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite);
             }
         });
         mRoleTextView = (TextView) view.findViewById(R.id.role);
