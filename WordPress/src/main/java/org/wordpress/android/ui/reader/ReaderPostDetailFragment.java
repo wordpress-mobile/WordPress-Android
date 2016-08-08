@@ -661,32 +661,6 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersView.showLikingUsers(mPost);
     }
 
-    /*
-     * show the primary tag for this post
-     */
-    private void refreshTag() {
-        if (!isAdded() || !hasPost()) return;
-
-        TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
-
-        final String tagToDisplay = mPost.getTagForDisplay(null);
-        if (TextUtils.isEmpty(tagToDisplay)) {
-            txtTag.setVisibility(View.GONE);
-            return;
-        }
-
-        txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-        txtTag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
-                ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
-            }
-        });
-
-        txtTag.setVisibility(View.VISIBLE);
-    }
-
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
         if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
@@ -964,7 +938,6 @@ public class ReaderPostDetailFragment extends Fragment
                         return;
                     }
                     refreshLikes();
-                    refreshTag();
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
@@ -1037,6 +1010,16 @@ public class ReaderPostDetailFragment extends Fragment
             long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (blogId != 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            }
+            return true;
+        }
+
+        // if this is a "wordpress://tagpreview?" link, show tag preview for the tag
+        if (ReaderUtils.isTagPreviewUrl(url)) {
+            String tagName = ReaderUtils.getTagNameFromTagPreviewUrl(url);
+            if (!TextUtils.isEmpty(tagName)) {
+                ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+                ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
             }
             return true;
         }

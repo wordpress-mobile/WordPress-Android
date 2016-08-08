@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -257,6 +258,14 @@ class ReaderPostRenderer {
                         + "</div>";
                 content += htmlDiscover;
             }
+        }
+
+        // add primary tag (if any) - this uses a custom URL scheme which will display
+        // tag preview when clicked
+        String tagToDisplay = mPost.getTagForDisplay(null);
+        if (!TextUtils.isEmpty(tagToDisplay)) {
+            String tagUrl = ReaderUtils.makeTagPreviewUrl(tagToDisplay);
+            content += "<p><a href='" + tagUrl + "'>#" + tagToDisplay + "</a></p>";
         }
 
         return content;
