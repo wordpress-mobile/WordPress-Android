@@ -419,7 +419,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    toggleFollow(view.getContext(), post);
+                    toggleFollow(view.getContext(), view, post);
                 }
             });
             holder.followButton.setVisibility(View.VISIBLE);
@@ -790,7 +790,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the follow button on a post
      */
-    private void toggleFollow(final Context context, final ReaderPost post) {
+    private void toggleFollow(final Context context, final View followButton, final ReaderPost post) {
         if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
@@ -801,6 +801,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
+                followButton.setEnabled(true);
                 if (!succeeded) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
@@ -814,6 +815,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        followButton.setEnabled(false);
         setFollowStatusForBlog(post.blogId, isAskingToFollow);
     }
 
