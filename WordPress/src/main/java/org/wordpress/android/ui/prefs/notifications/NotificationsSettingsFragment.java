@@ -28,14 +28,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.NotificationsSettings;
-import org.wordpress.android.models.NotificationsSettings.Channel;
-import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.NotificationsSettings;
+import org.wordpress.android.models.NotificationsSettings.Channel;
+import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
@@ -264,22 +263,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     }
 
     private void configureBlogsSettings() {
-        if (!isAdded()) return;
-        // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
-        // They will have an empty (but encrypted) password
-        String args = "password='" + WordPressDB.encryptPassword("") + "'";
+        if (!isAdded())
+            return;
 
-        // Check if user has typed in a search query
-        String trimmedQuery = null;
+        List<SiteModel> sites;
+        String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            args += " AND (url LIKE '%" + trimmedQuery + "%' OR blogName LIKE '%" + trimmedQuery + "%')";
+            sites = mSiteStore.getDotComSiteByNameOrUrlMatching(trimmedQuery);
+        } else {
+            sites = mSiteStore.getDotComSites();
         }
-
-        // TODO: STORES: we must implement a SiteStore searchDotComSitesByName or a generic way to get create a request
-        // mSiteStore.getsi
-        // List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
-        List<SiteModel> sites = new ArrayList<>();
         mSiteCount = sites.size();
 
         Context context = getActivity();
