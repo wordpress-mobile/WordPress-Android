@@ -237,7 +237,7 @@ class ReaderPostRenderer {
      */
     private String getPostContent() {
         // some content (such as Vimeo embeds) don't have "http:" before links
-        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        String content = mPost.getText().trim().replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
