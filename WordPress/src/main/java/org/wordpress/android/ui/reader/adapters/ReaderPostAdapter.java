@@ -25,10 +25,12 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -125,6 +127,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final WPNetworkImageView imgBlavatar;
 
         private final ViewGroup layoutPostHeader;
+        private final ReaderFollowButton followButton;
 
         private final ViewGroup layoutDiscover;
         private final WPNetworkImageView imgDiscoverAvatar;
@@ -159,6 +162,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             thumbnailStrip = (ReaderThumbnailStrip) itemView.findViewById(R.id.thumbnail_strip);
 
             layoutPostHeader = (ViewGroup) itemView.findViewById(R.id.layout_post_header);
+            followButton = (ReaderFollowButton) layoutPostHeader.findViewById(R.id.follow_button);
 
             // post header isn't shown when there's a site header
             if (hasSiteHeader()) {
@@ -406,6 +410,23 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.imgMore.setOnClickListener(null);
         }
 
+        // follow button doesn't show for "Followed Sites" or when there's a site header (Discover, site preview)
+        boolean showFollowButton = !hasSiteHeader()
+                && !mIsLoggedOutReader
+                && !isFollowedSites();
+        if (showFollowButton) {
+            holder.followButton.setIsFollowed(post.isFollowedByCurrentUser);
+            holder.followButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggleFollow(view.getContext(), view, post);
+                }
+            });
+            holder.followButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.followButton.setVisibility(View.GONE);
+        }
+
         // attribution section for discover posts
         if (post.isDiscoverPost()) {
             showDiscoverData(holder, post);
@@ -539,6 +560,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
+    }
+
+    private boolean isFollowedSites() {
+        return mCurrentTag != null && mCurrentTag.isFollowedSites();
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -730,7 +755,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, ReaderPostViewHolder holder, ReaderPost post) {
+    private void toggleLike(Context context, ReaderPostViewHolder holder,ReaderPost post) {
         if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
@@ -762,6 +787,38 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /*
+     * triggered when user taps the follow button on a post
+     */
+    private void toggleFollow(final Context context, final View followButton, final ReaderPost post) {
+        if (post == null || !NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
+        boolean isCurrentlyFollowed = ReaderPostTable.isPostFollowed(post);
+        final boolean isAskingToFollow = !isCurrentlyFollowed;
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                followButton.setEnabled(true);
+                if (!succeeded) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(context, resId);
+                    setFollowStatusForBlog(post.blogId, !isAskingToFollow);
+                }
+            }
+        };
+
+        if (!ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
+            return;
+        }
+
+        followButton.setEnabled(false);
+        setFollowStatusForBlog(post.blogId, isAskingToFollow);
+    }
+
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {
         ReaderPost post;
         for (int i = 0; i < mPosts.size(); i++) {
@@ -769,6 +826,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (post.blogId == blogId && post.isFollowedByCurrentUser != isFollowing) {
                 post.isFollowedByCurrentUser = isFollowing;
                 mPosts.set(i, post);
+                notifyItemChanged(i);
             }
         }
     }

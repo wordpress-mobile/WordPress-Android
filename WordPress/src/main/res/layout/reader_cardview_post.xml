@@ -38,11 +38,20 @@
                 android:layout_marginRight="@dimen/margin_large"
                 tools:src="@drawable/blavatar_placeholder" />
 
+            <org.wordpress.android.ui.reader.views.ReaderFollowButton
+                android:id="@+id/follow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_large" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_large"
+                android:layout_toLeftOf="@+id/follow_button"
                 android:layout_toRightOf="@+id/image_blavatar"
                 android:orientation="vertical">
 
