@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -236,7 +237,7 @@ class ReaderPostRenderer {
      */
     private String getPostContent() {
         // some content (such as Vimeo embeds) don't have "http:" before links
-        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        String content = mPost.getText().trim().replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
         if (shouldAddFeaturedImage()) {
@@ -257,6 +258,14 @@ class ReaderPostRenderer {
                         + "</div>";
                 content += htmlDiscover;
             }
+        }
+
+        // add primary tag (if any) - this uses a custom URL scheme which will display
+        // tag preview when clicked
+        String tagToDisplay = mPost.getTagForDisplay(null);
+        if (!TextUtils.isEmpty(tagToDisplay)) {
+            String tagUrl = ReaderUtils.makeTagPreviewUrl(tagToDisplay);
+            content += "<p><a href='" + tagUrl + "'>#" + tagToDisplay + "</a></p>";
         }
 
         return content;

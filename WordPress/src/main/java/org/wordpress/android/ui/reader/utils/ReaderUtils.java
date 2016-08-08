@@ -166,6 +166,25 @@ public class ReaderUtils {
     }
 
     /*
+     * used by post detail to display a link to the tag preview for a specific tag
+     */
+    public static String makeTagPreviewUrl(String tagName) {
+        return "wordpress://tagpreview?tag=" + UrlUtils.urlEncode(tagName);
+    }
+
+    public static boolean isTagPreviewUrl(String url) {
+        return (url != null && url.startsWith("wordpress://tagpreview"));
+    }
+
+    public static String getTagNameFromTagPreviewUrl(String url) {
+        if (isTagPreviewUrl(url)) {
+            return Uri.parse(url).getQueryParameter("tag");
+        } else {
+            return "";
+        }
+    }
+
+    /*
      * returns the passed string prefixed with a "#" if it's non-empty and isn't already
      * prefixed with a "#"
      */
