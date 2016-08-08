@@ -15,8 +15,9 @@ public class RoleSelectDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final String[] roles = getResources().getStringArray(R.array.roles);
         boolean isPrivateSite = getArguments().getBoolean(IS_PRIVATE_TAG);
+        int roleRes = isPrivateSite ? R.array.invite_roles_private : R.array.invite_roles_public;
+        final String[] roles = getResources().getStringArray(roleRes);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
