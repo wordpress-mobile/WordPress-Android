@@ -45,7 +45,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
@@ -74,6 +78,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -114,6 +120,9 @@ public class EditPostSettingsFragment extends Fragment
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
     private SiteModel mSite;
 
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
     public static EditPostSettingsFragment newInstance(SiteModel site) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
@@ -125,6 +134,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
@@ -146,6 +156,9 @@ public class EditPostSettingsFragment extends Fragment
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+
+        // Update post formats, in case anything changed.
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
     }
 
     @Override
@@ -230,32 +243,34 @@ public class EditPostSettingsFragment extends Fragment
             mRootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
             mRootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
+            // Default values
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
             mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
                     "status", "video"};
-            // TODO: STORES: use mSite getPostFormats() and the FETCH_POST_FORMATS action
-//            if (mSite.getPostFormats().equals("")) {
-//                new ApiHelper.GetPostFormatsTask().execute(mSite);
-//            } else {
-//                try {
-//                    Gson gson = new Gson();
-//                    Type type = new TypeToken<Map<String, String>>() {}.getType();
-//                    Map<String, String> jsonPostFormats = gson.fromJson(mSite.getPostFormats(),
-//                            type);
-//                    mPostFormats = new String[jsonPostFormats.size()];
-//                    mPostFormatTitles = new String[jsonPostFormats.size()];
-//                    int i = 0;
-//                    for (Map.Entry<String, String> entry : jsonPostFormats.entrySet()) {
-//                        String key = entry.getKey();
-//                        String val = entry.getValue();
-//                        mPostFormats[i] = key;
-//                        mPostFormatTitles[i] = StringEscapeUtils.unescapeHtml(val);
-//                        i++;
-//                    }
-//                } catch (RuntimeException e) {
-//                    AppLog.e(T.POSTS, e);
-//                }
-//            }
+            // If we have specific values for this site, use them
+            List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+            if (postFormatModels.size() > 0) {
+                int maxElements = postFormatModels.size();
+                if (mSite.isWPCom()) {
+                    maxElements += 1;
+                }
+                mPostFormats = new String[maxElements];
+                mPostFormatTitles = new String[maxElements];
+                int i = 0;
+                // Inject the "Standard" post format here since .com response doesn't include it
+                if (mSite.isWPCom()) {
+                    mPostFormats[i] = "standard";
+                    mPostFormatTitles[i] = getResources().getString(R.string.post_format_standard);
+                    i += 1;
+                }
+                for (PostFormatModel postFormatModel: postFormatModels) {
+                    mPostFormats[i] = postFormatModel.getSlug();
+                    mPostFormatTitles[i] = postFormatModel.getDisplayName();
+                    i += 1;
+                }
+            }
+
+            // Set up the Post Format spinner
             mPostFormatSpinner = (Spinner) mRootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
                     mPostFormatTitles);

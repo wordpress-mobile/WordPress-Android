@@ -31,6 +31,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.services.PostMediaService;
@@ -115,6 +116,7 @@ public interface AppComponent {
     void inject(PlansActivity object);
 
     void inject(EditPostActivity object);
+    void inject(EditPostSettingsFragment object);
 
     void inject(NotificationsListFragment object);
     void inject(NotificationsSettingsFragment object);
