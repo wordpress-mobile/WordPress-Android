@@ -661,6 +661,32 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersView.showLikingUsers(mPost);
     }
 
+    /*
+     * show the primary tag for this post
+     */
+    private void refreshTag() {
+        if (!isAdded() || !hasPost()) return;
+
+        TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
+
+        final String tagToDisplay = mPost.getTagForDisplay(null);
+        if (TextUtils.isEmpty(tagToDisplay)) {
+            txtTag.setVisibility(View.GONE);
+            return;
+        }
+
+        txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
+        txtTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
+                ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
+            }
+        });
+
+        txtTag.setVisibility(View.VISIBLE);
+    }
+
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
         if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
@@ -830,7 +856,6 @@ public class ReaderPostDetailFragment extends Fragment
             TextView txtBlogName = (TextView) getView().findViewById(R.id.text_blog_name);
             TextView txtDomain = (TextView) getView().findViewById(R.id.text_domain);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
-            TextView txtTag = (TextView) getView().findViewById(R.id.text_tag);
 
             WPNetworkImageView imgBlavatar = (WPNetworkImageView) getView().findViewById(R.id.image_blavatar);
             WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
@@ -912,18 +937,6 @@ public class ReaderPostDetailFragment extends Fragment
                 txtDateline.setText(timestamp);
             }
 
-            final String tagToDisplay = mPost.getTagForDisplay(null);
-            if (!TextUtils.isEmpty(tagToDisplay)) {
-                txtTag.setText(ReaderUtils.makeHashTag(tagToDisplay));
-                txtTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderTag tag = ReaderUtils.getTagFromTagName(tagToDisplay, ReaderTagType.FOLLOWED);
-                        ReaderActivityLauncher.showReaderTagPreview(v.getContext(), tag);
-                    }
-                });
-            }
-
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mLayoutFooter, AniUtils.Duration.LONG);
             }
@@ -951,6 +964,7 @@ public class ReaderPostDetailFragment extends Fragment
                         return;
                     }
                     refreshLikes();
+                    refreshTag();
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();

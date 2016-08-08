@@ -27,21 +27,6 @@
         android:layout_marginRight="@dimen/reader_detail_margin"
         android:layout_marginTop="@dimen/margin_medium">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_tag"
-            style="@style/ReaderTextView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_detail_tag_height"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/layout_icons"
-            android:background="?android:selectableItemBackground"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="#text_tag" />
-
         <LinearLayout
             android:id="@+id/layout_icons"
             android:layout_width="wrap_content"
@@ -63,10 +48,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingBottom="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="0dp"
                 android:paddingTop="@dimen/margin_medium"
-                android:paddingBottom="@dimen/margin_medium"
                 wp:readerIcon="like" />
 
         </LinearLayout>
