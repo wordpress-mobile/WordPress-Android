@@ -34,7 +34,7 @@
         android:layout_height="@dimen/list_divider_height"
         android:layout_width="match_parent" />
 
-    <org.wordpress.android.ui.prefs.MultiSelectListView
+    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@android:id/list"
         android:layout_below="@+id/list_editor_header_text"
         android:layout_width="match_parent"
