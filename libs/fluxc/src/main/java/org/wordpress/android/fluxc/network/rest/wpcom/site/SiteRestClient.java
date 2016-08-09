@@ -174,6 +174,11 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
             site.setHasCapabilityViewStats(from.capabilities.view_stats);
         }
+        if (from.meta != null) {
+            if (from.meta.links != null) {
+                site.setXmlRpcUrl(from.meta.links.xmlrpc);
+            }
+        }
         site.setIsWPCom(true);
         return site;
     }
