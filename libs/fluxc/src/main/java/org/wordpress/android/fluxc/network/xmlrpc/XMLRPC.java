@@ -9,8 +9,15 @@ public enum XMLRPC {
     UPLOAD_FILE("wp.uploadFile"),
 
     GET_OPTIONS("wp.getOptions"),
+
     GET_USERS_BLOGS("wp.getUsersBlogs"),
-    LIST_METHODS("system.listMethods");
+    LIST_METHODS("system.listMethods"),
+
+    DELETE_POST("wp.deletePost"),
+    EDIT_POST("wp.editPost"),
+    GET_POST("wp.getPost"),
+    GET_POSTS("wp.getPosts"),
+    NEW_POST("wp.newPost");
 
     private final String mEndpoint;
 
