@@ -11,7 +11,13 @@ public enum WPCOMREST {
     SITES_NEW("/sites/new"),
 
     // Users
-    USERS_NEW("/users/new");
+    USERS_NEW("/users/new"),
+
+    // Media
+    MEDIA_ALL("/sites/%s/media"),
+    MEDIA_ITEM("/sites/%s/media/%s"),
+    MEDIA_NEW("/sites/%s/media/new"),
+    MEDIA_DELETE("/sites/%s/media/%s/delete");
 
     private static final String WPCOM_REST_PREFIX = "https://public-api.wordpress.com/rest";
     private static final String WPCOM_PREFIX_V1 = WPCOM_REST_PREFIX + "/v1";
@@ -30,19 +36,19 @@ public enum WPCOMREST {
         return mEndpoint;
     }
 
-    public String getUrlV1() {
-        return WPCOM_PREFIX_V1 + mEndpoint;
+    public String getUrlV1(String...args) {
+        return WPCOM_PREFIX_V1 + String.format(mEndpoint, args);
     }
 
-    public String getUrlV1_1() {
-        return WPCOM_PREFIX_V1_1 + mEndpoint;
+    public String getUrlV1_1(String...args) {
+        return WPCOM_PREFIX_V1_1 + String.format(mEndpoint, args);
     }
 
-    public String getUrlV1_2() {
-        return WPCOM_PREFIX_V1_2 + mEndpoint;
+    public String getUrlV1_2(String...args) {
+        return WPCOM_PREFIX_V1_2 + String.format(mEndpoint, args);
     }
 
-    public String getUrlV1_3() {
-        return WPCOM_PREFIX_V1_3 + mEndpoint;
+    public String getUrlV1_3(String...args) {
+        return WPCOM_PREFIX_V1_3 + String.format(mEndpoint, args);
     }
 }
