@@ -128,7 +128,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     /**
      * Performs an HTTP POST call to the v1.1 {@link WPCOMREST#ME_SETTINGS} endpoint. Upon receiving
-     * a response (success or error) a {@link AccountAction#POSTED_SETTINGS} action is dispatched
+     * a response (success or error) a {@link AccountAction#PUSHED_SETTINGS} action is dispatched
      * with a payload of type {@link AccountPostSettingsResponsePayload}. {@link AccountPostSettingsResponsePayload#isError()} can
      * be used to determine the result of the request.
      *
@@ -145,14 +145,14 @@ public class AccountRestClient extends BaseWPComRestClient {
                     public void onResponse(HashMap response) {
                         AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(null);
                         payload.settings = response;
-                        mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
                 },
                 new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(error);
-                        mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));
                     }
                 }
         ));

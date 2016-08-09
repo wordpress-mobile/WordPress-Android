@@ -32,6 +32,7 @@ public class Authenticator {
 
     public static final String CLIENT_ID_PARAM_NAME = "client_id";
     public static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
+    public static final String REDIRECT_URI_PARAM_NAME = "redirect_uri";
     public static final String CODE_PARAM_NAME = "code";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
     public static final String USERNAME_PARAM_NAME = "username";
@@ -40,6 +41,12 @@ public class Authenticator {
     public static final String PASSWORD_GRANT_TYPE = "password";
     public static final String BEARER_GRANT_TYPE = "bearer";
     public static final String AUTHORIZATION_CODE_GRANT_TYPE = "authorization_code";
+
+    // Authentication error response keys/descriptions recognized
+    private static final String INVALID_REQUEST_ERROR = "invalid_request";
+    private static final String NEEDS_TWO_STEP_ERROR = "needs_2fa";
+    private static final String INVALID_OTP_ERROR = "invalid_otp";
+    private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
@@ -57,6 +64,11 @@ public class Authenticator {
             this.errorType = errorType;
             this.errorMessage = errorMessage;
         }
+
+        public AuthenticateErrorPayload() {
+            this.errorType = AuthenticationError.GENERIC_ERROR;
+            this.errorMessage = "";
+        }
     }
 
     @Inject
@@ -67,8 +79,7 @@ public class Authenticator {
 
     public void authenticate(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                              Listener listener, ErrorListener errorListener) {
-        TokenRequest tokenRequest = new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(),
-                username, password, twoStepCode, shouldSendTwoStepSMS, listener, errorListener);
+        TokenRequest tokenRequest = makeRequest(username, password, twoStepCode, shouldSendTwoStepSMS, listener, errorListener);
         mRequestQueue.add(tokenRequest);
     }
 
@@ -78,23 +89,26 @@ public class Authenticator {
 
     public TokenRequest makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                                     Listener listener, ErrorListener errorListener) {
-        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
+        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), mAppSecrets.getRedirectUri(), username, password, twoStepCode,
                 shouldSendTwoStepSMS, listener, errorListener);
     }
 
     public TokenRequest makeRequest(String code, Listener listener, ErrorListener errorListener) {
-        return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
+        return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), mAppSecrets.getRedirectUri(), code, listener, errorListener);
     }
 
     private static class TokenRequest extends Request<Token> {
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
-        TokenRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
+        TokenRequest(String appId, String appSecret, String redirectUri, Listener listener, ErrorListener errorListener) {
             super(Method.POST, TOKEN_ENDPOINT, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
             mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
+            if (!TextUtils.isEmpty(redirectUri)) {
+                mParams.put(REDIRECT_URI_PARAM_NAME, redirectUri);
+            }
         }
 
         @Override
@@ -122,9 +136,9 @@ public class Authenticator {
     }
 
     public static class PasswordRequest extends TokenRequest {
-        public PasswordRequest(String appId, String appSecret, String username, String password, String twoStepCode,
+        public PasswordRequest(String appId, String appSecret, String redirectUri, String username, String password, String twoStepCode,
                                boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
-            super(appId, appSecret, listener, errorListener);
+            super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
@@ -141,9 +155,9 @@ public class Authenticator {
     }
 
     public static class BearerRequest extends TokenRequest {
-        public BearerRequest(String appId, String appSecret, String code, Listener listener,
+        public BearerRequest(String appId, String appSecret, String redirectUri, String code, Listener listener,
                              ErrorListener errorListener) {
-            super(appId, appSecret, listener, errorListener);
+            super(appId, appSecret, redirectUri, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
             mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);
         }
@@ -214,16 +228,16 @@ public class Authenticator {
     public static AuthenticationError jsonErrorToAuthenticationError(JSONObject jsonObject) {
         AuthenticationError error = AuthenticationError.GENERIC_ERROR;
         if (jsonObject != null) {
-                String errorType = jsonObject.optString("error", "");
-                String errorMessage = jsonObject.optString("error_description", "");
-                error = AuthenticationError.fromString(errorType);
-                // Special cases for vague error types
-                if (error == AuthenticationError.INVALID_REQUEST) {
-                    // Try to parse the error message to specify the error
-                    if (errorMessage.contains("Incorrect username or password.")) {
-                        return AuthenticationError.INCORRECT_USERNAME_OR_PASSWORD;
-                    }
+            String errorType = jsonObject.optString("error", "");
+            String errorMessage = jsonObject.optString("error_description", "");
+            error = AuthenticationError.fromString(errorType);
+            // Special cases for vague error types
+            if (error == AuthenticationError.INVALID_REQUEST) {
+                // Try to parse the error message to specify the error
+                if (errorMessage.contains("Incorrect username or password.")) {
+                    return AuthenticationError.INCORRECT_USERNAME_OR_PASSWORD;
                 }
+            }
         }
         return error;
     }
