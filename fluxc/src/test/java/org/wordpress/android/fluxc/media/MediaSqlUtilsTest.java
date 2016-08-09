@@ -48,7 +48,7 @@ public class MediaSqlUtilsTest {
     // Inserts a media item with various known fields then retrieves and validates those fields
     @Test
     public void testInsertMedia() {
-        long testId = Math.abs(mRandom.nextLong());
+        long testId = Math.abs(mRandom.nextInt());
         String testTitle = getTestString();
         String testDescription = getTestString();
         String testCaption = getTestString();
@@ -78,7 +78,7 @@ public class MediaSqlUtilsTest {
     // Inserts a media item, verifies it's in the DB, deletes the item, verifies it's not in the DB
     @Test
     public void testDeleteMedia() {
-        long testId = Math.abs(mRandom.nextLong());
+        long testId = Math.abs(mRandom.nextInt());
         MediaModel testMedia = getTestMedia(testId);
         Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(testMedia));
         List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(TEST_SITE_ID, testId);
@@ -108,11 +108,11 @@ public class MediaSqlUtilsTest {
     // Inserts media of multiple MIME types then retrieves only images and verifies
     @Test
     public void testGetSiteImages() {
-        List<Long> imageIds = new ArrayList<>(SMALL_TEST_POOL);
-        List<Long> videoIds = new ArrayList<>(SMALL_TEST_POOL);
+        List<Integer> imageIds = new ArrayList<>(SMALL_TEST_POOL);
+        List<Integer> videoIds = new ArrayList<>(SMALL_TEST_POOL);
         for (int i = 0; i < imageIds.size(); ++i) {
-            imageIds.add(mRandom.nextLong());
-            videoIds.add(mRandom.nextLong());
+            imageIds.add(mRandom.nextInt());
+            videoIds.add(mRandom.nextInt());
             MediaModel image = getTestMedia(imageIds.get(i));
             image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
             MediaModel video = getTestMedia(videoIds.get(i));
@@ -311,7 +311,7 @@ public class MediaSqlUtilsTest {
     private long[] insertBasicTestItems(int num) {
         long[] testItemIds = new long[num];
         for (int i = 0; i < num; ++i) {
-            testItemIds[i] = mRandom.nextLong();
+            testItemIds[i] = mRandom.nextInt();
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(getTestMedia(testItemIds[i])));
         }
         return testItemIds;
@@ -320,7 +320,7 @@ public class MediaSqlUtilsTest {
     private long[] insertImageTestItems(int num) {
         long[] testItemIds = new long[num];
         for (int i = 0; i < num; ++i) {
-            testItemIds[i] = mRandom.nextLong();
+            testItemIds[i] = mRandom.nextInt();
             MediaModel image = getTestMedia(testItemIds[i]);
             image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
