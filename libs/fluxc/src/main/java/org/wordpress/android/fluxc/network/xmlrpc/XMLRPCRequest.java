@@ -100,7 +100,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     public void deliverError(VolleyError error) {
         super.deliverError(error);
         // XMLRPC Error
-        AuthenticateErrorPayload payload = new AuthenticateErrorPayload(AuthenticationError.GENERIC_ERROR, "");
+        AuthenticateErrorPayload payload = new AuthenticateErrorPayload();
         if (error.getCause() instanceof XMLRPCFault) {
             XMLRPCFault xmlrpcFault = (XMLRPCFault) error.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {

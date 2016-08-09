@@ -21,9 +21,9 @@ public enum AccountAction implements org.wordpress.android.fluxc.annotations.act
     @Action(payloadType = AccountRestPayload.class)
     FETCHED_SETTINGS,       // response received from Account Settings fetch
     @Action(payloadType = PostAccountSettingsPayload.class)
-    POST_SETTINGS,          // request saving Account Settings remotely
+    PUSH_SETTINGS,          // request saving Account Settings remotely
     @Action(payloadType = AccountPostSettingsResponsePayload.class)
-    POSTED_SETTINGS,        // response received from Account Settings post
+    PUSHED_SETTINGS,        // response received from Account Settings post
     @Action(payloadType = AccountModel.class)
     UPDATE_ACCOUNT,                 // update in-memory and persisted Account in AccountStore
     @Action(payloadType = UpdateTokenPayload.class)
