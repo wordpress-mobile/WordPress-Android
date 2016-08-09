@@ -6,6 +6,12 @@ import com.android.volley.VolleyError;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.action.AuthenticationAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
@@ -13,16 +19,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPostSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.Token;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.action.AccountAction;
-import org.wordpress.android.fluxc.action.AuthenticationAction;
-import org.wordpress.android.fluxc.annotations.action.Action;
-import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.persistence.AccountSqlUtils;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.util.AppLog;
@@ -42,6 +42,8 @@ public class AccountStore extends Store {
     public static class AuthenticatePayload implements Payload {
         public String username;
         public String password;
+        public String twoStepCode;
+        public boolean shouldSendTwoStepSms;
         public Action nextAction;
         public AuthenticatePayload(@NonNull String username, @NonNull String password) {
             this.username = username;
@@ -208,7 +210,7 @@ public class AccountStore extends Store {
             emitChange(event);
         } else if (actionType == AuthenticationAction.AUTHENTICATE) {
             AuthenticatePayload payload = (AuthenticatePayload) action.getPayload();
-            authenticate(payload.username, payload.password, payload);
+            authenticate(payload);
         } else if (actionType == AuthenticationAction.DISCOVER_ENDPOINT) {
             RefreshSitesXMLRPCPayload payload = (RefreshSitesXMLRPCPayload) action.getPayload();
             mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
@@ -231,7 +233,7 @@ public class AccountStore extends Store {
         } else if (actionType == AccountAction.FETCH_SETTINGS) {
             // fetch only Account Settings
             mAccountRestClient.fetchAccountSettings();
-        } else if (actionType == AccountAction.POST_SETTINGS) {
+        } else if (actionType == AccountAction.PUSH_SETTINGS) {
             PostAccountSettingsPayload payload = (PostAccountSettingsPayload) action.getPayload();
             mAccountRestClient.postAccountSettings(payload.params);
         } else if (actionType == AccountAction.FETCHED_ACCOUNT) {
@@ -246,12 +248,12 @@ public class AccountStore extends Store {
                 mAccount.copyAccountSettingsAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
             }
-        } else if (actionType == AccountAction.POSTED_SETTINGS) {
+        } else if (actionType == AccountAction.PUSHED_SETTINGS) {
             AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
             if (!data.isError()) {
                 boolean updated = AccountRestClient.updateAccountModelFromPostSettingsResponse(mAccount, data.settings);
                 if (updated) {
-                    updateDefaultAccount(mAccount, AccountAction.POST_SETTINGS);
+                    updateDefaultAccount(mAccount, AccountAction.PUSH_SETTINGS);
                 } else {
                     OnAccountChanged accountChanged = new OnAccountChanged();
                     accountChanged.accountInfosChanged = false;
@@ -333,27 +335,28 @@ public class AccountStore extends Store {
         return account == null ? new AccountModel() : account;
     }
 
-    private void authenticate(String username, String password, final AuthenticatePayload payload) {
-        mAuthenticator.authenticate(username, password, null, false, new Authenticator.Listener() {
-            @Override
-            public void onResponse(Token token) {
-                mAccessToken.set(token.getAccessToken());
-                if (payload.nextAction != null) {
-                    mDispatcher.dispatch(payload.nextAction);
-                }
-                emitChange(new OnAuthenticationChanged());
-            }
-        }, new Authenticator.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.API, "Authentication error");
-                OnAuthenticationChanged event = new OnAuthenticationChanged();
-                event.errorType = Authenticator.volleyErrorToAuthenticationError(volleyError);
-                event.errorMessage = Authenticator.volleyErrorToErrorMessage(volleyError);
-                event.isError = true;
-                emitChange(event);
-            }
-        });
+    private void authenticate(final AuthenticatePayload payload) {
+        mAuthenticator.authenticate(payload.username, payload.password, payload.twoStepCode,
+                payload.shouldSendTwoStepSms, new Authenticator.Listener() {
+                    @Override
+                    public void onResponse(Token token) {
+                        mAccessToken.set(token.getAccessToken());
+                        if (payload.nextAction != null) {
+                            mDispatcher.dispatch(payload.nextAction);
+                        }
+                        emitChange(new OnAuthenticationChanged());
+                    }
+                }, new Authenticator.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        AppLog.e(T.API, "Authentication error");
+                        OnAuthenticationChanged event = new OnAuthenticationChanged();
+                        event.errorType = Authenticator.volleyErrorToAuthenticationError(volleyError);
+                        event.errorMessage = Authenticator.volleyErrorToErrorMessage(volleyError);
+                        event.isError = true;
+                        emitChange(event);
+                    }
+                });
     }
 
     private boolean checkError(AccountRestPayload payload, String log) {
