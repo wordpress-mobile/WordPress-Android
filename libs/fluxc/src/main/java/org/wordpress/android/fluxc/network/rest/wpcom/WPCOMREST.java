@@ -1,48 +1,72 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
-public enum WPCOMREST {
-    // Me
-    ME("/me/"),
-    ME_SETTINGS("/me/settings/"),
-    ME_SITES("/me/sites/"),
 
-    // Sites
-    SITES("/sites/"),
-    SITES_NEW("/sites/new"),
+public class WPCOMREST {
+    // Top-level endpoints
+    public static MeEndpoint me = new MeEndpoint();
+    public static SitesEndpoint sites = new SitesEndpoint();
+    public static UsersEndpoint users = new UsersEndpoint();
 
-    // Users
-    USERS_NEW("/users/new");
+    public static class MeEndpoint extends WPComEndpoint {
+        private static final String ME_ENDPOINT = "/me/";
 
-    private static final String WPCOM_REST_PREFIX = "https://public-api.wordpress.com/rest";
-    private static final String WPCOM_PREFIX_V1 = WPCOM_REST_PREFIX + "/v1";
-    private static final String WPCOM_PREFIX_V1_1 = WPCOM_REST_PREFIX + "/v1.1";
-    private static final String WPCOM_PREFIX_V1_2 = WPCOM_REST_PREFIX + "/v1.2";
-    private static final String WPCOM_PREFIX_V1_3 = WPCOM_REST_PREFIX + "/v1.3";
+        public WPComEndpoint settings = new WPComEndpoint(ME_ENDPOINT + "settings/");
+        public WPComEndpoint sites = new WPComEndpoint(ME_ENDPOINT + "sites/");
 
-    private final String mEndpoint;
-
-    WPCOMREST(String endpoint) {
-        mEndpoint = endpoint;
+        private MeEndpoint() {
+            super(ME_ENDPOINT);
+        }
     }
 
-    @Override
-    public String toString() {
-        return mEndpoint;
+    public static class SitesEndpoint extends WPComEndpoint {
+        private static final String SITES_ENDPOINT = "/sites/";
+
+        public WPComEndpoint new_ = new WPComEndpoint(SITES_ENDPOINT + "new/");
+
+        private SitesEndpoint() {
+            super("/sites/");
+        }
+
+        public SiteEndpoint site(int siteId) {
+            return new SiteEndpoint(getEndpoint(), siteId);
+        }
+
+        public static class SiteEndpoint extends WPComEndpoint {
+            public final PostsEndpoint posts = new PostsEndpoint(getEndpoint());
+
+            private SiteEndpoint(String previousEndpoint, long siteId) {
+                super(previousEndpoint, siteId);
+            }
+
+            public static class PostsEndpoint extends WPComEndpoint {
+                public WPComEndpoint new_ = new WPComEndpoint(getEndpoint() + "new/");
+
+                private PostsEndpoint(String previousEndpoint) {
+                    super(previousEndpoint + "posts/");
+                }
+
+                public PostEndpoint post(long postId) {
+                    return new PostEndpoint(getEndpoint(), postId);
+                }
+
+                public static class PostEndpoint extends WPComEndpoint {
+                    public final WPComEndpoint delete = new WPComEndpoint(getEndpoint() + "delete/");
+
+                    private PostEndpoint(String previousEndpoint, long postId) {
+                        super(previousEndpoint, postId);
+                    }
+                }
+            }
+        }
     }
 
-    public String getUrlV1() {
-        return WPCOM_PREFIX_V1 + mEndpoint;
-    }
+    public static class UsersEndpoint extends WPComEndpoint {
+        private static final String USERS_ENDPOINT = "/users/";
 
-    public String getUrlV1_1() {
-        return WPCOM_PREFIX_V1_1 + mEndpoint;
-    }
+        public WPComEndpoint new_ = new WPComEndpoint(USERS_ENDPOINT + "new/");
 
-    public String getUrlV1_2() {
-        return WPCOM_PREFIX_V1_2 + mEndpoint;
-    }
-
-    public String getUrlV1_3() {
-        return WPCOM_PREFIX_V1_3 + mEndpoint;
+        private UsersEndpoint() {
+            super(USERS_ENDPOINT);
+        }
     }
 }
