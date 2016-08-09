@@ -35,7 +35,7 @@ public class WPCOMREST {
         }
 
         @Endpoint("/sites/$site/")
-        public SiteEndpoint site(int siteId) {
+        public SiteEndpoint site(long siteId) {
             return new SiteEndpoint(getEndpoint(), siteId);
         }
 
