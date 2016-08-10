@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -12,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class GsonRequest<T> extends BaseRequest<T> {
     private static final String PROTOCOL_CHARSET = "utf-8";
@@ -20,11 +22,14 @@ public class GsonRequest<T> extends BaseRequest<T> {
     private final Gson mGson = new Gson();
     private final Class<T> mClass;
     private final Listener<T> mListener;
+    private final Map<String, String> mParams;
 
-    public GsonRequest(int method, String url, Class<T> clazz, Listener<T> listener, ErrorListener errorListener) {
-        super(method, url, errorListener);
+    public GsonRequest(int method, Map<String, String> params, String url, Class<T> clazz, Listener<T> listener,
+                       ErrorListener errorListener) {
+        super(method, addParamsToUrlIfGet(method, url, params), errorListener);
         mClass = clazz;
         mListener = listener;
+        mParams = params;
     }
 
     @Override
@@ -38,6 +43,11 @@ public class GsonRequest<T> extends BaseRequest<T> {
     }
 
     @Override
+    protected Map<String, String> getParams() {
+        return mParams;
+    }
+
+    @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -47,5 +57,23 @@ public class GsonRequest<T> extends BaseRequest<T> {
         } catch (JsonSyntaxException e) {
             return Response.error(new ParseError(e));
         }
+    }
+
+    public static String addParamsToUrlIfGet(int method, String url, Map<String, String> params) {
+        if (method != Request.Method.GET || params == null || params.isEmpty()) {
+            return url;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : params.entrySet()){
+            if (stringBuilder.length() == 0){
+                stringBuilder.append('?');
+            } else {
+                stringBuilder.append('&');
+            }
+            stringBuilder.append(entry.getKey()).append('=').append(entry.getValue());
+        }
+
+        return url + stringBuilder.toString();
     }
 }

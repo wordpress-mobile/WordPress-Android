@@ -44,13 +44,24 @@ public class SiteWPComRestResponse implements Payload, Response {
         public boolean view_stats;
     }
 
+
+    public class Meta {
+        public class Links {
+            public String xmlrpc;
+        }
+
+        public Links links;
+    }
+
     public int ID;
     public String URL;
     public String name;
     public String description;
     public boolean jetpack;
     public boolean visible;
+    public boolean is_private;
     public Options options;
     public Capabilities capabilities;
     public Plan plan;
+    public Meta meta;
 }
