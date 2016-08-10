@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
-import org.wordpress.android.fluxc.store.SiteStore.UpdatePostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
@@ -111,8 +111,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         List<PostFormatModel> postFormats = responseToPostFormats(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdatePostFormatsAction(new
-                                UpdatePostFormatsPayload(site, postFormats)));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
                 new ErrorListener() {
