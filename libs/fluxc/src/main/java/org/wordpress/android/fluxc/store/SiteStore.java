@@ -215,6 +215,20 @@ public class SiteStore extends Store {
     }
 
     /**
+     * Returns sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
+    }
+
+    /**
+     * Returns .COM sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
+    }
+
+    /**
      * Checks whether the store contains at least one .COM site.
      */
     public boolean hasDotComSite() {
