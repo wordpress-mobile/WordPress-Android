@@ -37,7 +37,7 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
-        String url = WPCOMREST.POSTS.getUrlV1WithSiteId(site.getSiteId());
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
 
