@@ -10,14 +10,15 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -25,10 +26,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -55,7 +59,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSites() {
-        String url = WPCOMREST.ME_SITES.getUrlV1_1();
+        String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -80,7 +84,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = WPCOMREST.SITES.getUrlV1_1() + site.getSiteId();
+        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
@@ -103,7 +107,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
-        String url = WPCOMREST.SITES_NEW.getUrlV1();
+        String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("blog_name", siteName);
         params.put("blog_title", siteTitle);
@@ -134,6 +138,37 @@ public class SiteRestClient extends BaseWPComRestClient {
         ));
     }
 
+    public void pullPostFormats(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
+        final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, null, PostFormatsResponse.class,
+                new Listener<PostFormatsResponse>() {
+                    @Override
+                    public void onResponse(PostFormatsResponse response) {
+                        List<PostFormatModel> postFormats = new ArrayList<>();
+                        if (response.formats != null) {
+                            for (String key : response.formats.keySet()) {
+                                PostFormatModel postFormat = new PostFormatModel();
+                                postFormat.setSlug(key);
+                                postFormat.setDisplayName(response.formats.get(key));
+                                postFormats.add(postFormat);
+                            }
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                FetchedPostFormatsPayload(site, postFormats)));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(T.API, "Volley error", error);
+                        // TODO: Error, dispatch network error
+                    }
+                }
+        );
+        add(request);
+    }
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
@@ -142,6 +177,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setDescription(from.description);
         site.setIsJetpack(from.jetpack);
         site.setIsVisible(from.visible);
+        site.setIsPrivate(from.is_private);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read blog options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
@@ -173,6 +209,11 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setHasCapabilityDeleteUser(from.capabilities.delete_user);
             site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
             site.setHasCapabilityViewStats(from.capabilities.view_stats);
+        }
+        if (from.meta != null) {
+            if (from.meta.links != null) {
+                site.setXmlRpcUrl(from.meta.links.xmlrpc);
+            }
         }
         site.setIsWPCom(true);
         return site;
