@@ -73,13 +73,13 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to the v1.1 {@link WPCOMREST#ME} endpoint. Upon receiving a
+     * Performs an HTTP GET call to the v1.1 /me/ endpoint. Upon receiving a
      * response (success or error) a {@link AccountAction#FETCHED_ACCOUNT} action is dispatched
      * with a payload of type {@link AccountRestPayload}. {@link AccountRestPayload#isError()} can
      * be used to determine the result of the request.
      */
     public void fetchAccount() {
-        String url = WPCOMREST.ME.getUrlV1_1();
+        String url = WPCOMREST.me.getUrlV1_1();
         add(new WPComGsonRequest<>(Method.GET, url, null, AccountResponse.class,
                 new Listener<AccountResponse>() {
                     @Override
@@ -100,13 +100,13 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to the v1.1 {@link WPCOMREST#ME_SETTINGS} endpoint. Upon receiving
+     * Performs an HTTP GET call to the v1.1 /me/settings/ endpoint. Upon receiving
      * a response (success or error) a {@link AccountAction#FETCHED_SETTINGS} action is dispatched
      * with a payload of type {@link AccountRestPayload}. {@link AccountRestPayload#isError()} can
      * be used to determine the result of the request.
      */
     public void fetchAccountSettings() {
-        String url = WPCOMREST.ME_SETTINGS.getUrlV1_1();
+        String url = WPCOMREST.me.settings.getUrlV1_1();
         add(new WPComGsonRequest<>(Method.GET, url, null, AccountSettingsResponse.class,
                 new Listener<AccountSettingsResponse>() {
                     @Override
@@ -127,7 +127,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP POST call to the v1.1 {@link WPCOMREST#ME_SETTINGS} endpoint. Upon receiving
+     * Performs an HTTP POST call to the v1.1 /me/settings/ endpoint. Upon receiving
      * a response (success or error) a {@link AccountAction#POSTED_SETTINGS} action is dispatched
      * with a payload of type {@link AccountPostSettingsResponsePayload}. {@link AccountPostSettingsResponsePayload#isError()} can
      * be used to determine the result of the request.
@@ -136,7 +136,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      */
     public void postAccountSettings(Map<String, String> params) {
         if (params == null || params.isEmpty()) return;
-        String url = WPCOMREST.ME_SETTINGS.getUrlV1_1();
+        String url = WPCOMREST.me.settings.getUrlV1_1();
         // Note: we have to use a HashMap as a response here because the API response format is different depending
         // of the request we do.
         add(new WPComGsonRequest<>(Method.POST, url, params, HashMap.class,
@@ -160,7 +160,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
                            final boolean dryRun) {
-        String url = WPCOMREST.USERS_NEW.getUrlV1();
+        String url = WPCOMREST.users.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("username", username);
         params.put("password", password);
