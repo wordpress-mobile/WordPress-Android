@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc;
 
 import android.content.Context;
 
+import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.junit.Before;
@@ -289,6 +290,68 @@ public class SiteStoreUnitTest {
         }
     }
 
+    @Test
+    public void testSearchSitesByNameMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setName("Shield Eyes from light");
+        SiteModel dotComSite3 = generateDotComSite();
+        dotComSite3.setName("I remember when this was all farmland as far as the eye could see");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite3);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
+        assertEquals(2, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("EYE");
+        assertEquals(2, matchingSites.size());
+    }
+
+    @Test
+    public void testSearchSitesByNameOrUrlMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("eye");
+        assertEquals(2, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrName("EYE");
+        assertEquals(2, matchingSites.size());
+    }
+
+    @Test
+    public void testSearchDotComSitesByNameOrUrlMatching() {
+        SiteModel dotComSite1 = generateDotComSite();
+        dotComSite1.setName("Doctor Emmet Brown Homepage");
+        SiteModel dotComSite2 = generateDotComSite();
+        dotComSite2.setUrl("shieldeyesfromlight.wordpress.com");
+        SiteModel dotOrgSite = generateSelfHostedNonJPSite();
+        dotOrgSite.setName("I remember when this was all farmland as far as the eye could see.");
+
+        SiteSqlUtils.insertOrUpdateSite(dotComSite1);
+        SiteSqlUtils.insertOrUpdateSite(dotComSite2);
+        SiteSqlUtils.insertOrUpdateSite(dotOrgSite);
+
+        List<SiteModel> matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
+                SiteModelTable.IS_WPCOM, true, "eye");
+        assertEquals(1, matchingSites.size());
+
+        matchingSites = SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(
+                SiteModelTable.IS_WPCOM, true, "EYE");
+        assertEquals(1, matchingSites.size());
+    }
+
     public SiteModel generateDotComSite() {
         SiteModel example = new SiteModel();
         example.setId(1);
@@ -331,4 +394,6 @@ public class SiteStoreUnitTest {
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
         return example;
     }
+
+
 }

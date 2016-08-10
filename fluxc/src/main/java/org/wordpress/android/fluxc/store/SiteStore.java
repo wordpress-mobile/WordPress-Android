@@ -9,15 +9,15 @@ import com.yarolegovich.wellsql.mapper.SelectMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -194,6 +194,20 @@ public class SiteStore extends Store {
      */
     public int getDotComSitesCount() {
         return SiteSqlUtils.getNumberOfSitesWith(SiteModelTable.IS_WPCOM, true);
+    }
+
+    /**
+     * Returns sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getSitesByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrNameWith(SiteModelTable.IS_WPCOM, true, searchString);
+    }
+
+    /**
+     * Returns .COM sites with a name or url matching the search string.
+     */
+    public @NonNull List<SiteModel> getDotComSiteByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getAllSitesMatchingUrlOrName(searchString);
     }
 
     /**
