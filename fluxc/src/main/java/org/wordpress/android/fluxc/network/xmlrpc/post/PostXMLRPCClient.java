@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.post;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
@@ -158,7 +157,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
-                        Log.e("", "error=" + error);
                     }
                 });
 
