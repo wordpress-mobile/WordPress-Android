@@ -147,18 +147,7 @@ public class AccountStore extends Store {
         ACCOUNT_FETCH_ERROR,
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
-        GENERIC_ERROR;
-
-        public static AccountError fromString(String string) {
-            if (string != null) {
-                for (AccountError v : AccountError.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
-                }
-            }
-            return GENERIC_ERROR;
-        }
+        GENERIC_ERROR
     }
 
     public enum NewUserError {
