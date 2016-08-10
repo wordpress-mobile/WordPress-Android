@@ -340,7 +340,7 @@ public class GCMMessageService extends GcmListenerService {
             String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
             removeNotificationFromSystemBar(this, noteId);
         } else {
-            removeAllNotifications(this);
+            //removeAllNotifications(this);
         }
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
@@ -475,6 +475,10 @@ public class GCMMessageService extends GcmListenerService {
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 notificationManager.cancel(pushId);
                 removeNotification(pushId);
+                // if it also was the only one notification, clear the group notification id added at first
+                if (sActiveNotificationsMap.size() == 0) {
+                    notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
+                }
                 return;
             }
         }
