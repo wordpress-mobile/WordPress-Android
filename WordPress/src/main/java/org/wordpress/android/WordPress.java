@@ -957,6 +957,7 @@ public class WordPress extends MultiDexApplication {
     // WPStores Access Token migration
     //
     private static final String DEPRECATED_DATABASE_NAME = "wordpress";
+    private static final String DEPRECATED_ACCOUNT_TABLE = "tbl_accounts";
     private static final String DEPRECATED_ACCOUNTS_TABLE = "accounts";
     private static final String DEPRECATED_ACCESS_TOKEN_COLUMN = "access_token";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
@@ -972,11 +973,11 @@ public class WordPress extends MultiDexApplication {
         return token;
     }
 
-    private String getDeprecatedAccountTableAccessToken() {
+    private String getAccessTokenFromTable(String tableName) {
         String token = null;
         try {
             SQLiteDatabase db = SQLiteDatabase.openDatabase(DEPRECATED_DATABASE_NAME, null, SQLiteDatabase.OPEN_READONLY);
-            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + DEPRECATED_ACCOUNTS_TABLE + " WHERE local_id=0", null);
+            Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN + " FROM " + tableName + " WHERE local_id=0", null);
             if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
                 token = c.getString(c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN));
             }
@@ -998,7 +999,10 @@ public class WordPress extends MultiDexApplication {
     }
 
     private String getLatestDeprecatedAccessToken() {
-        String latestToken = getDeprecatedAccountTableAccessToken();
+        String latestToken = getAccessTokenFromTable(DEPRECATED_ACCOUNT_TABLE);
+        if (TextUtils.isEmpty(latestToken)) {
+            latestToken = getAccessTokenFromTable(DEPRECATED_ACCOUNTS_TABLE);
+        }
         if (TextUtils.isEmpty(latestToken)) {
             latestToken = getDeprecatedPreferencesAccessTokenThenDelete();
         }
