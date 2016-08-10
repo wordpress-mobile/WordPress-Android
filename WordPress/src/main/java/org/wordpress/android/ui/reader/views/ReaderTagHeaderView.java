@@ -22,31 +22,29 @@ import javax.inject.Inject;
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
-public class ReaderTagInfoView extends LinearLayout {
+public class ReaderTagHeaderView extends LinearLayout {
 
     private ReaderFollowButton mFollowButton;
     private ReaderTag mCurrentTag;
 
     @Inject AccountStore mAccountStore;
 
-    public ReaderTagInfoView(Context context) {
-        super(context);
+    public ReaderTagHeaderView(Context context) {
+        this(context, null);
+    }
+
+    public ReaderTagHeaderView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ReaderTagHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
-    public ReaderTagInfoView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
-    }
-
-    public ReaderTagInfoView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView(context);
-    }
-
     private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_tag_info_view, this);
+        View view = inflate(context, R.layout.reader_tag_header_view, this);
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
     }
 

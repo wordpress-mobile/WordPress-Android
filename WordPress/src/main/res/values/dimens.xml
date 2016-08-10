@@ -242,6 +242,7 @@
     <dimen name="related_posts_dialog_padding_right">24dp</dimen>
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
+    <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
     <dimen name="start_over_padding_top">40dp</dimen>
     <dimen name="start_over_margin">20dp</dimen>

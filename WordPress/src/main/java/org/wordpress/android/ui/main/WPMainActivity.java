@@ -15,27 +15,25 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.optimizely.Optimizely;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.GCMRegistrationIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.Note;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -62,7 +60,6 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPOptimizelyEventListener;
 import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -201,7 +198,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         if (savedInstanceState == null) {
             if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                startOptimizely(true);
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -217,19 +213,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     checkMagicLinkSignIn();
                 }
             } else {
-                startOptimizely(false);
                 ActivityLauncher.showSignInForResult(this);
-            }
-        }
-    }
-
-    private void startOptimizely(boolean isAsync) {
-        if (!BuildConfig.DEBUG) {
-            if (isAsync) {
-                Optimizely.startOptimizelyAsync(BuildConfig.OPTIMIZELY_TOKEN, getApplication(), new WPOptimizelyEventListener());
-            } else {
-                Optimizely.addOptimizelyEventListener(new WPOptimizelyEventListener());
-                Optimizely.startOptimizelyWithAPIToken(BuildConfig.OPTIMIZELY_TOKEN, getApplication());
             }
         }
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,32 +9,36 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_extra_large"
+        android:padding="@dimen/margin_extra_large"
         android:text="@string/site_settings_list_editor_no_items_text"
         android:textColor="@color/grey_lighten_10"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
-    <org.wordpress.android.ui.prefs.MultiSelectListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/list_editor_footer_text"
+        android:id="@+id/list_editor_header_text"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_extra_large"
+        android:padding="@dimen/margin_extra_large"
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/grey_darken_10" />
+
+    <View
+        android:background="@color/divider_grey"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/list_editor_header_text"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_width="match_parent" />
+
+    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+        android:id="@android:id/list"
+        android:layout_below="@+id/list_editor_header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!-- CoordinatorLayout required: https://code.google.com/p/android/issues/detail?id=175330 -->
     <android.support.design.widget.CoordinatorLayout
@@ -57,4 +61,4 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-</LinearLayout>
+</RelativeLayout>
