@@ -55,7 +55,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSites() {
-        String url = WPCOMREST.ME_SITES.getUrlV1_1();
+        String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -80,7 +80,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = WPCOMREST.SITES.getUrlV1_1() + site.getSiteId();
+        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
@@ -103,7 +103,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
-        String url = WPCOMREST.SITES_NEW.getUrlV1();
+        String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("blog_name", siteName);
         params.put("blog_title", siteTitle);
@@ -142,6 +142,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setDescription(from.description);
         site.setIsJetpack(from.jetpack);
         site.setIsVisible(from.visible);
+        site.setIsPrivate(from.is_private);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read blog options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
