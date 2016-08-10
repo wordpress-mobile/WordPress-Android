@@ -56,10 +56,10 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class UpdatePostFormatsPayload implements Payload {
+    public static class FetchedPostFormatsPayload implements Payload {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
-        public UpdatePostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
+        public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
         }
@@ -519,8 +519,8 @@ public class SiteStore extends Store {
             emitChange(onNewSiteCreated);
         } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
             fetchPostFormats((SiteModel) action.getPayload());
-        } else if (actionType == SiteAction.UPDATE_POST_FORMATS) {
-            UpdatePostFormatsPayload payload = (UpdatePostFormatsPayload) action.getPayload();
+        } else if (actionType == SiteAction.FETCHED_POST_FORMATS) {
+            FetchedPostFormatsPayload payload = (FetchedPostFormatsPayload) action.getPayload();
             updatePostFormats(payload.site, payload.postFormats);
         }
     }
