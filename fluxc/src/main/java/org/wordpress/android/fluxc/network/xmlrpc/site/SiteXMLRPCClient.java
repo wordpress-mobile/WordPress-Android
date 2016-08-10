@@ -137,7 +137,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             }
             HashMap<String, ?> siteMap = (HashMap<String, ?>) siteObject;
             SiteModel site = new SiteModel();
-            // From the response
+            // TODO: use MapUtils.getX(map,"", defaultValue) here
             site.setDotOrgSiteId(Integer.parseInt((String) siteMap.get("blogid")));
             site.setName((String) siteMap.get("blogName"));
             // TODO: set a canonical URL here
@@ -145,9 +145,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setLoginUrl((String) siteMap.get("login_url"));
             site.setXmlRpcUrl((String) siteMap.get("xmlrpc"));
             site.setIsAdmin((Boolean) siteMap.get("isAdmin"));
+            // Self Hosted won't be hidden
             site.setIsVisible(true);
-            // TODO: siteMap.get("isPrimary")
-
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
@@ -173,6 +172,14 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         oldModel.setTimezone(getOption(blogOptions, "time_zone", String.class));
         long dotComIdForJetpack = Long.valueOf(getOption(blogOptions, "jetpack_client_id", String.class));
         oldModel.setSiteId(dotComIdForJetpack);
+        // If the blog is not public, it's private. Note: this field doesn't always exist.
+        oldModel.setIsPrivate(false);
+        if (blogOptions.containsKey("blog_public")) {
+            Boolean isPublic = getOption(blogOptions, "blog_public", Boolean.class);
+            if (isPublic != null) {
+                oldModel.setIsPrivate(!isPublic);
+            }
+        }
         if (dotComIdForJetpack != 0) {
             oldModel.setIsJetpack(true);
         }
