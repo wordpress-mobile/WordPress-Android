@@ -59,6 +59,7 @@ public class SiteWPComRestResponse implements Payload, Response {
     public String description;
     public boolean jetpack;
     public boolean visible;
+    public boolean is_private;
     public Options options;
     public Capabilities capabilities;
     public Plan plan;
