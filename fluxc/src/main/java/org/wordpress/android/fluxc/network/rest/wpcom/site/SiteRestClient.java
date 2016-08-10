@@ -33,7 +33,6 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -60,7 +59,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSites() {
-        String url = WPCOMREST.ME_SITES.getUrlV1_1();
+        String url = WPCOMREST.me.sites.getUrlV1_1();
         final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -85,7 +84,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = WPCOMREST.SITES.getUrlV1_1() + site.getSiteId();
+        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
@@ -108,7 +107,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
-        String url = WPCOMREST.SITES_NEW.getUrlV1();
+        String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("blog_name", siteName);
         params.put("blog_title", siteTitle);
@@ -140,9 +139,8 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullPostFormats(@NonNull final SiteModel site) {
-        String url = String.format(Locale.US, WPCOMREST.SITES_POST_FORMATS.getUrlV1_1(), site.getSiteId());
         final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
-                url, null, PostFormatsResponse.class,
+                WPCOMREST.sites.site(site.getSiteId()).post_formats.getEndpoint(), null, PostFormatsResponse.class,
                 new Listener<PostFormatsResponse>() {
                     @Override
                     public void onResponse(PostFormatsResponse response) {
