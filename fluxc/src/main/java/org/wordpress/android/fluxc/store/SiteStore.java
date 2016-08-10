@@ -482,7 +482,7 @@ public class SiteStore extends Store {
             mSiteXMLRPCClient.pullSites(payload.url, payload.username, payload.password);
         } else if (actionType == SiteAction.FETCH_SITE) {
             SiteModel site = (SiteModel) action.getPayload();
-            if (site.isWPCom() || site.isJetpack()) {
+            if (site.isWPCom()) {
                 mSiteRestClient.pullSite(site);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
