@@ -40,6 +40,7 @@ public class SiteModel implements Identifiable, Payload, Serializable {
     // WPCom specifics
     @Column private boolean mIsJetpack;
     @Column private boolean mIsVisible;
+    @Column private boolean mIsPrivate;
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
     @Column private String mPlanShortName;
@@ -179,6 +180,14 @@ public class SiteModel implements Identifiable, Payload, Serializable {
 
     public void setIsVisible(boolean visible) {
         mIsVisible = visible;
+    }
+
+    public boolean isPrivate() {
+        return mIsPrivate;
+    }
+
+    public void setIsPrivate(boolean isPrivate) {
+        mIsPrivate = isPrivate;
     }
 
     public boolean isFeaturedImageSupported() {
