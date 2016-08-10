@@ -101,7 +101,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
-            handleBadgeResetPN();
+            handleBadgeResetPN(data);
             return;
         }
 
@@ -335,8 +335,13 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Clear all notifications
-    private void handleBadgeResetPN() {
-        removeAllNotifications(this);
+    private void handleBadgeResetPN(Bundle data) {
+        if (data != null && data.containsKey(PUSH_ARG_NOTE_ID)) {
+            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
+            removeNotificationFromSystemBar(this, noteId);
+        } else {
+            removeAllNotifications(this);
+        }
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
@@ -452,8 +457,27 @@ public class GCMMessageService extends GcmListenerService {
         return !sActiveNotificationsMap.isEmpty();
     }
 
+    // Removes a specific notification from the internal map - only use this when we know
+    // the user has dismissed the app by swiping it off the screen
     public static synchronized void removeNotification(int notificationId) {
         sActiveNotificationsMap.remove(notificationId);
+    }
+
+    // Removes a specific notification from the system bar
+    public static synchronized void removeNotificationFromSystemBar(Context context, String noteID) {
+        if (context == null || !hasNotifications()) {
+            return;
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        for (Integer pushId : sActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = sActiveNotificationsMap.get(pushId);
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
+                notificationManager.cancel(pushId);
+                removeNotification(pushId);
+                return;
+            }
+        }
     }
 
     // Removes all app notifications from the system bar
