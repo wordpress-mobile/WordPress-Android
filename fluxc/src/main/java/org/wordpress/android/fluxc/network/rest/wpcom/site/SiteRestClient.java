@@ -10,14 +10,15 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -25,10 +26,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -132,6 +136,37 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         ));
+    }
+
+    public void pullPostFormats(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
+        final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, null, PostFormatsResponse.class,
+                new Listener<PostFormatsResponse>() {
+                    @Override
+                    public void onResponse(PostFormatsResponse response) {
+                        List<PostFormatModel> postFormats = new ArrayList<>();
+                        if (response.formats != null) {
+                            for (String key : response.formats.keySet()) {
+                                PostFormatModel postFormat = new PostFormatModel();
+                                postFormat.setSlug(key);
+                                postFormat.setDisplayName(response.formats.get(key));
+                                postFormats.add(postFormat);
+                            }
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                FetchedPostFormatsPayload(site, postFormats)));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(T.API, "Volley error", error);
+                        // TODO: Error, dispatch network error
+                    }
+                }
+        );
+        add(request);
     }
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
