@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
-import org.wordpress.android.fluxc.utils.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -49,11 +48,9 @@ public class PostRestClient extends BaseWPComRestClient {
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
-        // TODO: Drop this when we add support for GET params to GsonRequest
-        url = NetworkUtils.addParamsToUrl(url, params);
 
         final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Request.Method.GET,
-                url, null, PostsResponse.class,
+                url, params, PostsResponse.class,
                 new Response.Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
