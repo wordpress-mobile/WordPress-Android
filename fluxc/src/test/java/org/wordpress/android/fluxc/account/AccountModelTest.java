@@ -1,4 +1,4 @@
-package org.wordpress.android.stores.account;
+package org.wordpress.android.fluxc.account;
 
 import junit.framework.Assert;
 
@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.wordpress.android.stores.model.AccountModel;
+import org.wordpress.android.fluxc.model.AccountModel;
 
 @RunWith(RobolectricTestRunner.class)
 public class AccountModelTest {
