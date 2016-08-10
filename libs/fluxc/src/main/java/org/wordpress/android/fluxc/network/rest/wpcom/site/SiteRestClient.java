@@ -139,8 +139,9 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullPostFormats(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
         final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
-                WPCOMREST.sites.site(site.getSiteId()).post_formats.getEndpoint(), null, PostFormatsResponse.class,
+                url, null, PostFormatsResponse.class,
                 new Listener<PostFormatsResponse>() {
                     @Override
                     public void onResponse(PostFormatsResponse response) {
