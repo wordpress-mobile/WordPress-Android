@@ -69,6 +69,9 @@ public class WPCOMREST {
                     }
                 }
             }
+
+            @Endpoint("/sites/$site/post-formats/")
+            public WPComEndpoint post_formats = new WPComEndpoint(getEndpoint() + "post-formats/");
         }
     }
 
