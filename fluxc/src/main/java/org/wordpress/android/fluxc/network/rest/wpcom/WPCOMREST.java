@@ -71,13 +71,7 @@ public class WPCOMREST {
             }
 
             @Endpoint("/sites/$site/post-formats/")
-            public final PostFormatsEndpoint post_formats = new PostFormatsEndpoint(getEndpoint());
-
-            public static class PostFormatsEndpoint extends WPComEndpoint {
-                private PostFormatsEndpoint(String previousEndpoint) {
-                    super(previousEndpoint + "post-formats/");
-                }
-            }
+            public WPComEndpoint post_formats = new WPComEndpoint(getEndpoint() + "post-formats/");
         }
     }
 
