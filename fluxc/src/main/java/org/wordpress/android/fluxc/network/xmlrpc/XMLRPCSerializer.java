@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SimpleTimeZone;
 
-class XMLRPCSerializer {
+public class XMLRPCSerializer {
     // Writes to /dev/null
     private static class NullOutputStream extends OutputStream {
         @Override
@@ -34,21 +34,21 @@ class XMLRPCSerializer {
         }
     }
 
-    static final String TAG_NAME = "name";
-    static final String TAG_MEMBER = "member";
-    static final String TAG_VALUE = "value";
-    static final String TAG_DATA = "data";
+    public static final String TAG_NAME = "name";
+    public static final String TAG_MEMBER = "member";
+    public static final String TAG_VALUE = "value";
+    public static final String TAG_DATA = "data";
 
-    static final String TYPE_INT = "int";
-    static final String TYPE_I4 = "i4";
-    static final String TYPE_I8 = "i8";
-    static final String TYPE_DOUBLE = "double";
-    static final String TYPE_BOOLEAN = "boolean";
-    static final String TYPE_STRING = "string";
-    static final String TYPE_DATE_TIME_ISO8601 = "dateTime.iso8601";
-    static final String TYPE_BASE64 = "base64";
-    static final String TYPE_ARRAY = "array";
-    static final String TYPE_STRUCT = "struct";
+    public static final String TYPE_INT = "int";
+    public static final String TYPE_I4 = "i4";
+    public static final String TYPE_I8 = "i8";
+    public static final String TYPE_DOUBLE = "double";
+    public static final String TYPE_BOOLEAN = "boolean";
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_DATE_TIME_ISO8601 = "dateTime.iso8601";
+    public static final String TYPE_BASE64 = "base64";
+    public static final String TYPE_ARRAY = "array";
+    public static final String TYPE_STRUCT = "struct";
 
     static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss");
     static Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
@@ -69,7 +69,7 @@ class XMLRPCSerializer {
     }
 
     @SuppressWarnings("unchecked")
-    static void serialize(XmlSerializer serializer, Object object) throws IOException {
+    public static void serialize(XmlSerializer serializer, Object object) throws IOException {
         // check for scalar types:
         if (object instanceof Integer || object instanceof Short || object instanceof Byte) {
             serializer.startTag(null, TYPE_I4).text(object.toString()).endTag(null, TYPE_I4);
@@ -197,7 +197,7 @@ class XMLRPCSerializer {
 //        }
     }
 
-    static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException, NumberFormatException {
+    public static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException, NumberFormatException {
         parser.require(XmlPullParser.START_TAG, null, TAG_VALUE);
 
         parser.nextTag();
