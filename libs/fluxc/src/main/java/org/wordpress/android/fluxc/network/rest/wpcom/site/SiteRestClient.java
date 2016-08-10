@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
-import org.wordpress.android.fluxc.store.SiteStore.UpdatePostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -153,8 +153,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 postFormats.add(postFormat);
                             }
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdatePostFormatsAction(new
-                                UpdatePostFormatsPayload(site, postFormats)));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
                 new ErrorListener() {
