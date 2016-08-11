@@ -160,6 +160,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     }
                 });
 
+        request.disableRetries();
         add(request);
     }
 
