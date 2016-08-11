@@ -240,7 +240,7 @@ public class PostStore extends Store {
                 offset = getUploadedPostsCountForSite(payload.site);
             }
 
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
+            if (payload.site.isWPCom()) {
                 mPostRestClient.fetchPosts(payload.site, false, offset);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
@@ -254,7 +254,7 @@ public class PostStore extends Store {
                 offset = getUploadedPostsCountForSite(payload.site);
             }
 
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
+            if (payload.site.isWPCom()) {
                 mPostRestClient.fetchPosts(payload.site, true, offset);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
@@ -285,7 +285,7 @@ public class PostStore extends Store {
             emitChange(onPostChanged);
         } else if (actionType == PostAction.FETCH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
+            if (payload.site.isWPCom()) {
                 // TODO: Implement REST API pages fetch
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
@@ -332,7 +332,7 @@ public class PostStore extends Store {
             emitChange(onPostChanged);
         } else if (actionType == PostAction.DELETE_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
+            if (payload.site.isWPCom()) {
                 // TODO: Implement REST API post delete
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
