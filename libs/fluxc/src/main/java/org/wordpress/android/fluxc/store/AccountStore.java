@@ -78,6 +78,8 @@ public class AccountStore extends Store {
 
     // OnChanged Events
     public class OnAccountChanged extends OnChanged {
+        public boolean isError;
+        public AccountError errorType;
         public boolean accountInfosChanged;
         public AccountAction causeOfChange;
     }
@@ -141,6 +143,13 @@ public class AccountStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum AccountError {
+        ACCOUNT_FETCH_ERROR,
+        SETTINGS_FETCH_ERROR,
+        SETTINGS_POST_ERROR,
+        GENERIC_ERROR
     }
 
     public enum NewUserError {
@@ -241,12 +250,16 @@ public class AccountStore extends Store {
             if (!checkError(data, "Error fetching Account via REST API (/me)")) {
                 mAccount.copyAccountAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
+            } else {
+                emitAccountChangeError(AccountError.ACCOUNT_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.FETCHED_SETTINGS) {
             AccountRestPayload data = (AccountRestPayload) action.getPayload();
             if (!checkError(data, "Error fetching Account Settings via REST API (/me/settings)")) {
                 mAccount.copyAccountSettingsAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
+            } else {
+                emitAccountChangeError(AccountError.SETTINGS_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.PUSHED_SETTINGS) {
             AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
@@ -259,8 +272,9 @@ public class AccountStore extends Store {
                     accountChanged.accountInfosChanged = false;
                     emitChange(accountChanged);
                 }
+            } else {
+                emitAccountChangeError(AccountError.SETTINGS_POST_ERROR);
             }
-            // TODO: error management
         } else if (actionType == AccountAction.UPDATE_ACCOUNT) {
             AccountModel accountModel = (AccountModel) action.getPayload();
             updateDefaultAccount(accountModel, AccountAction.UPDATE_ACCOUNT);
@@ -280,6 +294,13 @@ public class AccountStore extends Store {
             onNewUserCreated.dryRun = payload.dryRun;
             emitChange(onNewUserCreated);
         }
+    }
+
+    private void emitAccountChangeError(AccountError errorType) {
+        OnAccountChanged accountChanged = new OnAccountChanged();
+        accountChanged.isError = true;
+        accountChanged.errorType = errorType;
+        emitChange(accountChanged);
     }
 
     private void newAccount(NewAccountPayload payload) {
