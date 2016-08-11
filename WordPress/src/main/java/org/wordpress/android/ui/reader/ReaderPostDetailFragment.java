@@ -92,6 +92,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
     private View mLikingUsersDivider;
+    private View mLikingUsersLabel;
 
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
@@ -195,6 +196,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutFooter = (ViewGroup) view.findViewById(R.id.layout_post_detail_footer);
         mLikingUsersView = (ReaderLikingUsersView) view.findViewById(R.id.layout_liking_users_view);
         mLikingUsersDivider = view.findViewById(R.id.layout_liking_users_divider);
+        mLikingUsersLabel = view.findViewById(R.id.text_liking_users_label);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -449,8 +451,10 @@ public class ReaderPostDetailFragment extends Fragment
         // with the correct info once the new post loads
         getView().findViewById(R.id.container_related_posts).setVisibility(View.GONE);
         getView().findViewById(R.id.text_related_posts_label).setVisibility(View.GONE);
+
         mLikingUsersView.setVisibility(View.GONE);
         mLikingUsersDivider.setVisibility(View.GONE);
+        mLikingUsersLabel.setVisibility(View.GONE);
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         mReaderWebView.clearContent();
@@ -634,6 +638,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (mPost.numLikes > 0 && mLikingUsersView.getVisibility() == View.GONE) {
                 mLikingUsersView.setVisibility(View.INVISIBLE);
                 mLikingUsersDivider.setVisibility(View.INVISIBLE);
+                mLikingUsersLabel.setVisibility(View.INVISIBLE);
             }
         } else {
             countLikes.setVisibility(View.INVISIBLE);
@@ -653,6 +658,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost.numLikes == 0) {
             mLikingUsersView.setVisibility(View.GONE);
             mLikingUsersDivider.setVisibility(View.GONE);
+            mLikingUsersLabel.setVisibility(View.GONE);
             return;
         }
 
@@ -665,6 +671,7 @@ public class ReaderPostDetailFragment extends Fragment
         });
 
         mLikingUsersDivider.setVisibility(View.VISIBLE);
+        mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
         mLikingUsersView.showLikingUsers(mPost);
     }
