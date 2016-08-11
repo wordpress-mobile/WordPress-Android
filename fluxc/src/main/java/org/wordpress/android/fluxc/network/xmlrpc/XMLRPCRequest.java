@@ -58,9 +58,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         try {
             String data = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
-            // TODO: Clean up response here (WordPress can output junk before the xml response (php warnings for
-            // example)
-            Object obj = XMLSerializerUtils.deserialize(is);
+            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             return Response.success(obj, HttpHeaderParser.parseCacheHeaders(response));
         } catch (XMLRPCFault e) {
             return Response.error(new ParseError(e));
