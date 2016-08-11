@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network;
 
 import android.util.Base64;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response.ErrorListener;
 
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
@@ -15,6 +16,8 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
     }
 
     private static final String USER_AGENT_HEADER = "User-Agent";
+    private static final int DEFAULT_REQUEST_TIMEOUT = 30000;
+
     protected OnAuthFailedListener mOnAuthFailedListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
 
@@ -22,6 +25,8 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
         super(method, url, listener);
         // Make sure all our custom Requests are never cached.
         setShouldCache(false);
+        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     @Override
@@ -44,5 +49,12 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
 
     public void setUserAgent(String userAgent) {
         mHeaders.put(USER_AGENT_HEADER, userAgent);
+    }
+
+    /**
+     * Convenience method for setting a {@link com.android.volley.RetryPolicy} with no retries.
+     */
+    public void disableRetries() {
+        setRetryPolicy(new DefaultRetryPolicy(DEFAULT_REQUEST_TIMEOUT, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 }
