@@ -309,8 +309,8 @@ public class PostStore extends Store {
             emitChange(new OnPostInstantiated(newPost));
         } else if (actionType == PostAction.PUSH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            if (payload.site.isWPCom() || payload.site.isJetpack()) {
-                // TODO: Implement REST API post push
+            if (payload.site.isWPCom()) {
+                mPostRestClient.pushPost(payload.post, payload.site);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.pushPost(payload.post, payload.site);

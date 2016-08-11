@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
+import android.text.TextUtils;
+
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
@@ -19,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
@@ -102,6 +105,41 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void pushPost(final PostModel post, final SiteModel site) {
+        final String url;
+
+        if (post.isLocalDraft()) {
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+        }
+
+        Map<String, String> params = postModelToParams(post);
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, params, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel uploadedPost = postResponseToPostModel(response);
+
+                        uploadedPost.setIsLocalDraft(false);
+                        uploadedPost.setIsLocallyChanged(false);
+
+                        RemotePostPayload payload = new RemotePostPayload(uploadedPost, site);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle errors
+                    }
+                }
+        );
+        add(request);
+    }
+
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
         PostModel post = new PostModel();
         post.setRemotePostId(from.ID);
@@ -153,5 +191,37 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         return post;
+    }
+
+    private Map<String, String> postModelToParams(PostModel post) {
+        Map<String, String> params = new HashMap<>();
+
+        // TODO: Send empty strings where string values are null
+        params.put("status", post.getStatus());
+        params.put("title", post.getTitle());
+        params.put("content", post.getContent());
+        params.put("excerpt", post.getExcerpt());
+
+        if (post.isLocalDraft() && post.getDateCreated() != null) {
+            params.put("date", post.getDateCreated());
+        }
+
+        if (!post.isPage()) {
+            if (!TextUtils.isEmpty(post.getPostFormat())) {
+                params.put("format", post.getPostFormat());
+            }
+        } else {
+            params.put("type", "page");
+        }
+
+        params.put("password", post.getPassword());
+
+        params.put("categories_by_id", post.getCategoryIds());
+        params.put("tags_by_id", post.getTagIds());
+
+        // Will remove any existing featured image if this is the empty string
+        params.put("featured_image", String.valueOf(post.getFeaturedImageId()));
+
+        return params;
     }
 }
