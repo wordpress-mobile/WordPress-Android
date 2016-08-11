@@ -2,6 +2,9 @@
 <resources>
     <string-array name="invite_roles_public" translatable="true">
         <item>
+            Follower
+        </item>
+        <item>
             Administrator
         </item>
         <item>

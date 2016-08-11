@@ -2,6 +2,9 @@
 <resources>
     <string-array name="invite_roles_private" translatable="true">
         <item>
+            Viewer
+        </item>
+        <item>
             Administrator
         </item>
         <item>
