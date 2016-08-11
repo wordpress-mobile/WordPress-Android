@@ -286,7 +286,7 @@ public class PostStore extends Store {
         } else if (actionType == PostAction.FETCH_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom()) {
-                // TODO: Implement REST API pages fetch
+                mPostRestClient.fetchPost(payload.post, payload.site);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site);

@@ -1,8 +1,9 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
-import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
@@ -36,6 +37,28 @@ public class PostRestClient extends BaseWPComRestClient {
         super(dispatcher, requestQueue, accessToken, userAgent);
     }
 
+    public void fetchPost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
+                url, null, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel post = postResponseToPostModel(response);
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle errors
+                    }
+                }
+        );
+        add(request);
+    }
+
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
@@ -49,9 +72,9 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("offset", String.valueOf(offset));
         }
 
-        final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Request.Method.GET,
+        final WPComGsonRequest<PostsResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, params, PostsResponse.class,
-                new Response.Listener<PostsResponse>() {
+                new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
                         PostsModel posts = new PostsModel();
@@ -68,7 +91,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
-                new Response.ErrorListener() {
+                new ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.e(AppLog.T.API, "Volley error", error);
