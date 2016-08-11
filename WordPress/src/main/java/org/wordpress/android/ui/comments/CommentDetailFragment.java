@@ -29,7 +29,6 @@ import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -93,6 +92,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private static final String KEY_COMMENT_ID = "comment_id";
     private static final String KEY_NOTE_ID = "note_id";
 
+    private static final int INTENT_COMMENT_EDITOR     = 1010;
     private static final int FROM_BLOG_COMMENT = 1;
     private static final int FROM_NOTE = 2;
     private static final int FROM_NOTE_REMOTE = 3;
@@ -485,7 +485,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
+        if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             if (mNote == null) {
                 reloadComment();
             }
@@ -556,7 +556,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mNote != null) {
             intent.putExtra(EditCommentActivity.ARG_NOTE_ID, mNote.getId());
         }
-        startActivityForResult(intent, Constants.INTENT_COMMENT_EDITOR);
+        startActivityForResult(intent, INTENT_COMMENT_EDITOR);
     }
 
     /*
