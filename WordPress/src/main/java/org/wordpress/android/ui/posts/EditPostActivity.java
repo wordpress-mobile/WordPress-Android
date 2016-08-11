@@ -233,11 +233,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
         }
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
-        }
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
@@ -307,6 +302,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
