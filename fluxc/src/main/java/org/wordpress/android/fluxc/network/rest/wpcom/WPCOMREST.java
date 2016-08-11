@@ -43,6 +43,9 @@ public class WPCOMREST {
             @Endpoint("/sites/$site/posts/")
             public final PostsEndpoint posts = new PostsEndpoint(getEndpoint());
 
+            @Endpoint("/sites/$site/media/")
+            public final MediaEndpoint media = new MediaEndpoint(getEndpoint());
+
             private SiteEndpoint(String previousEndpoint, long siteId) {
                 super(previousEndpoint, siteId);
             }
@@ -72,6 +75,29 @@ public class WPCOMREST {
 
             @Endpoint("/sites/$site/post-formats/")
             public WPComEndpoint post_formats = new WPComEndpoint(getEndpoint() + "post-formats/");
+
+            public static class MediaEndpoint extends WPComEndpoint {
+                protected MediaEndpoint(String previousEndpoint) {
+                    super(previousEndpoint + "media/");
+                }
+
+                @Endpoint("sites/$site/media/new/")
+                public final WPComEndpoint new_ = new WPComEndpoint(getEndpoint() + "new/");
+
+                @Endpoint("sites/$site/media/$media_ID")
+                public MediaItemEndpoint item(long mediaId) {
+                    return new MediaItemEndpoint(getEndpoint(), mediaId);
+                }
+
+                public static class MediaItemEndpoint extends WPComEndpoint {
+                    private MediaItemEndpoint(String previousEndpoint, long mediaId) {
+                        super(previousEndpoint, mediaId);
+                    }
+
+                    @Endpoint("sites/$site/media/$media_ID/delete")
+                    public final WPComEndpoint delete = new WPComEndpoint(getEndpoint() + "delete/");
+                }
+            }
         }
     }
 
