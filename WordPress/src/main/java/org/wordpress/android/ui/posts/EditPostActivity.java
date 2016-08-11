@@ -48,7 +48,6 @@ import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.Constants;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -57,8 +56,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragmentAbstract;
-import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
+import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
@@ -66,11 +65,11 @@ import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
-import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.models.Post;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -1215,23 +1214,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Special actions
         String action = getIntent().getAction();
-        int quickMediaType = getIntent().getIntExtra("quick-media", -1);
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             setPostContentFromShareAction();
         } else if (NEW_MEDIA_GALLERY.equals(action)) {
             prepareMediaGallery();
         } else if (NEW_MEDIA_POST.equals(action)) {
             prepareMediaPost();
-        } else if (quickMediaType >= 0) {
-            // User selected 'Quick Photo' in the menu drawer
-            if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA) {
-                launchCamera();
-            } else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
-                WordPressMediaUtils.launchPictureLibrary(this);
-            }
-            if (post != null) {
-                post.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
-            }
         }
     }
 

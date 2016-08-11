@@ -37,9 +37,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
-
 @SuppressWarnings("deprecation")
 public class AccountSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
     private Preference mUsernamePreference;
@@ -108,12 +105,10 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
         super.onStop();
     }
@@ -233,28 +228,24 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mDispatcher.dispatch(AccountActionBuilder.newPostSettingsAction(payload));
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (isAdded()) {
-            // TODO: STORES: manage errors
+        if (!isAdded()) return;
+
+        if (event.isError) {
+            switch (event.errorType) {
+                case SETTINGS_FETCH_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    break;
+                case SETTINGS_POST_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+                    // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+                    checkIfEmailChangeIsPending();
+                    break;
+            }
+        } else {
             refreshAccountDetails();
-        }
-    }
-
-    // TODO: STORES: manage errors - function below should be killed
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
-        }
-    }
-
-    // TODO: STORES: manage errors - function below should be killed
-    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-
-            // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
-            checkIfEmailChangeIsPending();
         }
     }
 
@@ -281,7 +272,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
         return ids.toArray(new String[ids.size()]);
     }
-
 
     /*
      * AsyncTask which loads sites from database for primary site preference
