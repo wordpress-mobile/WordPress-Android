@@ -137,6 +137,8 @@ public class PostRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+
+        request.disableRetries();
         add(request);
     }
 
