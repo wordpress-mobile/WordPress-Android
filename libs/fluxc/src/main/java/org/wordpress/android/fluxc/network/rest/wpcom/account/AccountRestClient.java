@@ -168,7 +168,9 @@ public class AccountRestClient extends BaseWPComRestClient {
         params.put("validate", dryRun ? "1" : "0");
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
-        add(new WPComGsonRequest<>(Method.POST, url, params, NewAccountResponse.class,
+
+        WPComGsonRequest<NewAccountResponse> request = new WPComGsonRequest<>(Method.POST, url, params,
+                NewAccountResponse.class,
                 new Listener<NewAccountResponse>() {
                     @Override
                     public void onResponse(NewAccountResponse response) {
@@ -186,7 +188,10 @@ public class AccountRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
                     }
                 }
-        ));
+        );
+
+        request.disableRetries();
+        add(request);
     }
 
     private NewAccountResponsePayload volleyErrorToAccountResponsePayload(VolleyError error) {
