@@ -365,10 +365,9 @@ public class GCMMessageService extends GcmListenerService {
     private void handleBadgeResetPN(Bundle data) {
         if (data != null && data.containsKey(PUSH_ARG_NOTE_ID)) {
             removeNotificationWithNoteIdFromSystemBar(this, data);
-            //once we're done iterating through activeNotifications to see which notifications are affected by this noteId,
-            //(that is, which ones needed be cancelled/cleared) we can check and rebuild it visually
+            //now that we cleared the specific notif, we can check and make any visual updates
             if (sActiveNotificationsMap.size() > 0) {
-                // here notify the existing group notification by eliminating the line that is gone
+                // here notify the existing group notification by eliminating the line that is now gone
                 String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
                 if (title == null) {
                     title = getString(R.string.app_name);
@@ -376,19 +375,16 @@ public class GCMMessageService extends GcmListenerService {
                 String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
 
                 if (sActiveNotificationsMap.size() == 1) {
-                    //only one notification remains, so get the proper message for it and re-instante in the system dashboard
-                    for (Integer pushId : sActiveNotificationsMap.keySet()) {
-                        Bundle dataRemainingNote = sActiveNotificationsMap.get(pushId);
-                        if (dataRemainingNote != null) {
-
-                            String titleRemainingNote = StringEscapeUtils.unescapeHtml(dataRemainingNote.getString(PUSH_ARG_TITLE));
-                            if (!TextUtils.isEmpty(titleRemainingNote)) {
-                                title = titleRemainingNote;
-                            }
-                            String messageRemainingNote = StringEscapeUtils.unescapeHtml(dataRemainingNote.getString(PUSH_ARG_MSG));
-                            if (!TextUtils.isEmpty(messageRemainingNote)) {
-                                message = messageRemainingNote;
-                            }
+                    //only one notification remains, so get the proper message for it and re-instate in the system dashboard
+                    Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+                    if (remainingNote != null) {
+                        String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
+                        if (!TextUtils.isEmpty(remainingNoteTitle)) {
+                            title = remainingNoteTitle;
+                        }
+                        String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
+                        if (!TextUtils.isEmpty(remainingNoteMessage)) {
+                            message = remainingNoteMessage;
                         }
                     }
                 }
