@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.utils;
 
 import com.android.volley.Request.Method;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-public class UtilsTest {
+public class GsonRequestTest {
     @Test
     public void testAddParamsToUrlIfGet() {
         String baseUrl = "https://public-api.wordpress.com/rest/v1.1/sites/56/posts/";
@@ -36,6 +36,5 @@ public class UtilsTest {
         assertEquals(baseUrl, GsonRequest.addParamsToUrlIfGet(Method.POST, baseUrl,
                 Collections.<String, String>emptyMap()));
         assertEquals(baseUrl, GsonRequest.addParamsToUrlIfGet(Method.POST, baseUrl, params));
-
     }
 }
