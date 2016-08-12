@@ -140,82 +140,85 @@ public class PostStore extends Store {
     }
 
     /**
-     * Returns all posts in the store as a {@link PostModel} list.
+     * Returns all posts and pages in the store as a {@link PostModel} list.
      */
     public List<PostModel> getPosts() {
         return WellSql.select(PostModel.class).getAsModel();
     }
 
     /**
-     * Returns all posts in the store as a {@link Cursor}.
+     * Returns all posts and pages in the store as a {@link Cursor}.
      */
     public Cursor getPostsCursor() {
         return WellSql.select(PostModel.class).getAsCursor();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of posts and pages in the store.
      */
     public int getPostsCount() {
         return getPostsCursor().getCount();
     }
 
     /**
-     * Returns all posts in the store as a {@link PostModel} list.
+     * Returns all posts in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPostsForSite(SiteModel site) {
         return PostSqlUtils.getPostsForSite(site, false);
     }
 
     /**
-     * Returns all posts in the store as a {@link PostModel} list.
+     * Returns all pages in the store for the given site as a {@link PostModel} list.
      */
     public List<PostModel> getPagesForSite(SiteModel site) {
         return PostSqlUtils.getPostsForSite(site, true);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of posts in the store for the given site.
      */
     public int getPostsCountForSite(SiteModel site) {
         return getPostsForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of pages in the store for the given site.
      */
     public int getPagesCountForSite(SiteModel site) {
         return getPagesForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns all uploaded posts in the store for the given site.
      */
     public List<PostModel> getUploadedPostsForSite(SiteModel site) {
         return PostSqlUtils.getUploadedPostsForSite(site, false);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns all uploaded pages in the store for the given site.
      */
     public List<PostModel> getUploadedPagesForSite(SiteModel site) {
         return PostSqlUtils.getUploadedPostsForSite(site, true);
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of uploaded posts in the store for the given site.
      */
     public int getUploadedPostsCountForSite(SiteModel site) {
         return getUploadedPostsForSite(site).size();
     }
 
     /**
-     * Returns the number of posts in the store.
+     * Returns the number of uploaded pages in the store for the given site.
      */
     public int getUploadedPagesCountForSite(SiteModel site) {
         return getUploadedPagesForSite(site).size();
     }
 
+    /**
+     * Given a local ID for a post, returns that post as a {@link PostModel}.
+     */
     public PostModel getPostByLocalPostId(long localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
                 .where().equals(PostModelTable.ID, localId).endWhere()
