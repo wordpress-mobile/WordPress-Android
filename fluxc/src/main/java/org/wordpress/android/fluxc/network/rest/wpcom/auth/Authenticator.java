@@ -32,7 +32,6 @@ public class Authenticator {
 
     public static final String CLIENT_ID_PARAM_NAME = "client_id";
     public static final String CLIENT_SECRET_PARAM_NAME = "client_secret";
-    public static final String REDIRECT_URI_PARAM_NAME = "redirect_uri";
     public static final String CODE_PARAM_NAME = "code";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
     public static final String USERNAME_PARAM_NAME = "username";
@@ -89,26 +88,23 @@ public class Authenticator {
 
     public TokenRequest makeRequest(String username, String password, String twoStepCode, boolean shouldSendTwoStepSMS,
                                     Listener listener, ErrorListener errorListener) {
-        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), mAppSecrets.getRedirectUri(), username, password, twoStepCode,
+        return new PasswordRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), username, password, twoStepCode,
                 shouldSendTwoStepSMS, listener, errorListener);
     }
 
     public TokenRequest makeRequest(String code, Listener listener, ErrorListener errorListener) {
-        return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), mAppSecrets.getRedirectUri(), code, listener, errorListener);
+        return new BearerRequest(mAppSecrets.getAppId(), mAppSecrets.getAppSecret(), code, listener, errorListener);
     }
 
     private static class TokenRequest extends Request<Token> {
         private final Listener mListener;
         protected Map<String, String> mParams = new HashMap<>();
 
-        TokenRequest(String appId, String appSecret, String redirectUri, Listener listener, ErrorListener errorListener) {
+        TokenRequest(String appId, String appSecret, Listener listener, ErrorListener errorListener) {
             super(Method.POST, TOKEN_ENDPOINT, errorListener);
             mListener = listener;
             mParams.put(CLIENT_ID_PARAM_NAME, appId);
             mParams.put(CLIENT_SECRET_PARAM_NAME, appSecret);
-            if (!TextUtils.isEmpty(redirectUri)) {
-                mParams.put(REDIRECT_URI_PARAM_NAME, redirectUri);
-            }
         }
 
         @Override
@@ -136,9 +132,9 @@ public class Authenticator {
     }
 
     public static class PasswordRequest extends TokenRequest {
-        public PasswordRequest(String appId, String appSecret, String redirectUri, String username, String password, String twoStepCode,
+        public PasswordRequest(String appId, String appSecret, String username, String password, String twoStepCode,
                                boolean shouldSendTwoStepSMS, Listener listener, ErrorListener errorListener) {
-            super(appId, appSecret, redirectUri, listener, errorListener);
+            super(appId, appSecret, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
@@ -155,9 +151,9 @@ public class Authenticator {
     }
 
     public static class BearerRequest extends TokenRequest {
-        public BearerRequest(String appId, String appSecret, String redirectUri, String code, Listener listener,
+        public BearerRequest(String appId, String appSecret, String code, Listener listener,
                              ErrorListener errorListener) {
-            super(appId, appSecret, redirectUri, listener, errorListener);
+            super(appId, appSecret, listener, errorListener);
             mParams.put(CODE_PARAM_NAME, code);
             mParams.put(GRANT_TYPE_PARAM_NAME, BEARER_GRANT_TYPE);
         }
