@@ -48,8 +48,10 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
-                        PostModel post = postResponseToPostModel(response);
-                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+                        PostModel fetchedPost = postResponseToPostModel(response);
+                        fetchedPost.setId(post.getId());
+                        fetchedPost.setLocalSiteId(site.getId());
+                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(fetchedPost));
                     }
                 },
                 new ErrorListener() {
@@ -125,6 +127,8 @@ public class PostRestClient extends BaseWPComRestClient {
 
                         uploadedPost.setIsLocalDraft(false);
                         uploadedPost.setIsLocallyChanged(false);
+                        uploadedPost.setId(post.getId());
+                        uploadedPost.setLocalSiteId(site.getId());
 
                         RemotePostPayload payload = new RemotePostPayload(uploadedPost, site);
                         mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
@@ -150,7 +154,10 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostWPComRestResponse>() {
                     @Override
                     public void onResponse(PostWPComRestResponse response) {
-                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(postResponseToPostModel(response)));
+                        PostModel deletedPost = postResponseToPostModel(response);
+                        deletedPost.setId(post.getId());
+                        deletedPost.setLocalSiteId(post.getLocalSiteId());
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(deletedPost));
                     }
                 },
                 new ErrorListener() {
