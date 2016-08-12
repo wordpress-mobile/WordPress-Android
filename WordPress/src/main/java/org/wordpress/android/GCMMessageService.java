@@ -38,6 +38,7 @@ import org.wordpress.android.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -104,6 +105,18 @@ public class GCMMessageService extends GcmListenerService {
             handleBadgeResetPN(data);
             return;
         }
+
+        buildAndShowNotificationFromNoteData(data);
+
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    private void buildAndShowNotificationFromNoteData(Bundle data) {
+
+        if (data == null)
+            return;
+
+        String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
         String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
@@ -189,18 +202,8 @@ public class GCMMessageService extends GcmListenerService {
             AnalyticsTracker.flush();
         }
 
-        NotificationCompat.Builder builder;
-
         // Build the new notification, add group to support wearable stacking
-        builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setColor(getResources().getColor(R.color.blue_wordpress))
-                .setContentTitle(title)
-                .setContentText(message)
-                .setTicker(message)
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setGroup(NOTIFICATION_GROUP_KEY);
+        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
 
         // Add some actions if this is a comment notification
         if (noteType.equals(PUSH_TYPE_COMMENT)) {
@@ -228,6 +231,30 @@ public class GCMMessageService extends GcmListenerService {
         showNotificationForBuilder(builder, this, pushId);
 
         // Also add a group summary notification, which is required for non-wearable devices
+        showGroupNotificationForBuilder(builder, message);
+    }
+
+    private NotificationCompat.Builder getNotificationBuilder(String title, String message){
+        // Build the new notification, add group to support wearable stacking
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setColor(getResources().getColor(R.color.blue_wordpress))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setTicker(message)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setGroup(NOTIFICATION_GROUP_KEY);
+
+        return builder;
+    }
+
+    private void showGroupNotificationForBuilder(NotificationCompat.Builder builder, String message) {
+
+        if (builder == null) {
+            return;
+        }
+
         if (sActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             int noteCtr = 1;
@@ -270,13 +297,13 @@ public class GCMMessageService extends GcmListenerService {
                     .setStyle(inboxStyle);
 
             showNotificationForBuilder(groupBuilder, this, GROUP_NOTIFICATION_ID);
+
         } else {
             // Set the individual notification we've already built as the group summary
             builder.setGroupSummary(true);
             showNotificationForBuilder(builder, this, GROUP_NOTIFICATION_ID);
         }
 
-        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     // Displays a notification to the user
@@ -337,9 +364,42 @@ public class GCMMessageService extends GcmListenerService {
     // Clear all notifications
     private void handleBadgeResetPN(Bundle data) {
         if (data != null && data.containsKey(PUSH_ARG_NOTE_ID)) {
-            String noteId = data.getString(PUSH_ARG_NOTE_ID, "");
-            removeNotificationFromSystemBar(this, noteId);
+            removeNotificationWithNoteIdFromSystemBar(this, data);
+            //once we're done iterating through activeNotifications to see which notifications are affected by this noteId,
+            //(that is, which ones needed be cancelled/cleared) we can check and rebuild it visually
+            if (sActiveNotificationsMap.size() > 0) {
+                // here notify the existing group notification by eliminating the line that is gone
+                String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+                if (title == null) {
+                    title = getString(R.string.app_name);
+                }
+                String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+
+                if (sActiveNotificationsMap.size() == 1) {
+                    //only one notification remains, so get the proper message for it and re-instante in the system dashboard
+                    for (Integer pushId : sActiveNotificationsMap.keySet()) {
+                        Bundle dataRemainingNote = sActiveNotificationsMap.get(pushId);
+                        if (dataRemainingNote != null) {
+
+                            String titleRemainingNote = StringEscapeUtils.unescapeHtml(dataRemainingNote.getString(PUSH_ARG_TITLE));
+                            if (!TextUtils.isEmpty(titleRemainingNote)) {
+                                title = titleRemainingNote;
+                            }
+                            String messageRemainingNote = StringEscapeUtils.unescapeHtml(dataRemainingNote.getString(PUSH_ARG_MSG));
+                            if (!TextUtils.isEmpty(messageRemainingNote)) {
+                                message = messageRemainingNote;
+                            }
+                        }
+                    }
+                }
+                NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+                showGroupNotificationForBuilder(builder, message);
+            }
         } else {
+            //TODO: check if this is necessary:
+            // As of my tests, opening the notifications tab on the web client
+            //will trigger a full PN reset, which won't be necessary at all if we implement granular deletion
+            //as per removeNotificationWithNoteIdFromSystemBar();
             //removeAllNotifications(this);
         }
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
@@ -464,23 +524,31 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Removes a specific notification from the system bar
-    public static synchronized void removeNotificationFromSystemBar(Context context, String noteID) {
-        if (context == null || !hasNotifications()) {
+    public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, Bundle data) {
+        if (context == null || data == null || !hasNotifications()) {
+            return;
+        }
+
+        String noteID = data.getString(PUSH_ARG_NOTE_ID, "");
+        if (TextUtils.isEmpty(noteID)) {
             return;
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        for (Integer pushId : sActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = sActiveNotificationsMap.get(pushId);
+        // here we loop with an Iterator as there might be several Notifications with the same Note ID (i.e. likes on the same Note)
+        // so we need to keep cancelling them and removing them from our activeNotificationsMap as we find it suitable
+        for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, Bundle> row = it.next();
+            Integer pushId = row.getKey();
+            Bundle noteBundle = row.getValue();
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 notificationManager.cancel(pushId);
-                removeNotification(pushId);
-                // if it also was the only one notification, clear the group notification id added at first
-                if (sActiveNotificationsMap.size() == 0) {
-                    notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
-                }
-                return;
+                it.remove();
             }
+        }
+
+        if (sActiveNotificationsMap.size() == 0) {
+            notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
         }
     }
 
