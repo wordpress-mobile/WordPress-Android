@@ -333,7 +333,7 @@ public class PostStore extends Store {
         } else if (actionType == PostAction.DELETE_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             if (payload.site.isWPCom()) {
-                // TODO: Implement REST API post delete
+                mPostRestClient.deletePost(payload.post, payload.site);
             } else {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.deletePost(payload.post, payload.site);
