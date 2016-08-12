@@ -37,6 +37,10 @@ public class BaseWPComRestClient {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
+    protected AccessToken getAccessToken() {
+        return mAccessToken;
+    }
+
     private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setUserAgent(mUserAgent.getUserAgent());

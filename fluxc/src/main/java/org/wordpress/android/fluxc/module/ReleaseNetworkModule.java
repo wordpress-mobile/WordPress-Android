@@ -145,8 +145,9 @@ public class ReleaseNetworkModule {
     @Provides
     public MediaRestClient provideMediaRestClient(Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
+                                                  @Named("regular") OkHttpClient okHttpClient,
                                                   AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(dispatcher, requestQueue, token, userAgent);
+        return new MediaRestClient(dispatcher, requestQueue, okHttpClient, token, userAgent);
     }
 
     @Singleton
