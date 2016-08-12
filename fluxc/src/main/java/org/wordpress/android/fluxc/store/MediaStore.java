@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import com.android.volley.VolleyError;
 import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -12,6 +11,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +81,15 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
         }
     }
 
+    public class OnMediaProgress extends OnChanged {
+        public MediaModel media;
+        public float progress;
+        public OnMediaProgress(MediaModel media, float progress) {
+            this.media = media;
+            this.progress = progress;
+        }
+    }
+
     public class OnMediaError extends OnChanged {
         public MediaAction causeOfError;
         public Exception error;
@@ -96,6 +105,7 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     public MediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient) {
         super(dispatcher);
         mMediaRestClient = mediaRestClient;
+        mMediaRestClient.setListener(this);
     }
 
     @Subscribe
@@ -121,12 +131,12 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
             removeMedia(payload.media);
         } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
+            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
         }
     }
 
     @Override
     public void onRegister() {
-        mMediaRestClient.setListener(this);
     }
 
     @Override
@@ -138,6 +148,7 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
 
     @Override
     public void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia) {
+        emitChange(new OnMediaChanged(cause, pushedMedia));
     }
 
     @Override
@@ -148,7 +159,14 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     }
 
     @Override
-    public void onMediaError(MediaAction cause, VolleyError error) {
+    public void onMediaError(MediaAction cause, Exception error) {
+        AppLog.d(AppLog.T.MEDIA, cause + " caused error: " + error);
+    }
+
+    @Override
+    public void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress) {
+        AppLog.v(AppLog.T.MEDIA, "Progress update on upload of " + media.getTitle() + ": " + progress);
+        emitChange(new OnMediaProgress(media, progress));
     }
 
     public List<MediaModel> getAllSiteMedia(long siteId) {
