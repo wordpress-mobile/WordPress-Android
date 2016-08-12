@@ -17,9 +17,11 @@ public class PostSqlUtils {
 
         List<PostModel> postResult = WellSql.select(PostModel.class)
                 .where().beginGroup()
+                .equals(PostModelTable.ID, post.getId()).or()
+                .beginGroup()
                 .equals(PostModelTable.REMOTE_POST_ID, post.getRemotePostId())
                 .equals(PostModelTable.LOCAL_SITE_ID, post.getLocalSiteId())
-                .equals(PostModelTable.IS_PAGE, post.isPage())
+                .endGroup()
                 .endGroup().endWhere().getAsModel();
 
         if (postResult.isEmpty()) {
