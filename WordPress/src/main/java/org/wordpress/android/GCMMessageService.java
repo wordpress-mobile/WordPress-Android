@@ -69,6 +69,7 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_FOLLOW = "follow";
     private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
+    private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
 
     @Inject AccountStore mAccountStore;
 
@@ -109,6 +110,10 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
+        if (noteType.equals(PUSH_TYPE_BADGE_RESET)) {
+            handleBadgeResetPN();
+            return;
+        }
 
         String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
         if (title == null) {
@@ -337,6 +342,12 @@ public class GCMMessageService extends GcmListenerService {
         builder.setContentIntent(pendingIntent);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, builder.build());
+    }
+
+    // Clear all notifications
+    private void handleBadgeResetPN() {
+        removeAllNotifications(this);
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
     // Show a notification for two-step auth users who sign in from a web browser
