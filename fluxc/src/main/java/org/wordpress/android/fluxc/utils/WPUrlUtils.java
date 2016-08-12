@@ -1,7 +1,12 @@
 package org.wordpress.android.fluxc.utils;
 
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.util.UrlUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
 
@@ -48,4 +53,28 @@ public class WPUrlUtils {
         return url.getHost().equals("gravatar.com") || url.getHost().endsWith(".gravatar.com");
     }
 
+    /**
+     * Not strictly working with URLs, but this method exists already in WPUtils and will be removed
+     * when that library is imported.
+     */
+    public static JSONObject volleyErrorToJSON(VolleyError volleyError) {
+        if (volleyError == null || volleyError.networkResponse == null || volleyError.networkResponse.data == null
+                || volleyError.networkResponse.headers == null) {
+            return null;
+        }
+
+        String contentType = volleyError.networkResponse.headers.get("Content-Type");
+        if (contentType == null || !contentType.equals("application/json")) {
+            return null;
+        }
+
+        try {
+            String response = new String(volleyError.networkResponse.data, "UTF-8");
+            return new JSONObject(response);
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
 }
