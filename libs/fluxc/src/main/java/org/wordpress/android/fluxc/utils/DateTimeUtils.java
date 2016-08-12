@@ -20,7 +20,7 @@ public class DateTimeUtils {
      */
     public static Date dateFromIso8601(String iso8601date) {
         try {
-            iso8601date = iso8601date.replace("Z", "+0000");
+            iso8601date = iso8601date.replace("Z", "+0000").replace("+00:00", "+0000");
             DateFormat formatter = ISO8601Format.get();
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.parse(iso8601date);
@@ -42,7 +42,7 @@ public class DateTimeUtils {
 
         String iso8601date = formatter.format(date);
 
-        // Use the ISO8601 "Z" notation rather than the +0000 UTC offset to be consistent with the WP.COM API
-        return iso8601date.replace("+0000", "Z");
+        // Use "+00:00" notation rather than "+0000" to be consistent with the WP.COM API
+        return iso8601date.replace("+0000", "+00:00");
     }
 }
