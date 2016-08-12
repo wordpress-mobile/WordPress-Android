@@ -557,10 +557,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void signInAndFetchBlogListWPCom() {
-        // TODO: STORES: mTwoStepCode
-        // TODO: STORES: mShouldSendTwoStepSMS
         startProgress(getString(R.string.connecting_wpcom));
         AuthenticatePayload payload = new AuthenticatePayload(mUsername, mPassword);
+        payload.twoStepCode = mTwoStepCode;
+        payload.shouldSendTwoStepSms = mShouldSendTwoStepSMS;
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
@@ -830,7 +830,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 showTwoStepCodeError(R.string.invalid_verification_code);
                 break;
             case NEEDS_2FA:
-                // TODO: STORES: 2fa support
+                setTwoStepAuthVisibility(true);
+                break;
             case INVALID_REQUEST:
                 // TODO: STORES: could be specific?
             default:
