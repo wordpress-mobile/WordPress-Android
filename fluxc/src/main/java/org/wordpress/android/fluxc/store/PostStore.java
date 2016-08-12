@@ -318,12 +318,20 @@ public class PostStore extends Store {
             // TODO: Should call UPDATE_POST at this point, probably
         } else if (actionType == PostAction.PUSHED_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
-            PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+            int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
 
             emitChange(new OnPostUploaded(payload.post));
 
-            // Request a fresh copy of the uploaded post from the server to ensure local copy matches server
-            mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+            if (payload.site.isWPCom()) {
+                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
+                OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
+                onPostChanged.causeOfChange = PostAction.UPDATE_POST;
+                emitChange(onPostChanged);
+            } else {
+                // XML-RPC does not respond to new/edit post calls with the modified post
+                // Request a fresh copy of the uploaded post from the server to ensure local copy matches server
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site);
+            }
         } else if (actionType == PostAction.UPDATE_POST) {
             int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges((PostModel) action.getPayload());
 
