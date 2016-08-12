@@ -142,6 +142,29 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void deletePost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).delete.getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = new WPComGsonRequest<>(Method.POST,
+                url, null, PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(postResponseToPostModel(response)));
+                    }
+                },
+                new ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle errors
+                    }
+                }
+        );
+
+        request.disableRetries();
+        add(request);
+    }
+
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
         PostModel post = new PostModel();
         post.setRemotePostId(from.ID);
