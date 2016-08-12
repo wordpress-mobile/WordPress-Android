@@ -124,8 +124,8 @@ public class PostStore extends Store {
         }
     }
 
-    private PostRestClient mPostRestClient;
-    private PostXMLRPCClient mPostXMLRPCClient;
+    private final PostRestClient mPostRestClient;
+    private final PostXMLRPCClient mPostXMLRPCClient;
 
     @Inject
     public PostStore(Dispatcher dispatcher, PostRestClient postRestClient, PostXMLRPCClient postXMLRPCClient) {
@@ -318,7 +318,6 @@ public class PostStore extends Store {
                 // TODO: check for WP-REST-API plugin and use it here
                 mPostXMLRPCClient.pushPost(payload.post, payload.site);
             }
-            // TODO: Should call UPDATE_POST at this point, probably
         } else if (actionType == PostAction.PUSHED_POST) {
             RemotePostPayload payload = (RemotePostPayload) action.getPayload();
             int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);

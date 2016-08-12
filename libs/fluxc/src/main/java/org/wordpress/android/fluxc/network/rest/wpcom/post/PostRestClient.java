@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -228,13 +229,12 @@ public class PostRestClient extends BaseWPComRestClient {
     private Map<String, String> postModelToParams(PostModel post) {
         Map<String, String> params = new HashMap<>();
 
-        // TODO: Send empty strings where string values are null
-        params.put("status", post.getStatus());
-        params.put("title", post.getTitle());
-        params.put("content", post.getContent());
-        params.put("excerpt", post.getExcerpt());
+        params.put("status", StringUtils.notNullStr(post.getStatus()));
+        params.put("title", StringUtils.notNullStr(post.getTitle()));
+        params.put("content", StringUtils.notNullStr(post.getContent()));
+        params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
 
-        if (post.isLocalDraft() && post.getDateCreated() != null) {
+        if (post.isLocalDraft() && !TextUtils.isEmpty(post.getDateCreated())) {
             params.put("date", post.getDateCreated());
         }
 
@@ -246,13 +246,20 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("type", "page");
         }
 
-        params.put("password", post.getPassword());
+        params.put("password", StringUtils.notNullStr(post.getPassword()));
 
-        params.put("categories_by_id", post.getCategoryIds());
-        params.put("tags_by_id", post.getTagIds());
+        params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
+        params.put("tags", TextUtils.join(",", post.getTagIdList()));
 
-        // Will remove any existing featured image if this is the empty string
-        params.put("featured_image", String.valueOf(post.getFeaturedImageId()));
+        // Will remove any existing featured image if the empty string is sent
+        if (post.featuredImageHasChanged()) {
+            if (post.getFeaturedImageId() < 1 && !post.isLocalDraft()) {
+                // The featured image was removed from a live post
+                params.put("post_thumbnail", "");
+            } else {
+                params.put("post_thumbnail", String.valueOf(post.getFeaturedImageId()));
+            }
+        }
 
         return params;
     }

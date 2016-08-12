@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
@@ -445,15 +446,6 @@ public class PostModel implements Identifiable, Payload {
         if (ids == null || ids.isEmpty()) {
             return "";
         }
-        StringBuilder strbul  = new StringBuilder();
-        Iterator<Long> iter = ids.iterator();
-        while(iter.hasNext())
-        {
-            strbul.append(iter.next());
-            if(iter.hasNext()){
-                strbul.append(",");
-            }
-        }
-       return strbul.toString();
+        return TextUtils.join(",", ids);
     }
 }
