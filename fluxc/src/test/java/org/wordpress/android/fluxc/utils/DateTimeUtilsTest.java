@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc;
+package org.wordpress.android.fluxc.utils;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
