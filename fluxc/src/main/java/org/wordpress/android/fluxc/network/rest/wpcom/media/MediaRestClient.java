@@ -25,6 +25,21 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 
+/**
+ * MediaRestClient provides an interface for manipulating a WP.com site's media. It provides
+ * methods to:
+ *
+ * <ul>
+ *     <li>Pull existing media from a WP.com site
+ *     (via {@link #fetchAllMedia(long)} and {@link #fetchMedia(long, List)}</li>
+ *     <li>Push new media to a WP.com site
+ *     (via {@link #uploadMedia(long, MediaModel)})</li>
+ *     <li>Push updates to existing media to a WP.com site
+ *     (via {@link #pushMedia(long, List)})</li>
+ *     <li>Delete existing media from a WP.com site
+ *     (via {@link #deleteMedia(long, List)})</li>
+ * </ul>
+ */
 public class MediaRestClient extends BaseWPComRestClient implements UploadRequestBody.ProgressListener {
     public interface MediaRestListener {
         void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia);
@@ -43,10 +58,21 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         mOkHttpClient = okClient;
     }
 
-    public void setListener(MediaRestListener listener) {
-        mListener = listener;
+    @Override
+    public void onProgress(MediaModel media, float progress) {
+        notifyMediaProgress(media, progress);
     }
 
+    /**
+     * Pushes updates to existing media items on a WP.com site, creating (and uploading) new
+     * media files as necessary.
+     */
+    public void pushMedia(long siteId, List<MediaModel> media) {
+    }
+
+    /**
+     * Uploads a single media item to a WP.com site.
+     */
     public void uploadMedia(long siteId, MediaModel media) {
         final UploadRequestBody body = new UploadRequestBody(media, this);
         String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
@@ -80,6 +106,12 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         });
     }
 
+    /**
+     * Gets a list of all media items on a WP.com site.
+     *
+     * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
+     * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
+     */
     public void fetchAllMedia(long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.getUrlV1_1();
         add(new WPComGsonRequest<>(Request.Method.GET, url, null, MediaWPComRestResponse.MultipleMediaResponse.class,
@@ -99,6 +131,9 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         ));
     }
 
+    /**
+     * Gets a list of media items whose media IDs match the provided list.
+     */
     public void fetchMedia(long siteId, List<Long> mediaIds) {
         if (mediaIds == null || mediaIds.isEmpty()) return;
 
@@ -124,11 +159,12 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         }
     }
 
+    /**
+     * Deletes media from a WP.com site whose media ID is in the provided list.
+     */
     public void deleteMedia(long siteId, List<MediaModel> media) {
         if (media == null || media.isEmpty()) return;
 
-        final int count = media.size();
-        final ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
         for (MediaModel toDelete : media) {
             String url = WPCOMREST.sites.site(siteId).media.item(toDelete.getMediaId()).delete.getUrlV1_1();
             add(new WPComGsonRequest<>(Request.Method.GET, url, null, MediaWPComRestResponse.class,
@@ -136,7 +172,9 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
                             MediaModel media = responseToMediaModel(response);
-                            onMediaResponse(payload, media, null, count);
+                            List<MediaModel> mediaList = new ArrayList<>();
+                            mediaList.add(media);
+                            notifyMediaDeleted(MediaAction.DELETE_MEDIA, mediaList);
                         }
                     },
                     new Response.ErrorListener() {
@@ -149,9 +187,8 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         }
     }
 
-    @Override
-    public void onProgress(MediaModel media, float progress) {
-        notifyMediaProgress(media, progress);
+    public void setListener(MediaRestListener listener) {
+        mListener = listener;
     }
 
     private List<MediaModel> responseToMediaModelList(MediaWPComRestResponse.MultipleMediaResponse from) {
@@ -188,6 +225,17 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         return media;
     }
 
+    /**
+     * Helper method used by fetchMedia to track response progress
+     */
+    private void onMediaResponse(ChangedMediaPayload payload, MediaModel media, Exception error, int count) {
+        payload.media.add(media);
+        payload.errors.add(error);
+        if (payload.media.size() == count) {
+//            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
+        }
+    }
+
     private void notifyMediaProgress(MediaModel media, float progress) {
         if (mListener != null) {
             mListener.onMediaUploadProgress(MediaAction.UPLOAD_MEDIA, media, progress);
@@ -215,17 +263,6 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
     private void notifyMediaError(MediaAction cause, Exception error) {
         if (mListener != null) {
             mListener.onMediaError(cause, error);
-        }
-    }
-
-    /**
-     * Helper method used by fetchMedia to track response progress
-     */
-    private void onMediaResponse(ChangedMediaPayload payload, MediaModel media, Exception error, int count) {
-        payload.media.add(media);
-        payload.errors.add(error);
-        if (payload.media.size() == count) {
-//            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
         }
     }
 }
