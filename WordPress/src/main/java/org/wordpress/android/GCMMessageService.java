@@ -169,22 +169,7 @@ public class GCMMessageService extends GcmListenerService {
             sActiveNotificationsMap.put(pushId, data);
         }
 
-        String iconUrl = data.getString("icon");
-        Bitmap largeIconBitmap = null;
-        if (iconUrl != null) {
-            try {
-                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = getResources().getDimensionPixelSize(
-                        android.R.dimen.notification_large_icon_height);
-                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
-                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
-                if (largeIconBitmap != null && shouldCircularizeNoteIcon(noteType)) {
-                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
-                }
-            } catch (UnsupportedEncodingException e) {
-                AppLog.e(T.NOTIFS, e);
-            }
-        }
+        Bitmap largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(noteType));
 
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
         if (NotificationsUtils.isNotificationsEnabled(this)) {
@@ -232,6 +217,25 @@ public class GCMMessageService extends GcmListenerService {
 
         // Also add a group summary notification, which is required for non-wearable devices
         showGroupNotificationForBuilder(builder, message);
+    }
+
+    private Bitmap getLargeIconBitmap(String iconUrl, boolean shouldCircularizeIcon){
+        Bitmap largeIconBitmap = null;
+        if (iconUrl != null) {
+            try {
+                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
+                int largeIconSize = getResources().getDimensionPixelSize(
+                        android.R.dimen.notification_large_icon_height);
+                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
+                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
+                if (largeIconBitmap != null && shouldCircularizeIcon) {
+                    largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
+                }
+            } catch (UnsupportedEncodingException e) {
+                AppLog.e(T.NOTIFS, e);
+            }
+        }
+        return largeIconBitmap;
     }
 
     private NotificationCompat.Builder getNotificationBuilder(String title, String message){
@@ -367,6 +371,7 @@ public class GCMMessageService extends GcmListenerService {
             removeNotificationWithNoteIdFromSystemBar(this, data);
             //now that we cleared the specific notif, we can check and make any visual updates
             if (sActiveNotificationsMap.size() > 0) {
+                Bitmap largeIconBitmap = null;
                 // here notify the existing group notification by eliminating the line that is now gone
                 String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
                 if (title == null) {
@@ -386,9 +391,21 @@ public class GCMMessageService extends GcmListenerService {
                         if (!TextUtils.isEmpty(remainingNoteMessage)) {
                             message = remainingNoteMessage;
                         }
+                        largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
+                                shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
                     }
                 }
+
                 NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+
+                if (largeIconBitmap == null) {
+                    largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
+                }
+
+                if (largeIconBitmap != null) {
+                    builder.setLargeIcon(largeIconBitmap);
+                }
+
                 showGroupNotificationForBuilder(builder, message);
             }
         } else {
