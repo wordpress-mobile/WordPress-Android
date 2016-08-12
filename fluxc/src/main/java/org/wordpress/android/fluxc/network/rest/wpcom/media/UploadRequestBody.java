@@ -36,8 +36,6 @@ public class UploadRequestBody extends RequestBody {
     private static final String MEDIA_CAPTION_KEY = MEDIA_ATTRIBUTES_KEY + "[caption]";
     private static final String MEDIA_ALT_KEY = MEDIA_ATTRIBUTES_KEY + "[alt]";
     private static final String MEDIA_PARENT_KEY = MEDIA_ATTRIBUTES_KEY + "[parent_id]";
-    private static final String AUDIO_ARTIST_KEY = MEDIA_ATTRIBUTES_KEY + "[artist]";
-    private static final String AUDIO_ALBUM_KEY = MEDIA_ATTRIBUTES_KEY + "[album]";
 
     /**
      * Callback to report upload progress as body data is written to the sink for network delivery.
@@ -124,6 +122,10 @@ public class UploadRequestBody extends RequestBody {
         bufferedSink.flush();
     }
 
+    public MediaModel getMedia() {
+        return mMedia;
+    }
+
     private MultipartBody buildMultipartBody() {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
@@ -166,11 +168,6 @@ public class UploadRequestBody extends RequestBody {
         }
         if (mMedia.getPostId() > 0) {
             formData.add(new Pair<>(MEDIA_PARENT_KEY, String.valueOf(mMedia.getPostId())));
-        }
-
-        // audio media attributes
-        if (MediaUtils.isAudioMimeType(mMedia.getMimeType())) {
-            // TODO: update media model to include artist/album properties
         }
 
         return formData;
