@@ -14,27 +14,70 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.MediaStore.ChangedMediaPayload;
+import org.wordpress.android.util.AppLog;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaRestClient extends BaseWPComRestClient {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+
+public class MediaRestClient extends BaseWPComRestClient implements UploadRequestBody.ProgressListener {
     public interface MediaRestListener {
         void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia);
         void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia);
         void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia);
-        void onMediaError(MediaAction cause, VolleyError error);
+        void onMediaError(MediaAction cause, Exception error);
+        void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress);
     }
 
     private MediaRestListener mListener;
+    private OkHttpClient mOkHttpClient;
 
-    public MediaRestClient(Dispatcher dispatcher, RequestQueue requestQueue,
+    public MediaRestClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
                            AccessToken accessToken, UserAgent userAgent) {
         super(dispatcher, requestQueue, accessToken, userAgent);
+        mOkHttpClient = okClient;
     }
 
     public void setListener(MediaRestListener listener) {
         mListener = listener;
+    }
+
+    public void uploadMedia(long siteId, MediaModel media) {
+        final UploadRequestBody body = new UploadRequestBody(media, this);
+        String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
+        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
+                .url(url)
+                .post(body)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    AppLog.d(AppLog.T.MEDIA, "media upload successful: " + response);
+                    List<MediaModel> result = new ArrayList<>();
+                    result.add(body.getMedia());
+                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, result);
+                } else {
+                    AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, e);
+            }
+        });
     }
 
     public void fetchAllMedia(long siteId) {
@@ -106,6 +149,11 @@ public class MediaRestClient extends BaseWPComRestClient {
         }
     }
 
+    @Override
+    public void onProgress(MediaModel media, float progress) {
+        notifyMediaProgress(media, progress);
+    }
+
     private List<MediaModel> responseToMediaModelList(MediaWPComRestResponse.MultipleMediaResponse from) {
         List<MediaModel> media = new ArrayList<>();
         for (int i = 0; i < from.found; ++i) {
@@ -140,6 +188,12 @@ public class MediaRestClient extends BaseWPComRestClient {
         return media;
     }
 
+    private void notifyMediaProgress(MediaModel media, float progress) {
+        if (mListener != null) {
+            mListener.onMediaUploadProgress(MediaAction.UPLOAD_MEDIA, media, progress);
+        }
+    }
+
     private void notifyMediaPulled(MediaAction cause, List<MediaModel> pulledMedia) {
         if (mListener != null) {
             mListener.onMediaPulled(cause, pulledMedia);
@@ -158,7 +212,7 @@ public class MediaRestClient extends BaseWPComRestClient {
         }
     }
 
-    private void notifyMediaError(MediaAction cause, VolleyError error) {
+    private void notifyMediaError(MediaAction cause, Exception error) {
         if (mListener != null) {
             mListener.onMediaError(cause, error);
         }
