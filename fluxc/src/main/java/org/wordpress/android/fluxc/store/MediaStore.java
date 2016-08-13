@@ -26,7 +26,7 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     //
 
     /**
-     * Used for FETCH_ALL_MEDIA and FETCH_MEDIA actions
+     * Used for PULL_ALL_MEDIA and PULL_MEDIA actions
      */
     public static class FetchMediaPayload implements Payload {
         public SiteModel site;
@@ -111,27 +111,27 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     @Subscribe
     @Override
     public void onAction(Action action) {
-        if (action.getType() == MediaAction.FETCH_ALL_MEDIA) {
+        if (action.getType() == MediaAction.PULL_ALL_MEDIA) {
             FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
             mMediaRestClient.pullAllMedia(payload.site.getSiteId());
-        } else if (action.getType() == MediaAction.FETCH_MEDIA) {
+        } else if (action.getType() == MediaAction.PULL_MEDIA) {
             FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
             mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
         } else if (action.getType() == MediaAction.PUSH_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-//            mMediaRestClient.updateMedia(payload.site.getSiteId(), payload.media);
+            mMediaRestClient.pushMedia(payload.site.getSiteId(), payload.media);
         } else if (action.getType() == MediaAction.DELETE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
             mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
-        }else if (action.getType() == MediaAction.UPDATE_MEDIA) {
+        } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
+            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
+            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
+        } else if (action.getType() == MediaAction.UPDATE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
             updateMedia(payload.media);
         } else if (action.getType() == MediaAction.REMOVE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
             removeMedia(payload.media);
-        } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
         }
     }
 
@@ -140,27 +140,27 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     }
 
     @Override
-    public void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia) {
-        if (cause == MediaAction.FETCH_ALL_MEDIA || cause == MediaAction.FETCH_MEDIA) {
+    public void onMediaError(MediaAction cause, Exception error) {
+        AppLog.d(AppLog.T.MEDIA, cause + " caused error: " + error);
+    }
+
+    @Override
+    public void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia, List<Exception> errors) {
+        if (cause == MediaAction.PULL_ALL_MEDIA || cause == MediaAction.PULL_MEDIA) {
             emitChange(new OnMediaChanged(cause, pulledMedia));
         }
     }
 
     @Override
-    public void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia) {
+    public void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia, List<Exception> errors) {
         emitChange(new OnMediaChanged(cause, pushedMedia));
     }
 
     @Override
-    public void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia) {
+    public void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia, List<Exception> errors) {
         if (cause == MediaAction.DELETE_MEDIA) {
             emitChange(new OnMediaChanged(cause, deletedMedia));
         }
-    }
-
-    @Override
-    public void onMediaError(MediaAction cause, Exception error) {
-        AppLog.d(AppLog.T.MEDIA, cause + " caused error: " + error);
     }
 
     @Override
