@@ -113,10 +113,10 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     public void onAction(Action action) {
         if (action.getType() == MediaAction.FETCH_ALL_MEDIA) {
             FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.fetchAllMedia(payload.site.getSiteId());
+            mMediaRestClient.pullAllMedia(payload.site.getSiteId());
         } else if (action.getType() == MediaAction.FETCH_MEDIA) {
             FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.fetchMedia(payload.site.getSiteId(), payload.mediaIds);
+            mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
         } else if (action.getType() == MediaAction.PUSH_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
 //            mMediaRestClient.updateMedia(payload.site.getSiteId(), payload.media);

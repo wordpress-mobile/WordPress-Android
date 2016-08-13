@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
 import android.text.TextUtils;
-import android.util.Pair;
 
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -9,8 +8,7 @@ import org.wordpress.android.util.AppLog;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -31,11 +29,7 @@ import okio.Sink;
 public class UploadRequestBody extends RequestBody {
     private static final String MEDIA_DATA_KEY = "media[0]";
     private static final String MEDIA_ATTRIBUTES_KEY = "attrs[0]";
-    private static final String MEDIA_TITLE_KEY = MEDIA_ATTRIBUTES_KEY + "[title]";
-    private static final String MEDIA_DESCRIPTION_KEY = MEDIA_ATTRIBUTES_KEY + "[description]";
-    private static final String MEDIA_CAPTION_KEY = MEDIA_ATTRIBUTES_KEY + "[caption]";
-    private static final String MEDIA_ALT_KEY = MEDIA_ATTRIBUTES_KEY + "[alt]";
-    private static final String MEDIA_PARENT_KEY = MEDIA_ATTRIBUTES_KEY + "[parent_id]";
+    private static final String MEDIA_PARAM_FORMAT = MEDIA_ATTRIBUTES_KEY + "[%s]";
 
     /**
      * Callback to report upload progress as body data is written to the sink for network delivery.
@@ -130,9 +124,9 @@ public class UploadRequestBody extends RequestBody {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         // add media attributes
-        List<Pair<String, String>> mediaData = getMediaFormData();
-        for (Pair<String, String> part : mediaData) {
-            builder.addFormDataPart(part.first, part.second);
+        Map<String, String> mediaData = MediaUtils.getMediaRestParams(mMedia);
+        for (String key : mediaData.keySet()) {
+            builder.addFormDataPart(String.format(MEDIA_PARAM_FORMAT, key), mediaData.get(key));
         }
 
         // add media file data
@@ -141,36 +135,6 @@ public class UploadRequestBody extends RequestBody {
         builder.addFormDataPart(MEDIA_DATA_KEY, mMedia.getFileName(), body);
 
         return builder.build();
-    }
-
-    /**
-     * Gathers any existing optional media attributes to add as form data for a multipart request.
-     * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',
-     * and 'parent_id' for all media. Audio media also accepts 'artist' and 'album' attributes.
-     *
-     * ref https://developer.wordpress.com/docs/api/1.1/post/sites/%24site/media/new/
-     */
-    private List<Pair<String, String>> getMediaFormData() {
-        List<Pair<String, String>> formData = new ArrayList<>();
-
-        // all media attributes
-        if (!TextUtils.isEmpty(mMedia.getTitle())) {
-            formData.add(new Pair<>(MEDIA_TITLE_KEY, mMedia.getTitle()));
-        }
-        if (!TextUtils.isEmpty(mMedia.getDescription())) {
-            formData.add(new Pair<>(MEDIA_DESCRIPTION_KEY, mMedia.getDescription()));
-        }
-        if (!TextUtils.isEmpty(mMedia.getCaption())) {
-            formData.add(new Pair<>(MEDIA_CAPTION_KEY, mMedia.getCaption()));
-        }
-        if (!TextUtils.isEmpty(mMedia.getAlt())) {
-            formData.add(new Pair<>(MEDIA_ALT_KEY, mMedia.getAlt()));
-        }
-        if (mMedia.getPostId() > 0) {
-            formData.add(new Pair<>(MEDIA_PARENT_KEY, String.valueOf(mMedia.getPostId())));
-        }
-
-        return formData;
     }
 
     /**
