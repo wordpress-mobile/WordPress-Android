@@ -1,19 +1,23 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
-import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.Response.Listener;
+import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.ChangedMediaPayload;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
@@ -31,7 +35,7 @@ import okhttp3.OkHttpClient;
  *
  * <ul>
  *     <li>Pull existing media from a WP.com site
- *     (via {@link #fetchAllMedia(long)} and {@link #fetchMedia(long, List)}</li>
+ *     (via {@link #pullAllMedia(long)} and {@link #pullMedia(long, List)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(long, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -42,10 +46,10 @@ import okhttp3.OkHttpClient;
  */
 public class MediaRestClient extends BaseWPComRestClient implements UploadRequestBody.ProgressListener {
     public interface MediaRestListener {
-        void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia);
-        void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia);
-        void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia);
         void onMediaError(MediaAction cause, Exception error);
+        void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia, List<Exception> errors);
+        void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia, List<Exception> errors);
+        void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia, List<Exception> errors);
         void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress);
     }
 
@@ -62,48 +66,35 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
     public void onProgress(MediaModel media, float progress) {
         notifyMediaProgress(media, progress);
     }
-
     /**
      * Pushes updates to existing media items on a WP.com site, creating (and uploading) new
      * media files as necessary.
      */
-    public void pushMedia(long siteId, List<MediaModel> media) {
+    public void pushMedia(final long siteId, List<MediaModel> mediaList) {
+        for (final MediaModel media : mediaList) {
+            String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
+            add(new WPComGsonRequest<>(Method.POST, url, MediaUtils.getMediaRestParams(media),
+                    MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
+                @Override public void onResponse(MediaWPComRestResponse response) {
+                    // TODO: successful update
+                    notifyMediaPushed(MediaAction.PUSH_MEDIA, null);
+                }
+            }, new ErrorListener() {
+                @Override public void onErrorResponse(VolleyError error) {
+                    if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                        // media doesn't exist, upload
+                        performUpload(media, siteId);
+                    }
+                }
+            }));
+        }
     }
 
     /**
      * Uploads a single media item to a WP.com site.
      */
     public void uploadMedia(long siteId, MediaModel media) {
-        final UploadRequestBody body = new UploadRequestBody(media, this);
-        String url = WPCOMREST.sites.site(siteId).media.new_.getUrlV1_1();
-        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
-
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
-                .url(url)
-                .post(body)
-                .build();
-
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                if (response.code() == HttpURLConnection.HTTP_OK) {
-                    AppLog.d(AppLog.T.MEDIA, "media upload successful: " + response);
-                    List<MediaModel> result = new ArrayList<>();
-                    result.add(body.getMedia());
-                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, result);
-                } else {
-                    AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
-                    notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
-                notifyMediaError(MediaAction.UPLOAD_MEDIA, e);
-            }
-        });
+        performUpload(media, siteId);
     }
 
     /**
@@ -112,50 +103,43 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchAllMedia(long siteId) {
+    public void pullAllMedia(long siteId) {
         String url = WPCOMREST.sites.site(siteId).media.getUrlV1_1();
-        add(new WPComGsonRequest<>(Request.Method.GET, url, null, MediaWPComRestResponse.MultipleMediaResponse.class,
-                new Response.Listener<MediaWPComRestResponse.MultipleMediaResponse>() {
-                    @Override
-                    public void onResponse(MediaWPComRestResponse.MultipleMediaResponse response) {
-                        List<MediaModel> mediaList = responseToMediaModelList(response);
-                        notifyMediaPulled(MediaAction.FETCH_ALL_MEDIA, mediaList);
+        add(new WPComGsonRequest<>(Method.GET, url, null, MultipleMediaResponse.class,
+                new Listener<MultipleMediaResponse>() {
+                    @Override public void onResponse(MultipleMediaResponse response) {
+                        notifyMediaPulled(MediaAction.FETCH_ALL_MEDIA, new ChangedMediaPayload(
+                                MediaUtils.mediaListFromRestResponse(response), null, null));
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                }, new ErrorListener() {
+                    @Override public void onErrorResponse(VolleyError error) {
                         notifyMediaError(MediaAction.FETCH_ALL_MEDIA, error);
                     }
-                }
-        ));
+                }));
     }
 
     /**
      * Gets a list of media items whose media IDs match the provided list.
      */
-    public void fetchMedia(long siteId, List<Long> mediaIds) {
+    public void pullMedia(long siteId, List<Long> mediaIds) {
         if (mediaIds == null || mediaIds.isEmpty()) return;
 
-        final int count = mediaIds.size();
-        final ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
+        final int requestCount = mediaIds.size();
         for (final Long mediaId : mediaIds) {
+            final MediaStore.ChangedMediaPayload payload = new MediaStore.ChangedMediaPayload(
+                    new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
             String url = WPCOMREST.sites.site(siteId).media.item(mediaId).getUrlV1_1();
-            add(new WPComGsonRequest<>(Request.Method.GET, url, null, MediaWPComRestResponse.class,
-                    new Response.Listener<MediaWPComRestResponse>() {
-                        @Override
-                        public void onResponse(MediaWPComRestResponse response) {
-                            MediaModel media = responseToMediaModel(response);
-                            onMediaResponse(payload, media, null, count);
+            add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
+                    new Listener<MediaWPComRestResponse>() {
+                        @Override public void onResponse(MediaWPComRestResponse response) {
+                            MediaModel media = MediaUtils.mediaFromRestResponse(response);
+                            onPullMediaResponse(payload, media, null, requestCount);
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            onMediaResponse(payload, null, error, count);
-                        }
+                    }, new ErrorListener() {
+                        @Override public void onErrorResponse(VolleyError error) {
+                            onPullMediaResponse(payload, null, error, requestCount);
                     }
-            ));
+            }));
         }
     }
 
@@ -167,17 +151,17 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
 
         for (MediaModel toDelete : media) {
             String url = WPCOMREST.sites.site(siteId).media.item(toDelete.getMediaId()).delete.getUrlV1_1();
-            add(new WPComGsonRequest<>(Request.Method.GET, url, null, MediaWPComRestResponse.class,
-                    new Response.Listener<MediaWPComRestResponse>() {
+            add(new WPComGsonRequest<>(Method.GET, url, null, MediaWPComRestResponse.class,
+                    new Listener<MediaWPComRestResponse>() {
                         @Override
                         public void onResponse(MediaWPComRestResponse response) {
-                            MediaModel media = responseToMediaModel(response);
                             List<MediaModel> mediaList = new ArrayList<>();
-                            mediaList.add(media);
-                            notifyMediaDeleted(MediaAction.DELETE_MEDIA, mediaList);
+                            mediaList.add(MediaUtils.mediaFromRestResponse(response));
+                            notifyMediaDeleted(MediaAction.DELETE_MEDIA, new ChangedMediaPayload(
+                                    mediaList, null, null));
                         }
                     },
-                    new Response.ErrorListener() {
+                    new ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             notifyMediaError(MediaAction.DELETE_MEDIA, error);
@@ -191,48 +175,49 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         mListener = listener;
     }
 
-    private List<MediaModel> responseToMediaModelList(MediaWPComRestResponse.MultipleMediaResponse from) {
-        List<MediaModel> media = new ArrayList<>();
-        for (int i = 0; i < from.found; ++i) {
-            media.add(i, responseToMediaModel(from.media.get(i)));
-        }
-        return media;
-    }
+    // Used in both uploadMedia and pushMedia methods
+    private void performUpload(MediaModel media, long siteId) {
+        String url = WPCOMREST.sites.site(siteId).media.item(media.getMediaId()).getUrlV1_1();
+        final UploadRequestBody body = new UploadRequestBody(media, this);
+        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
-    private MediaModel responseToMediaModel(MediaWPComRestResponse from) {
-        MediaModel media = new MediaModel();
-        media.setMediaId(from.ID);
-        media.setUploadDate(from.date);
-        media.setPostId(from.post_ID);
-        media.setAuthorId(from.author_ID);
-        media.setUrl(from.URL);
-        media.setGuid(from.guid);
-        media.setFileName(from.file);
-        media.setFileExtension(from.extension);
-        media.setMimeType(from.mime_type);
-        media.setTitle(from.title);
-        media.setCaption(from.caption);
-        media.setDescription(from.description);
-        media.setAlt(from.alt);
-        media.setThumbnailUrl(from.thumbnails.thumbnail);
-        media.setHeight(from.height);
-        media.setWidth(from.width);
-        media.setLength(from.length);
-        media.setVideoPressGuid(from.videopress_guid);
-        media.setVideoPressProcessingDone(from.videopress_processing_done);
-        media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
-        // TODO: legacy fields
-        return media;
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
+                .url(url)
+                .post(body)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    AppLog.d(AppLog.T.MEDIA, "media upload successful: " + response);
+                    // TODO: serialize MediaModel from response and add to resultList
+//                    MediaModel responseMedia = resToMediaModel
+                    List<MediaModel> resultList = new ArrayList<>();
+//                    resultList.add(responseMedia);
+                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, new ChangedMediaPayload(
+                            resultList, null, null));
+                } else {
+                    AppLog.w(AppLog.T.MEDIA, "error uploading media: " + response);
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));
+                }
+            }
+
+            @Override public void onFailure(Call call, IOException e) {
+                AppLog.w(AppLog.T.MEDIA, "media upload failed: " + e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, e);
+            }
+        });
     }
 
     /**
-     * Helper method used by fetchMedia to track response progress
+     * Helper method used by pullMedia to track response progress
      */
-    private void onMediaResponse(ChangedMediaPayload payload, MediaModel media, Exception error, int count) {
+    private void onPullMediaResponse(ChangedMediaPayload payload, MediaModel media, Exception error, int count) {
         payload.media.add(media);
         payload.errors.add(error);
         if (payload.media.size() == count) {
-//            mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
+            mListener.onMediaPulled(MediaAction.FETCH_MEDIA, payload.media, payload.errors);
         }
     }
 
@@ -242,21 +227,21 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
         }
     }
 
-    private void notifyMediaPulled(MediaAction cause, List<MediaModel> pulledMedia) {
+    private void notifyMediaPulled(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaPulled(cause, pulledMedia);
+            mListener.onMediaPulled(cause, payload.media, payload.errors);
         }
     }
 
-    private void notifyMediaPushed(MediaAction cause, List<MediaModel> pushedMedia) {
+    private void notifyMediaPushed(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaPushed(cause, pushedMedia);
+            mListener.onMediaPushed(cause, payload.media, payload.errors);
         }
     }
 
-    private void notifyMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia) {
+    private void notifyMediaDeleted(MediaAction cause, ChangedMediaPayload payload) {
         if (mListener != null) {
-            mListener.onMediaDeleted(cause, deletedMedia);
+            mListener.onMediaDeleted(cause, payload.media, payload.errors);
         }
     }
 
