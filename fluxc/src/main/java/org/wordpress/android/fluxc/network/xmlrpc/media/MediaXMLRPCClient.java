@@ -38,7 +38,17 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient {
     public static final String WIDTH_KEY            = "width";
     public static final String HEIGHT_KEY           = "height";
 
+    public interface MediaXmlRpcListener {
+        void onMediaError(MediaAction cause, Exception error);
+        void onMediaPulled(MediaAction cause, List<MediaModel> pulledMedia, List<Exception> errors);
+        void onMediaPushed(MediaAction cause, List<MediaModel> pushedMedia, List<Exception> errors);
+        void onMediaDeleted(MediaAction cause, List<MediaModel> deletedMedia, List<Exception> errors);
+        void onMediaUploadProgress(MediaAction cause, MediaModel media, float progress);
+    }
+
     private static final String FILE_NAME_REGEX = "^.*/([A-Za-z0-9_-]+)\\.\\w+$";
+
+    private MediaXmlRpcListener mListener;
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                              UserAgent userAgent, HTTPAuthManager httpAuthManager) {
@@ -146,5 +156,35 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient {
         }
 
         return mediaModel;
+    }
+
+    private void notifyMediaProgress(MediaModel media, float progress) {
+        if (mListener != null) {
+            mListener.onMediaUploadProgress(MediaAction.UPLOAD_MEDIA, media, progress);
+        }
+    }
+
+    private void notifyMediaPulled(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+        if (mListener != null) {
+            mListener.onMediaPulled(cause, payload.media, payload.errors);
+        }
+    }
+
+    private void notifyMediaPushed(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+        if (mListener != null) {
+            mListener.onMediaPushed(cause, payload.media, payload.errors);
+        }
+    }
+
+    private void notifyMediaDeleted(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+        if (mListener != null) {
+            mListener.onMediaDeleted(cause, payload.media, payload.errors);
+        }
+    }
+
+    private void notifyMediaError(MediaAction cause, Exception error) {
+        if (mListener != null) {
+            mListener.onMediaError(cause, error);
+        }
     }
 }
