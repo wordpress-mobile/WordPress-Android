@@ -193,13 +193,11 @@ public class PeopleInviteFragment extends Fragment implements
             populateUsernameButtons(usernames);
         }
 
-        final boolean isPrivateSite = isPrivateSite();
-
         View roleContainer = view.findViewById(R.id.role_container);
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite);
+                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite());
             }
         });
         mRoleTextView = (TextView) view.findViewById(R.id.role);
