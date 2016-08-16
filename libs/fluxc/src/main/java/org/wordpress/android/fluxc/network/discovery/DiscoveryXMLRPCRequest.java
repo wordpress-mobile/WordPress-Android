@@ -5,7 +5,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.action.AuthenticationAction;
-import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 
 import java.util.List;

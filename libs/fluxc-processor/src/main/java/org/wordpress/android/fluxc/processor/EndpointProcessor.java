@@ -23,20 +23,18 @@ import javax.lang.model.element.TypeElement;
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
 public class EndpointProcessor extends AbstractProcessor {
+    private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
+    private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
+
+    private Filer mFiler;
+
     @Override
     public void init(ProcessingEnvironment processingEnv) {
+        mFiler = processingEnv.getFiler();
+
         try {
-            File file = new File("fluxc/src/main/tools/wp-com-endpoints.txt");
-            EndpointNode rootNode = EndpointTreeGenerator.process(file);
-            Filer filer = processingEnv.getFiler();
-
-            TypeSpec apiClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class);
-
-            JavaFile javaFile = JavaFile.builder(AnnotationConfig.PACKAGE + ".endpoint", apiClass)
-                    .indent("    ")
-                    .build();
-
-            javaFile.writeTo(filer);
+            generateWPCOMRESTEndpointFile();
+            generateXMLRPCEndpointFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,5 +43,28 @@ public class EndpointProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         return true;
+    }
+
+    private void generateWPCOMRESTEndpointFile() throws IOException {
+        File file = new File(WPCOMREST_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class);
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void generateXMLRPCEndpointFile() throws IOException {
+        File file = new File(XMLRPC_ENDPOINT_FILE);
+
+        TypeSpec endpointClass = XMLRPCPoet.generate(file, "XMLRPC");
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void writeEndpointClassToFile(TypeSpec endpointClass) throws IOException {
+        JavaFile javaFile = JavaFile.builder(AnnotationConfig.PACKAGE_ENDPOINTS, endpointClass)
+                .indent("    ")
+                .build();
+
+        javaFile.writeTo(mFiler);
     }
 }
