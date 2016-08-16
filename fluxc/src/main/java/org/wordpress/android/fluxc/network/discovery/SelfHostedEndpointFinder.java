@@ -7,7 +7,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
-import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.BaseRequestFuture;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
@@ -365,7 +365,7 @@ public class SelfHostedEndpointFinder {
      * Obtain the HTML response from a GET request for the given URL.
      */
     private String getResponse(String url) throws DiscoveryException {
-        RequestFuture<String> future = RequestFuture.newFuture();
+        BaseRequestFuture<String> future = BaseRequestFuture.newFuture();
         DiscoveryRequest request = new DiscoveryRequest(url, future, future);
         mClient.add(request);
         try {
@@ -457,7 +457,7 @@ public class SelfHostedEndpointFinder {
         params.add(httpUsername);
         params.add(httpPassword);
 
-        RequestFuture<Object[]> future = RequestFuture.newFuture();
+        BaseRequestFuture<Object[]> future = BaseRequestFuture.newFuture();
         DiscoveryXMLRPCRequest request = new DiscoveryXMLRPCRequest(url, XMLRPC.LIST_METHODS, params, future, future);
         mClient.add(request);
         try {

@@ -6,7 +6,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -40,7 +39,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
     public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
-                         ErrorListener errorListener) {
+                         BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;
         mMethod = method;
