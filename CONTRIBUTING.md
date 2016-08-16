@@ -79,7 +79,7 @@ Here are the libraries currently maintained and subtree'd:
 
 # String Resources
 
-We use `values/strings.xml` file for *ALL* translatable strings including string arrays. Each element in a string array should be defined as separate string resource first and then the string array should be defined with `translatable="false"` flag. Here is a basic example:
+We use `values/strings.xml` file for *ALL* translatable strings including string arrays. Each element in a string array should be defined as separate string resource first and then the string array should be defined with `translatable="false"` flag. This is due to a GlotPress limitation where translating arrays directly could generate smaller arrays if some elements are not translated. Here is a basic example:
 
 ```
 <string name="element1">Element 1</string>
