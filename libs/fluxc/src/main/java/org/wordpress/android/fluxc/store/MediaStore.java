@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -20,7 +21,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class MediaStore extends Store implements MediaRestClient.MediaRestListener {
+public class MediaStore extends Store
+        implements MediaRestClient.MediaRestListener, MediaXMLRPCClient.MediaXmlRpcListener {
     //
     // Payloads
     //
@@ -100,12 +102,15 @@ public class MediaStore extends Store implements MediaRestClient.MediaRestListen
     }
 
     private MediaRestClient mMediaRestClient;
+    private MediaXMLRPCClient mMediaXmlrpcClient;
 
     @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient) {
+    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
         super(dispatcher);
-        mMediaRestClient = mediaRestClient;
+        mMediaRestClient = restClient;
         mMediaRestClient.setListener(this);
+        mMediaXmlrpcClient = xmlrpcClient;
+        mMediaXmlrpcClient.setListener(this);
     }
 
     @Subscribe
