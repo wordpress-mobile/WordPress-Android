@@ -8,23 +8,33 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.UploadRequestBody;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
-import org.wordpress.android.fluxc.store.MediaStore.ChangedMediaPayload;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MediaXMLRPCClient extends BaseXMLRPCClient {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+
+public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequestBody.ProgressListener {
     public static final String MEDIA_ID_KEY         = "attachment_id";
     public static final String POST_ID_KEY          = "parent";
     public static final String TITLE_KEY            = "title";
@@ -49,66 +59,167 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient {
     private static final String FILE_NAME_REGEX = "^.*/([A-Za-z0-9_-]+)\\.\\w+$";
 
     private MediaXmlRpcListener mListener;
+    private OkHttpClient mOkHttpClient;
 
-    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okClient,
+                             AccessToken accessToken, UserAgent userAgent,
+                             HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+        mOkHttpClient = okClient;
     }
 
-    public void pullAllMedia(String xmlRpcUrl, String username, String password) {
-        List<Object> params = new ArrayList<>(3);
-        // TODO: need site ID
-//        params.add();
-        params.add(username);
-        params.add(password);
-        XMLRPCRequest request = new XMLRPCRequest(xmlRpcUrl, XMLRPC.GET_MEDIA_LIBRARY, params,
+    @Override
+    public void onProgress(MediaModel media, float progress) {
+        notifyMediaProgress(media, progress);
+    }
+
+    public void pushMedia(final SiteModel site, List<MediaModel> mediaList) {
+        for (final MediaModel media : mediaList) {
+            List<Object> params = getBasicParams(site);
+            add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_MEDIA, params,
+                    new Listener() {
+                        @Override public void onResponse(Object response) {
+                            if (response == null || !(response instanceof Boolean) || !(Boolean) response) {
+                                AppLog.v(T.MEDIA, "failed to update media: " + media.getTitle());
+                                return;
+                            }
+
+                            AppLog.v(T.MEDIA, "media updated: " + media.getUrl());
+                            List<MediaModel> mediaList = new ArrayList<>();
+                            mediaList.add(media);
+                            notifyMediaPushed(MediaAction.PUSH_MEDIA, mediaList, null);
+                        }
+                },
+                    new ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
+                                AppLog.i(T.MEDIA, "media does not exist, uploading");
+                                performUpload(site, media);
+                            } else {
+                                AppLog.e(T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA response: " + error);
+                            }
+                        }
+                }
+            ));
+        }
+    }
+
+    public void uploadMedia(SiteModel site, MediaModel media) {
+        performUpload(site, media);
+    }
+
+    public void pullAllMedia(SiteModel site) {
+        List<Object> params = getBasicParams(site);
+        add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params,
                 new Listener() {
                     @Override public void onResponse(Object response) {
-                        AppLog.v(AppLog.T.API, "Successful response from XMLRPC.getMediaLibrary");
-
+                        AppLog.v(T.MEDIA, "Successful response from XMLRPC.getMediaLibrary");
                         List<MediaModel> media = allMediaResponseToMediaModelList(response);
-                        ChangedMediaPayload payload = new ChangedMediaPayload(media, null, null);
-//                        mDispatcher.dispatch(MediaActionBuilder.newFetchedAllMediaAction(payload));
+                        notifyMediaPulled(MediaAction.PULL_ALL_MEDIA, media, null);
                     }
                 },
                 new ErrorListener() {
                     @Override public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Volley error", error);
+                        AppLog.e(T.MEDIA, "Volley error", error);
+                        notifyMediaError(MediaAction.PULL_ALL_MEDIA, error);
                     }
                 }
-        );
-        add(request);
+        ));
     }
 
-    public void pullMediaItem(String xmlRpcUrl, String username, String password, long mediaId) {
-        List<Object> params = new ArrayList<>(3);
-        // TODO: need site ID
-//        params.add()
-        params.add(username);
-        params.add(password);
-        XMLRPCRequest request = new XMLRPCRequest(xmlRpcUrl, XMLRPC.GET_MEDIA_ITEM, params,
-                new Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        AppLog.v(AppLog.T.API, "Successful response from XMLRPC.getMediaItem");
-
-                        if (!(response instanceof HashMap)) {
-                            // TODO: log? handle error some other way?
-                            return;
+    public void pullMedia(SiteModel site, List<Long> mediaIds) {
+        for (Long mediaId : mediaIds) {
+            List<Object> params = getBasicParams(site);
+            params.add(mediaId);
+            add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params,
+                    new Listener() {
+                        @Override public void onResponse(Object response) {
+                            AppLog.v(T.MEDIA, "Successful response from XMLRPC.getMediaItem");
+                            List<MediaModel> media = new ArrayList<>(1);
+                            media.add(responseMapToMediaModel((HashMap) response));
+                            notifyMediaPulled(MediaAction.PULL_MEDIA, media, null);
                         }
-                        List<MediaModel> media = new ArrayList<>(1);
-                        media.add(responseMapToMediaModel((HashMap) response));
-                        ChangedMediaPayload payload = new ChangedMediaPayload(media, null, null);
-//                        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload));
+                    },
+                    new ErrorListener() {
+                        @Override public void onErrorResponse(VolleyError error) {
+                            AppLog.e(T.MEDIA, "Volley error", error);
+                            notifyMediaError(MediaAction.PULL_MEDIA, error);
+                        }
                     }
-                },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Volley error", error);
+            ));
+        }
+    }
+
+    public void deleteMedia(SiteModel site, List<MediaModel> media) {
+        for (MediaModel mediaItem : media) {
+            List<Object> params = getBasicParams(site);
+            params.add(mediaItem.getMediaId());
+            add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_MEDIA, params,
+                    new Listener() {
+                        @Override public void onResponse(Object response) {
+                            AppLog.v(T.MEDIA, "Successful response from XMLRPC.deleteMedia");
+                            List<MediaModel> media = new ArrayList<>(1);
+                            media.add(responseMapToMediaModel((HashMap) response));
+                            notifyMediaDeleted(MediaAction.DELETE_MEDIA, media, null);
+                        }
+                    },
+                    new ErrorListener() {
+                        @Override public void onErrorResponse(VolleyError error) {
+                            AppLog.e(T.MEDIA, "Volley error", error);
+                            notifyMediaError(MediaAction.DELETE_MEDIA, error);
+                        }
                     }
+            ));
+        }
+    }
+
+    public void setListener(MediaXmlRpcListener listener) {
+        mListener = listener;
+    }
+
+    private void performUpload(SiteModel site, MediaModel media) {
+        final UploadRequestBody body = new UploadRequestBody(media, this);
+
+        HttpUrl url = new HttpUrl.Builder()
+                .host(site.getXmlRpcUrl())
+                .username(site.getUsername())
+                .password(site.getPassword())
+                .addQueryParameter("blog_id", String.valueOf(site.getDotOrgSiteId()))
+                .build();
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    AppLog.d(T.MEDIA, "media upload successful: " + response);
+                    // TODO: serialize MediaModel from response and add to resultList
+//                    MediaModel responseMedia = resToMediaModel
+//                    List<MediaModel> resultList = new ArrayList<>();
+//                    resultList.add(responseMedia);
+//                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, resultList, null);
+                } else {
+                    AppLog.w(T.MEDIA, "error uploading media: " + response);
+                    notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));
                 }
-        );
+            }
+
+            @Override public void onFailure(Call call, IOException e) {
+                AppLog.w(T.MEDIA, "media upload failed: " + e);
+                notifyMediaError(MediaAction.UPLOAD_MEDIA, e);
+            }
+        });
+    }
+
+    private List<Object> getBasicParams(SiteModel site) {
+        List<Object> params = new ArrayList<>();
+        params.add(site.getDotOrgSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        return params;
     }
 
     private List<MediaModel> allMediaResponseToMediaModelList(Object response) {
@@ -164,21 +275,21 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient {
         }
     }
 
-    private void notifyMediaPulled(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+    private void notifyMediaPulled(MediaAction cause, List<MediaModel> media, List<Exception> errors) {
         if (mListener != null) {
-            mListener.onMediaPulled(cause, payload.media, payload.errors);
+            mListener.onMediaPulled(cause, media, errors);
         }
     }
 
-    private void notifyMediaPushed(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+    private void notifyMediaPushed(MediaAction cause, List<MediaModel> media, List<Exception> errors) {
         if (mListener != null) {
-            mListener.onMediaPushed(cause, payload.media, payload.errors);
+            mListener.onMediaPushed(cause, media, errors);
         }
     }
 
-    private void notifyMediaDeleted(MediaAction cause, MediaStore.ChangedMediaPayload payload) {
+    private void notifyMediaDeleted(MediaAction cause, List<MediaModel> media, List<Exception> errors) {
         if (mListener != null) {
-            mListener.onMediaDeleted(cause, payload.media, payload.errors);
+            mListener.onMediaDeleted(cause, media, errors);
         }
     }
 

@@ -244,6 +244,10 @@ public class MediaStore extends Store
         return getNextSiteMediaToDelete(siteId) != null;
     }
 
+    //
+    // Action implementations
+    //
+
     private void updateMedia(List<MediaModel> media) {
         if (media == null || media.isEmpty()) return;
 
@@ -266,11 +270,50 @@ public class MediaStore extends Store
             }
         }
         emitChange(event);
-
     }
 
-    private OnChanged getErrorOrChangedEvent(MediaAction cause, ChangedMediaPayload payload) {
-        return payload.isError() ? new OnMediaError(cause, payload.error) :
-                                   new OnMediaChanged(cause, payload.media);
+    //
+    // Helper methods that choose the appropriate network client to perform an action
+    //
+
+    private void performPushMedia(ChangeMediaPayload payload) {
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pushMedia(payload.site.getSiteId(), payload.media);
+        } else {
+            mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
+        }
+    }
+
+    private void performUploadMedia(ChangeMediaPayload payload) {
+        if (payload.media == null || payload.media.isEmpty()) return;
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
+        } else {
+            mMediaXmlrpcClient.uploadMedia(payload.site, payload.media.get(0));
+        }
+    }
+
+    private void performPullAllMedia(PullMediaPayload payload) {
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pullAllMedia(payload.site.getSiteId());
+        } else {
+            mMediaXmlrpcClient.pullAllMedia(payload.site);
+        }
+    }
+
+    private void performPullMedia(PullMediaPayload payload) {
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
+        } else {
+            mMediaXmlrpcClient.pullMedia(payload.site, payload.mediaIds);
+        }
+    }
+
+    private void performDeleteMedia(ChangeMediaPayload payload) {
+        if (payload.site.isWPCom()) {
+            mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
+        } else {
+            mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+        }
     }
 }
