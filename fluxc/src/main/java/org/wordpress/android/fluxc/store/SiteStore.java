@@ -65,27 +65,34 @@ public class SiteStore extends Store {
         }
     }
 
-    // OnChanged Events
-    public class OnSiteChanged extends OnChanged {
-        public int rowsAffected;
+    public static class SiteError implements OnChangedError {
+    }
 
+    public static class NewSiteError implements OnChangedError {
+        public NewSiteErrorType type;
+        public String message;
+        public NewSiteError(NewSiteErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    // OnChanged Events
+    public class OnSiteChanged extends OnChanged<SiteError> {
+        public int rowsAffected;
         public OnSiteChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
     }
 
-    public class OnSiteRemoved extends OnChanged {
+    public class OnSiteRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
-
         public OnSiteRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
     }
 
-    public class OnNewSiteCreated extends OnChanged {
-        public boolean isError;
-        public NewSiteError errorType;
-        public String errorMessage;
+    public class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
     }
 
@@ -97,7 +104,7 @@ public class SiteStore extends Store {
     }
 
     // Enums
-    public enum NewSiteError {
+    public enum NewSiteErrorType {
         BLOG_NAME_REQUIRED,
         BLOG_NAME_NOT_ALLOWED,
         BLOG_NAME_MUST_BE_AT_LEAST_FOUR_CHARACTERS,
@@ -113,9 +120,9 @@ public class SiteStore extends Store {
         BLOG_TITLE_INVALID,
         GENERIC_ERROR;
 
-        public static NewSiteError fromString(String string) {
+        public static NewSiteErrorType fromString(String string) {
             if (string != null) {
-                for (NewSiteError v : NewSiteError.values()) {
+                for (NewSiteErrorType v : NewSiteErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -512,9 +519,7 @@ public class SiteStore extends Store {
         } else if (actionType == SiteAction.CREATED_NEW_SITE) {
             NewSiteResponsePayload payload = (NewSiteResponsePayload) action.getPayload();
             OnNewSiteCreated onNewSiteCreated = new OnNewSiteCreated();
-            onNewSiteCreated.isError = payload.isError;
-            onNewSiteCreated.errorType = payload.errorType;
-            onNewSiteCreated.errorMessage = payload.errorMessage;
+            onNewSiteCreated.error = payload.error;
             onNewSiteCreated.dryRun = payload.dryRun;
             emitChange(onNewSiteCreated);
         } else if (actionType == SiteAction.FETCH_POST_FORMATS) {

@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
@@ -45,9 +46,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     public static class NewSiteResponsePayload implements Payload {
         public NewSiteResponsePayload() {
         }
-        public NewSiteError errorType;
-        public String errorMessage;
-        public boolean isError;
+        public NewSiteError error;
         public boolean dryRun;
     }
 
@@ -123,7 +122,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(NewAccountResponse response) {
                         NewSiteResponsePayload payload = new NewSiteResponsePayload();
-                        payload.isError = false;
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
@@ -226,14 +224,13 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     private NewSiteResponsePayload volleyErrorToAccountResponsePayload(VolleyError error) {
         NewSiteResponsePayload payload = new NewSiteResponsePayload();
-        payload.isError = true;
-        payload.errorType = NewSiteError.GENERIC_ERROR;
+        payload.error = new NewSiteError(NewSiteErrorType.GENERIC_ERROR, "");
         if (error.networkResponse != null && error.networkResponse.data != null) {
             String jsonString = new String(error.networkResponse.data);
             try {
                 JSONObject errorObj = new JSONObject(jsonString);
-                payload.errorType = NewSiteError.fromString((String) errorObj.get("error"));
-                payload.errorMessage = (String) errorObj.get("message");
+                payload.error.type = NewSiteErrorType.fromString((String) errorObj.get("error"));
+                payload.error.message = (String) errorObj.get("message");
             } catch (JSONException e) {
                 // Do nothing (keep default error)
             }
