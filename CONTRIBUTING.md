@@ -77,6 +77,21 @@ Here are the libraries currently maintained and subtree'd:
 * Stores
 * Utils
 
+# String Resources
+
+We use `values/strings.xml` file for *ALL* translatable strings including string arrays. Each element in a string array should be defined as separate string resource first and then the string array should be defined with `translatable="false"` flag. Here is a basic example:
+
+```
+<string name="element1">Element 1</string>
+<string name="element2">Element 2</string>
+<string-array name="elements_array" translatable="false">
+    <item>@string/element1</item>
+    <item>@string/element2</item>
+</string-array>
+```
+
+We also have string resources outside of `strings.xml` such as `key_strings`. These strings are not user-facing and are not translated. These should be used for static strings such as preference keys.
+
 # Drawable Resources
 
 The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
