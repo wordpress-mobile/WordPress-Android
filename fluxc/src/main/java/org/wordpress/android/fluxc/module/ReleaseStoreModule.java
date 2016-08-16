@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -28,8 +29,9 @@ public class ReleaseStoreModule {
 
     @Provides
     @Singleton
-    public MediaStore provideMediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient) {
-        return new MediaStore(dispatcher, mediaRestClient);
+    public MediaStore provideMediaStore(Dispatcher dispatcher, MediaRestClient mediaRestClient,
+                                        MediaXMLRPCClient mediaXMLRPCClient) {
+        return new MediaStore(dispatcher, mediaRestClient, mediaXMLRPCClient);
     }
 
     @Provides
