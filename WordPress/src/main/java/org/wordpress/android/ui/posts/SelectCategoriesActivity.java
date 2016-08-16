@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -45,6 +46,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
+    private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
@@ -70,6 +72,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
+
+        mEmptyView = (TextView) findViewById(R.id.empty_view);
+        mListView.setEmptyView(mEmptyView);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -118,9 +123,14 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         populateCategoryList();
 
-        // Refresh blog list if network is available and activity really starts
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            refreshCategories();
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            mEmptyView.setText(R.string.empty_list_default);
+            // Refresh blog list if network is available and activity really starts
+            if (savedInstanceState == null) {
+                refreshCategories();
+            }
+        } else {
+            mEmptyView.setText(R.string.no_network_title);
         }
     }
 
