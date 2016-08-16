@@ -13,9 +13,9 @@ public abstract class Store {
         mDispatcher.register(this);
     }
 
-    public interface ErrorType {}
+    public interface OnChangedError {}
 
-    public class OnChanged<T extends ErrorType> {
+    public class OnChanged<T extends OnChangedError> {
         public T error = null;
 
         public boolean isError() {

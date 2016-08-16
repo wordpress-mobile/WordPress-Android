@@ -63,9 +63,9 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                     || apiResponseError.equals("invalid_token")
                     || apiResponseError.equals("access_denied")
                     || apiResponseError.equals("needs_2fa")) {
-                AuthenticationError error = Authenticator.jsonErrorToAuthenticationError(jsonObject);
-                AuthenticateErrorPayload payload = new AuthenticateErrorPayload(error, jsonObject.optString
-                        ("error_description", ""));
+                AuthenticationError error = new AuthenticationError(Authenticator.jsonErrorToAuthenticationError
+                        (jsonObject), jsonObject.optString("error_description", ""));
+                AuthenticateErrorPayload payload = new AuthenticateErrorPayload(error);
                 mOnAuthFailedListener.onAuthFailed(payload);
             }
         }
