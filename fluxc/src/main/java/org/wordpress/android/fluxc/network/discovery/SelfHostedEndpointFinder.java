@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
-import org.wordpress.android.fluxc.store.Store.ErrorType;
+import org.wordpress.android.fluxc.store.Store.OnChangedError;
 import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,7 +43,7 @@ public class SelfHostedEndpointFinder {
     private final Dispatcher mDispatcher;
     private final BaseXMLRPCClient mClient;
 
-    public enum DiscoveryError implements ErrorType {
+    public enum DiscoveryError implements OnChangedError {
         SITE_URL_CANNOT_BE_EMPTY,
         INVALID_URL,
         MISSING_XMLRPC_METHOD,

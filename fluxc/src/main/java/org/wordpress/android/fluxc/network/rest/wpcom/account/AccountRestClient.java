@@ -10,18 +10,19 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
+import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -57,10 +58,7 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class NewAccountResponsePayload implements Payload {
-        public NewAccountResponsePayload() {
-        }
-        public NewUserError errorType;
-        public String errorMessage;
+        public NewUserError error;
         public boolean isError;
         public boolean dryRun;
     }
@@ -196,15 +194,14 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     private NewAccountResponsePayload volleyErrorToAccountResponsePayload(VolleyError error) {
         NewAccountResponsePayload payload = new NewAccountResponsePayload();
-        payload.isError = true;
-        payload.errorType = NewUserError.GENERIC_ERROR;
+        payload.error = new NewUserError(NewUserErrorType.GENERIC_ERROR, "");
         if (error.networkResponse != null && error.networkResponse.data != null) {
             AppLog.e(T.API, new String(error.networkResponse.data));
             String jsonString = new String(error.networkResponse.data);
             try {
                 JSONObject errorObj = new JSONObject(jsonString);
-                payload.errorType = NewUserError.fromString((String) errorObj.get("error"));
-                payload.errorMessage = (String) errorObj.get("message");
+                payload.error.type = NewUserErrorType.fromString((String) errorObj.get("error"));
+                payload.error.message = (String) errorObj.get("message");
             } catch (JSONException e) {
                 // Do nothing (keep default error)
             }

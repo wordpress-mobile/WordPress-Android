@@ -95,8 +95,17 @@ public class AccountStore extends Store {
         public boolean dryRun;
     }
 
+    public static class AuthenticationError implements OnChangedError {
+        public AuthenticationErrorType type;
+        public String message;
+        public AuthenticationError(AuthenticationErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // Enums
-    public enum AuthenticationError implements ErrorType {
+    public enum AuthenticationErrorType {
         // From response's "error" field
         ACCESS_DENIED,
         AUTHORIZATION_REQUIRED,
@@ -121,9 +130,9 @@ public class AccountStore extends Store {
         // Generic error
         GENERIC_ERROR;
 
-        public static AuthenticationError fromString(String string) {
+        public static AuthenticationErrorType fromString(String string) {
             if (string != null) {
-                for (AuthenticationError v : AuthenticationError.values()) {
+                for (AuthenticationErrorType v : AuthenticationErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -133,14 +142,32 @@ public class AccountStore extends Store {
         }
     }
 
-    public enum AccountError implements ErrorType {
+    public static class AccountError implements OnChangedError {
+        public AccountErrorType type;
+        public String message;
+        public AccountError(AccountErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AccountErrorType {
         ACCOUNT_FETCH_ERROR,
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
         GENERIC_ERROR
     }
 
-    public enum NewUserError implements ErrorType {
+    public static class NewUserError implements OnChangedError {
+        public NewUserErrorType type;
+        public String message;
+        public NewUserError(NewUserErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum NewUserErrorType {
         USERNAME_ONLY_LOWERCASE_LETTERS_AND_NUMBERS,
         USERNAME_REQUIRED,
         USERNAME_NOT_ALLOWED,
@@ -158,9 +185,9 @@ public class AccountStore extends Store {
         EMAIL_RESERVED,
         GENERIC_ERROR;
 
-        public static NewUserError fromString(String string) {
+        public static NewUserErrorType fromString(String string) {
             if (string != null) {
-                for (NewUserError v : NewUserError.values()) {
+                for (NewUserErrorType v : NewUserErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -201,7 +228,7 @@ public class AccountStore extends Store {
         if (actionType == AuthenticationAction.AUTHENTICATE_ERROR) {
             OnAuthenticationChanged event = new OnAuthenticationChanged();
             AuthenticateErrorPayload payload = (AuthenticateErrorPayload) action.getPayload();
-            event.error = payload.errorType;
+            event.error = payload.error;
             emitChange(event);
         } else if (actionType == AuthenticationAction.AUTHENTICATE) {
             AuthenticatePayload payload = (AuthenticatePayload) action.getPayload();
@@ -237,7 +264,7 @@ public class AccountStore extends Store {
                 mAccount.copyAccountAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
             } else {
-                emitAccountChangeError(AccountError.ACCOUNT_FETCH_ERROR);
+                emitAccountChangeError(AccountErrorType.ACCOUNT_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.FETCHED_SETTINGS) {
             AccountRestPayload data = (AccountRestPayload) action.getPayload();
@@ -245,7 +272,7 @@ public class AccountStore extends Store {
                 mAccount.copyAccountSettingsAttributes(data.account);
                 updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
             } else {
-                emitAccountChangeError(AccountError.SETTINGS_FETCH_ERROR);
+                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
             }
         } else if (actionType == AccountAction.POSTED_SETTINGS) {
             AccountPostSettingsResponsePayload data = (AccountPostSettingsResponsePayload) action.getPayload();
@@ -259,7 +286,7 @@ public class AccountStore extends Store {
                     emitChange(accountChanged);
                 }
             } else {
-                emitAccountChangeError(AccountError.SETTINGS_POST_ERROR);
+                emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
             }
         } else if (actionType == AccountAction.UPDATE_ACCOUNT) {
             AccountModel accountModel = (AccountModel) action.getPayload();
@@ -274,16 +301,16 @@ public class AccountStore extends Store {
         } else if (actionType == AccountAction.CREATED_NEW_ACCOUNT) {
             NewAccountResponsePayload payload = (NewAccountResponsePayload) action.getPayload();
             OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
-            onNewUserCreated.error = payload.errorType;
+            onNewUserCreated.error = payload.error;
             onNewUserCreated.dryRun = payload.dryRun;
             emitChange(onNewUserCreated);
         }
     }
 
-    private void emitAccountChangeError(AccountError errorType) {
-        OnAccountChanged accountChanged = new OnAccountChanged();
-        accountChanged.error = errorType;
-        emitChange(accountChanged);
+    private void emitAccountChangeError(AccountErrorType errorType) {
+        OnAccountChanged event = new OnAccountChanged();
+        event.error = new AccountError(errorType, null);
+        emitChange(event);
     }
 
     private void newAccount(NewAccountPayload payload) {
@@ -355,9 +382,9 @@ public class AccountStore extends Store {
                     public void onErrorResponse(VolleyError volleyError) {
                         AppLog.e(T.API, "Authentication error");
                         OnAuthenticationChanged event = new OnAuthenticationChanged();
-                        event.error = Authenticator.volleyErrorToAuthenticationError(volleyError);
-                        //event.errorMessage = Authenticator.volleyErrorToErrorMessage(volleyError);
-                        //event.isError = true;
+                        event.error = new AuthenticationError(
+                                Authenticator.volleyErrorToAuthenticationError(volleyError),
+                                Authenticator.volleyErrorToErrorMessage(volleyError));
                         emitChange(event);
                     }
                 });
