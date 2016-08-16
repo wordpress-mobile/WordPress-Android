@@ -11,9 +11,10 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
