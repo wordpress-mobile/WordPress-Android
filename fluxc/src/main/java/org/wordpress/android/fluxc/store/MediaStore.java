@@ -30,10 +30,10 @@ public class MediaStore extends Store
     /**
      * Used for PULL_ALL_MEDIA and PULL_MEDIA actions
      */
-    public static class FetchMediaPayload implements Payload {
+    public static class PullMediaPayload implements Payload {
         public SiteModel site;
         public List<Long> mediaIds;
-        public FetchMediaPayload(SiteModel site, List<Long> mediaIds) {
+        public PullMediaPayload(SiteModel site, List<Long> mediaIds) {
             this.site = site;
             this.mediaIds = mediaIds;
         }
@@ -116,21 +116,16 @@ public class MediaStore extends Store
     @Subscribe
     @Override
     public void onAction(Action action) {
-        if (action.getType() == MediaAction.PULL_ALL_MEDIA) {
-            FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.pullAllMedia(payload.site.getSiteId());
-        } else if (action.getType() == MediaAction.PULL_MEDIA) {
-            FetchMediaPayload payload = (FetchMediaPayload) action.getPayload();
-            mMediaRestClient.pullMedia(payload.site.getSiteId(), payload.mediaIds);
-        } else if (action.getType() == MediaAction.PUSH_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            mMediaRestClient.pushMedia(payload.site.getSiteId(), payload.media);
-        } else if (action.getType() == MediaAction.DELETE_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            mMediaRestClient.deleteMedia(payload.site.getSiteId(), payload.media);
+        if (action.getType() == MediaAction.PUSH_MEDIA) {
+            performPushMedia((ChangeMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.UPLOAD_MEDIA) {
-            ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
-            mMediaRestClient.uploadMedia(payload.site.getSiteId(), payload.media.get(0));
+            performUploadMedia((ChangeMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.PULL_ALL_MEDIA) {
+            performPullAllMedia((PullMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.PULL_MEDIA) {
+            performPullMedia((PullMediaPayload) action.getPayload());
+        } else if (action.getType() == MediaAction.DELETE_MEDIA) {
+            performDeleteMedia((ChangeMediaPayload) action.getPayload());
         } else if (action.getType() == MediaAction.UPDATE_MEDIA) {
             ChangeMediaPayload payload = (ChangeMediaPayload) action.getPayload();
             updateMedia(payload.media);
@@ -252,27 +247,26 @@ public class MediaStore extends Store
     private void updateMedia(List<MediaModel> media) {
         if (media == null || media.isEmpty()) return;
 
-        ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
+        OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA, new ArrayList<MediaModel>());
         for (MediaModel mediaItem : media) {
             if (MediaSqlUtils.insertOrUpdateMedia(mediaItem) > 0) {
-                payload.media.add(mediaItem);
+                event.media.add(mediaItem);
             }
         }
-
-        // TODO: emit OnMediaChanged
+        emitChange(event);
     }
 
     private void removeMedia(List<MediaModel> media) {
         if (media == null || media.isEmpty()) return;
 
-        ChangedMediaPayload payload = new ChangedMediaPayload(new ArrayList<MediaModel>(), new ArrayList<Exception>(), null);
+        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA, new ArrayList<MediaModel>());
         for (MediaModel mediaItem : media) {
             if (MediaSqlUtils.deleteMedia(mediaItem) > 0) {
-                payload.media.add(mediaItem);
+                event.media.add(mediaItem);
             }
         }
+        emitChange(event);
 
-        // TODO: emit OnMediaChanged
     }
 
     private OnChanged getErrorOrChangedEvent(MediaAction cause, ChangedMediaPayload payload) {
