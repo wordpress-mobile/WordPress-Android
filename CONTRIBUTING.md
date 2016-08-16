@@ -90,7 +90,7 @@ We use `values/strings.xml` file for *ALL* translatable strings including string
 </string-array>
 ```
 
-We also have string resources outside of `strings.xml` such as `key_strings`. These strings are not user-facing and are not translated. These should be used for static strings such as preference keys.
+We also have string resources outside of `strings.xml` such as `key_strings`. These strings are not user-facing and should be used as static strings such as preference keys.
 
 # Drawable Resources
 
