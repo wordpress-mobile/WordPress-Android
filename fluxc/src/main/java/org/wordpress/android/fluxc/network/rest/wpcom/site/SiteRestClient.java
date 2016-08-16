@@ -1,10 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
@@ -24,10 +26,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.NewAccountResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
-import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -58,7 +60,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSites() {
-        String url = WPCOMREST.me.sites.getUrlV1_1();
+        String url = WPCOMREST.me.sites.getUrlV1_1() + "/FIXME: 404";
         final WPComGsonRequest<SitesResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SitesResponse.class,
                 new Listener<SitesResponse>() {
@@ -71,10 +73,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                     }
                 },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                new BaseErrorListener() {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
+
                         // TODO: Error, dispatch network error
                     }
                 }
@@ -93,9 +95,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
                     }
                 },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                new BaseErrorListener() {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
                         // TODO: Error, dispatch network error
                     }
@@ -126,9 +127,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
                 },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                new BaseErrorListener() {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, new String(error.networkResponse.data));
                         NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error);
                         payload.dryRun = dryRun;
@@ -161,9 +161,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                                 FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                new BaseErrorListener() {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
                         // TODO: Error, dispatch network error
                     }
