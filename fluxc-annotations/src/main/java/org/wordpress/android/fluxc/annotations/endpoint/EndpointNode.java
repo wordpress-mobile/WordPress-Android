@@ -44,6 +44,13 @@ public class EndpointNode {
         return mChildren;
     }
 
+    public EndpointNode getRoot() {
+        if (mParent != null) {
+            return mParent.getRoot();
+        }
+        return this;
+    }
+
     public void setChildren(List<EndpointNode> children) {
         mChildren = children;
     }
