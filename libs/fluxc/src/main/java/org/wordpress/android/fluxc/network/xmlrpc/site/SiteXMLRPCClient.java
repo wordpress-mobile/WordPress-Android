@@ -1,7 +1,9 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
@@ -10,6 +12,8 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -49,9 +53,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         }
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
                         // TODO: Error, dispatch network error
                     }
@@ -89,9 +93,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
                     }
                 }
@@ -115,9 +119,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                                 FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
-                new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                new BaseErrorListener() {
+                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
                         AppLog.e(T.API, "Volley error", error);
                     }
                 }
