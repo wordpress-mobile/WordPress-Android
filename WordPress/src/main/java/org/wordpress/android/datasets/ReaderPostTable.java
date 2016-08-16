@@ -46,7 +46,7 @@ public class ReaderPostTable {
           + "featured_image,"       // 17
           + "featured_video,"       // 18
           + "post_avatar,"          // 19
-          + "sort_index,"           // 20 - this is a score for search results, otherwise it's a timestamp
+          + "sort_index,"           // 20
           + "published,"            // 21
           + "num_replies,"          // 22
           + "num_likes,"            // 23
