@@ -1,63 +1,45 @@
 package org.wordpress.android.fluxc.processor;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 
+import org.wordpress.android.fluxc.annotations.AnnotationConfig;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
+import org.wordpress.android.fluxc.annotations.endpoint.EndpointTreeGenerator;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
+@SuppressWarnings("unused")
 @AutoService(Processor.class)
 public class EndpointProcessor extends AbstractProcessor {
     @Override
     public void init(ProcessingEnvironment processingEnv) {
-        EndpointNode rootNode = new EndpointNode("/");
+        try {
+            File file = new File("fluxc/src/main/tools/wp-com-endpoints.txt");
+            EndpointNode rootNode = EndpointTreeGenerator.process(file);
+            Filer filer = processingEnv.getFiler();
 
-        EndpointNode sitesNode = new EndpointNode("sites/");
-        EndpointNode usersNode = new EndpointNode("users/");
+            TypeSpec apiClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class);
 
-        EndpointNode newSiteNode = new EndpointNode("new/");
+            JavaFile javaFile = JavaFile.builder(AnnotationConfig.PACKAGE + ".endpoint", apiClass)
+                    .indent("    ")
+                    .build();
 
-        EndpointNode siteNode = new EndpointNode("$site/");
-        EndpointNode postsNode = new EndpointNode("posts/");
-        EndpointNode newPostNode = new EndpointNode("new/");
-        EndpointNode postNode = new EndpointNode("$post_ID/");
-        EndpointNode deletePostNode = new EndpointNode("delete/");
-
-        EndpointNode sitePostFormatsNode = new EndpointNode("post-formats/");
-
-        EndpointNode newUserNode = new EndpointNode("new/");
-
-        postNode.addChild(deletePostNode);
-        postsNode.addChild(newPostNode);
-        postsNode.addChild(postNode);
-        siteNode.addChild(postsNode);
-        siteNode.addChild(sitePostFormatsNode);
-        sitesNode.addChild(siteNode);
-        sitesNode.addChild(newSiteNode);
-        usersNode.addChild(newUserNode);
-
-        rootNode.addChild(sitesNode);
-        rootNode.addChild(usersNode);
-
-        EndpointNode userNode = new EndpointNode("$user/");
-        EndpointNode testNode = new EndpointNode("$test/");
-
-        EndpointNode testSubNode = new EndpointNode("sub/");
-        testNode.addChild(testSubNode);
-
-        usersNode.addChild(userNode);
-        rootNode.addChild(testNode);
-
-        RESTPoet.generate(rootNode, "WPCOMRESTGen", "org.wordpress.android.fluxc.network.rest.wpcom", WPComEndpoint.class);
+            javaFile.writeTo(filer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
