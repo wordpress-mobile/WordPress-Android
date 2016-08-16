@@ -86,11 +86,11 @@ public class MediaRestClient extends BaseWPComRestClient implements UploadReques
             }, new ErrorListener() {
                 @Override public void onErrorResponse(VolleyError error) {
                     if (error.networkResponse.statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
-                        AppLog.v(AppLog.T.MEDIA, "media does not exist, uploading");
-                        // media doesn't exist, upload
+                        AppLog.i(AppLog.T.MEDIA, "media does not exist, uploading");
                         performUpload(media, siteId);
+                    } else {
+                        AppLog.e(AppLog.T.MEDIA, "unhandled XMLRPC.EDIT_MEDIA error: " + error);
                     }
-                    // TODO: error
                 }
             }));
         }
