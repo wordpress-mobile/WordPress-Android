@@ -22,6 +22,8 @@ public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
+    private static String ROLE_FOLLOWER = "follower";
+    private static String ROLE_VIEWER = "viewer";
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
                                   final FetchUsersCallback callback) {
@@ -500,6 +502,11 @@ public class PeopleUtils {
                 }
             }
         };
+
+        // This is an ugly hack but the remote accepts "follower" as parameter when you're inviting a viewer
+        if (role.toLowerCase().equals(ROLE_VIEWER)) {
+            role = ROLE_FOLLOWER;
+        }
 
         String path = String.format("sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();

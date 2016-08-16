@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import org.wordpress.android.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,11 +8,16 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import org.wordpress.android.R;
+
 public class RoleSelectDialogFragment extends DialogFragment {
+    private static final String IS_PRIVATE_TAG = "is_private";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final String[] roles = getResources().getStringArray(R.array.roles);
+        boolean isPrivateSite = getArguments().getBoolean(IS_PRIVATE_TAG);
+        int roleRes = isPrivateSite ? R.array.invite_roles_private : R.array.invite_roles_public;
+        final String[] roles = getResources().getStringArray(roleRes);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
@@ -36,8 +39,12 @@ public class RoleSelectDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode) {
+    public static <T extends Fragment & OnRoleSelectListener> void show(T parentFragment, int requestCode,
+                                                                        boolean isPrivateSite) {
         RoleSelectDialogFragment roleChangeDialogFragment = new RoleSelectDialogFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(IS_PRIVATE_TAG, isPrivateSite);
+        roleChangeDialogFragment.setArguments(args);
         roleChangeDialogFragment.setTargetFragment(parentFragment, requestCode);
         roleChangeDialogFragment.show(parentFragment.getFragmentManager(), null);
     }

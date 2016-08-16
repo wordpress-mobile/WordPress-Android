@@ -20,6 +20,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
@@ -195,7 +197,7 @@ public class PeopleInviteFragment extends Fragment implements
         roleContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0);
+                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, isPrivateSite());
             }
         });
         mRoleTextView = (TextView) view.findViewById(R.id.role);
@@ -261,8 +263,9 @@ public class PeopleInviteFragment extends Fragment implements
     }
 
     private String loadDefaultRole() {
-        final String[] roles = getResources().getStringArray(R.array.roles);
-        return roles[roles.length - 1];
+        int roleRes = isPrivateSite() ? R.array.invite_roles_private : R.array.invite_roles_public;
+        final String[] roles = getResources().getStringArray(roleRes);
+        return roles[0];
     }
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
@@ -620,5 +623,11 @@ public class PeopleInviteFragment extends Fragment implements
         if (mUsernameEditText != null) {
             mUsernameEditText.setOnFocusChangeListener(null);
         }
+    }
+
+    private boolean isPrivateSite() {
+        String dotComBlogId = getArguments().getString(ARG_BLOGID);
+        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(dotComBlogId);
+        return blog != null && blog.isPrivate();
     }
 }
