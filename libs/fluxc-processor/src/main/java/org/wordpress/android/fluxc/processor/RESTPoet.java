@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.processor;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -11,8 +10,6 @@ import com.squareup.javapoet.TypeSpec;
 import org.wordpress.android.fluxc.annotations.Endpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 
 import javax.lang.model.element.Modifier;
@@ -31,7 +28,7 @@ public class RESTPoet {
 
     private static TypeName sBaseEndpointClass;
 
-    public static void generate(EndpointNode rootNode, String fileName, String packageName, Class baseEndpointClass) {
+    public static TypeSpec generate(EndpointNode rootNode, String fileName, Class baseEndpointClass) {
         sBaseEndpointClass = ClassName.get(baseEndpointClass);
 
         TypeSpec.Builder WPCOMRESTBuilder = TypeSpec.classBuilder(fileName)
@@ -41,16 +38,7 @@ public class RESTPoet {
             addEndpointToBuilder(endpoint, WPCOMRESTBuilder);
         }
 
-        JavaFile javaFile = JavaFile.builder(packageName, WPCOMRESTBuilder.build())
-                .indent("    ")
-                .build();
-
-        try {
-            File file = new File("fluxc/src/main/java/");
-            javaFile.writeTo(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return WPCOMRESTBuilder.build();
     }
 
     private static void addEndpointToBuilder(EndpointNode endpointNode, TypeSpec.Builder classBuilder) {
