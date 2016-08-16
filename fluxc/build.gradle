@@ -4,12 +4,14 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0-beta1'
-      classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.github.dcendents.android-maven'
 
 repositories {
     jcenter()
