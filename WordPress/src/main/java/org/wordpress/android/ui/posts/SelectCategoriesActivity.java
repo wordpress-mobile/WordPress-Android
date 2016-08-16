@@ -322,11 +322,13 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getLocalTableBlogId());
-            Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
-            i.putExtras(bundle);
-            startActivityForResult(i, 0);
+            if (NetworkUtils.checkConnection(this)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", blog.getLocalTableBlogId());
+                Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
+                i.putExtras(bundle);
+                startActivityForResult(i, 0);
+            }
             return true;
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
