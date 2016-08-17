@@ -40,11 +40,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import static org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST.sites;
+
 @Singleton
 public class SiteRestClient extends BaseWPComRestClient {
     private final AppSecrets mAppSecrets;
 
-    public static class NewSiteResponsePayload implements Payload {
+    public static class NewSiteResponsePayload extends Payload {
         public NewSiteResponsePayload() {
         }
         public NewSiteError error;
@@ -65,18 +67,19 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<SitesResponse>() {
                     @Override
                     public void onResponse(SitesResponse response) {
-                        SitesModel sites = new SitesModel();
+                        List<SiteModel> siteArray = new ArrayList<>();
+
                         for (SiteWPComRestResponse siteResponse : response.sites) {
-                            sites.add(siteResponseToSiteModel(siteResponse));
+                            siteArray.add(siteResponseToSiteModel(siteResponse));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(new SitesModel(siteArray)));
                     }
                 },
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(T.API, "Volley error", error.volleyError);
-
-                        // TODO: Error, dispatch network error
+                        SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
                     }
                 }
         );
@@ -84,7 +87,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
+        String url = sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
@@ -106,7 +109,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
-        String url = WPCOMREST.sites.new_.getUrlV1();
+        String url = sites.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("blog_name", siteName);
         params.put("blog_title", siteTitle);
@@ -141,7 +144,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullPostFormats(@NonNull final SiteModel site) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
+        String url = sites.site(site.getSiteId()).post_formats.getUrlV1_1();
         final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, PostFormatsResponse.class,
                 new Listener<PostFormatsResponse>() {
@@ -163,6 +166,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.API, "Volley error", error.volleyError);
+                        // FIXME
+                        //Payload payload = new FetchedPostFormatsPayload(null, null);
+                        //payload.error = error;
+                        //mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                         // TODO: Error, dispatch network error
                     }
                 }

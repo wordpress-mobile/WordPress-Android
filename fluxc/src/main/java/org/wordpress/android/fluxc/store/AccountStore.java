@@ -39,7 +39,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountStore extends Store {
     // Payloads
-    public static class AuthenticatePayload implements Payload {
+    public static class AuthenticatePayload extends Payload {
         public String username;
         public String password;
         public String twoStepCode;
@@ -51,13 +51,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class PostAccountSettingsPayload implements Payload {
+    public static class PostAccountSettingsPayload extends Payload {
         public Map<String, String> params;
         public PostAccountSettingsPayload() {
         }
     }
 
-    public static class NewAccountPayload implements Payload {
+    public static class NewAccountPayload extends Payload {
         public String username;
         public String password;
         public String email;
@@ -71,7 +71,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class UpdateTokenPayload implements Payload {
+    public static class UpdateTokenPayload extends Payload {
         public UpdateTokenPayload(String token) { this.token = token; }
         public String token;
     }
