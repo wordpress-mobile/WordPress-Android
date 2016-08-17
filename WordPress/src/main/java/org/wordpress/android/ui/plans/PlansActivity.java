@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -102,6 +103,10 @@ public class PlansActivity extends AppCompatActivity {
 
         // Download plans if not already available
         if (mAvailablePlans == null) {
+            if (!NetworkUtils.checkConnection(this)) {
+                finish();
+                return;
+            }
             showProgress();
             PlanUpdateService.startService(this, mLocalBlogID);
         } else {
