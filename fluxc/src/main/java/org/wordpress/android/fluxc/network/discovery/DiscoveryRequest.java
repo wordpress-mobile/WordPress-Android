@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.discovery;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 
@@ -17,7 +16,7 @@ public class DiscoveryRequest extends BaseRequest<String> {
 
     private final Listener<String> mListener;
 
-    public DiscoveryRequest(String url, Listener<String> listener, ErrorListener errorListener) {
+    public DiscoveryRequest(String url, Listener<String> listener, BaseErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         mListener = listener;
     }
