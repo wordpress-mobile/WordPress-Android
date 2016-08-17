@@ -25,12 +25,22 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
     protected OnAuthFailedListener mOnAuthFailedListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
 
-    public static class GenericError {
+    public static class BaseNetworkError {
         public GenericErrorType error;
         public String message;
-        public GenericError(GenericErrorType error, @Nullable String message) {
+        public VolleyError volleyError;
+
+        public BaseNetworkError(GenericErrorType error, @Nullable String message, @NonNull VolleyError volleyError) {
             this.message = message;
             this.error = error;
+            this.volleyError = volleyError;
+        }
+
+        public BaseNetworkError(@NonNull VolleyError volleyError) {
+            this.volleyError = volleyError;
+        }
+        public boolean isGeneric() {
+            return error != null;
         }
     }
 
@@ -44,28 +54,28 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
     public static abstract class BaseErrorListener implements ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            this.onErrorResponse(getGenericError(error), error);
+            this.onErrorResponse(getGenericError(error));
         }
 
-        private GenericError getGenericError(VolleyError volleyError) {
+        private @NonNull BaseNetworkError getGenericError(VolleyError volleyError) {
             if (volleyError.networkResponse == null) {
-                return null;
+                return new BaseNetworkError(volleyError);
             }
             if (volleyError instanceof TimeoutError) {
-                return new GenericError(GenericErrorType.TIMEOUT, "");
+                return new BaseNetworkError(GenericErrorType.TIMEOUT, "", volleyError);
             }
             switch (volleyError.networkResponse.statusCode) {
                 case 404:
-                    return new GenericError(GenericErrorType.NOT_FOUND, volleyError.getLocalizedMessage());
+                    return new BaseNetworkError(GenericErrorType.NOT_FOUND, volleyError.getMessage(), volleyError);
                 case 451:
-                    return new GenericError(GenericErrorType.CENSORED, volleyError.getLocalizedMessage());
+                    return new BaseNetworkError(GenericErrorType.CENSORED, volleyError.getMessage(), volleyError);
                 case 500:
-                    return new GenericError(GenericErrorType.SERVER_ERROR, volleyError.getLocalizedMessage());
+                    return new BaseNetworkError(GenericErrorType.SERVER_ERROR, volleyError.getMessage(), volleyError);
             }
-            return null;
+            return new BaseNetworkError(volleyError);
         }
 
-        public abstract void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error);
+        public abstract void onErrorResponse(@NonNull BaseNetworkError error);
     }
 
     public BaseRequest(int method, String url, BaseErrorListener listener) {

@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -17,7 +16,7 @@ import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericError;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
@@ -74,8 +73,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.API, "Volley error", error.volleyError);
 
                         // TODO: Error, dispatch network error
                     }
@@ -96,8 +95,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.API, "Volley error", error.volleyError);
                         // TODO: Error, dispatch network error
                     }
                 }
@@ -128,9 +127,9 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-                        AppLog.e(T.API, new String(error.networkResponse.data));
-                        NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.API, "Volley error", error.volleyError);
+                        NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(SiteActionBuilder.newCreatedNewSiteAction(payload));
                     }
@@ -162,8 +161,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-                        AppLog.e(T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.API, "Volley error", error.volleyError);
                         // TODO: Error, dispatch network error
                     }
                 }

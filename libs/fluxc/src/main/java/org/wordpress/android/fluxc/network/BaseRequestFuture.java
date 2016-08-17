@@ -24,7 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericError;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -150,8 +150,8 @@ public class BaseRequestFuture<T> extends BaseErrorListener implements Future<T>
     }
 
     @Override
-    public synchronized void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-        mException = error;
+    public synchronized void onErrorResponse(@NonNull BaseNetworkError error) {
+        mException = error.volleyError;
         notifyAll();
     }
 }
