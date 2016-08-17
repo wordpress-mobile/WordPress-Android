@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.volley.toolbox;
+// NOTE: this was forked from com.android.volley.toolbox.RequestFuture
+
+package org.wordpress.android.fluxc.network;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
