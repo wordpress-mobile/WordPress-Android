@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.people.utils;
 
+import android.content.Context;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
@@ -516,6 +519,30 @@ public class PeopleUtils {
         params.put("role", role);
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * This method is used to convert the translated role string to REST parameter as the remote expects it
+     * @param context Context to be able to get the string resources
+     * @param role Role string as it's seen in the UI
+     * @return Role string parameter to use in REST requests or null if no matching role is found
+     */
+    public static String getRoleParameter(Context context, String role) {
+        if (role.equalsIgnoreCase(context.getString(R.string.role_admin))) {
+            return "administrator";
+        } else if (role.equalsIgnoreCase(context.getString(R.string.role_editor))) {
+            return "editor";
+        } else if (role.equalsIgnoreCase(context.getString(R.string.role_author))) {
+            return "author";
+        } else if (role.equalsIgnoreCase(context.getString(R.string.role_contributor))) {
+            return "contributor";
+        } else if (role.equalsIgnoreCase(context.getString(R.string.role_follower))) {
+            return "follower";
+        } else if (role.equalsIgnoreCase(context.getString(R.string.role_viewer))) {
+            // the remote expects "follower" as the role param even if the role is "viewer"
+            return "follower";
+        }
+        return null;
     }
 
     public interface InvitationsSendCallback {
