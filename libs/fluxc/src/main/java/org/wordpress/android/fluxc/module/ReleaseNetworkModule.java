@@ -153,8 +153,9 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher, OkHttpClient okClient,
+    public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
+                                                      @Named("regular") OkHttpClient okClient,
                                                       AccessToken token, UserAgent userAgent,
                                                       HTTPAuthManager httpAuthManager) {
         return new MediaXMLRPCClient(dispatcher, requestQueue, okClient, token, userAgent, httpAuthManager);
