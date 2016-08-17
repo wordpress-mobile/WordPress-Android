@@ -22,8 +22,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +35,9 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequestBody.ProgressListener {
     public static final String MEDIA_ID_KEY         = "attachment_id";
@@ -179,17 +184,26 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
     }
 
     private void performUpload(SiteModel site, MediaModel media) {
-        final UploadRequestBody body = new UploadRequestBody(media, this);
+        URL xmlrpcUrl;
+        try {
+            xmlrpcUrl = new URL(site.getXmlRpcUrl());
+        } catch (MalformedURLException e) {
+            AppLog.w(T.MEDIA, "bad XMLRPC URL for site: " + site.getXmlRpcUrl());
+            return;
+        }
 
         HttpUrl url = new HttpUrl.Builder()
-                .host(site.getXmlRpcUrl())
+                .scheme(xmlrpcUrl.getProtocol())
+                .host(xmlrpcUrl.getHost())
+                .encodedPath(xmlrpcUrl.getPath())
                 .username(site.getUsername())
                 .password(site.getPassword())
-                .addQueryParameter("blog_id", String.valueOf(site.getDotOrgSiteId()))
                 .build();
+
+        File file = new File(media.getFilePath());
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
-                .post(body)
+                .post(RequestBody.create(MediaType.parse("application/xml"), file))
                 .build();
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
@@ -198,9 +212,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
                     // TODO: serialize MediaModel from response and add to resultList
 //                    MediaModel responseMedia = resToMediaModel
-//                    List<MediaModel> resultList = new ArrayList<>();
+                    List<MediaModel> resultList = new ArrayList<>();
 //                    resultList.add(responseMedia);
-//                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, resultList, null);
+                    notifyMediaPushed(MediaAction.UPLOAD_MEDIA, resultList, null);
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaError(MediaAction.UPLOAD_MEDIA, new Exception(response.toString()));

@@ -89,6 +89,21 @@ public class MediaUtils {
         return params;
     }
 
+    public static @NonNull Map<String, String> getMediaXmlRpcParams(@NonNull MediaModel media) {
+        final Map<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(media.getTitle())) {
+            params.put("name", media.getTitle());
+        } else {
+            params.put("name", "tempname");
+        }
+        if (!TextUtils.isEmpty(media.getMimeType())) {
+            params.put("type", media.getMimeType());
+        } else {
+            params.put("type", "image/png");
+        }
+        return params;
+    }
+
     //
     // MIME types
     //
