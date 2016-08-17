@@ -63,7 +63,7 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    public static class DiscoveryResultPayload implements Payload {
+    public static class DiscoveryResultPayload extends Payload {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
         public boolean isError;
