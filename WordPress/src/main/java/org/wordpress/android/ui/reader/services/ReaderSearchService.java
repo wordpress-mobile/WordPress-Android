@@ -113,8 +113,9 @@ public class ReaderSearchService extends Service {
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
 
-                // we want search results to be sorted based on their offset
-                int sortIndex = offset;
+                // we want search results to be sorted based on their offset - this works because
+                // ReaderPostTable.getPostsWithTag() sorts by sort_index in descending order
+                int sortIndex = -offset - 1;
                 for (ReaderPost post: serverPosts) {
                     post.sortIndex = sortIndex;
                     sortIndex--;
