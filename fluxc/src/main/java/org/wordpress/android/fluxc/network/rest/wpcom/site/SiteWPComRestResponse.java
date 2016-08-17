@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.Payload;
 
 import java.util.List;
 
-public class SiteWPComRestResponse implements Payload, Response {
+public class SiteWPComRestResponse extends Payload implements Response {
     public class SitesResponse {
         public List<SiteWPComRestResponse> sites;
     }
