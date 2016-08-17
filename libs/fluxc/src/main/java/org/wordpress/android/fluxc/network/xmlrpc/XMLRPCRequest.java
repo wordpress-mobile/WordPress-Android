@@ -6,14 +6,13 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlpull.v1.XmlPullParserException;
@@ -40,7 +39,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
     public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
-                         ErrorListener errorListener) {
+                         BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;
         mMethod = method;
@@ -98,24 +97,24 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     public void deliverError(VolleyError error) {
         super.deliverError(error);
         // XMLRPC Error
-        AuthenticateErrorPayload payload = new AuthenticateErrorPayload(AuthenticationError.GENERIC_ERROR, "");
+        AuthenticateErrorPayload payload = new AuthenticateErrorPayload(AuthenticationErrorType.GENERIC_ERROR);
         if (error.getCause() instanceof XMLRPCFault) {
             XMLRPCFault xmlrpcFault = (XMLRPCFault) error.getCause();
             if (xmlrpcFault.getFaultCode() == 401) {
                 // Unauthorized
-                payload.errorType = AuthenticationError.AUTHORIZATION_REQUIRED;
+                payload.error.type = AuthenticationErrorType.AUTHORIZATION_REQUIRED;
             } else if (xmlrpcFault.getFaultCode() == 403) {
                 // Not authenticated
-                payload.errorType = AuthenticationError.NOT_AUTHENTICATED;
+                payload.error.type = AuthenticationErrorType.NOT_AUTHENTICATED;
             }
         }
         // Invalid SSL Handshake
         if (error.getCause() instanceof SSLHandshakeException) {
-            payload.errorType = AuthenticationError.INVALID_SSL_CERTIFICATE;
+            payload.error.type = AuthenticationErrorType.INVALID_SSL_CERTIFICATE;
         }
         // Invalid HTTP Auth
         if (error instanceof AuthFailureError) {
-            payload.errorType = AuthenticationError.HTTP_AUTH_ERROR;
+            payload.error.type = AuthenticationErrorType.HTTP_AUTH_ERROR;
         }
         mOnAuthFailedListener.onAuthFailed(payload);
     }
