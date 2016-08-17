@@ -146,7 +146,6 @@ public class AccountRestClient extends BaseWPComRestClient {
                 },
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(T.API, "Volley error", error.volleyError);
                         AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
                     }
