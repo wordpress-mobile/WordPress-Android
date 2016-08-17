@@ -161,8 +161,8 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, long personID, String newRole, final int localTableBlogId,
-                                  final UpdateUserCallback callback) {
+    public static void updateRole(Context context, final String blogId, long personID, String newRole,
+                                  final int localTableBlogId, final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -193,7 +193,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", newRole.toLowerCase());
+        params.put("roles", getRoleParameter(context, newRole));
         String path = String.format("sites/%s/users/%d", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
@@ -447,8 +447,8 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, String dotComBlogId,
-                                       final InvitationsSendCallback callback) {
+    public static void sendInvitations(Context context, final List<String> usernames, String role, String message,
+                                       String dotComBlogId, final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -506,17 +506,12 @@ public class PeopleUtils {
             }
         };
 
-        // This is an ugly hack but the remote accepts "follower" as parameter when you're inviting a viewer
-        if (role.toLowerCase().equals(ROLE_VIEWER)) {
-            role = ROLE_FOLLOWER;
-        }
-
         String path = String.format("sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", role);
+        params.put("role", getRoleParameter(context, role));
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
@@ -527,7 +522,7 @@ public class PeopleUtils {
      * @param role Role string as it's seen in the UI
      * @return Role string parameter to use in REST requests or null if no matching role is found
      */
-    public static String getRoleParameter(Context context, String role) {
+    private static String getRoleParameter(Context context, String role) {
         if (role.equalsIgnoreCase(context.getString(R.string.role_admin))) {
             return "administrator";
         } else if (role.equalsIgnoreCase(context.getString(R.string.role_editor))) {

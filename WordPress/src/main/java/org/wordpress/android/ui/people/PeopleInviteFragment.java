@@ -560,8 +560,8 @@ public class PeopleInviteFragment extends Fragment implements
         enableSendButton(false);
 
         String dotComBlogId = getArguments().getString(ARG_BLOGID);
-        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage, dotComBlogId,
-                new PeopleUtils.InvitationsSendCallback() {
+        PeopleUtils.sendInvitations(getActivity(), new ArrayList<>(mUsernameButtons.keySet()), mRole, mCustomMessage,
+                dotComBlogId, new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {
                         if (!isAdded()) {
