@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
-public class SiteModel implements Identifiable, Payload, Serializable {
+public class SiteModel extends Payload implements Identifiable, Serializable {
 
     @PrimaryKey
     @Column private int mId;
