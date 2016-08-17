@@ -238,17 +238,18 @@ public class AccountStore extends Store {
             mSelfHostedEndpointFinder.findEndpoint(payload.url, payload.username, payload.password);
         } else if (actionType == AuthenticationAction.DISCOVERY_RESULT) {
             DiscoveryResultPayload payload = (DiscoveryResultPayload) action.getPayload();
-            if (payload.isError) {
-                OnDiscoveryResponse discoveryFailed = new OnDiscoveryResponse();
-                discoveryFailed.error = payload.error;
-                discoveryFailed.failedEndpoint = payload.failedEndpoint;
-                emitChange(discoveryFailed);
+            OnDiscoveryResponse discoveryResponse = new OnDiscoveryResponse();
+            if (payload.isError()) {
+                discoveryResponse.error = DiscoveryError.GENERIC_ERROR;
+                discoveryResponse.failedEndpoint = payload.failedEndpoint;
+            } else if (payload.isDiscoveryError()) {
+                discoveryResponse.error = payload.discoveryError;
+                discoveryResponse.failedEndpoint = payload.failedEndpoint;
             } else {
-                OnDiscoveryResponse discoverySucceeded = new OnDiscoveryResponse();
-                discoverySucceeded.xmlRpcEndpoint = payload.xmlRpcEndpoint;
-                discoverySucceeded.wpRestEndpoint = payload.wpRestEndpoint;
-                emitChange(discoverySucceeded);
+                discoveryResponse.xmlRpcEndpoint = payload.xmlRpcEndpoint;
+                discoveryResponse.wpRestEndpoint = payload.wpRestEndpoint;
             }
+            emitChange(discoveryResponse);
         } else if (actionType == AccountAction.FETCH_ACCOUNT) {
             // fetch only Account
             mAccountRestClient.fetchAccount();
