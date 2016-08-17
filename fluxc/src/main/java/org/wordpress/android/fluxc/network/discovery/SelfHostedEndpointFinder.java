@@ -50,7 +50,8 @@ public class SelfHostedEndpointFinder {
         ERRONEOUS_SSL_CERTIFICATE,
         HTTP_AUTH_REQUIRED,
         NO_SITE_ERROR,
-        WORDPRESS_COM_SITE
+        WORDPRESS_COM_SITE,
+        GENERIC_ERROR
     }
 
     static class DiscoveryException extends Exception {
@@ -66,8 +67,7 @@ public class SelfHostedEndpointFinder {
     public static class DiscoveryResultPayload extends Payload {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
-        public boolean isError;
-        public DiscoveryError error;
+        public DiscoveryError discoveryError;
         public String failedEndpoint;
 
         public DiscoveryResultPayload(String xmlRpcEndpoint, String wpRestEndpoint) {
@@ -75,10 +75,13 @@ public class SelfHostedEndpointFinder {
             this.wpRestEndpoint = wpRestEndpoint;
         }
 
-        public DiscoveryResultPayload(DiscoveryError error, String failedEndpoint) {
-            this.isError = true;
-            this.error = error;
+        public DiscoveryResultPayload(DiscoveryError discoveryError, String failedEndpoint) {
+            this.discoveryError = discoveryError;
             this.failedEndpoint = failedEndpoint;
+        }
+
+        public boolean isDiscoveryError() {
+            return discoveryError != null;
         }
     }
 
