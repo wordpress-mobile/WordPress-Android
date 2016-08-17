@@ -38,8 +38,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST.sites;
-
 @Singleton
 public class SiteRestClient extends BaseWPComRestClient {
     private final AppSecrets mAppSecrets;
@@ -85,7 +83,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullSite(final SiteModel site) {
-        String url = sites.getUrlV1_1() + site.getSiteId();
+        String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, SiteWPComRestResponse.class,
                 new Listener<SiteWPComRestResponse>() {
@@ -108,7 +106,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
                         @NonNull SiteVisibility visibility, final boolean dryRun) {
-        String url = sites.new_.getUrlV1();
+        String url = WPCOMREST.sites.new_.getUrlV1();
         Map<String, String> params = new HashMap<>();
         params.put("blog_name", siteName);
         params.put("blog_title", siteTitle);
@@ -142,7 +140,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void pullPostFormats(@NonNull final SiteModel site) {
-        String url = sites.site(site.getSiteId()).post_formats.getUrlV1_1();
+        String url = WPCOMREST.sites.site(site.getSiteId()).post_formats.getUrlV1_1();
         final WPComGsonRequest<PostFormatsResponse> request = new WPComGsonRequest<>(Method.GET,
                 url, null, PostFormatsResponse.class,
                 new Listener<PostFormatsResponse>() {
