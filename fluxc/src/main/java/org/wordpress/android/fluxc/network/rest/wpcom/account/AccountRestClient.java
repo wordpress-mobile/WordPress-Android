@@ -88,6 +88,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedAccountAction(payload));
@@ -114,6 +115,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSettingsAction(payload));
@@ -145,6 +147,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
@@ -175,6 +178,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;

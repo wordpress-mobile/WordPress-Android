@@ -72,6 +72,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
@@ -94,6 +95,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SiteModel payload = new SiteModel();
                         payload.error = error;
@@ -127,6 +129,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         NewSiteResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;
@@ -160,6 +163,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
                                 new ArrayList<PostFormatModel>());
