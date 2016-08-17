@@ -1,22 +1,23 @@
 package org.wordpress.android.fluxc.network.xmlrpc.post;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostLocation;
+import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -63,9 +64,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             }
                         }
                     }
-                }, new ErrorListener() {
+                }, new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
                     }
                 });
@@ -110,9 +111,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
                     }
                 }
@@ -153,9 +154,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
                     }
                 });
@@ -178,9 +179,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(post));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Implement lower-level catching in BaseXMLRPCClient
                     }
                 });
@@ -196,21 +197,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             postsList.add(postMap);
         }
 
-        PostsModel posts = new PostsModel();
+        List<PostModel> postArray = new ArrayList<>();
         PostModel post;
 
         for (Object postObject : postsList) {
             post = postResponseObjectToPostModel(postObject, site, isPage);
             if (post != null) {
-                posts.add(post);
+                postArray.add(post);
             }
         }
 
-        if (posts.isEmpty()) {
+        if (postArray.isEmpty()) {
             return null;
         }
 
-        return posts;
+        return new PostsModel(postArray);
     }
 
     private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site, boolean isPage) {

@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
 
-    public static class FetchPostsPayload implements Payload {
+    public static class FetchPostsPayload extends Payload {
         public SiteModel site;
         public boolean loadMore;
 
@@ -43,7 +43,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class FetchPostsResponsePayload implements Payload {
+    public static class FetchPostsResponsePayload extends Payload {
         public PostsModel posts;
         public SiteModel site;
         public boolean isPages;
@@ -60,7 +60,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class RemotePostPayload implements Payload {
+    public static class RemotePostPayload extends Payload {
         public PostModel post;
         public SiteModel site;
 
@@ -70,7 +70,7 @@ public class PostStore extends Store {
         }
     }
 
-    public static class InstantiatePostPayload implements Payload {
+    public static class InstantiatePostPayload extends Payload {
         public SiteModel site;
         public boolean isPage;
         public List<Long> categoryIds;
@@ -274,7 +274,7 @@ public class PostStore extends Store {
             }
 
             int rowsAffected = 0;
-            for (PostModel post : postsResponsePayload.posts) {
+            for (PostModel post : postsResponsePayload.posts.getPosts()) {
                 rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
             }
 
