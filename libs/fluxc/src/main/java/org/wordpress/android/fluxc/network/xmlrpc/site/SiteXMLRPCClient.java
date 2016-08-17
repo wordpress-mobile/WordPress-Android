@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
@@ -19,8 +20,6 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -47,14 +46,17 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         if (sites != null) {
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                         } else {
-                            // TODO: do nothing or dispatch error?
+                            sites = new SitesModel();
+                            sites.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                         }
                     }
                 },
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(T.API, "Volley error", error.volleyError);
-                        // TODO: Error, dispatch network error
+                        SitesModel sites = new SitesModel();
+                        sites.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
                     }
                 }
         );
@@ -92,7 +94,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 },
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(T.API, "Volley error", error.volleyError);
+                        SiteModel site = new SiteModel();
+                        site.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
                     }
                 }
         );
@@ -117,7 +121,10 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 },
                 new BaseErrorListener() {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(T.API, "Volley error", error.volleyError);
+                        FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
+                                new ArrayList<PostFormatModel>());
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                     }
                 }
         );
