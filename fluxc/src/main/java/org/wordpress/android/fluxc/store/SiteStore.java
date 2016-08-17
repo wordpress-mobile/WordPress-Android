@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -33,14 +34,14 @@ import javax.inject.Singleton;
 @Singleton
 public class SiteStore extends Store {
     // Payloads
-    public static class RefreshSitesXMLRPCPayload implements Payload {
+    public static class RefreshSitesXMLRPCPayload extends Payload {
         public RefreshSitesXMLRPCPayload() {}
         public String username;
         public String password;
         public String url;
     }
 
-    public static class NewSitePayload implements Payload {
+    public static class NewSitePayload extends Payload {
         public String siteName;
         public String siteTitle;
         public String language;
@@ -56,7 +57,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class FetchedPostFormatsPayload implements Payload {
+    public static class FetchedPostFormatsPayload extends Payload {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
@@ -66,6 +67,11 @@ public class SiteStore extends Store {
     }
 
     public static class SiteError implements OnChangedError {
+        public SiteErrorType type;
+
+        public SiteError(SiteErrorType type) {
+            this.type = type;
+        }
     }
 
     public static class NewSiteError implements OnChangedError {
@@ -101,6 +107,11 @@ public class SiteStore extends Store {
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
         }
+    }
+
+    public enum SiteErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
     }
 
     // Enums
@@ -470,18 +481,42 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getPostFormats(site);
     }
 
+    private void updateSite(Action action) {
+        SiteModel siteModel = (SiteModel) action.getPayload();
+        OnSiteChanged event;
+        if (siteModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
+    private void updateSites(Action action) {
+        SitesModel sitesModel = (SitesModel) action.getPayload();
+        OnSiteChanged event;
+        if (sitesModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = createOrUpdateSites(sitesModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
-    public void onAction(org.wordpress.android.fluxc.annotations.action.Action action) {
+    public void onAction(Action action) {
         org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
         if (actionType == SiteAction.UPDATE_SITE) {
-            int rowsAffected = SiteSqlUtils.insertOrUpdateSite((SiteModel) action.getPayload());
-            // Would be great to send an event only if the site actually changed.
-            emitChange(new OnSiteChanged(rowsAffected));
+            updateSite(action);
         } else if (actionType == SiteAction.UPDATE_SITES) {
-            int rowsAffected = createOrUpdateSites((SitesModel) action.getPayload());
-            // Would be great to send an event only if a site actually changed.
-            emitChange(new OnSiteChanged(rowsAffected));
+            updateSites(action);
         } else if (actionType == SiteAction.FETCH_SITES) {
             mSiteRestClient.pullSites();
         } else if (actionType == SiteAction.FETCH_SITES_XML_RPC) {
@@ -545,7 +580,7 @@ public class SiteStore extends Store {
 
     private int createOrUpdateSites(SitesModel sites) {
         int rowsAffected = 0;
-        for (SiteModel site : sites) {
+        for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
         }
         return rowsAffected;
@@ -561,7 +596,7 @@ public class SiteStore extends Store {
 
     private int toggleSitesVisibility(SitesModel sites, boolean visible) {
         int rowsAffected = 0;
-        for (SiteModel site : sites) {
+        for (SiteModel site : sites.getSites()) {
             rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
         }
         return rowsAffected;

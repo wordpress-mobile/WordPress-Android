@@ -57,7 +57,7 @@ public class Authenticator {
     public interface ErrorListener extends Response.ErrorListener {
     }
 
-    public static class AuthenticateErrorPayload implements Payload {
+    public static class AuthenticateErrorPayload extends Payload {
         public AuthenticationError error;
         public AuthenticateErrorPayload(@NonNull AuthenticationError error) {
             this.error = error;

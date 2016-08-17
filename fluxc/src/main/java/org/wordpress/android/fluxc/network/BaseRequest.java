@@ -10,6 +10,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator.AuthenticateErrorPayload;
+import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,7 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
     public static abstract class BaseErrorListener implements ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            AppLog.e(AppLog.T.API, "Volley error", error);
             this.onErrorResponse(getGenericError(error));
         }
 

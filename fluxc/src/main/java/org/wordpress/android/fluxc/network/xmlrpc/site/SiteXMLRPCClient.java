@@ -129,7 +129,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             return null;
         }
         Object[] responseArray = (Object[]) response;
-        SitesModel sites = new SitesModel();
+        List<SiteModel> siteArray = new ArrayList<>();
         for (Object siteObject: responseArray) {
             if (!(siteObject instanceof HashMap)) {
                 continue;
@@ -150,14 +150,14 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setIsWPCom(false);
             site.setUsername(username);
             site.setPassword(password);
-            sites.add(site);
+            siteArray.add(site);
         }
 
-        if (sites.isEmpty()) {
+        if (siteArray.isEmpty()) {
             return null;
         }
 
-        return sites;
+        return new SitesModel(siteArray);
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
