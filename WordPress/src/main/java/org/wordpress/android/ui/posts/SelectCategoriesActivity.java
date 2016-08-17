@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.wordpress.android.R;
@@ -45,6 +46,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
+    private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private HashSet<String> mSelectedCategories;
@@ -70,6 +72,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
+
+        mEmptyView = (TextView) findViewById(R.id.empty_view);
+        mListView.setEmptyView(mEmptyView);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -118,9 +123,21 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         populateCategoryList();
 
-        // Refresh blog list if network is available and activity really starts
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            refreshCategories();
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            mEmptyView.setText(R.string.empty_list_default);
+            if (isCategoryListEmpty()) {
+                refreshCategories();
+            }
+        } else {
+            mEmptyView.setText(R.string.no_network_title);
+        }
+    }
+
+    private boolean isCategoryListEmpty() {
+        if (mListView.getAdapter() != null) {
+            return mListView.getAdapter().isEmpty();
+        } else {
+            return true;
         }
     }
 
@@ -312,11 +329,13 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getLocalTableBlogId());
-            Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
-            i.putExtras(bundle);
-            startActivityForResult(i, 0);
+            if (NetworkUtils.checkConnection(this)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", blog.getLocalTableBlogId());
+                Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
+                i.putExtras(bundle);
+                startActivityForResult(i, 0);
+            }
             return true;
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
