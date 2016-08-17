@@ -74,6 +74,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class PostFormatsError implements OnChangedError {
+        public PostFormatsErrorType type;
+
+        public PostFormatsError(PostFormatsErrorType type) {
+            this.type = type;
+        }
+    }
+
     public static class NewSiteError implements OnChangedError {
         public NewSiteErrorType type;
         public String message;
@@ -102,7 +110,7 @@ public class SiteStore extends Store {
         public boolean dryRun;
     }
 
-    public class OnPostFormatsChanged extends OnChanged {
+    public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
@@ -110,6 +118,11 @@ public class SiteStore extends Store {
     }
 
     public enum SiteErrorType {
+        INVALID_SITE,
+        GENERIC_ERROR
+    }
+
+    public enum PostFormatsErrorType {
         INVALID_SITE,
         GENERIC_ERROR
     }
@@ -481,42 +494,14 @@ public class SiteStore extends Store {
         return SiteSqlUtils.getPostFormats(site);
     }
 
-    private void updateSite(Action action) {
-        SiteModel siteModel = (SiteModel) action.getPayload();
-        OnSiteChanged event;
-        if (siteModel.isError()) {
-            event = new OnSiteChanged(0);
-            // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
-        } else {
-            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
-            event = new OnSiteChanged(rowsAffected);
-        }
-        emitChange(event);
-    }
-
-    private void updateSites(Action action) {
-        SitesModel sitesModel = (SitesModel) action.getPayload();
-        OnSiteChanged event;
-        if (sitesModel.isError()) {
-            event = new OnSiteChanged(0);
-            // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
-        } else {
-            int rowsAffected = createOrUpdateSites(sitesModel);
-            event = new OnSiteChanged(rowsAffected);
-        }
-        emitChange(event);
-    }
-
     @Subscribe(threadMode = ThreadMode.ASYNC)
     @Override
     public void onAction(Action action) {
         org.wordpress.android.fluxc.annotations.action.IAction actionType = action.getType();
         if (actionType == SiteAction.UPDATE_SITE) {
-            updateSite(action);
+            updateSite((SiteModel) action.getPayload());
         } else if (actionType == SiteAction.UPDATE_SITES) {
-            updateSites(action);
+            updateSites((SitesModel) action.getPayload());
         } else if (actionType == SiteAction.FETCH_SITES) {
             mSiteRestClient.pullSites();
         } else if (actionType == SiteAction.FETCH_SITES_XML_RPC) {
@@ -527,7 +512,6 @@ public class SiteStore extends Store {
             if (site.isWPCom()) {
                 mSiteRestClient.pullSite(site);
             } else {
-                // TODO: check for WP-REST-API plugin and use it here
                 mSiteXMLRPCClient.pullSite(site);
             }
         } else if (actionType == SiteAction.REMOVE_SITE) {
@@ -560,8 +544,7 @@ public class SiteStore extends Store {
         } else if (actionType == SiteAction.FETCH_POST_FORMATS) {
             fetchPostFormats((SiteModel) action.getPayload());
         } else if (actionType == SiteAction.FETCHED_POST_FORMATS) {
-            FetchedPostFormatsPayload payload = (FetchedPostFormatsPayload) action.getPayload();
-            updatePostFormats(payload.site, payload.postFormats);
+            updatePostFormats((FetchedPostFormatsPayload) action.getPayload());
         }
     }
 
@@ -573,9 +556,41 @@ public class SiteStore extends Store {
         }
     }
 
-    private void updatePostFormats(SiteModel site, List<PostFormatModel> postFormats) {
-        SiteSqlUtils.insertOrReplacePostFormats(site, postFormats);
-        emitChange(new OnPostFormatsChanged(site));
+    private void updateSite(SiteModel siteModel) {
+        OnSiteChanged event;
+        if (siteModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
+    private void updateSites(SitesModel sitesModel) {
+        OnSiteChanged event;
+        if (sitesModel.isError()) {
+            event = new OnSiteChanged(0);
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            int rowsAffected = createOrUpdateSites(sitesModel);
+            event = new OnSiteChanged(rowsAffected);
+        }
+        emitChange(event);
+    }
+
+    private void updatePostFormats(FetchedPostFormatsPayload payload) {
+        OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
+        if (payload.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
+        } else {
+            SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
+        }
+        emitChange(event);
     }
 
     private int createOrUpdateSites(SitesModel sites) {
