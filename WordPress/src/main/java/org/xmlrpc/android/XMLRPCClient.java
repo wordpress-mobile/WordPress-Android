@@ -103,12 +103,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         mHttpParams = mPostMethod.getParams();
         HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
 
-        UsernamePasswordCredentials credentials = null;
-        if (!TextUtils.isEmpty(httpuser) && !TextUtils.isEmpty(httppasswd)) {
-            credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
-        }
-
-        mClient = instantiateClientForUri(uri, credentials);
+        mClient = new DefaultHttpClient();
         mSerializer = Xml.newSerializer();
     }
 
@@ -117,57 +112,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             return "";
         }
         return mLoggedInputStream.getResponseDocument();
-    }
-
-    private class ConnectionClient extends DefaultHttpClient {
-        public ConnectionClient(int port) throws IOException, GeneralSecurityException {
-            super();
-            TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
-            Scheme scheme = new Scheme("https", tasslf, port);
-            getConnectionManager().getSchemeRegistry().register(scheme);
-        }
-    }
-
-    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
-        DefaultHttpClient client = null;
-        if (WPUrlUtils.isWordPressCom(uri)) {
-            mIsWpcom = true;
-        }
-        if (mIsWpcom) {
-            //wpcom blog or self-hosted blog on plain HTTP
-            client = new DefaultHttpClient();
-        } else {
-            int port = uri.getPort();
-            if (port == -1) {
-                port = 443;
-            }
-
-            try {
-                client = new ConnectionClient(port);
-            } catch (GeneralSecurityException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
-                client = null;
-            } catch (IOException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustUserSSLCertsSocketFactory", e);
-                client = null;
-            }
-
-            if (client == null) {
-                client = new DefaultHttpClient();
-            }
-        }
-
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT_MS);
-        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT_MS);
-
-        // Setup HTTP Basic Auth if necessary
-        if (usernamePasswordCredentials != null) {
-            BasicCredentialsProvider cP = new BasicCredentialsProvider();
-            cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
-            client.setCredentialsProvider(cP);
-        }
-
-        return client;
     }
 
     public void addQuickPostHeader(String type) {
