@@ -53,6 +53,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SitesModel sites = new SitesModel();
                         sites.error = error;
@@ -93,6 +94,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SiteModel site = new SiteModel();
                         site.error = error;
@@ -120,6 +122,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     }
                 },
                 new BaseErrorListener() {
+                    @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
                                 new ArrayList<PostFormatModel>());
