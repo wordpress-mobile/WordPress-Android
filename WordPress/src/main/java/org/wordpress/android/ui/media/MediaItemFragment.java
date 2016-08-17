@@ -29,7 +29,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
@@ -77,7 +76,7 @@ public class MediaItemFragment extends Fragment {
         MediaItemFragment fragment = new MediaItemFragment();
         Bundle args = new Bundle();
         args.putString(ARGS_MEDIA_ID, mediaId);
-        args.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,12 +88,12 @@ public class MediaItemFragment extends Fragment {
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -106,7 +105,7 @@ public class MediaItemFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override

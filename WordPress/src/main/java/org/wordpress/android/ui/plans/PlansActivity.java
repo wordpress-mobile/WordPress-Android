@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plans.adapters.PlansPagerAdapter;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -66,13 +65,13 @@ public class PlansActivity extends AppCompatActivity {
         setContentView(R.layout.plans_activity);
 
         if (savedInstanceState != null) {
-            mSelectedSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSelectedSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             Serializable serializable = savedInstanceState.getSerializable(ARG_LOCAL_AVAILABLE_PLANS);
             if (serializable instanceof Plan[]) {
                 mAvailablePlans = (Plan[]) serializable;
             }
         } else if (getIntent() != null && getIntent().getExtras() != null) {
-            mSelectedSite = (SiteModel) getIntent().getExtras().getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSelectedSite = (SiteModel) getIntent().getExtras().getSerializable(WordPress.SITE);
         }
 
         if (mSelectedSite == null) {
@@ -227,7 +226,7 @@ public class PlansActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSelectedSite);
+        outState.putSerializable(WordPress.SITE, mSelectedSite);
         outState.putSerializable(ARG_LOCAL_AVAILABLE_PLANS, mAvailablePlans);
         super.onSaveInstanceState(outState);
     }

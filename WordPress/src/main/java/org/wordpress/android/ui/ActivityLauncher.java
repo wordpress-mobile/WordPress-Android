@@ -54,7 +54,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 
 public class ActivityLauncher {
-    public static final String EXTRA_SITE = "EXTRA_SITE";
 
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
@@ -69,33 +68,33 @@ public class ActivityLauncher {
     public static void viewBlogStats(Context context, SiteModel site) {
         if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
     public static void viewBlogPlans(Context context, SiteModel site) {
         Intent intent = new Intent(context, PlansActivity.class);
-        intent.putExtra(EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
     public static void viewCurrentBlogPages(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
@@ -103,7 +102,7 @@ public class ActivityLauncher {
 
     public static void viewCurrentBlogComments(Context context, SiteModel site) {
         Intent intent = new Intent(context, CommentsActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
@@ -111,14 +110,14 @@ public class ActivityLauncher {
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
         if (ThemeBrowserActivity.isAccessible(site)) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+            intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         }
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
@@ -127,7 +126,7 @@ public class ActivityLauncher {
         if (site == null) return;
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
@@ -171,7 +170,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
@@ -180,7 +179,7 @@ public class ActivityLauncher {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
         intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
         context.startActivity(intent);
@@ -190,7 +189,7 @@ public class ActivityLauncher {
         if (site == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.setAction(EditPostActivity.NEW_MEDIA_POST);
         intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, mediaId);
         context.startActivity(intent);
@@ -205,7 +204,7 @@ public class ActivityLauncher {
         WordPress.wpDB.savePost(newPost);
 
         Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
@@ -215,7 +214,7 @@ public class ActivityLauncher {
     public static void editBlogPostOrPageForResult(Activity activity, SiteModel site,
                                                    long postOrPageId, boolean isPage) {
         Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
@@ -309,7 +308,7 @@ public class ActivityLauncher {
 
     public static void viewMediaGalleryPickerForSite(Activity activity, @NonNull SiteModel site) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
         activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
@@ -317,7 +316,7 @@ public class ActivityLauncher {
     public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
                                                      @NonNull ArrayList<String> mediaIds) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
         activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
@@ -325,7 +324,7 @@ public class ActivityLauncher {
     public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
                                                @Nullable MediaGallery mediaGallery) {
         Intent intent = new Intent(activity, MediaGalleryActivity.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
         if (mediaGallery == null) {
             intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);

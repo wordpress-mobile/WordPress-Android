@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParserException;
@@ -42,7 +41,7 @@ public class PostUpdateService extends Service {
      */
     public static void startServiceForBlog(Context context, SiteModel site, boolean isPage, boolean loadMore) {
         Intent intent = new Intent(context, PostUpdateService.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ARG_IS_PAGE, isPage);
         intent.putExtra(ARG_LOAD_MORE, loadMore);
         context.startService(intent);
@@ -73,7 +72,7 @@ public class PostUpdateService extends Service {
         new Thread() {
             @Override
             public void run() {
-                SiteModel site = (SiteModel) intent.getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
                 boolean isPage = intent.getBooleanExtra(ARG_IS_PAGE, false);
                 boolean loadMore = intent.getBooleanExtra(ARG_LOAD_MORE, false);
                 fetchPostsInBlog(site, isPage, loadMore);

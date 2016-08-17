@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
@@ -149,7 +148,7 @@ public class StatsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
@@ -164,7 +163,7 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
 
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
@@ -323,7 +322,7 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
         outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);

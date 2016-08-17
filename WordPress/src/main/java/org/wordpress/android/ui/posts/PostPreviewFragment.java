@@ -15,7 +15,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
@@ -32,7 +31,7 @@ public class PostPreviewFragment extends Fragment {
 
     public static PostPreviewFragment newInstance(SiteModel site, long localPostId) {
         Bundle args = new Bundle();
-        args.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        args.putSerializable(WordPress.SITE, site);
         args.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, localPostId);
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
@@ -42,7 +41,7 @@ public class PostPreviewFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mSite = (SiteModel) args.getSerializable(ActivityLauncher.EXTRA_SITE);
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
         mLocalPostId = args.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
     }
 
@@ -52,14 +51,14 @@ public class PostPreviewFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
         outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
         super.onSaveInstanceState(outState);
     }

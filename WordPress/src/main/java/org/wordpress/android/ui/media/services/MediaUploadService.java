@@ -11,7 +11,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -54,7 +53,7 @@ public class MediaUploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mSite = (SiteModel) intent.getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         if (mSite == null) {
             AppLog.e(T.API, "Site is null");
             return START_NOT_STICKY;

@@ -15,13 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -62,9 +62,9 @@ public class CommentsActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -214,7 +214,7 @@ public class CommentsActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
 
         // retain the id of the highlighted and selected comments
         if (mSelectedCommentId != 0 && hasDetailFragment()) {

@@ -145,12 +145,12 @@ public class MediaGridFragment extends Fragment
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -276,7 +276,7 @@ public class MediaGridFragment extends Fragment
         outState.putInt(BUNDLE_DATE_FILTER_END_DAY, mEndDay);
         outState.putInt(BUNDLE_DATE_FILTER_END_MONTH, mEndMonth);
         outState.putInt(BUNDLE_DATE_FILTER_END_YEAR, mEndYear);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     private void setupSpinnerAdapter() {

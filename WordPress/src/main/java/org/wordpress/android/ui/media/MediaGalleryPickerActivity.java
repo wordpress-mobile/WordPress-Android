@@ -18,7 +18,6 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
 
@@ -75,9 +74,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {

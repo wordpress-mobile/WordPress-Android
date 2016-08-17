@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -35,7 +34,7 @@ public class PlanUpdateService extends Service {
 
     public static void startService(Context context, SiteModel site) {
         Intent intent = new Intent(context, PlanUpdateService.class);
-        intent.putExtra(ActivityLauncher.EXTRA_SITE, site);
+        intent.putExtra(WordPress.SITE, site);
         context.startService(intent);
     }
 
@@ -65,7 +64,7 @@ public class PlanUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mSite = (SiteModel) intent.getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
 
         mNumActiveRequests = 2;
         downloadPlanFeatures();

@@ -27,7 +27,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -74,7 +73,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        bundle.putSerializable(WordPress.SITE, site);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -84,9 +83,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -162,7 +161,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         if (mGridView != null) {
             outState.putInt(BUNDLE_PAGE, mPage);
         }
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     public TextView getEmptyTextView() {

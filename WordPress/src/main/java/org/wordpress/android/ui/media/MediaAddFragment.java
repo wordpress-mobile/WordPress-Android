@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
@@ -55,12 +54,12 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -85,7 +84,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (mMediaCapturePath != null && !mMediaCapturePath.equals("")) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -242,7 +241,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private void startMediaUploadService() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             Intent intent = new Intent(getActivity(), MediaUploadService.class);
-            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
+            intent.putExtra(WordPress.SITE, mSite);
             getActivity().startService(intent);
         }
     }

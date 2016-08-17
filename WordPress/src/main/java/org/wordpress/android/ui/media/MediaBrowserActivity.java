@@ -36,7 +36,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -95,9 +94,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -160,7 +159,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(SAVED_QUERY, mQuery);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -464,7 +463,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void startMediaDeleteService() {
         if (NetworkUtils.isNetworkAvailable(this)) {
             Intent intent = new Intent(this, MediaDeleteService.class);
-            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
+            intent.putExtra(WordPress.SITE, mSite);
             startService(intent);
         }
     }

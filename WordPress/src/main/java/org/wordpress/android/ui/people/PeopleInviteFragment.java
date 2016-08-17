@@ -20,8 +20,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
@@ -61,7 +61,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        bundle.putSerializable(WordPress.SITE, site);
         peopleInviteFragment.setArguments(bundle);
         return peopleInviteFragment;
     }
@@ -69,12 +69,12 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {

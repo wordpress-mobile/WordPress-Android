@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -46,7 +46,7 @@ public class PeopleListFragment extends Fragment {
     public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        bundle.putSerializable(WordPress.SITE, site);
         peopleListFragment.setArguments(bundle);
         return peopleListFragment;
     }
@@ -78,7 +78,7 @@ public class PeopleListFragment extends Fragment {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
-        mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         final boolean isPrivate =  mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);

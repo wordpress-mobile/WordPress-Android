@@ -126,7 +126,7 @@ public class EditPostSettingsFragment extends Fragment
     public static EditPostSettingsFragment newInstance(SiteModel site) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        bundle.putSerializable(WordPress.SITE, site);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -144,12 +144,12 @@ public class EditPostSettingsFragment extends Fragment
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
             } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -164,7 +164,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override

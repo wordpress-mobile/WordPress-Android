@@ -54,7 +54,6 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -214,9 +213,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -348,7 +347,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
         setupMorePreferenceScreen();
     }
 

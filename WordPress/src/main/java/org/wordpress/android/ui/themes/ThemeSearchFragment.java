@@ -13,7 +13,6 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -35,7 +34,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public static ThemeSearchFragment newInstance(SiteModel site) {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ActivityLauncher.EXTRA_SITE, site);
+        bundle.putSerializable(WordPress.SITE, site);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -48,9 +47,9 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
         }
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -68,7 +67,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override

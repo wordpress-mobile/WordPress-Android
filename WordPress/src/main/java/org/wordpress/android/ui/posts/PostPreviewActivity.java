@@ -70,9 +70,9 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -144,7 +144,7 @@ public class PostPreviewActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(ARG_LOCAL_POST_ID, mLocalPostId);
         outState.putBoolean(ARG_IS_PAGE, mIsPage);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
         super.onSaveInstanceState(outState);
     }
 

@@ -94,6 +94,7 @@ import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 public class WordPress extends MultiDexApplication {
+    public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
 

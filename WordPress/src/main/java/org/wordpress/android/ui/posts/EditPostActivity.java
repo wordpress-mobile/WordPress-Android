@@ -229,9 +229,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(ActivityLauncher.EXTRA_SITE);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
         // Check whether to show the visual editor
@@ -431,7 +431,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         savePostAsync(null);
         outState.putSerializable(STATE_KEY_CURRENT_POST, mPost);
         outState.putSerializable(STATE_KEY_ORIGINAL_POST, mOriginalPost);
-        outState.putSerializable(ActivityLauncher.EXTRA_SITE, mSite);
+        outState.putSerializable(WordPress.SITE, mSite);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
@@ -1959,7 +1959,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void startMediaUploadService() {
         if (!mMediaUploadServiceStarted) {
             Intent intent = new Intent(this, MediaUploadService.class);
-            intent.putExtra(ActivityLauncher.EXTRA_SITE, mSite);
+            intent.putExtra(WordPress.SITE, mSite);
             startService(intent);
             mMediaUploadServiceStarted = true;
         }
