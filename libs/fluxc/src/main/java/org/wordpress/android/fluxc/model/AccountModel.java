@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.util.StringUtils;
 
 @Table
-public class AccountModel implements Identifiable, Payload {
+public class AccountModel extends Payload implements Identifiable {
     @PrimaryKey
     @Column private int mId;
 

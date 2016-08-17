@@ -18,7 +18,7 @@ public class DiscoveryXMLRPCRequest extends XMLRPCRequest {
     private final ErrorListener mErrorListener;
 
     public DiscoveryXMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
-                                  ErrorListener errorListener) {
+                                  BaseErrorListener errorListener) {
         super(url, method, params, listener, errorListener);
         mErrorListener = errorListener;
     }
