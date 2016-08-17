@@ -7,11 +7,11 @@ import android.webkit.URLUtil;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
-import com.android.volley.toolbox.BaseRequestFuture;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.network.BaseRequestFuture;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.store.Store.OnChangedError;
