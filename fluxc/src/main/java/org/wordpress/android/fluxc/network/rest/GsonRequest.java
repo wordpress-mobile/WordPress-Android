@@ -4,7 +4,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
@@ -25,7 +24,7 @@ public class GsonRequest<T> extends BaseRequest<T> {
     private final Map<String, String> mParams;
 
     public GsonRequest(int method, Map<String, String> params, String url, Class<T> clazz, Listener<T> listener,
-                       ErrorListener errorListener) {
+                       BaseErrorListener errorListener) {
         super(method, addParamsToUrlIfGet(method, url, params), errorListener);
         mClass = clazz;
         mListener = listener;
