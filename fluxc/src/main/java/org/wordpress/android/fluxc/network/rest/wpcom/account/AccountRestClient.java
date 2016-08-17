@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.account;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -16,7 +15,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
-import org.wordpress.android.fluxc.network.BaseRequest.GenericError;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
@@ -39,29 +38,28 @@ public class AccountRestClient extends BaseWPComRestClient {
     private final AppSecrets mAppSecrets;
 
     public static class AccountRestPayload implements Payload {
-        public AccountRestPayload(AccountModel account, VolleyError error) {
+        public AccountRestPayload(AccountModel account, BaseNetworkError error) {
             this.account = account;
             this.error = error;
         }
         public boolean isError() { return error != null; }
-        public VolleyError error;
+        public BaseNetworkError error;
         public AccountModel account;
     }
 
     public static class AccountPostSettingsResponsePayload implements Payload {
-        public AccountPostSettingsResponsePayload(VolleyError error) {
+        public AccountPostSettingsResponsePayload(BaseNetworkError error) {
             this.error = error;
         }
         public boolean isError() {
             return error != null;
         }
-        public VolleyError error;
+        public BaseNetworkError error;
         public Map<String, Object> settings;
     }
 
     public static class NewAccountResponsePayload implements Payload {
         public NewUserError error;
-        public boolean isError;
         public boolean dryRun;
     }
 
@@ -90,7 +88,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedAccountAction(payload));
                     }
@@ -116,7 +114,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSettingsAction(payload));
                     }
@@ -147,7 +145,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.API, "Volley error", error.volleyError);
                         AccountPostSettingsResponsePayload payload = new AccountPostSettingsResponsePayload(error);
                         mDispatcher.dispatch(AccountActionBuilder.newPostedSettingsAction(payload));
                     }
@@ -172,14 +171,13 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(NewAccountResponse response) {
                         NewAccountResponsePayload payload = new NewAccountResponsePayload();
-                        payload.isError = false;
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
                     }
                 },
                 new BaseErrorListener() {
-                    public void onErrorResponse(@Nullable GenericError genericError, @NonNull VolleyError error) {
-                        NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
                     }

@@ -392,7 +392,7 @@ public class AccountStore extends Store {
 
     private boolean checkError(AccountRestPayload payload, String log) {
         if (payload.isError()) {
-            AppLog.w(T.API, log + "\nError: " + payload.error.getMessage());
+            AppLog.w(T.API, log + "\nError: " + payload.error.volleyError);
             return true;
         }
         return false;
