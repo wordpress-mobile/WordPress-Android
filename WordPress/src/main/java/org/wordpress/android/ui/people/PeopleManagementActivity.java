@@ -241,7 +241,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
             if (peopleInviteFragment == null) {
-                peopleInviteFragment = PeopleInviteFragment.newInstance(mSite.getSiteId());
+                peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
             if (!peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

@@ -24,6 +24,8 @@ public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
+    private static String ROLE_FOLLOWER = "follower";
+    private static String ROLE_VIEWER = "viewer";
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -498,7 +500,12 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%d/invites/new", dotComBlogId);
+        // This is an ugly hack but the remote accepts "follower" as parameter when you're inviting a viewer
+        if (role.toLowerCase().equals(ROLE_VIEWER)) {
+            role = ROLE_FOLLOWER;
+        }
+
+        String path = String.format("sites/%s/invites/new", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
