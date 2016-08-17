@@ -125,12 +125,19 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         if (NetworkUtils.isNetworkAvailable(this)) {
             mEmptyView.setText(R.string.empty_list_default);
-            // Refresh blog list if network is available and activity really starts
-            if (savedInstanceState == null) {
+            if (isCategoryListEmpty()) {
                 refreshCategories();
             }
         } else {
             mEmptyView.setText(R.string.no_network_title);
+        }
+    }
+
+    private boolean isCategoryListEmpty() {
+        if (mListView.getAdapter() != null) {
+            return mListView.getAdapter().isEmpty();
+        } else {
+            return true;
         }
     }
 
