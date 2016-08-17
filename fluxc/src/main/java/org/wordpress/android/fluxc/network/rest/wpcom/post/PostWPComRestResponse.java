@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.network.Response;
 import java.util.List;
 import java.util.Map;
 
-public class PostWPComRestResponse implements Payload, Response {
+public class PostWPComRestResponse extends Payload implements Response {
     public class PostsResponse {
         public List<PostWPComRestResponse> posts;
     }

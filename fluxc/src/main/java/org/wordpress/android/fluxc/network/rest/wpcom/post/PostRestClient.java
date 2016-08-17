@@ -1,18 +1,19 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPCOMREST;
@@ -22,7 +23,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(fetchedPost));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Handle errors
                     }
                 }
@@ -83,24 +83,24 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        PostsModel posts = new PostsModel();
+                        List<PostModel> postArray = new ArrayList<>();
+                        PostModel post;
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            PostModel post = postResponseToPostModel(postResponse);
+                            post = postResponseToPostModel(postResponse);
                             post.setLocalSiteId(site.getId());
-                            posts.add(post);
+                            postArray.add(post);
                         }
 
-                        boolean canLoadMore = posts.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
 
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
-                                offset > 0, canLoadMore);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(new PostsModel(postArray),
+                                site, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.API, "Volley error", error);
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Error, dispatch network error
                     }
                 }
@@ -135,9 +135,9 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Handle errors
                     }
                 }
@@ -161,9 +161,9 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(deletedPost));
                     }
                 },
-                new ErrorListener() {
+                new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // TODO: Handle errors
                     }
                 }

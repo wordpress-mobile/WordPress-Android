@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Table
-public class PostModel implements Identifiable, Payload {
+public class PostModel extends Payload implements Identifiable {
     private static long FEATURED_IMAGE_INIT_VALUE = -2;
 
     @PrimaryKey
