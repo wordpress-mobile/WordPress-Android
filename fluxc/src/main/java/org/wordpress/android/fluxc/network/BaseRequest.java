@@ -31,17 +31,22 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
         public String message;
         public VolleyError volleyError;
 
-        public BaseNetworkError(GenericErrorType error, @Nullable String message, @NonNull VolleyError volleyError) {
+        public BaseNetworkError(@NonNull GenericErrorType error, @Nullable String message, @NonNull VolleyError volleyError) {
             this.message = message;
             this.error = error;
             this.volleyError = volleyError;
         }
-
         public BaseNetworkError(@NonNull VolleyError volleyError) {
             this.volleyError = volleyError;
         }
+        public BaseNetworkError(@NonNull GenericErrorType error) {
+            this.error = error;
+        }
         public boolean isGeneric() {
             return error != null;
+        }
+        public boolean hasVolleyError() {
+            return volleyError != null;
         }
     }
 
@@ -49,7 +54,8 @@ public abstract class BaseRequest<T> extends com.android.volley.Request<T> {
         NOT_FOUND,
         CENSORED,
         SERVER_ERROR,
-        TIMEOUT
+        TIMEOUT,
+        INVALID_RESPONSE
     }
 
     public static abstract class BaseErrorListener implements ErrorListener {
