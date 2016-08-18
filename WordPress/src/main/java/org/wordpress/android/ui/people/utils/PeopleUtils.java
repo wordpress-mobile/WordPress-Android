@@ -8,9 +8,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -25,8 +25,6 @@ public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
     public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
-    private static String ROLE_FOLLOWER = "follower";
-    private static String ROLE_VIEWER = "viewer";
 
     public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
                                   final FetchUsersCallback callback) {
@@ -161,7 +159,7 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(Context context, final String blogId, long personID, String newRole,
+    public static void updateRole(Context context, final String blogId, long personID, Role newRole,
                                   final int localTableBlogId, final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -193,7 +191,7 @@ public class PeopleUtils {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("roles", getRoleParameter(context, newRole));
+        params.put("roles", newRole.toRESTString());
         String path = String.format("sites/%s/users/%d", blogId, personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
@@ -447,7 +445,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(Context context, final List<String> usernames, String role, String message,
+    public static void sendInvitations(Context context, final List<String> usernames, Role role, String message,
                                        String dotComBlogId, final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -511,33 +509,9 @@ public class PeopleUtils {
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
         }
-        params.put("role", getRoleParameter(context, role));
+        params.put("role", role.toRESTString());
         params.put("message", message);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * This method is used to convert the translated role string to REST parameter as the remote expects it
-     * @param context Context to be able to get the string resources
-     * @param role Role string as it's seen in the UI
-     * @return Role string parameter to use in REST requests or null if no matching role is found
-     */
-    private static String getRoleParameter(Context context, String role) {
-        if (role.equalsIgnoreCase(context.getString(R.string.role_admin))) {
-            return "administrator";
-        } else if (role.equalsIgnoreCase(context.getString(R.string.role_editor))) {
-            return "editor";
-        } else if (role.equalsIgnoreCase(context.getString(R.string.role_author))) {
-            return "author";
-        } else if (role.equalsIgnoreCase(context.getString(R.string.role_contributor))) {
-            return "contributor";
-        } else if (role.equalsIgnoreCase(context.getString(R.string.role_follower))) {
-            return "follower";
-        } else if (role.equalsIgnoreCase(context.getString(R.string.role_viewer))) {
-            // the remote expects "follower" as the role param even if the role is "viewer"
-            return "follower";
-        }
-        return null;
     }
 
     public interface InvitationsSendCallback {
