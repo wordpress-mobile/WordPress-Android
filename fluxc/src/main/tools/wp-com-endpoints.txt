@@ -1,0 +1,14 @@
+/me/
+/me/settings/
+/me/sites/
+
+/sites/
+/sites/new/
+/sites/$site/post-formats/
+
+/sites/$site/posts/
+/sites/$site/posts/$post_ID/
+/sites/$site/posts/$post_ID/delete/
+/sites/$site/posts/new/
+
+/users/new/
