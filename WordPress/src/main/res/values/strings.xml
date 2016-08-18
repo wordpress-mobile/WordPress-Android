@@ -1438,26 +1438,6 @@
     <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
-    <string-array name="roles" translatable="false">
-        <item>@string/role_admin</item>
-        <item>@string/role_editor</item>
-        <item>@string/role_author</item>
-        <item>@string/role_contributor</item>
-    </string-array>
-    <string-array name="invite_roles_public" translatable="false">
-        <item>@string/role_follower</item>
-        <item>@string/role_admin</item>
-        <item>@string/role_editor</item>
-        <item>@string/role_author</item>
-        <item>@string/role_contributor</item>
-    </string-array>
-    <string-array name="invite_roles_private" translatable="false">
-        <item>@string/role_viewer</item>
-        <item>@string/role_admin</item>
-        <item>@string/role_editor</item>
-        <item>@string/role_author</item>
-        <item>@string/role_contributor</item>
-    </string-array>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
