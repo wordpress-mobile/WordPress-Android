@@ -1,6 +1,5 @@
 package org.wordpress.android.models;
 
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import org.wordpress.android.R;
@@ -20,15 +19,51 @@ public enum Role {
         mLabelResId = labelResId;
     }
 
-    public String getDisplayString() {
+    public String toDisplayString() {
         return WordPress.getContext().getString(mLabelResId);
+    }
+
+    public static Role fromString(String role) {
+        switch (role) {
+            case "administrator":
+                return ADMIN;
+            case "editor":
+                return EDITOR;
+            case "author":
+                return AUTHOR;
+            case "contributor":
+                return CONTRIBUTOR;
+            case "follower":
+                return FOLLOWER;
+            case "viewer":
+                return VIEWER;
+        }
+        throw new IllegalArgumentException("All roles must be handled");
+    }
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case ADMIN:
+                return "administrator";
+            case EDITOR:
+                return "editor";
+            case AUTHOR:
+                return "author";
+            case CONTRIBUTOR:
+                return "contributor";
+            case FOLLOWER:
+                return "follower";
+            case VIEWER:
+                return "viewer";
+        }
+        throw new IllegalArgumentException("All roles must be handled");
     }
 
     /**
      * @return the string representation of the role, as used by the REST API
      */
-    @Nullable
-    public String getRESTString() {
+    public String toRESTString() {
         switch (this) {
             case ADMIN:
                 return "administrator";
@@ -44,21 +79,17 @@ public enum Role {
                 // the remote expects "follower" as the role parameter even if the role is "viewer"
                 return "follower";
         }
-        return null;
+        throw new IllegalArgumentException("All roles must be handled");
     }
 
-    @Nullable
-    public static Role fromString(String role) {
-        switch (role) {
-            case "administrator":
-                return ADMIN;
-            case "editor":
-                return EDITOR;
-            case "author":
-                return AUTHOR;
-            case "contributor":
-                return CONTRIBUTOR;
+    public static Role[] userRoles() {
+        return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    }
+
+    public static Role[] inviteRoles(boolean isPrivateSite) {
+        if (isPrivateSite) {
+            return new Role[] { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
         }
-        return null;
+        return new Role[] { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
     }
 }
