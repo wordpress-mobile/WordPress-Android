@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.UploadRequestBody;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPC;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
@@ -22,7 +21,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -35,9 +33,7 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequestBody.ProgressListener {
     public static final String MEDIA_ID_KEY         = "attachment_id";
@@ -200,16 +196,19 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements UploadRequest
                 .password(site.getPassword())
                 .build();
 
-        File file = new File(media.getFilePath());
+        UploadRequestBody requestBody = new UploadRequestBody(media, this, site);
+
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
-                .post(RequestBody.create(MediaType.parse("application/xml"), file))
+//                .post(RequestBody.create(MediaType.parse("text/xml"), file))
+                .post(requestBody)
                 .build();
 
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    AppLog.d(T.MEDIA, "media upload successful: " + response);
+                    String responseString = response.body().string();
+                    AppLog.d(T.MEDIA, "media upload successful: " + responseString);
                     // TODO: serialize MediaModel from response and add to resultList
 //                    MediaModel responseMedia = resToMediaModel
                     List<MediaModel> resultList = new ArrayList<>();
