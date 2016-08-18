@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
+import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
