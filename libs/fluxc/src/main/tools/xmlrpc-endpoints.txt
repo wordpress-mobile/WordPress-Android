@@ -1,0 +1,4 @@
+wp.getOptions
+wp.getPostFormats
+wp.getUsersBlogs
+system.listMethods
