@@ -18,10 +18,12 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
 
@@ -52,13 +54,20 @@ public class PostRestClient extends BaseWPComRestClient {
                         PostModel fetchedPost = postResponseToPostModel(response);
                         fetchedPost.setId(post.getId());
                         fetchedPost.setLocalSiteId(site.getId());
-                        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(fetchedPost));
+
+                        RemotePostPayload payload = new RemotePostPayload();
+                        payload.post = fetchedPost;
+
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Handle errors
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 }
         );
@@ -101,7 +110,10 @@ public class PostRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Error, dispatch network error
+                        // Possible non-generic errors: 404 unknown_post_type (invalid post type, shouldn't happen)
+                        PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
         );
@@ -138,7 +150,12 @@ public class PostRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Handle errors
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        // Note: Unlike XML-RPC, if an invalid term (category or tag) ID is specified, the server just
+                        // ignores it and creates/updates the post normally
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newPushedPostAction(payload));
                     }
                 }
         );
@@ -158,13 +175,18 @@ public class PostRestClient extends BaseWPComRestClient {
                         PostModel deletedPost = postResponseToPostModel(response);
                         deletedPost.setId(post.getId());
                         deletedPost.setLocalSiteId(post.getLocalSiteId());
-                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(deletedPost));
+
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // TODO: Handle errors
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 }
         );
