@@ -386,6 +386,8 @@ public class GCMMessageService extends GcmListenerService {
         String title = getNotificationTitleOrAppNameFromBundle(data);
         String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
 
+        NotificationCompat.Builder builder = null;
+
         if (sActiveNotificationsMap.size() == 1) {
             //only one notification remains, so get the proper message for it and re-instate in the system dashboard
             Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
@@ -400,10 +402,18 @@ public class GCMMessageService extends GcmListenerService {
                 }
                 largeIconBitmap = getLargeIconBitmap(remainingNote.getString("icon"),
                         shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
+
+                builder = getNotificationBuilder(title, message);
+
+                String noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
+                String noteId = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
+                showIndividualNotificationForBuilder(builder, noteType, noteId, sActiveNotificationsMap.keyAt(0));
             }
         }
 
-        NotificationCompat.Builder builder = getNotificationBuilder(title, message);
+        if (builder == null) {
+            builder = getNotificationBuilder(title, message);
+        }
 
         if (largeIconBitmap == null) {
             largeIconBitmap = getLargeIconBitmap(data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
@@ -427,17 +437,15 @@ public class GCMMessageService extends GcmListenerService {
 
     // Clear all notifications
     private void handleBadgeResetPN(Bundle data) {
-        if (data != null && data.containsKey(PUSH_ARG_NOTE_ID)) {
-            removeNotificationWithNoteIdFromSystemBar(this, data);
-            //now that we cleared the specific notif, we can check and make any visual updates
-            if (sActiveNotificationsMap.size() > 0) {
-                rebuildAndUpdateNotificationsOnSystemBar(data);
-            }
-        }
-
         if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
             // ignore the reset-badge PN if it's a global one
             return;
+        }
+
+        removeNotificationWithNoteIdFromSystemBar(this, data);
+        //now that we cleared the specific notif, we can check and make any visual updates
+        if (sActiveNotificationsMap.size() > 0) {
+            rebuildAndUpdateNotificationsOnSystemBar(data);
         }
 
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
